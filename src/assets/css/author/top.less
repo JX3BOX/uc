@@ -1,0 +1,222 @@
+@avatar: 180px;
+
+.m-author-header {
+    .clearfix;
+    border-bottom: 1px solid #e1e4e8;
+    margin-bottom: 20px;
+    overflow: hidden;
+    .clearfix;
+    padding: 20px;
+    .r(4px);
+}
+.m-author-avatar {
+    .size(160px);
+    .c-avatar-frame{
+        padding:20px;
+        .lt(-20px);
+    }
+    .fl;
+}
+
+.m-author-info {
+    .ml(@avatar + 30px);
+    .u-name {
+        font-size: 26px;
+        color: #333;
+        font-weight: 700;
+        display: block;
+        white-space: nowrap;
+        word-wrap: normal;
+        word-break: keep-all;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    .u-vip {
+        margin-left: 4px;
+        font-weight: normal;
+        .i-icon-vip {
+            padding: 1px 6px;
+            .fz(12px,1.5);
+            font-style: normal;
+            border-radius: 2px;
+            background-color: #ddd;
+            color: #fff;
+            &.on {
+                background-color: #6f42c1;
+            }
+        }
+    }
+    .u-medals {
+        .u-medal {
+            .mr(2px);
+            &:last-child {
+                .mr(0);
+            }
+        }
+    }
+    .u-superauthor {
+        display: inline-block;
+        vertical-align: -2px;
+        img {
+            width: 16px;
+        }
+    }
+    .u-uid {
+        font-size: 14px;
+        line-height: 2;
+        color: #666;
+        // display: block;
+    }
+    .u-level {
+        .ml(10px);
+        font-size: 12px;
+        // font-weight: 700;
+        line-height: 1.5;
+        color: #fff;
+        background-color: #aaa;
+        padding: 1px 6px;
+        border-radius: 2px;
+
+        background-color: #aaa;
+        border-radius: 2px;
+
+        &.lv-1 {
+            background-color: #32d3c4;
+        }
+        &.lv-2 {
+            background-color: #86c0fb;
+        }
+        &.lv-3 {
+            background-color: #33d9ff;
+        }
+        &.lv-4 {
+            background-color: #ffdb2a;
+        }
+        &.lv-5 {
+            background-color: #ffa739;
+        }
+        &.lv-6 {
+            background-color: #ff70b2;
+        }
+        &.lv-7 {
+            background-color: #ff3399;
+        }
+        &.lv-8 {
+            background-color: #f93c3c;
+        }
+    }
+    .u-join {
+        .db;
+        .fz(12px, 20px);
+        color: #666;
+
+        .u-icon-join {
+            .dbi;
+            .y(top);
+            .mr(5px);
+            .h(20px);
+            .mt(2px);
+            svg {
+                fill: #666;
+            }
+        }
+    }
+    .u-bio {
+        .fz(14px, 2);
+        padding-bottom: 10px;
+    }
+    .u-links-box {
+        padding-top: 10px;
+        border-top: 1px dashed #eee;
+        .h(32px);
+        a,
+        span {
+            .db;
+            .fz(12px, 20px);
+            color: #555;
+        }
+        a {
+            &:hover {
+                color: #f39;
+            }
+        }
+        svg,
+        img {
+            .size(16px);
+            .mr(6px);
+            .y(-3px);
+        }
+    }
+    .u-medals {
+        margin: 5px 0;
+        img{.size(20px);}
+    }
+    .u-teams {
+        .clearfix;
+        .el-col {
+            overflow: hidden;
+        }
+        .u-team {
+            // .db;.fl;
+            // .w(32px);
+            .mr(20px);
+            .nobreak;
+            .db;
+            // margin-right:10px;
+            .fz(12px, 20px);
+            color: #555;
+        }
+        .u-team-logo {
+            .size(16px);
+            .y;
+            .mr(10px);
+        }
+        .u-team-name {
+            // .db;.x;
+            .fz(12px,16px);
+        }
+        a {
+            color: @color;
+            &:hover {
+                color: @pink;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .m-author-header {
+        border-radius: 0;
+    }
+    .m-author-avatar {
+        .size(80px);
+        .mr(20px);
+        .c-avatar-frame{
+            padding:10px;
+            .lt(-10px);
+        }
+    }
+    .m-author-info {
+        margin-left: 0;
+
+        .u-bio {
+            border-top: 1px solid @border-hr;
+            padding-top: 20px;
+            .mt(20px);
+        }
+
+        .u-links-box,.u-teams{
+            .el-col {
+                .w(100%);
+                a,
+                span {
+                    margin: 5px 0;
+                }
+            }
+        }
+    }
+
+
+}
+
+

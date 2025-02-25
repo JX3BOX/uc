@@ -1,0 +1,120 @@
+{
+    "1": {
+        "name": "2022春节",
+        "key": "2022spring",
+        "type": "one",
+        "component": "OneScreen"
+    },
+    "2": {
+        "name": "2022端午节",
+        "key": "2022dragon",
+        "type": "one",
+        "text": "2022端午节快乐！",
+        "component": "OneScreen"
+    },
+    "3": {
+        "name": "2022七夕",
+        "bg": "bg.png",
+        "key": "seven",
+        "type": "double",
+        "component": "DoubleScreen",
+        "imgList": ["petal.png", "look.png", "left.png", "right.png", "boxcion.png", "close.png"]
+    },
+    "4": {
+        "name": "2022中秋节",
+        "key": "midAutumn",
+        "type": "autumn",
+        "component": "CardAutumn",
+        "imgList": ["one.png", "two.png"]
+    },
+    "5": {
+        "name": "2022圣诞节",
+        "key": "christmas",
+        "type": "christmas",
+        "component": "CardChristmas",
+        "imgList": ["cover.jpg", "button.png", "bg.jpg"]
+    },
+    "6": {
+        "name": "2023元旦",
+        "key": "newYearsDay",
+        "type": "newyear",
+        "component": "CardNewYear",
+        "imgList": ["P1-BG.jpg", "p2-01.jpg", "ClickButton-1.png", "CloseButton-1.png"]
+    },
+    "7": {
+        "name": "2023春节",
+        "year": "2023",
+        "key": "springFestival",
+        "type": "spring",
+        "component": "CardSpring"
+    },
+    "8": {
+        "name": "2023元宵节",
+        "key": "lanternFestival",
+        "type": "lantern",
+        "component": "CardLantern",
+        "imgList": ["BG.png", "Frame01.png", "button.png", "Frame02.png", "debut.png", "Frame03.png"]
+    },
+    "9": {
+        "name": "2023端午节",
+        "key": "dragonBoatFestival",
+        "type": "dragon",
+        "component": "CardDragonBoat",
+        "imgList": ["bg.svg", "text.svg", "cover.svg"]
+    },
+    "10": {
+        "name": "2023七夕",
+        "key": "qixi",
+        "type": "qixi",
+        "component": "CardQixi",
+        "imgList": ["text.png", "bg.png", "line.png"]
+    },
+    "11": {
+        "name": "2023中秋节",
+        "count": true,
+        "key": "midAutumn",
+        "type": "default",
+        "component": "DefaultTemplate",
+        "imgList": ["202301.png", "202302.jpg"]
+    },
+    "12": {
+        "name": "2023圣诞节",
+        "key": "christmas2023",
+        "type": "christmas",
+        "component": "CardChristmas",
+        "imgList": ["cover.jpg", "button.png", "bg.jpg"]
+    },
+    "28": {
+        "name": "2024元旦",
+        "key": "newYearsDay2023",
+        "type": "newyear",
+        "component": "CardNewYear",
+        "imgList": ["P1-BG.jpg", "p2-01.jpg", "ClickButton-1.png", "CloseButton-1.png"]
+    },
+    "29": {
+        "name": "2024春节",
+        "key": "springFestival2024",
+        "type": "spring",
+        "component": "CardSpring"
+    },
+    "30": {
+        "name": "2024儿童节",
+        "key": "children2024",
+        "type": "children",
+        "component": "CardChildren"
+    },
+    "31": {
+        "name": "2024中秋",
+        "bg": "202403.png",
+        "key": "midAutumn2024",
+        "type": "default",
+        "component": "DefaultTemplate",
+        "imgList": ["202402.png", "202401.png"]
+    },
+    "32": {
+        "name": "2025春节",
+        "key": "springFestival2025",
+        "type": "spring",
+        "component": "CardSpring"
+    }
+}

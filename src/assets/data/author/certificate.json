@@ -1,0 +1,979 @@
+{
+    "1": {
+        "key": 1,
+        "element": {
+            "topTitle": {
+                "type": "text",
+                "content": "首届秘境百强榜",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 24,
+                    "left": 640,
+                    "top": 170,
+                    "color": "#A19A95"
+                }
+            },
+            "topTitleEn": {
+                "type": "text",
+                "content": "T   H   E       F   I   R   S   T       J   X   3   D   U   N   G   E   O   N       T   O   P   1   0   0",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 10,
+                    "left": 640,
+                    "top": 190,
+                    "color": "#A19A95"
+                }
+            },
+            "server": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 24,
+                    "left": 640,
+                    "top": 650,
+                    "color": "#000000"
+                }
+            },
+            "name": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 28,
+                    "left": 640,
+                    "top": 700,
+                    "color": "#000000"
+                }
+            },
+            "rank": {
+                "type": "rank",
+                "content": "",
+                "style": {
+                    "type": "center",
+                    "top": 770,
+                    "left": 640,
+                    "topWidth": 350,
+                    "otherWidth": 100,
+                    "spaceWidth": 25
+                }
+            },
+            "mapTime": {
+                "type": "text",
+                "content": "于 yyyy 年 MM 月 dd 日  hh:mm:ss 通关",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 18,
+                    "left": 640,
+                    "top": 970,
+                    "color": "#818181"
+                }
+            },
+            "time": {
+                "type": "text",
+                "content": "用时 hh 小时 mm 分钟 ss 秒",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 18,
+                    "left": 640,
+                    "top": 1000,
+                    "color": "#818181"
+                }
+            },
+            "team": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 18,
+                    "left": 640,
+                    "top": 1200,
+                    "color": "#333434",
+                    "width": 600,
+                    "height": 30
+                }
+            },
+            "qr": {
+                "type": "qr",
+                "content": "1",
+                "style": {}
+            },
+            "qrTitle": {
+                "type": "text",
+                "content": "剑网3秘境百强榜",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 13,
+                    "left": 200,
+                    "top": 1605,
+                    "color": "#575A5A"
+                }
+            },
+            "qrSubTitle": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 11,
+                    "left": 200,
+                    "top": 1620,
+                    "color": "#575A5A"
+                }
+            },
+            "signTime": {
+                "type": "text",
+                "content": "签发日期：yyyy/MM/dd",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 17,
+                    "left": 1030,
+                    "top": 1635,
+                    "color": "#575A5A"
+                }
+            }
+        }
+    },
+    "2": {
+        "key": 1,
+        "element": {
+            "topTitle": {
+                "type": "text",
+                "content": "第二届秘境百强榜",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 24,
+                    "left": 640,
+                    "top": 170,
+                    "color": "#A19A95"
+                }
+            },
+            "topTitleEn": {
+                "type": "text",
+                "content": "T   H   E       S   E   C   O   N   D       J   X   3   D   U   N   G   E   O   N       T   O   P   1   0   0",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 10,
+                    "left": 640,
+                    "top": 190,
+                    "color": "#A19A95"
+                }
+            },
+            "server": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 24,
+                    "left": 640,
+                    "top": 650,
+                    "color": "#000000"
+                }
+            },
+            "name": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 28,
+                    "left": 640,
+                    "top": 700,
+                    "color": "#000000"
+                }
+            },
+            "rank": {
+                "type": "rank",
+                "content": "",
+                "style": {
+                    "type": "center",
+                    "top": 770,
+                    "left": 640,
+                    "topWidth": 350,
+                    "otherWidth": 100,
+                    "spaceWidth": 25
+                }
+            },
+            "mapTime": {
+                "type": "text",
+                "content": "于 yyyy 年 MM 月 dd 日  hh:mm:ss 通关",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 18,
+                    "left": 640,
+                    "top": 970,
+                    "color": "#818181"
+                }
+            },
+            "time": {
+                "type": "text",
+                "content": "用时 hh 小时 mm 分钟 ss 秒",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 18,
+                    "left": 640,
+                    "top": 1000,
+                    "color": "#818181"
+                }
+            },
+            "team": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 18,
+                    "left": 640,
+                    "top": 1200,
+                    "color": "#333434",
+                    "width": 600,
+                    "height": 30
+                }
+            },
+            "qr": {
+                "type": "qr",
+                "content": "1",
+                "style": {}
+            },
+            "qrTitle": {
+                "type": "text",
+                "content": "剑网3秘境百强榜",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 13,
+                    "left": 200,
+                    "top": 1605,
+                    "color": "#575A5A"
+                }
+            },
+            "qrSubTitle": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 11,
+                    "left": 200,
+                    "top": 1620,
+                    "color": "#575A5A"
+                }
+            },
+            "signTime": {
+                "type": "text",
+                "content": "签发日期：yyyy/MM/dd",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 17,
+                    "left": 1030,
+                    "top": 1635,
+                    "color": "#575A5A"
+                }
+            }
+        }
+    },
+    "3": {
+        "key": 1,
+        "element": {
+            "topTitle": {
+                "type": "text",
+                "content": "第三届秘境百强榜",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 24,
+                    "left": 640,
+                    "top": 170,
+                    "color": "#A19A95"
+                }
+            },
+            "topTitleEn": {
+                "type": "text",
+                "content": "T   H   E       3   R   D       J   X   3   D   U   N   G   E   O   N       T   O   P   1   0   0",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 10,
+                    "left": 640,
+                    "top": 190,
+                    "color": "#A19A95"
+                }
+            },
+            "server": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 24,
+                    "left": 640,
+                    "top": 650,
+                    "color": "#000000"
+                }
+            },
+            "name": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 28,
+                    "left": 640,
+                    "top": 700,
+                    "color": "#000000"
+                }
+            },
+            "rank": {
+                "type": "rank",
+                "content": "",
+                "style": {
+                    "type": "center",
+                    "top": 770,
+                    "left": 640,
+                    "topWidth": 350,
+                    "otherWidth": 100,
+                    "spaceWidth": 25
+                }
+            },
+            "mapTime": {
+                "type": "text",
+                "content": "于 yyyy 年 MM 月 dd 日  hh:mm:ss 通关",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 18,
+                    "left": 640,
+                    "top": 970,
+                    "color": "#818181"
+                }
+            },
+            "time": {
+                "type": "text",
+                "content": "用时 hh 小时 mm 分钟 ss 秒",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 18,
+                    "left": 640,
+                    "top": 1000,
+                    "color": "#818181"
+                }
+            },
+            "team": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 18,
+                    "left": 640,
+                    "top": 1200,
+                    "color": "#333434",
+                    "width": 600,
+                    "height": 30
+                }
+            },
+            "qr": {
+                "type": "qr",
+                "content": "1",
+                "style": {}
+            },
+            "signTime": {
+                "type": "text",
+                "content": "签发日期：yyyy/MM/dd",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 17,
+                    "left": 1030,
+                    "top": 1635,
+                    "color": "#575A5A"
+                }
+            }
+        }
+    },
+    "4": {
+        "key": 1,
+        "element": {
+            "topTitle": {
+                "type": "text",
+                "content": "第四届秘境百强榜",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 24,
+                    "left": 640,
+                    "top": 170,
+                    "color": "#A19A95"
+                }
+            },
+            "topTitleEn": {
+                "type": "text",
+                "content": "T   H   E       4   T   H       J   X   3   D   U   N   G   E   O   N       T   O   P   1   0   0",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 10,
+                    "left": 640,
+                    "top": 190,
+                    "color": "#A19A95"
+                }
+            },
+            "server": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 24,
+                    "left": 640,
+                    "top": 650,
+                    "color": "#000000"
+                }
+            },
+            "name": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 28,
+                    "left": 640,
+                    "top": 700,
+                    "color": "#000000"
+                }
+            },
+            "rank": {
+                "type": "rank",
+                "content": "",
+                "style": {
+                    "type": "center",
+                    "top": 770,
+                    "left": 640,
+                    "topWidth": 350,
+                    "otherWidth": 100,
+                    "spaceWidth": 25
+                }
+            },
+            "mapTime": {
+                "type": "text",
+                "content": "于 yyyy 年 MM 月 dd 日  hh:mm:ss 通关",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 18,
+                    "left": 640,
+                    "top": 970,
+                    "color": "#818181"
+                }
+            },
+            "time": {
+                "type": "text",
+                "content": "用时 hh 小时 mm 分钟 ss 秒",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 18,
+                    "left": 640,
+                    "top": 1000,
+                    "color": "#818181"
+                }
+            },
+            "team": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 18,
+                    "left": 640,
+                    "top": 1200,
+                    "color": "#333434",
+                    "width": 600,
+                    "height": 30
+                }
+            },
+            "qr": {
+                "type": "qr",
+                "content": "1",
+                "style": {}
+            },
+            "qrSubTitle": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 11,
+                    "left": 200,
+                    "top": 1620,
+                    "color": "#575A5A"
+                }
+            },
+            "signTime": {
+                "type": "text",
+                "content": "签发日期：yyyy/MM/dd",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 17,
+                    "left": 1030,
+                    "top": 1635,
+                    "color": "#575A5A"
+                }
+            }
+        }
+    },
+    "5": {
+        "key": 1,
+        "element": {
+            "topTitle": {
+                "type": "text",
+                "content": "第五届秘境百强榜",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 24,
+                    "left": 640,
+                    "top": 170,
+                    "color": "#A19A95"
+                }
+            },
+            "topTitleEn": {
+                "type": "text",
+                "content": "T   H   E       5   T   H       J   X   3   D   U   N   G   E   O   N       T   O   P   1   0   0",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 10,
+                    "left": 640,
+                    "top": 190,
+                    "color": "#A19A95"
+                }
+            },
+            "server": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 24,
+                    "left": 640,
+                    "top": 650,
+                    "color": "#000000"
+                }
+            },
+            "name": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 28,
+                    "left": 640,
+                    "top": 700,
+                    "color": "#000000"
+                }
+            },
+            "rank": {
+                "type": "rank",
+                "content": "",
+                "style": {
+                    "type": "center",
+                    "top": 770,
+                    "left": 640,
+                    "topWidth": 350,
+                    "otherWidth": 100,
+                    "spaceWidth": 25
+                }
+            },
+            "mapTime": {
+                "type": "text",
+                "content": "于 yyyy 年 MM 月 dd 日  hh:mm:ss 通关",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 18,
+                    "left": 640,
+                    "top": 970,
+                    "color": "#818181"
+                }
+            },
+            "time": {
+                "type": "text",
+                "content": "用时 hh 小时 mm 分钟 ss 秒",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 18,
+                    "left": 640,
+                    "top": 1000,
+                    "color": "#818181"
+                }
+            },
+            "team": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 18,
+                    "left": 640,
+                    "top": 1200,
+                    "color": "#333434",
+                    "width": 600,
+                    "height": 30
+                }
+            },
+            "qr": {
+                "type": "qr",
+                "content": "1",
+                "style": {}
+            },
+            "qrSubTitle": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 11,
+                    "left": 200,
+                    "top": 1620,
+                    "color": "#575A5A"
+                }
+            },
+            "signTime": {
+                "type": "text",
+                "content": "签发日期：yyyy/MM/dd",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 17,
+                    "left": 1030,
+                    "top": 1635,
+                    "color": "#575A5A"
+                }
+            }
+        }
+    },
+    "6": {
+        "key": 6,
+        "element": {
+            "rank": {
+                "type": "rank",
+                "content": "",
+                "style": {
+                    "type": "center",
+                    "top": 660,
+                    "left": 640,
+                    "topWidth": 200,
+                    "otherWidth": 70,
+                    "spaceWidth": 25
+                }
+            },
+            "name": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 28,
+                    "left": 640,
+                    "top": 790,
+                    "color": "#000000"
+                }
+            },
+            "mapName": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 20,
+                    "left": 128,
+                    "top": 1220,
+                    "color": "#818181"
+                }
+            },
+            "mapTime": {
+                "type": "text",
+                "content": "通关时间：yyyy年MM月dd日hh时mm分ss秒",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 20,
+                    "left": 128,
+                    "top": 1255,
+                    "color": "#818181"
+                }
+            },
+            "time": {
+                "type": "text",
+                "content": "通关用时：hh时mm分ss秒",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 20,
+                    "left": 128,
+                    "top": 1290,
+                    "color": "#818181"
+                }
+            },
+            "colonel": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 25,
+                    "left": 128,
+                    "top": 1450,
+                    "color": "#818181"
+                }
+            },
+            "team": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 20,
+                    "left": 128,
+                    "top": 1490,
+                    "color": "#818181",
+                    "width": 600,
+                    "height": 30
+                }
+            },
+            "signTime": {
+                "type": "text",
+                "content": "签发日期：yyyy/MM/dd",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 17,
+                    "left": 1090,
+                    "top": 1670,
+                    "color": "#575A5A"
+                }
+            }
+        }
+    },
+    "7": {
+        "key": 7,
+        "element": {
+            "rank": {
+                "type": "rank",
+                "content": "",
+                "style": {
+                    "type": "center",
+                    "top": 560,
+                    "left": 640,
+                    "topWidth": 200,
+                    "otherWidth": 70,
+                    "spaceWidth": 25
+                }
+            },
+            "name": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 28,
+                    "left": 640,
+                    "top": 690,
+                    "color": "#000000"
+                }
+            },
+            "time": {
+                "type": "text",
+                "content": "通关用时：hh时mm分ss秒",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 25,
+                    "left": 640,
+                    "top": 870,
+                    "color": "#818181"
+                }
+            },
+            "mapTime": {
+                "type": "text",
+                "content": "通关时间：yyyy年MM月dd日hh时mm分ss秒",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 25,
+                    "left": 640,
+                    "top": 915,
+                    "color": "#818181"
+                }
+            },
+            "colonel": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 23,
+                    "left": 128,
+                    "top": 1500,
+                    "color": "#003651"
+                }
+            },
+            "team": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 15,
+                    "left": 128,
+                    "top": 1530,
+                    "color": "#818181",
+                    "width": 700,
+                    "height": 30
+                }
+            },
+            "signTime": {
+                "type": "text",
+                "content": "签发日期：yyyy/MM/dd",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 19,
+                    "left": 1050,
+                    "top": 1620,
+                    "color": "#003651"
+                }
+            }
+        }
+    },
+    "8": {
+        "key": 8,
+        "element": {
+            "rank": {
+                "type": "rank",
+                "content": "",
+                "style": {
+                    "type": "left",
+                    "top": 500,
+                    "left": 115,
+                    "topWidth": 200,
+                    "otherWidth": 70,
+                    "spaceWidth": 25
+                }
+            },
+            "time": {
+                "type": "text",
+                "content": "通关用时：hh时mm分ss秒",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 22,
+                    "left": 115,
+                    "top": 620,
+                    "color": "#818181"
+                }
+            },
+            "mapTime": {
+                "type": "text",
+                "content": "通关时间：yyyy年MM月dd日hh时mm分ss秒",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 22,
+                    "left": 115,
+                    "top": 660,
+                    "color": "#818181"
+                }
+            },
+            "name": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 28,
+                    "left": 115,
+                    "top": 1460,
+                    "color": "#24292E"
+                }
+            },
+            "colonel": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 23,
+                    "left": 115,
+                    "top": 1510,
+                    "color": "#666666"
+                }
+            },
+            "team": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 15,
+                    "left": 115,
+                    "top": 1540,
+                    "color": "#666666",
+                    "width": 700,
+                    "height": 25
+                }
+            },
+            "signTime": {
+                "type": "text",
+                "content": "yyyy/MM/dd",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 15,
+                    "left": 640,
+                    "top": 1705,
+                    "color": "#24292E"
+                }
+            }
+        }
+    },
+    "9": {
+        "key": 9,
+        "element": {
+            "rank": {
+                "type": "rank",
+                "content": "",
+                "style": {
+                    "type": "center",
+                    "top": 579,
+                    "left": 640,
+                    "topWidth": 200,
+                    "otherWidth": 70,
+                    "spaceWidth": 25
+                }
+            },
+            "time": {
+                "type": "text",
+                "content": "通关用时：hh时mm分ss秒",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 22,
+                    "left": 640,
+                    "top": 685,
+                    "color": "#818181"
+                }
+            },
+            "mapTime": {
+                "type": "text",
+                "content": "通关时间：yyyy年MM月dd日hh时mm分ss秒",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 22,
+                    "left": 640,
+                    "top": 720,
+                    "color": "#818181"
+                }
+            },
+            "name": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 28,
+                    "left": 115,
+                    "top": 1460,
+                    "color": "#A78540"
+                }
+            },
+            "colonel": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 23,
+                    "left": 115,
+                    "top": 1510,
+                    "color": "#666666"
+                }
+            },
+            "team": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 15,
+                    "left": 115,
+                    "top": 1540,
+                    "color": "#666666",
+                    "width": 700,
+                    "height": 25
+                }
+            },
+            "signTime": {
+                "type": "text",
+                "content": "yyyy/MM/dd",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 15,
+                    "left": 640,
+                    "top": 1705,
+                    "color": "#24292E"
+                }
+            }
+        }
+    }
+}

@@ -18,6 +18,12 @@ module.exports = {
             entry: "src/pages/publish/index.js",
             template: "public/index.html",
             filename: "publish/index.html",
+        },
+        author: {
+            title: "作者 - JX3BOX",
+            entry: "src/pages/author/index.js",
+            template: "public/index.html",
+            filename: "author/index.html",
         }
     },
     //❤️ Proxy ~

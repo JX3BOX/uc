@@ -1,0 +1,273 @@
+// 分页
+.m-author-pages {
+    text-align: right;
+}
+//趣图瀑布流
+.m-emotions-list{
+    .w(100%);
+    .auto(x);
+    .mt(10px);
+    columns: 5; // 默认列数
+    column-gap: 10px; // 列间距
+
+    .u-list{
+        break-inside: avoid;
+        margin-bottom: 10px;
+        background-color: #f6f8fa;
+        padding: 5px;
+        &:hover{
+            background-color: rgb(175,226,250,0.8);
+        }
+        .u-pic{
+            color:#000000;
+        }
+        .u-img{
+            //.h(200px);
+            width: 100%;
+        }
+        .u-date{
+            text-align: right;
+            .fz(12px);
+            padding: 8px 0 0 0;
+        }
+    }
+
+}
+
+// 普通列表
+.m-archive-list {
+    //.mt(20px);
+    .u-list {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .u-item {
+        border-bottom: 1px solid @border-hr;
+        padding-bottom: 20px;
+        .mb(20px);
+        .clearfix;
+        .pr;
+        .fz(14px);
+    }
+
+    // 海报
+    .u-banner {
+        .fl;
+        .mr(10px);
+        .size(180px,100px);
+        overflow: hidden;
+        .db;
+        .pr;
+        .z(1);
+        border: 1px solid #eee;
+        padding: 5px;
+        box-sizing: border-box;
+        img {
+            .size(100%);
+            filter: saturate(120%);
+            transition: 0.06s all ease-in-out;
+            object-fit:cover ;
+        }
+        transition: 0.06s border ease-in-out;
+        &:hover {
+            img {
+                filter: saturate(140%) brightness(120%);
+            }
+            border-color: @border;
+        }
+    }
+
+    // 标题
+    .u-post {
+        margin: 0;
+        padding: 0;
+        .nobreak;
+        .mb(5px);
+        .u-icon {
+            .size(16px);
+            .y(-3px);
+            .mr(5px);
+        }
+        .u-title {
+            font-weight: 400;
+            text-decoration:none;
+            &:hover {
+                box-shadow: 0 1px 0 @primary;
+                color: @primary;
+                text-decoration:none;
+            }
+        }
+        .fz(15px, 2);
+        .lh(2);
+        font-weight: 400;
+    }
+    //骚话标题
+    .u-jokes{
+        margin: 0;
+        padding: 0;
+        .break;
+        .mb(5px);
+        .u-icon {
+            .size(16px);
+            .y(-3px);
+            .mr(5px);
+        }
+        .u-title {
+            font-weight: 400;
+            text-decoration:none;
+            .break(2);
+            width: calc(100% - 210px);
+            // &:hover {
+            //     box-shadow: 0 1px 0 @primary;
+            //     color: @primary;
+            //     text-decoration:none;
+            // }
+        }
+        .fz(15px, 2);
+        .lh(2);
+        font-weight: 400;
+    }
+    // 内容
+    .u-content {
+        .db;
+        padding-left: 20px;
+        .pr;
+    }
+
+    // 内容·描述类
+    .u-desc {
+        .db;
+        .fz(12px, 1.8);
+        color: #555;
+        .break(2);
+        .mb(6px);
+        padding: 0 2px;
+        .mr(200px);
+        @origin: #0eb7ce;
+        @std: #f0b400;
+        @all:#a26ef7;
+        .u-client {
+            font-style: normal;
+            .fz(12px);
+            padding: 2px 5px;
+            .r(2px);
+            .mr(5px);
+            line-height: 1.2;
+            border: 1px solid @std;
+            color: @std;
+            .dbi;
+
+            &.origin {
+                border: 1px solid @origin;
+                color: @origin;
+            }
+            &.all {
+                border: 1px solid @all;
+                color: @all;
+            }
+        }
+        .u-tag{
+            .mr(5px);
+        }
+
+        p{
+            margin:0;
+        }
+    }
+    // 作者向
+    .u-misc {
+        .db;
+        .pa;
+        .rb(10px, 24px);
+        .x(right);
+        .fz(12px, 20px);
+        color: #777;
+    }
+    .u-author-avatar {
+        .size(24px);
+        .y;
+        .r(2px);
+        .mr(5px);
+    }
+    .u-author-name {
+        .fz(12px, 24px);
+        // .fl;
+        color: #666;
+        &:hover {
+            color: @pink;
+        }
+    }
+    .u-date {
+        .db;
+        .mt(3px);
+        .clear;
+    }
+
+    .u-down {
+        // .u-btn-white;
+        i {
+            .size(12px);
+            .y(-1px);
+        }
+    }
+    .u-pipe {
+        margin: 0 5px;
+        color: #999;
+    }
+}
+@media screen and (max-width: @ipad) {
+    .m-emotions-list{
+        columns:3
+    }
+    .m-archive-list {
+        .u-banner {
+            .w(100px);
+            .h(55px);
+            padding: 3px;
+            .fr;
+            margin-left: 10px;
+            margin-right: 0;
+        }
+
+        .u-post {
+            white-space: normal;
+            word-break: break-all;
+            .break(2);
+            .fz(14px, 22px);
+        }
+
+        .u-metalist,
+        .u-down,
+        .u-view {
+            .none;
+        }
+        .u-tag {
+            .mb(8px);
+        }
+        .u-title {
+            width: 100% !important;
+        }
+        .u-misc {
+            .ps;
+            .x(left);
+        }
+        .u-author-name {
+            color: #555;
+        }
+    }
+}
+@media screen and (max-width:@phone){
+    .m-emotions-list{
+        columns:2
+    }
+    .m-archive-list{
+        .u-desc{
+            .none;
+        }
+        .u-title {
+            width: 100% !important;
+        }
+    }
+}
