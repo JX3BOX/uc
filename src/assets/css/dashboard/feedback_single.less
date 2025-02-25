@@ -1,0 +1,272 @@
+.m-feed-single {
+    position: relative;
+    .flex;
+    gap: 20px;
+    width: 100%;
+}
+.m-feed-log {
+    flex: none;
+    width: 280px;
+    @media screen and (max-width: @phone) {
+        .none;
+    }
+    .el-icon-document {
+        margin-right: 5px;
+    }
+    .u-content {
+        .flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 5px;
+        font-size: 12px;
+        margin-top: 5px;
+        color: #999;
+    }
+    .u-op {
+        .flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+    }
+    .u-user {
+        .flex;
+        align-items: center;
+        gap: 5px;
+    }
+    .u-avatar {
+        .size(18px);
+        .r(100%);
+    }
+    .u-label {
+        color: #999;
+    }
+    .u-remark {
+        color: orange;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+    .el-timeline-item__timestamp {
+        .fz(12px);
+    }
+}
+.m-feed-content {
+    width: calc(100% - 300px);
+    @media screen and (max-width: @phone) {
+        .w(100%);
+    }
+
+    .el-step__icon {
+        width: 20px;
+        height: 20px;
+    }
+    .el-step__icon-inner {
+        .fz(12px);
+    }
+    .el-step__title {
+        .fz(14px);
+        .bold;
+    }
+
+    .is-process {
+        .el-step__icon {
+            background: orange;
+            border-color: orange;
+        }
+        .el-step__icon-inner {
+            color: #fff;
+        }
+    }
+    .el-step__title.is-process {
+        color: orange !important;
+    }
+    .is-success {
+        .el-step__icon {
+            background: #49c10f;
+        }
+        .el-step__icon-inner {
+            color: #fff;
+        }
+    }
+}
+.m-single-content {
+    .pt(10px);
+    .flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .fz(14px,24px);
+    .u-item {
+        .flex;
+        align-items: center;
+        img {
+            .mr(5px);
+        }
+    }
+
+    .m-block {
+        .flex;
+        align-items: center;
+        gap: 20px;
+
+        @media screen and (max-width: @phone) {
+            flex-wrap: wrap;
+        }
+    }
+    .u-subblock {
+        .flex;
+        align-items: center;
+
+        .u-list-assign {
+            gap: 8px;
+        }
+    }
+    .m-steps {
+        margin-top: 20px;
+        @media screen and (max-width: @phone) {
+            .none;
+        }
+    }
+    .m-type {
+        .flex;
+        gap: 15px;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .u-title {
+            .flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .u-status {
+            color: #fff;
+            padding: 2px 8px;
+            .r(2px);
+            white-space: nowrap;
+        }
+        .u-value {
+            &::after {
+                content: " » ";
+            }
+            &:last-child::after {
+                .none;
+            }
+        }
+    }
+    .m-user {
+        display: flex;
+        align-items: center;
+        .u-user {
+            .u-user-avatar {
+                .size(24px);
+                .r(100%);
+            }
+        }
+    }
+    .m-dev {
+        .flex;
+        img {
+            .size(24px);
+            .r(100%);
+        }
+        .u-list {
+            display: flex;
+            align-items: center;
+        }
+        .u-null {
+            color: #999;
+        }
+    }
+    .m-textarea {
+        .w(100%);
+        .r(3px);
+        .fz(14px,1.6);
+        box-sizing: border-box;
+    }
+    .m-content {
+        min-height: 240px;
+    }
+    .m-attachment {
+        .u-detail {
+            .flex;
+            flex-wrap: wrap;
+        }
+        .u-img {
+            .mr(10px);
+            .mb(10px);
+        }
+        .el-image {
+            .size(100px);
+        }
+    }
+
+    .u-thx-trigger {
+        padding: 4px 8px;
+        margin-left: 10px;
+    }
+
+    .u-gift {
+        .size(24px);
+        margin-right: 10px;
+    }
+
+    .u-count {
+        color: #fe7e91;
+        font-family: Trebuchet MS, Lucida Sans Unicode, Lucida Grande, Lucida Sans, Arial, sans-serif;
+        font-weight: 600;
+    }
+
+    .u-delete {
+        .ml(20px);
+        color: #c00;
+        i {
+            .mr(3px);
+        }
+        .pointer;
+        &:hover {
+            color: #f00;
+        }
+    }
+}
+.m-teammate {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .m-user {
+        display: flex;
+        align-items: center;
+        .u-avatar {
+            .size(24px);
+            .r(100%);
+            .mr(5px);
+        }
+
+        .u-user-id {
+            margin-left: 5px;
+            color: #999;
+        }
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .u-list-assign {
+        flex-wrap: wrap;
+        padding-left: 10px;
+    }
+}
+
+.m-reply .c-comment .el-main {
+    .flex;
+    flex-direction: column;
+    .c-comment-order,
+    .c-comment-list,
+    .c-comment-pages {
+        order: 0;
+    }
+    .c-comment-box {
+        order: 1;
+    }
+}
+.el-dropdown-menu--small .el-dropdown-menu__item {
+    margin-bottom: 5px;
+}

@@ -1,0 +1,63 @@
+@import './credit.less';
+
+.m-packet-in-list{
+    .isDone{
+        color:#999;
+    }
+    .isProcessing {
+        color:#ffa41a;
+    }
+    .isFinished{
+        color:#67c23a;
+    }
+    .isPending{
+        color:#f00;
+    }
+    a:hover{
+        color:@pink;
+    }
+}
+
+
+.m-packet-msg{
+    b{
+        color:#f00;
+        padding:0 5px;
+    }
+}
+
+.m-packet-check{
+    padding:20px;
+    background-color:@bg-light;
+    border:1px solid @border-hr;
+    .r(4px);
+    .mt(15px);
+}
+
+@media screen and (max-width:@phone){
+    .m-packet-search{
+        .el-col{
+            .w(100%);
+            float:none;
+            .mb(10px);
+        }
+    }
+}
+
+.m-packet-table{
+    overflow-x: auto !important;
+
+    td,th{
+        min-width:80px !important;
+    }
+    .u-user {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+    }
+    .u-avatar {
+        .size(24px);
+        .r(50%);
+    }
+}

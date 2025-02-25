@@ -1,0 +1,12 @@
+{
+    "types": {
+		"seasun_ykt":"金山一卡通",
+		"other":"其它"
+	},
+    "subtypes":{
+        "boxcoin":"盒币兑换",
+        "lottery":"积分抽奖",
+        "weibo":"微博活动",
+        "jdt":"赛事奖励"
+    }
+}

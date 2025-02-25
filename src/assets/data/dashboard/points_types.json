@@ -1,0 +1,14 @@
+{
+    "login":"登录",
+    "be_inpired":"被人打赏",
+    "inpired_other":"打赏他人",
+    "pay_money":"消费",
+    "interaction":"互动操作",
+    "task_account_bing_wx":"绑定微信",
+    "task_account_bing_phone":"绑定手机",
+    "task_account_bing_third_platform":"绑定第三方平台",
+    "task_account_bing_wx_publisher":"关注微信公众号",
+    "post_interaction":"文章互动",
+    "system":"系统派发",
+    "points_mall_order":"商城兑换"
+}

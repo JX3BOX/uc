@@ -1,0 +1,107 @@
+[
+    {
+        "group_name": "我的仓库",
+        "children": [
+            {
+                "path": "/msg",
+                "name": "我的消息",
+                "icon": "el-icon-bell"
+            },
+            {
+                "path": "/fav",
+                "name": "收藏订阅",
+                "icon": "el-icon-star-off"
+            },
+            {
+                "path": "/purchases",
+                "name": "付费资源",
+                "icon": "el-icon-shopping-cart-2"
+            },
+            {
+                "path": "/frame",
+                "name": "主题装扮",
+                "icon": "el-icon-brush"
+            },
+            {
+                "path": "/treasure",
+                "name": "魔盒藏品",
+                "icon": "el-icon-magic-stick"
+            }
+        ]
+    },
+    {
+        "group_name": "权益中心",
+        "children": [
+            {
+                "path": "/boxcoin",
+                "name": "我的盒币",
+                "icon": "el-icon-coin"
+            },
+            {
+                "path": "/points",
+                "name": "我的积分",
+                "icon": "el-icon-sugar"
+            },
+            {
+                "path": "/card",
+                "name": "我的卡密",
+                "icon": "el-icon-bank-card"
+            },
+            {
+                "path": "ic",
+                "name": "我的盒码",
+                "icon": "el-icon-present"
+            }
+        ]
+    },
+    {
+        "group_name": "账号中心",
+        "children": [
+            {
+                "path": "/profile",
+                "name": "资料设置",
+                "icon": "el-icon-user"
+            },
+            {
+                "path": "/role",
+                "name": "角色设置",
+                "icon": "el-icon-coordinate"
+            },
+            {
+                "path": "/privacy",
+                "name": "隐私设置",
+                "icon": "el-icon-ship"
+            },
+            {
+                "path": "/config",
+                "name": "全局设置",
+                "icon": "el-icon-setting"
+            }
+        ]
+    },
+    {
+        "group_name": "服务中心",
+        "children": [
+            {
+                "path": "/tasks",
+                "name": "任务中心",
+                "icon": "el-icon-coffee-cup"
+            },
+            {
+                "path": "/cooperation",
+                "name": "签约中心",
+                "icon": "el-icon-reading"
+            },
+            {
+                "path": "/mall",
+                "name": "订单中心",
+                "icon": "el-icon-shopping-bag-1"
+            },
+            {
+                "path": "/feedback",
+                "name": "反馈中心",
+                "icon": "el-icon-phone-outline"
+            }
+        ]
+    }
+]

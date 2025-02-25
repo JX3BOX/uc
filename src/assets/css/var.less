@@ -1,0 +1,20 @@
+.scrollbar(@width: 4px){
+    // max-height: 70vh;
+    &::-webkit-scrollbar {
+        width: @width;
+    }
+    &::-webkit-scrollbar-track,
+    &::-webkit-scrollbar-track-piece {
+        background-color: #fafafa;
+        border-radius: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: #eee;
+        border-radius: 6px;
+    }
+    &::-webkit-scrollbar-button,
+    &::-webkit-scrollbar-corner,
+    &::-webkit-resizer {
+        display: none;
+    }
+}

@@ -1,0 +1,134 @@
+.m-cert-item {
+    .pr();
+    .mt(20px);
+    .r(10px);
+    .pointer();
+    padding: 24px 18px;
+    border: 1px solid #cfcfcf;
+    background: linear-gradient(0deg, #ffffff 28.24%, #f5f7fa 100%);
+    transition: 0.2s all;
+    .flex();
+    align-items: flex-end;
+    .u-img {
+        width: 34%;
+        .pb(47%);
+        background-size: cover;
+        background-position: center;
+        transition: 0.2s all;
+        transform-origin: bottom left;
+        border: 1px solid #cfcfcf;
+
+        &.u-card {
+            .pb(34%);
+        }
+    }
+    .m-info {
+        .w(calc(100% - 40%));
+        .pl(10px);
+        box-sizing: border-box;
+        .pr();
+        .u-title {
+            .fz(22px);
+            .bold();
+            .color(#6470a1);
+            .mb(10px);
+            transition: 0.2s all;
+        }
+        .u-tip {
+            .color(#999999);
+            .fz(12px);
+            .mt(2px);
+        }
+    }
+    .u-icon {
+        .pa();
+        .rt(18px,24px);
+        .size(52px);
+    }
+    &:hover {
+        box-shadow: 0 0 10px 0 #e3d29a;
+        border-color: #ffc300;
+        background: linear-gradient(180deg, #ffffff 25.46%, #fff9de 100%);
+        .u-img {
+            transform: rotate(-10deg);
+        }
+        .m-info {
+            .u-title {
+                .color(#ffbe3b);
+            }
+        }
+    }
+    &.tt_item {
+        .u-title {
+            .color(#A18D58);
+        }
+        .u-icon {
+            .size(65px);
+            .rt(18px,18px);
+        }
+    }
+
+    &.m-feast-item {
+        .u-card {
+            background-image: url("../../img/dashboard/holidayCard/feast_img.png");
+            border-color: #eb7373;
+        }
+        .m-info {
+            .u-title {
+                color: #eb7373;
+            }
+        }
+        &:hover {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 1) 25.46%, rgba(255, 231, 222, 1) 100%);
+            border-color: #eb7373;
+            box-shadow: 0 0 10px 0 #f5c3bc;
+            .m-info {
+                .u-title {
+                    color: #cc3737;
+                }
+            }
+        }
+    }
+    &.m-bday-item {
+        .u-card {
+            background-image: url("../../img/dashboard/holidayCard/bday_img.png");
+            border-color: #cf82b8;
+        }
+        .m-info {
+            .u-title {
+                color: #cf82b8;
+            }
+        }
+        &:hover {
+            background: linear-gradient(180deg, #ffffff 25.46%, #ffebf6 100%);
+            border-color: #cf82b8;
+            box-shadow: 0 0 10px 0 #e9d3ed;
+            .m-info {
+                .u-title {
+                    color: #ab4f8f;
+                }
+            }
+        }
+    }
+}
+.m-cert-pages {
+    .pt(20px);
+    overflow-x: auto;
+    .x;
+}
+
+.m-pagination {
+    .x;
+    .pt(20px);
+    overflow-x: auto;
+}
+
+@media screen and (max-width: @ipad-y) {
+    .m-cert-item {
+        .m-info {
+            .u-title {
+                .fz(16px);
+            }
+        }
+    }
+}

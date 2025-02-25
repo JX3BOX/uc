@@ -1,0 +1,136 @@
+.m-dashboard-keycode {
+    .m-table {
+        .cell {
+            color: #232323;
+            .x;
+        }
+        th {
+            .fz(12px);
+        }
+        td {
+            .fz(12px);
+            .x;
+            opacity: 0.75;
+            // cursor: pointer;
+        }
+        tr {
+            border-bottom: 1px solid #eee;
+        }
+        .u-card,
+        .u-code {
+            .flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+        .u-card {
+            .u-count {
+                .flex;
+                .lh(24px);
+                gap: 5px;
+                flex-direction: column;
+                .u-line {
+                    .flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 10px;
+                    span {
+                        text-align: left;
+                        font-family: Consolas;
+                        user-select: none;
+                    }
+                    .u-btn {
+                        .ml(10px);
+                    }
+                }
+            }
+        }
+        .u-code {
+            .flex;
+            gap: 10px;
+        }
+        .u-time {
+            .u-tag {
+                .r(3px);
+                .mr(10px);
+                padding: 2px 10px;
+                border: 1px solid #ddd;
+                &.gray {
+                    color: #a6a9ad;
+                    border-color: #a6a9ad;
+                }
+                &.green {
+                    color: #40bb04;
+                    border-color: #40bb04;
+                }
+            }
+        }
+
+        .u-used {
+            color: #67C23A;
+
+            &.is-used {
+                color: #f00;
+            }
+        }
+    }
+    .m-credit-pages {
+        .pt(20px);
+    }
+    .u-title{
+        .flex;
+        align-items: baseline;
+        i{
+            margin-right: 5px;
+        }
+        .u-only{
+            .ml(20px);
+            font-weight: normal;
+            .fz(12px);
+        }
+    }
+}
+
+.m-boxcoin-tip{
+    .mb(20px);
+    border:1px solid #fba524;
+
+    a{
+        color:#49c10f;
+        text-decoration: underline;
+    }
+    .el-alert__description{
+        line-height:1.8;
+    }
+
+    .m-boxcoin-tip__content{
+        white-space: pre-wrap;
+    }
+}
+
+
+.m-keycode-tab{
+    .pr;
+
+    .el-tabs--border-card{
+        box-shadow: none !important;
+    }
+
+    .u-tab--desc {
+        color: #c00;
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .m-table, .m-packet-null {
+        margin-top: 40px;
+    }
+    .u-title{
+        .u-only {
+            top: 60px;
+        }
+    }
+    .m-credit-pages {
+        overflow: auto;
+    }
+}

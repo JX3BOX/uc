@@ -1,0 +1,22 @@
+{
+    "points":{
+        "label":"积分变动",
+        "icon":"el-icon-sugar"
+    },
+    "boxcoin": {
+        "label":"盒币变动",
+        "icon":"el-icon-coin"
+    },
+    "redpack":{
+        "label":"红包金额",
+        "icon":"el-icon-wallet"
+    },
+    "order":{
+        "label":"订单信息",
+        "icon":"el-icon-present"
+    },
+    "cny": {
+        "label": "金箔变动",
+        "icon": "el-icon-coin"
+    }
+}

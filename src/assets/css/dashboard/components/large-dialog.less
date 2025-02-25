@@ -1,0 +1,22 @@
+.c-large-dialog .el-dialog{
+    .w(60%);
+    height: 70%;
+    .el-dialog__body {
+        height: calc(100% - 54px - 70px);
+        overflow-y: auto;
+        box-sizing: border-box;
+    }
+}
+@media screen and (max-width: @notebook) {
+    .c-large-dialog .el-dialog{
+        .w(90%);
+    }
+}
+@media screen and (max-width: @ipad-y) {
+    .c-large-dialog .el-dialog{
+        margin: 0 !important;
+        .size(100%);
+        max-height: none;
+        .h(100%);
+    }
+}

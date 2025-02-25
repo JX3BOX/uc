@@ -1,0 +1,74 @@
+@import "./work.less";
+
+.m-dashboard-wiki {
+    padding:20px;
+    
+    .u-mark {
+        .ml(5px);
+        padding: 1px 5px 2px 5px;
+        border-radius: 2px;
+        font-style: normal;
+        font-size: 12px;
+        color: #ffffff;
+        background-color: #6f42c1;
+
+        &.pending {
+            background-color: #3a97eb;
+        }
+
+        &.reject {
+            background-color: #f0787a;
+        }
+
+        &.hold {
+            background-color: darkorange;
+        }
+    }
+
+    li{
+        padding-left:40px;
+    }
+
+    .u-tab {
+        // float: left;
+        .pa;left:10px;
+        width: 1em;
+        line-height: 1.3em;
+        margin-top: 4px;
+        margin-right: 5px;
+        padding: 4px 5px;
+        font-size: 12px;
+        background-color: #333333;
+        color: #FFFFFF;
+        border-radius: 3px;
+    }
+
+    .u-desc {
+        margin-top: 2px;
+    }
+
+    .u-check_remark {
+        color: #f0787a;
+    }
+
+    .u-content {
+        color: #666666;
+        margin: 10px 0 0;
+
+        &:after{
+            content:'|';
+            display:inline-block;
+            margin-left:8px;
+            margin-right:8px;
+        }
+    }
+
+    .u-check_remark, .u-content{
+        &:after{
+            content:'|';
+            display:inline-block;
+            margin-left:8px;
+            margin-right:8px;
+        }
+    }
+}

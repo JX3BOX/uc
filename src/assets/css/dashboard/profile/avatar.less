@@ -1,0 +1,375 @@
+.m-profile-avatar {
+    .flex;
+    .mt(20px);
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+// m-profile-box styled media queries
+@media screen and (max-width: @phone) {
+    .m-profile-avatar {
+        .flex;
+        .mt(20px);
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        flex-direction: column;
+    }
+}
+.m-dashboard-avatar .u-profile-btn {
+    .x;
+    .mt(25px);
+    .el-button {
+        .pl(40px);
+        .pr(40px);
+    }
+}
+.m-profile-box {
+    .r(10px);
+    .size(435px,470px);
+    box-sizing: border-box;
+    padding: 20px;
+    border: 1px solid #eee;
+}
+// m-profile-box styled media queries
+@media screen and (max-width: @phone) {
+    .m-profile-box {
+        .r(10px);
+        .size(100%,470px);
+        box-sizing: border-box;
+        padding: 20px;
+        border: 1px solid #eee;
+    }
+}
+.m-profile-avatar-primary {
+    .flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+
+    .u-preview {
+        .clearfix;
+        .x;
+    }
+
+    .u-avatar {
+        .auto(x);
+    }
+    .u-avatar-l {
+        .size(240px);
+    }
+    .u-avatar-m {
+        .size(68px);
+    }
+    .u-avatar-s {
+        .size(24px);
+    }
+
+    .u-upload {
+        .x;
+        border: 1px dashed #eee;
+        .el-upload-dragger {
+            .h(auto);
+            border: none;
+        }
+    }
+
+    .el-upload-list {
+        .none;
+    }
+
+    .u-tip {
+        .fz(12px,2);
+        color: #999;
+    }
+    .u-select {
+        .flex;
+        .flex(x);
+        div {
+            border: 1px dashed #eee;
+            .size(64px);
+            padding: 4px;
+        }
+        .u-avatar {
+            // border-right: 1px dashed #eee;
+            .mr(10px);
+        }
+    }
+}
+.m-profile-avatar-list {
+    .scrollbar();
+    overflow-y: scroll;
+    .u-title {
+        .lh(32px);
+        .bold;
+        .mb(10px);
+    }
+    .u-avatar {
+        .dbi;
+        .pointer;
+        margin: 0 10px 10px 0;
+        &:hover {
+            filter: brightness(120%);
+        }
+    }
+}
+.m-profile-avatar-frame {
+    .el-tabs__content {
+        padding: 10px 20px;
+        border: 1px solid #eee;
+        border-top: none;
+    }
+    .u-decoration-tip {
+        .fz(12px,2);
+        color: #bbb;
+        text-align: right;
+        .pr(6px);
+    }
+    .u-empty {
+        .db;
+        width: 80%;
+        margin: 10px auto;
+    }
+    // 虚拟装扮部分
+    .u-decoration-box {
+        max-height: 420px;
+        overflow-y: auto;
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+        &::-webkit-scrollbar-track,
+        &::-webkit-scrollbar-track-piece {
+            background-color: #fafafa;
+            border-radius: 6px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: #eee;
+            border-radius: 6px;
+        }
+        &::-webkit-scrollbar-button,
+        &::-webkit-scrollbar-corner,
+        &::-webkit-resizer {
+            display: none;
+        }
+    }
+    .u-decoration-list {
+        padding: 0 4px;
+        .mb(10px);
+        .u-title {
+            // .ml(6px);
+            .mb(8px);
+            // padding-bottom: 4px;
+            padding: 0 0 4px 6px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .u-decoration-item {
+            .flex;
+            // justify-content: space-between;
+            // .flex(x);
+            // align-items: flex-start;
+            flex-wrap: wrap;
+
+            .u-picbox {
+                .pr;
+                .mr(4px);
+                cursor: pointer;
+                user-select: none;
+                -webkit-user-select: none;
+                .size(70px,96px);
+                .mb(6px);
+                .u-pic {
+                    .size(70px);
+                    object-fit: contain;
+                }
+                .u-decoration-name {
+                    overflow: hidden; //超出的文本隐藏
+                    text-overflow: ellipsis; //溢出用省略号显示
+                    white-space: nowrap;
+                    .w(100%);
+                    .fz(12px,2);
+                    color: #000;
+                    text-align: center !important;
+                }
+                &.select {
+                    // .size(70px);
+                    .pr;
+                    text-align: center;
+                    color: #4abe84;
+                    background-color: #fff;
+                }
+                &.select:before {
+                    content: "";
+                    .pa;
+                    right: 0;
+                    bottom: 26px;
+                    border: 16px solid #4abe84;
+                    border-top-color: transparent;
+                    border-left-color: transparent;
+                }
+                &.select:after {
+                    content: "";
+                    width: 4px;
+                    height: 12px;
+                    .pa;
+                    right: 6px;
+                    bottom: 28px;
+                    border: 2px solid #fff;
+                    border-top-color: transparent;
+                    border-left-color: transparent;
+                    transform: rotate(45deg);
+                }
+            }
+            // .u-picbox:nth-child(2) {
+            // -webkit-filter: grayscale(100%); /* CSS3 filter方式，webkit内核方式，firefox外的绝大部分的现代浏览器*/
+            // -moz-filter: grayscale(100%); /* 目前没有实现 */
+            // -ms-filter: grayscale(100%);
+            // -o-filter: grayscale(100%);
+            // filter: grayscale(100%); /* CSS3 filter方式，标准写法*/
+            // /*filter: url(filters.svg#grayscale);*/ /* Firefox 4+ */
+            // filter: gray; /* IE 6-9 */
+            // }
+            // .u-picbox:nth-child(6) {
+            //     .mr(0);
+            // }
+        }
+    }
+}
+@media screen and (max-width: @phone) {
+    .m-profile-avatar-primary {
+        .el-upload {
+            .db;
+        }
+        .el-upload-dragger {
+            .w(100%);
+
+            .el-upload__text{
+                .mr(50px);
+                .ml(50px);
+            }
+        }
+    }
+}
+
+.m-profile-avatar-frame {
+    .dbi;
+    .y(top);
+    width: 600px;
+    .el-tabs__header {
+        margin: 0;
+    }
+    .m-profile-tab {
+        padding: 10px 0;
+        // border: 1px solid #eee;
+        border-top: none;
+    }
+    .u-title {
+        font-weight: 300;
+        .x(left);
+        .mt(0);
+    }
+    .u-limit {
+        .fz(13px);
+        font-weight: normal;
+        .ml(5px);
+        color: #f57e03;
+
+        i {
+            font-size: 16px;
+        }
+
+        &.on {
+            color: #49c10f;
+        }
+        a {
+            box-shadow: 0 1px 0 @color-link;
+        }
+    }
+    .u-tip {
+        .fz(12px,2);
+        color: #bbb;
+        .x(left);
+    }
+    .u-list {
+        list-style: none;
+        .clearfix;
+        .pr;
+        padding: 10px;
+        max-height: 420px;
+        overflow-y: auto;
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+        &::-webkit-scrollbar-track,
+        &::-webkit-scrollbar-track-piece {
+            background-color: #fafafa;
+            border-radius: 6px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: #eee;
+            border-radius: 6px;
+        }
+        &::-webkit-scrollbar-button,
+        &::-webkit-scrollbar-corner,
+        &::-webkit-resizer {
+            display: none;
+        }
+    }
+    .u-item {
+        .fl;
+        .mr(20px);
+        .mb(20px);
+        .pointer;
+        .pr;
+        .size(68px);
+
+        &:hover {
+            // outline: 2px solid #49c10f;
+        }
+    }
+    .u-pic {
+        .size(68px);
+        &.isCircle {
+            border-radius: 100%;
+        }
+    }
+    .u-frame-none {
+        border: 8px solid #eee;
+        box-sizing: border-box;
+    }
+    .u-item.on {
+        .u-frame-none {
+            border-color: #e6f0fb;
+        }
+    }
+    @offset: 8px;
+    .u-frame {
+        .pa;
+        .lt(-@offset,-@offset);
+        .db;
+        .size(84px);
+        img {
+            .db;
+        }
+    }
+
+    .u-blocked {
+        cursor: default;
+        // background-color:rgba(255,255,255,.8);
+        // .pa;.lt(0);
+        // .size(100%);
+        .tm(0.6);
+    }
+}
+@media screen and (max-width: @phone) {
+    .m-profile-avatar-primary {
+        padding-right: 0;
+        .mr(0);
+        border-right: none;
+    }
+    .m-profile-avatar-frame {
+        .mr(0);
+        width: 100%;
+    }
+}

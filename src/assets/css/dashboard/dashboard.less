@@ -1,0 +1,44 @@
+.m-dashboard-container {
+    padding: 20px;
+    min-height: calc(100vh - 64px - 48px - 40px);
+
+    h2.u-title {
+        margin: 0;
+        border-bottom: 1px solid @border;
+        padding-bottom: 10px;
+        .mb(10px);
+    }
+}
+// .m-dashboard-person{
+//     padding:25px 35px;
+// }
+@media screen and (max-width: @phone) {
+    .m-dashboard-person {
+        padding: 10px 20px;
+    }
+}
+.m-dashboard-tabs {
+    .u-mail {
+        fill: @color;
+        .y(-3px);
+    }
+    .is-active {
+        .u-mail {
+            fill: @primary;
+        }
+    }
+    .el-tabs__item:hover {
+        .u-mail {
+            fill: @primary;
+        }
+    }
+    .u-tab-icon {
+        min-width: 14px;
+    }
+    .u-count {
+        color: gray;
+        &.is-orange {
+            color: orange;
+        }
+    }
+}

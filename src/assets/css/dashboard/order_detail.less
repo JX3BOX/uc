@@ -1,0 +1,120 @@
+.m-mall-detail {
+    .m-breadcrumb {
+        .flex;
+        justify-content: space-between;
+        .fz(14px);
+        .r(3px);
+        .mb(20px);
+        background-color: #fafbfc;
+        padding: 12px;
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+        .u-back {
+            .pointer;
+            &:hover {
+                .color(#0366d6);
+            }
+        }
+    }
+    .m-content {
+        .r(3px);
+        .flex;
+        flex-direction: column;
+        gap: 20px;
+        background-color: #fafbfc;
+        padding: 30px 20px;
+        box-sizing: border-box;
+        border: 1px solid #ddd;
+        min-height: 400px;
+        .m-address {
+            .flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 20px;
+        }
+        .m-order {
+            .flex;
+            gap: 40px;
+            padding: 20px;
+            .m-img {
+                .flex;
+                .size(240px,auto);
+                flex-direction: column;
+                gap: 20px;
+                img {
+                    .w(100%);
+                }
+                .u-link {
+                    .db;
+                    .x;
+                    .pointer;
+                }
+            }
+            .el-descriptions {
+                width: 100%;
+                .u-box {
+                    .flex;
+                    flex-direction: column;
+                    b {
+                        .bold;
+                        .color(#f00);
+                    }
+                }
+            }
+            .u-button {
+                .flex;
+                gap: 20px;
+            }
+            .m-text {
+                .flex;
+                flex: 1;
+                flex-direction: column;
+                gap: 10px;
+                .u-textarea {
+                    width: 100%;
+                }
+                .u-add_comment {
+                    .indent(2em);
+                    .fz(12px);
+                    .color(#888);
+                }
+            }
+            .m-comment {
+                .flex;
+                gap: 20px;
+                justify-content: space-between;
+                align-items: baseline;
+            }
+        }
+        .m-button {
+            padding: 20px;
+            .flex;
+            justify-content: center;
+            gap: 20px;
+            .el-button + .el-button {
+                margin: 0;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .m-mall-detail {
+        .m-content {
+            .m-order {
+                .flex;
+                flex-direction: column;
+                .m-address {
+                    .w(100%);
+                }
+                .m-goods {
+                    .flex;
+                    flex-direction: column;
+                    .u-img {
+                        .size(100%,auto);
+                    }
+                }
+            }
+        }
+    }
+}

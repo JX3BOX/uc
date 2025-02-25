@@ -1,0 +1,90 @@
+.m-profile-basic{
+    max-width:800px;
+
+    padding:5px 10px;
+
+    .u-name {
+        .u-value {
+            .bold;
+        }
+        .mb(5px);
+    }
+
+    .u-rename {
+        .pr;
+        padding:0 5px;
+        .mb(10px);
+        // .w(280px);
+
+        .u-rename-input{
+            .mb(10px);
+            .mr(10px);
+        }
+
+        .el-icons-status {
+            .pa;
+            .rt(50px, 14px);
+        }
+        .el-icon-success {
+            color: #67c23a;
+        }
+        .el-icon-error {
+            color: #f00;
+        }
+
+        .el-alert {
+            .mb(10px);
+            padding: 0 5px 0 10px;
+            line-height: 2.5;
+        }
+    }
+
+    .u-edit {
+        margin-left:5px;
+    }
+
+    .u-bio {
+        textarea {
+            font-family: "Arial";
+        }
+    }
+
+    .u-server-tip{
+        .ml(10px);
+        .fz(12px);
+        color:#999;
+        i{
+            .fz(16px);
+        }
+    }
+
+    .u-submit{
+        .w(180px);
+    }
+
+    .el-form-item{
+        .mb(20px);
+    }
+
+    .el-dialog__body{
+        padding-top:10px;
+        padding-bottom:10px;
+    }
+    .u-tip{
+        .mb(10px);
+    }
+}
+@media screen and (max-width: @phone) {
+    .m-profile-basic{
+        padding:0;
+        .el-form-item__label {
+            .x(left);
+        }
+        .u-server{
+            .db;
+        }
+        .u-btns{
+            .x;
+        }
+    }
+}

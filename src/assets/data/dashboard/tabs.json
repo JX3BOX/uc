@@ -1,0 +1,31 @@
+{
+    "themeTab": [
+        { "name": "frame", "icon": "el-icon-camera", "label": "头像框" },
+        { "name": "theme", "icon": "el-icon-orange", "label": "主题风格" },
+        { "name": "honor", "icon": "el-icon-collection-tag", "label": "称号" },
+        { "name": "medal", "icon": "el-icon-medal", "label": "勋章" },
+        { "name": "emotion", "icon": "el-icon-picture-outline-round", "label": "表情包" }
+    ],
+    "profileTab": [
+        { "name": "profile", "icon": "el-icon-user", "label": "基本资料" },
+        { "name": "avatar", "icon": "el-icon-camera", "label": "修改头像" },
+        { "name": "pwd", "icon": "el-icon-lock", "label": "修改密码" },
+        { "name": "notice", "icon": "el-icon-message", "label": "通知中心" },
+        { "name": "connect", "icon": "el-icon-connection", "label": "绑定账号" },
+        { "name": "address", "icon": "el-icon-map-location", "label": "地址管理" },
+        { "name": "auth", "icon": "el-icon-s-check", "label": "账号认证" }
+    ],
+    "mallTab": [
+        { "name": "mall", "icon": "el-icon-shopping-bag-1", "label": "商城订单" },
+        { "name": "orders", "icon": "el-icon-shopping-bag-2", "label": "系统订单" }
+    ],
+    "msgTab": [
+        { "name": "msg", "icon": "el-icon-message", "label": "通知" },
+        { "name": "letter", "icon": "el-icon-chat-dot-square", "label": "私信" }
+    ],
+    "antiqueTab":[
+        { "name": "certification", "icon": "el-icon-medal", "label": "电子证书" },
+        { "name": "holidayCard", "icon": "el-icon-sugar", "label": "节日贺卡" },
+        { "name": "birthdayCard", "icon": "el-icon-present", "label": "生日贺卡" }
+    ]
+}

@@ -1,0 +1,79 @@
+@import "./work.less";
+
+.m-dashboard-box-list {
+    .on .u-primary {
+        // .tm(0.4);
+    }
+    .u-label {
+        .mr(5px);
+        .fz(12px);
+        padding: 2px 5px;
+        .r(2px);
+    }
+    .u-hasChecked {
+        background-color: #e4e7ed;
+        color: #989898;
+    }
+    .u-hasNotChecked {
+        background-color: #fba524;
+        color: #fff;
+    }
+    .u-content {
+        .fz(14px, 2);
+        color: #555;
+    }
+    .u-time {
+        .db;
+        .fz(12px, 2);
+        color: #999;
+    }
+    .u-msg-detail {
+        .ml(10px);
+        cursor: pointer;
+        display: inline-flex;
+        gap: 3px;
+        align-items: center;
+        color:@color-link;
+        &:hover {
+            color: @pink;
+        }
+    }
+    .u-msg-link {
+        .ml(10px);
+        &:hover {
+            color: @pink;
+        }
+    }
+
+    .u-action {
+        .pa;
+        .rb(10px, 15px);
+    }
+}
+
+.m-dashboard-box-pages {
+    .mt(20px);
+    .x;
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.m-dashboard-box-null {
+    .mt(10px);
+}
+
+.m-dashboard-msg-header {
+    .pr;
+    .flex;
+    align-items: center;
+    gap: 10px;
+    .u-read-all {
+        .mb(10px);
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .m-dashboard-msg-header {
+        flex-wrap: wrap;
+    }
+}
