@@ -1,0 +1,102 @@
+.m-page-cart {
+    .m-cart-title {
+        .flex;
+        gap: 10px;
+        align-items: center;
+    }
+    .el-dialog__body {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .m-carts {
+        .flex;
+        flex-direction: column;
+        gap: 10px;
+        max-height: 500px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        .scrollbar();
+        .m-cart-item {
+            .flex;
+            justify-content: space-between;
+            gap: 10px;
+            border-bottom: 1px dashed #eee;
+            padding: 10px;
+            .r(4px);
+            // height: 90px;
+            box-sizing: border-box;
+            .m-info,
+            .m-left {
+                .flex;
+                align-items: center;
+                gap: 10px;
+                cursor: pointer;
+            }
+            .u-exchange {
+                margin-top: 5px;
+                font-size: 12px;
+                .flex;
+                gap: 5px;
+            }
+            .u-tip {
+                margin-top: 5px;
+                font-size: 12px;
+                color: #f56c6c;
+            }
+            .u-amount {
+                .flex;
+                gap: 10px;
+                align-items: center;
+            }
+            .is-disabled {
+                .u-exchange,
+                .u-frame,
+                .u-title {
+                    opacity: 0.5;
+                }
+            }
+            &:hover {
+                background-color: #f6f8fa;
+            }
+            .u-frame {
+                .size(48px);
+                background-color: @bg-light;
+                padding: 5px;
+                .r(4px);
+                border: 1px solid #eee;
+            }
+        }
+    }
+    .m-footer {
+        .flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        padding: 5px;
+        .m-info {
+            .flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .u-total {
+            .flex;
+            gap: 10px;
+        }
+        .u-total-item{
+            .flex;
+            align-items: center;
+            gap:3px;
+            margin-right:10px;
+            span{
+                .bold;
+            }
+            b{
+                color:#c00;
+                .bold;
+            }
+        }
+        .u-check-all {
+            margin-top: 2px;
+        }
+    }
+}

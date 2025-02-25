@@ -1,0 +1,140 @@
+.dragon {
+    .m-content {
+        background: url("@{dragon_blindbox}bg.jpg") top center no-repeat;
+        background-size: auto 1000px;
+    }
+    .m-left {
+        .logo {
+            .pa;
+            .lb(100px,150px);
+            .w(220px);
+            margin: 0;
+            .u-info {
+                .pa;
+                .pointer;
+                .rt(-20px,0);
+                .size(20px);
+                white-space: pre-line;
+            }
+        }
+        .m-box {
+            .lt(126px,0);
+            .mt(60px);
+            &.active {
+                .u-box {
+                    animation: swing 2s ease-in-out forwards;
+                    &:nth-child(odd) {
+                        animation-delay: 0.05s;
+                    }
+                }
+            }
+            .u-box {
+                .size(82px,238px);
+                background: none;
+                .u-img {
+                    .full;
+                    .lt(0);
+                    margin: 0;
+                    &:hover {
+                        transform: translateY(-10px);
+                    }
+                }
+                &.active {
+                    animation: swing 2s ease-in-out forwards;
+                }
+                &.u-box-1 {
+                    .lt(110px,20px);
+                }
+                &.u-box-2 {
+                    .lt(324px,0);
+                }
+                &.u-box-3 {
+                    .lt(608px,0);
+                }
+                &.u-box-4 {
+                    .lt(20px,184px);
+                }
+                &.u-box-5 {
+                    .lt(224px,184px);
+                }
+                &.u-box-6 {
+                    .lt(488px,120px);
+                }
+                &.u-box-7 {
+                    .lt(808px,36px);
+                }
+                &.u-box-8 {
+                    .lt(110px,368px);
+                }
+                &.u-box-9 {
+                    .lt(528px,338px);
+                }
+                &.u-box-10 {
+                    .lt(658px,228px);
+                }
+            }
+        }
+    }
+    .m-right {
+        .m-prize .m-scroll .m-scroll-box .u-item {
+            background-color: #ffe58b;
+        }
+        .m-lottery {
+            .m-random {
+                .pl(240px);
+                justify-content: flex-start;
+                background: url("@{dragon_blindbox}random.svg") center center no-repeat;
+                .u-price {
+                    .fz(30px);
+                    .pl(0);
+                    .mt(3px);
+                    background: none;
+                    filter: brightness(110%);
+                    color: #99574e;
+                }
+            }
+            .m-open {
+                background: url("@{dragon_blindbox}open.svg") center center no-repeat;
+            }
+        }
+    }
+    @media screen and(max-width:@ipad) {
+        .m-left .m-box {
+            left: 10px;
+        }
+    }
+    @keyframes swing {
+        0% {
+            transform: rotate(0deg) translateY(0px);
+            opacity: 1;
+        }
+        5% {
+            transform: rotate(15deg);
+        }
+        10% {
+            transform: rotate(0deg);
+        }
+        15% {
+            transform: rotate(-15deg);
+        }
+        20% {
+            transform: rotate(0deg);
+        }
+        25% {
+            transform: rotate(15deg);
+        }
+        30% {
+            transform: rotate(0deg);
+        }
+        35% {
+            transform: rotate(-15deg);
+        }
+        40% {
+            transform: rotate(0deg) translateY(0px);
+        }
+        100% {
+            transform: rotate(0deg) translateY(500px);
+            opacity: 0;
+        }
+    }
+}

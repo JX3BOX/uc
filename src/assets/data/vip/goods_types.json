@@ -1,0 +1,43 @@
+[
+    {
+        "name": "全部",
+        "key": "",
+        "icon": "el-icon-menu"
+    },
+    {
+        "name": "实物",
+        "key": "entity",
+        "icon": "el-icon-s-goods",
+        "sub_category": [
+            { "name": "定制纪念品", "key": "jdt" },
+            { "name": "其它", "key": "other" }
+        ]
+    },
+    {
+        "name": "虚拟",
+        "key": "virtual",
+        "icon": "el-icon-s-ticket",
+        "sub_category": [
+            { "name": "主题装扮", "key": "skin" },
+            { "name": "魔卡", "key": "palu" },
+            { "name": "头像框", "key": "avatar" },
+            { "name": "表情包", "key": "emotion" }
+        ]
+    },
+    {
+        "name": "系统",
+        "key": "system",
+        "icon": "el-icon-s-finance",
+        "sub_category": [
+            { "name": "专业版", "key": "vip", "link": "/vip/premium", "target": "_blank" },
+            { "name": "改名卡", "key": "rename2", "link": "/vip/rename", "target": "_blank" },
+            { "name": "铭牌", "key": "namespace2", "link": "/vip/namespace", "target": "_blank" },
+            {
+                "name": "点月卡",
+                "key": "dianyueka",
+                "link": "https://charge.xoyo.com/pay?item=jx3&__from=jx3box",
+                "target": "_blank"
+            }
+        ]
+    }
+]

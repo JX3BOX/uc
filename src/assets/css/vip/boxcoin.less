@@ -1,0 +1,52 @@
+.m-boxcoin{
+    max-width:800px;
+    .auto(x);
+    padding:40px 0;
+}
+
+.m-boxcoin-form{
+    .u-price{
+        color:#c00;
+        .fz(24px);
+    }
+    .u-btn{
+        .w(120px);
+    }
+    .u-desc{
+        background-color:@bg-light;
+        border:1px solid #eee;
+        .r(4px);
+        padding:10px;
+        .mb(10px);
+        .fz(13px,2);
+    }
+}
+
+.m-boxcoin-result{
+    .mt(200px);
+    a:hover{
+        text-decoration:underline;
+    }
+}
+
+@media screen and (max-width:@phone){
+    .m-boxcoin{
+        margin:0 20px;
+    }
+    .m-boxcoin-form{
+        .el-form-item__label{
+            background-color:@bg-light;
+            .db;
+            padding:0 10px;
+            margin-bottom:10px;
+            .lh(32px);
+        }
+        .el-radio{
+            .mb(10px);
+            .ml(0) !important;
+        }
+    }
+    .m-boxcoin-result{
+        .mt(20px);
+    }
+}

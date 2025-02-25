@@ -1,0 +1,131 @@
+.m-page-order {
+    padding: 20px;
+    .el-dialog {
+        max-width: 800px;
+    }
+    .m-breadcrumb {
+        .flex;
+        justify-content: space-between;
+        .fz(14px);
+        .r(5px);
+        .mb(20px);
+        background-color: #fff;
+        padding: 12px;
+        .u-back {
+            .pointer;
+            &:hover {
+                .color(#0366d6);
+            }
+        }
+    }
+
+    .el-dialog__body {
+        padding: 0;
+    }
+    .el-divider {
+        margin: 20px 0;
+    }
+    .el-divider__text {
+        color: #888;
+        .fz(12px);
+    }
+    .m-goods {
+        .flex;
+        padding: 10px 20px 40px 20px;
+        gap: 22px;
+        .u-img {
+            .size(200px);
+            flex-shrink: 0;
+            .u-pic {
+                .r(4px);
+            }
+            .u-title {
+                .fz(12px,2);
+                .bold;
+                color: #3d454d;
+
+                &:hover {
+                    color: @primary;
+                }
+            }
+            .u-postage {
+                .fz(12px,2);
+                color: #999;
+            }
+        }
+        .m-info {
+            .flex;
+            flex: 1;
+            flex-direction: column;
+            gap: 10px;
+            .u-title {
+                .fz(16px,2);
+                .break(2);
+            }
+            .u-span {
+                .fz(14px,2);
+                .color(#666);
+            }
+            .m-line {
+                .flex;
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+            .u-button {
+                .mt(20px);
+                .auto(x);
+            }
+            b {
+                color: #c00;
+            }
+        }
+        .m-address {
+            // .flex;
+            .m-button {
+                .mb(10px);
+            }
+            .u-my-address {
+                .r(5px);
+                // .w(420px);
+                .flex;
+                box-sizing: border-box;
+                flex-direction: column;
+                padding: 10px 20px;
+                border: 2px double #ddd;
+                color: #555;
+                .u-label {
+                    .fz(12px);
+                    color: #111;
+                    .mb(10px);
+                }
+                .u-addr {
+                    .fz(13px,2);
+                    .bold;
+                    color: #c00;
+                }
+            }
+        }
+        .u-no-address {
+            font-size: 12px;
+            color: #999;
+        }
+    }
+    .m-order-step {
+        .u-coin {
+            .mr(20px);
+            b {
+                .ml(5px);
+            }
+        }
+    }
+
+    .u-buy {
+        .w(160px);
+        .mt(10px);
+        // .auto(x);
+    }
+    .m-op {
+        .flex;
+        justify-content: flex-end;
+    }
+}

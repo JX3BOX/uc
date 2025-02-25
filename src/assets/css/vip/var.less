@@ -1,0 +1,31 @@
+.m-vip-container{
+    .mt(@header-height + @bread-height);
+    min-height:calc(100vh - @header-height - @bread-height - 60px);
+}
+
+.scrollbar(@w:2px,@color:#0003,@bgc:hsla(0, 0%, 87%, 0.2)) {
+    &::-webkit-scrollbar {
+        width: @w;
+        height: @w;
+    }
+    &::-webkit-scrollbar-track-piece {
+        background-color: @bgc;
+        border-radius: 6px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: @color;
+        border-radius: 6px;
+        transition: all 0.2s ease-in-out;
+    }
+    &::-webkit-scrollbar-button,
+    &::-webkit-scrollbar-corner,
+    &::-webkit-resizer {
+        display: none;
+    }
+}
+
+@event : 'https://img.jx3box.com/image/event/';
+@kv_blindbox: "https://cdn.jx3box.com/design/event/lottery/";
+@dragon_blindbox: "https://cdn.jx3box.com/design/event/lottery/dragon/";
+@hacker_blindbox: "https://cdn.jx3box.com/design/event/lottery/hacker/";

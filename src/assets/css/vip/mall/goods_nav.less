@@ -1,0 +1,108 @@
+.m-mall-nav {
+    .r(5px);
+    .flex;
+    flex-shrink: 0;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 10px;
+
+    .u-link,.u-address{
+        .fz(13px);
+        font-weight: normal;
+    }
+    .u-link {
+        .mb(10px);
+    }
+    .u-address {
+        background-color: #fff !important;
+        border-color: @color-link !important;
+        .ml(0);
+        &:hover {
+            color: @color-link;
+        }
+        .mb(20px);
+    }
+
+
+    .u-all,
+    .u-title {
+        .color(#3d454d);
+        &.active,
+        &:not(.active):hover {
+            .color(#0366d6);
+        }
+        &.active {
+            .bold;
+        }
+        .db;
+        padding: 8px;
+        .fz(14px);
+        .flex;
+        align-items: center;
+        .pointer;
+    }
+    .u-icon {
+        .fz(16px);
+        .mr(3px);
+    }
+    .u-arrow {
+        font-weight: normal;
+        font-style: normal;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 10px;
+        .mr(5px);
+        color: #888;
+    }
+
+
+    .u-children-list {
+        .flex;
+        .pl(20px);
+        flex-direction: column;
+    }
+    .u-child {
+        .pointer;
+        .flex;
+        align-items: center;
+        padding: 5px 0;
+        .color(#3d454d);
+        &.active{
+            .color(@color-link);
+        }
+        &:not(.active):hover {
+            .color(@pink);
+        }
+        &.active {
+            .bold;
+        }
+        .fz(14px);
+    }
+}
+
+.m-mall-profile{
+    padding:15px;
+    .r(3px);
+    border:1px solid @color-link;
+    background-color:#fff;
+    .mb(10px);
+    .el-divider{
+        .mt(10px);
+    }
+    .el-divider__text, .el-link{
+        .fz(12px);
+    }
+    .u-credit{
+        .flex;
+        justify-content: space-between;
+        .fz(12px,2.2);
+        b{
+            // color:@color-link;
+            .bold;
+        }
+        em{
+            color:#999;
+            // .ml(5px);
+            font-style: normal;
+        }
+    }
+}

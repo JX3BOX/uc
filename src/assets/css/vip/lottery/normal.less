@@ -1,0 +1,66 @@
+.normal {
+    .m-content {
+        background: url("@{kv_blindbox}bg.jpg") top center no-repeat;
+        background-size: auto 1000px;
+    }
+    .m-left {
+        .m-box {
+            .lb(88px,0);
+            &.active .u-box .u-img {
+                opacity: 1;
+                animation: active_flash 2s;
+            }
+            .u-box {
+                .pa;
+                .size(244px, 208px);
+                background: url("@{kv_blindbox}base.svg") bottom center no-repeat;
+                transition: all 0.4s ease 0s;
+
+                .u-img {
+                    .pa;
+                    .pointer;
+                    .lt(50%);
+                    .size(158px,180px);
+                    margin: -168px 0 0 -80px;
+                    &:hover {
+                        transform: translateY(-10px);
+                    }
+                }
+                &.active .u-img {
+                    opacity: 1;
+                    animation: active_flash 2s;
+                }
+                &.u-box-1 {
+                    .lt(110px,0);
+                }
+                &.u-box-2 {
+                    .lt(374px,0);
+                }
+                &.u-box-3 {
+                    .lt(638px,0);
+                }
+                &.u-box-4 {
+                    .lt(-20px,154px);
+                }
+                &.u-box-5 {
+                    .lt(244px,154px);
+                }
+                &.u-box-6 {
+                    .lt(508px,154px);
+                }
+                &.u-box-7 {
+                    .lt(772px,154px);
+                }
+                &.u-box-8 {
+                    .lt(110px,308px);
+                }
+                &.u-box-9 {
+                    .lt(374px,308px);
+                }
+                &.u-box-10 {
+                    .lt(638px,308px);
+                }
+            }
+        }
+    }
+}

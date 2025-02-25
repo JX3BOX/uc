@@ -1,0 +1,78 @@
+.m-vip-event {
+    padding-top: 40px;
+    .m-vip-title {
+        margin-bottom: 40px;
+    }
+}
+.m-vip-event-index-list {
+    .auto(x);
+    max-width: 520px * 3;
+    img {
+        transition: 0.2s ease-in-out;
+    }
+    .u-desc {
+        .fz(14px, 2);
+        color: @color;
+        .x;
+    }
+    .u-item {
+        .db;
+        &:hover {
+            img {
+                filter: saturate(115%) brightness(115%);
+            }
+        }
+        .mb(20px);
+    }
+}
+.m-event-item {
+    .u-box {
+        .h(100%);
+        .w(1080px);
+        .auto(x);
+    }
+}
+
+.c-breadcrumb {
+    .u-cart {
+        // breadcrumb已经fixed了
+        // position: fixed;
+        // right: 30px;
+        // top: 78px;
+        float: right;
+        margin-right: 10px;
+        margin-top: 2px;
+        .u-icon {
+            font-size: 24px;
+            user-select: none;
+            cursor: pointer;
+        }
+        &.is-disabled {
+            opacity: 0.5;
+            .u-icon {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+        }
+    }
+}
+
+.c-fly-item,
+.c-fly-item > img {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    transition: transform 0.5s;
+    z-index: 999;
+}
+.c-fly-item {
+    visibility: hidden;
+    margin: -25px 0 0 -25px;
+    transition-timing-function: linear;
+    opacity: 0.5;
+}
+.c-fly-item > img {
+    transition-timing-function: cubic-bezier(0.09, 0.59, 0, 1.03);
+    .r(5px);
+    outline: 1px solid #f56c6c;
+}
