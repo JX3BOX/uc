@@ -1,0 +1,121 @@
+.c-sidebar-left {
+    padding: 10px 0 0 0;
+}
+.m-nav-publish,.m-nav-bucket{
+    margin:10px 20px !important;
+    .db;
+    box-sizing: border-box;
+    i{
+        .fz(16px);
+        .y(-1px);
+    }
+}
+.m-nav-bucket{
+    // .u-bucket{
+    //     fill:@color-link;
+    //     .y(-3px);
+    //     .mr(5px);
+    // }
+    background-color: #fff !important;
+    border-color:@color-link !important;
+    color:@color-link;
+    &:hover,&:focus{
+        color:#f39 !important;
+        border-color:#f39 !important;
+        .u-bucket{
+            fill:#f39;
+        }
+    }
+}
+// .m-nav {
+//     // padding:0 10px;
+//     .u-title {
+//         padding: 10px 20px;
+//         border-bottom: 1px solid #eee;
+//         margin:10px 0;
+//     }
+// }
+.m-nav-group {
+    // margin-top:5px;
+    // margin-bottom:10px;
+
+    .u-title{
+        padding-left:25px;
+        .bold;
+    }
+
+    a {
+        .db;
+        // border-bottom: 1px solid #eee;
+        .fz(14px, 32px);
+        padding: 4px 30px;
+        color: #555;
+        svg,i,img{
+            .mr(5px);
+        }
+        svg{
+            .size(16px);
+            .y(-3px);
+            fill:#555;
+        }
+        i{
+            .fz(16px);
+            .y(-1px);
+        }
+        .u-blank{
+            .mt(7px);
+            .fr;
+        }
+
+        &.disabled{
+            .tm(0.4);
+            cursor: default;
+        }
+
+        transition:0.1s ease-in-out;
+        &:hover {
+            // background-color: #fff;
+            // color:@color-link;
+            svg{fill:@color-link;}
+            background-color:@bg-gray;
+        }
+
+        border-top:1px solid transparent;
+        border-bottom:1px solid transparent;
+        &.on {
+            background-color: #fff;
+            color:@color-link;
+            svg{fill:@color-link;}
+            .bold;
+            border-top:1px solid #eee;
+            border-bottom:1px solid #eee;
+        }
+    }
+
+    .router-link-exact-active{
+        color:@color-link;
+        .bold;
+
+        .u-count{
+            color:@pink;
+        }
+    }
+
+    .u-count{
+        // .fr;
+        color:@color-link;
+        .fz(12px);
+        .ml(10px);
+        &:before{
+            content:"("
+        }
+        &:after{
+            content:")"
+        }
+
+        &.isNull{
+            color:#bbb !important;
+        }
+        font-weight: normal;
+    }
+}

@@ -1,0 +1,126 @@
+.m-publish-namespace-box {
+    // padding-top: 20px;
+}
+.m-publish-namespace-header {
+    // word-spacing: 2px;
+    // .color(#666);
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px dashed #888;
+    background-color: #f4faff;
+    color: #606266;
+    margin: 30px 0 40px 0;
+    font-size: 14px;
+    line-height: 2;
+    a {
+        .color(#0366d6);
+    }
+    b {
+        .color(#fba524);
+    }
+    span {
+        margin-right: 5px;
+    }
+    .u-tip {
+        .fz(14px, 2);
+        margin-bottom: 10px;
+    }
+    .u-btn-buy {
+        .color(#fff);
+        .mr(10px);
+    }
+    .u-count-txt {
+        .mr(20px);
+        .mb(10px);
+    }
+    .u-skip {
+        .fz(14px);
+        .color(#f00);
+    }
+}
+.m-namspace-tips {
+    margin-bottom: 10px;
+}
+
+// 展示列表
+.m-namespace-list {
+    // display: flex;
+    // flex-wrap: wrap;
+    // flex-direction: row;
+    .u-namespace-item {
+        // width: 25%;
+        margin-bottom: 20px;
+        .u-item {
+            padding: 10px;
+            // margin: 10px;
+            display: flex;
+            justify-content: space-between;
+            background-color: @bg-light;
+            border: 1px solid #eee;
+            .r(5px);
+            .u-box {
+                display: flex;
+                flex-direction: column;
+                .u-title {
+                    display: flex;
+                    align-items: baseline;
+                    .bold;
+                    .u-icon {
+                        margin-right: 5px;
+                        .fz(18px);
+                        .pr;top:2px;
+                    }
+                    .fz(14px,2);
+                }
+                .u-name{
+                    .color(@color-link);
+                }
+                .u-desc {
+                    .fz(12px,2);
+                    color:#999;
+                    display: flex;
+                    flex-direction: column;
+                }
+                .u-time{
+
+                }
+            }
+            .u-action {
+                align-self: flex-end;
+            }
+        }
+    }
+}
+.m-namespace-pages {
+    padding-top: 40px;
+    overflow-x: auto;
+    .x;
+}
+@media screen and (max-width: @ipad) {
+    .m-namespace-list .el-col {
+        width: 50%;
+    }
+}
+@media screen and (max-width: @phone) {
+    .m-publish-namespace-header {
+        .u-tip {
+            .fz(14px);
+        }
+        .u-count-txt {
+            .db;
+        }
+    }
+    .m-namespace-list .el-col {
+        width: 100%;
+    }
+}
+
+.m-publish-namespace-form {
+    .el-alert {
+        padding: 0 10px;
+    }
+    .u-submit {
+        .w(160px);
+        .x;
+    }
+}

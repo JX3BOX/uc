@@ -13,6 +13,12 @@ module.exports = {
             template: "public/index.html",
             filename: "dashboard/index.html",
         },
+        publish: {
+            title: "发布中心 - JX3BOX",
+            entry: "src/pages/publish/index.js",
+            template: "public/index.html",
+            filename: "publish/index.html",
+        }
     },
     //❤️ Proxy ~
     devServer: {

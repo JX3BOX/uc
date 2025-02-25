@@ -1,0 +1,215 @@
+.m-publish{
+    padding:20px;
+}
+.m-title{
+    margin:0;
+    font-weight:300;
+    border-bottom:1px solid #eee;
+    padding-bottom:10px;
+    margin-bottom:10px;
+}
+.c-breadcrumb .u-channel-logo{
+    padding:3px;
+}
+
+.m-publish-box {
+    padding:40px;
+    .el-divider__text {
+        color: #888;
+        font-weight: 300;
+    }
+    .el-radio{
+        // .mb(10px);
+        .ml(0) !important;
+    }
+
+    .m-publish-doc {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: 20px 0 -20px 0;
+    }
+
+    .u-illegal-alert {
+        .mb(20px);
+        width: 445px;
+
+        i {
+            .pr;
+            top: 2px;
+        }
+    }
+
+    .u-actions {
+        .flex;
+        gap: 10px;
+    }
+}
+@media screen and (max-width: @ipad) {
+    .m-publish-box {
+        padding: 10px;
+
+        .el-radio-group{
+            .db;.w(100%);
+            white-space: nowrap;
+            overflow-x: auto;
+        }
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .el-form-item__label {
+        float: none;
+    }
+    .el-form-item__content {
+        margin-left: 0 !important;
+    }
+}
+
+.m-publish-buttons {
+    padding: 40px 0;
+    .x;
+
+    button {
+        .w(120px);
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .m-publish-zlp {
+        .db;
+    }
+}
+
+.m-publish-xf {
+    .el-form-item{
+        .mb(0);
+    }
+    .u-pic {
+        .db;
+        .size(48px);
+        background-color: @bg-black;
+        .r(4px);
+        transition: 0.1s ease-in;
+        .tm(0.4);
+        box-sizing: border-box;
+    }
+    .u-txt {
+        .db;
+        .x;
+        .fz(14px, 2);
+        white-space: nowrap;
+        overflow: hidden;
+        .w(48px);
+    }
+
+    .el-radio {
+        .ml(0);
+        .mr(15px);
+    }
+    .el-radio__input {
+        .none;
+    }
+    .el-radio__label {
+        .db;
+        padding-left: 0;
+    }
+
+    .is-checked {
+        .u-pic {
+            border: 3px solid @primary;
+            // filter: saturate(120%)  brightness(120%);
+            .tm(1);
+        }
+        .u-txt {
+            .bold;
+        }
+    }
+}
+
+.m-publish-datalist {
+    .u-data-input {
+        .none;
+    }
+}
+
+.m-publish-box {
+    .c-large-dialog {
+        line-height: 1.5 !important;
+    }
+
+    .isRequired .el-form-item__label {
+        &:after {
+            content: "*";
+            color: #fc3c3c;
+            .ml(3px);
+        }
+    }
+}
+
+.m-publish-content{
+    .pr;
+    .c-editor-markdown{
+        .mb(30px);
+    }
+}
+.m-publish-editormode{
+    .pa;.rt(0,28px);
+    .w(auto) !important;
+}
+@media screen and (max-width:@phone){
+    .m-publish-editormode{
+        .ps;
+        .mb(5px);
+    }
+}
+
+.w-select {
+    position: relative;
+    .flex;
+    align-items: center;
+    .u-select-label {
+        background-color: #f5f7fa;
+        color: #909399;
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 4px;
+        padding: 0 20px;
+        white-space: nowrap;
+        border-right: 0;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        box-shadow: 1px 0 0 0 #dcdfe6 inset, 0 1px 0 0 #dcdfe6 inset, 0 -1px 0 0 #dcdfe6 inset;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+    .el-select {
+        .el-input__wrapper,
+        .el-select__wrapper {
+            min-width: 165px;
+            height: 40px;
+            line-height: 40px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            box-sizing: border-box;
+            box-shadow: 0 1px 0 0 #dcdfe6 inset, 0 -1px 0 0 #dcdfe6 inset, 0 0 0 1px #dcdfe6 inset;
+        }
+
+        .el-input__inner {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+    }
+    .u-select {
+        .el-input__suffix-inner {
+            position: absolute;
+            right: 10px;
+            top: 13px;
+        }
+    }
+}

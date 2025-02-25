@@ -1,0 +1,121 @@
+.m-index{
+
+    .m-title{
+        border-bottom: none;
+
+        .u-btn {
+            float: right;
+            .pr;
+            top: 8px;
+        }
+    }
+    .u-desc{
+        .fz(14px);
+        font-style: italic;
+        .ml(20px);
+    }
+
+    .u-nav{
+        .x;
+        svg,i {
+            .fz(40px);
+            .color(@color);
+            .size(40px);
+            .db;.auto(x);
+            fill:@color;
+            .mb(10px);
+        }
+        span{
+            .fz(18px,2);
+            .db;
+            font-weight:300;
+            color:@color;
+        }
+        a{
+            // .size(200px,160px);
+            .db;
+            // background-color:@bg-light;
+            // padding:10px;
+            // .r(4px);
+            padding:30px 0;
+
+            transition:0.1s ease-in;
+            &:hover{
+                background-color:@bg-gray;
+                svg{fill:@bg-black;}
+                span{color:@bg-black}
+            }
+        }
+        .el-divider__text{
+            color:#999;
+            .fz(12px);
+        }
+        .disabled{
+            opacity: 0.2;
+            cursor: default;
+        }
+        .u-icon {
+            .fz(40px);
+            .color(@color);
+            .size(40px);
+            .db;.auto(x);
+            fill:@color;
+            .mb(10px);
+        }
+    }
+    .el-card__body{
+        padding:0;
+    }
+    .el-col{
+        .mb(10px);
+    }
+}
+
+@media screen and (max-width:@mininote){
+    .m-index{
+        .el-col{
+            .w(20%);
+        }
+    }
+}
+
+@media screen and (max-width:@ipad-y){
+    .m-index{
+        .el-col{
+            .w(25%);
+        }
+    }
+}
+
+@media screen and (max-width:@phone){
+    .m-index{
+        .el-col{
+            .w(50%);
+        }
+        .u-nav {
+            svg,i{
+                .size(28px);
+            }
+            span{
+                .fz(1em);
+            }
+            .u-icon{
+                .size(28px);
+            }
+        }
+    }
+}
+@media screen and (max-width:@ip5){
+    .m-index{
+        .el-col{
+            .w(50%);
+        }
+    }
+}
+
+.m-index-warning{
+    a{
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+    }
+}

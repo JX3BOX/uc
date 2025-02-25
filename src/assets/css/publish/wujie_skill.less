@@ -1,0 +1,87 @@
+.m-publish-wujie-skill {
+    // 已选数据
+    .m-selected-skills {
+        height: 80px;
+        border: 1px solid #ddd;
+        padding: 10px;
+        .scrollbar();
+        overflow-y: auto;
+
+        &.is-empty {
+            .flex;
+            align-items: center;
+        }
+
+        .m-skills-list {
+            .flex;
+            gap: 30px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            .flex;
+            flex-wrap: wrap;
+        }
+        .m-skill {
+            // position: relative;
+            // display: flex;
+            // justify-content: center;
+            .pr;
+
+            &:not(:last-of-type)::after {
+                content: "▲";
+                .pa;
+                right: -25px;
+                top: 15px;
+                transform: rotate(90deg);
+            }
+
+            .u-remove-icon {
+                .pa;
+                right: -4px;
+                top: -4px;
+                cursor: pointer;
+                // .none;
+
+                background-color: #c00;
+                .size(12px);
+                .r(50%);
+                .db;
+                i {
+                    color: #fff;
+                    .fz(12px);
+                    .db;
+                }
+                &:hover {
+                    background-color: #f00;
+                }
+            }
+
+            .u-skill-icon {
+                .size(48px, 48px);
+            }
+
+            .u-name {
+                display: block;
+                font-size: 12px;
+                text-align: center;
+                overflow: hidden;
+                white-space: nowrap;
+                width: 48px;
+            }
+
+            .u-mask {
+                .pa;
+                .lt(0);
+                .size(48px, 48px);
+                background-color: rgba(0, 0, 0, 0.5);
+                .r(6px);
+                .none;
+                .pointer;
+            }
+
+            &:hover {
+                cursor: move;
+            }
+        }
+    }
+}

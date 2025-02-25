@@ -19,6 +19,7 @@
         "@jx3box/jx3box-emotion": "^1.2.8",
         "@jx3box/jx3box-facedat": "^2.6.2",
         "@microsoft/signalr": "^8.0.0",
+        "@vueuse/core": "^10.11.0",
         "axios": "^0.21.1",
         "core-js": "^3.4.3",
         "dompurify": "^3.0.6",

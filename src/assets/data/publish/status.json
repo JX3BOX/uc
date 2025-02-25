@@ -1,0 +1,6 @@
+{
+    "publish": "公开",
+    "draft": "草稿",
+    "pending": "待审核",
+    "dustbin":"已删除"
+}
