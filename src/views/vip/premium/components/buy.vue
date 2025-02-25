@@ -38,8 +38,8 @@
                 </li>
             </ul>
         </div>
+        <!-- * 开通年费会员后需前往专题页申请领取实物奖品（<a href="/event/birthday/#/5?anchor=gift" target="_blank">点击前往</a>）<br> -->
         <div class="u-tips">
-            * 开通年费会员后需前往专题页申请领取实物奖品（<a href="/event/birthday/#/5?anchor=gift" target="_blank">点击前往</a>）<br>
             * 本虚拟商品无退货服务<br>
             * 获取的积分以实际支付金额为准
         </div>
@@ -275,6 +275,7 @@ export default {
 }
 .m-buy-box--special {
     .mt(40px);
+    .none;
 }
 .m-pay-content {
     .pt(40px);
