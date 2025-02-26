@@ -160,6 +160,12 @@ module.exports = {
         //for lost
         "/",
 
+    configureWebpack: {
+        module: {
+            exprContextCritical: false,
+        }
+    },
+
     chainWebpack: (config) => {
         //💘 html-webpack-plugin ~
         // Multiple pages disable the block below
