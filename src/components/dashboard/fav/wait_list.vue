@@ -18,8 +18,8 @@
                 <i class="u-icon">
                     <img svg-inline src="@/assets/img/dashboard/works/repo.svg" />
                 </i>
-                <a class="u-title" target="_blank" :href="getLink(item.source_type, item.source_id)">{{
-                    item.title || "无标题"
+                <a class="u-title" target="_blank" :href="getLink(item.category, item.content_meta && item.content_meta.content_id || item.source_id)">{{
+                    item.content_meta && item.content_meta.title || item.title || "无标题"
                 }}</a>
                 <div class="u-desc">
                     <span class="u-category"><i class="el-icon-folder"></i> {{ getTypeLabel(item.category) }} </span>
@@ -92,7 +92,11 @@ export default {
             type = type.includes("community") ? "community" : type;
             return getTypeLabel(type);
         },
-        getLink,
+        getLink(type, id) {
+            type = type.replace(/dbm_/g, "");
+            type = type.includes("community") ? "community" : type;
+            return getLink(type, id);
+        },
         del(id) {
             this.$confirm("确定要删除该记录吗？", "提示", {
                 confirmButtonText: "确定",
