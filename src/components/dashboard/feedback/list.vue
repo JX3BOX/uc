@@ -103,7 +103,12 @@ export default {
             this.getData();
         },
         viewFeedback: function (row) {
-            window.open("/feedback/" + row.id, "_blank");
+            const path = this.$router.resolve({
+                name: "feedback_single",
+                params: { id: row.id },
+            });
+
+            window.open(path.href, "_blank");
         },
     },
 };
