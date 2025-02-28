@@ -161,8 +161,7 @@ export default {
                 return false;
             }
             // 禁用符号
-            this.new_name = sterilizer(this.new_name).kill();
-            this.new_name = sterilizer(this.new_name).removeSpace();
+            this.new_name = sterilizer(this.new_name).kill().removeSpace().toString();
             this.valid = true;
             let msg = "";
             // 可用性检查

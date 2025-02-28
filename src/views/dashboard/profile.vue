@@ -147,7 +147,6 @@
 import uc from "@/components/dashboard/uc.vue";
 import User from "@jx3box/jx3box-common/js/user";
 import { updateProfile, getProfile } from "@/service/dashboard/profile";
-import { sterilizer } from "sterilizer/index.js";
 import servers from "@jx3box/jx3box-data/data/server/server_list.json";
 import tvmap from "@/assets/data/dashboard/tvmap.json";
 export default {
