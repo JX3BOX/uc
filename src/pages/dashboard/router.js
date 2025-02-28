@@ -151,7 +151,7 @@ const routes = [
 const router = new VueRouter({
     routes,
     mode: "history",
-    // base: "/dashboard",
+    base: "/dashboard",
 });
 
 router.beforeEach((to, from, next) => {
