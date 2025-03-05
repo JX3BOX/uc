@@ -49,9 +49,9 @@
                                 v-if="!subscribed"
                                 @click="follow"
                                 size="mini"
-                                :style="userDefinedStyle.btn"
                                 >关注TA</el-button
-                            >
+                                >
+                                <!-- :style="userDefinedStyle.btn" -->
                             <div class="u-already-attention" v-else>
                                 <el-button
                                     class="u-btn"

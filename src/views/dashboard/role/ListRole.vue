@@ -132,7 +132,7 @@
                 </router-link>
             </div>
         </template>
-        <el-dialog title="设置备注" :visible.sync="noteVisible" width="30%" class="m-team-note-dialog">
+        <el-dialog title="设置备注" :visible.sync="noteVisible" :width="isPhone ? '95%' :'30%'" class="m-team-note-dialog">
             <div>
                 <el-input v-model="note" placeholder="请输入内容" :maxlength="20" :show-word-limit="true"></el-input>
             </div>
@@ -185,6 +185,8 @@ export default {
             name: "",
             xfmap,
             school_id_map,
+
+            isPhone: window.innerWidth < 768,
         };
     },
     computed: {
