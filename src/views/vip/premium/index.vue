@@ -78,8 +78,7 @@ export default {
         },
         checkIsTeammate() {
             if (User.isLogin()) {
-                const user_id = User.getInfo().uid;
-                checkIsTeammate(user_id).then((res) => {
+                checkIsTeammate().then((res) => {
                     this.is_teammate = res.data.data;
                 });
             }
@@ -87,10 +86,6 @@ export default {
     },
     mounted: async function () {
         this.isLogin && this.loadAsset();
-
-        // let params = new URLSearchParams(location.search);
-        // this.refer = params.get("redirect") || "";
-        // this.redirect()
 
         this.checkIsTeammate();
 
