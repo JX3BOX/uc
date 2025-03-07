@@ -119,7 +119,7 @@ export default {
             return __Links.account.register + "?redirect=" + this.redirect;
         },
         reset_url: function () {
-            return "/account/password_rest"
+            return "/account/password_reset"
         },
     },
     methods: {
