@@ -71,7 +71,7 @@
                         <a :href="login_url">登录 &raquo;</a>
                     </p>
                     <p class="u-resetpwd">
-                        <a href="../password_reset">忘记密码?</a>
+                        <a href="/password_reset">忘记密码?</a>
                     </p>
                 </footer>
             </main>
@@ -132,7 +132,7 @@ export default {
             return this.email_validate && this.email_available && this.pass_validate && this.agreement;
         },
         login_url: function () {
-            return "../login?redirect=" + this.redirect;
+            return "/login?redirect=" + this.redirect;
         },
         code_disabled: function () {
             return !this.email || !this.email_available || this.interval > 0;

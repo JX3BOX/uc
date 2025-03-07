@@ -42,7 +42,7 @@
                             <a :href="register_url">立即注册 &raquo;</a>
                         </p>
                         <p class="u-resetpwd">
-                            <a href="../password_reset">忘记密码?</a>
+                            <a href="/password_reset">忘记密码?</a>
                         </p>
                     </footer>
                 </main>
