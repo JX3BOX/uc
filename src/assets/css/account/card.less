@@ -1,0 +1,161 @@
+.m-card{
+    width:460px;
+    .pa;
+    .lt(50%,50%);
+    transform: translate(-50%,-50%);
+
+    padding-bottom:1px;
+}
+.box-card{
+    padding:20px;
+}
+@media screen and (max-width:@phone){
+    .m-card{
+        .lt(0);
+        transform:translate(0,0);
+        .w(100%);
+        .h(100%);
+        .box-card{
+            .full;
+            box-sizing: border-box;
+        }
+    }
+    .m-bottom{
+        .none;
+    }
+}
+.m-header{
+    a{
+        .db;
+    }
+
+    .u-logo{
+        .db;.auto(x);
+        .size(88px);
+    }
+    // .u-title{
+    //     .fz(24px);
+    //     .x;
+    //     font-weight:300;
+    //     letter-spacing:30px;
+    //     padding-left:30px;
+    // }
+
+    .el-divider__text{
+        .fz(12px) !important;
+        color:#999 !important;
+    }
+}
+.m-main{
+
+    // 输入框
+    .u-text{
+        margin-bottom:10px;
+    }
+    .u-ok {
+        .pa;
+        .rt(10px, 12px);
+        color: #67c23a;
+    }
+    .u-email{
+        .i-mail{
+            .w(16px);
+            .mt(4px);
+            fill:#909399;
+        }
+        .el-input__inner{
+            padding-right:40px;
+        }
+        .pr;
+    }
+    .u-pass{
+        .i-pass{
+            .w(16px);
+            .mt(4px);
+            fill:#909399;
+        }
+    }
+
+    .u-invite {
+        .i-invite {
+            .w(16px);
+            .mt(4px);
+            fill: #909399;
+        }
+        .el-input__inner {
+            padding-right: 40px;
+        }
+    }
+    .u-code {
+        .i-code {
+            .w(16px);
+            .mt(4px);
+            fill: #909399;
+        }
+        .el-input__inner {
+            padding-right: 40px;
+        }
+        .pr;
+    }
+
+    // 提示
+    .u-tip{
+        .fz(12px);
+    }
+    .el-alert{
+        .mb(10px);
+        .el-alert__title{
+            .db;
+        }
+        .el-alert__description{
+            margin-top:6px;
+        }
+    }
+
+
+    // 按钮
+    .u-button{
+        .w(100%);
+    }
+    .u-submit{
+        letter-spacing:30px;
+        span{
+            padding-left:30px;
+        }
+    }
+    .u-skip{
+        a{color:#fff;}
+    }
+}
+
+.m-footer{
+    .mt(20px);
+    .clearfix;
+    p{
+        margin:5px 0;
+        a{
+            color:@primary;
+            .underline(@primary);
+        }
+        .fz(13px,14px);
+        span{
+            color:#ccc;
+            margin:0 5px;
+        }
+    }
+}
+
+.m-login-in{
+    .x;
+    padding:20px 0;
+
+    .u-current-info{
+        i{
+            .pr;
+            top:2px;
+        }
+    }
+    .u-logout{
+        .mt(20px);
+    }
+}

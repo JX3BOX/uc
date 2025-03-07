@@ -1,0 +1,66 @@
+.m-main{
+    .u-terms{
+        padding:5px 0;
+        .mb(10px);
+        .el-checkbox__label{
+            .fz(12px);
+        }
+        a{
+            color:@color-link;
+            font-weight: normal;
+            &:hover{
+                text-decoration: underline;
+            }
+        }
+
+        .el-checkbox__input.is-checked + .el-checkbox__label{
+            color:@color;
+        }
+    }
+
+}
+
+.m-register {
+    width: 730px;
+    .el-card__body {
+        padding: 5px 10px;
+    }
+    
+    .m-form {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+    
+    .u-code {
+        .pr;
+    
+    }
+    .u-code-btn {
+        .pa;
+        right: 3px;
+        top: 3px;
+        padding: 2px 10px;
+        line-height: 28px;
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .m-register {
+        width: 100%;
+        .m-form {
+            display: flex;
+            flex-direction: column;
+            gap: unset;
+        }
+    }
+}
+
+.m-footer{
+    .u-login{
+        .fl;
+    }
+    .u-resetpwd{
+        .fr;
+    }
+}
