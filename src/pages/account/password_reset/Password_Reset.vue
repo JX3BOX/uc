@@ -74,10 +74,10 @@
                 </div>
                 <footer class="m-footer">
                     <p class="u-login">
-                        已有账号? <a href="../login">登录 &raquo;</a>
+                        已有账号? <a href="/account/login">登录 &raquo;</a>
                     </p>
                     <p class="u-register">
-                        <a href="../register">免费注册</a>
+                        <a href="/account/register">免费注册</a>
                     </p>
                 </footer>
             </main>
@@ -198,7 +198,7 @@
                     </el-alert>
                     <a
                         class="u-skip el-button u-button el-button--primary"
-                        href="../login"
+                        href="/account/login"
                         >立即登录</a
                     >
                 </template>

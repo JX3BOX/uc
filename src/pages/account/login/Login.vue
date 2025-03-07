@@ -42,7 +42,7 @@
                             <a :href="register_url">立即注册 &raquo;</a>
                         </p>
                         <p class="u-resetpwd">
-                            <a href="../password_reset">忘记密码?</a>
+                            <a :href="reset_url">忘记密码?</a>
                         </p>
                     </footer>
                 </main>
@@ -78,7 +78,7 @@ import Union from "@/components/account/Union.vue";
 const { validator } = require("sterilizer");
 const cookie = require("@/utils/cookie");
 import { loginByEmail } from "@/service/account/email.js";
-import { __Root } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, __Links } from "@jx3box/jx3box-common/data/jx3box.json";
 import User from "@jx3box/jx3box-common/js/user";
 import Msg from "@/components/account/Msg.vue";
 export default {
@@ -116,7 +116,10 @@ export default {
             return this.email_validate && this.pass_validate;
         },
         register_url: function () {
-            return "../register?redirect=" + this.redirect;
+            return __Links.account.register + "?redirect=" + this.redirect;
+        },
+        reset_url: function () {
+            return "/account/password_rest"
         },
     },
     methods: {
