@@ -1,4 +1,4 @@
-import { $helper, $cms } from "@jx3box/jx3box-common/js/https";
+import { $cms } from "@jx3box/jx3box-common/js/https";
 
 function contractAuthorApply(data) {
     return $cms().post('/api/cms/contract-author/log', data)
@@ -6,6 +6,10 @@ function contractAuthorApply(data) {
 
 function getContractAuthorLogs() {
     return $cms().get('/api/cms/contract-author/log/mine')
+}
+
+function getLastContractAuthorLog() {
+    return $cms().get('/api/cms/contract-author/log/last')
 }
 
 function getSuperAuthorState(userId) {
@@ -19,5 +23,6 @@ export {
     contractAuthorApply,
     getSuperAuthorState,
     getContractAuthorLogs,
-    filterSeaSun
+    filterSeaSun,
+    getLastContractAuthorLog
 }
