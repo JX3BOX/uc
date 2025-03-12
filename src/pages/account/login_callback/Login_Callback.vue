@@ -10,7 +10,7 @@
 
             <main v-if="success == false" class="m-main">
                 <el-alert title="登录失败" type="error" description="令牌不合法或已过期" show-icon :closable="false"> </el-alert>
-                <a class="u-skip el-button u-button el-button--primary" href="../login">返回登录</a>
+                <a class="u-skip el-button u-button el-button--primary" :href="login_url">返回登录</a>
             </main>
         </el-card>
         <Bottom />
@@ -20,7 +20,7 @@
 <script>
 import CardHeader from "@/components/account/CardHeader.vue";
 import User from "@jx3box/jx3box-common/js/user";
-import { __Root, __OriginRoot } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, __OriginRoot, __Links } from "@jx3box/jx3box-common/data/jx3box.json";
 const client = location.host.includes("origin") ? "origin" : "std";
 
 export default {
@@ -29,6 +29,7 @@ export default {
         return {
             success: null,
             redirect: client =='origin' ? __OriginRoot : __Root,
+            login_url: __Links.account.login
         };
     },
     methods: {},
@@ -51,11 +52,7 @@ export default {
         User.update(data).then(() => {
             this.success = true;
             // hack:怀旧服第三方登录问题
-            // if(location.hostname == 'origin.jx3box.com'){
             location.href = decodeURIComponent(this.redirect);
-            // }else{
-            //     location.href = location.href.replace('www.jx3box.com','origin.jx3box.com')
-            // }
         });
     },
     components: {
