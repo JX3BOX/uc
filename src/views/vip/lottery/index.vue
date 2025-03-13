@@ -5,7 +5,7 @@
             <!-- 模糊背景 -->
             <div class="m-video" v-if="isVideo">
                 <video class="u-video" autoplay muted loop :poster="`${themeImg}bg.jpg`" preload="metadata">
-                    <source src="https://cdn.jx3box.com/design/event/lottery/hacker/bg.mp4" type="video/mp4" />
+                    <source :src="`https://cdn.jx3box.com/design/event/lottery/${theme}/bg.mp4`" type="video/mp4" />
                 </video>
             </div>
 
@@ -16,7 +16,7 @@
                     <!-- 左侧 -->
                     <div class="m-left">
                         <div class="logo">
-                            <img :src="`${themeImg}logo.svg`" alt="魔盒盲盒" />
+                            <img :src="`${themeImg}logo.svg?123`" alt="魔盒盲盒" />
                             <el-tooltip effect="light" placement="right-start">
                                 <img class="u-info" :src="`${__imgRoot}desc.svg`" alt="活动说明" />
                                 <div class="m-blindbox-info" slot="content">
@@ -32,9 +32,10 @@
                                 :key="index"
                                 @click="change(number)"
                             >
+                                <!-- 围棋五黑五白，其他正常box.svg -->
                                 <img
                                     class="u-img"
-                                    :src="`${themeImg}box.svg`"
+                                    :src="`${themeImg}${(theme === 'weiqi' && index < 5) ? 'boxBlack' : 'box'}.svg?123`"
                                     alt="奖品"
                                     :key="replay + 'box' + index"
                                     v-show="showBox(index)"
@@ -110,7 +111,14 @@
                                 class="u-img refresh"
                                 @click="refreshBox"
                                 alt="刷新盲盒"
+                                v-if="theme !== 'weiqi'"
                             />
+                            <!-- 围棋主题需要换图片所以用div的背景图代替 -->
+                            <div
+                                class="u-img refresh"
+                                @click="refreshBox"
+                                v-if="theme === 'weiqi'"
+                            ></div>
                             <div
                                 class="m-random u-img"
                                 :class="{ disabled: !activeList.length || points < draw[0][1] || isDrawing }"
@@ -198,6 +206,7 @@ import { __Root, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 import "@/assets/css/vip/lottery/hacker.less";
 import "@/assets/css/vip/lottery/dragon.less";
 import "@/assets/css/vip/lottery/normal.less";
+import "@/assets/css/vip/lottery/weiqi.less"
 export default {
     name: "Index",
     data: function () {
@@ -287,9 +296,11 @@ export default {
                 boxcoin: `${this.__imgRoot}boxcoin.png`,
             };
         },
+        //判断是否需要动画
         isVideo() {
             const data = {
                 hacker: "hacker",
+                weiqi: "weiqi"
             };
             return data[this.theme];
         },

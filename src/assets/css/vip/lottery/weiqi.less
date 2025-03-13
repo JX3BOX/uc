@@ -1,0 +1,191 @@
+.weiqi{
+    .m-video {
+        .pr;
+        .size(1920px,1000px);
+        .auto(x);
+        .flex;
+        justify-content: center;
+        align-items: center;
+
+        .u-video {
+            .pa;
+            .db;
+            top: -100px;
+            height: 110%;
+            margin: 0;
+            padding: 0;
+        }
+    }
+    .m-left {
+        .m-box {
+            .size(1000px,670px);
+            .lt(15px,220px);
+            .mt(60px);
+            background-image: url("@{weiqi_blindbox}棋盘格.png");
+            background-size: cover;
+            .u-box {
+                &:hover{
+                    animation: float .1s infinite;
+                }
+                .size(130px,130px);
+                background: none;
+                .u-img {
+                    .full;
+                    .lt(0);
+                    margin: 0;
+                }
+
+                &.active {
+                    animation: up 1s ease-in forwards;
+                }
+                &.u-box-1 {
+                    .lt(235px,315px);
+                    z-index: 10;
+                }
+                &.u-box-2 {
+                    .lt(380px,465px);
+                    z-index: 100;
+                }
+                &.u-box-3 {
+                    .lt(530px,315px);
+                    z-index: 10;
+                }
+                &.u-box-4 {
+                    .lt(235px,465px);
+                    z-index: 100;
+                }
+                &.u-box-5 {
+                    .lt(380px,170px);
+                    z-index: 1;
+                }
+                &.u-box-6 {
+                    .lt(530px,170px);
+                    z-index: 1;
+                }
+                &.u-box-7 {
+                    .lt(85px,315px);
+                    z-index: 10;
+                }
+                &.u-box-8 {
+                    .lt(235px,170px);
+                    z-index: 1;
+                }
+                &.u-box-9 {
+                    .lt(530px,465px);
+                    z-index: 100;
+                }
+                &.u-box-10 {
+                    .lt(675px,315px);
+                    z-index: 10;
+                }
+            }
+        }
+    }
+    .m-right {
+        .m-prize .m-scroll .m-scroll-box .u-item {
+            background-color: #ffe58b;
+        }
+        .m-point {
+            .color(#fff);
+            background: url("@{hacker_blindbox}point.svg") left bottom no-repeat;
+        }
+
+        .m-lottery {
+            .refresh {
+                background: url("@{weiqi_blindbox}refresh.svg") center center no-repeat;
+                &:hover {
+                    background: url("@{weiqi_blindbox}refreshHover.svg") center center no-repeat;
+                }
+            }
+            .m-random {
+                .pr(20px);
+                .size(290px,124px);
+                background: url("@{weiqi_blindbox}随机开盒0.svg") center center no-repeat;
+                background-size: 290px 124px;
+                justify-content: flex-end;
+                &:hover {
+                    background: url("@{weiqi_blindbox}随机开盒1.svg") center center no-repeat;
+                }
+
+                .u-price {
+                    .fz(30px);
+                    .pl(0);
+                    .mt(3px);
+                    background: none;
+
+                    &::before {
+                        content: " x ";
+                        font-size: 24px;
+                    }
+                }
+            }
+            .m-random,
+            .m-open {
+                &.u-img {
+                    filter: grayscale(60%);
+                }
+                &:hover,
+                &.disabled {
+                    filter: grayscale(0%);
+                }
+            }
+            .m-random {
+                .u-price {
+                    .pl(40px);
+                    .h(50px);
+                    .lh(50px);
+                    .fz(28px);
+                    color: #fff;
+                    background: url("@{hacker_blindbox}icon.svg") center left no-repeat;
+                }
+            }
+            .m-open {
+                background: url("@{weiqi_blindbox}十连开盒0.svg") center center no-repeat;
+                &:hover {
+                    background: url("@{weiqi_blindbox}十连开盒1.svg") center center no-repeat;
+                }
+                .u-price {
+                    .pl(40px);
+                    .h(50px);
+                    .lh(50px);
+                    .fz(28px);
+                    color: #fff;
+                    background: url("@{hacker_blindbox}icon.svg") center left no-repeat;
+                }
+            }
+        }
+    }
+}
+@media screen and(max-width:@ipad) {
+    .m-left .m-box {
+        left: 10px;
+    }
+}
+@keyframes float {
+    0% {
+        transform: translate(0px,0px);
+    }
+    25% {
+        transform: translate(2px,2px);
+    }
+    50% {
+        transform: translate(2px,-2px);
+    }
+    75% {
+        transform: translate(-2px,-2px);
+    }
+    100% {
+        transform: translate(-2px,2px);
+    }
+}
+@keyframes up {
+    0% {
+        transform: translateY(0px);
+    }
+    25% {
+        transform: translateY(-150px) rotateX(360deg);
+    }
+    100% {
+        transform: translateY(-2000px) scale(1.5) rotateX(100000deg);;
+    }
+}
