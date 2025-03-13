@@ -492,7 +492,7 @@ export default {
         },
         // 选择盒子抽奖
         change(number) {
-            if (this.points < this.draw[0][1]) return;
+            if (this.points < this.draw[0][1] || this.mark) return;
             this.active = number;
             this.mark = true;
             setTimeout(() => {
