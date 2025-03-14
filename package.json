@@ -3,7 +3,7 @@
     "private": true,
     "scripts": {
         "dev": "env DEV_SERVER=true vue-cli-service serve --mode development",
-        "serve": "env DEV_SERVER=true vue-cli-service serve --mode serve",
+        "serve": "vue-cli-service serve --mode serve",
         "debug": "env DEV_SERVER=true vue-cli-service serve --mode staging",
         "build": "vue-cli-service build",
         "preview": "env BUILD_MODE=preview vue-cli-service build",
@@ -13,9 +13,9 @@
     },
     "dependencies": {
         "@jx3box/jx3box-comment-ui": "^2.0.4",
-        "@jx3box/jx3box-common": "^8.6.7",
+        "@jx3box/jx3box-common": "^8.6.8",
         "@jx3box/jx3box-common-ui": "^9.2.9",
-        "@jx3box/jx3box-data": "^3.7.8",
+        "@jx3box/jx3box-data": "^3.7.9",
         "@jx3box/jx3box-editor": "^2.2.27",
         "@jx3box/jx3box-emotion": "^1.2.8",
         "@jx3box/jx3box-facedat": "^2.6.2",
