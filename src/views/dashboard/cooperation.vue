@@ -1,7 +1,10 @@
 <template>
     <div class="m-dashboard m-cooperation">
         <h2 class="u-title">
-            <span><i class="el-icon-reading"></i> 签约中心</span>
+            <span class="u-title-text"
+                ><i class="el-icon-reading"></i> 签约中心
+                <el-tag class="u-sign" size="small" type="success" v-if="isSuperAuthor">签约时长：{{ signDuration }}{{ signDurationType }}</el-tag>
+            </span>
             <el-button type="primary" @click="openPage" size="small" v-if="isSuperAuthor" icon="el-icon-unlock">
                 敏感词测试
             </el-button>
@@ -21,7 +24,7 @@
             <el-alert
                 title="签约成功！"
                 type="success"
-                description="签约为每赛季审核一次，过期后如不满足条件的将会被取消资格。"
+                :description="`签约为每赛季审核一次，过期后如不满足条件的将会被取消资格。 本次签约时间：${signAt}`"
                 show-icon
                 :closable="false"
                 v-if="isSuperAuthor"
@@ -97,9 +100,15 @@
 </template>
 <script>
 import User from "@jx3box/jx3box-common/js/user";
-import { contractAuthorApply, getSuperAuthorState, getContractAuthorLogs } from "@/service/dashboard/cooperation";
+import {
+    contractAuthorApply,
+    getSuperAuthorState,
+    getContractAuthorLogs,
+    getLastContractAuthorLog,
+} from "@/service/dashboard/cooperation";
 import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
 import { pick } from "lodash";
+import dayjs from "dayjs";
 export default {
     name: "cooperation",
     props: [],
@@ -146,6 +155,7 @@ export default {
 
             // 签约记录
             logs: [],
+            last: {},
 
             processing: false,
 
@@ -156,6 +166,25 @@ export default {
         // 最近一次申请记录
         log: function () {
             return this.logs && this.logs[0];
+        },
+        signDuration: function () {
+            // 检查是否有有效的签约记录
+            if (!this.last || this.last["checked_at"] === undefined) {
+                return 0; // 无签约记录则返回0
+            }
+
+            const checkedDate = dayjs(this.last["checked_at"] * 1000);
+            const now = dayjs();
+            const diffYears = now.diff(checkedDate, "year");
+
+            // 如果已签约且不足一年，返回天数；否则返回年数
+            return this.last["checked"] === 1 && diffYears < 1 ? now.diff(checkedDate, "day") : diffYears;
+        },
+        signDurationType: function () {
+            return this.signDuration < 1 ? "天" : "年";
+        },
+        signAt: function () {
+            return this.last["checked_at"] ? dayjs(this.last["checked_at"] * 1000).format("YYYY-MM-DD HH:mm:ss") : "";
         },
     },
     methods: {
@@ -206,34 +235,20 @@ export default {
             this.loadContractAuthorLogs();
             this.checkSuperUser();
             this.loadAc();
+            this.loadLastLog();
         },
         openPage() {
             this.$router.push({ name: "filter" });
+        },
+        loadLastLog() {
+            getLastContractAuthorLog().then((res) => {
+                this.last = res.data.data;
+            });
         },
     },
     mounted: function () {
         this.init();
     },
-    // watch: {
-    //     'logs': {
-    //         deep: true,
-    //         handler(val) {
-    //             const len = val.length
-    //             if (len) {
-    //                 const keys = ['nickname', 'qq', 'phone', 'weibo', 'description'];
-    //                 keys.forEach(key => {
-    //                     // 将最新值放入form
-    //                     this.form[key] = val[0][key];
-    //                 })
-    //                 this.checked = val[0]?.checked
-    //             } else {
-    //                 // 未进行申请的状态
-    //                 // HACK: 此处仅为前端状态，事实上不存在4这个状态
-    //                 this.checked = 4
-    //             }
-    //         }
-    //     }
-    // }
 };
 </script>
 <style lang="less">
@@ -257,9 +272,24 @@ export default {
         margin: 0;
     }
 }
-.m-cooperation .u-title {
-    .flex;
-    justify-content: space-between;
+
+.m-cooperation {
+    .u-title {
+        .flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .u-title-text {
+        .flex;
+        align-items: center;
+    }
+
+    .u-sign {
+        font-size: 14px;
+        font-weight: normal;
+        margin-left: 10px;
+    }
 }
 @media screen and (max-width: @phone) {
     .m-block {
