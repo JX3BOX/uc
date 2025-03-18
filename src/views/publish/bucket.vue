@@ -65,7 +65,7 @@ export default {
 			return this.types[this.type];
 		},
 		publishLink: function () {
-			return "./#/" + this.type;
+			return "/publish/#/" + this.type;
 		},
 		currentComponent() {
 			return this.type;

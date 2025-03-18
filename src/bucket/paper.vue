@@ -62,7 +62,7 @@ export default {
     },
     methods: {
         edit: function (id) {
-            location.href = "./#/paper/" + id;
+            location.href = "/publish/#/paper/" + id;
         },
         postLink: function (id) {
             return getLink("paper", id);

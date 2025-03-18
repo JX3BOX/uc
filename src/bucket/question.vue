@@ -62,7 +62,7 @@ export default {
     },
     methods: {
         edit: function (id) {
-            location.href = "./#/question/" + id;
+            location.href = "/publish/#/question/" + id;
         },
         postLink: function (id) {
             return getLink("question", id);

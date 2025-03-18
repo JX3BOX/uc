@@ -116,7 +116,7 @@ export default {
             };
         },
         publishLink: function () {
-            return "./#/" + this.type;
+            return "/publish/#/" + this.type;
         },
     },
     watch: {
@@ -141,7 +141,7 @@ export default {
                 });
         },
         edit: function (type, id) {
-            location.href = "./#/" + type + "/" + id;
+            location.href = "/publish/#/" + type + "/" + id;
         },
         del: function (id,i) {
             this.$alert("确定要删除吗？", "确认信息", {

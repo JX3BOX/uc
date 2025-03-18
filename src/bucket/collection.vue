@@ -119,7 +119,7 @@ export default {
             };
         },
         publishLink: function () {
-            return "./#/" + this.type;
+            return "/publish/#/" + this.type;
         },
     },
     watch: {
@@ -143,7 +143,7 @@ export default {
                 });
         },
         post_edit(id) {
-            location.href = "./#/collection/" + id;
+            location.href = "/publish/#/collection/" + id;
         },
         post_del(id) {
             this.$confirm("确定要删除这篇小册吗？", "确认信息", {
