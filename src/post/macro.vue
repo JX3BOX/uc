@@ -3,7 +3,7 @@
         <!-- 头部 -->
         <publish-header name="云端宏">
             <div class="u-actions">
-                <publish-revision :enable="true" :post-id="id"></publish-revision>
+                <publish-revision :enable="true" type="macro" :post-id="id"></publish-revision>
                 <publish-reading-history v-if="id" :post-id="id" category="posts"></publish-reading-history>
             </div>
         </publish-header>

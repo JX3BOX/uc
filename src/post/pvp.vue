@@ -3,7 +3,7 @@
         <!-- 头部 -->
         <publish-header name="竞技技巧">
             <div class="u-actions">
-                <publish-revision :enable="true" :post-id="id"></publish-revision>
+                <publish-revision :enable="true" type="pvp" :post-id="id"></publish-revision>
                 <publish-reading-history v-if="id" :post-id="id" category="posts"></publish-reading-history>
             </div>
         </publish-header>

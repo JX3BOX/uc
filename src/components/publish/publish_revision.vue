@@ -1,48 +1,30 @@
 <template>
-    <div class="m-revision" v-if="ready">
+    <div class="m-revision">
         <el-button type="primary" @click="view" size="small" icon="el-icon-folder">历史版本</el-button>
 
         <el-drawer title="历史版本" :visible.sync="show" z-index="2100" class="m-revision-drawer" append-to-body>
             <h3 class="u-revision-title" slot="title">历史版本</h3>
             <main class="m-revision-container" v-loading="loading">
-                <div class="u-actions">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkedAll" @change="checkAll">全选</el-checkbox>
-                    <el-button class="u-empty" size="mini" plain icon="el-icon-delete" @click="delRevisions" :disabled="!checked || !checked.length">批量删除</el-button>
-                </div>
                 <div class="m-revision-list">
-                    <ul class="u-list" v-if="data && data.length">
-                        <li class="m-revision-item" v-for="(item, i) in data" :key="i">
-                            <span class="u-name">
-                                <el-checkbox class="u-checkbox" v-model="item.checked" @change="(val) => checkChange(val, item)"></el-checkbox>
-                                <el-tooltip class="item" effect="dark" :content="item.remark" placement="top" :disabled="!item.remark">
-                                    <span>
-                                        <i class="u-icon el-icon-tickets"></i>
-                                    <span class="u-remark">{{ item.remark ? formatRemark(item.remark) : item.post_title }}</span>
-                                    </span>
-                                </el-tooltip>
-                                <em class="u-time">{{ item.updated_at | formatDate }}</em>
-                                <span class="u-creator" v-if="item.user_info" title="创建人">{{ item.user_info.display_name }}</span>
-                                <i class="u-edit el-icon-edit" @click="remark(item)" title="添加备注"></i>
-                            </span>
-
-                            <el-button-group>
-                                <el-button size="mini" icon="el-icon-view" @click="use(item)" title="预览"></el-button>
-                                <el-button size="mini" icon="el-icon-delete" @click="del(item)" title="删除"></el-button>
-                            </el-button-group>
+                    <ul class="u-list" v-if="list.length">
+                        <li v-for="(item, i) in list" class="u-item" :key="i" @click="use(item)">
+                            <div class="u-version">
+                                <span>{{ item.version }}</span> - <span>{{ item.created_at }}</span>
+                            </div>
+                            <el-button class="u-compare" size="small" type="text"
+                                ><i class="el-icon-sort u-icon"></i>使用</el-button
+                            >
                         </li>
-
-                        <el-pagination
-                            class="u-pagination"
-                            background
-                            hide-on-single-page
-                            layout="prev,pager,next,->,total"
-                            :total="total"
-                            :page-size="per"
-                            :current-page.sync="page"
-                        ></el-pagination>
                     </ul>
-
                     <el-alert class="u-null" v-else title="当前没有任何历史版本" type="info" show-icon></el-alert>
+                    <el-pagination
+                        small
+                        layout="prev, pager, next"
+                        :total="total"
+                        :current-page.sync="index"
+                        hide-on-single-page
+                    >
+                    </el-pagination>
                 </div>
             </main>
         </el-drawer>
@@ -50,201 +32,85 @@
 </template>
 
 <script>
-import { getRevisions, putRevision, removeRevision, removeRevisions } from "@/service/publish/revision";
-import { showTime } from "@jx3box/jx3box-common/js/moment";
+import { getCommitHistories } from "@/service/publish/version";
 export default {
     name: "publish_revision",
-    props: {
-        postId: {
-            type: [String, Number],
-            default: 0,
-        },
-        enable: {
-            type: Boolean,
-            default: false,
-        },
-    },
+    props: ["type", "postId"],
     data() {
         return {
             show: false,
-            data: [
-                // {
-                //     id: 1,
-                //     version: 1,
-                //     updated_at: "2021-12-19 16:29",
-                //     remark: "",
-                //     data: {},
-                //     checked: false,
-                // },
-            ],
-
-            per: 10,
-            page: 1,
+            index: 1,
+            pageSize: 10,
             total: 0,
-            loading: false,
+            list: [],
 
-            checked: [],
-            checkedAll: false,
-            isIndeterminate: false,
+            loading: false,
+            link_content_meta_id: "",
         };
     },
     computed: {
-        params() {
+        pageParams() {
             return {
-                page: this.page,
-                per: this.per,
+                index: this.index,
+                pageSize: this.pageSize,
             };
         },
-        isPostMode: function() {
-            return !this.$route.query.mode || this.$route.query.mode == "default";
+        db() {
+            return this.$store.state.db;
         },
-        ready: function() {
-            // 栏目启用 && 非新文 && 非草稿|历史版本模式
-            return this.enable && this.postId && this.isPostMode;
+        key() {
+            return `${this.type}_${this.postId}`;
         },
     },
-    filters: {
-        revisionName(val) {
-            return `版本${val.version}`;
+    watch: {
+        page() {
+            this.load();
         },
-        formatDate: function(gmt) {
-            return showTime(new Date(gmt));
+        key(key) {
+            if (this.postId) {
+                this.db.getItem(key).then((data) => {
+                    this.link_content_meta_id = data?.link_content_meta_id || 0;
+                    console.log(key, this.link_content_meta_id);
+                });
+            }
         },
     },
     methods: {
-        formatRemark: function(str) {
-            return str?.length > 10 ? str.slice(0, 10) + ".." : str;
-        },
         view() {
-            if (!this.postId) return;
             this.show = true;
-            this.loadList();
+            this.load();
         },
-        loadList() {
+        load() {
+            if (!this.link_content_meta_id) return;
             this.loading = true;
-            getRevisions(this.postId, this.params)
+            getCommitHistories(this.link_content_meta_id, this.pageParams)
                 .then((res) => {
-                    this.data = res.data.data.list.map((item) => {
-                        this.$set(item, "checked", false);
-                        return item;
-                    });
-                    this.page = res.data.data.page;
-                    this.per = res.data.data.per;
-                    this.total = res.data.data.total;
+                    const list = res.data?.data?.list || [];
+                    if (list.length) {
+                        this.list = list.map((item, i) => {
+                            return {
+                                ...item,
+                                version: "v" + (list.length - i),
+                            };
+                        });
+                        this.total = res.data?.data?.page?.total || 0;
+                    }
                 })
                 .finally(() => {
                     this.loading = false;
                 });
         },
-        remark(item) {
-            this.$prompt("请输入备注", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                closeOnClickModal: false,
-                inputValue: item.remark || "",
-            }).then(({ value }) => {
-                // item.remark = value
-                putRevision(this.postId, item.id, { remark: value })
-                    .then(() => {
-                        this.$message.success("备注添加成功");
-                        item.remark = value;
-                        return true;
-                    })
-                    .catch(() => {
-                        return false;
-                    });
-            });
-        },
-        checkChange(val, item) {
-            if (val) {
-                this.checked.push(item.id);
-            } else {
-                this.checked = this.checked.filter((c) => c !== item.id);
-            }
-            this.checkedAll = this.checked.length === this.data.length;
-        },
-        checkAll(val) {
-            if (val) {
-                this.checked = this.data.map((item) => item.id);
-                this.data.map((item) => {
-                    item.checked = true;
-                    return item;
-                });
-            } else {
-                this.checked = [];
-                this.data.map((item) => {
-                    item.checked = false;
-                    return item;
-                });
-            }
-            this.isIndeterminate = false;
-
-            console.log(this.checked);
-        },
         use(item) {
             const routeName = this.$route.name;
-            this.$router.push(`/${routeName}/${item.post_id}/?mode=revision&id=${item.id}`);
-        },
-        del(item) {
-            this.$confirm(`确认删除【版本-${item.version}】吗？`, "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                type: "warning",
-            }).then(() => {
-                removeRevision(this.postId, item.id).then(() => {
-                    this.$notify({
-                        type: "success",
-                        title: "成功",
-                        message: "历史版本删除成功",
-                    });
-
-                    this.loadList();
-                });
-            });
-        },
-        delRevisions() {
-            this.$confirm(`确认删除选中的历史版本？`, "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                type: "warning",
-            }).then(() => {
-                const ids = this.checked.join(",");
-                removeRevisions(this.postId, ids).then(() => {
-                    this.$notify({
-                        type: "success",
-                        title: "成功",
-                        message: "历史版本删除成功",
-                    });
-
-                    this.checkedAll = false;
-                    this.checked = [];
-
-                    if (this.page === 1) {
-                        this.loadList();
-                    } else {
-                        this.page = 1;
-                    }
-
-                });
-            });
-        },
-    },
-    watch: {
-        params: {
-            deep: true,
-            handler() {
-                this.loadList();
-            },
+            this.$router.push(
+                `/${routeName}/${this.postId}?mode=revision&content_meta_id=${item.link_content_meta_id}&commit_hash=${item.commit_hash}`
+            );
         },
     },
 };
 </script>
 
 <style lang="less">
-.m-revision {
-    // .pa;
-    // .rt(0);
-}
 .m-revision-drawer {
     .size(100%);
     .pf;
@@ -260,12 +126,6 @@ export default {
     .m-revision-container {
         padding: 0 10px;
 
-        .u-actions {
-            display: flex;
-            align-items: center;
-            .ml(15px);
-            min-height: 28px;
-        }
         .u-empty {
             .ml(10px);
         }
@@ -276,58 +136,42 @@ export default {
 
     .m-revision-list {
         .u-list {
-            margin: 0;
-            padding: 0;
             list-style: none;
+            padding: 0;
+            margin: 0;
+            li {
+                padding: 0 10px;
+                .fz(13px, 36px);
+                .flex;
+                justify-content: space-between;
+                align-items: center;
+                transition: 0.15s ease-in-out;
+                .nobreak;
+                &:hover {
+                    background-color: #e6f0fb;
+
+                    .u-compare {
+                        .db;
+                        @media screen and (max-width: @phone) {
+                            .none;
+                        }
+                    }
+                }
+                .pointer;
+            }
+
+            .u-compare {
+                .none;
+
+                .u-icon {
+                    transform: rotate(90deg);
+                    margin-right: 3px;
+                }
+            }
         }
         .u-pagination {
             .mt(20px);
             text-align: center;
-        }
-    }
-
-    .m-revision-item {
-        display: flex;
-        justify-content: space-between;
-        height: 40px;
-        align-items: center;
-        padding: 5px;
-        .fz(12px, 28px);
-        border-bottom: 1px dashed #eee;
-        white-space: nowrap;
-
-        .u-checkbox {
-            .mr(5px);
-        }
-
-        .u-edit {
-            cursor: pointer;
-            color: @color-link !important;
-            .ml(5px);
-        }
-
-        .u-time {
-            color: #999;
-            .ml(5px);
-            font-style: normal;
-        }
-        .u-remark span {
-            color: #fba524;
-        }
-
-        .u-name {
-            .ml(10px);
-            i {
-                .fz(16px);
-                color: #888;
-                .y(-2px);
-                .mr(5px);
-            }
-        }
-
-        .u-creator {
-            margin-left: 5px;
-            margin-right: 5px;
         }
     }
 }
