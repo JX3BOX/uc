@@ -213,6 +213,7 @@
                     </span>
                 </div>
                 <template v-if="tabKey == 'info'">
+                    <Skeleton :category="skeletonInfo.category" :img="skeletonInfo.img" />
                     <Article v-if="item.describe" :content="item.describe" @directoryRendered="updateDirectory" />
                     <span v-else class="u-none">~ 暂无商品详情 ~</span>
                 </template>
@@ -238,6 +239,7 @@ import Comment from "./components/comment.vue";
 import UserPop from "@jx3box/jx3box-common-ui/src/author/UserPop.vue";
 import Picture from "./components/Picture.vue";
 import Order from "./components/Order.vue";
+import Skeleton from './components/skeleton/index.vue'
 
 import types from "@/assets/data/vip/goods_types.json";
 import User from "@jx3box/jx3box-common/js/user";
@@ -254,6 +256,7 @@ export default {
         Comment,
         UserPop,
         Order,
+        Skeleton,
     },
     data: function () {
         return {
@@ -281,6 +284,30 @@ export default {
         };
     },
     computed: {
+        skeletonInfo() {
+            if (this.item && this.item.category === "virtual") {
+                if (this.item.sub_category === 'skin'){
+                    const map = {
+                        首页日历: 'calendar',
+                        侧边栏主题: 'sidebar',
+                        评论皮肤:'comment',
+                        个人名片:'atcard',
+                        主页风格:'homebanner',
+                    }
+                    return {
+                        category: map[this.item.title.split(' ').at(-1)],
+                        img:`https://cdn.jx3box.com/design/decoration/images/${this.item.remark}/${map[this.item.title.split(' ').at(-1)]}.png`
+                    }
+                }
+                if (this.item.sub_category === 'palu'){
+                    return {
+                        category: 'palu',
+                        img: `https://cdn.jx3box.com/design/decoration/palu/${this.item.remark}.png`
+                    }
+                }
+            }
+            return {};
+        },
         id() {
             return this.$route.params.id;
         },
