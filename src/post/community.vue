@@ -221,7 +221,7 @@ export default {
         // },
 
         id: function () {
-            return ~~this.post.id;
+            return ~~this.post.id || ~~this.$route.params.id;
         },
         data: function () {
             return {

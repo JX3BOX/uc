@@ -256,7 +256,7 @@ export default {
     },
     computed: {
         id: function () {
-            return this.isRevision ? ~~this.post.post_id : ~~this.post.ID;
+            return ~~this.post.ID || ~~this.$route.params.id;
         },
         data: function () {
             if (this.id) {

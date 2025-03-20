@@ -12,6 +12,11 @@ export function getCommitByHash(content_meta_id, hash) {
     return $next().get(`/api/next2/userdata/commit-history/content-meta/${content_meta_id}/commit/by-hash/${hash}`);
 }
 
+// 通过id获取提交记录
+export function getCommitById(content_meta_id, id) {
+    return $next().get(`/api/next2/userdata/commit-history/content-meta/${content_meta_id}/commit/by-id/${id}`);
+}
+
 // 提交
 export function commitHistory(id, data) {
     // { domain: "https://dev.next2.jx3box.com" }

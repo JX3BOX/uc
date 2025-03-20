@@ -1,7 +1,7 @@
 import { pull } from "@/service/publish/cms";
 import { webDuration, localDuration } from "@/pages/publish/setting.json";
 import { addRevision, getRevision } from "@/service/publish/revision";
-import { getCommitByHash } from "@/service/publish/version";
+import { getCommitById } from "@/service/publish/version";
 import hash from "object-hash";
 import { cloneDeep } from "lodash";
 
@@ -61,9 +61,9 @@ export const AutoSaveMixin = {
                 // 2.当 mode = revision 时，加载对应历史版本内容
             } else if (this.isRevision) {
                 const content_meta_id = this.$route.query.content_meta_id;
-                const commit_hash = this.$route.query.commit_hash;
-                if (commit_hash && content_meta_id) {
-                    return getCommitByHash(content_meta_id, commit_hash)
+                const version_id = this.$route.query.version_id;
+                if (version_id && content_meta_id) {
+                    return getCommitById(content_meta_id, version_id)
                         .then((res) => {
                             this.post = {
                                 post_content: res.data?.data?.content || "",

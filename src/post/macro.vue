@@ -274,7 +274,7 @@ export default {
     },
     computed: {
         id: function () {
-            return this.isRevision ? ~~this.post.post_id : ~~this.post.ID;
+            return ~~this.post.ID || ~~this.$route.params.id;
         },
         pz_query: function () {
             let mount_id = xfmap[this.post.post_subtype]?.id;

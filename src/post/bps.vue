@@ -254,10 +254,7 @@ export default {
     },
     computed: {
         id: function () {
-            return ~~this.post.ID;
-        },
-        link_content_meta_id() {
-            return this.id ? this.post?.link_content_meta_id : "";
+            return ~~this.post.ID || ~~this.$route.params.id;
         },
         data: function () {
             if (this.id) {

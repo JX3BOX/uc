@@ -70,7 +70,6 @@ export default {
             if (this.postId) {
                 this.db.getItem(key).then((data) => {
                     this.link_content_meta_id = data?.link_content_meta_id || 0;
-                    console.log(key, this.link_content_meta_id);
                 });
             }
         },
@@ -81,9 +80,10 @@ export default {
             this.load();
         },
         load() {
-            if (!this.link_content_meta_id) return;
+            const link_content_meta_id = this.link_content_meta_id || ~~this.$route.query.content_meta_id;
+            if (!link_content_meta_id) return;
             this.loading = true;
-            getCommitHistories(this.link_content_meta_id, this.pageParams)
+            getCommitHistories(link_content_meta_id, this.pageParams)
                 .then((res) => {
                     const list = res.data?.data?.list || [];
                     if (list.length) {
@@ -101,9 +101,10 @@ export default {
                 });
         },
         use(item) {
+            this.show = false;
             const routeName = this.$route.name;
             this.$router.push(
-                `/${routeName}/${this.postId}?mode=revision&content_meta_id=${item.link_content_meta_id}&commit_hash=${item.commit_hash}`
+                `/${routeName}/${this.postId}?mode=revision&version_id=${item.id}&content_meta_id=${item.link_content_meta_id}`
             );
         },
     },
