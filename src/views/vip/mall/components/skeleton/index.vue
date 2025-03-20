@@ -15,7 +15,7 @@ export default {
                 sidebar:Sidebar,
                 comment:Comment,
                 atcard:AtCard,
-                homebanner:HomeSkin,
+                homebg:HomeSkin,
             },
         };
     },

@@ -287,16 +287,9 @@ export default {
         skeletonInfo() {
             if (this.item && this.item.category === "virtual") {
                 if (this.item.sub_category === 'skin'){
-                    const map = {
-                        首页日历: 'calendar',
-                        侧边栏主题: 'sidebar',
-                        评论皮肤:'comment',
-                        个人名片:'atcard',
-                        主页风格:'homebanner',
-                    }
                     return {
-                        category: map[this.item.title.split(' ').at(-1)],
-                        img:`https://cdn.jx3box.com/design/decoration/images/${this.item.remark}/${map[this.item.title.split(' ').at(-1)]}.png`
+                        category: this.item.virtual_stock_item_details.category,
+                        img:`https://cdn.jx3box.com/design/decoration/images/${this.item.remark}/${this.item.virtual_stock_item_details.category}.png`
                     }
                 }
                 if (this.item.sub_category === 'palu'){

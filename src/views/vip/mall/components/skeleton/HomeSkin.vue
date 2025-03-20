@@ -1,6 +1,6 @@
 <template>
-    <div class="homeSkin-bg" :style="{backgroundImage:`url(${img.replace('homebanner','homebg_rb@1x')})`}">
-        <div class="banner" :style="{backgroundImage:`url(${img})`}">
+    <div class="homeSkin-bg" :style="{backgroundImage:`url(${img.replace('homebg','homebg_rb@1x')})`}">
+        <div class="banner" :style="{backgroundImage:`url(${img.replace('homebg','homebanner')})`}">
             <div class="avatar"></div>
             <div class="text">
                 <div class="name"></div>
