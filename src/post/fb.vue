@@ -3,7 +3,7 @@
         <!-- 头部 -->
         <publish-header name="副本攻略">
             <div class="u-actions">
-                <publish-revision :enable="true" type="fb" :post-id="id"></publish-revision>
+                <publish-revision :enable="true" :post="post"></publish-revision>
                 <publish-reading-history v-if="id" :post-id="id" category="posts"></publish-reading-history>
             </div>
         </publish-header>

@@ -3,7 +3,7 @@
         <!-- 头部 -->
         <publish-header name="云端宏">
             <div class="u-actions">
-                <publish-revision :enable="true" type="macro" :post-id="id"></publish-revision>
+                <publish-revision :enable="true" :post="post"></publish-revision>
                 <publish-reading-history v-if="id" :post-id="id" category="posts"></publish-reading-history>
             </div>
         </publish-header>
@@ -20,7 +20,7 @@
                 <publish-original v-model="post.original"></publish-original>
                 <!-- 客户端 -->
                 <!-- <publish-client v-model="post.client" :forbidAll="true"></publish-client> -->
-                 <!-- 是否适用无界 -->
+                <!-- 是否适用无界 -->
                 <publish-wujie v-if="post.client == 'std'" v-model="post.is_wujie"></publish-wujie>
                 <!-- 语言：简体/繁体 -->
                 <publish-lang v-model="post.lang"></publish-lang>
@@ -101,7 +101,14 @@
             </div>
 
             <div class="m-publish-doc">
-                <el-alert class="u-illegal-alert" v-if="is_illegal" :closable="false" show-icon type="warning" title="检测到您的内容存在不合规，将无法发布成功，并有禁言风险。"></el-alert>
+                <el-alert
+                    class="u-illegal-alert"
+                    v-if="is_illegal"
+                    :closable="false"
+                    show-icon
+                    type="warning"
+                    title="检测到您的内容存在不合规，将无法发布成功，并有禁言风险。"
+                ></el-alert>
                 <el-checkbox v-model="hasRead" :true-label="1" :false-label="0"
                     >我已阅读并了解<a href="/notice/119" @click.stop target="_blank">《创作发布规范》</a></el-checkbox
                 >
