@@ -2,7 +2,7 @@
     <div class="m-publish-box" v-loading="loading">
         <!-- 头部 -->
         <publish-header name="插件数据">
-            <publish-revision :enable="true" type="jx3dat" :post-id="id"></publish-revision>
+            <publish-revision :enable="true" :post="post"></publish-revision>
         </publish-header>
 
         <el-form label-position="left" label-width="80px">

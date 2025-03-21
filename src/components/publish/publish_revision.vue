@@ -35,7 +35,7 @@
 import { getCommitHistories } from "@/service/publish/version";
 export default {
     name: "publish_revision",
-    props: ["type", "postId"],
+    props: ["post"],
     data() {
         return {
             show: false,
@@ -45,7 +45,6 @@ export default {
             list: [],
 
             loading: false,
-            link_content_meta_id: "",
         };
     },
     computed: {
@@ -58,20 +57,13 @@ export default {
         db() {
             return this.$store.state.db;
         },
-        key() {
-            return `${this.type}_${this.postId}`;
+        link_content_meta_id() {
+            return this.post?.link_content_meta_id || 0;
         },
     },
     watch: {
         page() {
             this.load();
-        },
-        key(key) {
-            if (this.postId) {
-                this.db.getItem(key).then((data) => {
-                    this.link_content_meta_id = data?.link_content_meta_id || 0;
-                });
-            }
         },
     },
     methods: {

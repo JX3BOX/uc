@@ -107,6 +107,7 @@ export const AutoSaveMixin = {
                                 prev_post: res.data.data.prev_post || "",
                                 next_post: res.data.data.next_post || "",
                             };
+                            // console.log(this.post);
                         })
                         .finally(() => {
                             this.loading = false;
