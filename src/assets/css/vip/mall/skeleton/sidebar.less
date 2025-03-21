@@ -1,0 +1,83 @@
+.m-plate__content {
+    padding: 0 13px;
+    .size(280px, 308px);
+    margin-top: 10px;
+    .Skeleton {
+        background-color: #f2f2f2;
+        border-radius: 4px;
+    }
+    .c-sidebar {
+        padding: 10px;
+        border-radius: 5px;
+        height: 100%;
+        box-sizing: border-box;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: 100% 0;
+
+        .m-author {
+            display: flex;
+            align-items: center;
+            .u-avatar__img {
+                .Skeleton();
+                .size(68px);
+                border-radius: 50%;
+                margin-right: 15px;
+            }
+            .u-info {
+                .u-name {
+                    .Skeleton();
+                    height: 19px;
+                    width: 80px;
+                }
+                .u-extend {
+                    height: 18px;
+                    display: flex;
+                    gap: 4px;
+                    margin-top: 16px;
+                    .u-extend__item {
+                        .Skeleton();
+                        width: 37px;
+                    }
+                }
+            }
+        }
+        .u-bio {
+            .Skeleton();
+            width: 80%;
+            margin-top: 10px;
+            height: 24px;
+        }
+        .u-interact {
+            display: flex;
+            gap: 8px;
+            .u-interact__item {
+                .Skeleton();
+                .size(71px,30px);
+                margin-top: 5px;
+            }
+        }
+        .c-author-link {
+            margin-top: 20px;
+            display: flex;
+            gap: 3px;
+            .u-link {
+                .Skeleton();
+                .size(18px);
+                border-radius: 50%;
+            }
+        }
+        .c-author-label {
+            .Skeleton();
+            margin-top: 30px;
+            height: 16px;
+            width: 40%;
+        }
+        .m-author-teams {
+            margin-top: 10px;
+            .Skeleton();
+            .size(18px);
+            border-radius: 50%;
+        }
+    }
+}

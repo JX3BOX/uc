@@ -1,0 +1,46 @@
+.m-plate__content {
+    .size(955px, 141px);
+    margin-top: 10px;
+    .Skeleton {
+        background-color: #f2f2f2;
+        border-radius: 4px;
+    }
+    .c-comment-cmt__box {
+        border-radius: 8px;
+        display: flex;
+        padding-top: 5px;
+        background-size: cover;
+        .c-comment-avatar {
+            margin-right: 20px;
+            padding-left: 6px;
+            .u-avatar__img {
+                .Skeleton();
+                .size(48px);
+                border-radius: 50%;
+            }
+        }
+        .c-comment-content {
+            .c-comment-cmt__author {
+                .Skeleton();
+                .size(50px,19px);
+            }
+            .u-cmt {
+                .u-text {
+                    .Skeleton();
+                    .size(50px,19px);
+                    margin-top: 10px;
+                }
+                .u-toolbar {
+                    display: flex;
+                    gap: 20px;
+                    margin-top: 60px;
+                    padding-bottom: 10px;
+                    .u-toolbar__item {
+                        .Skeleton();
+                        .size(30px,16px);
+                    }
+                }
+            }
+        }
+    }
+}

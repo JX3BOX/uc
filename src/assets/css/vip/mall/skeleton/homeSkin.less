@@ -1,0 +1,60 @@
+.homeSkin-bg {
+    .Skeleton {
+        background-color: #f2f2f2;
+        border-radius: 4px;
+    }
+    margin-top: 10px;
+    .size(960px,540px);
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: 100% 0;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .banner {
+        .size(550px,110px);
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        .avatar {
+            .Skeleton();
+            .size(68px);
+            border-radius: 50%;
+            margin: 0 25px 0 10px;
+        }
+        .name{
+           .Skeleton();
+            .size(80px,19px);
+            margin-bottom: 5px
+        }
+        .tag{
+            .Skeleton();
+            .size(50px,19px);
+        }
+    }
+    .section {
+        .size(550px);
+        display: flex;
+        .article {
+            .Skeleton();
+            flex: 3;
+        }
+        .items {
+            padding-left: 10px;
+            flex: 2;
+            .item {
+                .Skeleton();
+                width: 100%;
+                height: 25px;
+                margin-bottom: 10px;
+            }
+        }
+    }
+}
