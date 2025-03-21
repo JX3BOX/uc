@@ -73,7 +73,7 @@ export default {
     data: function () {
         const checkPhone = (rule, value, callback) => {
             if (value) {
-                const num = /^[1][3,4,5,7,8][0-9]{9}$/;
+                const num = /^[1][3,4,5,7,8,9][0-9]{9}$/;
                 if (!num.test(value)) {
                     callback(new Error("请输入正确的手机号"));
                 } else {
