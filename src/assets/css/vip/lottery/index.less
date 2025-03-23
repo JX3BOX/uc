@@ -1,4 +1,3 @@
-
 #app {
     height: calc(100vh - 64px);
 }
@@ -137,6 +136,12 @@
             padding: 0 20px;
             .u-prize {
                 .size(110px,18px);
+            }
+            .u-preview {
+                margin-left: 20px;
+                .pointer;
+                .fz(12px);
+                color: #cc474b;
             }
             .u-odds {
                 .pointer;
@@ -593,4 +598,17 @@
     .pt(15px);
     .fz(12px,24px);
     color: #cc474b;
+}
+.m-preview-dialog {
+    .m-preview {
+        .flex;
+        flex-wrap: wrap;
+        .m-preview-item {
+            padding: 20px;
+            text-align: center;
+            img {
+                .size(200px,200px);
+            }
+        }
+    }
 }
