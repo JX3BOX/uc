@@ -52,9 +52,9 @@
                         <!-- 奖品 -->
                         <div class="m-prize box">
                             <div class="m-title">
-                                <div>
+                                <div style="display:flex">
                                     <img :src="`${__imgRoot}prize.png`" class="u-prize" alt="奖品一览" />
-                                    <span class="u-preview" @click="preview = true">速览</span>
+                                    <div class="u-preview" @click="preview = true">速览</div>
                                 </div>
                                 <el-dialog
                                     title="奖品速览"
@@ -418,7 +418,6 @@ export default {
                     const data = res.data.data;
 
                     this.draw = zip(data.allow_once_try_count, data.allow_once_try_count_cost_points);
-                    const list = this.setPrizeList(data);
                     this.previewList = this.setPrizeList(data);
                     this.prizeList = this.setPrizeList(data).reverse();
                     this.scroll(this.prizeList.length);
