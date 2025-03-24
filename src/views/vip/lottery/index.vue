@@ -373,9 +373,11 @@ export default {
     },
     methods: {
         loadUser() {
-            getMyInfo().then((res) => {
-                this.user = res.data.data;
-            });
+            if(this.isLogin){
+                getMyInfo().then((res) => {
+                    this.user = res.data.data;
+                });
+            }
         },
         // 初始化，获取活动ID,并获取活动详情
         init() {
