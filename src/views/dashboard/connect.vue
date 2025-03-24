@@ -24,22 +24,13 @@
                     >
                         立即绑定
                     </el-button>
-
-                    <!-- <a
-                        class="el-button el-button--primary el-button--large"
-                        v-if="!checkStatus(types[type].idKey)"
-                        :href="getAuthUrl(types[type].uuid)"
-                    >
-                        <span class="u-status">
-                            立即绑定
-                        </span>
-                    </a> -->
                     <el-button v-else @click="unbind(types[type].uuid)" size="large" type="danger">
                         <span class="u-status">
                             解除绑定
                         </span>
                     </el-button>
                 </div>
+                <qqbot :data="data" @refresh="loadAuth"></qqbot>
             </div>
         </div>
 
@@ -59,11 +50,11 @@
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import links from "@jx3box/jx3box-common/js/connect";
 import { __imgPath, __cdn, __cms } from "@jx3box/jx3box-common/data/jx3box.json";
 import { unbindOAuth, checkOAuth } from "@/service/dashboard/profile";
 const client = location.href.includes("origin") ? "origin" : "std";
 import { unbindApp } from "@/service/dashboard/union";
+import qqbot from "./qqbot.vue";
 
 const BASE_URL = __cms
 
@@ -222,6 +213,7 @@ export default {
     },
     components: {
         uc,
+        qqbot,
     },
 };
 </script>

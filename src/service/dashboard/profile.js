@@ -1,4 +1,4 @@
-import { $cms, $_https } from "@jx3box/jx3box-common/js/https.js";
+import { $cms, $_https, $next } from "@jx3box/jx3box-common/js/https.js";
 
 import axios from "axios";
 import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
@@ -77,6 +77,14 @@ function unbindOAuth(type) {
     }).delete(`/api/cms/account/oauth/unbind/${type}`);
 }
 
+function getQQbotToken() {
+    return $next().get("/api/next2/qqbot/bind-token");
+}
+
+function unbindQQbot() {
+    return $next().delete("/api/next2/qqbot/bind-token");
+}
+
 // 6.微信
 // 获取微信二维码
 function getWechatQrcode() {
@@ -128,4 +136,6 @@ export {
     sendPhoneCode,
     verifyPhone,
     checkPhone,
+    getQQbotToken,
+    unbindQQbot,
 };
