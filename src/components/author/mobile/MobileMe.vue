@@ -29,7 +29,7 @@
                             {{ subscribed ? '已关注' : '关注TA' }}
                         </button>
                         <div class="u-more">
-                            <img class="u-icon" src="@/assets/img/author/mobile/nav_more.svg" />
+                            <img class="u-icon" svg-inline src="@/assets/img/author/mobile/nav_more.svg" />
                         </div>
                     </div>
                 </div>

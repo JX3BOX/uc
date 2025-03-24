@@ -133,7 +133,7 @@ export default {
 
                 border-radius: 8px;
                 border: 1px solid rgba(40, 40, 40, 0.05);
-                background: var(--Primary-Brand-4, #282828);
+                background: var(--primary-brand-4, #282828);
 
                 color: var(--black-40, rgba(255, 255, 255, 0.40));
 

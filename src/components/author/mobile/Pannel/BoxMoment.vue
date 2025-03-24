@@ -1,8 +1,6 @@
-
-
 <template>
     <div>
-        12312
+        动态
     </div>
 </template>
 
