@@ -35,7 +35,7 @@
                                 <!-- 围棋五黑五白，其他正常box.svg -->
                                 <img
                                     class="u-img"
-                                    :src="`${themeImg}${(theme === 'weiqi' && index < 5) ? 'boxBlack' : 'box'}.svg?123`"
+                                    :src="`${themeImg}${theme === 'weiqi' && index < 5 ? 'boxBlack' : 'box'}.svg?123`"
                                     alt="奖品"
                                     :key="replay + 'box' + index"
                                     v-show="showBox(index)"
@@ -52,7 +52,49 @@
                         <!-- 奖品 -->
                         <div class="m-prize box">
                             <div class="m-title">
-                                <img :src="`${__imgRoot}prize.png`" class="u-prize" alt="奖品一览" />
+                                <div style="display: flex">
+                                    <img :src="`${__imgRoot}prize.png`" class="u-prize" alt="奖品一览" />
+                                    <div class="u-preview" @click="preview = true">速览</div>
+                                </div>
+                                <el-dialog
+                                    title="奖品速览"
+                                    :visible.sync="preview"
+                                    width="80%"
+                                    :before-close="() => (preview = false)"
+                                    :append-to-body="true"
+                                    custom-class="m-preview-dialog"
+                                >
+                                    <div class="m-preview">
+                                        <a
+                                            :href="aLink(item)"
+                                            v-for="(item, index) in previewList"
+                                            :key="index"
+                                            target="_blank"
+                                            :data-index="index"
+                                            class="m-preview-item"
+                                        >
+                                            <div class="u-prize">
+                                                <img :src="item.img" />
+                                                <div class="u-prize-name">{{ item.name }}</div>
+                                                <span class="u-prize-count" v-if="item.name !== '积分（积分）'"
+                                                    >剩余量 <b>{{ item.prize_count - item.be_won_count }}</b
+                                                    ><el-progress
+                                                        :percentage="
+                                                            Number(
+                                                                (
+                                                                    ((item.prize_count - item.be_won_count) /
+                                                                        item.prize_count) *
+                                                                    100
+                                                                ).toFixed(1)
+                                                            )
+                                                        "
+                                                    ></el-progress
+                                                ></span>
+                                                <span v-else>不限量</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </el-dialog>
                                 <el-tooltip effect="light" placement="right-start">
                                     <span class="u-odds" v-show="odds">+ 概率公式</span>
                                     <div class="m-blindbox-info" slot="content">
@@ -114,11 +156,7 @@
                                 v-if="theme !== 'weiqi'"
                             />
                             <!-- 围棋主题需要换图片所以用div的背景图代替 -->
-                            <div
-                                class="u-img refresh"
-                                @click="refreshBox"
-                                v-if="theme === 'weiqi'"
-                            ></div>
+                            <div class="u-img refresh" @click="refreshBox" v-if="theme === 'weiqi'"></div>
                             <div
                                 class="m-random u-img"
                                 :class="{ disabled: !activeList.length || points < draw[0][1] || isDrawing }"
@@ -206,7 +244,7 @@ import { __Root, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 import "@/assets/css/vip/lottery/hacker.less";
 import "@/assets/css/vip/lottery/dragon.less";
 import "@/assets/css/vip/lottery/normal.less";
-import "@/assets/css/vip/lottery/weiqi.less"
+import "@/assets/css/vip/lottery/weiqi.less";
 export default {
     name: "Index",
     data: function () {
@@ -215,6 +253,7 @@ export default {
             raw: {},
             draw: {},
             prizeList: [],
+            previewList: [],
             points: 0,
             index: 0,
 
@@ -257,6 +296,7 @@ export default {
             visible: false,
             loading: false,
             user: {},
+            preview: false,
         };
     },
     components: {
@@ -300,7 +340,7 @@ export default {
         isVideo() {
             const data = {
                 hacker: "hacker",
-                weiqi: "weiqi"
+                weiqi: "weiqi",
             };
             return data[this.theme];
         },
@@ -333,9 +373,11 @@ export default {
     },
     methods: {
         loadUser() {
-            getMyInfo().then((res) => {
-                this.user = res.data.data;
-            });
+            if(this.isLogin){
+                getMyInfo().then((res) => {
+                    this.user = res.data.data;
+                });
+            }
         },
         // 初始化，获取活动ID,并获取活动详情
         init() {
@@ -378,7 +420,7 @@ export default {
                     const data = res.data.data;
 
                     this.draw = zip(data.allow_once_try_count, data.allow_once_try_count_cost_points);
-
+                    this.previewList = this.setPrizeList(data);
                     this.prizeList = this.setPrizeList(data).reverse();
                     this.scroll(this.prizeList.length);
                     const userLevelLimit = data.user_level_limit;

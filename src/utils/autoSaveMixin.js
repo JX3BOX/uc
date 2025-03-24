@@ -1,6 +1,7 @@
 import { pull } from "@/service/publish/cms";
 import { webDuration, localDuration } from "@/pages/publish/setting.json";
 import { addRevision, getRevision } from "@/service/publish/revision";
+import { getCommitById } from "@/service/publish/version";
 import hash from "object-hash";
 import { cloneDeep } from "lodash";
 
@@ -12,7 +13,7 @@ export const AutoSaveMixin = {
             webTimer: "",
         };
     },
-    beforeDestroy: function() {
+    beforeDestroy: function () {
         // 清空引用，释放内存
         clearInterval(this.localTimer);
         this.localTimer = null;
@@ -42,7 +43,7 @@ export const AutoSaveMixin = {
         // 加载
         // ==============================
         // 初始化加载
-        loadData: function() {
+        loadData: function () {
             this.loading = true;
 
             // 1.当 mode = draft 时，加载本地 IndexedDB 内容
@@ -59,19 +60,41 @@ export const AutoSaveMixin = {
 
                 // 2.当 mode = revision 时，加载对应历史版本内容
             } else if (this.isRevision) {
-                let post_id = this.$route.params.id;
-                let revision_id = this.$route.query.id;
-                return getRevision(post_id, revision_id)
-                    .then((res) => {
-                        this.post = {
-                            ...res.data.data,
-                            prev_post: res.data.data.prev_post || '',
-                            next_post: res.data.data.next_post || '',
-                        };
-                    })
-                    .finally(() => {
+                const content_meta_id = this.$route.query.content_meta_id;
+                const version_id = this.$route.query.version_id;
+                if (version_id && content_meta_id) {
+                    return getCommitById(content_meta_id, version_id)
+                        .then((res) => {
+                            this.post = {
+                                post_content: res.data?.data?.content || "",
+                                prev_post: "",
+                                next_post: "",
+                            };
+                        })
+                        .finally(() => {
+                            this.loading = false;
+                        });
+                } else {
+                    return new Promise((resolve, reject) => {
+                        resolve();
+                    }).finally(() => {
                         this.loading = false;
                     });
+                }
+
+                // let post_id = this.$route.params.id;
+                // let revision_id = this.$route.query.id;
+                // return getRevision(post_id, revision_id)
+                //     .then((res) => {
+                //         this.post = {
+                //             ...res.data.data,
+                //             prev_post: res.data.data.prev_post || '',
+                //             next_post: res.data.data.next_post || '',
+                //         };
+                //     })
+                //     .finally(() => {
+                //         this.loading = false;
+                //     });
 
                 // 3.正常加载文章
             } else {
@@ -81,9 +104,10 @@ export const AutoSaveMixin = {
                         .then((res) => {
                             this.post = {
                                 ...res.data.data,
-                                prev_post: res.data.data.prev_post || '',
-                                next_post: res.data.data.next_post || '',
+                                prev_post: res.data.data.prev_post || "",
+                                next_post: res.data.data.next_post || "",
                             };
+                            // console.log(this.post);
                         })
                         .finally(() => {
                             this.loading = false;
@@ -101,7 +125,7 @@ export const AutoSaveMixin = {
         // 自动保存
         // 间隔设置见setting.json
         // ==============================
-        autoSave: function() {
+        autoSave: function () {
             // 首次初始化时，为内容创建镜像缓存（以做后续对比功能或其他应用读取原始状态）
             if (this.id) {
                 sessionStorage.setItem(this.post.post_type + "_" + this.id, JSON.stringify(this.post));
@@ -115,11 +139,11 @@ export const AutoSaveMixin = {
                 }, localDuration);
 
                 // 云端备份
-                if (this.id) {
-                    this.webTimer = setInterval(() => {
-                        this.createCloudRevision();
-                    }, webDuration);
-                }
+                // if (this.id) {
+                //     this.webTimer = setInterval(() => {
+                //         this.createCloudRevision();
+                //     }, webDuration);
+                // }
             }
         },
 
@@ -173,19 +197,21 @@ export const AutoSaveMixin = {
         },
 
         // 自动保存：生成云端备份
-        createCloudRevision() {
-            const isSame = hash.MD5(sessionStorage.getItem(`${this.post.post_type}_${this.post.ID}`)) === hash.MD5(JSON.stringify(this.post));
-            if (isSame) return;
-            addRevision(this.post.ID, this.post).then(() => {
-                this.$notify({
-                    title: "提醒",
-                    type: "success",
-                    message: "历史版本生成成功",
-                });
-                // 更新md5
-                sessionStorage.setItem(`${this.post.post_type}_${this.post.ID}`, JSON.stringify(this.post));
-            });
-        },
+        // createCloudRevision() {
+        //     const isSame =
+        //         hash.MD5(sessionStorage.getItem(`${this.post.post_type}_${this.post.ID}`)) ===
+        //         hash.MD5(JSON.stringify(this.post));
+        //     if (isSame) return;
+        //     addRevision(this.post.ID, this.post).then(() => {
+        //         this.$notify({
+        //             title: "提醒",
+        //             type: "success",
+        //             message: "历史版本生成成功",
+        //         });
+        //         // 更新md5
+        //         sessionStorage.setItem(`${this.post.post_type}_${this.post.ID}`, JSON.stringify(this.post));
+        //     });
+        // },
 
         // 使用按钮
         // ==============================

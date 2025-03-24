@@ -114,7 +114,7 @@ export default {
             };
         },
         publishLink: function () {
-            return "./#/" + "namespace";
+            return "/publish/#/" + "namespace";
         },
     },
     methods: {
@@ -123,7 +123,7 @@ export default {
                 location.href = "/team/org/edit/" + teamid + "?tab=other";
                 return;
             }
-            location.href = "./#/namespace/" + id;
+            location.href = "/publish/#/namespace/" + id;
         },
         loadData: function () {
             this.loading = true;

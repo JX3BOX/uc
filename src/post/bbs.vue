@@ -2,7 +2,7 @@
     <div class="m-publish-box" v-loading="loading">
         <!-- 头部 -->
         <publish-header name="剑三茶馆">
-            <publish-revision :enable="true" :post-id="id"></publish-revision>
+            <publish-revision :enable="true" :post="post"></publish-revision>
         </publish-header>
 
         <el-form label-position="left" label-width="80px">
@@ -63,10 +63,8 @@
             <div class="m-publish-extend">
                 <el-divider content-position="left">设置</el-divider>
                 <publish-comment v-model="post.comment">
-                    <el-checkbox v-model="visible_for_self" :true-label="1" :false-label="0"
-                        >仅自己可见</el-checkbox>
-                    <el-checkbox v-model="open_white_list" :true-label="1" :false-label="0"
-                        >开启评论过滤</el-checkbox>
+                    <el-checkbox v-model="visible_for_self" :true-label="1" :false-label="0">仅自己可见</el-checkbox>
+                    <el-checkbox v-model="open_white_list" :true-label="1" :false-label="0">开启评论过滤</el-checkbox>
                 </publish-comment>
                 <publish-gift v-model="post.allow_gift"></publish-gift>
                 <publish-visible v-model="post.visible"></publish-visible>
@@ -238,7 +236,7 @@ export default {
     },
     computed: {
         id: function () {
-            return this.isRevision ? ~~this.post.post_id : ~~this.post.ID;
+            return ~~this.post.ID || ~~this.$route.params.id;
         },
         data: function () {
             const topics = [...new Set([...this.post.topics, ...this.buckets])];
@@ -252,7 +250,7 @@ export default {
     mounted() {
         this.getTopicBucket();
         const id = this.$route.params.id;
-        id && this.loadCommentConfig('post', id);
+        id && this.loadCommentConfig("post", id);
     },
     methods: {
         // 初始化
@@ -280,7 +278,7 @@ export default {
         publish: function (status, skip) {
             this.post.post_status = status;
             this.processing = true;
-            const fn = this.from === 'admin' ? pushAdmin : push;
+            const fn = this.from === "admin" ? pushAdmin : push;
             return fn(...this.data)
                 .then((res) => {
                     let result = res.data.data;
@@ -289,10 +287,10 @@ export default {
                 .then((result) => {
                     this.atUser(result.ID || this.id);
                     this.setHasRead();
-                    this.afterPublish({...result, ID: result.ID || this.id, post_type: "bbs"}).finally(() => {
-                        this.done(skip, {...result, ID: result.ID || this.id, post_type: "bbs"});
+                    this.afterPublish({ ...result, ID: result.ID || this.id, post_type: "bbs" }).finally(() => {
+                        this.done(skip, { ...result, ID: result.ID || this.id, post_type: "bbs" });
                     });
-                    this.setCommentConfig('post', result.ID || this.id);
+                    this.setCommentConfig("post", result.ID || this.id);
                 })
                 .finally(() => {
                     this.processing = false;
@@ -343,11 +341,11 @@ export default {
             });
         },
         getTopicBucket() {
-            getTopicBucket({ type: 'bbs' }).then((res) => {
-                const data = res.data.data?.map(item => item.name) || [];
+            getTopicBucket({ type: "bbs" }).then((res) => {
+                const data = res.data.data?.map((item) => item.name) || [];
                 this.topics = [...data];
             });
-        }
+        },
     },
 };
 </script>

@@ -3,7 +3,7 @@
         <!-- 头部 -->
         <publish-header name="工具资源">
             <div class="u-actions">
-                <publish-revision :enable="true" :post-id="id"></publish-revision>
+                <publish-revision :enable="true" :post="post"></publish-revision>
                 <publish-reading-history v-if="id" :post-id="id" category="posts"></publish-reading-history>
             </div>
         </publish-header>
@@ -91,7 +91,14 @@
             </div>
 
             <div class="m-publish-doc">
-                <el-alert class="u-illegal-alert" v-if="is_illegal" :closable="false" show-icon type="warning" title="检测到您的内容存在不合规，将无法发布成功，并有禁言风险。"></el-alert>
+                <el-alert
+                    class="u-illegal-alert"
+                    v-if="is_illegal"
+                    :closable="false"
+                    show-icon
+                    type="warning"
+                    title="检测到您的内容存在不合规，将无法发布成功，并有禁言风险。"
+                ></el-alert>
                 <el-checkbox v-model="hasRead" :true-label="1" :false-label="0"
                     >我已阅读并了解<a href="/notice/119" @click.stop target="_blank">《创作发布规范》</a></el-checkbox
                 >
@@ -249,13 +256,13 @@ export default {
     },
     computed: {
         id: function () {
-            return this.isRevision ? ~~this.post.post_id : ~~this.post.ID;
+            return ~~this.post.ID || ~~this.$route.params.id;
         },
         data: function () {
             if (this.id) {
-                return [this.id, {...this.post, post_content: this.removeBase64Img(this.post.post_content)}];
+                return [this.id, { ...this.post, post_content: this.removeBase64Img(this.post.post_content) }];
             } else {
-                return [{...this.post, post_content: this.removeBase64Img(this.post.post_content)}];
+                return [{ ...this.post, post_content: this.removeBase64Img(this.post.post_content) }];
             }
         },
     },
@@ -286,8 +293,8 @@ export default {
                     return result;
                 })
                 .then((result) => {
-                    this.afterPublish({...result, ID: result.ID || this.id, post_type: "tool"}).finally(() => {
-                        this.done(skip, {...result, ID: result.ID || this.id, post_type: "tool"});
+                    this.afterPublish({ ...result, ID: result.ID || this.id, post_type: "tool" }).finally(() => {
+                        this.done(skip, { ...result, ID: result.ID || this.id, post_type: "tool" });
                     });
 
                     this.setCommentConfig("post", result.ID || this.id);

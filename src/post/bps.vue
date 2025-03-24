@@ -3,7 +3,7 @@
         <!-- 头部 -->
         <publish-header name="职业攻略">
             <div class="u-actions">
-                <publish-revision :enable="true" :post-id="id"></publish-revision>
+                <publish-revision :enable="true" :post="post"></publish-revision>
                 <publish-reading-history v-if="id" :post-id="id" category="posts"></publish-reading-history>
             </div>
         </publish-header>
@@ -32,7 +32,11 @@
                 <!-- 心法 -->
                 <publish-xf v-model="post.post_subtype" :client="post.client"></publish-xf>
                 <!-- 跨心法 -->
-                <publish-mix-subtype v-if="post.post_subtype == '通用'" v-model="post.mix_subtype" :client="post.client"></publish-mix-subtype>
+                <publish-mix-subtype
+                    v-if="post.post_subtype == '通用'"
+                    v-model="post.mix_subtype"
+                    :client="post.client"
+                ></publish-mix-subtype>
             </div>
 
             <!-- 正文 -->
@@ -91,7 +95,14 @@
             </div>
 
             <div class="m-publish-doc">
-                <el-alert class="u-illegal-alert" v-if="is_illegal" :closable="false" show-icon type="warning" title="检测到您的内容存在不合规，将无法发布成功，并有禁言风险。"></el-alert>
+                <el-alert
+                    class="u-illegal-alert"
+                    v-if="is_illegal"
+                    :closable="false"
+                    show-icon
+                    type="warning"
+                    title="检测到您的内容存在不合规，将无法发布成功，并有禁言风险。"
+                ></el-alert>
                 <el-checkbox v-model="hasRead" :true-label="1" :false-label="0"
                     >我已阅读并了解<a href="/notice/119" @click.stop target="_blank">《创作发布规范》</a></el-checkbox
                 >
@@ -99,17 +110,12 @@
 
             <!-- 按钮 -->
             <div class="m-publish-buttons">
-                <template v-if="isDraft || isRevision">
-                    <el-button type="primary" @click="useDraft" :disabled="processing">使用此版本</el-button>
-                </template>
-                <template v-else>
-                    <el-button type="primary" @click="publish('publish', true)" :disabled="processing || !hasRead"
-                        >发 &nbsp;&nbsp; 布</el-button
-                    >
-                    <el-button type="plain" @click="publish('draft', false)" :disabled="processing || !hasRead"
-                        >保存为草稿</el-button
-                    >
-                </template>
+                <el-button type="primary" @click="publish('publish', true)" :disabled="processing || !hasRead"
+                    >发 &nbsp;&nbsp; 布</el-button
+                >
+                <el-button type="plain" @click="publish('draft', false)" :disabled="processing || !hasRead"
+                    >保存为草稿</el-button
+                >
             </div>
         </el-form>
     </div>
@@ -248,13 +254,13 @@ export default {
     },
     computed: {
         id: function () {
-            return this.isRevision ? ~~this.post.post_id : ~~this.post.ID;
+            return ~~this.post.ID || ~~this.$route.params.id;
         },
         data: function () {
             if (this.id) {
-                return [this.id, {...this.post, post_content: this.removeBase64Img(this.post.post_content)}];
+                return [this.id, { ...this.post, post_content: this.removeBase64Img(this.post.post_content) }];
             } else {
-                return [{...this.post, post_content: this.removeBase64Img(this.post.post_content)}];
+                return [{ ...this.post, post_content: this.removeBase64Img(this.post.post_content) }];
             }
         },
         topics: function () {
@@ -308,8 +314,8 @@ export default {
                     return result;
                 })
                 .then((result) => {
-                    this.afterPublish({...result, ID: result.ID || this.id, post_type: 'bps'}).finally(() => {
-                        this.done(skip, {...result, ID: result.ID || this.id, post_type: 'bps'});
+                    this.afterPublish({ ...result, ID: result.ID || this.id, post_type: "bps" }).finally(() => {
+                        this.done(skip, { ...result, ID: result.ID || this.id, post_type: "bps" });
                     });
                     this.setCommentConfig("post", result.ID || this.id);
                 })

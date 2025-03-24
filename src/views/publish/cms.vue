@@ -117,7 +117,7 @@ export default {
             };
         },
         publishLink: function () {
-            return "./#/" + this.type;
+            return "/publish/#/" + this.type;
         },
         showWujie: function () {
             return ["bps", "pvp", "bbs"].includes(this.type);
@@ -152,7 +152,7 @@ export default {
                 });
         },
         edit: function (type, id) {
-            location.href = "./#/" + type + "/" + id;
+            location.href = "/publish/#/" + type + "/" + id;
         },
         del: function (id) {
             this.$alert("确定要删除吗？", "确认信息", {

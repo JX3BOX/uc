@@ -126,7 +126,7 @@ export default {
             };
         },
         publishLink: function () {
-            return "./#/community";
+            return "/publish/#/community";
         },
         showWujie: function () {
             return ["bps", "pvp", "bbs"].includes(this.type);

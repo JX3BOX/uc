@@ -1,9 +1,12 @@
 <template>
     <div class="m-dashboard m-cooperation">
         <h2 class="u-title">
-            <span class="u-title-text"
-                ><i class="el-icon-reading"></i> 签约中心
-                <el-tag class="u-sign" size="small" type="success" v-if="isSuperAuthor">签约时长：{{ signDuration }}{{ signDurationType }}</el-tag>
+            <span class="u-title-text">
+                <i class="el-icon-reading"></i>
+                签约中心
+                <el-tag class="u-sign" size="small" type="success" v-if="isSuperAuthor"
+                    >签约时长：{{ signDuration }}{{ signDurationType }}</el-tag
+                >
             </span>
             <el-button type="primary" @click="openPage" size="small" v-if="isSuperAuthor" icon="el-icon-unlock">
                 敏感词测试
@@ -283,6 +286,7 @@ export default {
     .u-title-text {
         .flex;
         align-items: center;
+        gap:10px;
     }
 
     .u-sign {

@@ -116,7 +116,7 @@ export default {
             return wikiTypes[this.type];
         },
         publishLink: function () {
-            return "./#/" + this.type;
+            return "/publish/#/" + this.type;
         },
     },
     methods: {

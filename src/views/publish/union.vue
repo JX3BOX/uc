@@ -154,7 +154,7 @@ export default {
                 });
         },
         edit: function (type, id) {
-            location.href = "./#/" + type + "/" + id;
+            location.href = "/publish/#/" + type + "/" + id;
         },
         postLink: function (type, id) {
             return getLink(type, id);

@@ -102,7 +102,7 @@ export default {
             };
         },
         publishLink: function () {
-            return "./#/face";
+            return "/publish/#/face";
         },
     },
     watch: {
@@ -130,7 +130,7 @@ export default {
                 });
         },
         edit: function (id) {
-            location.href = "./#/face/" + id;
+            location.href = "/publish/#/face/" + id;
         },
         postLink: function (id) {
             return "/face/" + id;

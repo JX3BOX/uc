@@ -101,7 +101,7 @@ export default {
             };
         },
         publishLink: function () {
-            return "./#/body";
+            return "/publish/#/body";
         },
     },
     watch: {
@@ -129,7 +129,7 @@ export default {
                 });
         },
         edit: function (id) {
-            location.href = "./#/body/" + id;
+            location.href = "/publish/#/body/" + id;
         },
         postLink: function (id) {
             return "/body/" + id;
