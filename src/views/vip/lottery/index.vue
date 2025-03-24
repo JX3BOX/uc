@@ -52,7 +52,7 @@
                         <!-- 奖品 -->
                         <div class="m-prize box">
                             <div class="m-title">
-                                <div style="display:flex">
+                                <div style="display: flex">
                                     <img :src="`${__imgRoot}prize.png`" class="u-prize" alt="奖品一览" />
                                     <div class="u-preview" @click="preview = true">速览</div>
                                 </div>
@@ -75,10 +75,10 @@
                                         >
                                             <div class="u-prize">
                                                 <img :src="item.img" />
-                                                <div>{{ item.name }}</div>
-                                                <span v-if="item.name !== '积分（积分）'"
-                                                    >剩余量 {{ item.prize_count - item.be_won_count
-                                                    }}<el-progress
+                                                <div class="u-prize-name">{{ item.name }}</div>
+                                                <span class="u-prize-count" v-if="item.name !== '积分（积分）'"
+                                                    >剩余量 <b>{{ item.prize_count - item.be_won_count }}</b
+                                                    ><el-progress
                                                         :percentage="
                                                             Number(
                                                                 (
