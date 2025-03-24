@@ -1,9 +1,8 @@
 <template>
     <AppLayout>
-        <div class="m-theme" :style="themeStyle">
+        <div class="c-var p-author-detail" :style="themeStyle">
             <div class="m-author" :class="isAdmin ? 'm-author-admin' : ''">
-                <Me :decorationMe="decorationMe" :honor="honor" />
-                <Footer></Footer>
+                <MobileMe :decorationMe="decorationMe" :honor="honor" />
             </div>
         </div>
     </AppLayout>
@@ -11,42 +10,43 @@
 
 <script>
 import AppLayout from "@/layouts/author/AppLayout.vue";
-import Me from "@/components/author/newComponents/Me.vue";
 import { getUserInfo, getDecoration, getDecorationJson } from "@/service/author/cms";
 import User from "@jx3box/jx3box-common/js/user";
 import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import MobileMe from "@/components/author/mobile/MobileMe.vue";
+
 const DECORATION_JSON = "decoration_json";
 const DECORATION_KEY = "decoration_me";
 export default {
     name: "Author",
     components: {
-        Me,
+        MobileMe,
         AppLayout,
     },
     props: [],
-    data: function () {
+    data: function() {
         return {
             isAdmin: User.getInfo().group >= 128,
             themeStyle: {},
-            decorationMe: { status: false },
+            decorationMe: { status: false, },
             honor: null,
         };
     },
     computed: {
-        userdata: function () {
+        userdata: function() {
             return this.$store.state.userdata;
         },
-        uid: function () {
+        uid: function() {
             return this.$route.params.id;
         },
-        root: function () {
+        root: function() {
             return "/author/" + this.uid;
         },
-        name: function () {
+        name: function() {
             return this.$store.state.userdata.display_name || "魔盒";
         },
     },
-    created: function () {
+    created: function() {
         if (this.uid) {
             this.$store.state.uid = ~~this.uid;
             getUserInfo(this.uid).then((res) => {
@@ -98,7 +98,7 @@ export default {
                 }
             });
         },
-        showDecoration: function (val, type) {
+        showDecoration: function(val, type) {
             return __cdn + `design/decoration/images/${val}/${type}.png?${new Date().getTime()}`;
         },
         setDecoration(theme) {
@@ -133,10 +133,6 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-@import "~@/assets/css/author/app.less";
-@import "~@/assets/css/author/post.less";
-.m-theme {
-    min-height: calc(100vh - @header-height);
-}
+<style lang="less">
+@import "~@/assets/css/author/mobile/var";
 </style>
