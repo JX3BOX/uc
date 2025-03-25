@@ -28,7 +28,10 @@
                     {{ bindText }}
                 </span>
             </div>
-            <div class="m-custom-tip">请复制以上内容，私聊发送给魔盒QQ机器人（QQ: {{ qq }}）即可</div>
+            <div class="m-custom-tip">
+                请复制以上内容，私聊发送给魔盒QQ机器人<br>
+                QQ: <b>{{ qq }}</b>
+            </div>
         </el-dialog>
     </div>
 </template>
@@ -110,13 +113,18 @@ export default {
 .m-qqbot-dialog {
     .m-qqbot-content {
         padding: 20px;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-x: auto;
         .u-token {
-            .fz(24px);
+            .fz(20px);
             background-color: #e6f0fb;
             border: 1px solid @color-link;
             color: @color-link;
             padding: 20px;
+            font-weight: 400;
             .r(4px);
+            white-space: nowrap;
 
             i {
                 .fz(20px);
@@ -127,9 +135,13 @@ export default {
     }
     .m-custom-tip {
         .x;
-        .mt(40px);
+        .mt(20px);
         max-width: 680px;
         .auto(x);
+        .fz(14px,2);
+        b{
+            color:orange;
+        }
     }
 
     @media screen and (max-width: @phone) {

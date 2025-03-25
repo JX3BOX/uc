@@ -78,106 +78,106 @@ module.exports = {
     },
     //❤️ Proxy ~
     devServer: {
-        proxy: {
-            "/api/horn": {
-                target: "https://pay.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/inspire": {
-                target: "https://pay.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/vip": {
-                target: "https://pay.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/cny": {
-                target: "https://pay.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/summary": {
-                target: "https://next2.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/comment": {
-                target: "https://next2.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/cms": {
-                // target: process.env["DEV_SERVER"] == "true" ? "http://localhost:7100" : "https://cms.jx3box.com",
-                target: "https://cms.jx3box.com"
-            },
-            "/api/summary-any": {
-                target: "https://next2.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/team": {
-                target: "https://team.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/search": {
-                target: "https://gs.jx3box.com",
-                changeOrigin: true,
-            },
-            "/pay/web": {
-                target: "https://ipay.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/pay": {
-                target: "https://pay.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/summary-any": {
-                target: "https://next2.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/letter": {
-                target: "https://dev.next2.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/next2": {
-                target: "https://dev.next2.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api/lua":{
-                target: "https://lua.jx3box.com/",
-                onProxyReq: function(request) {
-                    request.setHeader("origin", "");
-                },
-            },
-            "/api": {
-                target: "https://dev.next2.jx3box.com",
-                onProxyReq: function (request) {
-                    request.setHeader("origin", "");
-                },
-            },
-        },
+        // proxy: {
+        //     "/api/horn": {
+        //         target: "https://pay.jx3box.com",
+        //         onProxyReq: function (request) {
+        //             request.setHeader("origin", "");
+        //         },
+        //     },
+        //     "/api/inspire": {
+        //         target: "https://pay.jx3box.com",
+        //         onProxyReq: function (request) {
+        //             request.setHeader("origin", "");
+        //         },
+        //     },
+        //     "/api/vip": {
+        //         target: "https://pay.jx3box.com",
+        //         onProxyReq: function (request) {
+        //             request.setHeader("origin", "");
+        //         },
+        //     },
+        //     "/api/cny": {
+        //         target: "https://pay.jx3box.com",
+        //         onProxyReq: function (request) {
+        //             request.setHeader("origin", "");
+        //         },
+        //     },
+        //     "/api/summary": {
+        //         target: "https://next2.jx3box.com",
+        //         onProxyReq: function (request) {
+        //             request.setHeader("origin", "");
+        //         },
+        //     },
+        //     "/api/comment": {
+        //         target: "https://next2.jx3box.com",
+        //         onProxyReq: function (request) {
+        //             request.setHeader("origin", "");
+        //         },
+        //     },
+        //     "/api/cms": {
+        //         // target: process.env["DEV_SERVER"] == "true" ? "http://localhost:7100" : "https://cms.jx3box.com",
+        //         target: "https://cms.jx3box.com"
+        //     },
+        //     "/api/summary-any": {
+        //         target: "https://next2.jx3box.com",
+        //         onProxyReq: function (request) {
+        //             request.setHeader("origin", "");
+        //         },
+        //     },
+        //     "/api/team": {
+        //         target: "https://team.jx3box.com",
+        //         onProxyReq: function (request) {
+        //             request.setHeader("origin", "");
+        //         },
+        //     },
+        //     "/api/search": {
+        //         target: "https://gs.jx3box.com",
+        //         changeOrigin: true,
+        //     },
+        //     "/pay/web": {
+        //         target: "https://ipay.jx3box.com",
+        //         onProxyReq: function (request) {
+        //             request.setHeader("origin", "");
+        //         },
+        //     },
+        //     "/pay": {
+        //         target: "https://pay.jx3box.com",
+        //         onProxyReq: function (request) {
+        //             request.setHeader("origin", "");
+        //         },
+        //     },
+        //     "/api/summary-any": {
+        //         target: "https://next2.jx3box.com",
+        //         onProxyReq: function (request) {
+        //             request.setHeader("origin", "");
+        //         },
+        //     },
+        //     "/api/letter": {
+        //         target: "https://dev.next2.jx3box.com",
+        //         onProxyReq: function (request) {
+        //             request.setHeader("origin", "");
+        //         },
+        //     },
+        //     "/api/next2": {
+        //         target: "https://dev.next2.jx3box.com",
+        //         onProxyReq: function (request) {
+        //             request.setHeader("origin", "");
+        //         },
+        //     },
+        //     "/api/lua":{
+        //         target: "https://lua.jx3box.com/",
+        //         onProxyReq: function(request) {
+        //             request.setHeader("origin", "");
+        //         },
+        //     },
+        //     "/api": {
+        //         target: "https://dev.next2.jx3box.com",
+        //         onProxyReq: function (request) {
+        //             request.setHeader("origin", "");
+        //         },
+        //     },
+        // },
         disableHostCheck: true,
     },
 
