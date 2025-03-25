@@ -36,7 +36,7 @@
                     </div>
                     <div v-if="item.extra_images?.length" class="m-img-list">
                         <img
-                            v-for="(img, index) in item?.extra_images"
+                            v-for="(img, index) in item?.extra_images.slice(0,3)"
                             :key="index"
                             loading="lazy"
                             class="u-img"
