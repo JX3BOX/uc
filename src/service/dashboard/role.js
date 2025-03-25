@@ -47,6 +47,11 @@ function getRoleBelongTeams(role_id) {
     return $team().get(`/api/team/relation/role/${role_id}/teams`);
 }
 
+// 修改角色可见性
+function updateRoleVisible(role_id, visible) {
+    return $team().put(`/api/team/my-game-roles/${role_id}/change-visible/${visible}`);
+}
+
 export {
     getRoles,
     unbindRole,
@@ -59,4 +64,5 @@ export {
     starRole,
     unstarRole,
     getRoleBelongTeams,
+    updateRoleVisible,
 };

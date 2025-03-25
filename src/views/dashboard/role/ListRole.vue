@@ -79,44 +79,37 @@
                             <em>备注</em>
                             {{ item.note }}
                             <span class="u-addnote" @click="addNote(item)">
-                            <el-tooltip class="item" effect="dark" content="设置备注" placement="top">
-                                <i class="el-icon-edit-outline"></i>
-                            </el-tooltip>
-                        </span>
+                                <el-tooltip class="item" effect="dark" content="设置备注" placement="top">
+                                    <i class="el-icon-edit-outline"></i>
+                                </el-tooltip>
+                            </span>
                         </span>
                     </span>
                     <span class="u-time">绑定时间 : {{ item.created_at | showTime }}</span>
                     <div class="u-op">
-                        <el-button
-                            v-if="!item.custom"
-                            class="u-btn u-unbind"
-                            plain
-                            size="mini"
-                            circle
-                            icon="el-icon-delete"
-                            @click="unbind(item.ID, i)"
-                        >
-                            <!-- <i class="u-icon">
-                                <img svg-inline src="@/assets/img/dashboard/unbind.svg" /> </i
-                            > -->
-                        </el-button>
-                        <template v-else>
-                            <router-link
-                                :to="'/role/edit/' + item.ID"
-                                class="el-button u-btn u-delete el-button--default el-button--mini is-plain is-circle"
-                            >
-                                <i class="el-icon-edit-outline"></i>
-                            </router-link>
-                            <el-button
-                                class="u-btn u-delete"
-                                plain
-                                size="mini"
-                                circle
-                                @click="delRole(item.ID, i)"
-                                icon="el-icon-delete"
-                                ></el-button
-                            >
-                        </template>
+                        <el-switch v-model="item.is_public_visible" :active-value="1" :inactive-value="0" @change="onPublicChange(item)" class="u-public" active-text="公开">
+                        </el-switch>
+                        <el-dropdown @command="handleCommand" trigger="click">
+                            <el-button type="default" size="small">
+                                更多<i class="el-icon-arrow-down el-icon--right"></i>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item v-if="!item.custom" :command="{ item, command: 'unbind' }">
+                                    <i class="el-icon-remove-outline"></i>
+                                    解绑
+                                </el-dropdown-item>
+                                <template v-else>
+                                    <el-dropdown-item :command="{ item, command: 'edit' }">
+                                        <i class="el-icon-edit-outline"></i>
+                                        编辑
+                                    </el-dropdown-item>
+                                    <el-dropdown-item :command="{ item, command: 'delete' }">
+                                        <i class="el-icon-delete"></i>
+                                        删除
+                                    </el-dropdown-item>
+                                </template>
+                            </el-dropdown-menu>
+                        </el-dropdown>
                     </div>
                 </li>
             </ul>
@@ -132,7 +125,12 @@
                 </router-link>
             </div>
         </template>
-        <el-dialog title="设置备注" :visible.sync="noteVisible" :width="isPhone ? '95%' :'30%'" class="m-team-note-dialog">
+        <el-dialog
+            title="设置备注"
+            :visible.sync="noteVisible"
+            :width="isPhone ? '95%' : '30%'"
+            class="m-team-note-dialog"
+        >
             <div>
                 <el-input v-model="note" placeholder="请输入内容" :maxlength="20" :show-word-limit="true"></el-input>
             </div>
@@ -145,7 +143,7 @@
 </template>
 
 <script>
-import { getRoles, unbindRole, noteRole, deleteRole, starRole, unstarRole } from "@/service/dashboard/role.js";
+import { getRoles, unbindRole, noteRole, deleteRole, starRole, unstarRole, updateRoleVisible } from "@/service/dashboard/role.js";
 import school_id_map from "@jx3box/jx3box-data/data/xf/schoolid.json";
 import { __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
@@ -160,19 +158,7 @@ export default {
     },
     data: function () {
         return {
-            data: [
-                // {
-                //     id: 0,
-                //     uid: 0,
-                //     jx3id: "testid",
-                //     server: "服务器名称",
-                //     name: "角色名",
-                //     mount: "10080",
-                //     body_type: "6",
-                //     status: 1,
-                //     created_at: "2020-09-29T16:55:03+08:00",
-                // },
-            ],
+            data: [],
             loading: false,
 
             // 备注
@@ -198,9 +184,10 @@ export default {
         },
     },
     methods: {
-        unbind: function (id, i) {
-            this.$alert("在网站进行解绑游戏内需要小退方可生效", "消息", {
+        unbind: function (id) {
+            this.$confirm("在网站进行解绑游戏内需要小退方可生效", "提示", {
                 confirmButtonText: "确定解绑",
+                cancelButtonText: "取消",
                 callback: (action) => {
                     if (action == "confirm") {
                         unbindRole(id).then((res) => {
@@ -209,7 +196,7 @@ export default {
                                 message: "角色解绑成功",
                                 type: "success",
                             });
-                            this.data.splice(i, 1);
+                            this.loadData();
                         });
                     }
                 },
@@ -248,7 +235,7 @@ export default {
                 });
             });
         },
-        delRole: function (role_id, i) {
+        delRole: function (role_id, ) {
             this.$alert("确定删除该角色吗？", "消息", {
                 confirmButtonText: "确定",
                 callback: (action) => {
@@ -259,7 +246,7 @@ export default {
                                 message: "角色删除成功",
                                 type: "success",
                             });
-                            this.data.splice(i, 1);
+                            this.loadData();
                         });
                     }
                 },
@@ -285,6 +272,25 @@ export default {
                     });
                 });
             }
+        },
+
+        handleCommand(data) {
+            if (data.command == 'unbind') {
+                this.unbind(data.item.ID);
+            } else if (data.command == 'edit') {
+                this.$router.push('/role/edit/' + data.item.ID);
+            } else if (data.command == 'delete') {
+                this.delRole(data.item.ID);
+            }
+        },
+        onPublicChange: function (item) {
+            updateRoleVisible(item.ID, item.is_public_visible).then((res) => {
+                this.$notify({
+                    title: "成功",
+                    message: "设置成功",
+                    type: "success",
+                });
+            });
         },
     },
     created: function () {},
