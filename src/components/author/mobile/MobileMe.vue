@@ -24,9 +24,7 @@
                     </div>
                     <div v-if="isSuperAuthor || isPRO" class="m-ext-info">
                         <div v-if="isSuperAuthor" class="u-author">签约作者</div>
-                        <div v-if="isPRO"  class="u-pro">
-                            <img  class="u-icon" svg-inline src="@/assets/img/author/mobile/pro.svg" />
-                        </div>
+                        <div v-if="isPRO"  class="u-pro"><span>Pro 专业版</span> </div>
                     </div>
                     <div class="m-op">
                         <button class="u-btn u-subscribe" :class="{ 'is-subscribe': subscribed }" @click="follow">

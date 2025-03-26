@@ -205,7 +205,12 @@
                         color: var(--secondary-orange);
                     }
                     .u-pro {
-                        width: 69px;
+                        span{
+                            background: linear-gradient(51deg, #42FFD2 0%, #FF007A 100%);
+                            background-clip: text;
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                        }
                     }
                     .u-fans {
                         color: #ff9bc6;
@@ -279,6 +284,7 @@
             border-bottom: 0.5px solid var(--black-10, rgba(28, 28, 28, 0.10));
             margin: 0;
             background: #fff;
+            padding-top: 12px;
 
             &.fixed{
                 position: fixed;
@@ -381,7 +387,7 @@
 
     .m-empty{
         background: #FFF;
-        opacity: 14%;
+        opacity: 76%;
         @media (prefers-color-scheme: dark) {
             background: #1C1C1C;
         }

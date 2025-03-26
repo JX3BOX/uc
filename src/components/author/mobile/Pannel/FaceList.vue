@@ -64,7 +64,7 @@ export default {
             this.loading = true;
             getFaceList(this.params)
                 .then((res) => {
-                    this.list = res.data.data.list;
+                    this.list = this.list.concat(res.data.data.list || []);
                     this.total = res.data.data.page.total;
                 })
                 .finally(() => {
@@ -75,6 +75,14 @@ export default {
             let url=item.images?.[0] || __imgPath + "image/face/null2.png";
             return getThumbnail(url,360);
         },
+        loadMore(){
+            if (this.loading) return;
+            if (document.documentElement.scrollTop + window.innerHeight + 100 >= document.documentElement.scrollHeight) {
+                if (this.list.length < this.total) {
+                    this.pageIndex++;
+                }
+            }
+        }
     },
     watch : {
         params : {
@@ -85,10 +93,12 @@ export default {
             }
         }
     },
-    mounted: function() {
-
+    mounted() {
+        window.addEventListener("scroll", this.loadMore);
     },
-
+    destroyed() {
+        window.removeEventListener("scroll", this.loadMore);
+    }
 };
 </script>
 <style lang="less">

@@ -3,7 +3,7 @@
         <!-- 列表 -->
         <div v-if="list && list.length" class="m-body-list">
             <div v-for="(item, i) in list"  :key="i + item" class="m-body-item">
-                <a class="u-face" :href="`/body/${item.id}`" target="_blank">
+                <a class="u-face" :href="`/body/${item?.id}`" target="_blank">
                     <div class="u-item_img">
                         <img class="u-pic" :src="showThumb(item)" loading="lazy"  style="object-fit: cover" />
                         <div class="u-body-body">
@@ -61,7 +61,7 @@ export default {
             this.loading = true;
             getBodyList(this.params)
                 .then((res) => {
-                    this.list = res.data.data.list;
+                    this.list = this.list.concat(res.data.data.list||[]);
                     this.total = res.data.data.page.total;
                 })
                 .finally(() => {
@@ -75,6 +75,14 @@ export default {
         dateFormat: function(val) {
             return dayjs(val).format('YYYY-MM-DD HH:mm:ss')
         },
+        loadMore(){
+            if (this.loading) return;
+            if (document.documentElement.scrollTop + window.innerHeight + 100 >= document.documentElement.scrollHeight) {
+                if (this.list.length < this.total) {
+                    this.pageIndex++;
+                }
+            }
+        }
     },
     watch : {
         params : {
@@ -85,9 +93,12 @@ export default {
             }
         }
     },
-    mounted: function() {
-
+    mounted() {
+        window.addEventListener("scroll", this.loadMore);
     },
+    destroyed() {
+        window.removeEventListener("scroll", this.loadMore);
+    }
 
 };
 </script>
