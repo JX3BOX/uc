@@ -15,7 +15,9 @@ import RoleCard from "@/components/author/mobile/Pannel/RoleCard.vue";
 
 export default {
     name: "RoleInfo",
-    components: { RoleCard },
+    components: {
+        RoleCard
+    },
     computed:{
         data: function () {
             return this.$store.state.userdata;
