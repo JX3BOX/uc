@@ -1,28 +1,32 @@
 <template>
     <div class="m-mobile-me">
         <div class="m-user-header" :style="{ backgroundColor: userDefinedStyle.bgColor, backgroundImage: `url(${userDefinedStyle.banner || ''})` }">
+            <div class="m-bg"></div>
             <div class="m-header">
-                <div class="m-info-box">
-                    <div class="m-name-avatar">
-                        <div class="m-avatar-box" :class="{'no-frame':!avatar_frame}" >
-                            <Avatar :uid="uid" :url="avatar" :size="80" />
-                            <img  class="u-frame" :src="frameUrl" />
-                        </div>
-                        <div class="u-name">
-                            {{name}}
-                        </div>
+                <div class="m-name-avatar">
+                    <div class="m-avatar-box" :class="{'no-frame':!avatar_frame}" >
+                        <Avatar :uid="uid" :url="avatar" :size="80" />
+                        <img  class="u-frame" :src="frameUrl" />
                     </div>
+                    <div class="u-name-uid">
+                        {{name}}
+                        <div class="u-uid">UID {{uid}}</div>
+                    </div>
+                </div>
+                <div class="m-info-box">
                     <div v-if="uid" class="u-info">
-                        <div class="u-level" :style="{ color: showLevelColor(level) }">Lv.{{ level }}</div>
-                        <div v-if="isSuperAuthor" class="u-author">签约</div>
+                        <div class="u-level u-value" >Lv.{{ level }} <span class="u-tip">用户</span></div>
+                        <div class="u-fans u-value"> {{ fansNum }} <span class="u-tip">粉丝</span></div>
+                        <div class="u-gift u-value"> {{ boxcoin_count | formatBoxcoin }} <span class="u-tip">累计打赏</span></div>
+                    </div>
+                    <div v-if="data.user_bio" class="m-signature">
+                        {{ data.user_bio || "这个人太懒了~没有写签名。" }}
+                    </div>
+                    <div v-if="isSuperAuthor || isPRO" class="m-ext-info">
+                        <div v-if="isSuperAuthor" class="u-author">签约作者</div>
                         <div v-if="isPRO"  class="u-pro">
                             <img  class="u-icon" svg-inline src="@/assets/img/author/mobile/pro.svg" />
                         </div>
-                        <div class="u-fans">粉丝 {{ fansNum }}</div>
-                    </div>
-                    <div class="m-signature">
-                        <div class="u-tip">TA的签名</div>
-                        {{ data.user_bio || "这个人太懒了~没有写签名。" }}
                     </div>
                     <div class="m-op">
                         <button class="u-btn u-subscribe" :class="{ 'is-subscribe': subscribed }" @click="follow">
@@ -52,6 +56,7 @@ import { showAvatar, tvLink } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
 import { deny, undeny, hadDenyUser } from "@/service/author/author";
 import ContentTabList from "@/components/author/mobile/ContentTabList.vue";
+import { getFansList, getSummary } from "@jx3box/jx3box-common-ui/service/author";
 export default {
     name: "MobileMe",
     components: {
@@ -113,6 +118,8 @@ export default {
             // 关注
             subscribed: false,
             fansNum: 0,
+            fans_count:0,
+            boxcoin_count:0,
         };
     },
     computed: {
@@ -201,6 +208,12 @@ export default {
         time: (val) => {
             return dateFormat(new Date(val));
         },
+        formatBoxcoin(val){
+            if(val > 10000){
+                return `${(val /10000).toFixed(2)}w`
+            }
+            return val;
+        }
     },
     methods: {
         showAvatar,
@@ -336,6 +349,15 @@ export default {
                 .finally(() => {
                     this.loading = false;
                 });
+
+            getSummary(this.uid).then((res) => {
+                this.fans_count = res.data.data?.fans_count || 0;
+                this.boxcoin_count = res.data.data?.boxcoin_count || 0;
+            });
+
+            getFansList(this.uid, this.fansLimit).then((res) => {
+                this.list = res.data.data.list || [];
+            });
         },
 
         avatarSizeChange() {
@@ -400,6 +422,7 @@ export default {
 
             return Math.floor(years);
         },
+
     },
     created() {
         this.avatarSizeChange();
