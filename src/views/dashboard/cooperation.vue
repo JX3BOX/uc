@@ -172,11 +172,11 @@ export default {
         },
         signDuration: function () {
             // 检查是否有有效的签约记录
-            if (!this.last || this.last["checked_at"] === undefined) {
+            if (!this.last || this.last["updated"] === undefined) {
                 return 0; // 无签约记录则返回0
             }
 
-            const checkedDate = dayjs(this.last["checked_at"] * 1000);
+            const checkedDate = dayjs(this.last["updated"] * 1000);
             const now = dayjs();
             const diffYears = now.diff(checkedDate, "year");
 
@@ -187,7 +187,7 @@ export default {
             return this.signDuration < 1 ? "天" : "年";
         },
         signAt: function () {
-            return this.last["checked_at"] ? dayjs(this.last["checked_at"] * 1000).format("YYYY-MM-DD HH:mm:ss") : "";
+            return this.last["updated"] ? dayjs(this.last["updated"] * 1000).format("YYYY-MM-DD HH:mm:ss") : "";
         },
     },
     methods: {
