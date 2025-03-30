@@ -28,7 +28,7 @@
                     </div>
                     <div class="m-op">
                         <button class="u-btn u-subscribe" :class="{ 'is-subscribe': subscribed }" @click="follow">
-                            {{ subscribed ? '已关注' : '关注TA' }}
+                            {{ subscribed ? (isFollower?'互相关注':'已关注') : '关注TA' }}
                         </button>
                         <div class="u-more">
                             <img class="u-icon" svg-inline src="@/assets/img/author/mobile/nav_more.svg" />
@@ -37,29 +37,35 @@
                 </div>
             </div>
         </div>
-        <ContentTabList />
+        <ContentTabList :list="filterTabs"/>
 
     </div>
 </template>
 
 <script>
-import { follow, unfollow } from "@jx3box/jx3box-common-ui/service/follow";
 import { getAuthorRss, subscribeAuthor, unsubscribeAuthor } from "@jx3box/jx3box-common/js/rss";
 import { __userLevelColor, __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box";
 import { user as medal_map } from "@jx3box/jx3box-common/data/medals.json";
 import frames from "@jx3box/jx3box-common/data/user_avatar_frame.json";
 import User from "@jx3box/jx3box-common/js/user";
-import { getFansCount } from "@jx3box/jx3box-common-ui/service/follow";
 import { showAvatar, tvLink } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
-import { deny, undeny, hadDenyUser } from "@/service/author/author";
-import ContentTabList from "@/components/author/mobile/ContentTabList.vue";
+import { deny, undeny, hadDenyUser, isFollower } from "@/service/author/author";
 import { getFansList, getSummary } from "@jx3box/jx3box-common-ui/service/author";
+
+import ContentTabList from "@/components/author/mobile/ContentTabList.vue";
+import RoleInfo from "@/components/author/mobile/Pannel/RoleInfo.vue";
+import BoxMoment from "@/components/author/mobile/Pannel/BoxMoment.vue";
+import CmsPosts from "@/components/author/mobile/Pannel/CmsPosts.vue";
+import SubTabContent from "@/components/author/mobile/Pannel/SubTabContent.vue";
+import TopicList from "@/components/author/mobile/Pannel/TopicList.vue";
+import ReplyList from "@/components/author/mobile/Pannel/ReplyList.vue";
+import FaceList from "@/components/author/mobile/Pannel/FaceList.vue";
+import BodyList from "@/components/author/mobile/Pannel/BodyList.vue";
 export default {
     name: "MobileMe",
     components: {
         ContentTabList,
-
     },
     props: {
         decorationMe: {
@@ -68,6 +74,12 @@ export default {
                 return {};
             },
         },
+        privateConf:{
+            type: Object,
+            default: function () {
+                return {};
+            },
+        }
     },
     watch: {
         decorationMe: {
@@ -84,6 +96,10 @@ export default {
                     hadDenyUser(display_name).then((res) => {
                         const list = res.data?.data?.list || [];
                         this.hadDeny = !!list.length;
+                    });
+                    isFollower(display_name).then((res) => {
+                        console.log(res?.data?.data?.list);
+                        this.isFollower = !!res?.data?.data?.list?.length;
                     });
                 }
             },
@@ -118,6 +134,96 @@ export default {
             fansNum: 0,
             fans_count:0,
             boxcoin_count:0,
+            isFollower: false,
+            tabs: [
+                {
+                    label: "角色",
+                    value: "UserInfo",
+                    component: RoleInfo,
+                    key:'role_is_public',
+                },
+                {
+                    label: "动态",
+                    value: "BoxMoment",
+                    component: BoxMoment,
+                    key:'personal_activities_is_public',
+
+                },
+                {
+                    label: "文章",
+                    value: "Works",
+                    component: CmsPosts,
+                    key:'article_is_public',
+
+                    children:[
+                        {
+                            label: "宏库",
+                            value: "macro",
+                        },
+                        {
+                            label: "职业",
+                            value: "bps",
+                        },
+                        {
+                            label: "副本",
+                            value: "fb",
+                        },
+                        {
+                            label: "竞技",
+                            value: "pvp",
+                        },
+                        {
+                            label: "工具",
+                            value: "tool",
+                        },
+                    ]
+                },
+                {
+                    label: "帖子",
+                    value: "Other",
+                    key: 'community_topic_is_public',
+                    component: SubTabContent,
+                    children:[
+                        {
+                            label: "发帖",
+                            value: "Topic",
+                            component: TopicList,
+                        },
+                        {
+                            label: "回帖",
+                            value: "Reply",
+                            component: ReplyList,
+                        },
+                    ]
+                },
+                {
+                    label: "捏脸",
+                    value: "Data",
+                    key: 'make_face_is_public',
+                    component: SubTabContent,
+                    children:[
+                        {
+                            label: "捏脸",
+                            value: "face",
+                            component: FaceList,
+                            icon:'el-icon-grape'
+                        },
+                        {
+                            label: "体型",
+                            value: "body",
+                            component: BodyList,
+                            icon:'el-icon-watermelon'
+                        },
+                    ]
+                },
+                // {
+                //     label: "配装",
+                //     value: "Pz",
+                //     component: Pz,
+                // key: 'pz_info_is_public',
+                //     icon: "el-icon-sugar",
+                // },
+            ],
         };
     },
     computed: {
@@ -177,12 +283,16 @@ export default {
             return "/dashboard/letter?receiver=" + this.uid;
         },
         display_name() {
-            return this.authorInfo?.display_name;
+            return this.data?.display_name;
         },
         diffYear() {
             return this.getYearDiff(this.data.user_registered);
         },
-
+        filterTabs(){
+            return this.tabs.filter(i=>{
+                return this.privateConf[i.key]!==0
+            })
+        },
         // TODO: 后续改成图片
         diffYearText() {
             const obj = {

@@ -2,7 +2,7 @@
     <AppLayout>
         <div class="c-var p-author-detail" :style="themeStyle">
             <div class="m-author" :class="isAdmin ? 'm-author-admin' : ''">
-                <MobileMe :decorationMe="decorationMe" :honor="honor" />
+                <MobileMe :decorationMe="decorationMe" :honor="honor" :privateConf="privateConf" />
             </div>
         </div>
     </AppLayout>
@@ -14,6 +14,7 @@ import { getUserInfo, getDecoration, getDecorationJson } from "@/service/author/
 import User from "@jx3box/jx3box-common/js/user";
 import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 import MobileMe from "@/components/author/mobile/MobileMe.vue";
+import { getPrivateConf } from "@/service/author/author";
 
 const DECORATION_JSON = "decoration_json";
 const DECORATION_KEY = "decoration_me";
@@ -30,6 +31,7 @@ export default {
             themeStyle: {},
             decorationMe: { status: false, },
             honor: null,
+            privateConf:{}
         };
     },
     computed: {
@@ -52,6 +54,10 @@ export default {
             getUserInfo(this.uid).then((res) => {
                 this.$store.state.userdata = res.data.data;
             });
+            getPrivateConf(this.uid).then((res)=>{
+                this.privateConf = res.data.data;
+            })
+
             this.getDecoration();
         }
     },

@@ -66,6 +66,7 @@ import dayjs from 'dayjs'
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { __cdn } from "@jx3box/jx3box-common/data/jx3box";
 
+
 export default {
     name: 'TopicItem',
     props: {
@@ -102,12 +103,12 @@ export default {
             // checkLongPress(e);
             this.$emit("openMore", this.item);
         },
-        openUser() {
-            this.$emit("openUser", { uid: this.item.user_id });
-        },
         toDetail() {
-            // 新页面跳转getLink('community', this.item.id)
-            window.open(getLink('community', this.item.id), '_blank');
+            const wx = require('@/utils/jweixin-1.3.2');
+
+            // 异常
+
+            wx.miniProgram.navigateTo({url: '/path/to/page'})
         },
         getDecorationImage(t, m) {
             if (!t || !m) {

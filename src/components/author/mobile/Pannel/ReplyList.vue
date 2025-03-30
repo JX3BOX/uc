@@ -5,7 +5,7 @@
                 <div v-for="(item, i) in list" :key="i + item" class="m-reply-item">
                     <div class="m-ext-info">
                         <div class="u-tag">
-                            标签
+                            {{ item.topic?.category }}
                         </div>
                         <time class="u-time">{{ dateFormat(item.created_at) }}</time>
                     </div>
@@ -18,7 +18,7 @@
 
                        <!-- 作者 -->
                        <div class="u-reply-title">
-                            标题XXXXXXXXXXXXX
+                            {{item.topic?.title}}
                        </div>
                    </div>
             </div>

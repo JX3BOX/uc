@@ -1,6 +1,6 @@
 <template>
-    <div class="m-role-card">
-        <div class="m-role-box">
+    <div v-if="first" class="m-role-card">
+        <div  class="m-role-box">
             <div :class="['u-item', first.mount!=null?`mount-${first.mount}-var`:'', total > 1 ? 'has-num' : '']">
                 <div class="u-title">
                     TA的角色
@@ -15,16 +15,14 @@
                     </div>
                 </div>
                 <img
-                    v-if="mount_name "
-                    :src="`/static/icons/mounts/${mount_name}.svg`"
+                    v-if="first.mount_icon "
+                    :src="require(`@/assets/img/author/mobile/mounts/${first.mount_icon}.svg`)"
                     class="u-mount-icon"
                 />
-                <img v-if="mount_avatar" class="u-mount-avatar" :src="mount_avatar" />
-            </div>
-            <div v-if="total > 1" class="u-num">
-                + {{ total - 1 }}
+                <img v-if="first.mount_avatar" class="u-mount-avatar" :src="first.mount_avatar" />
             </div>
         </div>
+        <QyCard v-if="first.jx3id" :jx3id="first.jx3id"  :name="first.name" :icon="first?.mount_icon"  />
     </div>
 </template>
 
@@ -34,14 +32,18 @@
 import User from "@jx3box/jx3box-common/js/user";
 import school_map from "@jx3box/jx3box-data/data/xf/schoolid.json";
 import { getThumbnail } from "@jx3box/jx3box-common/js/utils";
+import { getMyGameRoles } from "@/service/author/author";
+import QyCard from "@/components/author/mobile/Pannel/QyCard.vue";
+import ContentTabList from "@/components/author/mobile/ContentTabList.vue";
 
 export default {
     name: "RoleCard",
+    components: { QyCard },
     data() {
         return {
             list: [],
             total: 0,
-            first: {},
+            first:null,
             mounts: school_map
         };
     },
@@ -54,29 +56,37 @@ export default {
                 return  ''
             }
 
-            return this.getMountAvatar(this.first.mount, this.first.body_type, 368);
+            return this.getMountAvatar(this.first?.mount, this.first.body_type, 368);
         },
         mount_name(){
-            if (!this.first.id){
+            if (!this.first?.id){
                 return  ''
             }
-            return school_map[this.first.mount] || "江湖";
-        }
+            return school_map[this.first?.mount] || "江湖";
+        },
     },
     methods: {
         loadData() {
-            if (!User.isLogin()) return;
-
             getMyGameRoles({ per: 2 }).then(({ data }) => {
                 this.list = data?.data?.list || [];
+
                 this.first = this.formatFirst(data?.data?.list?.[0] || {});
+
                 this.total = data?.data?.page?.total || 0;
             });
+        },
+        formatFirst(first){
+            if (first == null) {
+                return first;
+            }
+            first.mount_avatar = this.getMountAvatar(first.mount, first.body_type, 368);
+            first.mount_icon = school_map[first.mount] || "江湖";
+            return first;
         },
         getMountAvatar(mount, body, size, replace) {
             return getThumbnail(`https://cdn.jx3box.com/design/avatar/mini/${mount}-${body}.png`, size, replace);
         }
-    }
+    },
 };
 </script>
 
@@ -87,7 +97,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: 20px;
     align-self: stretch;
 
     .m-role-box {

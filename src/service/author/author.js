@@ -101,6 +101,36 @@ function getTopicReplyList(params) {
     });
 }
 
+
+/**
+ * 判断是否是自己粉丝
+ */
+
+function isFollower(username) {
+    return $next().get(`/api/next2/rss/my-subscribers`, {
+        params: {
+            username,
+        },
+    });
+}
+
+function getCertification(id) {
+    return $team().get(`/api/team/team-certification-record/item/${id}`);
+}
+
+//
+function getPrivateConf(id) {
+    return $next().get(`/api/next2/user/${id}/privacy-conf`);
+}
+
+function authorUpdateList(uid,params){
+    return $next().get(`/api/next2/rss/author/${uid}/update-records`, params);
+}
+
+function getMyGameRoles(params) {
+    return $team().get(`api/team/my-game-roles`, params);
+}
+
 export {
     getDouyu,
     getUserMedals,
@@ -113,4 +143,8 @@ export {
     getTopicList,
     getTopicReplyList,
     hadDenyUser,
+    isFollower,
+    getPrivateConf,
+    authorUpdateList,
+    getMyGameRoles
 };

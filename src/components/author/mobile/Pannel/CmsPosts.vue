@@ -7,9 +7,7 @@
                        <a class="u-item" target="_blank" :href="postLink(item.post_type, item.ID, item.client)" v-for="(item, i) in posts" :key="i + item">
                            <!-- Banner -->
 
-                           <div class="u-banner" target="_blank">
-                               <img :src="getBanner(item, item.post_subtype, item.post_type)" :key="item.ID" />
-                           </div>
+                           <el-image class="u-banner" fit="cover"  :src="getBanner(item, item.post_subtype, item.post_type)" :key="item.ID" />
 
                            <!-- 标题 -->
                            <div class="u-post">
@@ -182,21 +180,11 @@ export default {
                 gap: 12px;
 
                 .u-banner{
-                    flex: 1 0 0;
-                    max-width: 126px;
-                    max-height: 64.145px;
-                    overflow: hidden;
-                    background: none;
-                    // 解锁图片比例，撑满
-                    img{
-                        min-height: 100%;
-                        min-width: 100%;
-                        overflow: hidden;
-                        background: none;
-
-                    }
                     border-radius: 4px;
-                    background: #DFDFDF;
+                    width: 126px;
+                    height: 64.145px;
+                    overflow: hidden;
+                    aspect-ratio: 126.00/64.15;
                 }
 
                 .u-post{
