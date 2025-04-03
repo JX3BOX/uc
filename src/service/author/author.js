@@ -131,6 +131,11 @@ function getMyGameRoles(params) {
     return $team().get(`api/team/my-game-roles`, params);
 }
 
+function getUserPublicRoles(uid) {
+    return $team().get(`api/team/user-public-game-roles/${uid}`);
+}
+
+
 export {
     getDouyu,
     getUserMedals,
@@ -146,5 +151,6 @@ export {
     isFollower,
     getPrivateConf,
     authorUpdateList,
-    getMyGameRoles
+    getMyGameRoles,
+    getUserPublicRoles
 };

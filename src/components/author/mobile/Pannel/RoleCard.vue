@@ -1,6 +1,6 @@
 <template>
-    <div v-if="first" class="m-role-card">
-        <div  class="m-role-box">
+    <div v-if="first.uid" class="m-role-card">
+        <div   class="m-role-box">
             <div :class="['u-item', first.mount!=null?`mount-${first.mount}-var`:'', total > 1 ? 'has-num' : '']">
                 <div class="u-title">
                     TA的角色
@@ -19,7 +19,7 @@
                     :src="require(`@/assets/img/author/mobile/mounts/${first.mount_icon}.svg`)"
                     class="u-mount-icon"
                 />
-                <img v-if="first.mount_avatar" class="u-mount-avatar" :src="first.mount_avatar" />
+                <img v-if="mount_avatar" class="u-mount-avatar" :src="mount_avatar" />
             </div>
         </div>
         <QyCard v-if="first.jx3id" :jx3id="first.jx3id"  :name="first.name" :icon="first?.mount_icon"  />
@@ -29,12 +29,10 @@
 <script>
 
 
-import User from "@jx3box/jx3box-common/js/user";
 import school_map from "@jx3box/jx3box-data/data/xf/schoolid.json";
 import { getThumbnail } from "@jx3box/jx3box-common/js/utils";
-import { getMyGameRoles } from "@/service/author/author";
+import {  getUserPublicRoles } from "@/service/author/author";
 import QyCard from "@/components/author/mobile/Pannel/QyCard.vue";
-import ContentTabList from "@/components/author/mobile/ContentTabList.vue";
 
 export default {
     name: "RoleCard",
@@ -51,8 +49,11 @@ export default {
         this.loadData();
     },
     computed:{
+        uid() {
+            return ~~this.$store.state.uid;
+        },
         mount_avatar(){
-            if (!this.first.id){
+            if (!this.first.uid){
                 return  ''
             }
 
@@ -67,7 +68,7 @@ export default {
     },
     methods: {
         loadData() {
-            getMyGameRoles({ per: 2 }).then(({ data }) => {
+            getUserPublicRoles(this.uid).then(({ data }) => {
                 this.list = data?.data?.list || [];
 
                 this.first = this.formatFirst(data?.data?.list?.[0] || {});

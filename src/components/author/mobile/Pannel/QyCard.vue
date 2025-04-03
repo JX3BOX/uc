@@ -72,7 +72,7 @@
                     <div
                         class="m-qy__item"
                         v-for="(item, index) in userAchievement.perfect.filter(i=>i.isAct)"
-                        :key="index"
+                        :key="item.dwID || index"
                     >
                         <el-image  class="u-qy__img"  :src="getCdnImgUrl(`world/${item.dwID}_act.png`)">
                             <el-image
@@ -110,6 +110,7 @@
                         v-for="(item, index) in userAchievement.normal"
                         :key="index"
                     >
+                        <div class="u-black"></div>
                         <template v-if="[4, 118].indexOf(item.dwID) > -1">
                             <img
                                 v-show="currentCamp == 'hq'"
@@ -152,11 +153,6 @@
             </div>
             <div class="m-qy m-pet">
                 <div class="m-qy-list" v-if="userAchievement.pet?.length">
-                    <div class="m-qy__item" v-for="(item, index) in userAchievement.pet" :key="index">
-                        <img class="u-qy__img" :src="getImgUrl(item)" />
-                        <img v-if="showBorder"  class="u-qy__border" :src="getCdnImgUrl('pet_img_border.png')" />
-                        <div class="u-bg"></div>
-                    </div>
                     <div class="m-qy__item" v-for="(item, index) in userAchievement.pet" :key="index">
                         <img class="u-qy__img" :src="getImgUrl(item)" />
                         <img v-if="showBorder" class="u-qy__border" :src="getCdnImgUrl('pet_img_border.png')" />
@@ -311,6 +307,10 @@ export default {
         border-radius: 12px;
         background: linear-gradient(0deg, #FAF5ED 0%, #FAF5ED 100%), linear-gradient(180deg, #F9F1E4 0%, rgba(249, 246, 242, 0.00) 100%);
 
+        @media (prefers-color-scheme: dark) {
+            background: var(--black-5, rgba(255, 255, 255, 0.10));
+        }
+
         .m-left {
             flex: 1;
             display: flex;
@@ -415,7 +415,9 @@ export default {
 
         border-radius: 12px;
         background: linear-gradient(0deg, #FAF5ED 0%, #FAF5ED 100%), linear-gradient(180deg, #F9F1E4 0.01%, rgba(255, 255, 255, 0.00) 100%);
-
+        @media (prefers-color-scheme: dark) {
+            background: var(--black-20, rgba(255, 255, 255, 0.20));
+        }
         .u-trans-display{
             color: var(--black-100, #1C1C1C);
 
@@ -474,6 +476,10 @@ export default {
                     border-radius: 8px;
                     overflow: hidden;
                     border: 1px solid #000;
+                    background: black;
+                    .u-qy__img{
+                        opacity: 0.5;
+                    }
                     .u-qy__border {
                         position: absolute;
                         left: 0;
@@ -564,6 +570,7 @@ export default {
                         border-radius: 8px;
                         overflow: hidden;
 
+                        background: black;
 
 
                         .u-qy__img{
@@ -596,7 +603,9 @@ export default {
                         min-height: 26px;
                         border-radius: 50%;
                         overflow: hidden;
-
+                        .u-qy__img{
+                            opacity: 1;
+                        }
                         .u-bg{
                             background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 33%, #A91515 100%);
                             background-size: 50%;
