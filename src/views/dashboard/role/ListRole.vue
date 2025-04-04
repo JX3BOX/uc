@@ -53,7 +53,7 @@
                     </router-link>
                     <span class="u-title">
                         <router-link class="u-rolename" :to="'/role/' + item.ID">{{ item.name }}</router-link>
-                        <el-tag v-if="item.is_default_role" size="mini">默认</el-tag>
+                        <el-tag v-if="item.is_default_role" size="mini" type="warning">默认</el-tag>
                         <span class="u-star" :class="{ on: item.priority }" @click="starRole(item)">
                             <el-tooltip
                                 class="item"
