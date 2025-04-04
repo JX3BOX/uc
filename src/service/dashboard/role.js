@@ -1,4 +1,4 @@
-import { $team} from '@jx3box/jx3box-common/js/https';
+import { $team } from "@jx3box/jx3box-common/js/https";
 
 function getRoles(params) {
     return $team().get("/api/team/my-game-roles", {
@@ -36,13 +36,12 @@ function deleteRole(role_id) {
     return $team().delete(`/api/team/custom-role/${role_id}`);
 }
 
-function starRole(role_id){
-    return $team().put(`/api/team/role-priority/${role_id}/top`)
+function starRole(role_id) {
+    return $team().put(`/api/team/role-priority/${role_id}/top`);
 }
-function unstarRole(role_id){
-    return $team().put(`/api/team/role-priority/${role_id}/untop`)
+function unstarRole(role_id) {
+    return $team().put(`/api/team/role-priority/${role_id}/untop`);
 }
-
 function getRoleBelongTeams(role_id) {
     return $team().get(`/api/team/relation/role/${role_id}/teams`);
 }
@@ -50,6 +49,10 @@ function getRoleBelongTeams(role_id) {
 // 修改角色可见性
 function updateRoleVisible(role_id, visible) {
     return $team().put(`/api/team/my-game-roles/${role_id}/change-visible/${visible}`);
+}
+// 设置默认角色
+function defaultRole(role_id, is_default) {
+    return $team().put(`/api/team/my-game-roles/${role_id}/set-default/${is_default}`);
 }
 
 export {
@@ -65,4 +68,5 @@ export {
     unstarRole,
     getRoleBelongTeams,
     updateRoleVisible,
+    defaultRole,
 };

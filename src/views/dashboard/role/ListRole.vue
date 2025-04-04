@@ -53,6 +53,7 @@
                     </router-link>
                     <span class="u-title">
                         <router-link class="u-rolename" :to="'/role/' + item.ID">{{ item.name }}</router-link>
+                        <el-tag v-if="item.is_default_role" size="mini">默认</el-tag>
                         <span class="u-star" :class="{ on: item.priority }" @click="starRole(item)">
                             <el-tooltip
                                 class="item"
@@ -87,13 +88,24 @@
                     </span>
                     <span class="u-time">绑定时间 : {{ item.created_at | showTime }}</span>
                     <div class="u-op">
-                        <el-switch v-model="item.is_public_visible" :active-value="1" :inactive-value="0" @change="onPublicChange(item)" class="u-public" active-text="公开">
+                        <el-switch
+                            v-model="item.is_public_visible"
+                            :active-value="1"
+                            :inactive-value="0"
+                            @change="onPublicChange(item)"
+                            class="u-public"
+                            active-text="公开"
+                        >
                         </el-switch>
                         <el-dropdown @command="handleCommand" trigger="click">
                             <el-button type="default" size="small">
                                 更多<i class="el-icon-arrow-down el-icon--right"></i>
                             </el-button>
                             <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item :command="{ item, command: 'default' }">
+                                    <i class="el-icon-setting"></i>
+                                    {{ item.is_default_role ? "取消默认" : "设为默认" }}
+                                </el-dropdown-item>
                                 <el-dropdown-item v-if="!item.custom" :command="{ item, command: 'unbind' }">
                                     <i class="el-icon-remove-outline"></i>
                                     解绑
@@ -143,7 +155,16 @@
 </template>
 
 <script>
-import { getRoles, unbindRole, noteRole, deleteRole, starRole, unstarRole, updateRoleVisible } from "@/service/dashboard/role.js";
+import {
+    getRoles,
+    unbindRole,
+    noteRole,
+    deleteRole,
+    starRole,
+    unstarRole,
+    updateRoleVisible,
+    defaultRole,
+} from "@/service/dashboard/role.js";
 import school_id_map from "@jx3box/jx3box-data/data/xf/schoolid.json";
 import { __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
@@ -235,7 +256,7 @@ export default {
                 });
             });
         },
-        delRole: function (role_id, ) {
+        delRole: function (role_id) {
             this.$alert("确定删除该角色吗？", "消息", {
                 confirmButtonText: "确定",
                 callback: (action) => {
@@ -275,12 +296,21 @@ export default {
         },
 
         handleCommand(data) {
-            if (data.command == 'unbind') {
+            if (data.command == "unbind") {
                 this.unbind(data.item.ID);
-            } else if (data.command == 'edit') {
-                this.$router.push('/role/edit/' + data.item.ID);
-            } else if (data.command == 'delete') {
+            } else if (data.command == "edit") {
+                this.$router.push("/role/edit/" + data.item.ID);
+            } else if (data.command == "delete") {
                 this.delRole(data.item.ID);
+            } else if (data.command == "default") {
+                defaultRole(data.item.ID, ~~!data.item.is_default_role).then((res) => {
+                    this.$message({
+                        title: "成功",
+                        message: ~~!data.item.is_default_role ? "设置成功" : "取消成功",
+                        type: "success",
+                    });
+                    this.loadData();
+                });
             }
         },
         onPublicChange: function (item) {
