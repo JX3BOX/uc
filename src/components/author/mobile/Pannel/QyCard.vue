@@ -1,8 +1,7 @@
 
 
 <template>
-    <div v-if="jx3id" v-loading="loading" class="m-qy-card">
-
+    <div v-if="uid" v-loading="loading" class="m-qy-card">
         <div class="m-overview">
             <div class="m-left">
                 <div class="u-name">
@@ -175,9 +174,9 @@ import { __Links } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
     name:"QyCard",
     props:{
-        jx3id: {
-            type: String,
-            default: '',
+        uid: {
+            type: Number,
+            default: 0,
         },
         name: {
             type: String,
@@ -213,7 +212,7 @@ export default {
         },
     },
     watch: {
-        jx3id: {
+        uid: {
             immediate: true,
             handler(v){
                 if (v){
@@ -264,11 +263,11 @@ export default {
             }
             this.contentZoom = zoom;
         },
-        loadRole(userJx3Id) {
+        loadRole() {
             this.loading = true;
-            getData(userJx3Id).then((res) => {
+            getData(this.uid, true).then((res) => {
                 console.log(res);
-                this.isSync = !!userJx3Id; // 是否在游戏中同步
+                this.isSync = !!this.uid; // 是否在游戏中同步
                 this.userAchievement = res;
                 this.addClass = false;
                 this.isOver = false;

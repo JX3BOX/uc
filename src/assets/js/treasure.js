@@ -12,11 +12,9 @@ export function getUserInfo() {
 }
 
 // 获取角色的成就状态
-export function getRoleGameAchievements(jx3id) {
+export function getRoleGameAchievements(params) {
     return $next().get(`/api/next2/user-achievements`, {
-        params: {
-            jx3id,
-        },
+        params: params,
     });
 }
 
@@ -70,7 +68,7 @@ let formatDateTime = (dateTimeString) => {
     return formattedDateTime;
 };
 
-let getData = (userJx3Id) => {
+let getData = (id,useUid) => {
     return new Promise((resolve, reject) => {
         var returnData = {
             pet: [],
@@ -78,7 +76,7 @@ let getData = (userJx3Id) => {
             perfect: [],
         };
 
-        Promise.all([getRoleGameAchievements(userJx3Id), getAchievements()]).then(([res, mapRule]) => {
+        Promise.all([getRoleGameAchievements(useUid? {uid: id}: {jx3id:id}), getAchievements()]).then(([res, mapRule]) => {
             const achievements = res.data?.data?.achievements || "";
             let list = achievements.split(",");
             let newList = [];

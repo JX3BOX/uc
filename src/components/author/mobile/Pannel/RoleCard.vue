@@ -1,5 +1,5 @@
 <template>
-    <div v-if="first.uid" class="m-role-card">
+    <div v-if="first?.uid" class="m-role-card">
         <div   class="m-role-box">
             <div :class="['u-item', first.mount!=null?`mount-${first.mount}-var`:'', total > 1 ? 'has-num' : '']">
                 <div class="u-title">
@@ -22,7 +22,7 @@
                 <img v-if="mount_avatar" class="u-mount-avatar" :src="mount_avatar" />
             </div>
         </div>
-        <QyCard v-if="first.jx3id" :jx3id="first.jx3id"  :name="first.name" :icon="first?.mount_icon"  />
+        <QyCard :uid="first?.uid"  :name="first.name" :icon="first?.mount_icon"  />
     </div>
 </template>
 
@@ -50,7 +50,7 @@ export default {
     },
     computed:{
         uid() {
-            return ~~this.$store.state.uid;
+            return ~~this.$store.state?.uid;
         },
         mount_avatar(){
             if (!this.first.uid){
