@@ -23,7 +23,7 @@
             </div>
 
             <div class="m-right">
-                <img src="@/assets/img/author/mobile/juan.png" />
+                <img  :src="require(`@/assets/img/author/mobile/juan${isDark?'-dark':''}.png`)" />
             </div>
         </div>
 
@@ -210,6 +210,9 @@ export default {
         client: function () {
             return this.$store.state.client;
         },
+        isDark(){
+            return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
     },
     watch: {
         uid: {
@@ -334,6 +337,14 @@ export default {
                     height: 24px;
                     justify-content: center;
                     align-items: center;
+
+                    fill: var(--black-80);
+
+                    @media (prefers-color-scheme: dark) {
+                        // filter 出颜色 rgba(#ffffff, 0.8)
+                        filter: invert(0.8) hue-rotate(180deg);
+
+                    }
                 }
             }
 

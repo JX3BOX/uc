@@ -2,7 +2,7 @@
     <div class="m-post" v-loading="loading">
         <!-- 列表 -->
         <div v-if="list && list.length" class="m-reply-list">
-                <div v-for="(item, i) in list" :key="i + item" class="m-reply-item">
+                <div v-for="(item, i) in list" :key="i + item" class="m-reply-item" @click="toDetail(item)">
                     <div class="m-ext-info">
                         <div class="u-tag">
                             {{ item.topic?.category }}
@@ -56,7 +56,11 @@ export default {
             };
         },
     },
-    methods: {
+    methods:{
+        toDetail(item){
+            const wx = require('weixin-js-sdk');
+            wx.miniProgram?.navigateTo({url: `/pages/publish/detail/detail?id=${item.topic_id}`})
+        },
         loadData: function () {
             if (!this.uid) return;
             this.loading = true;
