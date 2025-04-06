@@ -65,6 +65,7 @@
 import dayjs from 'dayjs'
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { __cdn } from "@jx3box/jx3box-common/data/jx3box";
+import wx from "weixin-js-sdk";
 
 
 export default {
@@ -104,11 +105,9 @@ export default {
             this.$emit("openMore", this.item);
         },
         toDetail() {
-            const wx = require('@/utils/jweixin-1.3.2');
+            const wx = require('weixin-js-sdk');
 
-            // 异常
-
-            wx.miniProgram.navigateTo({url: '/path/to/page'})
+            wx.miniProgram?.navigateTo({url: `/pages/publish/detail/detail?id=${this.item.id}`})
         },
         getDecorationImage(t, m) {
             if (!t || !m) {

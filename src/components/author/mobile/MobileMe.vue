@@ -28,9 +28,9 @@
                     </div>
                     <div class="m-op">
                         <button class="u-btn u-subscribe" :class="{ 'is-subscribe': subscribed }" @click="follow">
-                            {{ subscribed ? (isFollower?'互相关注':'已关注') : '关注TA' }}
+                            {{ hadDeny?"已拉黑":subscribed ? (isFollower?'互相关注':'已关注') : '关注TA' }}
                         </button>
-                        <div class="u-more">
+                        <div class="u-more" @click="openMore">
                             <img class="u-icon" svg-inline src="@/assets/img/author/mobile/nav_more.svg" />
                         </div>
                     </div>
@@ -38,7 +38,7 @@
             </div>
         </div>
         <ContentTabList :list="filterTabs"/>
-
+        <simple-more-action  :show.sync="actionShow" :actions="actions" @close="closeMore" @select="onSelect" />
     </div>
 </template>
 
@@ -62,9 +62,14 @@ import TopicList from "@/components/author/mobile/Pannel/TopicList.vue";
 import ReplyList from "@/components/author/mobile/Pannel/ReplyList.vue";
 import FaceList from "@/components/author/mobile/Pannel/FaceList.vue";
 import BodyList from "@/components/author/mobile/Pannel/BodyList.vue";
+import SimpleMoreAction from "@/components/author/mobile/MoreAction.vue";
+import wx from "weixin-js-sdk";
+
+
 export default {
     name: "MobileMe",
     components: {
+        SimpleMoreAction,
         ContentTabList,
     },
     props: {
@@ -135,6 +140,8 @@ export default {
             fans_count:0,
             boxcoin_count:0,
             isFollower: false,
+            actionShow: false,
+
             tabs: [
                 {
                     label: "角色",
@@ -310,6 +317,36 @@ export default {
             } else {
                 return "";
             }
+        },
+        actions(){
+            const res = [
+                {
+                    list: [
+
+                    ],
+                },
+                {
+                    list: [
+                        {
+                            method: "close",
+                            name: "取消",
+                        },
+                    ],
+                },
+            ]
+            if (!this.hadDeny){
+                res[0].list.push({
+                    method: "black",
+                    name: this.hadDeny ? "取消拉黑" : "拉黑",
+                });
+            }
+
+            res[0].list.push({
+                method: "report",
+                name:  "举报",
+            });
+
+            return res;
         }
     },
     filters: {
@@ -325,6 +362,20 @@ export default {
     },
     methods: {
         showAvatar,
+        onSelect(item){
+            if (item.method === "black") {
+                this.joinBlacklist();
+            } else if (item.method === "report") {
+                // 跳转到feedback
+                window.open("/feedback", "_blank");
+            } else if (item.method === "close") {
+                this.closeMore();
+            }
+        },
+
+        closeMore(){
+            this.actionShow = false;
+        },
         copyData(text) {
             let _this = this;
             this.$copyText(String(text)).then(
@@ -391,6 +442,9 @@ export default {
                 `design/decoration/images/${decoration.name}/homebanner.${
                     webp.includes(decoration.name) ? "webp" : "png"
                 }`;
+        },
+        openMore(){
+           this.actionShow = true
         },
         // 关注
         follow() {

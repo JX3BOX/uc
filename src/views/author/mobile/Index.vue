@@ -5,6 +5,7 @@
                 <MobileMe :decorationMe="decorationMe" :honor="honor" :privateConf="privateConf" />
             </div>
         </div>
+
     </AppLayout>
 </template>
 
