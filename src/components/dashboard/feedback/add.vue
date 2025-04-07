@@ -15,7 +15,13 @@
             </el-form>
         </div>
         <div class="m-content">
-            <el-input v-model="form.content" type="textarea" :rows="10" placeholder="输入反馈内容" @paste.native="handlePaste"></el-input>
+            <el-input
+                v-model="form.content"
+                type="textarea"
+                :rows="10"
+                placeholder="输入反馈内容"
+                @paste.native="handlePaste"
+            ></el-input>
         </div>
         <div class="m-feedback-actions">
             <div class="m-feedback-attachment">
@@ -24,6 +30,7 @@
                     class="u-upload avatar-uploader"
                     :action="url"
                     list-type="picture-card"
+                    :on-preview="handlePictureCardPreview"
                     :on-remove="remove"
                     :on-success="done"
                     :on-error="fail"
@@ -37,6 +44,9 @@
                 >
                     <i class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
+                <el-dialog :visible.sync="dialogVisible">
+                    <img width="100%" :src="dialogImageUrl" alt="" />
+                </el-dialog>
             </div>
             <div class="m-feedback-visible">
                 <span class="u-label">是否公开：</span>
@@ -90,6 +100,8 @@ export default {
             url: API,
             imgs: [],
             loading: false,
+            dialogImageUrl: "",
+            dialogVisible: false,
         };
     },
     computed: {
@@ -120,6 +132,10 @@ export default {
         // 图片上限
         exceed: function () {
             this.$message.warning(`上传的图片个数最多为${this.max}个`);
+        },
+        handlePictureCardPreview: function (file) {
+            this.dialogImageUrl = file.url;
+            this.dialogVisible = true;
         },
         // 移除图片
         remove: function (file) {
