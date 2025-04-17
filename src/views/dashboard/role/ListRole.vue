@@ -29,18 +29,6 @@
             <el-input class="u-name" v-model="name" placeholder="请输入角色名称" size="small">
                 <template slot="prepend"> <i class="el-icon-search"></i> 查找 </template>
             </el-input>
-            <!-- <el-radio-group class="u-mount" v-model="mount">
-                <el-radio class="u-mount-unit" label>全部</el-radio>
-                <el-radio
-                    class="u-mount-unit"
-                    v-for="(school,school_id) in school_id_map"
-                    :key="school_id"
-                    :label="school_id"
-                >
-                    <img :src="school_id | showSchoolIcon" />
-                    {{school}}
-                </el-radio>
-            </el-radio-group> -->
         </div>
         <div class="m-team-rolelist" v-if="data && data.length">
             <ul class="u-list">
@@ -75,6 +63,14 @@
                             <em>门派</em>
                             <img class="u-icon" :src="item.mount | showSchoolIcon" />
                             {{ item.mount | showSchoolName }}
+                        </span>
+                        <span class="u-team-name" v-if="item.team_relation && item.team_relation.team_id">
+                            <em>团队名</em>
+                            {{ item.team_relation.team_name }}
+                        </span>
+                        <span class="u-team-status" v-if="item.team_relation && item.team_relation.team_id">
+                            <em>状态</em>
+                            <span class="u-team-status" :class="`u-team-status-${item.team_relation.status}`">{{ teamStatus(item.team_relation.status) }}</span>
                         </span>
                         <span class="u-note">
                             <em>备注</em>
@@ -322,6 +318,12 @@ export default {
                 });
             });
         },
+        teamStatus(status) {
+            return {
+                0: "待审核",
+                1: "已通过",
+            }[status]
+        }
     },
     created: function () {},
     watch: {
