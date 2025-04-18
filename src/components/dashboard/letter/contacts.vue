@@ -4,7 +4,7 @@
             class="m-letter-contact"
             v-for="(item, index) in contacts"
             :key="index"
-            :class="{ active: active == item.receiver_info.id, 'u-letter-unread': item.latest_letter && !item.latest_letter.has_read }"
+            :class="{ active: active == item.receiver_info.id, 'u-letter-unread': showUnread(item) }"
             @click="onContactClick(item)"
         >
             <div class="u-close" @click.stop="removeContact(item)" title="移除" v-if="item.receiver_info.id != 0 && canOp">
@@ -27,6 +27,7 @@
 <script>
 import { getRecentContacts, deleteRecentContact, createRecentContact } from "@/service/dashboard/letter";
 import { showAvatar } from "@jx3box/jx3box-common/js/utils";
+import User from "@jx3box/jx3box-common/js/user";
 export default {
     name: "contacts",
     props: {
@@ -43,6 +44,11 @@ export default {
             isInit: true,
             contacts: [],
         };
+    },
+    computed: {
+        user() {
+            return User.getInfo();
+        },
     },
     watch: {
         active: {
@@ -104,6 +110,9 @@ export default {
             item.latest_letter.has_read = 1;
         },
         showAvatar,
+        showUnread(item) {
+            return item.latest_letter && !item.latest_letter.has_read && item.latest_letter.receiver == this.user.uid;
+        },
     },
 };
 </script>
