@@ -251,6 +251,14 @@ export default {
             })
         },
         add() {
+            if (!this.userdata) {
+                this.$notify({
+                    title: "提示",
+                    message: "请先输入UID进行搜索",
+                    type: "warning",
+                });
+                return;
+            }
             if (this.active === 'myfollow') {
                 addRssUser(this.userdata.ID, { title: this.userdata.display_name }).then((res) => {
                     this.loadList();
