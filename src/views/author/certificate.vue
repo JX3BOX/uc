@@ -343,7 +343,7 @@ export default {
         getImgPath(id, type) {
             let imgUrl = "";
             if (type == "bg") {
-                imgUrl = `${__cdn}/design/certification/CertBG_jdt${id < 10 ? "0" + id : id}.png`;
+                imgUrl = `${__cdn}design/certification/CertBG_jdt${id < 10 ? "0" + id : id}.png`;
             } else if (type == "rank") {
                 imgUrl = require(`@/assets/img/author/cert/${this.drawConfig.key}/rank/${id}.png`);
             } else if (type == "qr") {

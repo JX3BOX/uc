@@ -975,5 +975,90 @@
                 }
             }
         }
+    },
+    "10": {
+        "key": 10,
+        "element": {
+            "rank": {
+                "type": "rank",
+                "content": "",
+                "style": {
+                    "type": "center",
+                    "top": 666,
+                    "left": 640,
+                    "topWidth": 200,
+                    "otherWidth": 70,
+                    "spaceWidth": 25
+                }
+            },
+            "time": {
+                "type": "text",
+                "content": "通关用时：hh时mm分ss秒",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 22,
+                    "left": 640,
+                    "top": 780,
+                    "color": "#818181"
+                }
+            },
+            "mapTime": {
+                "type": "text",
+                "content": "通关时间：yyyy年MM月dd日hh时mm分ss秒",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 22,
+                    "left": 640,
+                    "top": 820,
+                    "color": "#818181"
+                }
+            },
+            "name": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 28,
+                    "left": 115,
+                    "top": 1460,
+                    "color": "#000000"
+                }
+            },
+            "colonel": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 23,
+                    "left": 115,
+                    "top": 1510,
+                    "color": "#666666"
+                }
+            },
+            "team": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 15,
+                    "left": 115,
+                    "top": 1540,
+                    "color": "#666666",
+                    "width": 700,
+                    "height": 25
+                }
+            },
+            "signTime": {
+                "type": "text",
+                "content": "yyyy/MM/dd",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 15,
+                    "left": 640,
+                    "top": 1705,
+                    "color": "#24292E"
+                }
+            }
+        }
     }
 }
