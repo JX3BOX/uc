@@ -345,7 +345,7 @@ export default {
             if (type == "bg") {
                 imgUrl = `${__cdn}design/certification/CertBG_jdt${id < 10 ? "0" + id : id}.png`;
             } else if (type == "rank") {
-                imgUrl = require(`@/assets/img/author/cert/${this.drawConfig.key}/rank/${id}.png`);
+                imgUrl = require(`@/assets/img/author/cert/1/rank/${id}.png`);
             } else if (type == "qr") {
                 imgUrl = require(`@/assets/img/author/cert/${this.treasureInfo.team_certificate.rank_id}/qr.png`);
             }
