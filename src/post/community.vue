@@ -114,7 +114,7 @@
                     v-if="is_illegal"
                     :closable="false"
                     show-icon
-                    type="warning"
+                    type="error"
                     title="检测到您的内容存在不合规，将无法发布成功，并有禁言风险。"
                 ></el-alert>
                 <el-checkbox v-model="hasRead" :true-label="1" :false-label="0"
@@ -125,7 +125,7 @@
             <!-- 按钮 -->
             <div class="m-publish-buttons">
                 <template>
-                    <el-button type="primary" @click="publish('publish', true)" :disabled="processing || !hasRead"
+                    <el-button type="primary" @click="publish('publish', true)" :disabled="is_illegal || processing || !hasRead"
                         >发 &nbsp;&nbsp; 布</el-button
                     >
                 </template>

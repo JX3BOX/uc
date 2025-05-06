@@ -106,7 +106,7 @@
                     v-if="is_illegal"
                     :closable="false"
                     show-icon
-                    type="warning"
+                    type="error"
                     title="检测到您的内容存在不合规，将无法发布成功，并有禁言风险。"
                 ></el-alert>
                 <el-checkbox v-model="hasRead" :true-label="1" :false-label="0"
@@ -120,7 +120,7 @@
                     <el-button type="primary" @click="useDraft" :disabled="processing">使用此版本</el-button>
                 </template>
                 <template v-else>
-                    <el-button type="primary" @click="publish('publish', true)" :disabled="processing || !hasRead"
+                    <el-button type="primary" @click="publish('publish', true)" :disabled="is_illegal || processing || !hasRead"
                         >发 &nbsp;&nbsp; 布</el-button
                     >
                     <el-button type="plain" @click="publish('draft', false)" :disabled="processing || !hasRead"
