@@ -141,5 +141,5 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/assets/css/author/mobile/var";
+@import "~@/assets/css/common/var";
 </style>

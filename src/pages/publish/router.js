@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
+import main from "@/pages/publish/main.vue";
 
 // 解决重复点击路由报错的BUG
 const originalPush = VueRouter.prototype.push;
@@ -73,262 +75,276 @@ const routes = [
     // 索引
     {
         path: "/",
-        component: index,
-    },
+        component: main,
+        children:[
+            {
+                path: "/",
+                component: index,
+            },
+            // CMS
+            // ================================
+            // 查看
+            {
+                path: "/cms/community",
+                component: cmsCommunity,
+            },
+            {
+                path: "/cms/:type",
+                component: cms,
+            },
+            // 联合创作
+            {
+                name: "union_active",
+                path: "/union/active",
+                component: union,
+            },
+            {
+                name: "union_passive",
+                path: "/union/passive",
+                component: union,
+            },
 
-    // CMS
-    // ================================
-    // 查看
-    {
-        path: "/cms/community",
-        component: cmsCommunity,
-    },
-    {
-        path: "/cms/:type",
-        component: cms,
-    },
-    // 联合创作
-    {
-        name: "union_active",
-        path: "/union/active",
-        component: union,
-    },
-    {
-        name: "union_passive",
-        path: "/union/passive",
-        component: union,
-    },
+            // 发布DEMO
+            {
+                path: "/demo",
+                component: demo,
+            },
+            // 宏发布
+            {
+                path: "/macro/:id?",
+                component: macro,
+                name: "macro",
+            },
+            // 插件数据发布
+            {
+                path: "/jx3dat/:id?",
+                component: jx3dat,
+                name: "jx3dat",
+            },
+            // 副本发布
+            {
+                path: "/fb/:id?",
+                component: fb,
+                name: "fb",
+            },
+            // 职业发布
+            {
+                path: "/bps/:id?",
+                component: bps,
+                name: "bps",
+            },
+            // 技能百科
+            {
+                path: "/skill/:id?",
+                component: skill,
+                name: "skill",
+            },
+            // 工具发布
+            {
+                path: "/tool/:id?",
+                component: tool,
+                name: "tool",
+            },
+            // 茶馆闲聊
+            {
+                path: "/bbs/:id?",
+                component: bbs,
+                name: "bbs",
+            },
+            {
+                path: "/post/:id?",
+                component: bbs,
+            },
+            // 魔盒论坛
+            {
+                path: "/community/:id?",
+                component: community,
+                name: "community",
+            },
+            {
+                path: "/community/reply/:id",
+                component: community_reply,
+                name: "community_reply",
+            },
+            // 公告
+            {
+                path: "/notice/:id?",
+                component: notice,
+            },
+            // 竞技技巧
+            {
+                path: "/pvp/:id?",
+                component: pvp,
+            },
 
-    // 发布DEMO
-    {
-        path: "/demo",
-        component: demo,
-    },
-    // 宏发布
-    {
-        path: "/macro/:id?",
-        component: macro,
-        name: "macro",
-    },
-    // 插件数据发布
-    {
-        path: "/jx3dat/:id?",
-        component: jx3dat,
-        name: "jx3dat",
-    },
-    // 副本发布
-    {
-        path: "/fb/:id?",
-        component: fb,
-        name: "fb",
-    },
-    // 职业发布
-    {
-        path: "/bps/:id?",
-        component: bps,
-        name: "bps",
-    },
-    // 技能百科
-    {
-        path: "/skill/:id?",
-        component: skill,
-        name: "skill",
-    },
-    // 工具发布
-    {
-        path: "/tool/:id?",
-        component: tool,
-        name: "tool",
-    },
-    // 茶馆闲聊
-    {
-        path: "/bbs/:id?",
-        component: bbs,
-        name: "bbs",
-    },
-    {
-        path: "/post/:id?",
-        component: bbs,
-    },
-    // 魔盒论坛
-    {
-        path: "/community/:id?",
-        component: community,
-        name: "community",
-    },
-    {
-        path: "/community/reply/:id",
-        component: community_reply,
-        name: "community_reply",
-    },
-    // 公告
-    {
-        path: "/notice/:id?",
-        component: notice,
-    },
-    // 竞技技巧
-    {
-        path: "/pvp/:id?",
-        component: pvp,
-    },
+            // 百科=====================
+            // 查看
+            {
+                path: "/wiki/:type",
+                name: "wiki_post",
+                component: wiki,
+            },
+            // 成就攻略发布
+            {
+                path: "/achievement/:achievement_id(\\d+)?",
+                component: achievement,
+            },
+            // 物品攻略发布
+            {
+                path: "/item/:source_id([_\\d]+)?",
+                component: item,
+            },
+            // 通识百科发布
+            {
+                path: "/knowledge/:source_id?",
+                component: knowledge,
+            },
+            // 任务攻略发布
+            {
+                path: "/quest/:source_id([_\\d]+)?",
+                component: quest,
+            },
 
-    // 百科=====================
-    // 查看
-    {
-        path: "/wiki/:type",
-        name: "wiki_post",
-        component: wiki,
-    },
-    // 成就攻略发布
-    {
-        path: "/achievement/:achievement_id(\\d+)?",
-        component: achievement,
-    },
-    // 物品攻略发布
-    {
-        path: "/item/:source_id([_\\d]+)?",
-        component: item,
-    },
-    // 通识百科发布
-    {
-        path: "/knowledge/:source_id?",
-        component: knowledge,
-    },
-    // 任务攻略发布
-    {
-        path: "/quest/:source_id([_\\d]+)?",
-        component: quest,
-    },
+            // 应用=====================
+            // 捏脸分享
+            {
+                path: "/share/:id?",
+                component: share,
+            },
+            {
+                path: "/face/:id?",
+                component: face,
+            },
+            {
+                path: "/bucket/face",
+                component: bucket_face,
+            },
+            // 体型分享
+            {
+                path: "/body/:id?",
+                component: body,
+            },
+            {
+                path: "/bucket/body",
+                component: bucket_body,
+            },
+            // 家园发布
+            // {
+            //     path: "/house/:id?",
+            //     component: house,
+            // },
+            // 骚话
+            {
+                path: "/joke/:id?",
+                component: joke,
+            },
+            {
+                path: "/bucket/joke",
+                component: bucket_joke,
+            },
+            // 表情
+            {
+                path: "/emotion/:id?",
+                component: emotion,
+            },
+            {
+                path: "/bucket/emotion",
+                component: bucket_emotion,
+            },
+            // 铭牌
+            {
+                path: "/namespace/:id?",
+                component: namespace,
+            },
+            {
+                path: "/bucket/namespace",
+                component: bucket_namespace,
+                name: "bucket_namespace",
+            },
+            // 小册
+            {
+                path: "/collection/:collection_id(\\d+)?",
+                component: collection,
+            },
+            {
+                path: "/bucket/collection",
+                component: bucket_collection,
+            },
 
-    // 应用=====================
-    // 捏脸分享
-    {
-        path: "/share/:id?",
-        component: share,
-    },
-    {
-        path: "/face/:id?",
-        component: face,
-    },
-    {
-        path: "/bucket/face",
-        component: bucket_face,
-    },
-    // 体型分享
-    {
-        path: "/body/:id?",
-        component: body,
-    },
-    {
-        path: "/bucket/body",
-        component: bucket_body,
-    },
-    // 家园发布
-    // {
-    //     path: "/house/:id?",
-    //     component: house,
-    // },
-    // 骚话
-    {
-        path: "/joke/:id?",
-        component: joke,
-    },
-    {
-        path: "/bucket/joke",
-        component: bucket_joke,
-    },
-    // 表情
-    {
-        path: "/emotion/:id?",
-        component: emotion,
-    },
-    {
-        path: "/bucket/emotion",
-        component: bucket_emotion,
-    },
-    // 铭牌
-    {
-        path: "/namespace/:id?",
-        component: namespace,
-    },
-    {
-        path: "/bucket/namespace",
-        component: bucket_namespace,
-        name: "bucket_namespace",
-    },
-    // 小册
-    {
-        path: "/collection/:collection_id(\\d+)?",
-        component: collection,
-    },
-    {
-        path: "/bucket/collection",
-        component: bucket_collection,
-    },
+            // 日历
+            {
+                path: "/bucket/calendar",
+                component: bucket_calendar,
+            },
 
-    // 日历
-    {
-        path: "/bucket/calendar",
-        component: bucket_calendar,
-    },
+            // 考试
+            {
+                path: "/bucket/:type",
+                name: "bucket",
+                component: bucket,
+            },
+            // 题目发布
+            {
+                name: "question",
+                path: "/question/:id?",
+                component: exam_question,
+            },
+            // 考试
+            {
+                name: "exam",
+                path: "/exam",
+                component: exam,
+            },
+            // 试卷发布
+            {
+                name: "paper",
+                path: "/paper/:id?",
+                component: exam_paper,
+            },
+            // 物品清单发布
+            {
+                name: "item_plan",
+                path: "/item_plan/:plan_id(\\d+)?",
+                component: item_plan,
+            },
 
-    // 考试
-    {
-        path: "/bucket/:type",
-        name: "bucket",
-        component: bucket,
-    },
-    // 题目发布
-    {
-        name: "question",
-        path: "/question/:id?",
-        component: exam_question,
-    },
-    // 考试
-    {
-        name: "exam",
-        path: "/exam",
-        component: exam,
-    },
-    // 试卷发布
-    {
-        name: "paper",
-        path: "/paper/:id?",
-        component: exam_paper,
-    },
-    // 物品清单发布
-    {
-        name: "item_plan",
-        path: "/item_plan/:plan_id(\\d+)?",
-        component: item_plan,
-    },
+            // 草稿=====================
+            // 草稿
+            {
+                path: "/draft",
+                component: draft,
+            },
 
-    // 草稿=====================
-    // 草稿
-    {
-        path: "/draft",
-        component: draft,
-    },
-
-    // 评论=====================
-    {
-        path: "/comment/cms",
-        component: cms_comment,
-    },
-    {
-        path: "/comment/wiki",
-        component: wiki_comment,
-    },
-    {
-        path: "/comment/feedback",
-        component: feedback,
-    },
-    {
-        path: "/comment/community",
-        component: community_comment,
+            // 评论=====================
+            {
+                path: "/comment/cms",
+                component: cms_comment,
+            },
+            {
+                path: "/comment/wiki",
+                component: wiki_comment,
+            },
+            {
+                path: "/comment/feedback",
+                component: feedback,
+            },
+            {
+                path: "/comment/community",
+                component: community_comment,
+            },
+        ]
     },
 ];
 
+if (isMiniProgram()){
+    routes.unshift({
+        path: "/me",
+        component: ()=> import("@/views/publish/me.vue")
+    });
+}
+
+
+console.log(routes);
 const router = new VueRouter({
     routes,
     base: "/publish",

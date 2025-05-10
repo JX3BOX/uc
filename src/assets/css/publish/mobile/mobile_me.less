@@ -1,0 +1,160 @@
+.m-mobile-me{
+    background: #FFF;
+    @media (prefers-color-scheme: dark) {
+        background: #1C1C1C;
+    }
+    height: 100vh;
+
+    .el-loading-mask{
+        background: #FFF;
+        opacity: 0.9;
+        @media (prefers-color-scheme: dark) {
+            background: #1C1C1C;
+        }
+    }
+
+    .m-empty{
+        background: #FFF;
+        opacity: 0.85;
+        @media (prefers-color-scheme: dark) {
+            background: #1C1C1C;
+        }
+    }
+
+    .m-content-tab-list{
+        padding-top: 20px;
+        background: var(--primary-brand-2, #24292E);
+        .m-content-tabs{
+            z-index: 1;
+            border-bottom: 0.5px solid var(--black-10, rgba(28, 28, 28, 0.10));
+            margin: 0;
+            background: var(--primary-brand-2, #24292E);
+            padding-bottom: 8px;
+            padding-left: 20px;
+            padding-right: 20px;
+
+            &.fixed{
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+            }
+
+
+            .el-tabs__nav-wrap:after{
+                background: none;
+            }
+            .el-tabs__active-bar{
+                background: none;
+                &:after{
+                    // 剧中 20 px
+                    content: '';
+                    position: absolute;
+                    left: 50%;
+                    top: 0;
+                    transform: translateX(-50%);
+                    width: 20px;
+                    height: 2px;
+                    background: var(--primary-brand-3, #FEDAA3);
+                    border-radius: 2px;
+                }
+            }
+
+            .el-tabs__header{
+                margin: 0;
+            }
+
+            .el-tabs__item{
+                color: var(--primary-brand-3, #FEDAA3);
+
+                /* 18 Bold */
+                font-size: 18px;
+                font-style: normal;
+                font-weight: 700;
+                height: 36px;
+                padding: 0 9px;
+                &.is-top:nth-child(2){
+                    padding-left: 0;
+                }
+            }
+        }
+
+        .m-primary{
+            box-sizing: border-box;
+            width: 100%;
+
+            background: #FFF;
+
+            @media (prefers-color-scheme: dark) {
+                background: #1C1C1C;
+            }
+        }
+
+        .m-sub-tabs{
+            z-index: 1;
+            margin: 0;
+            width: 100%;
+            &.fixed{
+                position: fixed;
+                top: 27px;
+                padding-top: 16px;
+                left: 0;
+                right: 0;
+                z-index: 10;
+                box-sizing: border-box;
+                max-width: 100%;
+                padding-left: 16px;
+                padding-right: 16px;
+
+                background: #FFF;
+                @media (prefers-color-scheme: dark) {
+                    background: #1C1C1C;
+                }
+            }
+
+            .el-tabs__nav-wrap:after{
+                background: none;
+            }
+            .el-tabs__active-bar{
+                background: none;
+                &:after{
+                    // 剧中 20 px
+                    content: '';
+                    position: absolute;
+                    left: 50%;
+                    top: 0;
+                    transform: translateX(-50%);
+                    width: 20px;
+                    height: 2px;
+                    background: var(--black-100, #1C1C1C);
+                    border-radius: 2px;
+
+                }
+            }
+            .el-tabs__header{
+                margin: 0;
+            }
+            .el-tabs__item{
+                text-align: center;
+                /* 14 Bold */
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 700;
+                height: 24px;
+                //padding: 0;
+                padding: 0 8px;
+                margin: 0;
+                line-height: 20px; /* 142.857% */
+                color: var(--black-40, rgba(255, 255, 255, 0.40));
+                &.is-active{
+                    color: var(--black-100, #FFF);
+
+                }
+                &.is-top:nth-child(2){
+                    padding-left: 0;
+                }
+            }
+        }
+    }
+}

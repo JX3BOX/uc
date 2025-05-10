@@ -92,7 +92,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "~@/assets/css/author/mobile/mount-id.less";
+@import "~@/assets/css/common/mount-id.less";
 
 .m-role-card {
     display: flex;

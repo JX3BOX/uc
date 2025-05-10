@@ -8,4 +8,10 @@ function remove_comment(comment_id) {
     return $cms().delete(`/api/cms/wiki/comment/${comment_id}`);
 }
 
-export { get_comments, remove_comment };
+function getMineWiki(params) {
+   return $cms().get(`/api/cms/wiki/post/mine`, {
+       params
+   })
+}
+
+export { get_comments, remove_comment,getMineWiki };
