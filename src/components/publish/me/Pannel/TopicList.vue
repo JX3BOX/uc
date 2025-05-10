@@ -99,6 +99,7 @@ export default {
     display: flex;
     gap: 20px;
     flex-direction: column;
-
+    box-sizing: border-box;
+    width: 100%;
 }
 </style>

@@ -156,7 +156,8 @@ export default {
     // 清理a标签样式
     text-decoration: none;
     color: var(--black-40, rgba(28, 28, 28, 0.40));
-
+    box-sizing: border-box;
+    max-width: 100%;
 
     .m-ext-info {
         display: flex;
@@ -216,6 +217,7 @@ export default {
         background: var(--primary-brand-4);
         position: relative;
         overflow: hidden;
+        box-sizing: border-box;
 
         .m-bg-wrapper {
             position: absolute;

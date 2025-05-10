@@ -216,6 +216,7 @@ export default {
         background: var(--primary-brand-4);
         position: relative;
         overflow: hidden;
+        box-sizing: border-box;
 
         .m-bg-wrapper {
             position: absolute;
