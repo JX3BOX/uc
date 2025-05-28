@@ -333,7 +333,6 @@ export default {
             // 必填字段 title file
             let required = ["title"];
             let requiredMsg = ["请填写标题"];
-            console.log(data);
             if (data.code_mode) {
                 required.push("code");
                 requiredMsg.push("请填写捏脸码");
@@ -491,7 +490,7 @@ export default {
                 const text = await navigator.clipboard.readText();
                 this.post.code = text;
             } catch (err) {
-                this.$message.error("读取剪切板内容失败");
+                console.error("Failed to read clipboard contents: ", err);
             }
         },
     },

@@ -9,7 +9,15 @@
             <!-- 信息 -->
             <div class="m-publish-info">
                 <el-divider content-position="left">信息</el-divider>
-                <el-form-item label="数据">
+                <el-form-item label="体型码">
+                    <el-switch
+                        v-model="post.code_mode"
+                        :active-value="1"
+                        :inactive-value="0"
+                        active-color="#13ce66"
+                    ></el-switch>
+                </el-form-item>
+                <el-form-item label="数据" v-if="!post.code_mode">
                     <face-attachment :body="post.body_type" type="body" @update:data="handleBodyChange" />
                     <div class="u-attachment" v-for="item in bodyAttachments" :key="item.id">
                         <el-button
@@ -39,6 +47,13 @@
                             title="移除"
                         />
                     </div>
+                </el-form-item>
+                <el-form-item prop="code" v-else>
+                    <template #label>
+                        <span>体型码</span>
+                        <i class="el-icon-document-copy" @click="codePaste" style="margin-left: 2px; color: #c00"></i>
+                    </template>
+                    <el-input v-model="post.code" placeholder="请输入体型码"></el-input>
                 </el-form-item>
                 <!-- 客户端 -->
                 <el-form-item label="版本">
@@ -168,6 +183,9 @@ export default {
                 // 价格
                 price_type: "0", // 价格类型 0:免费 1:盒币 2:金箔
                 price_count: 0, // 数量
+                // 体型码
+                code_mode: 0, // 是否是体型码
+                code: "", // 体型码
             },
 
             loading: false,
@@ -262,8 +280,15 @@ export default {
         },
         validator(data) {
             // 必填字段 title file
-            const required = ["title", "file"];
-            const requiredMsg = ["请填写标题", "请上传数据"];
+            let required = ["title"];
+            let requiredMsg = ["请填写标题"];
+            if (data.code_mode) {
+                required.push("code");
+                requiredMsg.push("请填写体型码");
+            } else {
+                required.push("file");
+                requiredMsg.push("请上传数据");
+            }
             let message;
             for (let i = 0; i < required.length; i++) {
                 if (!data[required[i]]) {
@@ -356,6 +381,15 @@ export default {
                 type: "success",
                 duration: 2000,
             });
+        },
+        // 粘贴体型码
+        async codePaste() {
+            try {
+                const text = await navigator.clipboard.readText();
+                this.post.code = text;
+            } catch (err) {
+                console.error("Failed to read clipboard contents: ", err);
+            }
         },
     },
 };
