@@ -1,5 +1,5 @@
 <template>
-    <uc class="m-dashboard-medal m-dashboard-skin" icon="el-icon-brush" title="魔盒藏品" :tab-list="tabList">
+    <uc class="m-dashboard-medal m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tab-list="tabList">
         <template #header>
             <a
                 class="u-link el-button el-button--default el-button--mini is-round is-plain"
@@ -33,7 +33,7 @@
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { antiqueTab } from "@/assets/data/dashboard/tabs.json";
+import { themeTab } from "@/assets/data/dashboard/tabs.json";
 import User from "@jx3box/jx3box-common/js/user";
 import { getUserMedals, getMedals, setMedal } from "@/service/dashboard/decoration";
 import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
@@ -45,7 +45,7 @@ export default {
     },
     data: function () {
         return {
-            tabList: antiqueTab,
+            tabList: themeTab,
 
             medals: [],
 
