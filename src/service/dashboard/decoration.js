@@ -49,14 +49,22 @@ function cancelHonor() {
 }
 
 // 获取用户勋章
-function getUserMedals(uid) {
-    return $next({ mute: true }).get("/api/next2/user/" + uid + "/medals");
+function getUserMedals(uid, params) {
+    return $next({ mute: true }).get("/api/next2/user/" + uid + "/medals", {
+        params,
+    });
 }
 
 // 获取所有勋章
 function getMedals(params) {
     return $cms().get("/api/cms/config/medal", {params});
 }
+
+// 用户佩戴或者取消佩戴勋章
+function setMedal(uid, medal_id, is_wear) {
+    return $next().put(`/api/next2/user/${uid}/medals/${medal_id}/wear/${is_wear}`);
+}
+
 export {
     getDecoration,
     setDecoration,
@@ -70,4 +78,5 @@ export {
     cancelHonor,
     getUserMedals,
     getMedals,
+    setMedal
 };

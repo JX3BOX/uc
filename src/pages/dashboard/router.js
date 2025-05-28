@@ -76,7 +76,6 @@ const routes = [
     { name: "theme", path: "/theme", component: theme },
     { name: "emotion", path: "/emotion", component: emotion },
     { name: "honor", path: "/honor", component: honor },
-    { name: "medal", path: "/medal", component: medal },
     {
         name: "treasure",
         path: "/treasure",
@@ -87,6 +86,7 @@ const routes = [
     { name: "certification", path: "/treasure/certification", component: certification },
     { name: "holidayCard", path: "/treasure/holiday-card", component: holidayCard },
     { name: "birthdayCard", path: "/treasure/birthday-card", component: birthdayCard },
+    { name: "medal", path: "/treasure/medal", component: medal },
 
     { name: "mall", path: "/mall", component: mall },
     { name: "orders", path: "/orders", component: orders },
