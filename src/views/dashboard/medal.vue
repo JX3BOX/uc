@@ -8,7 +8,7 @@
                 ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
             >
         </template>
-        <div class="m-medal">
+        <div class="m-medal-content">
             <el-divider content-position="left">已获得</el-divider>
             <div class="u-list">
                 <div class="u-item is-have" v-for="item in userMedals" :key="item.id" :title="item.medal_desc">
