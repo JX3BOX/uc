@@ -15,9 +15,12 @@
                     <img class="u-img" :src="imgSrc(item.medal)" :alt="item.medal" />
                     <span class="u-model-name">{{ item.medal_desc }}</span>
                     <time :datetime="item.created_at" class="u-medal-time">{{ dateFormat(item.created_at) }}</time>
-                    <el-button type="primary" size="small" :plain="!!item.is_wear" @click="onIsWearChange(item)">{{
-                        item.is_wear ? "佩戴中" : "佩戴"
-                    }}</el-button>
+                    <el-button size="small" @click="onIsWearChange(item)"
+                        :type="item.is_wear ? 'info' : 'primary'" :plain="!!item.is_wear"
+                    >
+                        <i :class="item.is_wear ? 'el-icon-help' : 'el-icon-s-help'"></i>
+                        {{ item.is_wear ? "卸下" : "佩戴" }}
+                    </el-button>
                 </div>
             </div>
             <el-divider content-position="left">未获得</el-divider>
