@@ -8,9 +8,7 @@
                 ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
             >
         </template>
-        <div class="u-tips">
-            <i class="el-icon-warning-outline"></i>自定义表情包最多只能同时激活五个。
-        </div>
+        <div class="u-tips"><i class="el-icon-warning-outline"></i>自定义表情包最多只能同时激活五个。</div>
         <div class="u-list">
             <div
                 class="u-item"
@@ -97,6 +95,8 @@ export default {
         imgSrc(val) {
             const group = this.emotions.find((item) => item.group_name === val);
             const defaultEmo = group.items?.[0];
+            const filename = defaultEmo?.filename;
+            if (filename?.startsWith("http")) return filename;
             return __imgPath + "emotion/output/" + defaultEmo?.filename;
         },
         isUsing(val) {
