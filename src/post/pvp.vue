@@ -25,6 +25,20 @@
                 <publish-zlp v-model="post.zlp" :client="post.client"></publish-zlp>
                 <!-- 心法 -->
                 <publish-xf v-model="post.post_subtype" :client="post.client"></publish-xf>
+                <!-- 类型 -->
+                <div class="m-publish-type">
+                    <el-form-item label="类型">
+                        <el-checkbox-group v-model="post.tags">
+                            <el-checkbox
+                                v-model="post.tags"
+                                :label="tag"
+                                :value="tag"
+                                v-for="tag in tagList"
+                                :key="tag"
+                            ></el-checkbox>
+                        </el-checkbox-group>
+                    </el-form-item>
+                </div>
                 <!-- 跨心法 -->
                 <publish-mix-subtype
                     v-model="post.mix_subtype"
@@ -102,7 +116,10 @@
                     <el-button type="primary" @click="useDraft" :disabled="processing">使用此版本</el-button>
                 </template>
                 <template v-else>
-                    <el-button type="primary" @click="publish('publish', true)" :disabled="is_illegal || processing || !hasRead"
+                    <el-button
+                        type="primary"
+                        @click="publish('publish', true)"
+                        :disabled="is_illegal || processing || !hasRead"
                         >发 &nbsp;&nbsp; 布</el-button
                     >
                     <el-button type="plain" @click="publish('draft', false)" :disabled="processing || !hasRead"
@@ -220,6 +237,8 @@ export default {
                 lang: "cn",
                 // 资料片
                 zlp: "",
+                // 类型
+                tags: [],
 
                 // 摘要
                 post_excerpt: "",
@@ -245,6 +264,7 @@ export default {
                 mix_subtype: [],
                 is_wujie: 0,
             },
+            tagList: ["战场", "竞技场", "绝境战场", "插旗", "其他"],
         };
     },
     computed: {
@@ -292,6 +312,7 @@ export default {
         },
         // 发布
         publish: function (status, skip) {
+            if (!this.post.tags.length) return this.$message.error("类型必选");
             this.post.post_status = status;
             this.processing = true;
 
