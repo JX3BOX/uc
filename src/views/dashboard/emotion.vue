@@ -8,7 +8,9 @@
                 ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
             >
         </template>
-        <div class="u-tips"><i class="el-icon-warning-outline"></i>自定义表情包最多只能同时激活五个。</div>
+        <div class="u-tips">
+            <i class="el-icon-warning-outline"></i>自定义表情包最多只能同时激活五个。
+        </div>
         <div class="u-list">
             <div
                 class="u-item"
@@ -25,8 +27,18 @@
                 <div class="u-title">{{ item.group_name }}</div>
             </div>
         </div>
+        <div class="u-tips">
+            <i class="el-icon-warning-outline"></i>点击上面的表情包可以预览其中的表情。
+        </div>
+        <div class="m-preview" v-if="currentEmotion.group_name">
+            <div class="m-preview-item" v-for="(item, index) in currentEmotion.items" :key="index">
+                <img class="u-img" :src="itemImgSrc(item)" :alt="item.key" />
+                <span class="u-key">{{ getNameByKey(item.key) }}</span>
+            </div>
+        </div>
 
         <div class="u-actions">
+            <el-button @click="goBuy" icon="el-icon-shopping-bag-2" v-if="showBuy">前往购买</el-button>
             <el-button type="primary" @click="handleSave" icon="el-icon-circle-check" :loading="loading"
                 >保存</el-button
             >
@@ -49,11 +61,26 @@ export default {
             emotionList: [],
             emotions: [],
             active: [],
+            current: "emotion",
             loading: false,
         };
     },
-    computed: {},
+    computed: {
+        currentEmotion() {
+            return this.emotions.find((item) => item.group_name === this.current) || {};
+        },
+        showBuy() {
+            return !this.emotionList.some(item => item.val === this.current);;
+        },
+    },
     methods: {
+        goBuy() {
+            window.open(`/vip/mall?category=virtual&search=${this.current}`, "_blank");
+        },
+        getNameByKey(key) {
+            if(!key) return "";
+            return key.replace(/^\#\w+/, "");
+        },
         loadDecoration() {
             getDecoration({ type: "emotion" }).then((res) => {
                 this.emotionList = res.data.data;
@@ -95,9 +122,12 @@ export default {
         imgSrc(val) {
             const group = this.emotions.find((item) => item.group_name === val);
             const defaultEmo = group.items?.[0];
-            const filename = defaultEmo?.filename;
+            return this.itemImgSrc(defaultEmo);
+        },
+        itemImgSrc(item) {
+            const filename = item.filename;
             if (filename?.startsWith("http")) return filename;
-            return __imgPath + "emotion/output/" + defaultEmo?.filename;
+            return __imgPath + "emotion/output/" + filename;
         },
         isUsing(val) {
             return this.active.includes(val) || val === "默认";
@@ -109,6 +139,7 @@ export default {
             return val === "默认";
         },
         handleEmotionClick(item) {
+            this.current = item.group_name;
             if (this.isDisabled(item.group_name)) {
                 return;
             }
@@ -150,6 +181,28 @@ export default {
 
 <style lang="less">
 .m-dashboard-emotion {
+    .m-preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .m-preview-item {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap: 4px;
+        margin: 8px 0;
+
+        .u-img {
+            max-width: 60px;
+            max-height: 60px;
+        }
+        .u-key {
+            .fz(12px);
+            color: #aba;
+            
+        }
+    }
     .u-tips {
         margin-bottom: 16px;
         .fz(13px);
@@ -163,6 +216,7 @@ export default {
     .u-list {
         .flex;
         flex-wrap: wrap;
+        .mb(16px);
     }
     .u-item {
         .flex;
@@ -213,8 +267,8 @@ export default {
             }
         }
         &.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+            opacity: 0.7;
+            border-style: dashed;
         }
     }
     .u-actions {
