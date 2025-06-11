@@ -8,9 +8,7 @@
                 ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
             >
         </template>
-        <div class="u-tips">
-            <i class="el-icon-warning-outline"></i>自定义表情包最多只能同时激活五个。
-        </div>
+        <div class="u-tips"><i class="el-icon-warning-outline"></i>自定义表情包最多只能同时激活五个。</div>
         <div class="u-list">
             <div
                 class="u-item"
@@ -27,9 +25,7 @@
                 <div class="u-title">{{ item.group_name }}</div>
             </div>
         </div>
-        <div class="u-tips">
-            <i class="el-icon-warning-outline"></i>点击上面的表情包可以预览其中的表情。
-        </div>
+        <div class="u-tips"><i class="el-icon-warning-outline"></i>点击上面的表情包可以预览其中的表情。</div>
         <div class="m-preview" v-if="currentEmotion.group_name">
             <div class="m-preview-item" v-for="(item, index) in currentEmotion.items" :key="index">
                 <img class="u-img" :src="itemImgSrc(item)" :alt="item.key" />
@@ -61,7 +57,7 @@ export default {
             emotionList: [],
             emotions: [],
             active: [],
-            current: "emotion",
+            current: "",
             loading: false,
         };
     },
@@ -70,7 +66,7 @@ export default {
             return this.emotions.find((item) => item.group_name === this.current) || {};
         },
         showBuy() {
-            return !this.emotionList.some(item => item.val === this.current);;
+            return this.currentEmotion.group_name && !this.emotionList.some((item) => item.val === this.current);
         },
     },
     methods: {
@@ -78,7 +74,7 @@ export default {
             window.open(`/vip/mall?category=virtual&search=${this.current}`, "_blank");
         },
         getNameByKey(key) {
-            if(!key) return "";
+            if (!key) return "";
             return key.replace(/^\#\w+/, "");
         },
         loadDecoration() {
@@ -200,7 +196,6 @@ export default {
         .u-key {
             .fz(12px);
             color: #aba;
-            
         }
     }
     .u-tips {
