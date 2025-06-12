@@ -29,13 +29,7 @@
                 <div class="m-publish-type">
                     <el-form-item label="类型">
                         <el-checkbox-group v-model="post.tags">
-                            <el-checkbox
-                                v-model="post.tags"
-                                :label="tag"
-                                :value="tag"
-                                v-for="tag in tagList"
-                                :key="tag"
-                            ></el-checkbox>
+                            <el-checkbox :label="tag" :value="tag" v-for="tag in tagList" :key="tag"></el-checkbox>
                         </el-checkbox-group>
                     </el-form-item>
                 </div>
@@ -307,9 +301,6 @@ export default {
             // 尝试加载
             return this.loadData().then(() => {
                 // 加载成功后执行自动保存逻辑（含本地草稿、本地缓存、云端历史版本）
-                if (!this.post.tags) {
-                    this.post.tags = [];
-                }
                 this.autoSave();
             });
         },

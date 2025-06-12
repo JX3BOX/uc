@@ -45,7 +45,7 @@ export const AutoSaveMixin = {
         // 初始化加载
         loadData: function () {
             this.loading = true;
-
+            const isPvp = this.$route?.path?.startsWith("/pvp");
             // 1.当 mode = draft 时，加载本地 IndexedDB 内容
             if (this.isDraft) {
                 const key = this.$route?.query?.key;
@@ -53,6 +53,9 @@ export const AutoSaveMixin = {
                     .getItem(key)
                     .then((res) => {
                         this.post = res;
+                        if (isPvp && !this.post.tags) {
+                            this.post.tags = [];
+                        }
                     })
                     .finally(() => {
                         this.loading = false;
@@ -70,6 +73,9 @@ export const AutoSaveMixin = {
                                 prev_post: "",
                                 next_post: "",
                             };
+                            if (isPvp && !this.post.tags) {
+                                this.post.tags = [];
+                            }
                         })
                         .finally(() => {
                             this.loading = false;
@@ -107,6 +113,9 @@ export const AutoSaveMixin = {
                                 prev_post: res.data.data.prev_post || "",
                                 next_post: res.data.data.next_post || "",
                             };
+                            if (isPvp && !this.post.tags) {
+                                this.post.tags = [];
+                            }
                             // console.log(this.post);
                         })
                         .finally(() => {
