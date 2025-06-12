@@ -307,12 +307,15 @@ export default {
             // 尝试加载
             return this.loadData().then(() => {
                 // 加载成功后执行自动保存逻辑（含本地草稿、本地缓存、云端历史版本）
+                if (!this.post.tags) {
+                    this.post.tags = [];
+                }
                 this.autoSave();
             });
         },
         // 发布
         publish: function (status, skip) {
-            if (!this.post.tags.length) return this.$message.error("类型必选");
+            if (!this.post.tags?.length) return this.$message.error("类型必选");
             this.post.post_status = status;
             this.processing = true;
 
