@@ -44,6 +44,7 @@
                         <el-radio :label="1500" border :disabled="!canSelect(1500)" v-if="client == 'std'"
                             >1500通宝</el-radio
                         >
+                        <el-radio :label="2000" border :disabled="!canSelect(2000)">2000通宝</el-radio>
                         <el-radio :label="3000" border :disabled="!canSelect(3000)">3000通宝</el-radio>
                         <el-radio :label="5000" border :disabled="!canSelect(5000)">5000通宝</el-radio>
                         <el-radio :label="10000" border :disabled="!canSelect(10000)">10000通宝</el-radio>
