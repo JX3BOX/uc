@@ -9,32 +9,35 @@
 export default {
     name: "publish_header",
     props: ["name"],
-    data: function() {
-        return {
-        };
+    data: function () {
+        return {};
     },
     computed: {},
     methods: {
-        goBack: function() {
-            if(window.history.length){
-                this.$router.go(-1);
-            }else{
-                this.$router.push('/')
-            }
+        goBack: function () {
+            // 使用router.go(-1)尝试后退，如果失败则通过导航守卫会自动处理
+            this.$router.go(-1);
+
+            // 设置超时，检查是否仍在同一页面
+            const currentPath = this.$route.fullPath;
+            setTimeout(() => {
+                if (this.$route.fullPath === currentPath) {
+                    // 如果路径没变，说明后退失败
+                    this.$router.push("/");
+                }
+            }, 100);
         },
     },
-    mounted: function() {},
-    components: {
-    },
+    mounted: function () {},
+    components: {},
 };
 </script>
 
 <style lang="less">
-.m-publish-header{
+.m-publish-header {
     .pr;
     .flex;
     justify-content: space-between;
     align-items: center;
 }
-
 </style>

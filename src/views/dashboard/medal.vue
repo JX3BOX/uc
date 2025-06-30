@@ -1,5 +1,5 @@
 <template>
-    <uc class="m-dashboard-medal m-dashboard-skin" icon="el-icon-brush" title="魔盒藏品" :tab-list="tabList">
+    <uc class="m-dashboard-medal m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tab-list="tabList">
         <template #header>
             <a
                 class="u-link el-button el-button--default el-button--mini is-round is-plain"
@@ -8,16 +8,19 @@
                 ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
             >
         </template>
-        <div class="m-medal">
+        <div class="m-medal-content">
             <el-divider content-position="left">已获得</el-divider>
             <div class="u-list">
                 <div class="u-item is-have" v-for="item in userMedals" :key="item.id" :title="item.medal_desc">
                     <img class="u-img" :src="imgSrc(item.medal)" :alt="item.medal" />
                     <span class="u-model-name">{{ item.medal_desc }}</span>
                     <time :datetime="item.created_at" class="u-medal-time">{{ dateFormat(item.created_at) }}</time>
-                    <el-button type="primary" size="small" :plain="!!item.is_wear" @click="onIsWearChange(item)">{{
-                        item.is_wear ? "佩戴中" : "佩戴"
-                    }}</el-button>
+                    <el-button size="small" @click="onIsWearChange(item)"
+                        :type="item.is_wear ? 'info' : 'primary'" :plain="!!item.is_wear"
+                    >
+                        <i :class="item.is_wear ? 'el-icon-help' : 'el-icon-s-help'"></i>
+                        {{ item.is_wear ? "卸下" : "佩戴" }}
+                    </el-button>
                 </div>
             </div>
             <el-divider content-position="left">未获得</el-divider>
@@ -33,7 +36,7 @@
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { antiqueTab } from "@/assets/data/dashboard/tabs.json";
+import { themeTab } from "@/assets/data/dashboard/tabs.json";
 import User from "@jx3box/jx3box-common/js/user";
 import { getUserMedals, getMedals, setMedal } from "@/service/dashboard/decoration";
 import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
@@ -45,7 +48,7 @@ export default {
     },
     data: function () {
         return {
-            tabList: antiqueTab,
+            tabList: themeTab,
 
             medals: [],
 
