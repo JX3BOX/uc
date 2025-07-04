@@ -1,7 +1,9 @@
 <template>
     <div :class="{ 'is-hidden': !isShowNav, 'm-mall-nav': true }">
         <div class="left">
-            <div class="image">图片</div>
+            <a :href="lotteryLink" class="image u-lottery-link" target="_blank" v-if="showLottery">
+                <el-image :src="lottery" :fit="cover"></el-image>
+            </a>
             <div class="m-mall-types">
                 <div class="u-item" v-for="(item, i) in types" :key="i">
                     <!-- 分组名 -->
@@ -61,7 +63,7 @@
             <div class="pagination">
                 <el-pagination
                     :layout="query.pageSize == 10 ? 'total,prev, pager, next' : 'prev, pager, next'"
-                    :pager-count="query.pageSize == 10 ? 5 : 3"
+                    :pager-count="5"
                     :total="query.total"
                     :page-size.sync="query.pageSize"
                     :current-page.sync="query.pageIndex"
@@ -80,6 +82,10 @@
 </template>
 
 <script>
+import { getConfig } from "@/service/vip/cms";
+import { getDecoration } from "@/service/author/cms";
+import { __Root, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import User from "@jx3box/jx3box-common/js/user";
 import types from "@/assets/data/vip/goods_types.json";
 import SearchBox from "./SearchBox.vue";
 import GoodItem from "./GoodItem.vue";
@@ -93,6 +99,8 @@ export default {
         return {
             isShow: true,
             types,
+            showLottery: false,
+            exitList: [],
         };
     },
     inject: ["query", "changeQuery"],
@@ -106,7 +114,28 @@ export default {
             required: true,
         },
     },
+    computed: {
+        lotteryLink() {
+            return __Root + "vip/lottery";
+        },
+        lottery() {
+            return __cdn + "design/event/lottery/lottery.png";
+        },
+    },
+    mounted() {
+        this.loadConfig();
+        this.getDecoration();
+    },
     methods: {
+        async getDecoration() {
+            if (User.profile?.uid) {
+                const res = await getDecoration({ user_id: User.profile.uid });
+                const emotionRes = await getDecoration({ user_id: User.profile.uid, type: "emotion" });
+                const list = res.data?.data || [];
+                const emotionList = emotionRes.data?.data || [];
+                this.exitList = list.concat(emotionList);
+            }
+        },
         itemLinkClick(key) {
             this.changeQuery(["category", "sub_category"], [key, ""]);
         },
@@ -115,6 +144,11 @@ export default {
         },
         handleCurrentChange(page) {
             this.changeQuery("pageIndex", page, true);
+        },
+        loadConfig() {
+            getConfig({ key: "mall_lottery_pic" }).then((res) => {
+                this.showLottery = res?.val == "0" ? false : true;
+            });
         },
     },
 };
@@ -133,7 +167,8 @@ export default {
         width: 180px;
         background: linear-gradient(0deg, rgba(0, 0, 0, 1) 50.93%, rgba(71, 36, 0, 1) 100%);
         .image {
-            width: 100%;
+            .dbi;
+            width: 180px;
             height: 90px;
             color: white;
         }

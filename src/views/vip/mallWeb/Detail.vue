@@ -55,10 +55,11 @@
                             <img :src="imgUrl + '积分.svg'" alt="" />{{ good.price_points }}积分
                         </template>
                     </button>
-                    <button class="button like">
+                    <!-- <button class="button like">
                         <img :src="imgUrl + '点赞fill.svg'" alt="" />
                         点赞
-                    </button>
+                    </button> -->
+                    <Like class="like" :postId="id" postType="mall"></Like>
                 </div>
             </div>
             <div class="good-comment" v-html="good.describe"></div>
@@ -70,11 +71,13 @@
 import { getItem } from "@/service/vip/mall";
 import User from "@jx3box/jx3box-common/js/user";
 import Skeleton from "../mallNew/components/skeleton/index.vue";
+import Like from "@jx3box/jx3box-common-ui/src/interact/Like2.vue";
 import { throttle } from "lodash";
 export default {
     name: "Detail",
     components: {
         Skeleton,
+        Like,
     },
     data() {
         return {
@@ -346,10 +349,11 @@ export default {
                 height: 9.6vw;
                 display: flex;
                 justify-content: center;
+                align-items: center;
                 gap: 3.2vw;
+                margin-top: 2.6667vw;
                 .button {
                     cursor: pointer;
-                    margin-top: 2.6667vw;
                     width: 26.6667vw;
                     height: 9.6vw;
                     border-radius: 3.2vw;

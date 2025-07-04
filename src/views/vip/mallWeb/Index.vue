@@ -47,7 +47,7 @@ export default {
             return this.$store.state.mallNew.asset;
         },
         list() {
-            return this.goodsList.map((item) => {
+            return this.goodsList?.map((item) => {
                 return {
                     ...item,
                     canBuy: this.checkCanBuy(item),
@@ -74,10 +74,12 @@ export default {
         loadData() {
             const query = this.buildQuery();
             getItemList(query).then((res) => {
-                this.goodsList = res.data.data.list;
-                this.query.total = res.data.data.page.total;
-                this.query.pageIndex = res.data.data.page.index;
-                this.query.pageSize = res.data.data.page.pageSize;
+                this.goodsList = res.data.data?.list || [];
+                this.query.total = res.data.data.page?.total || 0;
+                if (res.data.data.page) {
+                    this.query.pageIndex = res.data.data.page.index;
+                    this.query.pageSize = res.data.data.page.pageSize;
+                }
             });
         },
         changeQuery(key, value, isChangePage) {

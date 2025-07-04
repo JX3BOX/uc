@@ -55,10 +55,11 @@
                             <img :src="imgUrl + '积分.svg'" alt="" />{{ good.price_points }}积分
                         </template>
                     </button>
-                    <button class="button like">
+                    <!-- <button class="button like">
                         <img :src="imgUrl + '点赞fill.svg'" alt="" />
                         点赞
-                    </button>
+                    </button> -->
+                    <Like class="like" :postId="id" postType="mall"></Like>
                 </div>
             </div>
             <div class="good-comment" v-html="good.describe"></div>
@@ -67,6 +68,7 @@
 </template>
 
 <script>
+import Like from "@jx3box/jx3box-common-ui/src/interact/Like2.vue";
 import Skeleton from "@/views/vip/mallNew/components/skeleton/index.vue";
 import { throttle } from "lodash";
 import User from "@jx3box/jx3box-common/js/user";
@@ -74,6 +76,7 @@ export default {
     name: "GoodDetail",
     components: {
         Skeleton,
+        Like,
     },
     props: {
         good: {
@@ -101,6 +104,9 @@ export default {
         };
     },
     computed: {
+        id() {
+            return this.good.id;
+        },
         goodInfo() {
             if (this.good && this.good.category === "virtual") {
                 if (this.good.sub_category === "skin") {
@@ -324,10 +330,11 @@ export default {
                 height: 36px;
                 display: flex;
                 justify-content: center;
+                align-items: center;
                 gap: 12px;
+                margin-top: 10px;
                 .button {
                     cursor: pointer;
-                    margin-top: 10px;
                     width: 100px;
                     height: 36px;
                     border-radius: 12px;
@@ -370,6 +377,9 @@ export default {
             padding: 6px 43px;
             overflow: scroll;
             scrollbar-width: none;
+            color: rgba(#fff, 0.75);
+            font-size: 12px;
+            font-weight: 400;
             background: linear-gradient(
                 90deg,
                 rgba(255, 255, 255, 0) 0%,
