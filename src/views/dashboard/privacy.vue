@@ -21,6 +21,7 @@
                                     等待确认中...
                                     <el-button size="mini" @click="onCancel(item)">取消</el-button>
                                 </span>
+                                <span v-else class="u-item-remark u-exit" @click="onExit(item)"> 解除关系 </span>
                             </div>
                         </div>
 
@@ -179,6 +180,7 @@ import {
     deleteInvite,
     getWaitInvites,
     dealInvite,
+    exitNet,
 } from "@/service/dashboard/relation.js";
 import User from "@jx3box/jx3box-common/js/user.js";
 import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
@@ -301,6 +303,26 @@ export default {
         },
     },
     methods: {
+        onExit(item) {
+            this.$confirm(`是否解除关系？`, "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning",
+            }).then(() => {
+                this.loading = true;
+                exitNet(item.net_id)
+                    .then(() => {
+                        this.$notify({
+                            title: "解除成功",
+                            type: "success",
+                        });
+                        this.loadRelationNetMembersByType();
+                    })
+                    .finally(() => {
+                        this.loading = false;
+                    });
+            });
+        },
         onAccept(item) {
             let typeName = this.active === "lover" ? "情缘" : "";
             this.$confirm(`是否接受 ${item.creator_info.display_name} 的邀请，成为ta的${typeName}？`, "提示", {
@@ -311,6 +333,10 @@ export default {
                 this.loading = true;
                 dealInvite(item.net_id, 1)
                     .then(() => {
+                        this.$notify({
+                            title: "接受成功",
+                            type: "success",
+                        });
                         this.waitVisible = false;
                         this.loadRelationNetMembersByType();
                     })
@@ -328,6 +354,10 @@ export default {
                 this.loading = true;
                 dealInvite(item.net_id, 2)
                     .then(() => {
+                        this.$notify({
+                            title: "拒绝成功",
+                            type: "success",
+                        });
                         this.loadWaitInvites();
                     })
                     .finally(() => {
