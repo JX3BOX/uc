@@ -28,7 +28,13 @@
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
                 </template>
-                <el-switch v-model="conf.allow_gift_of_mall_virtual_goods" active-color="#13ce66" active-text="开启" :active-value="1" :inactive-value="0"></el-switch>
+                <el-switch
+                    v-model="conf.allow_gift_of_mall_virtual_goods"
+                    active-color="#13ce66"
+                    active-text="开启"
+                    :active-value="1"
+                    :inactive-value="0"
+                ></el-switch>
             </el-form-item>
             <el-form-item label="订阅通知">
                 <template #label>
@@ -41,16 +47,37 @@
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
                 </template>
-                <el-switch v-model="conf.feed_message" active-color="#13ce66" active-text="开启" :active-value="1" :inactive-value="0"></el-switch>
+                <el-switch
+                    v-model="conf.feed_message"
+                    active-color="#13ce66"
+                    active-text="开启"
+                    :active-value="1"
+                    :inactive-value="0"
+                ></el-switch>
+            </el-form-item>
+            <el-form-item label="情缘功能">
+                <template #label>
+                    <span>情缘功能</span>
+                    <el-tooltip
+                        class="item"
+                        effect="dark"
+                        content="当开启时，会接受其他用户向您申请绑定情缘"
+                        placement="top"
+                        ><i class="el-icon-info"></i
+                    ></el-tooltip>
+                </template>
+                <el-switch
+                    v-model="conf.accept_lover_request"
+                    active-color="#13ce66"
+                    active-text="开启"
+                    :active-value="1"
+                    :inactive-value="0"
+                ></el-switch>
             </el-form-item>
             <el-form-item label="日历链接">
                 <template #label>
                     <span>日历链接</span>
-                    <el-tooltip
-                        class="item"
-                        effect="dark"
-                        content="网站首页日历模块点击的快捷跳转地址"
-                        placement="top"
+                    <el-tooltip class="item" effect="dark" content="网站首页日历模块点击的快捷跳转地址" placement="top"
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
                 </template>
@@ -59,11 +86,7 @@
             <el-form-item label="客户端偏好">
                 <template #label>
                     <span>客户端偏好</span>
-                    <el-tooltip
-                        class="item"
-                        effect="dark"
-                        content="在小程序端默认的游戏客户端"
-                        placement="top"
+                    <el-tooltip class="item" effect="dark" content="在小程序端默认的游戏客户端" placement="top"
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
                 </template>
@@ -84,10 +107,14 @@
                     ></el-tooltip>
                 </template>
                 <el-select v-model="conf.rss_need_level">
-                    <el-option v-for="item in levelMap" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    <el-option
+                        v-for="item in levelMap"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                    ></el-option>
                 </el-select>
             </el-form-item>
-
 
             <!-- <el-form-item label="评论邮件通知">
                 <el-switch v-model="conf.cmt_email" active-color="#13ce66" active-text="开启" :active-value="1" :inactive-value="0" disabled></el-switch>
@@ -129,6 +156,7 @@ export default {
                 allow_cny: 1,
                 allow_gift_of_mall_virtual_goods: 1,
                 feed_message: 1,
+                accept_lover_request: 1,
                 // hotkey: false,
                 // game_setting: false,
                 // custom_ui: false,
@@ -140,7 +168,7 @@ export default {
                 // plugin_setting_fy: false,
                 fav_link: "",
                 default_client: "",
-                rss_need_level: 1
+                rss_need_level: 1,
             },
 
             levelMap: new Array(8).fill(0).map((_, i) => {

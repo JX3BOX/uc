@@ -8,30 +8,55 @@
                 ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
             >
         </template>
-        <div class="u-tips">
-            <i class="el-icon-warning-outline"></i>自定义表情包最多只能同时激活五个。
-        </div>
-        <div class="u-list">
-            <div
-                class="u-item"
-                v-for="item in emotions"
-                :key="item.group_id"
-                :class="{
-                    'is-using': isUsing(item.group_name),
-                    disabled: isDisabled(item.group_name),
-                    hidden: isHidden(item.group_name),
-                }"
-                @click.stop="handleEmotionClick(item)"
-            >
-                <img class="u-img" :src="imgSrc(item.group_name)" :alt="item.group_name" />
-                <div class="u-title">{{ item.group_name }}</div>
+        <div class="m-emotion-content-preview">
+            <div class="m-title">
+                <span>表情包内容展示</span>
+                <span class="u-tip">点击表情包可以预览其中的表情</span>
+            </div>
+            <div class="m-emotion-content-list" v-if="previewEmotion">
+                <div class="m-emotion-content-item" v-for="(item, index) in previewEmotion.items" :key="index">
+                    <img class="u-img" :src="itemImgSrc(item)" alt="" />
+                    <span class="u-name">{{ getNameByKey(item.key) }}</span>
+                </div>
             </div>
         </div>
-
-        <div class="u-actions">
-            <el-button type="primary" @click="handleSave" icon="el-icon-circle-check" :loading="loading"
-                >保存</el-button
+        <el-divider content-position="left">已获得</el-divider>
+        <div class="m-emotion-list">
+            <div
+                class="m-emotion-item"
+                :class="{ 'is-select': selectedKeys.includes(emotion.group_name) }"
+                v-for="(emotion, index) in ownedEmotions"
+                :key="index"
+                @click="toggleEmotionSelected(emotion)"
             >
+                <img
+                    class="u-check"
+                    v-if="selectedKeys.includes(emotion.group_name)"
+                    src="@/assets/img/dashboard/check.svg"
+                    alt=""
+                />
+                <img class="u-img" :src="emotion.cover" alt="" />
+                <span class="u-name">{{ emotion.group_name }}</span>
+            </div>
+        </div>
+        <div class="m-actions">
+            <el-button icon="el-icon-circle-check" type="primary" @click="onSave" :loading="loading"
+                >确定激活({{ selectedKeys.length }}/5)</el-button
+            >
+            <div class="u-tip">自定义表情包最多只能同时激活五个。挑选完毕后，需点击按钮方可实装。</div>
+        </div>
+        <el-divider content-position="left">未获得</el-divider>
+        <div class="m-emotion-list">
+            <div
+                class="m-emotion-item is-not-owned"
+                v-for="(emotion, index) in unownedEmotions"
+                :key="index"
+                @click="toggleEmotionSelected(emotion)"
+            >
+                <img class="u-img" :src="emotion.cover" alt="" />
+                <span class="u-name">{{ emotion.group_name }}</span>
+                <span class="u-go-buy" @click.stop="goBuy(emotion.group_name)">前往兑换</span>
+            </div>
         </div>
     </uc>
 </template>
@@ -48,31 +73,49 @@ export default {
         return {
             tabList: themeTab,
 
-            emotionList: [],
             emotions: [],
             active: [],
             loading: false,
+
+            allEmotions: [], // 所有表情包
+            ownedEmotionKeys: [], // 已拥有的表情包键
+            selectedKeys: [], // 当前选中的表情包键
+            previewKey: "", // 预览的表情包键
         };
     },
-    computed: {},
+    computed: {
+        ownedEmotions() {
+            return this.emotions
+                .filter((item) => this.ownedEmotionKeys.includes(item.group_name))
+                .map((item) => ({
+                    ...item,
+                    cover: this.itemImgSrc(item.items?.[0] || {}),
+                }));
+        },
+        unownedEmotions() {
+            return this.emotions
+                .filter((item) => !this.ownedEmotionKeys.includes(item.group_name) && item.group_name !== "默认")
+                .map((item) => ({
+                    ...item,
+                    cover: this.itemImgSrc(item.items?.[0] || {}),
+                }));
+        },
+        previewEmotion() {
+            return this.emotions.find((item) => item.group_name === this.previewKey) || null;
+        },
+    },
     methods: {
+        goBuy(key) {
+            window.open(`/vip/mall?category=virtual&search=${key}`, "_blank");
+        },
+        getNameByKey(key) {
+            if (!key) return "";
+            return key.replace(/^\#\w+/, "");
+        },
         loadDecoration() {
             getDecoration({ type: "emotion" }).then((res) => {
-                this.emotionList = res.data.data;
-                this.active = this.emotionList.filter((item) => item.using).map((item) => item.val);
-                const _emotionList = this.emotionList.map((item) => item.val);
-                // 已购买的表情包排在前列
-                this.emotions.sort((a, b) => {
-                    const aUsing = _emotionList.includes(a.group_name);
-                    const bUsing = _emotionList.includes(b.group_name);
-                    if (aUsing && !bUsing) {
-                        return -1;
-                    } else if (!aUsing && bUsing) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                });
+                this.ownedEmotionKeys = res.data.data.map((item) => item.val);
+                this.selectedKeys = res.data.data.filter((item) => item.using).map((item) => item.val);
             });
         },
         getEmotion() {
@@ -89,48 +132,38 @@ export default {
                     });
                 }
             } catch (e) {
-                this.emotions = [];
-            } finally {
-                this.loadDecoration();
+                this.allEmotions = [];
             }
         },
-        imgSrc(val) {
-            const group = this.emotions.find((item) => item.group_name === val);
-            const defaultEmo = group.items?.[0];
-            return __imgPath + "emotion/output/" + defaultEmo?.filename;
-        },
-        isUsing(val) {
-            return this.active.includes(val) || val === "默认";
-        },
-        isDisabled(val) {
-            return !this.emotionList.map((item) => item.val).includes(val) && val !== "默认";
-        },
-        isHidden(val) {
-            return val === "默认";
-        },
-        handleEmotionClick(item) {
-            if (this.isDisabled(item.group_name)) {
+        toggleEmotionSelected(emotion) {
+            const key = emotion.group_name;
+            this.previewKey = key; // 设置预览的表情包键
+            if (!this.ownedEmotionKeys.includes(key)) {
                 return;
             }
-            // 最多只能选择五个
-            if (this.active.length >= 5 && !this.isUsing(item.group_name)) {
-                this.$message.error("最多只能选择五个表情包");
-                return;
+            if (this.selectedKeys.includes(key)) {
+                this.selectedKeys = this.selectedKeys.filter((k) => k !== key);
             } else {
-                if (this.isUsing(item.group_name)) {
-                    this.active = this.active.filter((val) => val !== item.group_name);
-                } else {
-                    this.active.push(item.group_name);
+                if (this.selectedKeys.length >= 5) {
+                    this.$message.error("最多只能选择五个表情包");
+                    return;
                 }
+                this.selectedKeys.push(key);
             }
         },
-        handleSave() {
+        itemImgSrc(item) {
+            const filename = item.filename;
+            if (filename?.startsWith("http")) return filename;
+            return __imgPath + "emotion/output/" + filename;
+        },
+
+        onSave() {
             this.loading = true;
-            const data = this.emotionList.map((item) => {
+            const data = this.ownedEmotionKeys.map((item) => {
                 return {
                     type: "emotion",
-                    val: item.val,
-                    using: this.active.includes(item.val),
+                    val: item,
+                    using: this.selectedKeys.includes(item),
                 };
             });
             setDecoration(data).then((res) => {
@@ -141,6 +174,7 @@ export default {
     },
     mounted: function () {
         this.getEmotion();
+        this.loadDecoration();
     },
     components: {
         uc,
@@ -150,76 +184,135 @@ export default {
 
 <style lang="less">
 .m-dashboard-emotion {
-    .u-tips {
-        margin-bottom: 16px;
-        .fz(13px);
-        i {
-            .mr(2px);
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    }
-    .u-list {
-        .flex;
+    display: flex;
+    flex-direction: column;
+
+    .m-emotion-list {
+        .mb(12px);
+        display: flex;
+        gap: 6px;
         flex-wrap: wrap;
     }
-    .u-item {
-        .flex;
-        .pointer;
+
+    .m-emotion-item {
+        display: flex;
+        gap: 7px;
+        flex-direction: column;
         align-items: center;
-        border: 1px solid #e6e6e6;
-        border-radius: 3px;
-        padding: 4px 8px;
-        margin: 4px;
+        justify-content: center;
+        border: 1px solid rgba(229, 229, 229, 1);
+        border-radius: 4px;
+        width: 100px;
+        height: 82px;
+        .pointer;
+        .pr;
+
+        &.is-select {
+            background-color: rgba(64, 128, 255, 1);
+
+            .u-name {
+                color: white;
+            }
+        }
+        &:hover {
+            border-color: rgba(64, 128, 255, 1);
+
+            &.is-not-owned .u-go-buy {
+                background-color: rgba(64, 128, 255, 1);
+            }
+        }
+        .u-check {
+            .pa;
+            .rt(13px);
+        }
         .u-img {
-            .size(20px, 20px);
+            .size(30px);
         }
-        .u-title {
-            margin-left: 4px;
-            .fz(13px);
+        .u-name {
+            .fz(14px);
         }
+        &.is-not-owned {
+            height: 85px;
 
-        &.hidden {
-            .none;
-        }
-
-        &.is-using {
-            border-color: #409eff;
-            position: relative;
-
-            // 倒三角标
-            &::before {
-                content: "";
-                .pa;
-                right: 0;
-                bottom: 0;
-                border: 12px solid #4abe84;
-                border-top-color: transparent;
-                border-left-color: transparent;
+            .pb(24px);
+            .u-name {
+                color: rgba(128, 128, 128, 1);
+            }
+            .u-go-buy {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-bottom-left-radius: 3px;
                 border-bottom-right-radius: 3px;
-            }
-            &::after {
-                content: "";
-                width: 2px;
-                height: 8px;
                 .pa;
-                right: 4px;
-                bottom: 4px;
-                border: 2px solid #fff;
-                border-top-color: transparent;
-                border-left-color: transparent;
-                transform: rotate(45deg);
+                bottom: 0;
+                .size(100%, 24px);
+                color: white;
+                background-color: rgba(36, 41, 46, 1);
+                .fz(12px, 18px);
+                &:hover {
+                    filter: brightness(1.05);
+                }
             }
-        }
-        &.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
         }
     }
-    .u-actions {
-        margin-top: 16px;
-        text-align: center;
+
+    .m-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        .mb(48px);
+
+        .el-button {
+            padding: 10px 55px;
+        }
+        .u-tip {
+            font-size: 14px;
+            line-height: 20.27px;
+            color: rgba(153, 153, 153, 1);
+        }
+    }
+
+    .m-emotion-content-preview {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 12px;
+        background: rgba(250, 251, 252, 1);
+        border: 1px solid rgba(229, 229, 229, 1);
+        .mb(48px);
+
+        .m-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            .fz(14px, 20px);
+
+            .u-tip {
+                color: rgba(153, 153, 153, 1);
+            }
+        }
+    }
+
+    .m-emotion-content-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .m-emotion-content-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        align-items: center;
+
+        .u-img {
+            .size(30px);
+        }
+
+        .u-name {
+            .fz(12px, 18px);
+        }
     }
 }
 </style>
