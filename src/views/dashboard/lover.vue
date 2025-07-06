@@ -8,10 +8,12 @@
                     </a>
                     <a class="u-item-name" :href="userLink(me)" target="_blank">{{ getName(me) }}</a>
                 </div>
+                <div class="u-div">
+                    <div class="u-div-icon"><i class="el-icon-connection"></i></div>
+                    <div class="u-div-meta">xxxx-xx-xx xx:xx:xx</div>
+                    <div class="u-div-meta u-div-unbind"><img svg-inline src="@/assets/img/dashboard/lover/unbind.svg" alt="" >解除绑定</div>
+                </div>
                 <template v-if="myLover.id">
-                    <div class="u-switch">
-                        <i class="el-icon-d-arrow-right"></i>
-                    </div>
                     <div class="m-wrapper">
                         <div class="u-item">
                             <a class="u-item-pic" :href="userLink(myLover)" target="_blank">
@@ -20,7 +22,7 @@
                             <a class="u-item-name" :href="userLink(myLover)" target="_blank">{{ getName(myLover) }}</a>
                             <div class="u-action">
                                 <div class="u-item-remark" v-if="!myLover.status">
-                                    <div>等待确认中...</div>
+                                    <div class="u-pending"><i class="el-icon-time"></i>等待确认中...</div>
                                     <el-button size="mini" @click="onCancel(myLover)">取消</el-button>
                                 </div>
                                 <span v-else class="u-item-remark u-exit" @click="onExit(myLover)"> 解除关系 </span>
@@ -206,12 +208,45 @@ export default {
 
 <style lang="less">
 .m-privacy-lover {
+    min-width: 800px;
     .m-members {
         .flex;
         justify-content: center;
         align-items: center;
         gap: 10px;
         margin-top: 20px;
+
+        .u-div{
+            padding:0 40px;
+            .u-div-icon{
+                .x;
+                .fz(40px);
+            }
+            .u-div-meta{
+                .x;
+                .fz(12px, 2.5);
+                color:#888;
+            }
+            .u-div-unbind{
+                .flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                color: #888;
+                img,svg{
+                    .size(16px);
+                    margin-right: 5px;
+                    fill: #888;
+                }
+            }
+            .u-div-unbind:hover{
+                color: orange;
+                svg{
+                    fill:orange;
+                }
+            }
+        }
+
         .u-item {
             position: relative;
             .flex;
@@ -223,7 +258,7 @@ export default {
             border: 1px solid #ddd;
             padding: 40px 10px;
             width: 200px;
-            height: 251px;
+            min-height: 250px;
             box-sizing: border-box;
             &.u-add {
                 font-size: 30px;
@@ -232,6 +267,11 @@ export default {
                     background-color: #f2f2f2;
                 }
             }
+        }
+
+        .u-pending{
+            color:orange;
+            i{margin-right: 3px;}
         }
     }
     .u-wait-tip {
@@ -259,10 +299,10 @@ export default {
         margin-left: -5px;
     }
 
-    overflow: hidden;
     .u-item-name {
         .nobreak;
         .fz(14px, 2.5);
+        margin-top:10px;
         .bold;
         .x;
         .db;
@@ -272,7 +312,7 @@ export default {
     }
     .u-action {
         position: absolute;
-        bottom: 10px;
+        bottom:20px;
     }
     .u-item-remark {
         .x;
