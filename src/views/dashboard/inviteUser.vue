@@ -124,6 +124,7 @@ export default {
                         type: "success",
                     });
                     this.$emit("update");
+                    this.close();
                 })
                 .finally(() => {
                     this.loading = false;

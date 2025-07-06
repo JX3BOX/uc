@@ -54,23 +54,15 @@
             </div>
         </template>
         <el-button type="success" v-if="showOpen" @click="onOpen">启用</el-button>
-        <el-dialog title="待处理列表" :visible.sync="waitVisible" width="80%">
-            <div class="m-whitelist-list m-wait-list">
-                <div class="u-item" v-for="(item, i) in waitList" :key="i">
-                    <a class="u-item-pic" :href="userLink(item)" target="_blank">
-                        <img class="u-item-avatar" :src="getAvatar(item) | showAvatar" />
-                    </a>
-                    <a class="u-item-name" :href="userLink(item)" target="_blank">{{ getName(item) }}</a>
-                    <span class="u-item-remark" v-if="!item.status">
-                        <el-button v-if="!members.length" size="mini" @click="onAccept(item)">接受</el-button>
-                        <el-button size="mini" @click="onReject(item)">拒绝</el-button>
-                    </span>
-                </div>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="waitVisible = false">取 消</el-button>
-            </span>
-        </el-dialog>
+        <!-- 待处理列表 -->
+        <waitList
+            v-if="waitVisible"
+            :visible="waitVisible"
+            :waitList="waitList"
+            :list="list"
+            @refresh="onEmit"
+            @close="waitVisible = false"
+        ></waitList>
         <!-- 关系网邀请 -->
         <inviteUser
             v-if="inviteVisible"
@@ -86,16 +78,18 @@
 </template>
 
 <script>
-import { deleteInvite, dealInvite, exitNet, createRelationNet } from "@/service/dashboard/relation.js";
+import { deleteInvite, exitNet, createRelationNet } from "@/service/dashboard/relation.js";
 import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import { getUserConf, setUserConf } from "@/service/dashboard/conf";
 import User from "@jx3box/jx3box-common/js/user.js";
 import inviteUser from "./inviteUser.vue";
+import waitList from "./waitList.vue";
 
 export default {
     name: "Lover",
     components: {
         inviteUser,
+        waitList,
     },
     emits: ["refresh"],
     props: {
@@ -152,6 +146,9 @@ export default {
         toAdd() {
             this.inviteVisible = true;
         },
+        onEmit(fn) {
+            this.$emit("refresh", fn);
+        },
         onRefresh() {
             this.$emit("refresh", "loadRelationNetMembersByType");
         },
@@ -166,7 +163,7 @@ export default {
                         title: "开启成功",
                         type: "success",
                     });
-                    // this.autoCreateNet();
+                    this.autoCreateNet();
                 });
             });
         },
@@ -197,7 +194,7 @@ export default {
             return item.user_info?.display_name || item.creator_info?.display_name;
         },
         onExit(item) {
-            this.$confirm(`是否解除关系？`, "提示", {
+            this.$confirm(`是否和 ${item.user_info?.display_name} 解除情缘关系？`, "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 type: "warning",
@@ -210,47 +207,6 @@ export default {
                             type: "success",
                         });
                         this.onRefresh();
-                    })
-                    .finally(() => {
-                        this.loading = false;
-                    });
-            });
-        },
-        onAccept(item) {
-            this.$confirm(`是否接受 ${item.creator_info.display_name} 的邀请，成为ta的情缘？`, "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                type: "warning",
-            }).then(() => {
-                this.loading = true;
-                dealInvite(item.net_id, 1)
-                    .then(() => {
-                        this.$notify({
-                            title: "接受成功",
-                            type: "success",
-                        });
-                        this.waitVisible = false;
-                        this.onRefresh();
-                    })
-                    .finally(() => {
-                        this.loading = false;
-                    });
-            });
-        },
-        onReject(item) {
-            this.$confirm(`是否拒绝 ${item.creator_info.display_name} 的邀请？`, "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                type: "warning",
-            }).then(() => {
-                this.loading = true;
-                dealInvite(item.net_id, 2)
-                    .then(() => {
-                        this.$notify({
-                            title: "拒绝成功",
-                            type: "success",
-                        });
-                        this.$emit("refresh", "loadWaitInvites");
                     })
                     .finally(() => {
                         this.loading = false;
