@@ -19,6 +19,7 @@
                             :relation-active-name="relationActiveName"
                             @refresh="onRefresh"
                         ></lover>
+                        <el-button type="success" v-if="showOpen" @click="onOpen">启用</el-button>
                     </el-tab-pane>
                 </template>
                 <el-tab-pane label="我的亲友" name="whitelist"></el-tab-pane>
@@ -130,22 +131,13 @@ import {
     editKith,
     removeKith,
     getBlackList,
-    getMyFollowList,
-    getMyFansList,
     follow,
-    unfollow,
     deny,
     undeny,
-    removeFans,
 } from "@/service/dashboard/privacy.js";
 import { getMyRss, getMySubscribers, removeRssUser, addRssUser, cancelRssUser } from "@/service/dashboard/rss";
-import {
-    getRelationNetTypes,
-    getRelationNetMembersByType,
-    createRelationNet,
-    inviteUserJoin,
-    getWaitInvites,
-} from "@/service/dashboard/relation.js";
+import { getRelationNetTypes, getRelationNetMembersByType, getWaitInvites } from "@/service/dashboard/relation.js";
+import { getUserConf, setUserConf } from "@/service/dashboard/conf";
 import User from "@jx3box/jx3box-common/js/user.js";
 import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import lover from "./lover.vue";
@@ -187,6 +179,7 @@ export default {
             members: [],
             waitList: [], // 待处理的关系列表
             inviteVisible: false,
+            isAllowLover: false, // 是否允许情缘。允许则后端在未创建情缘关系网时自动创建，不允许则显示开启按钮
         };
     },
     computed: {
@@ -269,8 +262,35 @@ export default {
         userId() {
             return User.getInfo().uid;
         },
+        showOpen() {
+            return this.active == "lover" && !this.isAllowLover;
+        },
     },
     methods: {
+        onOpen() {
+            this.$confirm(`是否立即启用情缘功能？`, "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning",
+            }).then(() => {
+                setUserConf({ accept_lover_request: 1 }).then(() => {
+                    this.$notify({
+                        title: "开启成功",
+                        type: "success",
+                    });
+                    this.isAllowLover = true;
+                    this.loadRelationNetMembersByType();
+                });
+            });
+        },
+        loadConf() {
+            getUserConf().then((res) => {
+                this.isAllowLover = !!res?.data?.data?.accept_lover_request;
+                if (this.isAllowLover) {
+                    this.loadRelationNetMembersByType();
+                }
+            });
+        },
         onRefresh(fn) {
             this?.[fn]();
         },
@@ -312,7 +332,11 @@ export default {
         },
         tabChange() {
             if (this.relationNetTypes.find((item) => item.relationship_type === this.active)) {
-                this.loadRelationNetMembersByType();
+                if (this.active == "lover") {
+                    this.loadConf();
+                } else {
+                    this.loadRelationNetMembersByType();
+                }
                 return;
             }
             this.keyword = this.$route.query.keyword || "";
@@ -517,7 +541,11 @@ export default {
                     this.relationNetTypes.find((item) => item.relationship_type === this.$route.query.tab)
                         ?.relationship_type || "lover";
                 this.active = tab;
-                this.loadRelationNetMembersByType();
+                if (this.active == "lover") {
+                    this.loadConf();
+                } else {
+                    this.loadRelationNetMembersByType();
+                }
                 this.loadWaitInvites();
             } else {
                 this.active = this.$route.query.tab || "whitelist";

@@ -18,11 +18,13 @@
                                 <img class="u-item-avatar" :src="getAvatar(myLover) | showAvatar" />
                             </a>
                             <a class="u-item-name" :href="userLink(myLover)" target="_blank">{{ getName(myLover) }}</a>
-                            <span class="u-item-remark" v-if="!myLover.status">
-                                等待确认中...
-                                <el-button size="mini" @click="onCancel(myLover)">取消</el-button>
-                            </span>
-                            <span v-else class="u-item-remark u-exit" @click="onExit(myLover)"> 解除关系 </span>
+                            <div class="u-action">
+                                <div class="u-item-remark" v-if="!myLover.status">
+                                    <div>等待确认中...</div>
+                                    <el-button size="mini" @click="onCancel(myLover)">取消</el-button>
+                                </div>
+                                <span v-else class="u-item-remark u-exit" @click="onExit(myLover)"> 解除关系 </span>
+                            </div>
                         </div>
                         <el-alert
                             v-if="waitList.length"
@@ -53,7 +55,6 @@
                 </div>
             </div>
         </template>
-        <el-button type="success" v-if="showOpen" @click="onOpen">启用</el-button>
         <!-- 待处理列表 -->
         <waitList
             v-if="waitVisible"
@@ -78,9 +79,8 @@
 </template>
 
 <script>
-import { deleteInvite, exitNet, createRelationNet } from "@/service/dashboard/relation.js";
+import { deleteInvite, exitNet } from "@/service/dashboard/relation.js";
 import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
-import { getUserConf, setUserConf } from "@/service/dashboard/conf";
 import User from "@jx3box/jx3box-common/js/user.js";
 import inviteUser from "./inviteUser.vue";
 import waitList from "./waitList.vue";
@@ -114,13 +114,9 @@ export default {
         return {
             inviteVisible: false,
             waitVisible: false,
-            isAllowLover: false, // 是否允许情缘。允许则在未创建情缘关系网时自动创建，不允许则显示开启按钮
         };
     },
     computed: {
-        showOpen() {
-            return !this.isAllowLover && !this.list.length;
-        },
         userId() {
             return User.getInfo().uid;
         },
@@ -151,36 +147,6 @@ export default {
         },
         onRefresh() {
             this.$emit("refresh", "loadRelationNetMembersByType");
-        },
-        onOpen() {
-            this.$confirm(`是否立即启用情缘功能？`, "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                type: "warning",
-            }).then(() => {
-                setUserConf({ accept_lover_request: 1 }).then(() => {
-                    this.$notify({
-                        title: "开启成功",
-                        type: "success",
-                    });
-                    this.autoCreateNet();
-                });
-            });
-        },
-        autoCreateNet() {
-            // 当成员为空时,且isAllowLover为true时，自动建立关系网
-            if (this.list.length) return;
-            createRelationNet({ relationship_type: "lover" }).then(() => {
-                this.onRefresh();
-            });
-        },
-        loadConf() {
-            getUserConf().then((res) => {
-                this.isAllowLover = !!res?.data?.data?.accept_lover_request;
-                if (this.isAllowLover) {
-                    this.autoCreateNet();
-                }
-            });
         },
         // 用户链接
         userLink(item) {
@@ -247,6 +213,7 @@ export default {
         gap: 10px;
         margin-top: 20px;
         .u-item {
+            position: relative;
             .flex;
             flex-direction: column;
             justify-content: center;
@@ -302,6 +269,10 @@ export default {
         &:hover {
             color: @pink;
         }
+    }
+    .u-action {
+        position: absolute;
+        bottom: 10px;
     }
     .u-item-remark {
         .x;
