@@ -1,24 +1,26 @@
 <template>
-    <el-dialog class="w-dialog m-invite-user" width="500" :visible.sync="show" :title="title" @close="close">
-        <el-input
-            class="u-input"
-            v-model.number="uid"
-            placeholder="输入UID添加"
-            suffix-icon="el-icon-search"
-            @keyup.enter.native="search"
-            @change="search"
-        ></el-input>
-        <div class="u-list" v-if="userdata">
-            <div class="u-item">
-                <img class="u-item-avatar" :src="userdata.user_avatar | showAvatar" :alt="userdata.display_name" />
-                <div class="u-item-info">
-                    <span class="u-item-uid">UID：{{ userdata.ID }}</span>
-                    <b class="u-item-name">{{ userdata.display_name }}</b>
+    <el-dialog class="w-dialog m-invite-user-dialog" width="500" :visible.sync="show" :title="title" @close="close">
+        <div class="m-invite-user">
+            <el-input
+                class="u-input"
+                v-model.number="uid"
+                placeholder="输入UID添加"
+                suffix-icon="el-icon-search"
+                @keyup.enter.native="search"
+                @change="search"
+            ></el-input>
+            <div class="u-list" v-if="userdata">
+                <div class="u-item">
+                    <img class="u-avatar" :src="userdata.user_avatar | showAvatar" :alt="userdata.display_name" />
+                    <div class="u-info">
+                        <span class="u-uid">UID：{{ userdata.ID }}</span>
+                        <b class="u-name">{{ userdata.display_name }}</b>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="u-null" v-if="isNull">
-            <el-alert title="无搜索结果" type="info" show-icon :closable="false"></el-alert>
+            <div class="u-null" v-if="isNull">
+                <el-alert title="无搜索结果" type="info" show-icon :closable="false"></el-alert>
+            </div>
         </div>
         <template #footer>
             <div class="dialog-footer">
@@ -154,52 +156,44 @@ export default {
 </script>
 
 <style lang="less">
-.m-invite-user {
-    .u-null {
-        .mt(10px);
-    }
-
-    .u-list {
-        .mt(10px);
-    }
-
-    .u-item {
-        .w(100%);
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        margin-bottom: 10px;
-        background-color: #f9f9f9;
-        padding: 10px;
-        .u-item-avatar {
-            .size(40px);
-            .r(10px);
-            margin-right: 20px;
+.m-invite-user-dialog {
+    .m-invite-user {
+        .u-null {
+            .mt(10px);
         }
-        .u-item-info {
-            .clip;
-            width: calc(100% - 60px);
+
+        .u-list {
+            .mt(10px);
+        }
+
+        .u-item {
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            .fz(13px, 20px);
-            b,
-            span {
-                .x(left);
-                .w(100%);
-                .nobreak;
-                text-overflow: ellipsis;
-                align-self: flex-start;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            background-color: #f9f9f9;
+            padding: 10px;
+            .r(4px);
+            .u-avatar {
+                .size(40px);
+                .r(10px);
+                margin-right: 20px;
             }
-        }
-        .pr;
-        .u-item-exist {
-            .pa;
-            .fz(12px);
-            font-style: normal;
-            right: 5px;
-            top: 5px;
-            color: #fba524;
+            .u-info {
+                .clip;
+                width: calc(100% - 60px);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                .fz(13px, 20px);
+                b,
+                span {
+                    .x(left);
+                    .w(100%);
+                    .nobreak;
+                    text-overflow: ellipsis;
+                    align-self: flex-start;
+                }
+            }
         }
     }
 }

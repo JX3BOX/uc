@@ -19,7 +19,10 @@
                             :relation-active-name="relationActiveName"
                             @refresh="onRefresh"
                         ></lover>
-                        <el-button type="success" v-if="showOpen" @click="onOpen">启用</el-button>
+                        <div class="m-fun-open" v-if="showOpen">
+                            <el-empty description="您尚未开启该功能"></el-empty>
+                            <el-button type="success" @click="onOpen">立即启用</el-button>
+                        </div>
                     </el-tab-pane>
                 </template>
                 <el-tab-pane label="我的亲友" name="whitelist"></el-tab-pane>
@@ -268,7 +271,7 @@ export default {
     },
     methods: {
         onOpen() {
-            this.$confirm(`是否立即启用情缘功能？`, "提示", {
+            this.$confirm(`是否立即启用？`, "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 type: "warning",
@@ -337,6 +340,12 @@ export default {
                 } else {
                     this.loadRelationNetMembersByType();
                 }
+                this.$router.push({
+                    name: "privacy",
+                    query: {
+                        tab: this.active,
+                    },
+                });
                 return;
             }
             this.keyword = this.$route.query.keyword || "";
@@ -533,14 +542,45 @@ export default {
                 })
                 .finally(() => {});
         },
+        userLink(item) {
+            let id = "";
+            if (this.active === "whitelist") {
+                id = item.kith_id;
+            } else if (this.active === "myfans") {
+                id = item.user_id;
+            } else if (this.active === "blacklist") {
+                id = item.bind_user_id;
+            } else {
+                id = item.author_id;
+            }
+            return authorLink(id);
+        },
+        getAvatar(item) {
+            if (this.active == "myfans") {
+                return item.user_info?.avatar;
+            } else if (this.active == "myfollow") {
+                return item.author_info?.avatar;
+            }
+            return (item.kith_info || item).user_avatar;
+        },
+        getName(item) {
+            if (this.active == "myfans") {
+                return item.user_info?.display_name;
+            } else if (this.active == "myfollow") {
+                return item.author_info?.display_name;
+            }
+            return (item.kith_info || item).display_name;
+        },
     },
     mounted: function () {
         this.loadRelationNetTypes().then(() => {
-            if (this.relationNetTypes.length) {
-                const tab =
-                    this.relationNetTypes.find((item) => item.relationship_type === this.$route.query.tab)
-                        ?.relationship_type || "lover";
-                this.active = tab;
+            let routeTab = this.$route.query.tab;
+            const relationNetTypes = this.relationNetTypes;
+            if (relationNetTypes.length && !routeTab) {
+                routeTab = relationNetTypes[0].relationship_type;
+            }
+            if (routeTab && relationNetTypes.find((item) => item.relationship_type === routeTab)) {
+                this.active = routeTab;
                 if (this.active == "lover") {
                     this.loadConf();
                 } else {
@@ -548,7 +588,7 @@ export default {
                 }
                 this.loadWaitInvites();
             } else {
-                this.active = this.$route.query.tab || "whitelist";
+                this.active = routeTab || "whitelist";
                 this.loadList();
             }
         });

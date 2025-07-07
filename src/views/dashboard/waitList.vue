@@ -2,14 +2,18 @@
     <el-dialog class="w-dialog m-wait-list-dialog" :visible.sync="show" title="待处理列表" @close="close">
         <div class="m-wait-list" v-loading="loading">
             <div class="u-item" v-for="(item, i) in waitList" :key="i">
+                <div class="u-close" v-if="!item.status" @click.stop="onReject(item)">
+                    <i class="el-icon-close"></i>
+                </div>
                 <a class="u-item-pic" :href="userLink(item)" target="_blank">
                     <img class="u-item-avatar" :src="getAvatar(item) | showAvatar" />
                 </a>
                 <a class="u-item-name" :href="userLink(item)" target="_blank">{{ getName(item) }}</a>
-                <span class="u-item-remark" v-if="!item.status">
-                    <el-button v-if="list.length <= 1" size="mini" @click="onAccept(item)">接受</el-button>
-                    <el-button size="mini" @click="onReject(item)">拒绝</el-button>
-                </span>
+                <div class="u-action">
+                    <span class="u-item-remark" v-if="!item.status">
+                        <el-button v-if="list.length <= 1" size="mini" @click="onAccept(item)">接受</el-button>
+                    </span>
+                </div>
             </div>
         </div>
         <template #footer>
@@ -54,7 +58,6 @@ export default {
             immediate: true,
             handler(bol) {
                 this.show = bol;
-                console.log(this.list);
             },
         },
     },
@@ -70,7 +73,7 @@ export default {
         },
         // 用户链接
         userLink(item) {
-            const id = item.user_id || item.creator_info?.id;
+            const id = item.initiator_id || item.creator_info?.id;
             return authorLink(id);
         },
         getAvatar(item) {
@@ -132,69 +135,91 @@ export default {
         flex-wrap: wrap;
         align-items: center;
         gap: 10px;
-    }
 
-    .u-item {
-        .fl;
-
-        .r(3px);
-        background-color: #f9f9f9;
-        border: 1px solid #ddd;
-        margin: 0 10px 10px 0;
-        padding: 40px 10px;
-        width: 200px;
-        height: 251px;
-        box-sizing: border-box;
-
-        .x;
-        .u-item-pic {
-            .dbi;
-            .x;
-            .pr;
-            .auto(x);
-            .size(68px);
-            transition: 0.2s ease-in-out;
-            &:hover {
-                filter: saturate(120%) brightness(110%);
+        .u-item {
+            position: relative;
+            .r(3px);
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            margin: 0 10px 10px 0;
+            padding: 40px 10px;
+            width: 200px;
+            height: 251px;
+            box-sizing: border-box;
+            .u-action {
+                position: absolute;
+                bottom: 20px;
+                .flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
             }
-        }
-        .u-item-avatar {
-            .r(100%);
-        }
-        .u-item-status {
-            .pa;
-            .lt(50%, 50%);
-            transform: translate(-50%, -50%);
-            margin-top: -5px;
-            margin-left: -5px;
-        }
-
-        overflow: hidden;
-        .u-item-name {
-            .nobreak;
-            .fz(14px, 2.5);
-            .bold;
             .x;
-            .db;
-            &:hover {
-                color: @pink;
-            }
-        }
-        .u-item-remark {
-            .x;
-            .fz(12px, 2);
-            color: #888;
-            .db;
-            &.u-exit {
-                cursor: pointer;
+            .u-item-pic {
+                .dbi;
+                .x;
+                .pr;
+                .auto(x);
+                .size(68px);
+                transition: 0.2s ease-in-out;
                 &:hover {
-                    color: @primary;
+                    filter: saturate(120%) brightness(110%);
                 }
             }
-        }
-        .u-item-btns {
-            .x;
-            .mt(10px);
+            .u-item-avatar {
+                .r(100%);
+            }
+            .u-item-status {
+                .pa;
+                .lt(50%, 50%);
+                transform: translate(-50%, -50%);
+                margin-top: -5px;
+                margin-left: -5px;
+            }
+
+            overflow: hidden;
+            .u-item-name {
+                .nobreak;
+                .fz(14px, 2.5);
+                .bold;
+                .x;
+                .db;
+                &:hover {
+                    color: @pink;
+                }
+            }
+            .u-item-remark {
+                .x;
+                .fz(12px, 2);
+                color: #888;
+                .db;
+                &.u-exit {
+                    cursor: pointer;
+                    &:hover {
+                        color: @primary;
+                    }
+                }
+            }
+            .u-item-btns {
+                .x;
+                .mt(10px);
+            }
+            .u-close {
+                .none;
+                position: absolute;
+                top: 0;
+                right: 0;
+                padding: 10px;
+                cursor: pointer;
+                &:hover {
+                    background: #eee;
+                }
+            }
+            &:hover {
+                .u-close {
+                    .dbi;
+                }
+            }
         }
     }
 }

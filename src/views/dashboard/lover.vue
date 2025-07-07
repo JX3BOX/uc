@@ -10,12 +10,19 @@
                 </div>
                 <div class="u-div">
                     <div class="u-div-icon"><i class="el-icon-connection"></i></div>
-                    <div class="u-div-meta">xxxx-xx-xx xx:xx:xx</div>
-                    <div class="u-div-meta u-div-unbind"><img svg-inline src="@/assets/img/dashboard/lover/unbind.svg" alt="" >解除绑定</div>
+                    <template v-if="myLover.id">
+                        <div class="u-div-meta">{{ formatTime(myLover.updated_at) }}</div>
+                        <div class="u-div-meta u-div-unbind" v-if="myLover.status" @click="onExit(myLover)">
+                            <img svg-inline src="@/assets/img/dashboard/lover/unbind.svg" alt="" />解除绑定
+                        </div>
+                    </template>
                 </div>
                 <template v-if="myLover.id">
-                    <div class="m-wrapper">
+                    <div class="m-wrapper" @click="toWait">
                         <div class="u-item">
+                            <div v-if="!myLover.status" class="u-cancel" @click.stop="onCancel(myLover)">
+                                <i class="el-icon-close"></i>
+                            </div>
                             <a class="u-item-pic" :href="userLink(myLover)" target="_blank">
                                 <img class="u-item-avatar" :src="getAvatar(myLover) | showAvatar" />
                             </a>
@@ -23,37 +30,26 @@
                             <div class="u-action">
                                 <div class="u-item-remark" v-if="!myLover.status">
                                     <div class="u-pending"><i class="el-icon-time"></i>等待确认中...</div>
-                                    <el-button size="mini" @click="onCancel(myLover)">取消</el-button>
                                 </div>
-                                <span v-else class="u-item-remark u-exit" @click="onExit(myLover)"> 解除关系 </span>
+                                <div v-if="waitList.length" class="u-wait-tip">
+                                    您有 <b>{{ waitList.length }}</b> 条情缘申请待处理，<span>查看</span>
+                                </div>
                             </div>
                         </div>
-                        <el-alert
-                            v-if="waitList.length"
-                            class="u-wait-tip"
-                            :title="`您有 ${waitList.length} 条邀请待处理！`"
-                            type="warning"
-                            show-icon
-                            :closable="false"
-                            @click.native="waitVisible = true"
-                        >
-                        </el-alert>
                     </div>
                 </template>
-                <div class="m-wrapper" v-else>
-                    <div class="u-item u-add" @click="toAdd">
-                        <i class="el-icon-plus"></i>
+                <div class="m-wrapper" v-else @click="toAdd">
+                    <div class="u-item u-add-item">
+                        <div class="u-add">
+                            <i class="el-icon-plus"></i>
+                        </div>
+                        <div class="u-bind">绑定情缘</div>
+                        <div class="u-action" v-if="waitList.length">
+                            <div class="u-wait-tip" @click.stop="toWait">
+                                您有 <b>{{ waitList.length }}</b> 条情缘申请待处理，<span>查看</span>
+                            </div>
+                        </div>
                     </div>
-                    <el-alert
-                        v-if="waitList.length"
-                        class="u-wait-tip"
-                        :title="`您有 ${waitList.length} 条邀请待处理！`"
-                        type="warning"
-                        show-icon
-                        :closable="false"
-                        @click.native="waitVisible = true"
-                    >
-                    </el-alert>
                 </div>
             </div>
         </template>
@@ -84,6 +80,7 @@
 import { deleteInvite, exitNet } from "@/service/dashboard/relation.js";
 import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user.js";
+import moment from "moment";
 import inviteUser from "./inviteUser.vue";
 import waitList from "./waitList.vue";
 
@@ -141,6 +138,14 @@ export default {
     },
     mounted() {},
     methods: {
+        toWait() {
+            if (this.waitList.length) {
+                this.waitVisible = true;
+            }
+        },
+        formatTime(time) {
+            return moment(time).format("YYYY-MM-DD HH:mm:ss");
+        },
         toAdd() {
             this.inviteVisible = true;
         },
@@ -162,7 +167,7 @@ export default {
             return item.user_info?.display_name || item.creator_info?.display_name;
         },
         onExit(item) {
-            this.$confirm(`是否和 ${item.user_info?.display_name} 解除情缘关系？`, "提示", {
+            this.$confirm(`是否和 ${item.user_info?.display_name} 解除情缘绑定？`, "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 type: "warning",
@@ -216,33 +221,34 @@ export default {
         gap: 10px;
         margin-top: 20px;
 
-        .u-div{
-            padding:0 40px;
-            .u-div-icon{
+        .u-div {
+            padding: 0 40px;
+            .u-div-icon {
                 .x;
                 .fz(40px);
             }
-            .u-div-meta{
+            .u-div-meta {
                 .x;
                 .fz(12px, 2.5);
-                color:#888;
+                color: #888;
             }
-            .u-div-unbind{
+            .u-div-unbind {
                 .flex;
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
                 color: #888;
-                img,svg{
+                img,
+                svg {
                     .size(16px);
                     margin-right: 5px;
                     fill: #888;
                 }
             }
-            .u-div-unbind:hover{
+            .u-div-unbind:hover {
                 color: orange;
-                svg{
-                    fill:orange;
+                svg {
+                    fill: orange;
                 }
             }
         }
@@ -260,22 +266,41 @@ export default {
             width: 200px;
             min-height: 250px;
             box-sizing: border-box;
-            &.u-add {
+            &.u-add-item {
                 font-size: 30px;
                 cursor: pointer;
                 &:hover {
                     background-color: #f2f2f2;
                 }
+                .u-add {
+                    .flex;
+                    align-items: center;
+                    justify-content: center;
+                    .size(68px);
+                    .r(50%);
+                    color: #999;
+                }
+                .u-bind {
+                    .fz(14px, 2.5);
+                    margin-top: 10px;
+                    .bold;
+                    .x;
+                    .db;
+                }
+            }
+
+            .u-action {
+                position: absolute;
+                bottom: 20px;
             }
         }
 
-        .u-pending{
-            color:orange;
-            i{margin-right: 3px;}
+        .u-pending {
+            color: orange;
+            i {
+                margin-right: 3px;
+            }
         }
-    }
-    .u-wait-tip {
-        cursor: pointer;
     }
     .u-item-pic {
         .dbi;
@@ -302,17 +327,13 @@ export default {
     .u-item-name {
         .nobreak;
         .fz(14px, 2.5);
-        margin-top:10px;
+        margin-top: 10px;
         .bold;
         .x;
         .db;
         &:hover {
             color: @pink;
         }
-    }
-    .u-action {
-        position: absolute;
-        bottom:20px;
     }
     .u-item-remark {
         .x;
@@ -334,8 +355,33 @@ export default {
         position: relative;
         padding: 40px 0;
         .u-wait-tip {
+            font-size: 12px;
+            text-align: center;
+            width: 100%;
+            b {
+                color: orange;
+            }
+            span {
+                color: @primary;
+            }
+        }
+        .u-cancel {
+            .none;
             position: absolute;
-            bottom: 0;
+            top: 0;
+            right: 0;
+            padding: 10px;
+            cursor: pointer;
+            &:hover {
+                background: #eee;
+            }
+        }
+        .u-item {
+            &:hover {
+                .u-cancel {
+                    .dbi;
+                }
+            }
         }
     }
 }
