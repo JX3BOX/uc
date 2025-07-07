@@ -11,7 +11,7 @@
                 <a class="u-item-name" :href="userLink(item)" target="_blank">{{ getName(item) }}</a>
                 <div class="u-action">
                     <span class="u-item-remark" v-if="!item.status">
-                        <el-button v-if="list.length <= 1" size="mini" @click="onAccept(item)">接受</el-button>
+                        <el-button v-if="list.length <= 1" size="mini" @click="onAccept(item)" type="success" plain>接受</el-button>
                     </span>
                 </div>
             </div>
@@ -149,10 +149,8 @@ export default {
             .u-action {
                 position: absolute;
                 bottom: 20px;
-                .flex;
-                justify-content: center;
-                align-items: center;
-                width: 100%;
+                left:50%;
+                transform: translateX(-50%);
             }
             .x;
             .u-item-pic {

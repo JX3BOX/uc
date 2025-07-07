@@ -2,52 +2,53 @@
     <div class="m-privacy-lover">
         <template v-if="list.length">
             <div class="m-members">
+                <!-- 自己 -->
                 <div class="u-item" v-if="me.id">
                     <a class="u-item-pic" :href="userLink(me)" target="_blank">
                         <img class="u-item-avatar" :src="getAvatar(me) | showAvatar" />
                     </a>
                     <a class="u-item-name" :href="userLink(me)" target="_blank">{{ getName(me) }}</a>
                 </div>
+                <!-- 中间 -->
                 <div class="u-div">
                     <div class="u-div-icon"><i class="el-icon-connection"></i></div>
-                    <template v-if="myLover.id">
-                        <div class="u-div-meta">{{ formatTime(myLover.updated_at) }}</div>
-                        <div class="u-div-meta u-div-unbind" v-if="myLover.status" @click="onExit(myLover)">
+                    <template v-if="myLover.id && myLover.status">
+                        <div class="u-div-meta">
+                            {{ formatTime(myLover.updated_at) }}
+                        </div>
+                        <div class="u-div-meta u-div-unbind" @click="onExit(myLover)">
                             <img svg-inline src="@/assets/img/dashboard/lover/unbind.svg" alt="" />解除绑定
                         </div>
                     </template>
                 </div>
-                <template v-if="myLover.id">
-                    <div class="m-wrapper" @click="toWait">
-                        <div class="u-item">
-                            <div v-if="!myLover.status" class="u-cancel" @click.stop="onCancel(myLover)">
+                <!-- 右侧 -->
+                <div class="m-wrapper">
+                    <div class="u-item" v-if="myLover.id">
+                        <!-- <div v-if="!myLover.status" class="u-cancel" @click.stop="onCancel(myLover)">
                                 <i class="el-icon-close"></i>
-                            </div>
-                            <a class="u-item-pic" :href="userLink(myLover)" target="_blank">
-                                <img class="u-item-avatar" :src="getAvatar(myLover) | showAvatar" />
-                            </a>
-                            <a class="u-item-name" :href="userLink(myLover)" target="_blank">{{ getName(myLover) }}</a>
-                            <div class="u-action">
-                                <div class="u-item-remark" v-if="!myLover.status">
-                                    <div class="u-pending"><i class="el-icon-time"></i>等待确认中...</div>
-                                </div>
-                                <div v-if="waitList.length" class="u-wait-tip">
-                                    您有 <b>{{ waitList.length }}</b> 条情缘申请待处理，<span>查看</span>
-                                </div>
+                            </div> -->
+                        <a class="u-item-pic" :href="userLink(myLover)" target="_blank">
+                            <img class="u-item-avatar" :src="getAvatar(myLover) | showAvatar" />
+                        </a>
+                        <a class="u-item-name" :href="userLink(myLover)" target="_blank">{{ getName(myLover) }}</a>
+                        <div class="u-action">
+                            <div class="u-item-remark" v-if="!myLover.status">
+                                <div class="u-pending"><i class="el-icon-time"></i>等待确认中...</div>
+                                <el-button plain type="info" @click.stop="onCancel(myLover)" size="mini"
+                                    >取消</el-button
+                                >
                             </div>
                         </div>
                     </div>
-                </template>
-                <div class="m-wrapper" v-else @click="toAdd">
-                    <div class="u-item u-add-item">
+                    <div class="u-item u-add-item" v-else @click="toAdd">
                         <div class="u-add">
                             <i class="el-icon-plus"></i>
                         </div>
                         <div class="u-bind">绑定情缘</div>
-                        <div class="u-action" v-if="waitList.length">
-                            <div class="u-wait-tip" @click.stop="toWait">
-                                您有 <b>{{ waitList.length }}</b> 条情缘申请待处理，<span>查看</span>
-                            </div>
+                    </div>
+                    <div class="u-pending el-alert el-alert--warning is-light" v-if="waitList.length">
+                        <div class="u-wait-tip">
+                            <i class="el-icon-warning-outline"></i> 您有 <b>{{ waitList.length }}</b> 条情缘申请待处理，<span class="u-pending-btn" @click.stop="toWait">查看</span>
                         </div>
                     </div>
                 </div>
@@ -264,7 +265,7 @@ export default {
             border: 1px solid #ddd;
             padding: 40px 10px;
             width: 200px;
-            min-height: 250px;
+            min-height: 260px;
             box-sizing: border-box;
             &.u-add-item {
                 font-size: 30px;
@@ -381,6 +382,12 @@ export default {
                 .u-cancel {
                     .dbi;
                 }
+            }
+        }
+        .u-pending{
+            margin-top:5px;
+            .u-pending-btn{
+                .pointer;
             }
         }
     }
