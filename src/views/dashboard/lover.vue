@@ -48,7 +48,12 @@
                     </div>
                     <div class="u-pending el-alert el-alert--warning is-light" v-if="waitList.length">
                         <div class="u-wait-tip">
-                            <i class="el-icon-warning-outline"></i> 您有 <b>{{ waitList.length }}</b> 条情缘申请待处理，<span class="u-pending-btn" @click.stop="toWait">查看</span>
+                            <i class="el-icon-warning-outline"></i> 您有
+                            <b>{{ waitList.length }}</b> 条情缘申请待处理,<span
+                                class="u-pending-btn"
+                                @click.stop="toWait"
+                                >查看</span
+                            >
                         </div>
                     </div>
                 </div>
@@ -297,6 +302,7 @@ export default {
         }
 
         .u-pending {
+            position: absolute;
             color: orange;
             i {
                 margin-right: 3px;
@@ -356,7 +362,7 @@ export default {
         position: relative;
         padding: 40px 0;
         .u-wait-tip {
-            font-size: 12px;
+            font-size: 11px;
             text-align: center;
             width: 100%;
             b {
@@ -384,9 +390,10 @@ export default {
                 }
             }
         }
-        .u-pending{
-            margin-top:5px;
-            .u-pending-btn{
+        .u-pending {
+            margin-top: 5px;
+            padding: 8px !important;
+            .u-pending-btn {
                 .pointer;
             }
         }
