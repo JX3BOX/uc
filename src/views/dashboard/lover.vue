@@ -46,8 +46,8 @@
                         </div>
                         <div class="u-bind">绑定情缘</div>
                     </div>
-                    <div class="u-pending el-alert el-alert--warning is-light" v-if="waitList.length">
-                        <div class="u-wait-tip">
+                    <div class="u-pending u-wait-tip el-alert el-alert--warning is-light" v-if="waitList.length">
+                        <div>
                             <i class="el-icon-warning-outline"></i> 您有
                             <b>{{ waitList.length }}</b> 条情缘申请待处理,<span
                                 class="u-pending-btn"
@@ -302,7 +302,6 @@ export default {
         }
 
         .u-pending {
-            position: absolute;
             color: orange;
             i {
                 margin-right: 3px;
@@ -365,6 +364,7 @@ export default {
             font-size: 11px;
             text-align: center;
             width: 100%;
+            position: absolute;
             b {
                 color: orange;
             }
@@ -392,7 +392,6 @@ export default {
         }
         .u-pending {
             margin-top: 5px;
-            padding: 8px !important;
             .u-pending-btn {
                 .pointer;
             }
