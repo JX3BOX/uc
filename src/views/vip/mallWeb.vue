@@ -1,7 +1,8 @@
 <template>
     <div id="app">
-        <div style="height: calc(64px + 9.6vw)">
-            <Header :key="currentKey"></Header>
+        <div style="height: 9.6vw">
+            <!-- 这个放这里干啥的？ -->
+            <Header :key="currentKey" style="display: none"></Header>
             <Breadcrumb></Breadcrumb>
         </div>
         <div v-if="isSky" class="sky"></div>
@@ -44,10 +45,10 @@ export default {
 <style lang="less" scoped>
 .sky {
     width: 100%;
-    height: calc(100vh - 64px - 9.6vw);
+    height: calc(100vh - 9.6vw);
     background: #808080;
     position: fixed;
-    top: calc(64px + 9.6vw);
+    top: 9.6vw;
     left: 0;
     z-index: 1000;
 }

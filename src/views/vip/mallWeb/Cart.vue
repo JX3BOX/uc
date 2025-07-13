@@ -1,11 +1,7 @@
 <template>
     <div class="cart-web">
         <div class="cart-title">
-            购物车清单<i
-                class="el-icon-close"
-                @click="$store.dispatch('mallNew/changeCartIsShow', false)"
-                style="cursor: pointer"
-            ></i>
+            购物车清单<i class="el-icon-close" @click="$router.go(-1)" style="cursor: pointer"></i>
         </div>
         <div class="dashed"></div>
         <div class="cart-header">

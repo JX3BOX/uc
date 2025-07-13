@@ -148,7 +148,7 @@ export default {
 <style lang="less" scoped>
 .m-mall-web {
     width: 100%;
-    height: calc(100vh - 64px - 9.6vw);
+    height: calc(100vh - 9.6vw);
     background: #070f1c;
     padding: 3.2vw;
     box-sizing: border-box;

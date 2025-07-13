@@ -1,7 +1,7 @@
 <template>
     <div class="good-detail" :class="{ 'without-nav': !isShowNav }">
-        <div :class="{ 'canBuy-text': true, canBuy: good.canBuy.canBuy }">
-            {{ good.canBuy.canBuy ? "—&emsp;当前商品 · 可兑换&emsp;—" : "—&emsp;当前商品 · 不满足兑换条件&emsp;—" }}
+        <div :class="{ 'canBuy-text': true, canBuy: good.canBuy?.canBuy }">
+            {{ good.canBuy?.canBuy ? "—&emsp;当前商品 · 可兑换&emsp;—" : "—&emsp;当前商品 · 不满足兑换条件&emsp;—" }}
         </div>
         <div class="title-card">
             <div class="title">{{ good.title }}</div>
@@ -11,42 +11,42 @@
             <div v-if="goodInfo.img" class="skeleton-container">
                 <Skeleton :category="goodInfo.category" :img="goodInfo.img"></Skeleton>
             </div>
-            <img :src="good.goods_images[0]" v-else style="width: 400px; height: 400px" />
+            <img :src="good.goods_images?.[0]" v-else style="width: 400px; height: 400px" />
         </div>
         <div class="buy-detail">
             <div class="detail-card">
                 <div class="condition">
-                    <div class="condition-item" :class="{ canBuy: good.canBuy.level }">
-                        所需等级：lv.{{ good.canBuy.user_level }}
-                        <i class="el-icon-circle-check" v-if="good.canBuy.level"></i>
+                    <div class="condition-item" :class="{ canBuy: good.canBuy?.level }">
+                        所需等级：lv.{{ good.canBuy?.user_level }}
+                        <i class="el-icon-circle-check" v-if="good.canBuy?.level"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
-                    <div class="condition-item" :class="{ canBuy: good.canBuy.vip_limit }">
+                    <div class="condition-item" :class="{ canBuy: good.canBuy?.vip_limit }">
                         会员专属
-                        <i class="el-icon-circle-check" v-if="good.canBuy.vip_limit"></i>
+                        <i class="el-icon-circle-check" v-if="good.canBuy?.vip_limit"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
-                    <div class="condition-item" :class="{ canBuy: good.canBuy.box_coin }" v-if="good.price_boxcoin">
+                    <div class="condition-item" :class="{ canBuy: good.canBuy?.box_coin }" v-if="good.price_boxcoin">
                         所需盒币：{{ good.price_boxcoin }}
-                        <i class="el-icon-circle-check" v-if="good.canBuy.box_coin"></i>
+                        <i class="el-icon-circle-check" v-if="good.canBuy?.box_coin"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
-                    <div class="condition-item" :class="{ canBuy: good.canBuy.points }" v-if="good.price_points">
+                    <div class="condition-item" :class="{ canBuy: good.canBuy?.points }" v-if="good.price_points">
                         所需积分：{{ good.price_points }}
-                        <i class="el-icon-circle-check" v-if="good.canBuy.points"></i>
+                        <i class="el-icon-circle-check" v-if="good.canBuy?.points"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
                 </div>
-                <div class="buy-time" :class="{ canBuy: good.canBuy.buy_time }">
+                <div class="buy-time" :class="{ canBuy: good.canBuy?.buy_time }">
                     可兑换时间：{{ good.start_sell_time }} ~ {{ good.end_sell_time
-                    }}{{ good.canBuy.buy_time ? "" : "(不在兑换期内)" }}
+                    }}{{ good.canBuy?.buy_time ? "" : "(不在兑换期内)" }}
                 </div>
                 <div class="buttons">
-                    <button class="button add-cart" :disabled="!good.canBuy.canBuy" @click="addCart">
+                    <button class="button add-cart" :disabled="!good?.canBuy?.canBuy" @click="addCart">
                         <img :src="imgUrl + '购物车fill.svg'" alt="" />
                         加购
                     </button>
-                    <button class="button buy" @click="buyGoods" :disabled="!good.canBuy.canBuy">
+                    <button class="button buy" @click="buyGoods" :disabled="!good?.canBuy?.canBuy">
                         <template v-if="good.price_boxcoin">
                             <img :src="imgUrl + '盒币fill.svg'" alt="" />{{ good.price_boxcoin }}盒币
                         </template>
@@ -62,12 +62,13 @@
                     <Like class="like" :postId="id" postType="mall"></Like>
                 </div>
             </div>
-            <div v-if="good.describe" class="good-comment" v-html="good.describe"></div>
+            <div class="good-comment" v-html="good.describe"></div>
         </div>
     </div>
 </template>
 
 <script>
+import { getItem } from "@/service/vip/mall";
 import Like from "@jx3box/jx3box-common-ui/src/interact/Like2.vue";
 import Skeleton from "@/views/vip/mallNew/components/skeleton/index.vue";
 import { throttle } from "lodash";
@@ -79,10 +80,11 @@ export default {
         Like,
     },
     props: {
-        good: {
-            type: Object,
-            required: true,
-        },
+        // 移动端也是有直接从url中进来的可能的，所以还是需要直接在详情页请求数据
+        // good: {
+        //     type: Object,
+        //     required: true,
+        // },
         isShowNav: {
             type: Boolean,
             required: true,
@@ -101,11 +103,12 @@ export default {
                 calendar: "首页日历",
                 homebg: "主页风格",
             },
+            good: {},
         };
     },
     computed: {
         id() {
-            return this.good.id;
+            return ~~this.$route.params.id;
         },
         goodInfo() {
             if (this.good && this.good.category === "virtual") {
@@ -127,7 +130,46 @@ export default {
             };
         },
     },
+    created() {
+        if (!this.id) return;
+        getItem(this.id).then((res) => {
+            res.data.data.canBuy = this.checkCanBuy(res.data.data);
+            this.good = res.data.data || {};
+        });
+    },
     methods: {
+        checkCanBuy(item) {
+            const obj = {
+                canBuy: true,
+                vip_limit: true,
+                box_coin: true,
+                points: true,
+                level: true,
+                user_level: User.getLevel(item.exp_limit),
+                buy_time: true,
+            };
+            if (item.vip_limit === 1 && !User._isPRO(this.asset)) {
+                obj.canBuy = false;
+                obj.vip_limit = false;
+            }
+            if (this.asset.box_coin < item.price_boxcoin) {
+                obj.canBuy = false;
+                obj.box_coin = false;
+            }
+            if (this.asset.points < item.price_points) {
+                obj.canBuy = false;
+                obj.points = false;
+            }
+            if (this.asset.experience < item.exp_limit) {
+                obj.canBuy = false;
+                obj.level = false;
+            }
+            if (item.on_selling === 0) {
+                obj.canBuy = false;
+                obj.buy_time = false;
+            }
+            return obj;
+        },
         buyGoods: throttle(function () {
             if (!User.isLogin()) {
                 this.$message.error("请先登录");
