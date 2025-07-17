@@ -1,7 +1,7 @@
 <template>
     <div class="good-detail">
-        <div :class="{ 'canBuy-text': true, canBuy: good.canBuy.canBuy }">
-            {{ good.canBuy.canBuy ? "—&emsp;当前商品 · 可兑换&emsp;—" : "—&emsp;当前商品 · 不满足兑换条件&emsp;—" }}
+        <div :class="{ 'canBuy-text': true, canBuy: good.canBuy?.canBuy }">
+            {{ good.canBuy?.canBuy ? "—&emsp;当前商品 · 可兑换&emsp;—" : "—&emsp;当前商品 · 不满足兑换条件&emsp;—" }}
         </div>
         <div class="title-card">
             <div class="title">{{ good.title }}</div>
@@ -11,42 +11,42 @@
             <div v-if="goodInfo.img" class="skeleton-container">
                 <Skeleton :category="goodInfo.category" :img="goodInfo.img"></Skeleton>
             </div>
-            <img :src="good.goods_images[0]" v-else style="width: 90vw; height: 90vw" />
+            <img :src="good.goods_images?.[0]" v-else style="width: 90vw; height: 90vw" />
         </div>
         <div class="buy-detail">
             <div class="detail-card">
                 <div class="condition">
-                    <div class="condition-item" :class="{ canBuy: good.canBuy.level }">
-                        所需等级：lv.{{ good.canBuy.user_level }}
-                        <i class="el-icon-circle-check" v-if="good.canBuy.level"></i>
+                    <div class="condition-item" :class="{ canBuy: good.canBuy?.level }">
+                        所需等级：lv.{{ good.canBuy?.user_level }}
+                        <i class="el-icon-circle-check" v-if="good.canBuy?.level"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
-                    <div class="condition-item" :class="{ canBuy: good.canBuy.vip_limit }">
+                    <div class="condition-item" :class="{ canBuy: good.canBuy?.vip_limit }">
                         会员专属
-                        <i class="el-icon-circle-check" v-if="good.canBuy.vip_limit"></i>
+                        <i class="el-icon-circle-check" v-if="good.canBuy?.vip_limit"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
-                    <div class="condition-item" :class="{ canBuy: good.canBuy.box_coin }" v-if="good.price_boxcoin">
+                    <div class="condition-item" :class="{ canBuy: good.canBuy?.box_coin }" v-if="good.price_boxcoin">
                         所需盒币：{{ good.price_boxcoin }}
-                        <i class="el-icon-circle-check" v-if="good.canBuy.box_coin"></i>
+                        <i class="el-icon-circle-check" v-if="good.canBuy?.box_coin"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
-                    <div class="condition-item" :class="{ canBuy: good.canBuy.points }" v-if="good.price_points">
+                    <div class="condition-item" :class="{ canBuy: good.canBuy?.points }" v-if="good.price_points">
                         所需积分：{{ good.price_points }}
-                        <i class="el-icon-circle-check" v-if="good.canBuy.points"></i>
+                        <i class="el-icon-circle-check" v-if="good.canBuy?.points"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
                 </div>
-                <div class="buy-time" :class="{ canBuy: good.canBuy.buy_time }">
-                    兑换时间：{{ good.start_sell_time }} ~ {{ good.end_sell_time
-                    }}{{ good.canBuy.buy_time ? "" : "(不在兑换期内)" }}
+                <div class="buy-time" :class="{ canBuy: good.canBuy?.buy_time }">
+                    可兑换时间：{{ good.start_sell_time }} ~ {{ good.end_sell_time
+                    }}{{ good.canBuy?.buy_time ? "" : "(不在兑换期内)" }}
                 </div>
                 <div class="buttons">
-                    <button class="button add-cart" @click="addCart">
+                    <button class="button add-cart" :disabled="!good.canBuy?.canBuy" @click="addCart">
                         <img :src="imgUrl + '购物车fill.svg'" alt="" />
                         加购
                     </button>
-                    <button class="button buy" @click="buyGoods" :disabled="!good.canBuy.canBuy">
+                    <button class="button buy" @click="buyGoods" :disabled="!good?.canBuy?.canBuy">
                         <template v-if="good.price_boxcoin">
                             <img :src="imgUrl + '盒币fill.svg'" alt="" />{{ good.price_boxcoin }}盒币
                         </template>
@@ -62,7 +62,7 @@
                     <Like class="like" :postId="id" postType="mall"></Like>
                 </div>
             </div>
-            <div class="good-comment" v-html="good.describe"></div>
+            <div v-if="good.describe" class="good-comment" v-html="good.describe"></div>
         </div>
     </div>
 </template>
@@ -96,12 +96,6 @@ export default {
             },
         };
     },
-    created() {
-        getItem(this.id).then((res) => {
-            res.data.data.canBuy = this.checkCanBuy(res.data.data);
-            this.good = res.data.data || {};
-        });
-    },
     computed: {
         asset() {
             return this.$store.state.mallNew.asset;
@@ -124,6 +118,21 @@ export default {
             return {
                 category: this.good.sub_category,
             };
+        },
+    },
+    watch: {
+        asset: {
+            immediate: true,
+            deep: true,
+            handler(asset) {
+                if (asset.user_id && this.id) {
+                    getItem(this.id).then((res) => {
+                        const data = res.data?.data || {};
+                        data.canBuy = this.checkCanBuy(data) || {};
+                        this.good = data;
+                    });
+                }
+            },
         },
     },
     methods: {
@@ -304,19 +313,21 @@ export default {
         }
     }
     .buy-detail {
-        height: 48vw;
+        min-height: 48vw;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         gap: 1.6vw;
         .detail-card {
-            height: 24vw;
+            min-height: 24vw;
             .condition {
                 width: 100%;
-                height: 4.8vw;
+                // height: 4.8vw;
                 display: flex;
+                flex-wrap: wrap;
                 justify-content: center;
-                gap: 4.2667vw;
+                box-sizing: border-box;
+                gap: 2.2667vw;
                 .condition-item {
                     height: 4.8vw;
                     opacity: 1;
@@ -333,6 +344,7 @@ export default {
                 }
             }
             .buy-time {
+                margin-top: 6px;
                 height: 4.8vw;
                 width: 100%;
                 text-align: center;
@@ -383,6 +395,10 @@ export default {
                     }
                     &.add-cart {
                         background: rgba(255, 163, 43, 1);
+                        &:disabled {
+                            background: rgba(168, 168, 168, 1);
+                            cursor: not-allowed;
+                        }
                     }
                     &.like {
                         background: rgba(255, 133, 184, 1);
@@ -392,6 +408,7 @@ export default {
         }
 
         .good-comment {
+            margin-top: 30px;
             width: 100vw;
             height: 20.5333vw;
             box-sizing: border-box;
@@ -399,6 +416,7 @@ export default {
             overflow-y: scroll;
             scrollbar-width: none;
             overflow-x: hidden;
+            font-size: 10px;
             background: linear-gradient(
                 90deg,
                 rgba(255, 255, 255, 0) 0%,
