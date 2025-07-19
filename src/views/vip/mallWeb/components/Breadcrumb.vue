@@ -67,7 +67,7 @@ export default {
     height: 9.6vw;
     background-color: black;
     position: fixed;
-    top: 0;
+    top: 64px;
     left: 0;
     z-index: 602;
     .m-mall-breadcrumb {

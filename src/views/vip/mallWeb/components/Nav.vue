@@ -72,11 +72,11 @@ export default {
 
 <style lang="less" scoped>
 .m-mall-types {
-    height: calc(100vh - 9.6vw);
+    height: calc(100vh - 64px - 9.6vw);
     width: 48vw;
     background: linear-gradient(180deg, rgba(0, 0, 0, 1) 50.93%, rgba(71, 36, 0, 1) 100%);
     position: fixed;
-    top: 9.6vw;
+    top: calc(64px + 9.6vw);
     left: -48vw;
     transition: all 0.3s ease-in-out;
     z-index: 1000;

@@ -2,6 +2,9 @@ const path = require("path");
 const pkg = require("./package.json");
 const { JX3BOX, SEO } = require("@jx3box/jx3box-common");
 
+const VueProxyPlugin = require('./src/utils/vue-proxy-plugin.js');
+const proxyConfig = VueProxyPlugin.generateProxy([]);
+
 module.exports = {
     // map
     productionSourceMap: false,
@@ -178,6 +181,7 @@ module.exports = {
         //         },
         //     },
         // },
+        proxy: proxyConfig,
         disableHostCheck: true,
     },
 
