@@ -64,10 +64,10 @@
                             <img class="u-icon" :src="item.mount | showSchoolIcon" />
                             {{ item.mount | showSchoolName }}
                         </span>
-                        <span class="u-team-name" v-if="item.team_relation && item.team_relation.team_id">
+                        <!-- <span class="u-team-name" v-if="item.team_relation && item.team_relation.team_id">
                             <em>团队名</em>
                             {{ item.team_relation.team_name }}
-                        </span>
+                        </span> -->
                         <!--<span class="u-team-status" v-if="item.team_relation && item.team_relation.team_id">
                             <em>状态</em>
                             <span class="u-team-status" :class="`u-team-status-${item.team_relation.status}`">{{ teamStatus(item.team_relation.status) }}</span>
