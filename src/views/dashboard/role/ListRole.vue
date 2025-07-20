@@ -68,10 +68,10 @@
                             <em>团队名</em>
                             {{ item.team_relation.team_name }}
                         </span>
-                        <span class="u-team-status" v-if="item.team_relation && item.team_relation.team_id">
+                        <!--<span class="u-team-status" v-if="item.team_relation && item.team_relation.team_id">
                             <em>状态</em>
                             <span class="u-team-status" :class="`u-team-status-${item.team_relation.status}`">{{ teamStatus(item.team_relation.status) }}</span>
-                        </span>
+                        </span>-->
                         <span class="u-note">
                             <em>备注</em>
                             {{ item.note }}
