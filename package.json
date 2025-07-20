@@ -20,6 +20,7 @@
         "@jx3box/jx3box-editor": "^2.2.32",
         "@jx3box/jx3box-emotion": "^1.2.14",
         "@jx3box/jx3box-facedat": "^2.6.2",
+        "@jx3box/jx3box-fe-proxy": "^1.0.1",
         "@microsoft/signalr": "^8.0.0",
         "@vueuse/core": "^10.11.0",
         "axios": "^0.21.1",
