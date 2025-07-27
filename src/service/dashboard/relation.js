@@ -39,3 +39,8 @@ export function getWaitInvites() {
 export function dealInvite(id, status) {
     return $team().put(`/api/team/relation-net/item/${id}/invite/deal-with/${status}`);
 }
+
+// 用户退出关系网 / 如果是创建者则直接解散关系网
+export function exitNet(net_id) {
+    return $team().put(`/api/team/relation-net/item/${net_id}/exit`);
+}

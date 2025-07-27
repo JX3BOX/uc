@@ -371,7 +371,8 @@ export default {
             this.formStatus = true;
         },
         openConfirmBox: function () {
-            if (this.pull.account !== this.pull.accounts) return this.$alert(`请确认游戏账号是否填写正确`);
+            if (/[\u4e00-\u9fa5]/.test(this.pull.account)) return this.$alert("请填写剑三登录账号，而不是角色名");
+            if (this.pull.account !== this.pull.accounts) return this.$alert(`请确认账号是否填写正确`);
 
             this.$alert(
                 `<div class="m-boxcoin-msg">大区：<b>${this.pull.zone}</b> <br/> 账号：<b>${this.pull.account}</b> <br/> 邮箱：<b>${this.pull.email}</b> <br/> 兑换：<b>${this.pull.cash}通宝</b></div>`,

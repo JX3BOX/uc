@@ -11,29 +11,18 @@
                         :key="i"
                         v-for="(item, i) in relationNetTypes"
                     >
-                        <div class="m-members m-whitelist-list" v-if="isRelationNet">
-                            <div class="u-item" v-for="(item, index) in members" :key="index">
-                                <a class="u-item-pic" :href="userLink(item)" target="_blank">
-                                    <img class="u-item-avatar" :src="getAvatar(item) | showAvatar" />
-                                </a>
-                                <a class="u-item-name" :href="userLink(item)" target="_blank">{{ getName(item) }}</a>
-                                <span class="u-item-remark" v-if="!item.status">
-                                    等待确认中...
-                                    <el-button size="mini" @click="onCancel(item)">取消</el-button>
-                                </span>
-                            </div>
+                        <lover
+                            v-if="active === 'lover' && isRelationNet"
+                            :list="members"
+                            :waitList="waitList"
+                            :relationId="relationId"
+                            :relation-active-name="relationActiveName"
+                            @refresh="onRefresh"
+                        ></lover>
+                        <div class="m-fun-open" v-if="showOpen">
+                            <el-empty description="您尚未开启该功能"></el-empty>
+                            <el-button type="success" @click="onOpen">立即启用</el-button>
                         </div>
-
-                        <el-alert
-                            v-if="waitList.length"
-                            class="u-wait-tip"
-                            :title="`您有 ${waitList.length} 条邀请待处理！`"
-                            type="warning"
-                            show-icon
-                            :closable="false"
-                            @click.native="waitVisible = true"
-                        >
-                        </el-alert>
                     </el-tab-pane>
                 </template>
                 <el-tab-pane label="我的亲友" name="whitelist"></el-tab-pane>
@@ -104,7 +93,7 @@
                 ></el-pagination>
             </template>
         </div>
-        <div class="m-whitelist-sidebar" v-if="active !== 'myfans'">
+        <div class="m-whitelist-sidebar" v-if="active !== 'myfans' && !isRelationNet">
             <div class="u-title"><i class="el-icon-news"></i> {{ sideTitle }}</div>
             <el-input
                 class="u-input"
@@ -135,23 +124,6 @@
                 >{{ btnText }}</el-button
             >
         </div>
-        <el-dialog title="待处理列表" :visible.sync="waitVisible" width="80%">
-            <div class="m-whitelist-list m-wait-list">
-                <div class="u-item" v-for="(item, i) in waitList" :key="i">
-                    <a class="u-item-pic" :href="userLink(item)" target="_blank">
-                        <img class="u-item-avatar" :src="getAvatar(item) | showAvatar" />
-                    </a>
-                    <a class="u-item-name" :href="userLink(item)" target="_blank">{{ getName(item) }}</a>
-                    <span class="u-item-remark" v-if="!item.status">
-                        <el-button v-if="!members.length" size="mini" @click="onAccept(item)">接受</el-button>
-                        <el-button size="mini" @click="onReject(item)">拒绝</el-button>
-                    </span>
-                </div>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="waitVisible = false">取 消</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
 <script>
@@ -162,28 +134,21 @@ import {
     editKith,
     removeKith,
     getBlackList,
-    getMyFollowList,
-    getMyFansList,
     follow,
-    unfollow,
     deny,
     undeny,
-    removeFans,
 } from "@/service/dashboard/privacy.js";
 import { getMyRss, getMySubscribers, removeRssUser, addRssUser, cancelRssUser } from "@/service/dashboard/rss";
-import {
-    getRelationNetTypes,
-    getRelationNetMembersByType,
-    createRelationNet,
-    inviteUserJoin,
-    deleteInvite,
-    getWaitInvites,
-    dealInvite,
-} from "@/service/dashboard/relation.js";
+import { getRelationNetTypes, getRelationNetMembersByType, getWaitInvites } from "@/service/dashboard/relation.js";
+import { getUserConf, setUserConf } from "@/service/dashboard/conf";
 import User from "@jx3box/jx3box-common/js/user.js";
 import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
+import lover from "./lover.vue";
 export default {
     name: "privacy",
+    components: {
+        lover,
+    },
     props: [],
     data: function () {
         return {
@@ -216,7 +181,8 @@ export default {
             net: {},
             members: [],
             waitList: [], // 待处理的关系列表
-            waitVisible: false,
+            inviteVisible: false,
+            isAllowLover: false, // 是否允许情缘。允许则后端在未创建情缘关系网时自动创建，不允许则显示开启按钮
         };
     },
     computed: {
@@ -299,56 +265,37 @@ export default {
         userId() {
             return User.getInfo().uid;
         },
+        showOpen() {
+            return this.active == "lover" && !this.isAllowLover;
+        },
     },
     methods: {
-        onAccept(item) {
-            let typeName = this.active === "lover" ? "情缘" : "";
-            this.$confirm(`是否接受 ${item.creator_info.display_name} 的邀请，成为ta的${typeName}？`, "提示", {
+        onOpen() {
+            this.$confirm(`是否立即启用？`, "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 type: "warning",
             }).then(() => {
-                this.loading = true;
-                dealInvite(item.net_id, 1)
-                    .then(() => {
-                        this.waitVisible = false;
-                        this.loadRelationNetMembersByType();
-                    })
-                    .finally(() => {
-                        this.loading = false;
-                    });
-            });
-        },
-        onReject(item) {
-            this.$confirm(`是否拒绝 ${item.creator_info.display_name} 的邀请？`, "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                type: "warning",
-            }).then(() => {
-                this.loading = true;
-                dealInvite(item.net_id, 2)
-                    .then(() => {
-                        this.loadWaitInvites();
-                    })
-                    .finally(() => {
-                        this.loading = false;
-                    });
-            });
-        },
-        onCancel(item) {
-            // 取消已发出但未接受的关系
-            this.loading = true;
-            deleteInvite(item.id)
-                .then((res) => {
+                setUserConf({ accept_lover_request: 1 }).then(() => {
                     this.$notify({
-                        title: "取消成功",
+                        title: "开启成功",
                         type: "success",
                     });
+                    this.isAllowLover = true;
                     this.loadRelationNetMembersByType();
-                })
-                .finally(() => {
-                    this.loading = false;
                 });
+            });
+        },
+        loadConf() {
+            getUserConf().then((res) => {
+                this.isAllowLover = !!res?.data?.data?.accept_lover_request;
+                if (this.isAllowLover) {
+                    this.loadRelationNetMembersByType();
+                }
+            });
+        },
+        onRefresh(fn) {
+            this?.[fn]();
         },
         async loadRelationNetTypes() {
             // 暂时只筛选官方的关系网类型 is_official & is_only_one
@@ -388,7 +335,17 @@ export default {
         },
         tabChange() {
             if (this.relationNetTypes.find((item) => item.relationship_type === this.active)) {
-                this.loadRelationNetMembersByType();
+                if (this.active == "lover") {
+                    this.loadConf();
+                } else {
+                    this.loadRelationNetMembersByType();
+                }
+                this.$router.push({
+                    name: "privacy",
+                    query: {
+                        tab: this.active,
+                    },
+                });
                 return;
             }
             this.keyword = this.$route.query.keyword || "";
@@ -412,21 +369,6 @@ export default {
                     this.flag = true;
                 });
         },
-        inviteUser() {
-            if (!this.relationId) return;
-            this.loading = true;
-            inviteUserJoin(this.relationId, this.userdata.ID)
-                .then(() => {
-                    this.$notify({
-                        title: "已发送邀请",
-                        type: "success",
-                    });
-                    this.loadRelationNetMembersByType();
-                })
-                .finally(() => {
-                    this.loading = false;
-                });
-        },
         add() {
             if (!this.userdata) {
                 this.$notify({
@@ -436,25 +378,14 @@ export default {
                 });
                 return;
             }
-            if (this.isRelationNet) {
-                if (this.members.length) {
-                    this.inviteUser();
-                } else {
-                    // 当成员为空时，要先建立关系网再邀请
-                    createRelationNet({ relationship_type: "lover" }).then((res) => {
-                        this.inviteUser();
-                    });
-                }
+            if (this.active === "myfollow") {
+                addRssUser(this.userdata.ID, { title: this.userdata.display_name }).then((res) => {
+                    this.loadList();
+                });
             } else {
-                if (this.active === "myfollow") {
-                    addRssUser(this.userdata.ID, { title: this.userdata.display_name }).then((res) => {
-                        this.loadList();
-                    });
-                } else {
-                    this.addFns[this.active](this.userdata.ID).then((res) => {
-                        this.loadList();
-                    });
-                }
+                this.addFns[this.active](this.userdata.ID).then((res) => {
+                    this.loadList();
+                });
             }
         },
         // 添加亲友
@@ -611,60 +542,53 @@ export default {
                 })
                 .finally(() => {});
         },
-        // 用户链接
         userLink(item) {
             let id = "";
-            if (this.isRelationNet) {
-                id = item.user_id || item.creator_info?.id;
+            if (this.active === "whitelist") {
+                id = item.kith_id;
+            } else if (this.active === "myfans") {
+                id = item.user_id;
+            } else if (this.active === "blacklist") {
+                id = item.bind_user_id;
             } else {
-                if (this.active === "whitelist") {
-                    id = item.kith_id;
-                } else if (this.active === "myfans") {
-                    id = item.user_id;
-                } else if (this.active === "blacklist") {
-                    id = item.bind_user_id;
-                } else {
-                    id = item.author_id;
-                }
+                id = item.author_id;
             }
             return authorLink(id);
         },
         getAvatar(item) {
-            if (this.isRelationNet) {
-                return item.user_info?.avatar || item.creator_info?.avatar;
-            } else {
-                if (this.active == "myfans") {
-                    return item.user_info?.avatar;
-                } else if (this.active == "myfollow") {
-                    return item.author_info?.avatar;
-                }
-                return (item.kith_info || item).user_avatar;
+            if (this.active == "myfans") {
+                return item.user_info?.avatar;
+            } else if (this.active == "myfollow") {
+                return item.author_info?.avatar;
             }
+            return (item.kith_info || item).user_avatar;
         },
         getName(item) {
-            if (this.isRelationNet) {
-                return item.user_info?.display_name || item.creator_info?.display_name;
-            } else {
-                if (this.active == "myfans") {
-                    return item.user_info?.display_name;
-                } else if (this.active == "myfollow") {
-                    return item.author_info?.display_name;
-                }
-                return (item.kith_info || item).display_name;
+            if (this.active == "myfans") {
+                return item.user_info?.display_name;
+            } else if (this.active == "myfollow") {
+                return item.author_info?.display_name;
             }
+            return (item.kith_info || item).display_name;
         },
     },
     mounted: function () {
         this.loadRelationNetTypes().then(() => {
-            if (this.relationNetTypes.length) {
-                const tab =
-                    this.relationNetTypes.find((item) => item.relationship_type === this.$route.query.tab)
-                        ?.relationship_type || "lover";
-                this.active = tab;
-                this.loadRelationNetMembersByType();
+            let routeTab = this.$route.query.tab;
+            const relationNetTypes = this.relationNetTypes;
+            if (relationNetTypes.length && !routeTab) {
+                routeTab = relationNetTypes[0].relationship_type;
+            }
+            if (routeTab && relationNetTypes.find((item) => item.relationship_type === routeTab)) {
+                this.active = routeTab;
+                if (this.active == "lover") {
+                    this.loadConf();
+                } else {
+                    this.loadRelationNetMembersByType();
+                }
                 this.loadWaitInvites();
             } else {
-                this.active = this.$route.query.tab || "whitelist";
+                this.active = routeTab || "whitelist";
                 this.loadList();
             }
         });
