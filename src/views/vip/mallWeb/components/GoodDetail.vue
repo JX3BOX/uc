@@ -389,6 +389,10 @@ export default {
                     line-height: 36px;
                     color: rgba(255, 255, 255, 1);
                     text-align: center;
+                    border: none;
+                    &:disabled {
+                        cursor: not-allowed;
+                    }
                     img {
                         margin-right: 4px;
                     }

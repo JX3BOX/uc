@@ -42,11 +42,11 @@
                     }}{{ good.canBuy.buy_time ? "" : "(不在兑换期内)" }}
                 </div>
                 <div class="buttons">
-                    <div class="button add-cart" :disabled="!good.canBuy.canBuy" @click="addCart">
+                    <button class="button add-cart" @click="addCart" :disabled="!good.canBuy.canBuy">
                         <img :src="imgUrl + '购物车fill.svg'" alt="" />
                         加购
-                    </div>
-                    <div class="button buy" @click="buyGoods" :disabled="!good.canBuy.canBuy">
+                    </button>
+                    <button class="button buy" @click="buyGoods" :disabled="!good.canBuy.canBuy">
                         <template v-if="good.price_boxcoin">
                             <img :src="imgUrl + '盒币fill.svg'" alt="" />{{ good.price_boxcoin }}盒币
                         </template>
@@ -54,12 +54,11 @@
                         <template v-if="good.price_points">
                             <img :src="imgUrl + '积分.svg'" alt="" />{{ good.price_points }}积分
                         </template>
-                    </div>
-                    <div class="button like" @click="$refs.like.addLike()">
+                    </button>
+                    <button class="button like" @click="$refs.like.addLike()">
                         <img :src="imgUrl + '点赞fill.svg'" alt="" />
                         <Like class="like" :postId="id" postType="mall" ref="like"></Like>
-                    </div>
-                    
+                    </button>
                 </div>
             </div>
             <div v-if="good.describe" class="good-comment" v-html="good.describe"></div>
@@ -316,6 +315,10 @@ export default {
                     line-height: 36px;
                     color: rgba(255, 255, 255, 1);
                     text-align: center;
+                    border: none;
+                    &:disabled {
+                        cursor: not-allowed;
+                    }
                     img {
                         margin-right: 4px;
                     }

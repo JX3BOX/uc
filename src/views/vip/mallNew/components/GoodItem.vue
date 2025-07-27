@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div class="footer">
-                <div
+                <button
                     :class="{ button: true, canBuy: good.canBuy.canBuy }"
                     @click.stop="buyGoods(good)"
                     :disabled="!good.canBuy.canBuy"
@@ -28,7 +28,7 @@
                             <img :src="imgUrl + '积分.svg'" alt="" />{{ good.price_points }}积分
                         </template>
                     </div>
-                </div>
+                </button>
                 <div class="icon" @click.stop="addCart" v-if="good.canBuy.canBuy">
                     <img :src="imgUrl + '购物车.svg'" alt="" />
                 </div>
@@ -185,6 +185,7 @@ export default {
             gap: 4px;
             width: 100%;
             .button {
+                border: none;
                 flex: 1;
                 height: 28px;
                 border-radius: 8px;

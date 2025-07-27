@@ -185,6 +185,7 @@ export default {
             gap: 1.0667vw;
             width: 100%;
             .button {
+                border: none;
                 flex: 1;
                 height: 7.4667vw;
                 border-radius: 2.1333vw;
