@@ -56,6 +56,7 @@ export default {
                 }, 1000);
                 return;
             }
+            this.isShow = false;
             const { category, is_virtual, id } = this.item;
             if (is_virtual && category == "virtual") {
                 return this.$store
@@ -66,7 +67,6 @@ export default {
                         remark: "虚拟商品购买",
                     })
                     .then((res) => {
-                        this.isShow = false;
                         this.$confirm("购买成功，是否跳转至订单界面?", "提示", {
                             confirmButtonText: "确定",
                             cancelButtonText: "取消",
