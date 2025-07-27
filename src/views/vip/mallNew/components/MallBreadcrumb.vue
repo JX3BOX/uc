@@ -126,7 +126,7 @@ export default {
                     line-height: 20px;
                     color: rgba(255, 255, 255, 1);
                     span {
-                        color: #656463;
+                        color: rgba(255, 255, 255, 0.6);
                     }
                 }
             }

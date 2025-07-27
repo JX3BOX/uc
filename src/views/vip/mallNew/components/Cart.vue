@@ -37,6 +37,8 @@
                                 v-model="item.amount"
                                 :max="item.goods.stock"
                                 @change="itemChange(item, $event)"
+                                :min="1"
+                                v-if="item.goods.category === 'virtual' && item.goods.sub_category === 'palu'"
                             ></el-input-number>
                             <span v-if="item.goods.price_points" style="color: rgba(116, 120, 237, 1)">
                                 <img src="@/assets/img/vip/vip2/points.svg" alt="" class="icon" svg-inline />
@@ -92,11 +94,10 @@
                     <div class="left">{{ $store.getters["mallNew/all_price_points"] }}</div>
                 </div>
             </div>
-            <div class="total-btn" @click="$router.push({ name: 'mall_batch_order_new' })">结算</div>
+            <div class="total-btn" @click="$store.dispatch('mallNew/changeCartConfirmIsShow', true)">结算</div>
         </div>
     </div>
 </template>
-
 <script>
 import { debounce } from "lodash";
 import moment from "moment";
@@ -377,6 +378,7 @@ export default {
             }
         }
         .total-btn {
+            cursor: pointer;
             width: 161px;
             height: 50px;
             border-radius: 50px;

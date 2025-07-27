@@ -178,6 +178,7 @@ export default {
                                         type: "success",
                                         message: "下单成功",
                                     });
+                                    this.$store.dispatch("mallNew/getCart");
                                     const loading = this.$loading({
                                         lock: true,
                                         text: "跳转中...",

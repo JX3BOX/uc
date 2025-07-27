@@ -123,7 +123,7 @@ export default {
             box-sizing: border-box;
             transition: transform 0.3s ease-in-out;
             transform: translateX(56.8vw);
-            z-index: 100000;
+            z-index: 100;
             &.is-show {
                 transform: translateX(0);
             }
@@ -151,7 +151,7 @@ export default {
                     line-height: 5.3333vw;
                     color: rgba(255, 255, 255, 1);
                     span {
-                        color: #656463;
+                        color: rgba(255, 255, 255, 0.6);
                     }
                 }
             }

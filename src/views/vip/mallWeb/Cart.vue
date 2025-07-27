@@ -33,6 +33,7 @@
                                 v-model="item.amount"
                                 :max="item.goods.stock"
                                 @change="itemChange(item, $event)"
+                                :min="1"
                             ></el-input-number>
                             <span v-if="item.goods.price_points" style="color: rgba(116, 120, 237, 1)">
                                 <img src="@/assets/img/vip/vip2/points.svg" alt="" class="icon" svg-inline />
@@ -94,16 +95,21 @@
                     <div class="left">{{ $store.getters["mallNew/all_price_points"] }}</div>
                 </div>
             </div>
-            <div class="total-btn" @click="$router.push({ name: 'mall_batch_order_web' })">结算</div>
+            <div class="total-btn" @click="$refs.cartConfirm.isShow = true">结算</div>
         </div>
+        <CartConfirm ref="cartConfirm"></CartConfirm>
     </div>
 </template>
 
 <script>
 import { debounce } from "lodash";
 import moment from "moment";
+import CartConfirm from "./components/CartConfirm.vue";
 export default {
     name: "Cart",
+    components: {
+        CartConfirm,
+    },
     data() {
         return {
             imgurl: "https://cdn.jx3box.com/design/mall/",

@@ -42,11 +42,11 @@
                     }}{{ good.canBuy?.buy_time ? "" : "(不在兑换期内)" }}
                 </div>
                 <div class="buttons">
-                    <button class="button add-cart" :disabled="!good.canBuy?.canBuy" @click="addCart">
+                    <div class="button add-cart" :disabled="!good.canBuy?.canBuy" @click="addCart">
                         <img :src="imgUrl + '购物车fill.svg'" alt="" />
                         加购
-                    </button>
-                    <button class="button buy" @click="buyGoods" :disabled="!good?.canBuy?.canBuy">
+                    </div>
+                    <div class="button buy" @click="buyGoods" :disabled="!good?.canBuy?.canBuy">
                         <template v-if="good.price_boxcoin">
                             <img :src="imgUrl + '盒币fill.svg'" alt="" />{{ good.price_boxcoin }}盒币
                         </template>
@@ -54,16 +54,16 @@
                         <template v-if="good.price_points">
                             <img :src="imgUrl + '积分.svg'" alt="" />{{ good.price_points }}积分
                         </template>
-                    </button>
-                    <!-- <button class="button like">
+                    </div>
+                    <div class="button like" @click="$refs.like.addLike()">
                         <img :src="imgUrl + '点赞fill.svg'" alt="" />
-                        点赞
-                    </button> -->
-                    <Like class="like" :postId="id" postType="mall"></Like>
+                        <Like :postId="id" postType="mall" ref="like"></Like>
+                    </div>
                 </div>
             </div>
             <div v-if="good.describe" class="good-comment" v-html="good.describe"></div>
         </div>
+        <BuyConfirm ref="buyConfirm" :item="good"></BuyConfirm>
     </div>
 </template>
 
@@ -71,13 +71,15 @@
 import { getItem } from "@/service/vip/mall";
 import User from "@jx3box/jx3box-common/js/user";
 import Skeleton from "../mallNew/components/skeleton/index.vue";
-import Like from "@jx3box/jx3box-common-ui/src/interact/Like2.vue";
+import Like from "../mallNew/components/Like.vue";
 import { throttle } from "lodash";
+import BuyConfirm from "./components/BuyConfirm.vue";
 export default {
     name: "Detail",
     components: {
         Skeleton,
         Like,
+        BuyConfirm,
     },
     data() {
         return {
@@ -169,40 +171,7 @@ export default {
             return obj;
         },
         buyGoods: throttle(function () {
-            if (!User.isLogin()) {
-                this.$message.error("请先登录");
-                setTimeout(() => {
-                    User.toLogin();
-                }, 1000);
-                return;
-            }
-            const { category, is_virtual, id } = this.good;
-            if (is_virtual && category == "virtual") {
-                return this.$store
-                    .dispatch("mallNew/buyGoods", {
-                        id,
-                        count: 1,
-                        addressId: 0,
-                        remark: "虚拟商品购买",
-                    })
-                    .then((res) => {
-                        this.$confirm("购买成功，是否跳转至订单界面?", "提示", {
-                            confirmButtonText: "确定",
-                            cancelButtonText: "取消",
-                            type: "warning",
-                        })
-                            .then(() => {
-                                const url = `${this.root}dashboard/mall`;
-                                window.open(url);
-                            })
-                            .catch(() => {});
-                    });
-            }
-
-            this.$router.push({
-                name: "mall_order_new",
-                params: { id },
-            });
+            this.$refs.buyConfirm.isShow = true;
         }, 2000),
         addCart: throttle(function (e) {
             const num = this.$store.state.mall.cart?.find((item) => item.goods_id === this.good.id)?.amount || 0;

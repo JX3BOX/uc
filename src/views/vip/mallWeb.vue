@@ -52,7 +52,7 @@ export default {
     position: fixed;
     top: calc(64px + 9.6vw);
     left: 0;
-    z-index: 1000;
+    z-index: 50;
 }
 .cart {
     width: 17.0667vw;

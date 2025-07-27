@@ -24,7 +24,7 @@
                             <img
                                 src="@/assets/img/vip/vip2/box_icon.svg"
                                 svg-inline
-                                style="fill: white; margin-right: 0.6vw;width: 3.2vw;height: 3.2vw;"
+                                style="fill: white; margin-right: 0.6vw; width: 3.2vw; height: 3.2vw"
                             />{{ good.price_boxcoin }}盒币
                         </template>
                         <template v-if="good.price_boxcoin && good.price_points"> + </template>
@@ -32,7 +32,7 @@
                             <img
                                 src="@/assets/img/vip/vip2/points.svg"
                                 svg-inline
-                                style="fill: white; margin-right: 0.6vw;width: 3.2vw;height: 3.2vw;"
+                                style="fill: white; margin-right: 0.6vw; width: 3.2vw; height: 3.2vw"
                             />{{ good.price_points }}积分
                         </template>
                     </div>
@@ -42,14 +42,19 @@
                 </div>
             </div>
         </div>
+        <BuyConfirm :item="good" ref="buyConfirm" />
     </div>
 </template>
 
 <script>
 import User from "@jx3box/jx3box-common/js/user";
 import { throttle } from "lodash";
+import BuyConfirm from "./BuyConfirm.vue";
 export default {
     name: "GoodItem",
+    components: {
+        BuyConfirm,
+    },
     data() {
         return {
             imgUrl: "https://cdn.jx3box.com/design/mall/",
@@ -66,40 +71,7 @@ export default {
             return User.getLevel(exp_limit);
         },
         buyGoods: throttle(function () {
-            if (!User.isLogin()) {
-                this.$message.error("请先登录");
-                setTimeout(() => {
-                    User.toLogin();
-                }, 1000);
-                return;
-            }
-            const { category, is_virtual, id } = this.good;
-            if (is_virtual && category == "virtual") {
-                return this.$store
-                    .dispatch("mallNew/buyGoods", {
-                        id,
-                        count: 1,
-                        addressId: 0,
-                        remark: "虚拟商品购买",
-                    })
-                    .then((res) => {
-                        this.$confirm("购买成功，是否跳转至订单界面?", "提示", {
-                            confirmButtonText: "确定",
-                            cancelButtonText: "取消",
-                            type: "warning",
-                        })
-                            .then(() => {
-                                const url = `${this.root}dashboard/mall`;
-                                window.open(url);
-                            })
-                            .catch(() => {});
-                    });
-            }
-
-            this.$router.push({
-                name: "mall_order_new",
-                params: { id },
-            });
+            this.$refs.buyConfirm.isShow = true;
         }, 2000),
         addCart: throttle(function (e) {
             const num = this.$store.state.mall.cart?.find((item) => item.goods_id === this.good.id)?.amount || 0;

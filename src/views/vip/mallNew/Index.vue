@@ -15,12 +15,12 @@
                                 >放入购物车</span
                             >一并结算！
                         </div>
-                        <div class="cart-btn" @click="$store.dispatch('mallNew/changeCartIsShow', true)">
+                        <div class="cart-btn">
                             <div class="text">
                                 <div>当前购物车</div>
                                 <div>合计：{{ $store.getters["mallNew/checked_num"] }}件</div>
                             </div>
-                            <div class="btn" id="cartBtn">
+                            <div class="btn" id="cartBtn" @click="$store.dispatch('mallNew/changeCartIsShow', true)">
                                 <img :src="imgurl + '购物车.svg'" alt="" class="cart-icon" />
                                 查看购物车
                             </div>
@@ -53,7 +53,7 @@
                                 <div class="left">{{ $store.getters["mallNew/all_price_points"] }}</div>
                             </div>
                         </div>
-                        <div class="total-btn" @click="$router.push({ name: 'mall_batch_order_new' })">结算</div>
+                        <div class="total-btn" @click="$store.dispatch('mallNew/changeCartIsShow', true)">结算</div>
                     </div>
                     <div class="arrow"></div>
                 </div>
@@ -61,6 +61,7 @@
             <Cart></Cart>
             <img :src="imgurl + '商城盒子娘.png'" alt="" class="girl" />
         </div>
+        <CartConfirm></CartConfirm>
     </div>
 </template>
 <script>
@@ -72,6 +73,7 @@ import GoodDetail from "@/views/vip/mallNew/components/GoodDetail.vue";
 import Cart from "@/views/vip/mallNew/components/Cart.vue";
 import { debounce } from "lodash";
 import { getDecoration } from "@/service/vip/decoration";
+import CartConfirm from "@/views/vip/mallNew/components/CartConfirm.vue";
 export default {
     name: "MallList",
     data: function () {
@@ -208,6 +210,7 @@ export default {
                 user_level: User.getLevel(item.exp_limit),
                 buy_time: true,
             };
+            const time = new Date().getTime();
             if (item.vip_limit === 1 && !User._isPRO(this.asset)) {
                 obj.canBuy = false;
                 obj.vip_limit = false;
@@ -224,7 +227,7 @@ export default {
                 obj.canBuy = false;
                 obj.level = false;
             }
-            if (item.on_selling === 0) {
+            if (time < new Date(item.start_sell_time).getTime() || time > new Date(item.end_sell_time).getTime()) {
                 obj.canBuy = false;
                 obj.buy_time = false;
             }
@@ -257,6 +260,7 @@ export default {
         MallNav,
         GoodDetail,
         Cart,
+        CartConfirm,
     },
 };
 </script>
@@ -311,7 +315,6 @@ export default {
                         }
                     }
                     .cart-btn {
-                        cursor: pointer;
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
@@ -319,6 +322,7 @@ export default {
                             font-size: 12px;
                         }
                         .btn {
+                            cursor: pointer;
                             width: 115px;
                             height: 28px;
                             border-radius: 8px;
@@ -361,6 +365,7 @@ export default {
                         }
                     }
                     .total-btn {
+                        cursor: pointer;
                         width: 161px;
                         height: 50px;
                         border-radius: 50px;

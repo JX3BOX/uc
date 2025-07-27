@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div class="footer">
-                <button
+                <div
                     :class="{ button: true, canBuy: good.canBuy.canBuy }"
                     @click.stop="buyGoods(good)"
                     :disabled="!good.canBuy.canBuy"
@@ -28,21 +28,26 @@
                             <img :src="imgUrl + '积分.svg'" alt="" />{{ good.price_points }}积分
                         </template>
                     </div>
-                </button>
+                </div>
                 <div class="icon" @click.stop="addCart" v-if="good.canBuy.canBuy">
                     <img :src="imgUrl + '购物车.svg'" alt="" />
                 </div>
             </div>
         </div>
+        <BuyConfirm :item="good" ref="buyConfirm" />
     </div>
 </template>
 
 <script>
 import User from "@jx3box/jx3box-common/js/user";
 import { throttle } from "lodash";
+import BuyConfirm from "./BuyConfirm.vue";
 export default {
     name: "GoodItem",
     inject: ["changeSelectItem"],
+    components: {
+        BuyConfirm,
+    },
     data() {
         return {
             imgUrl: "https://cdn.jx3box.com/design/mall/",
@@ -59,40 +64,7 @@ export default {
             return User.getLevel(exp_limit);
         },
         buyGoods: throttle(function () {
-            if (!User.isLogin()) {
-                this.$message.error("请先登录");
-                setTimeout(() => {
-                    User.toLogin();
-                }, 1000);
-                return;
-            }
-            const { category, is_virtual, id } = this.good;
-            if (is_virtual && category == "virtual") {
-                return this.$store
-                    .dispatch("mallNew/buyGoods", {
-                        id,
-                        count: 1,
-                        addressId: 0,
-                        remark: "虚拟商品购买",
-                    })
-                    .then((res) => {
-                        this.$confirm("购买成功，是否跳转至订单界面?", "提示", {
-                            confirmButtonText: "确定",
-                            cancelButtonText: "取消",
-                            type: "warning",
-                        })
-                            .then(() => {
-                                const url = `${this.root}dashboard/mall`;
-                                window.open(url);
-                            })
-                            .catch(() => {});
-                    });
-            }
-
-            this.$router.push({
-                name: "mall_order_new",
-                params: { id },
-            });
+            this.$refs.buyConfirm.isShow = true;
         }, 2000),
         addCart: throttle(function (e) {
             const num = this.$store.state.mall.cart?.find((item) => item.goods_id === this.good.id)?.amount || 0;
@@ -148,6 +120,14 @@ export default {
     height: 120px;
     border-radius: 12px;
     background: rgba(36, 41, 46, 1);
+    &:hover {
+        background: linear-gradient(
+            149.47deg,
+            rgba(36, 41, 46, 1) 0%,
+            rgba(82, 82, 82, 1) 66.39%,
+            rgba(36, 41, 46, 1) 100%
+        );
+    }
     display: flex;
     overflow: hidden;
     cursor: pointer;
@@ -235,6 +215,9 @@ export default {
 
                 &.canBuy {
                     background: rgba(64, 128, 255, 1);
+                    &:active {
+                        background: linear-gradient(180deg, rgba(64, 128, 255, 1) 52.47%, rgba(150, 236, 255, 1) 100%);
+                    }
                 }
             }
             .icon {
