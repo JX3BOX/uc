@@ -1,11 +1,7 @@
 <template>
     <div class="m-mall-box">
         <MallNav :list="list" @changeNav="isShowNav = !isShowNav" :isShowNav="isShowNav"></MallNav>
-        <GoodDetail
-            v-if="selectItem || paramsItem"
-            :good="selectItem || paramsItem"
-            :isShowNav="isShowNav"
-        ></GoodDetail>
+        <GoodDetail v-if="selectItem" :good="selectItem || {}" :isShowNav="isShowNav"></GoodDetail>
         <div class="right">
             <div class="cart">
                 <div class="cart-container">
@@ -94,7 +90,22 @@ export default {
             },
             isShowNav: true,
             myVirtualItems: [],
+            id: this.$route.params.id,
         };
+    },
+    watch: {
+        list: {
+            handler(newVal) {
+                if (newVal.length > 0) {
+                    if (this.id) {
+                        this.selectItem = this.list.find((item) => item.id == this.id);
+                        this.id = null;
+                    } else {
+                        this.selectItem = newVal[0];
+                    }
+                }
+            },
+        },
     },
     computed: {
         asset() {
@@ -108,12 +119,6 @@ export default {
                     isHave: this.isHaveGood(item),
                 };
             });
-        },
-        paramsItem() {
-            if (this.$route.params.id) {
-                return this.list.find((item) => item.id == this.$route.params.id);
-            }
-            return null;
         },
     },
     provide() {
