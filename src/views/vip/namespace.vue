@@ -16,9 +16,9 @@
                                     <b>{{ (asset && asset.namespace_card_count) || 0 }}</b>
                                 </div>
                             </el-form-item>
-                            <el-form-item label="购买数量">
+                            <!-- <el-form-item label="购买数量">
                                 <el-radio-group v-model="count" size="small">
-                                    <el-radio :label="20" border>20个铭牌</el-radio>
+                                    <el-radio :label="1" border>1个铭牌</el-radio>
                                 </el-radio-group>
                             </el-form-item>
                             <el-form-item label="支付金额">
@@ -27,9 +27,9 @@
                                     <b class="u-price">10.00</b>
                                     <span>元</span>
                                 </div>
-                            </el-form-item>
+                            </el-form-item> -->
                             <el-form-item>
-                                <el-button class="u-btn" type="primary" @click="buy">购买</el-button>
+                                <el-button class="u-btn" type="primary" @click="buy">前往兑换</el-button>
                             </el-form-item>
                         </el-form>
                     </div>
@@ -96,12 +96,14 @@ export default {
     },
     methods: {
         buy: function (type) {
-            if (!this.isLogin) {
-                User.toLogin();
-            } else {
-                this.will = true;
-                this.dialog_visible = true;
-            }
+            // if (!this.isLogin) {
+            //     User.toLogin();
+            // } else {
+            //     this.will = true;
+            //     this.dialog_visible = true;
+            // }
+            const url = "/vip/mall/39";
+            window.open(url, "_blank");
         },
         loadAsset: function () {
             return User.getAsset().then((data) => {

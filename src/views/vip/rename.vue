@@ -8,6 +8,7 @@
                     <div v-if="!had_renamed"><i class="el-icon-s-opportunity"></i> 每个账号拥有一次免费更名机会</div>
                     <div v-else>
                         当前剩余可改名次数 <b>{{ count }}</b>
+                        <el-button @click="toPurchaseRenameCard" type="primary" size="small" icon="el-icon-shopping-cart-2" style="margin-left: 10px;">购买改名卡</el-button>
                     </div>
                 </div>
                 <el-form
@@ -187,6 +188,7 @@ export default {
             User.getAsset().then((data) => {
                 this.asset = data;
                 this.count = ~~data.rename_card_count;
+                console.log("当前改名次数", this.count);
             });
         },
         submit: function () {
@@ -206,6 +208,10 @@ export default {
         finish: function () {
             location.reload();
         },
+        toPurchaseRenameCard() {
+            const url = "/vip/mall/38";
+            window.open(url, "_blank");
+        }
     },
     mounted: function () {
         this.checkPermission();
