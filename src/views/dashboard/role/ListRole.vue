@@ -7,9 +7,12 @@
                 <router-link to="/role/bind" class="el-button el-button--primary el-button--mini">
                     <i class="el-icon-connection"></i> 绑定角色
                 </router-link>
-                <router-link to="/role/add" class="el-button el-button--primary el-button--mini">
-                    <i class="el-icon-plus"></i> 自定义角色
+                <router-link to="/role/sync" class="el-button el-button--primary el-button--mini">
+                    <i class="el-icon-refresh"></i> 同步数据
                 </router-link>
+                <!-- <router-link to="/role/add" class="el-button el-button--primary el-button--mini">
+                    <i class="el-icon-plus"></i> 自定义角色
+                </router-link> -->
             </div>
         </h2>
         <div class="m-role-list-filter">
@@ -32,7 +35,7 @@
         </div>
         <div class="m-team-rolelist" v-if="data && data.length">
             <ul class="u-list">
-                <li class="u-item" v-for="(item, i) in data" :key="i">
+                <li class="u-item" v-for="item in data" :key="item.ID" :class="{ auth: !item.custom }">
                     <router-link :to="'/role/' + item.ID" class="u-pic u-avatar">
                         <img :src="showAvatar(item.mount, item.body_type)" alt />
                         <i class="u-status" v-if="!item.custom" title="已认证">
@@ -82,7 +85,11 @@
                             </span>
                         </span>
                     </span>
-                    <span class="u-time">绑定时间 : {{ item.created_at | showTime }}</span>
+                    <span class="u-time u-achievement"
+                        >成就数据:
+                        <template v-if="item.sync_achievements"><i class="el-icon-success u-success"></i>已同步</template>
+                        <template v-else><i class="el-icon-warning-outline u-warning"></i>未同步</template>
+                    </span>
                     <div class="u-op">
                         <el-switch
                             v-model="item.is_public_visible"
@@ -322,8 +329,8 @@ export default {
             return {
                 0: "待审核",
                 1: "已通过",
-            }[status]
-        }
+            }[status];
+        },
     },
     created: function () {},
     watch: {

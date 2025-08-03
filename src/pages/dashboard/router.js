@@ -42,6 +42,7 @@ const ListRole = () => import("@/views/dashboard/role/ListRole.vue");
 const AddRole = () => import("@/views/dashboard/role/AddRole.vue");
 const EditRole = () => import("@/views/dashboard/role/EditRole.vue");
 const ViewRole = () => import("@/views/dashboard/role/ViewRole.vue");
+const SyncData = () => import("@/views/dashboard/role/SyncData.vue");
 
 const profile = () => import("@/views/dashboard/profile.vue");
 const avatar = () => import("@/views/dashboard/avatar.vue");
@@ -99,6 +100,7 @@ const routes = [
     { name: "ic", path: "/ic", component: ic },
 
     { name: "bind_role", path: "/role/bind", component: BindRole },
+    { name: "sync_data", path: "/role/sync", component: SyncData },
     { name: "list_role", path: "/role", component: ListRole },
     { name: "add_role", path: "/role/add", component: AddRole },
     { name: "edit_role", path: "/role/edit/:id", component: EditRole },

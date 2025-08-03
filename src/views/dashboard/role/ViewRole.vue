@@ -69,6 +69,16 @@
                         {{ data.body_type | showBodyType }}
                     </span>
                 </div>
+                <div class="u-meta">
+                    <span class="u-remark">
+                        <em>备 注</em>
+                        {{ data.note }}
+                    </span>
+                    <span class="u-remark">
+                        <em>绑定于</em>
+                        {{ data.created_at | showTime }}
+                    </span>
+                </div>
             </div>
             <!-- <div class="m-role-player">
                 <el-divider content-position="left">
@@ -135,7 +145,7 @@
 import User from "@jx3box/jx3box-common/js/user";
 import { getRole, deleteRole, getRoleBelongTeams } from "@/service/dashboard/role.js";
 import RoleAvatar from "@/components/dashboard/role/RoleAvatar.vue";
-import { showBodyType, getThumbnail, authorLink, showAvatar, showSchoolIcon, showSchoolName } from "@/utils/filters"
+import { showBodyType, getThumbnail, authorLink, showAvatar, showSchoolIcon, showSchoolName, showTime } from "@/utils/filters"
 export default {
     name: "ViewRole",
     props: [],
@@ -204,7 +214,8 @@ export default {
         showAvatar,
         showBodyType,
         showSchoolIcon,
-        showSchoolName
+        showSchoolName,
+        showTime,
     },
     mounted: function () {
         this.loadData();

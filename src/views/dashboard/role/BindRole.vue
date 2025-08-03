@@ -31,19 +31,11 @@
                             {{ token }}
                         </span>
                     </div>
-                    <div class="m-tutorial">
-                        <h2 class="u-title-name"><i class="el-icon-question"></i> 绑定步骤</h2>
-                        <p>
-                            打开【茗伊插件集】-【团队】-【团队平台】
-                            <br />【点击绑定】并【填入上方密钥】以绑定角色到魔盒账号
-                            <br />可以将多个角色绑定至同一个魔盒账号
-                        </p>
-                        <img class="u-demo" :src="demo_url" />
-                    </div>
+                   <div v-html="notice"></div>
                 </el-tab-pane>
-                <el-tab-pane label="自定义创建" name="origin">
+                <!-- <el-tab-pane label="自定义创建" name="origin">
                     <roleform :data="form" @submit="submit" btn_txt="创建" :processing="processing" />
-                </el-tab-pane>
+                </el-tab-pane> -->
             </el-tabs>
         </div>
 
@@ -56,9 +48,10 @@
 </template>
 
 <script>
-import { getToken,createRole } from "@/service/dashboard/role.js";
+import { getToken, createRole } from "@/service/dashboard/role.js";
 import { __imgPath, __ossMirror } from "@jx3box/jx3box-common/data/jx3box.json";
-import roleform from "@/components/dashboard/role/roleform.vue";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
+// import roleform from "@/components/dashboard/role/roleform.vue";
 export default {
     name: "BindRole",
     props: [],
@@ -78,6 +71,8 @@ export default {
                 custom: 1,
             },
             processing: false,
+
+            notice: ""
         };
     },
     computed: {},
@@ -112,6 +107,11 @@ export default {
         goBack: function () {
             this.$router.push("/role");
         },
+        loadBreadCrumb: function () {
+            getBreadcrumb("bind_role").then((res) => {
+                this.notice = res
+            });
+        },
     },
     mounted: function () {
         this.loading = true;
@@ -122,9 +122,11 @@ export default {
             .finally(() => {
                 this.loading = false;
             });
+
+        this.loadBreadCrumb();
     },
     components: {
-        roleform,
+        // roleform,
     },
 };
 </script>
