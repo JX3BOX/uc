@@ -4,8 +4,15 @@
             <Header :key="currentKey"></Header>
             <Breadcrumb></Breadcrumb>
         </div>
-        <div v-if="isSky" class="sky"></div>
+        <div
+            v-if="isSky"
+            class="u-mark u-sky"
+            @click="$store.commit('mallNew/toState', { assetIsShow: !$store.state.mallNew.assetIsShow })"
+        ></div>
+        <div v-if="isNavShow" class="u-mark" @click="$store.commit('mallNew/toState', { navIsShow: false })"></div>
+
         <keep-alive include="Index"><router-view></router-view> </keep-alive>
+
         <div class="cart" @click="$router.push('/mallWeb/cart')" v-if="$route.path !== '/mallWeb/cart'">
             <img :src="imgUrl + 'cart.svg'" alt="" id="cartBtn" />
         </div>
@@ -27,7 +34,10 @@ export default {
     },
     computed: {
         isSky() {
-            return this.$store.state.mallNew.assetIsShow || this.$store.state.mallNew.navIsShow;
+            return this.$store.state.mallNew.assetIsShow;
+        },
+        isNavShow() {
+            return this.$store.state.mallNew.navIsShow;
         },
     },
     created() {
@@ -45,14 +55,16 @@ export default {
 .m-mall-web-header {
     height: calc(64px + 9.6vw);
 }
-.sky {
+.u-mark {
     width: 100%;
     height: calc(100vh - 64px - 9.6vw);
-    background: #808080;
     position: fixed;
     top: calc(64px + 9.6vw);
     left: 0;
     z-index: 50;
+    &.u-sky {
+        background: #808080;
+    }
 }
 .cart {
     width: 17.0667vw;
@@ -69,5 +81,8 @@ export default {
         width: 8vw;
         height: 8vw;
     }
+}
+.no-click {
+    .full;
 }
 </style>

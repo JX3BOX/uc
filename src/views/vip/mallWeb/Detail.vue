@@ -327,8 +327,8 @@ export default {
             }
             .buttons {
                 width: 100%;
-                height: 9.6vw;
                 display: flex;
+                flex-wrap: wrap;
                 justify-content: center;
                 align-items: center;
                 gap: 3.2vw;
@@ -353,6 +353,7 @@ export default {
                         height: 4.2667vw;
                     }
                     &.buy {
+                        order: 2;
                         width: auto;
                         min-width: 26.6667vw;
                         padding: 0 2.6667vw;
@@ -371,6 +372,7 @@ export default {
                         }
                     }
                     &.like {
+                        order: 1;
                         background: rgba(255, 133, 184, 1);
                     }
                 }
