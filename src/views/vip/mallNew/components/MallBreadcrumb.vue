@@ -7,12 +7,12 @@
             <div class="pro button" v-if="isPro">PRO</div>
             <div class="asset-continer">
                 <div class="item">
-                    <img src="@/assets/img/vip/vip2/box_icon.svg" alt="" class="icon" svg-inline />
-                    <div class="text">盒币<span>（=通宝）</span>：{{ asset.box_coin }}</div>
+                    <img src="@/assets/img/vip/vip2/points.svg" alt="" class="icon" svg-inline />
+                    <div class="text">积分<span>（=银铛）</span>：{{ asset.points }}</div>
                 </div>
                 <div class="item">
-                    <img src="@/assets/img/vip/vip2/points.svg" alt="" class="icon" svg-inline />
-                    <div class="text">积分<span>（=积分）</span>：{{ asset.points }}</div>
+                    <img src="@/assets/img/vip/vip2/box_icon.svg" alt="" class="icon" svg-inline />
+                    <div class="text">盒币<span>（=通宝）</span>：{{ asset.box_coin }}</div>
                 </div>
             </div>
         </div>
@@ -58,7 +58,6 @@ export default {
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     box-sizing: border-box;
     .left {
-        width: calc(100% - 510px);
         display: flex;
         align-items: center;
         font-size: 20px;
@@ -75,7 +74,6 @@ export default {
         }
     }
     .right {
-        width: 510px;
         height: 20px;
         opacity: 1;
         display: flex;
@@ -102,19 +100,16 @@ export default {
             margin-right: 12px;
         }
         .asset-continer {
-            width: 362px;
-            height: 20px;
             display: flex;
-            justify-content: space-between;
+            gap: 12px;
             align-items: center;
             .item {
-                width: 175px;
-                height: 20px;
+                min-width: 175px; 
                 border-radius: 4px;
                 background: rgba(255, 255, 255, 0.1);
                 display: flex;
                 align-items: center;
-                padding-left: 12px;
+                padding: 0 12px;
                 box-sizing: border-box;
                 .icon {
                     width: 12px;

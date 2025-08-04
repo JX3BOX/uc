@@ -43,20 +43,20 @@
                 </div>
                 <div class="buttons">
                     <button class="button add-cart" @click="addCart" :disabled="!good.canBuy.canBuy">
-                        <img :src="imgUrl + '购物车fill.svg'" alt="" />
+                        <img :src="imgUrl + 'cart-fill.svg'" alt="" />
                         加购
                     </button>
                     <button class="button buy" @click="buyGoods" :disabled="!good.canBuy.canBuy">
                         <template v-if="good.price_boxcoin">
-                            <img :src="imgUrl + '盒币fill.svg'" alt="" />{{ good.price_boxcoin }}盒币
+                            <img :src="imgUrl + 'box_coin_fill.svg'" alt="" />{{ good.price_boxcoin }}盒币
                         </template>
                         <template v-if="good.price_boxcoin && good.price_points"> + </template>
                         <template v-if="good.price_points">
-                            <img :src="imgUrl + '积分.svg'" alt="" />{{ good.price_points }}积分
+                            <img :src="imgUrl + 'point.svg'" alt="" />{{ good.price_points }}积分
                         </template>
                     </button>
                     <button class="button like" @click="$refs.like.addLike()">
-                        <img :src="imgUrl + '点赞fill.svg'" alt="" />
+                        <img :src="imgUrl + 'like.svg'" alt="" />
                         <Like class="like" :postId="id" postType="mall" ref="like"></Like>
                     </button>
                 </div>
@@ -182,7 +182,7 @@ export default {
 
 <style lang="less" scoped>
 .good-detail {
-    margin-left: 0;
+    margin: 0 300px 0 0;
     &.without-nav {
         margin-left: -820px;
     }
@@ -316,6 +316,9 @@ export default {
                     color: rgba(255, 255, 255, 1);
                     text-align: center;
                     border: none;
+                    &:hover {
+                        box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.5);
+                    }
                     &:disabled {
                         cursor: not-allowed;
                     }

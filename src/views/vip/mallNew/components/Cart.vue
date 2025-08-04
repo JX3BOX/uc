@@ -63,7 +63,7 @@
             >
                 {{ name }}&emsp;{{ time }}
             </div>
-            <img :src="`${imgurl}条形码.svg`" alt="" class="icon" svg-inline />
+            <img :src="`${imgurl}bar-code.svg`" alt="" class="icon" svg-inline />
         </div>
         <div class="dashed"></div>
         <div class="total-price">
@@ -389,6 +389,9 @@ export default {
             font-size: 18px;
             font-weight: 700;
             color: rgba(255, 255, 255, 1);
+            &:hover {
+                box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+            }
         }
     }
 }

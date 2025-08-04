@@ -92,17 +92,9 @@ export default {
     },
     methods: {
         handleChange(value, key) {
-            switch (key) {
-                case "level":
-                    this.changeQuery("level", value);
-                    break;
-                case "vip_limit":
-                    this.changeQuery("vip_limit", value);
-                    break;
-                case "title":
-                    this.changeQuery("title", value.trim());
-                    break;
-            }
+            const _value = value.trim();
+            const arr = ["level", "vip_limit", "title"];
+            if (arr.includes(key)) this.changeQuery(key, _value);
         },
     },
 };

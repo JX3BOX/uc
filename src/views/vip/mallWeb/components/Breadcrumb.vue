@@ -20,12 +20,12 @@
                     </div>
                 </div>
                 <div class="item">
-                    <img src="@/assets/img/vip/vip2/box_icon.svg" alt="" class="icon" svg-inline />
-                    <div class="text">盒币<span>（=通宝）</span>：{{ asset.box_coin }}</div>
+                    <img src="@/assets/img/vip/vip2/points.svg" alt="" class="icon" svg-inline />
+                    <div class="text">积分<span>（=银铛）</span>：{{ asset.points }}</div>
                 </div>
                 <div class="item">
-                    <img src="@/assets/img/vip/vip2/points.svg" alt="" class="icon" svg-inline />
-                    <div class="text">积分<span>（=积分）</span>：{{ asset.points }}</div>
+                    <img src="@/assets/img/vip/vip2/box_icon.svg" alt="" class="icon" svg-inline />
+                    <div class="text">盒币<span>（=通宝）</span>：{{ asset.box_coin }}</div>
                 </div>
             </div>
         </div>

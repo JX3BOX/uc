@@ -38,7 +38,7 @@
                     </div>
                 </button>
                 <div class="icon" @click.stop="addCart" v-if="good.canBuy.canBuy">
-                    <img :src="imgUrl + '购物车.svg'" alt="" />
+                    <img :src="imgUrl + 'cart.svg'" alt="" />
                 </div>
             </div>
         </div>

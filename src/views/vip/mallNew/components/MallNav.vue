@@ -30,7 +30,14 @@
                             :key="key"
                             @click="childLinkClick(item.key, child.key)"
                         >
-                            <i class="u-arrow el-icon-caret-right"></i>
+                            <img
+                                svg-inline
+                                :src="
+                                    require(`@/assets/img/vip/mall/icon_0${
+                                        query.sub_category !== child.key ? '1' : '2'
+                                    }.svg`)
+                                "
+                            />
                             {{ child.name }}
                         </div>
                     </div>
@@ -49,7 +56,15 @@
                                     : ''
                             "
                         >
-                            <i class="u-arrow el-icon-caret-right"></i> {{ child.name }}
+                            <img
+                                svg-inline
+                                :src="
+                                    require(`@/assets/img/vip/mall/icon_0${
+                                        query.sub_category !== child.key ? '1' : '2'
+                                    }.svg`)
+                                "
+                            />
+                            {{ child.name }}
                         </a>
                     </div>
                 </div>
@@ -214,6 +229,7 @@ export default {
                 .flex;
                 align-items: center;
                 padding: 8px 0;
+                gap: 4px;
                 .color(rgba(163, 163, 163, 1));
                 &.active {
                     .color(rgba(255, 195, 0, 1));
@@ -248,6 +264,7 @@ export default {
             justify-content: center;
             margin-top: 33px;
             /deep/ .el-pagination {
+                font-weight: 400;
                 background-color: transparent;
                 button,
                 .el-pagination__total,
@@ -258,21 +275,22 @@ export default {
                 button,
                 .el-pager li {
                     color: white;
+                    margin: 0 12px;
                     &:hover {
                         color: #5cb6ff;
                     }
                 }
                 .el-pager li {
                     &.active {
-                        width: 24px;
-                        height: 24px;
+                        .size(24px);
+                        .bold;
+                        .fz(18px,24px);
                         border-radius: 12px;
                         background: rgba(255, 255, 255, 0.75);
                         color: #000;
                         padding: 0;
-                        margin: 2px 4px;
+                        margin: 2px 12px;
                         min-width: 24px;
-                        line-height: 24px;
                     }
                 }
             }

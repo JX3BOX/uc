@@ -2,7 +2,7 @@
     <div class="m-mall-box">
         <MallNav :list="list" @changeNav="isShowNav = !isShowNav" :isShowNav="isShowNav"></MallNav>
         <GoodDetail v-if="selectItem" :good="selectItem || {}" :isShowNav="isShowNav"></GoodDetail>
-        <div class="right">
+        <div class="box-right">
             <div class="cart">
                 <div class="cart-container">
                     <div class="cart-content">
@@ -17,7 +17,7 @@
                                 <div>合计：{{ $store.getters["mallNew/checked_num"] }}件</div>
                             </div>
                             <div class="btn" id="cartBtn" @click="$store.dispatch('mallNew/changeCartIsShow', true)">
-                                <img :src="imgurl + '购物车.svg'" alt="" class="cart-icon" />
+                                <img :src="imgurl + 'cart.svg'" alt="" class="cart-icon" />
                                 查看购物车
                             </div>
                         </div>
@@ -55,7 +55,7 @@
                 </div>
             </div>
             <Cart></Cart>
-            <img :src="imgurl + '商城盒子娘.png'" alt="" class="girl" />
+            <img :src="imgurl + 'girl.png'" alt="" class="girl" />
         </div>
         <CartConfirm></CartConfirm>
     </div>
@@ -274,26 +274,23 @@ export default {
 .m-mall-box {
     width: 100%;
     min-height: calc(100vh - 100px);
-    background: url("https://cdn.jx3box.com/design/mall/商城底图.png") no-repeat center center;
+    background: url("https://cdn.jx3box.com/design/mall/bg.png") no-repeat center center;
     background-size: 100% 100%;
     display: flex;
     flex-wrap: nowrap;
     overflow-x: scroll;
     scrollbar-width: none;
-    .right {
+    .box-right {
         width: 292px;
+        position: fixed;
+        right: 0;
+        top: 120px;
         .girl {
-            position: fixed;
-            bottom: 0;
-            right: 12px;
             width: 220px;
             height: 265px;
         }
         .cart {
             .cart-container {
-                position: fixed;
-                right: 12px;
-                bottom: 279px;
                 .cart-content {
                     width: 280px;
                     height: 267px;
@@ -370,17 +367,18 @@ export default {
                         }
                     }
                     .total-btn {
-                        cursor: pointer;
-                        width: 161px;
-                        height: 50px;
-                        border-radius: 50px;
+                        .size(160px,50px);
+                        .pointer;
+                        .fz(18px,50px);
+                        .r(25px);
+                        .bold;
+                        .x;
                         background: rgba(255, 163, 43, 1);
                         align-self: center;
-                        text-align: center;
-                        line-height: 50px;
-                        font-size: 18px;
-                        font-weight: 700;
                         color: rgba(255, 255, 255, 1);
+                        &:hover {
+                            box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+                        }
                     }
                 }
                 .arrow {

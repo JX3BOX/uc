@@ -25,12 +25,12 @@
                         </template>
                         <template v-if="good.price_boxcoin && good.price_points"> + </template>
                         <template v-if="good.price_points">
-                            <img :src="imgUrl + '积分.svg'" alt="" />{{ good.price_points }}积分
+                            <img :src="imgUrl + 'point.svg'" alt="" />{{ good.price_points }}积分
                         </template>
                     </div>
                 </button>
                 <div class="icon" @click.stop="addCart" v-if="good.canBuy.canBuy">
-                    <img :src="imgUrl + '购物车.svg'" alt="" />
+                    <img :src="imgUrl + 'cart.svg'" alt="" />
                 </div>
             </div>
         </div>
@@ -216,7 +216,7 @@ export default {
 
                 &.canBuy {
                     background: rgba(64, 128, 255, 1);
-                    &:active {
+                    &:hover {
                         background: linear-gradient(180deg, rgba(64, 128, 255, 1) 52.47%, rgba(150, 236, 255, 1) 100%);
                     }
                 }
@@ -229,6 +229,9 @@ export default {
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                &:hover {
+                    background: linear-gradient(180deg, rgba(255, 163, 43, 1) 51.39%, rgba(252, 221, 109, 1) 100%);
+                }
             }
         }
     }

@@ -7,7 +7,7 @@
         <div v-if="isSky" class="sky"></div>
         <keep-alive include="Index"><router-view></router-view> </keep-alive>
         <div class="cart" @click="$router.push('/mallWeb/cart')" v-if="$route.path !== '/mallWeb/cart'">
-            <img :src="imgUrl + '购物车.svg'" alt="" id="cartBtn" />
+            <img :src="imgUrl + 'cart.svg'" alt="" id="cartBtn" />
         </div>
     </div>
 </template>
