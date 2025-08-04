@@ -66,7 +66,7 @@
                     <div class="u-limit">
                         <el-divider content-position="left"><i class="el-icon-unlock"></i> 兑换需求</el-divider>
                         <span class="u-line" v-if="item.end_sell_time">
-                            <i class="el-icon-time"></i> 兑换时间：
+                            <i class="el-icon-time"></i> 可兑换时间：
                             <el-tag :type="isExpire(item.end_sell_time) ? 'success' : 'warning'" size="mini">{{
                                 item.start_sell_time
                             }}</el-tag>

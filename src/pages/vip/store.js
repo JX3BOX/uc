@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 import mallStore from "./mall";
+import mallNewStore from "./mallNew";
 
 Vue.use(Vuex);
 
@@ -14,6 +15,7 @@ let store = {
     actions: {},
     modules: {
         mall: mallStore,
+        mallNew: mallNewStore,
     },
 };
 
