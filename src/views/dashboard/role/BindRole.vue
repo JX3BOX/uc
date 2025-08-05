@@ -31,7 +31,7 @@
                             {{ token }}
                         </span>
                     </div>
-                   <div v-html="notice"></div>
+                   <div class="m-tutorial" v-html="notice"></div>
                 </el-tab-pane>
                 <!-- <el-tab-pane label="自定义创建" name="origin">
                     <roleform :data="form" @submit="submit" btn_txt="创建" :processing="processing" />
