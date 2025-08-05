@@ -195,7 +195,7 @@ export default {
     box-sizing: border-box;
     min-width: 600px;
     min-height: calc(100vh - 100px);
-    padding: 24px 0;
+    padding: 24px 292px 24px 0;
     display: flex;
     flex-direction: column;
     align-items: center;

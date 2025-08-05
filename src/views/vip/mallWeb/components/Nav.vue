@@ -24,7 +24,12 @@
                     :key="key"
                     @click="childLinkClick(item.key, child.key)"
                 >
-                    <i class="u-arrow el-icon-caret-right"></i>
+                    <img
+                        svg-inline
+                        :src="
+                            require(`@/assets/img/vip/mall/icon_0${query.sub_category !== child.key ? '1' : '2'}.svg`)
+                        "
+                    />
                     {{ child.name }}
                 </div>
             </div>
@@ -39,7 +44,13 @@
                         query.sub_category == child.key ? 'active' : query.sub_category == child.key ? 'active' : ''
                     "
                 >
-                    <i class="u-arrow el-icon-caret-right"></i> {{ child.name }}
+                    <img
+                        svg-inline
+                        :src="
+                            require(`@/assets/img/vip/mall/icon_0${query.sub_category !== child.key ? '1' : '2'}.svg`)
+                        "
+                    />
+                    {{ child.name }}
                 </a>
             </div>
         </div>
@@ -128,6 +139,7 @@ export default {
     .u-child {
         .pointer;
         .flex;
+        gap: 4px;
         align-items: center;
         padding: 2.1333vw 0;
         .color(rgba(163, 163, 163, 1));

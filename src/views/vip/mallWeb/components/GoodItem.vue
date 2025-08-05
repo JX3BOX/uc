@@ -134,6 +134,7 @@ export default {
     .good-item-img {
         width: 32vw;
         height: 32vw;
+        object-fit: contain;
     }
     .right {
         flex: 1;

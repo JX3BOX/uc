@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :visible.sync="isShow" width="109.8667vw" :show-close="false" custom-class="m-cart-confirm">
+    <el-dialog :visible.sync="isShow" :show-close="false" custom-class="m-cart-confirm">
         <div class="content">
             <div class="title">购物车结算</div>
             <div class="text">
@@ -12,12 +12,14 @@
             </div>
         </div>
         <div class="btn-box">
-            <el-button round @click="isShow = false" size="mini" style="width: 20.5333vw; font-size: 3.2vw">再想想</el-button>
+            <el-button round @click="isShow = false" size="mini" style="width: 20.5333vw; font-size: 3.2vw"
+                >再想想</el-button
+            >
             <el-button
                 round
                 @click="buyGoods"
                 size="mini"
-                style="width: 20.5333vw; font-size: 3.2vw; background-color: rgba(255, 163, 43, 1);color: #fff;"
+                style="width: 20.5333vw; font-size: 3.2vw; background-color: rgba(255, 163, 43, 1); color: #fff"
                 >确认</el-button
             >
         </div>
@@ -49,10 +51,13 @@ export default {
 
 <style scoped lang="less">
 /deep/.m-cart-confirm {
+    width: 90%;
     .el-dialog__header {
         padding: 0;
     }
     .el-dialog__body {
+        width: 100%;
+        box-sizing: border-box;
         padding: 7.4667vw;
     }
     .content {

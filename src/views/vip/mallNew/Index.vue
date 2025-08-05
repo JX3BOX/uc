@@ -183,7 +183,7 @@ export default {
         },
         loadData() {
             const query = this.buildQuery();
-            getItemList(query).then((res) => {
+            getItemList(query).then((res) => { 
                 this.goodsList = res.data.data?.list || [];
                 this.query.total = res.data.data.page?.total || 0;
                 if (res.data.data.page) {
@@ -284,7 +284,7 @@ export default {
         width: 292px;
         position: fixed;
         right: 0;
-        top: 120px;
+        bottom: 0;
         .girl {
             width: 220px;
             height: 265px;

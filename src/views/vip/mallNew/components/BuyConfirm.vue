@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :visible.sync="isShow" width="290px" :show-close="false" custom-class="m-buy-confirm">
+    <el-dialog :visible.sync="isShow" width="380px" :show-close="false" custom-class="m-buy-confirm">
         <div class="content">
             <img :src="item.goods_images[0]" alt="" style="width: 120px; height: 120px" />
             <div class="text">
@@ -101,7 +101,7 @@ export default {
         display: flex;
         align-items: center;
         flex-direction: column;
-        gap: 10px;
+        gap: 20px;
         font-size: 12px;
         color: rgba(56, 56, 56, 1);
         .price {
