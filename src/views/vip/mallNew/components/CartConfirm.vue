@@ -48,6 +48,7 @@ export default {
         padding: 0;
     }
     .el-dialog__body {
+        width: 100%;
         padding: 28px;
     }
     .content {

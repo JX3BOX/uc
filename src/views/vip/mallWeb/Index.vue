@@ -1,7 +1,8 @@
 <template>
-    <div class="m-mall-web">
+    <div class="m-mall-web" v-loading="isLoading">
         <SearchBox></SearchBox>
-        <GoodList :list="list"></GoodList>
+        <GoodList :list="list" :noData="noData"></GoodList>
+
         <Nav></Nav>
     </div>
 </template>
@@ -12,8 +13,9 @@ import GoodList from "./components/GoodList.vue";
 import { getItemList } from "@/service/vip/mall";
 import { __userLevel } from "@jx3box/jx3box-common/data/jx3box.json";
 import User from "@jx3box/jx3box-common/js/user";
-import { debounce } from "lodash";
+import { debounce, unionBy } from "lodash";
 import Nav from "./components/Nav.vue";
+import { removeEmpty } from "@/utils/index";
 export default {
     name: "Index",
     data() {
@@ -26,9 +28,11 @@ export default {
                 title: "",
                 category: "",
                 sub_category: "",
-                total: 0,
             },
             goodsList: [],
+            hasMore: true,
+            isLoading: false,
+            noData: false,
         };
     },
     components: {
@@ -40,6 +44,9 @@ export default {
         return {
             query: this.query,
             changeQuery: this.changeQuery,
+            hasMore: this.hasMore,
+            isLoading: this.isLoading,
+            noData: this.noData,
         };
     },
     computed: {
@@ -56,31 +63,23 @@ export default {
         },
     },
     methods: {
-        buildQuery() {
-            const _query = {};
-            for (let key in this.query) {
-                if (this.query[key] !== undefined && this.query[key] !== "" && this.query[key] !== null) {
-                    if (key === "level" && this.query.level != 0) {
-                        _query.exp_limit = __userLevel[this.query.level]?.[0];
-                        _query.exp_limit_max = __userLevel[this.query.level]?.[1] - 1 || "";
-                    } else {
-                        _query[key] = this.query[key];
-                    }
-                }
+        async loadData() {
+            try {
+                if (this.query.pageIndex === 1) this.noData = false;
+                if (this.noData) return;
+                this.isLoading = true;
+                const res = await getItemList(removeEmpty(this.query));
+                const list = res.data.data?.list || [];
+                const all = [...this.goodsList, ...list];
+                this.goodsList = this.query.pageIndex == 1 ? list : unionBy(all, "id");
+                const pageTotal = res.data.data?.page.pageTotal;
+                this.hasMore = this.query.pageIndex < pageTotal;
+                if (!list.length) this.noData = true;
+            } catch (error) {
+                console.error("加载数据失败", error);
+            } finally {
+                this.isLoading = false;
             }
-            delete _query.total;
-            return _query;
-        },
-        loadData() {
-            const query = this.buildQuery();
-            getItemList(query).then((res) => {
-                this.goodsList = res.data.data?.list || [];
-                this.query.total = res.data.data.page?.total || 0;
-                if (res.data.data.page) {
-                    this.query.pageIndex = res.data.data.page.index;
-                    this.query.pageSize = res.data.data.page.pageSize;
-                }
-            });
         },
         changeQuery(key, value, isChangePage) {
             if (Array.isArray(key)) {
@@ -95,8 +94,9 @@ export default {
             }
             this.loadData();
         },
+        // 判断是否可以购买
         checkCanBuy(item) {
-            const obj = {
+            const result = {
                 canBuy: true,
                 vip_limit: true,
                 box_coin: true,
@@ -106,26 +106,26 @@ export default {
                 buy_time: true,
             };
             if (item.vip_limit === 1 && !User._isPRO(this.asset)) {
-                obj.canBuy = false;
-                obj.vip_limit = false;
+                result.canBuy = false;
+                result.vip_limit = false;
             }
             if (this.asset.box_coin < item.price_boxcoin) {
-                obj.canBuy = false;
-                obj.box_coin = false;
+                result.canBuy = false;
+                result.box_coin = false;
             }
             if (this.asset.points < item.price_points) {
-                obj.canBuy = false;
-                obj.points = false;
+                result.canBuy = false;
+                result.points = false;
             }
             if (this.asset.experience < item.exp_limit) {
-                obj.canBuy = false;
-                obj.level = false;
+                result.canBuy = false;
+                result.level = false;
             }
             if (item.on_selling === 0) {
-                obj.canBuy = false;
-                obj.buy_time = false;
+                result.canBuy = false;
+                result.buy_time = false;
             }
-            return obj;
+            return result;
         },
         getBoundCart: debounce(function () {
             const { left, top } = document.getElementById("cartBtn").getBoundingClientRect();

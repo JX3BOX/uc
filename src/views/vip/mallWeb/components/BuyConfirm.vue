@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :visible.sync="isShow" width="77.3333vw" :show-close="false" custom-class="m-buy-confirm">
+    <el-dialog :visible.sync="isShow" width="85%" :show-close="false" custom-class="m-buy-confirm">
         <div class="content">
             <img :src="item.goods_images[0]" alt="" style="width: 32vw; height: 32vw" />
             <div class="text">

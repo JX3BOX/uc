@@ -51,7 +51,15 @@
                         :class="sub_category == child.key ? 'active' : ''"
                         @click.native="childLinkClick(item.key, child.key)"
                     >
-                        <i class="u-arrow el-icon-arrow-right"></i> {{ child.name }}
+                        <img
+                            svg-inline
+                            :src="
+                                require(`@/assets/img/vip/mall/icon_0${
+                                    query.sub_category !== child.key ? '1' : '2'
+                                }.svg`)
+                            "
+                        />
+                        {{ child.name }}
                     </router-link>
                 </div>
                 <div class="u-children-list" v-else>
@@ -63,7 +71,15 @@
                         :key="key"
                         :class="sub_category == child.key ? 'active' : sub_category == child.key ? 'active' : ''"
                     >
-                        <i class="u-arrow el-icon-arrow-right"></i> {{ child.name }}
+                        <img
+                            svg-inline
+                            :src="
+                                require(`@/assets/img/vip/mall/icon_0${
+                                    query.sub_category !== child.key ? '1' : '2'
+                                }.svg`)
+                            "
+                        />
+                        {{ child.name }}
                     </a>
                 </div>
             </div>

@@ -63,7 +63,7 @@
             >
                 {{ name }}&emsp;{{ time }}
             </div>
-            <img :src="`${imgurl}bar-code.svg`" alt="" class="icon" svg-inline />
+            <img :src="`${imgUrl}bar-code.svg`" alt="" class="icon" svg-inline />
         </div>
         <div class="dashed"></div>
         <div class="total-price">
@@ -99,13 +99,14 @@
     </div>
 </template>
 <script>
+import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 import { debounce } from "lodash";
 import moment from "moment";
 export default {
     name: "Cart",
     data() {
         return {
-            imgurl: "https://cdn.jx3box.com/design/mall/",
+            imgUrl: __cdn + "design/mall/",
             list: [],
             name: localStorage.getItem("name"),
             time: moment().format("YYYY/MM/DD HH:mm"),
