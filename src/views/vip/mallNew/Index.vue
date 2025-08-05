@@ -17,7 +17,7 @@
                                 <div>合计：{{ $store.getters["mallNew/checked_num"] }}件</div>
                             </div>
                             <div class="btn" id="cartBtn" @click="$store.dispatch('mallNew/changeCartIsShow', true)">
-                                <img :src="imgurl + 'cart.svg'" alt="" class="cart-icon" />
+                                <img :src="imgUrl + 'cart.svg'" alt="" class="cart-icon" />
                                 查看购物车
                             </div>
                         </div>
@@ -55,7 +55,7 @@
                 </div>
             </div>
             <Cart></Cart>
-            <img :src="imgurl + 'girl.png'" alt="" class="girl" />
+            <img :src="imgUrl + 'girl.png'" alt="" class="girl" />
         </div>
         <CartConfirm></CartConfirm>
     </div>
@@ -70,11 +70,12 @@ import Cart from "@/views/vip/mallNew/components/Cart.vue";
 import { debounce } from "lodash";
 import { getDecoration } from "@/service/vip/decoration";
 import CartConfirm from "@/views/vip/mallNew/components/CartConfirm.vue";
+import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
     name: "MallList",
     data: function () {
         return {
-            imgurl: "https://cdn.jx3box.com/design/mall/",
+            imgUrl: __cdn + "design/mall/",
             goodsList: [],
             selectItem: null,
 
@@ -183,7 +184,7 @@ export default {
         },
         loadData() {
             const query = this.buildQuery();
-            getItemList(query).then((res) => { 
+            getItemList(query).then((res) => {
                 this.goodsList = res.data.data?.list || [];
                 this.query.total = res.data.data.page?.total || 0;
                 if (res.data.data.page) {
@@ -274,7 +275,7 @@ export default {
 .m-mall-box {
     width: 100%;
     min-height: calc(100vh - 100px);
-    background: url("https://cdn.jx3box.com/design/mall/bg.png") no-repeat center center;
+    background: url("@{design}/mall/bg.png") no-repeat center center;
     background-size: 100% 100%;
     display: flex;
     flex-wrap: nowrap;

@@ -50,6 +50,7 @@
 import User from "@jx3box/jx3box-common/js/user";
 import { throttle } from "lodash";
 import BuyConfirm from "./BuyConfirm.vue";
+import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
     name: "GoodItem",
     components: {
@@ -57,7 +58,7 @@ export default {
     },
     data() {
         return {
-            imgUrl: "https://cdn.jx3box.com/design/mall/",
+            imgUrl: __cdn + "design/mall/",
         };
     },
     props: {

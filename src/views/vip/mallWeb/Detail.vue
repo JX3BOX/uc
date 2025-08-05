@@ -73,6 +73,7 @@ import User from "@jx3box/jx3box-common/js/user";
 import Skeleton from "../mallNew/components/skeleton/index.vue";
 import Like from "../mallNew/components/Like.vue";
 import { throttle } from "lodash";
+import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 import BuyConfirm from "./components/BuyConfirm.vue";
 export default {
     name: "Detail",
@@ -83,7 +84,7 @@ export default {
     },
     data() {
         return {
-            imgUrl: "https://cdn.jx3box.com/design/mall/",
+            imgUrl: __cdn + "design/mall/",
             id: this.$route.params.id,
             good: {},
             apply: {

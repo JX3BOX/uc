@@ -21,12 +21,13 @@
 
 <script>
 import Breadcrumb from "@/views/vip/mallWeb/components/Breadcrumb.vue";
+import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
     name: "mallWeb",
     data() {
         return {
             currentKey: 0,
-            imgUrl: "https://cdn.jx3box.com/design/mall/",
+            imgUrl: __cdn + "design/mall/",
         };
     },
     components: {

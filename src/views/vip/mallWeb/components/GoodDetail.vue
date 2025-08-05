@@ -73,6 +73,7 @@ import Like from "@jx3box/jx3box-common-ui/src/interact/Like2.vue";
 import Skeleton from "@/views/vip/mallNew/components/skeleton/index.vue";
 import { throttle } from "lodash";
 import User from "@jx3box/jx3box-common/js/user";
+import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
     name: "GoodDetail",
     components: {
@@ -92,7 +93,7 @@ export default {
     },
     data() {
         return {
-            imgUrl: "https://cdn.jx3box.com/design/mall/",
+            imgUrl: __cdn + "design/mall/",
             apply: {
                 palu: "魔盒论坛列表页",
                 avatar: "头像框",

@@ -1,6 +1,6 @@
 <template>
     <div class="m-mall-breadcrumb">
-        <div class="left"><img class="icon" :src="imgurl + 'mall.svg'" alt="" />积分商城</div>
+        <div class="left"><img class="icon" :src="imgUrl + 'mall.svg'" alt="" />积分商城</div>
         <div class="right">
             我的资产
             <div class="lv button">Lv.{{ level }}</div>
@@ -21,11 +21,12 @@
 
 <script>
 import User from "@jx3box/jx3box-common/js/user";
+import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
     name: "MallBreadcrumb",
     data() {
         return {
-            imgurl: "https://cdn.jx3box.com/design/mall/",
+            imgUrl: __cdn + "design/mall/",
         };
     },
     methods: {
@@ -104,7 +105,7 @@ export default {
             gap: 12px;
             align-items: center;
             .item {
-                min-width: 175px; 
+                min-width: 175px;
                 border-radius: 4px;
                 background: rgba(255, 255, 255, 0.1);
                 display: flex;

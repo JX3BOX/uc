@@ -3,7 +3,7 @@
         <div class="m-mall-breadcrumb">
             <div class="left">
                 <i class="el-icon-arrow-left" v-if="$route.path !== '/mallWeb/list'" @click="$router.back()"></i
-                ><img class="icon" :src="imgurl + 'mall.svg'" alt="" />积分商城
+                ><img class="icon" :src="imgUrl + 'mall.svg'" alt="" />积分商城
             </div>
             <div
                 class="right"
@@ -34,11 +34,12 @@
 
 <script>
 import User from "@jx3box/jx3box-common/js/user";
+import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
     name: "MallBreadcrumb",
     data() {
         return {
-            imgurl: "https://cdn.jx3box.com/design/mall/",
+            imgUrl: __cdn + "design/mall/",
             isShowAsset: false,
         };
     },
