@@ -275,7 +275,7 @@ export default {
 .m-mall-box {
     width: 100%;
     min-height: calc(100vh - 100px);
-    background: url("@{design}/mall/bg.png") no-repeat center center;
+    background: url("@{design}mall/bg.png") no-repeat center center;
     background-size: 100% 100%;
     display: flex;
     flex-wrap: nowrap;
