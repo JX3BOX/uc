@@ -56,7 +56,7 @@
                         {{ data.server }}
                     </span>
                     <span class="u-school">
-                        <em>门 派</em>
+                        <em>门派</em>
                         {{ data.mount | showSchoolName
                         }}
                         <img
@@ -65,14 +65,14 @@
                         />
                     </span>
                     <span class="u-body">
-                        <em>体 型</em>
+                        <em>体型</em>
                         {{ data.body_type | showBodyType }}
                     </span>
                 </div>
                 <div class="u-meta">
                     <span class="u-remark">
-                        <em>备 注</em>
-                        {{ data.note }}
+                        <em>备注</em>
+                        {{ data.note || '-' }}
                     </span>
                     <span class="u-remark">
                         <em>绑定于</em>
