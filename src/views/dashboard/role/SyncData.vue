@@ -6,6 +6,7 @@
                 >返回列表</el-button
             >
         </h2>
+        <div class="m-tutorial" v-html="notice"></div>
     </div>
 </template>
 
@@ -23,7 +24,7 @@ export default {
             this.$router.push("/role/list");
         },
         loadBreadCrumb() {
-            getBreadcrumb("role_sync").then((res) => {
+            getBreadcrumb("user-sync-game-data").then((res) => {
                 this.notice = res
             });
         }
@@ -36,5 +37,19 @@ export default {
 </script>
 
 <style lang="less">
-
+.v-sync-data {
+    padding: 20px;
+    .u-title {
+        margin-bottom: 20px;
+    }
+    .m-tutorial {
+        background-color: #f5f7fa;
+        border:1px solid #eee;
+        padding:30px;
+        line-height:1.8;
+        p{margin:0 0 5px 0;}
+        max-width:1080px;
+        .auto(x);
+    }
+}
 </style>

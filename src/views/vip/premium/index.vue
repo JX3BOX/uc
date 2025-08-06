@@ -84,6 +84,11 @@ export default {
             }
         },
     },
+    beforeRouteEnter(to, from, next) {
+        // 跳转走
+        window.location.href = "/vip/mall/160";
+        next();
+    },
     mounted: async function () {
         this.isLogin && this.loadAsset();
 
