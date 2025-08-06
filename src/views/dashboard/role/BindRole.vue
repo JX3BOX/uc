@@ -8,7 +8,7 @@
                 </router-link>
             </div> -->
             <el-button slot="reference" class="u-back" size="mini" icon="el-icon-arrow-left" @click="goBack"
-                >返回列表</el-button
+                >返回</el-button
             >
         </h2>
         <div class="m-role-bind">

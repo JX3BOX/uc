@@ -1,6 +1,6 @@
 <template>
     <div class="m-mall-breadcrumb">
-        <div class="left"><img class="icon" :src="imgUrl + 'mall.svg'" alt="" />积分商城</div>
+        <div class="left"><img class="icon" :src="imgUrl + 'mall.svg'" alt="" /><a href="/vip/mall">积分商城</a></div>
         <div class="right">
             我的资产
             <div class="lv button">Lv.{{ level }}</div>
@@ -72,6 +72,9 @@ export default {
             width: 28px;
             height: 28px;
             margin: 0 4px 0 12px;
+        }
+        a{
+            color:#fff;
         }
     }
     .right {

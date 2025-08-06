@@ -73,7 +73,14 @@
         <div class="right">
             <SearchBox></SearchBox>
             <div class="goods-list">
-                <GoodItem v-for="(item, index) in list" :key="index" :good="item"></GoodItem>
+                <template v-if="list && list.length">
+                    <GoodItem v-for="(item, index) in list" :key="index" :good="item"></GoodItem>
+                </template>
+                <template v-else>
+                    <div class="u-null">
+                        <i class="el-icon-warning-outline"></i> 暂无数据
+                    </div>
+                </template>
             </div>
             <div class="pagination">
                 <el-pagination
@@ -83,6 +90,7 @@
                     :page-size.sync="query.pageSize"
                     :current-page.sync="query.pageIndex"
                     @current-change="handleCurrentChange"
+                    hide-on-single-page
                 >
                 </el-pagination>
             </div>
@@ -195,7 +203,7 @@ export default {
                 .color(rgba(194, 194, 194, 1));
                 &.active,
                 &:not(.active):hover {
-                    .color(#0366d6);
+                    .color(rgba(255, 195, 0, 1));
                 }
                 &.active {
                     .color(rgba(255, 195, 0, 1));
@@ -238,7 +246,7 @@ export default {
                     }
                 }
                 &:not(.active):hover {
-                    .color(@pink);
+                    .color(rgba(255, 195, 0, 1));
                 }
                 &.active {
                     .bold;
@@ -258,6 +266,15 @@ export default {
             flex-wrap: wrap;
             gap: 16px;
             align-content: flex-start;
+
+            .u-null{
+                .x;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .w(100%);
+                padding:200px 0;
+            }
         }
         .pagination {
             display: flex;
