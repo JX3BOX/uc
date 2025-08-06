@@ -172,6 +172,14 @@ import school_id_map from "@jx3box/jx3box-data/data/xf/schoolid.json";
 import { __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
 import { showSchoolIcon, showSchoolName, showTime, getThumbnail } from "@/utils/filters";
+
+// 计算排序权重
+const getWeight = (role) => {
+    if (role.is_default_role) return 0; // 默认角色优先级最高
+    if (role.priority) return 1;        // 收藏角色第二
+    if (!role.custom) return 2;         // 认证角色第三
+    return 3;                            // 其他角色最后
+};
 export default {
     name: "ListRole",
     props: [],
@@ -204,6 +212,7 @@ export default {
             return {
                 mount: this.mount,
                 name: this.name,
+                _no_page: 1
             };
         },
     },
@@ -231,6 +240,24 @@ export default {
             getRoles(this.params)
                 .then((res) => {
                     this.data = res.data.data.list || [];
+                    // 进行排序
+                    // 默认角色第一
+                    // 收藏角色第一梯队
+                    // 认证角色第二梯队（即custom=0，就是游戏内绑定的，而不是自定义的）
+                    // 其它角色
+                    this.data.sort((a, b) => {
+
+                        const weightA = getWeight(a);
+                        const weightB = getWeight(b);
+
+                        // 如果权重不同，按权重排序
+                        if (weightA !== weightB) {
+                            return weightA - weightB;
+                        }
+
+                        // 权重相同时，按名称排序
+                        return a.name.localeCompare(b.name);
+                    });
                 })
                 .finally(() => {
                     this.loading = false;
