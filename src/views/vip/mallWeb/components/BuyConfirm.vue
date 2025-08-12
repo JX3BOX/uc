@@ -1,7 +1,10 @@
 <template>
     <el-dialog :visible.sync="isShow" width="85%" :show-close="false" custom-class="m-buy-confirm">
         <div class="content">
-            <img :src="item.goods_images[0]" alt="" style="width: 32vw; height: 32vw" />
+            <img
+                :src="item?.goods_images?.[0] ? item.goods_images[0] : '@/assets/img/publish/logo.svg'"
+                style="width: 32vw; height: 32vw"
+            />
             <div class="text">
                 确认使用<span class="price">{{ confirmText }}</span
                 >兑换<span class="title">{{ item.title }}</span
@@ -9,8 +12,15 @@
             </div>
         </div>
         <div class="btn-box">
-            <el-button round @click.stop="isShow = false" size="mini" style="width: 20.5333vw; font-size: 3.2vw">取消</el-button>
-            <el-button type="primary" round @click.stop="buyGoods" size="mini" style="width: 20.5333vw; font-size: 3.2vw"
+            <el-button round @click.stop="isShow = false" size="mini" style="width: 20.5333vw; font-size: 3.2vw"
+                >取消</el-button
+            >
+            <el-button
+                type="primary"
+                round
+                @click.stop="buyGoods"
+                size="mini"
+                style="width: 20.5333vw; font-size: 3.2vw"
                 >确定</el-button
             >
         </div>
@@ -19,7 +29,7 @@
 
 <script>
 import User from "@jx3box/jx3box-common/js/user";
-
+import { __Root } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
     name: "BuyConfirm",
     props: {
@@ -73,7 +83,7 @@ export default {
                             type: "warning",
                         })
                             .then(() => {
-                                const url = `${this.root}dashboard/mall`;
+                                const url = `${__Root}dashboard/mall`;
                                 window.open(url);
                             })
                             .catch(() => {});

@@ -298,7 +298,7 @@ export default {
         // },
         showCover(item) {
             const img = item?.goods_images[0];
-            return getThumbnail(img, 360);
+            return img && getThumbnail(img, 360);
         },
         showDetailLevel(num) {
             return User.getLevel(num);

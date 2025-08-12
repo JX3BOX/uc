@@ -92,9 +92,8 @@ export default {
     },
     methods: {
         handleChange(value, key) {
-            const _value = value.trim();
-            const arr = ["level", "vip_limit", "title"];
-            if (arr.includes(key)) this.changeQuery(key, _value);
+            if (key == "title") value = value.trim();
+            this.changeQuery(key, value);
         },
     },
 };

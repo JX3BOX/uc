@@ -68,24 +68,19 @@
 </template>
 
 <script>
-import { getItem } from "@/service/vip/mall";
+import User from "@jx3box/jx3box-common/js/user";
 import Like from "@jx3box/jx3box-common-ui/src/interact/Like2.vue";
 import Skeleton from "@/views/vip/mallNew/components/skeleton/index.vue";
 import { throttle } from "lodash";
-import User from "@jx3box/jx3box-common/js/user";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+// import { getItem } from "@/service/vip/mall";
+import { __cdn, __root } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
-    name: "GoodDetail",
+    name: "GoodWebDetail",
     components: {
         Skeleton,
         Like,
     },
     props: {
-        // 移动端也是有直接从url中进来的可能的，所以还是需要直接在详情页请求数据
-        // good: {
-        //     type: Object,
-        //     required: true,
-        // },
         isShowNav: {
             type: Boolean,
             required: true,
@@ -109,20 +104,23 @@ export default {
     },
     computed: {
         id() {
-            return ~~this.$route.params.id;
+            return this.$route.params.id;
         },
+
         goodInfo() {
             if (this.good && this.good.category === "virtual") {
-                if (this.good.sub_category === "skin") {
+                if (this.good.sub_category === "skin" && this.good.virtual_stock_item_details) {
                     return {
                         category: this.good.virtual_stock_item_details.category,
-                        img: `https://cdn.jx3box.com/design/decoration/images/${this.good.remark}/${this.good.virtual_stock_item_details.category}.png`,
+                        img:
+                            __cdn +
+                            `design/decoration/images/${this.good.remark}/${this.good.virtual_stock_item_details.category}.png`,
                     };
                 }
                 if (this.good.sub_category === "palu") {
                     return {
                         category: "palu",
-                        img: `https://cdn.jx3box.com/design/decoration/palu/${this.good.remark}.png`,
+                        img: __cdn + `design/decoration/palu/${this.good.remark}.png`,
                     };
                 }
             }
@@ -131,13 +129,7 @@ export default {
             };
         },
     },
-    created() {
-        if (!this.id) return;
-        getItem(this.id).then((res) => {
-            res.data.data.canBuy = this.checkCanBuy(res.data.data);
-            this.good = res.data.data || {};
-        });
-    },
+
     methods: {
         checkCanBuy(item) {
             const obj = {
@@ -195,7 +187,7 @@ export default {
                             type: "warning",
                         })
                             .then(() => {
-                                const url = `${this.root}dashboard/mall`;
+                                const url = `${__root}dashboard/mall`;
                                 window.open(url);
                             })
                             .catch(() => {});

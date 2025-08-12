@@ -170,7 +170,7 @@ export default {
         },
         showCover(item) {
             const img = item?.goods_images[0];
-            return getThumbnail(img, 48 * 2);
+            return img && getThumbnail(img, 48 * 2);
         },
         showLevel(num) {
             let _key = 1;

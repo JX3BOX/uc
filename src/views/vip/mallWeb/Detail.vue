@@ -76,7 +76,7 @@ import { throttle } from "lodash";
 import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 import BuyConfirm from "./components/BuyConfirm.vue";
 export default {
-    name: "Detail",
+    name: "mall_detail_web",
     components: {
         Skeleton,
         Like,

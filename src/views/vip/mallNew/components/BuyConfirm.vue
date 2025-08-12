@@ -19,7 +19,7 @@
 
 <script>
 import User from "@jx3box/jx3box-common/js/user";
-
+import { __Root } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
     name: "BuyConfirm",
     props: {
@@ -73,7 +73,7 @@ export default {
                             type: "warning",
                         })
                             .then(() => {
-                                const url = `${this.root}dashboard/mall`;
+                                const url = `${__Root}dashboard/mall`;
                                 window.open(url);
                             })
                             .catch(() => {});
