@@ -69,12 +69,12 @@
 
 <script>
 import Like from "./Like.vue";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import BuyConfirm from "./BuyConfirm.vue";
 import Skeleton from "@/views/vip/mallNew/components/skeleton/index.vue";
 import { throttle } from "lodash";
-import BuyConfirm from "./BuyConfirm.vue";
+import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
-    name: "GoodDetail",
+    name: "GoodMallDetail",
     components: {
         Skeleton,
         Like,
@@ -111,16 +111,18 @@ export default {
         },
         goodInfo() {
             if (this.good && this.good.category === "virtual") {
-                if (this.good.sub_category === "skin") {
+                if (this.good.sub_category === "skin" && this.good.virtual_stock_item_details) {
                     return {
                         category: this.good.virtual_stock_item_details.category,
-                        img: `https://cdn.jx3box.com/design/decoration/images/${this.good.remark}/${this.good.virtual_stock_item_details.category}.png`,
+                        img:
+                            __cdn +
+                            `design/decoration/images/${this.good.remark}/${this.good.virtual_stock_item_details.category}.png`,
                     };
                 }
                 if (this.good.sub_category === "palu") {
                     return {
                         category: "palu",
-                        img: `https://cdn.jx3box.com/design/decoration/palu/${this.good.remark}.png`,
+                        img: __cdn + `design/decoration/palu/${this.good.remark}.png`,
                     };
                 }
             }

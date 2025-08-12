@@ -239,7 +239,7 @@ import Comment from "./components/comment.vue";
 import UserPop from "@jx3box/jx3box-common-ui/src/author/UserPop.vue";
 import Picture from "./components/Picture.vue";
 import Order from "./components/Order.vue";
-import Skeleton from './components/skeleton/index.vue'
+import Skeleton from "./components/skeleton/index.vue";
 
 import types from "@/assets/data/vip/goods_types.json";
 import User from "@jx3box/jx3box-common/js/user";
@@ -286,17 +286,17 @@ export default {
     computed: {
         skeletonInfo() {
             if (this.item && this.item.category === "virtual") {
-                if (this.item.sub_category === 'skin'){
+                if (this.item.sub_category === "skin") {
                     return {
                         category: this.item.virtual_stock_item_details.category,
-                        img:`https://cdn.jx3box.com/design/decoration/images/${this.item.remark}/${this.item.virtual_stock_item_details.category}.png`
-                    }
+                        img: `https://cdn.jx3box.com/design/decoration/images/${this.item.remark}/${this.item.virtual_stock_item_details.category}.png`,
+                    };
                 }
-                if (this.item.sub_category === 'palu'){
+                if (this.item.sub_category === "palu") {
                     return {
-                        category: 'palu',
-                        img: `https://cdn.jx3box.com/design/decoration/palu/${this.item.remark}.png`
-                    }
+                        category: "palu",
+                        img: `https://cdn.jx3box.com/design/decoration/palu/${this.item.remark}.png`,
+                    };
                 }
             }
             return {};
@@ -304,9 +304,7 @@ export default {
         id() {
             return this.$route.params.id;
         },
-        root() {
-            return __Root;
-        },
+
         asset() {
             return this.$store.state.mall.asset || {};
         },
@@ -491,7 +489,7 @@ export default {
                         type: "warning",
                     })
                         .then(() => {
-                            const url = `${this.root}dashboard/mall`;
+                            const url = `${__Root}dashboard/mall`;
                             window.open(url);
                         })
                         .catch(() => {});
