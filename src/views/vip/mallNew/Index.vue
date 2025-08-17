@@ -91,24 +91,22 @@ export default {
             },
             isShowNav: true,
             myVirtualItems: [],
-            id: this.$route.params.id,
         };
     },
     watch: {
-        list: {
-            handler(newVal) {
-                if (newVal.length > 0) {
-                    if (this.id) {
-                        this.selectItem = this.list.find((item) => item.id == this.id);
-                        this.id = null;
-                    } else {
-                        this.selectItem = newVal[0];
-                    }
+        id: {
+            immediate: true,
+            handler(val) {
+                if (val) {
+                    this.getData({ id: val });
                 }
             },
         },
     },
     computed: {
+        id() {
+            return this.$route.params.id;
+        },
         asset() {
             return this.$store.state.mallNew.asset;
         },
@@ -248,7 +246,8 @@ export default {
         },
         changeSelectItem(item) {
             if (item.id === this.selectItem?.id) return;
-            this.getData(item);
+            this.$router.replace({ params: { id: item.id } });
+            // this.getData(item);
         },
         handleResize() {
             const width = window.innerWidth < 1550 ? 5 : 10;
