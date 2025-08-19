@@ -246,8 +246,8 @@ export default {
         },
         changeSelectItem(item) {
             if (item.id === this.selectItem?.id) return;
-            this.$router.replace({ params: { id: item.id } });
-            // this.getData(item);
+            // this.$router.replace({ params: { id: item.id } });
+            this.getData(item);
         },
         handleResize() {
             const width = window.innerWidth < 1550 ? 5 : 10;
