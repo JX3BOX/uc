@@ -7,9 +7,9 @@
                 <router-link to="/role/bind" class="el-button el-button--primary el-button--mini">
                     <i class="el-icon-connection"></i> 绑定角色
                 </router-link>
-                <router-link to="/role/sync" class="el-button el-button--primary el-button--mini">
+                <!-- <router-link to="/role/sync" class="el-button el-button--primary el-button--mini">
                     <i class="el-icon-refresh"></i> 同步数据
-                </router-link>
+                </router-link> -->
                 <!-- <router-link to="/role/add" class="el-button el-button--primary el-button--mini">
                     <i class="el-icon-plus"></i> 自定义角色
                 </router-link> -->

@@ -37,7 +37,8 @@ const tasks = () => import("@/views/dashboard/tasks.vue");
 const card = () => import("@/views/dashboard/card.vue");
 const ic = () => import("@/views/dashboard/ic.vue");
 
-const BindRole = () => import("@/views/dashboard/role/BindRole.vue");
+// const BindRole = () => import("@/views/dashboard/role/BindRole.vue");
+const BindRole = () => import("@/views/dashboard/role/BindRole2.vue");
 const ListRole = () => import("@/views/dashboard/role/ListRole.vue");
 const AddRole = () => import("@/views/dashboard/role/AddRole.vue");
 const EditRole = () => import("@/views/dashboard/role/EditRole.vue");

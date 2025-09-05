@@ -27,3 +27,4 @@ yarn-error.log*
 .nuxt
 .history
 pve
+tmp
