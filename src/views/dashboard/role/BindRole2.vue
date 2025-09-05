@@ -4,20 +4,20 @@
             <!-- STEP 1 -->
             <div class="m-step is-1">
                 <div class="u-step-head">
-                    <img class="u-step-img" src="../../../../tmp/step1.png" alt="" />
+                    <img class="u-step-img" src="@/assets/img/dashboard/role/step1.png" alt="" />
                 </div>
                 <div class="u-step-body">
                     <div v-html="notice"></div>
                 </div>
                 <div class="u-line1">
-                    <img class="u-line1-img" src="../../../../tmp/line1to2.png" alt="" />
+                    <img class="u-line1-img" src="@/assets/img/dashboard/role/line1to2.png" alt="" />
                 </div>
             </div>
 
             <!-- STEP 2 -->
             <div class="m-step is-2">
                 <div class="u-step-head">
-                    <img class="u-step-img" src="../../../../tmp/step2.png" alt="" />
+                    <img class="u-step-img" src="@/assets/img/dashboard/role/step2.png" alt="" />
                 </div>
                 <div class="u-step-body">
                     <div class="u-notice">在弹窗内输入下方“角色认证”验证码 - 点击【④确认】</div>
@@ -37,14 +37,14 @@
                     </ul>
                 </div>
                 <div class="u-line2">
-                    <img class="u-line2-img" src="../../../../tmp/line2to3.png" alt="" />
+                    <img class="u-line2-img" src="@/assets/img/dashboard/role/line2to3.png" alt="" />
                 </div>
             </div>
 
             <!-- STEP 3 -->
             <div class="m-step is-3">
                 <div class="u-step-head">
-                    <img class="u-step-img" src="../../../../tmp/step3.png" alt="" />
+                    <img class="u-step-img" src="@/assets/img/dashboard/role/step3.png" alt="" />
                 </div>
                 <div class="u-step-body">
                     <div v-html="sync_notice"></div>
