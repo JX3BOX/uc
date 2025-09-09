@@ -246,8 +246,7 @@ export default {
         },
         changeSelectItem(item) {
             if (item.id === this.selectItem?.id) return;
-            // this.$router.replace({ params: { id: item.id } });
-            this.getData(item);
+            this.$router.push({ name: "mall_list_new_id", params: { id: item.id } });
         },
         handleResize() {
             const width = window.innerWidth < 1550 ? 5 : 10;
