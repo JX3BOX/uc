@@ -27,19 +27,14 @@ export default {
     },
     methods: {},
     created: function () {
-        if (!User.isLogin()) {
-            this.$message.error("请先登录");
-            setTimeout(() => {
-                User.toLogin();
-            }, 1000);
-            return;
+        if (User.isLogin()) {
+            this.$store.dispatch("mallNew/getAsset").catch((err) => {
+                this.$message.error("获取资产失败");
+            });
+            this.$store.dispatch("mallNew/getCart").catch((err) => {
+                this.$message.error("获取购物车失败");
+            });
         }
-        this.$store.dispatch("mallNew/getAsset").catch((err) => {
-            this.$message.error("获取资产失败");
-        });
-        this.$store.dispatch("mallNew/getCart").catch((err) => {
-            this.$message.error("获取购物车失败");
-        });
     },
 };
 </script>
