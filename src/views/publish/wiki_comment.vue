@@ -19,7 +19,7 @@
                 <li class="u-wiki" v-for="(comment, key) in achievement_comment.data" :key="key">
                     <span class="u-tab" v-text="getTypeLabel(comment.type)"></span>
                     <div class="u-header">
-                        <a class="u-title" target="_blank" :href="comment.type + comment.link">{{
+                        <a class="u-title" target="_blank" :href="'cj/view/' + comment.source_id">{{
                             comment.title || "无标题"
                         }}</a>
                         <span v-if="comment.checked == 0" class="u-mark pending">⌛ 等待审核</span>
