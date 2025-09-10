@@ -242,6 +242,7 @@ export default {
                 res.data.data.canBuy = this.checkCanBuy(res.data.data);
                 res.data.data.isHave = this.isHaveGood(res.data.data);
                 this.selectItem = res.data.data || {};
+                console.log(this.selectItem);
             });
         },
         changeSelectItem(item) {

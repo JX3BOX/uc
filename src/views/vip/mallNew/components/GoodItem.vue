@@ -135,6 +135,7 @@ export default {
     .good-item-img {
         width: 120px;
         height: 120px;
+        object-fit: cover;
     }
     .right {
         width: 240px;
