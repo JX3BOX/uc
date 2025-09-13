@@ -291,7 +291,7 @@
 </template>
 
 <script>
-import { __userGroup, __imgPath, __userLevelColor, __userLevel } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userGroup, __imgPath, __userLevelColor, __userLevel, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 import User from "@jx3box/jx3box-common/js/user";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { getUserMedals, getMyAssetLogs, getMyInfo } from "@/service/dashboard/index.js";
@@ -449,7 +449,7 @@ export default {
             return post_type == "mall_order" ? `/vip/mall/${post_id}` : getLink(post_type, post_id);
         },
         showMedalIcon: function (val) {
-            return __imgPath + "image/medals/user/" + val + ".gif";
+            return __cdn + "design/medals/user/" + val + ".gif";
         },
         showBoxcoinType: function (item) {
             if (item.action_type == 9) {
