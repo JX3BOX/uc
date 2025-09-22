@@ -74,7 +74,7 @@ export default {
             return `${year}-${month < 10 ? "0" + month : month}-${day < 10 ? "0" + day : day}`;
         },
         getCertLink(item) {
-            return `/author/${item.user_id}/holiday-card/${item.event_id}?id=${item.id}`;
+            return `/card?type=holiday&uid=${item.user_id}&id=${item.id}&event_id=${item.event_id}`;
         },
         currentChange(val) {
             this.pageIndex = val;
