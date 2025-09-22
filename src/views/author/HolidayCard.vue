@@ -109,14 +109,19 @@ export default {
             const countImgList = String(this.fontCount)
                 .split("")
                 .map((item) => `${this.imgLink}${item}.png`);
+            const size = this.cardType[this.event_id]?.size;
+            const percentage = this.cardType[this.event_id]?.percentage;
             const data = {
                 imgList: this.imgList.map((item) => `${this.imgLink}${item}`),
                 fontCount: this.fontCount,
                 countImg: `${this.imgLink}${this.fontCount}.png`,
                 countImgList,
                 count,
+                size,
+                percentage,
             };
             if (bg) data.countBg = `${this.imgLink}${bg}`;
+
             return data;
         },
         // 儿童节
@@ -205,6 +210,9 @@ export default {
     },
     methods: {
         close() {
+            // window.opener = null;
+            // window.open("", "_self");
+            // window.close();
             this.goBack();
             window.parent.postMessage("closeHolidayCard", "*");
         },

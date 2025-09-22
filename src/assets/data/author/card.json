@@ -116,5 +116,19 @@
         "key": "springFestival2025",
         "type": "spring",
         "component": "CardSpring"
+    },
+    "33": {
+        "name": "2025中秋节",
+        "bg": "202503.png?1",
+        "key": "midAutumn2025",
+        "type": "default",
+        "component": "DefaultTemplate",
+        "imgList": ["202502.png?1", "202501.png?1"],
+        "size": {
+            "width": "750px",
+            "height": "600px",
+            "margin": "-375px 0 0 -350px"
+        },
+        "percentage": "100%"
     }
 }

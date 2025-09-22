@@ -1,24 +1,25 @@
 <template>
-    <div :class="count ? 'defaultTemplateCount' : 'defaultTemplate'">
+    <div :class="count ? 'defaultTemplateCount' : 'defaultTemplate'" :style="size ? size : {}" @click="clickStep">
         <template v-if="!count">
             <div class="m-count" :class="{ flipper }">
-                <img :src="countImg" v-if="countImg" class="u-count" />
+                <img :src="countImg" v-if="countImg" class="u-count" :style="percentage ? `width:${percentage}` : ''" />
             </div>
-            <img :src="countBg" v-if="countBg" class="u-img u-bg" :class="{ flipper }" @click="close" />
-            <div class="u-img u-img-cover" @click.stop="hide" :class="{ active, flipper }">
+            <img :src="countBg" v-if="countBg" class="u-img u-bg" :class="{ flipper }" />
+            <div class="u-img u-img-cover" :class="{ active, flipper }">
                 <img :src="item" v-for="(item, i) in imgList" :key="i" :class="`u-pic u-pic-${2 - i}`" />
             </div>
         </template>
         <template v-else>
-            <div class="m-count">
-                <img :src="item" v-for="(item, index) in countImgList" :key="index" class="u-count" />
+            <div @click="close">
+                <div class="m-count">
+                    <img :src="item" v-for="(item, index) in countImgList" :key="index" class="u-count" />
+                </div>
+                <img :src="imgList[1]" class="u-img" />
             </div>
-            <img :src="imgList[1]" class="u-img" @click="close" />
             <img
                 :src="imgList[0]"
                 class="u-img u-img-cover"
                 :class="['animation', { fadeOutUp: flipper }, { none: active }]"
-                @click.stop="hide"
             />
         </template>
     </div>
@@ -44,18 +45,23 @@ export default {
         count() {
             return this.data.count;
         },
+        size() {
+            return this.data.size;
+        },
+        percentage() {
+            return this.data.percentage;
+        },
     },
     data() {
         return {
             active: false,
             flipper: false,
+            one: true,
         };
     },
 
     methods: {
         close() {
-            this.active = false;
-            this.$emit("checked");
             this.$emit("close");
         },
         hide() {
@@ -65,6 +71,18 @@ export default {
                 this.active = true;
                 this.$emit("checked");
             }, 600);
+        },
+        clickStep() {
+            if (!this.count) {
+                if (this.one) {
+                    this.hide();
+                    this.one = false;
+                } else {
+                    this.close();
+                }
+            } else {
+                this.hide();
+            }
         },
     },
 };
