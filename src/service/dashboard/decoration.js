@@ -29,9 +29,8 @@ function updateAvatarFrame(data) {
     return $cms().put("/api/cms/user/my/avatar-frame", data);
 }
 
-function getHonor() {
-    // return axios.get(`${__imgPath}decoration/honor.json?${Date.now()}`);
-    return $cms().get("/api/cms/user/config/honor");
+function getHonor(params) { 
+    return $cms().get("/api/cms/user/config/honor", {params});
 }
 
 function getUserHonors(uid) {
