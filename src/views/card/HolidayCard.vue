@@ -12,17 +12,17 @@ import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
 import cardType from "@/assets/data/author/card.json";
 import { getHolidayCard } from "@/service/author/card";
 import HeaderLessLayout from "@/layouts/author/HeaderLessLayout.vue";
-import DefaultTemplate from "@/components/author/card/DefaultTemplate.vue";
-import CardChildren from "@/components/author/card/CardChildren.vue";
-import CardSpring from "@/components/author/card/CardSpring.vue";
-import CardNewYear from "@/components/author/card/CardNewYear.vue";
-import CardChristmas from "@/components/author/card/CardChristmas.vue";
-import CardQixi from "@/components/author/card/CardQixi.vue";
-import CardDragonBoat from "@/components/author/card/CardDragonBoat.vue";
-import CardLantern from "@/components/author/card/CardLantern.vue";
-import CardAutumn from "@/components/author/card/CardAutumn.vue";
-import DoubleScreen from "@/components/author/card/DoubleScreen.vue";
-import OneScreen from "@/components/author/card/OneScreen.vue";
+import DefaultTemplate from "@/components/card/holiday/DefaultTemplate.vue";
+import CardChildren from "@/components/card/holiday/CardChildren.vue";
+import CardSpring from "@/components/card/holiday/CardSpring.vue";
+import CardNewYear from "@/components/card/holiday/CardNewYear.vue";
+import CardChristmas from "@/components/card/holiday/CardChristmas.vue";
+import CardQixi from "@/components/card/holiday/CardQixi.vue";
+import CardDragonBoat from "@/components/card/holiday/CardDragonBoat.vue";
+import CardLantern from "@/components/card/holiday/CardLantern.vue";
+import CardAutumn from "@/components/card/holiday/CardAutumn.vue";
+import DoubleScreen from "@/components/card/holiday/DoubleScreen.vue";
+import OneScreen from "@/components/card/holiday/OneScreen.vue";
 import User from "@jx3box/jx3box-common/js/user";
 
 export default {
@@ -51,7 +51,7 @@ export default {
     computed: {
         // 用户id
         user_id() {
-            return this.$route.params.uid;
+            return this.$route.query.uid;
         },
         // 打开的卡号id
         my_card_id() {
@@ -63,7 +63,7 @@ export default {
         },
         // 当前卡号对应的活动id
         event_id() {
-            return this.$route.params.event_id;
+            return this.$route.query.event_id;
         },
         // 活动id对应的活动key
         event_key() {
@@ -217,7 +217,7 @@ export default {
             window.parent.postMessage("closeHolidayCard", "*");
         },
         goBack() {
-            this.$router.push({ name: "index", params: { id: this.user_id } });
+            // window.location.href = `/author/${this.user_id}`;
         },
         load() {
             if (!User.isLogin()) return;
