@@ -119,11 +119,11 @@
     },
     "33": {
         "name": "2025中秋节",
-        "bg": "202503.png?1",
+        "bg": "202503.png",
         "key": "midAutumn2025",
         "type": "default",
         "component": "DefaultTemplate",
-        "imgList": ["202502.png?1", "202501.png?1"],
+        "imgList": ["202502.png", "202501.png"],
         "size": {
             "width": "750px",
             "height": "600px",

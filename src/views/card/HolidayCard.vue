@@ -184,7 +184,7 @@ export default {
                 fontCount: this.fontCount,
                 countImg: `${this.imgLink}${this.fontCount}.png`,
                 imgList: this.imgList.map((item) => `${this.imgLink}${item}`),
-                vImg: `${this.imgLink}/v${this.fontCount}.png`,
+                vImg: `${this.imgLink}v${this.fontCount}.png`,
                 bgImg: `${this.imgLink}bg.png`,
             };
         },
