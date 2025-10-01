@@ -1,5 +1,5 @@
 import { $node, axios } from "@jx3box/jx3box-common/js/https";
-import JX3BOX from "@jx3box/jx3box-common/data/jx3box.json";
+import JX3BOX from "@/utils/config";
 
 const $oss = axios.create({
     baseURL: JX3BOX.__dataPath,

@@ -169,7 +169,7 @@
 // 公共模块
 import { getLink, getThumbnail } from "@jx3box/jx3box-common/js/utils";
 import schoolmap from "@jx3box/jx3box-data/data/xf/schoolid.json";
-import { __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath, __cdn } from "@/utils/config";
 
 // 本地模块
 import publish_header from "@/components/publish/publish_header.vue";

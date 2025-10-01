@@ -231,7 +231,7 @@ import CardHeader from "@/components/account/CardHeader.vue";
 const { validator } = require("sterilizer");
 import { sendCode, checkCode, resetPassword } from "@/service/account/password.js";
 import { checkEmail } from "@/service/account/email.js";
-import { __Root } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root } from "@/utils/config";
 export default {
     name: "Password_Reset",
     data: function() {

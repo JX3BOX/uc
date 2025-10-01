@@ -161,7 +161,7 @@ import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
 import moment from "moment";
 import { concat, isEqual } from "lodash";
-import { __clients } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __clients } from "@/utils/config";
 export default {
     name: "pendingList",
     props: {

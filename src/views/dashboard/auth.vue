@@ -34,7 +34,7 @@ import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc";
 import { checkOAuth } from "@/service/dashboard/profile";
 import { getMyInfo } from "@/service/dashboard/index.js";
 import uc from "@/components/dashboard/uc.vue";
-import { __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath, __cdn } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 
 const types = {

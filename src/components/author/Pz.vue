@@ -45,7 +45,7 @@
 import {getLink,} from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
 import { getUserPz } from "@/service/author/cms.js";
-import { __postType, __clients, __Root, __OriginRoot } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __postType, __clients, __Root, __OriginRoot } from "@/utils/config";
 export default {
     props: [],
     data: function() {

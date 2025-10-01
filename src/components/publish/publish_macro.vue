@@ -183,7 +183,7 @@
 import User from "@jx3box/jx3box-common/js/user";
 import lodash from "lodash";
 import { sterilizer } from "sterilizer/index.js";
-import { __iconPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __iconPath } from "@/utils/config";
 import isEmptyMeta from "@/utils/isEmptyMeta.js";
 import cloneDeep from 'lodash/cloneDeep'
 import publish_mark from "./publish_mark.vue";

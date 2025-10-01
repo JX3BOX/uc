@@ -72,7 +72,7 @@ import Like from "./Like.vue";
 import BuyConfirm from "./BuyConfirm.vue";
 import Skeleton from "@/views/vip/mallNew/components/skeleton/index.vue";
 import { throttle } from "lodash";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 export default {
     name: "GoodMallDetail",
     components: {

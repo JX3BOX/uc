@@ -42,7 +42,7 @@
 
 <script>
 import {getLink, showAvatar,authorLink,} from "@jx3box/jx3box-common/js/utils";
-import { __postType, __clients } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __postType, __clients } from "@/utils/config";
 import dayjs from "dayjs";
 import {getDBM} from "@/service/author/cms.js";
 export default {

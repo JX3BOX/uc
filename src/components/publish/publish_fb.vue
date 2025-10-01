@@ -61,7 +61,7 @@ import lodash from "lodash";
 import isEmptyMeta from "@/utils/isEmptyMeta.js";
 import fbmap_std from "@jx3box/jx3box-data/data/fb/fb_map.json";
 import fbmap_origin from "@jx3box/jx3box-data/data/fb/fb_map_origin.json";
-import { __ossMirror, __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __ossMirror, __imgPath } from "@/utils/config";
 import Bus from "@/utils/bus.js";
 // META空模板
 const default_meta = {

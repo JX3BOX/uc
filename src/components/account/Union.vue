@@ -27,7 +27,7 @@
 <script>
 import connect from "@jx3box/jx3box-common/js/connect.js";
 const client = location.href.includes('origin') ? 'origin' : 'std'
-import {__cms} from "@jx3box/jx3box-common/data/jx3box.json";
+import {__cms} from "@/utils/config";
 export default {
     name: "LoginWith",
     props: {

@@ -94,7 +94,7 @@
 const { validator } = require("sterilizer");
 import CardHeader from "@/components/account/CardHeader.vue";
 import { checkEmail, registerByEmail, verifyEmail } from "@/service/account/email.js";
-import { __Root } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root } from "@/utils/config";
 import Msg from "@/components/account/Msg.vue";
 import Union from "@/components/account/Union.vue";
 

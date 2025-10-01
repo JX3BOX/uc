@@ -39,7 +39,7 @@ import uc from "@/components/dashboard/uc.vue";
 import { themeTab } from "@/assets/data/dashboard/tabs.json";
 import User from "@jx3box/jx3box-common/js/user";
 import { getUserMedals, getMedals, setMedal } from "@/service/dashboard/decoration";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 import moment from "moment";
 export default {
     name: "medal",

@@ -79,7 +79,7 @@
 <script>
 import { getMyPosts, push, del } from "@/service/publish/cms.js";
 import { editLink, getLink } from "@jx3box/jx3box-common/js/utils.js";
-import { __postType, __visibleMap } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __postType, __visibleMap } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 import statusMap from "@/assets/data/publish/status.json";
 export default {

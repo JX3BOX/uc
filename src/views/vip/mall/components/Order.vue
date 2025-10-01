@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { __userLevel, __Root } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userLevel, __Root } from "@/utils/config";
 import Address from "./address.vue";
 import { forEach } from "lodash";
 import { getItem, toPayOrder } from "@/service/vip/mall";

@@ -167,9 +167,9 @@
 </template>
 
 <script lang="js">
-import { __cdn, __imgPath } from "@jx3box/jx3box-common/data/jx3box";
+import { __cdn, __imgPath } from "@/utils/config";
 import getData from "@/assets/js/treasure";
-import { __Links } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Links } from "@/utils/config";
 
 export default {
     name:"QyCard",

@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { feedback } from "@jx3box/jx3box-common/data/jx3box.json";
+import { feedback } from "@/utils/config";
 import dashboardLink from "@/utils/dashboardLink.js";
 import navList from "@/assets/data/dashboard/nav.json";
 const profile_routes = ["profile", "avatar", "pwd", "connect", "email", "address", "notice"];

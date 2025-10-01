@@ -152,7 +152,7 @@
 <script>
 import User from "@jx3box/jx3box-common/js/user";
 import { sterilizer } from "sterilizer/index.js";
-import { __iconPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __iconPath } from "@/utils/config";
 import isEmptyMeta from "@/utils/isEmptyMeta.js";
 import {cloneDeep} from "lodash";
 import publish_wujie_skill from "@/components/publish/publish_wujie_skill.vue";

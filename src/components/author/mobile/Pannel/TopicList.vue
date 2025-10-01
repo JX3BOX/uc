@@ -15,7 +15,7 @@
 <script>
 import { getLink, showBanner } from "@jx3box/jx3box-common/js/utils";
 import dayjs from "dayjs";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 import { random } from "lodash";
 import { getTopicList } from "@/service/author/author.js";
 import TopicItem from "@/components/author/mobile/Pannel/TopicItem.vue";

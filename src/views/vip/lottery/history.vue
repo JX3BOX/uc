@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { __Root } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root } from "@/utils/config";
 import { getMyHistory } from "@/service/vip/lottery";
 import { some } from "lodash";
 export default {

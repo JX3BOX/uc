@@ -1,6 +1,6 @@
 import axios from "axios";
 import User from "@jx3box/jx3box-common/js/user";
-import { __cms } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cms } from "@/utils/config";
 
 const $ = axios.create({
     withCredentials : true,

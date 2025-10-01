@@ -107,7 +107,7 @@
 <script>
 import { getConfig } from "@/service/vip/cms";
 import { getDecoration } from "@/service/author/cms";
-import { __Root, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, __cdn } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import types from "@/assets/data/vip/goods_types.json";
 import SearchBox from "./SearchBox.vue";

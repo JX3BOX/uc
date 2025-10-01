@@ -1,7 +1,7 @@
 import { $cms, $_https, $next } from "@jx3box/jx3box-common/js/https.js";
 
 import axios from "axios";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 
 // 1.资料
 // -------------------------------

@@ -73,7 +73,7 @@ import Like from "@jx3box/jx3box-common-ui/src/interact/Like2.vue";
 import Skeleton from "@/views/vip/mallNew/components/skeleton/index.vue";
 import { throttle } from "lodash";
 // import { getItem } from "@/service/vip/mall";
-import { __cdn, __root } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn, __root } from "@/utils/config";
 export default {
     name: "GoodWebDetail",
     components: {

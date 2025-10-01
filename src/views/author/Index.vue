@@ -14,7 +14,7 @@ import AppLayout from "@/layouts/author/AppLayout.vue";
 import Me from "@/components/author/newComponents/Me.vue";
 import { getUserInfo, getDecoration, getDecorationJson } from "@/service/author/cms";
 import User from "@jx3box/jx3box-common/js/user";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 const DECORATION_JSON = "decoration_json";
 const DECORATION_KEY = "decoration_me";
 export default {

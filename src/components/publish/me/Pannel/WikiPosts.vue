@@ -49,7 +49,7 @@ import {
     __OriginRoot,
     __imgPath,
     __wikiType,
-} from "@jx3box/jx3box-common/data/jx3box.json";
+} from "@/utils/config";
 import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
 import SubTabContent from "@/components/publish/me/Pannel/SubTabContent.vue";
 import { getMineWiki } from "@/service/publish/wiki";

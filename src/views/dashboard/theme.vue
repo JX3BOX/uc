@@ -79,7 +79,7 @@
 import uc from "@/components/dashboard/uc.vue";
 import { getDecoration, setDecoration, getDecorationJson } from "@/service/dashboard/decoration";
 import User from "@jx3box/jx3box-common/js/user";
-import { __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath, __cdn } from "@/utils/config";
 import { cloneDeep, flatten } from "lodash";
 import { themeTab } from "@/assets/data/dashboard/tabs.json";
 

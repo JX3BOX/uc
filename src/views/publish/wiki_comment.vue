@@ -79,7 +79,7 @@
 
 <script>
 import { getTypeLabel } from "@jx3box/jx3box-common/js/utils";
-import { __wikiType } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __wikiType } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 import { get_comments, remove_comment } from "@/service/publish/wiki";
 export default {

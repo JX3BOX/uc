@@ -91,7 +91,7 @@ import { getMyList, del, getMyReplyList, deleteMyReply } from "@/service/publish
 import dateFormat from "@/utils/dateFormat";
 import statusMap from "@/assets/data/publish/status.json";
 import { pick } from "lodash";
-import { __postType, __visibleMap } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __postType, __visibleMap } from "@/utils/config";
 export default {
     name: "work",
     props: [],

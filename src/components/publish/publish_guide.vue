@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { __postType } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __postType } from "@/utils/config";
 import { getMyPosts } from "@/service/publish/cms";
 import { cloneDeep } from "lodash";
 export default {

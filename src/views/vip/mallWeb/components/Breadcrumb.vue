@@ -34,7 +34,7 @@
 
 <script>
 import User from "@jx3box/jx3box-common/js/user";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 export default {
     name: "MallBreadcrumb",
     data() {

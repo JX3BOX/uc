@@ -243,7 +243,7 @@ import Skeleton from "./components/skeleton/index.vue";
 
 import types from "@/assets/data/vip/goods_types.json";
 import User from "@jx3box/jx3box-common/js/user";
-import { __Root, __OriginRoot } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, __OriginRoot } from "@/utils/config";
 import { throttle } from "lodash";
 import { resolveImagePath, showAvatar } from "@jx3box/jx3box-common/js/utils";
 import { checkOwnedStatus, getItem, toPay, toPayOrder, giveAway, getDecoration } from "@/service/vip/mall";

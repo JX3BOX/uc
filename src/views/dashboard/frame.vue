@@ -64,7 +64,7 @@ import uc from "@/components/dashboard/uc.vue";
 import { themeTab } from "@/assets/data/dashboard/tabs.json";
 import User from "@jx3box/jx3box-common/js/user";
 import { showAvatar } from "@jx3box/jx3box-common/js/utils";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 import { getFrames, getUserOverview } from "@/service/dashboard/profile";
 import { updateAvatarFrame, getDecoration, receive, setDecoration } from "@/service/dashboard/decoration";
 export default {

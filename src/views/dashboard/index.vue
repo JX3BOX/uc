@@ -291,7 +291,7 @@
 </template>
 
 <script>
-import { __userGroup, __imgPath, __userLevelColor, __userLevel, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userGroup, __imgPath, __userLevelColor, __userLevel, __cdn } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { getUserMedals, getMyAssetLogs, getMyInfo } from "@/service/dashboard/index.js";

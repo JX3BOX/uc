@@ -173,7 +173,7 @@ import publishBanner from "@/components/publish/publish_banner.vue";
 import { DecalDatabase } from "@jx3box/jx3box-facedat/src/DecalDatabase";
 import User from "@jx3box/jx3box-common/js/user.js";
 import cloneDeep from "lodash/cloneDeep";
-import { __clients } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __clients } from "@/utils/config";
 import { bodyMap, majorMap, faceSubtype } from "@jx3box/jx3box-facedat/assets/data/index.json";
 import { getConfig } from "@/service/publish/cms";
 export default {

@@ -97,7 +97,7 @@
 
 <script>
 import { showAvatar, tvLink, getLink } from "@jx3box/jx3box-common/js/utils";
-import { __imgPath,__userLevelColor } from "@jx3box/jx3box-common/data/jx3box";
+import { __imgPath,__userLevelColor } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 import { getUserMedals, getFrames, getUserPublicTeams } from "@/service/author/author";
 import { user as medal_map } from "@jx3box/jx3box-common/data/medals.json";

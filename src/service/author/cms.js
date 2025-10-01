@@ -1,6 +1,6 @@
 import { $cms, $team } from "@jx3box/jx3box-common/js/https";
 import axios from "axios";
-import { __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath, __cdn } from "@/utils/config";
 
 function getPosts(params) {
     return $cms().get(`/api/cms/posts`, {

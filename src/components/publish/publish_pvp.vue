@@ -149,7 +149,7 @@
 <script>
 import User from "@jx3box/jx3box-common/js/user";
 import { sterilizer } from "sterilizer/index.js";
-import { __iconPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __iconPath } from "@/utils/config";
 import isEmptyMeta from "@/utils/isEmptyMeta.js";
 import { cloneDeep, pick } from "lodash";
 import SkillDialog from "@/components/publish/skill_dialog.vue";

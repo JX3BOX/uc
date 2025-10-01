@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 import AppLayout from "@/layouts/author/AppLayout.vue";
 import { getCertification } from "@/service/author/cms";
 import CI from "@/assets/data/author/certificate.json";

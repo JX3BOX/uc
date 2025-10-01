@@ -34,7 +34,7 @@ import dayjs from "dayjs";
 import { getUserInfo } from "@/service/author/cms.js";
 import User from "@jx3box/jx3box-common/js/user";
 import { getBirthdayDetail } from "@/service/author/birthday";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 export default {
     name: "Birthday",
     props: [],

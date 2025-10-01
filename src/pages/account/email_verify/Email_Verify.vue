@@ -48,7 +48,7 @@
 <script>
 import CardHeader from "@/components/account/CardHeader.vue";
 import { verifyEmail } from "@/service/account/email.js";
-import { __Root } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root } from "@/utils/config";
 
 export default {
     name: "Register",

@@ -47,7 +47,7 @@ import { getWechatQrcode, unbindWechat } from "@/service/dashboard/profile";
 import { getMyInfo } from "@/service/dashboard/index";
 import { SSE } from "@jx3box/jx3box-common/js/https";
 import User from "@jx3box/jx3box-common/js/user";
-import { __cms } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cms } from "@/utils/config";
 const base = `https://mp.weixin.qq.com/cgi-bin/showqrcode`;
 export default {
     name: "wechat",

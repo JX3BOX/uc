@@ -62,7 +62,7 @@
 </template>
 <script>
 import { getItemList, getItem } from "@/service/vip/mall";
-import { __userLevel } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userLevel } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import MallNav from "@/views/vip/mallNew/components/MallNav.vue";
 import GoodDetail from "@/views/vip/mallNew/components/GoodDetail.vue";
@@ -70,7 +70,7 @@ import Cart from "@/views/vip/mallNew/components/Cart.vue";
 import { debounce } from "lodash";
 import { getDecoration } from "@/service/vip/decoration";
 import CartConfirm from "@/views/vip/mallNew/components/CartConfirm.vue";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 export default {
     name: "MallList",
     data: function () {

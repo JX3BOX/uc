@@ -73,7 +73,7 @@
 
 <script>
 import { getThumbnail, showAvatar, resolveImagePath } from "@jx3box/jx3box-common/js/utils";
-import { __userLevel, __cdn, __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userLevel, __cdn, __imgPath } from "@/utils/config";
 import { forEach, throttle } from "lodash";
 import User from "@jx3box/jx3box-common/js/user";
 import { addGoodsToCart } from "@/service/vip/cart";

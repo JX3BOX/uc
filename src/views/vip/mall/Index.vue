@@ -62,7 +62,7 @@
 import { getItemList, getDecoration, getSkinJson } from "@/service/vip/mall";
 import Item from "./components/Item.vue";
 import { debounce } from "lodash";
-import { __userLevel } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userLevel } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 export default {
     name: "MallList",

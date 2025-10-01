@@ -1,5 +1,5 @@
 import { $pay, $cms } from "@jx3box/jx3box-common/js/https";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 import axios from "axios";
 function getItem(id) {
     return $pay().get(`/api/mall/items/${id}`);

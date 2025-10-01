@@ -88,7 +88,7 @@ import User from "@jx3box/jx3box-common/js/user";
 import { sterilizer } from "sterilizer/index.js";
 import { checkNickname, doRename } from "@/service/vip/rename.js";
 import result from "@/components/vip/result.vue";
-import { __Root } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root } from "@/utils/config";
 import paypop from "@/components/vip/paypop.vue";
 import callback from "@/utils/callback.js";
 import simple_header from "@/components/vip/simple_header.vue";

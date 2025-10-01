@@ -135,7 +135,7 @@
 </template>
 
 <script>
-import { __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath, __cdn } from "@/utils/config";
 // 公共模块
 import community_types from "@/assets/data/publish/community.json";
 

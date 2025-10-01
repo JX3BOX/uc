@@ -19,7 +19,7 @@
 
 <script>
 import User from "@jx3box/jx3box-common/js/user";
-import { __Root } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root } from "@/utils/config";
 export default {
     name: "BuyConfirm",
     props: {

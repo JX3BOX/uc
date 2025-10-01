@@ -11,7 +11,7 @@
 import SearchBox from "./components/SearchBox.vue";
 import GoodList from "./components/GoodList.vue";
 import { getItemList } from "@/service/vip/mall";
-import { __userLevel } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userLevel } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import { debounce, unionBy } from "lodash";
 import Nav from "./components/Nav.vue";

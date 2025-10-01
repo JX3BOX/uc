@@ -185,7 +185,7 @@
 <script>
 import { follow, unfollow } from "@jx3box/jx3box-common-ui/service/follow";
 import { getAuthorRss, subscribeAuthor, unsubscribeAuthor } from "@jx3box/jx3box-common/js/rss";
-import { __userLevelColor, __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box";
+import { __userLevelColor, __imgPath, __cdn } from "@/utils/config";
 import { user as medal_map } from "@jx3box/jx3box-common/data/medals.json";
 import frames from "@jx3box/jx3box-common/data/user_avatar_frame.json";
 import User from "@jx3box/jx3box-common/js/user";

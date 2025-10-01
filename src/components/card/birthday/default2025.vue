@@ -38,7 +38,7 @@
 import { getBirthdayDetail } from "@/service/author/birthday";
 import User from "@jx3box/jx3box-common/js/user";
 import dayjs from "dayjs";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 export default {
     name: "Default2025",
     data: function () {

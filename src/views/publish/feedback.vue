@@ -84,7 +84,7 @@ import { editLink, getLink } from "@jx3box/jx3box-common/js/utils.js";
 import {
     __postType,
     __visibleMap,
-} from "@jx3box/jx3box-common/data/jx3box.json";
+} from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 export default {
     name: "work",

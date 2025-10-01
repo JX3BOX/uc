@@ -68,7 +68,7 @@
     </div>
 </template>
 <script>
-import { __userLevel, __Root } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userLevel, __Root } from "@/utils/config";
 import Address from "./components/address.vue";
 import { batchMakeOrder, batchPayOrder } from "@/service/vip/mall";
 export default {
