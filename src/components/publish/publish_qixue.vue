@@ -77,7 +77,7 @@ export default {
                 if (val) {
                     this.sq = "1,1,1,1";
                 } else {
-                    this.sq = "1,1,1,1,1,1,1,1,1,1,1,1";
+                    this.sq = "1,1,1,1,1,1,1,1,2,3";
                 }
                 this.reloadTalent();
             },
@@ -118,6 +118,7 @@ export default {
                     talent.load({
                         xf: this.subtype,
                         client: this.client,
+                        sq: this.sq,
                         version: this.version[this.client],
                     });
                 });
