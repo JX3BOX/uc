@@ -15,10 +15,13 @@
 </template>
 
 <script>
-import { __cdn } from "@/utils/config";
+import { __cdn, __Root } from "@/utils/config";
 import AppLayout from "@/layouts/author/AppLayout.vue";
 import { getCertification } from "@/service/author/cms";
 import CI from "@/assets/data/author/certificate.json";
+const fontMap = {
+    "ALIMAMASHUHEITI-BOLD": require("@/assets/css/author/certificateFont/ALIMAMASHUHEITI-BOLD.OTF"),
+};
 export default {
     name: "Author",
     components: { AppLayout },
@@ -66,16 +69,24 @@ export default {
                     } = team_certificate;
                     let drawConfig = CI[rank_id];
                     let { element } = drawConfig;
-
                     element.mapTime.content = this.formatTimeString(element.mapTime.content, time);
                     element.name.content = team_name;
                     element.rank.content = sort_no;
                     element.team.content = teammate;
+                    if (element.subRank) {
+                        if (element.subRank.content.includes("{{rank}}")) {
+                            element.subRank.content = element.subRank.content.replace("{{rank}}", sort_no);
+                        }
+                    }
                     if (element.colonel) {
                         element.colonel.content = `团长：${leader}`;
                     }
                     if (element.signTime) {
                         element.signTime.content = this.formatTimeString(element.signTime.content, awardtime);
+                        if (element.signTime.addUrl) {
+                            element.signTime.content =
+                                __Root + element.signTime.addUrl + "  " + element.signTime.content;
+                        }
                     }
                     if (element.time) {
                         element.time.content = this.takeTimeCalc(element.time.content, duration);
@@ -115,7 +126,11 @@ export default {
                                 item.key = key;
                                 this.drawText(ctx, item);
                             } else if (item.type == "rank") {
-                                this.drawRank(item);
+                                if (item.style.fontName) {
+                                    this.drawFontText(ctx, item);
+                                } else {
+                                    this.drawRank(item);
+                                }
                             } else if (item.type == "qr") {
                                 this.drawQr(ctx, item);
                             }
@@ -134,6 +149,40 @@ export default {
             } else {
                 this.drawWrappedText(ctx, data.content, style);
             }
+        },
+        drawFontText(ctx, data) {
+            let drawText = `第${data.content}名`;
+            let drawStyle = data.style.otherStyle;
+            if (data.content * 1 <= 3) {
+                drawStyle = data.style.topThreeStyle;
+            }
+            if (data.content == 1) {
+                drawText = "冠军";
+            } else if (data.content == 2) {
+                drawText = "亚军";
+            } else if (data.content == 3) {
+                drawText = "季军";
+            }
+
+            const fontUrl = fontMap[data.style.fontName];
+            const font = new FontFace(data.style.fontName, `url(${fontUrl})`);
+            font.load().then(() => {
+                document.fonts.add(font);
+                ctx.font = `${drawStyle.fontSize}px ${data.style.fontName}`;
+                ctx.textAlign = drawStyle.textAlign;
+                ctx.fillStyle = drawStyle.color;
+                ctx.fillText(drawText, drawStyle.left, drawStyle.top);
+                if (drawStyle.subFontStyle) {
+                    ctx.font = `${drawStyle.subFontStyle.fontSize}px ${data.style.fontName}`;
+                    ctx.textAlign = drawStyle.subFontStyle.textAlign;
+                    ctx.fillStyle = drawStyle.subFontStyle.color;
+                    ctx.fillText(
+                        drawStyle.subFontStyle.content + data.content,
+                        drawStyle.subFontStyle.left,
+                        drawStyle.subFontStyle.top
+                    );
+                }
+            });
         },
         drawWrappedText(ctx, text, style) {
             let words = text.split(";");
