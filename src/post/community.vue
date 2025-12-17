@@ -71,14 +71,14 @@
             <!-- 扩展 -->
             <div class="m-publish-extend">
                 <el-divider content-position="left">设置</el-divider>
-                <el-form-item label="匿名开关">
-                    <el-switch v-model="post.anonymous" :active-value="1" :inactive-value="0"></el-switch>
+                <el-form-item label="评论开关">
+                    <el-switch v-model="post.disable_comment" :active-value="1" :inactive-value="0"></el-switch>
                 </el-form-item>
-                <el-form-item label="禁止投币">
+                <el-form-item label="礼物开关">
                     <el-switch v-model="post.disable_inspire_boxcoin" :active-value="1" :inactive-value="0"></el-switch>
                 </el-form-item>
-                <el-form-item label="禁止评论">
-                    <el-switch v-model="post.disable_comment" :active-value="1" :inactive-value="0"></el-switch>
+                <el-form-item label="匿名开关">
+                    <el-switch v-model="post.anonymous" :active-value="1" :inactive-value="0"></el-switch>
                 </el-form-item>
                 <el-form-item label="阅读权限">
                     <el-radio-group v-model="post.visible">
