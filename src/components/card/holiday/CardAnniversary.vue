@@ -13,7 +13,7 @@
                 <video class="u-video" autoplay muted loop :poster="bgImg[0]" preload="metadata">
                     <source :src="bgImg[2]" type="video/mp4" />
                 </video>
-                <img class="u-box-woman" :src="bgImg[1]" alt="盒子娘" />
+                <img class="u-box-girl" :src="bgImg[1]" alt="盒子娘" />
             </div>
             <!-- 内容 -->
             <div class="m-star-box">
@@ -24,8 +24,8 @@
                 />
                 <span class="u-count">({{ starCount }}/6)</span>
                 <div class="m-heart">
-                    <img class="u-heart u-heart-1" :src="imgList[0]" />
-                    <img class="u-heart u-heart-2" :src="imgList[1]" />
+                    <div class="u-heart u-heart-1"></div>
+                    <div class="u-heart u-heart-2" :class="{ light: showNext }"></div>
                     <img
                         :class="['u-star', { light: starList.includes(i) }, `u-star-${i}`]"
                         v-for="i in 6"
@@ -57,7 +57,7 @@ export default {
     props: ["data"],
     data: function () {
         return {
-            show: true,
+            show: false,
             light: false,
             starCount: 0,
             starList: [],
@@ -141,7 +141,7 @@ export default {
             .w(100%);
             .lb(0);
         }
-        .u-box-woman {
+        .u-box-girl {
             .size(88px,160px);
             .pa;
             .lb(50%,0);
@@ -174,6 +174,30 @@ export default {
         .u-heart {
             .pa;
             .size(100%);
+            &-1 {
+                background-image: url("https://cdn.jx3box.com/design/card/festival/box2025/path0.png");
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+            &-2 {
+                background-image: url("https://cdn.jx3box.com/design/card/festival/box2025/path1.png");
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+
+                transform: translateZ(0);
+                will-change: transform, opacity;
+
+                -webkit-mask-image: radial-gradient(circle 0px at center, transparent 0%, transparent 100%);
+                mask-image: radial-gradient(circle 0px at center, transparent 0%, transparent 100%);
+                transition: -webkit-mask-image 1s linear, mask-image 1s linear;
+                &.light {
+                    animation: maskAnimation 1s linear forwards;
+                    -webkit-mask-image: radial-gradient(circle 150px at center, transparent 0%, black 100%);
+                    mask-image: radial-gradient(circle 150px at center, transparent 0%, black 100%);
+                }
+            }
         }
         .u-star {
             .pa;
@@ -288,6 +312,64 @@ export default {
     }
     100% {
         box-shadow: 0 0 0 50px rgba(255, 255, 255, 0.15);
+    }
+}
+@keyframes maskAnimation {
+    0% {
+        -webkit-mask-image: radial-gradient(circle 0px at center top, transparent 0%, transparent 100%);
+        mask-image: radial-gradient(circle 0px at center top, transparent 0%, transparent 100%);
+    }
+    25% {
+        -webkit-mask-image: conic-gradient(
+            from 0deg at 50% 50%,
+            black 0deg,
+            black 90deg,
+            transparent 90deg,
+            transparent 360deg
+        );
+        mask-image: conic-gradient(
+            from 0deg at 50% 50%,
+            black 0deg,
+            black 90deg,
+            transparent 90deg,
+            transparent 360deg
+        );
+    }
+    50% {
+        -webkit-mask-image: conic-gradient(
+            from 0deg at 50% 50%,
+            black 0deg,
+            black 180deg,
+            transparent 180deg,
+            transparent 360deg
+        );
+        mask-image: conic-gradient(
+            from 0deg at 50% 50%,
+            black 0deg,
+            black 180deg,
+            transparent 180deg,
+            transparent 360deg
+        );
+    }
+    75% {
+        -webkit-mask-image: conic-gradient(
+            from 0deg at 50% 50%,
+            black 0deg,
+            black 270deg,
+            transparent 270deg,
+            transparent 360deg
+        );
+        mask-image: conic-gradient(
+            from 0deg at 50% 50%,
+            black 0deg,
+            black 270deg,
+            transparent 270deg,
+            transparent 360deg
+        );
+    }
+    100% {
+        -webkit-mask-image: none;
+        mask-image: none;
     }
 }
 </style>
