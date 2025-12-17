@@ -74,6 +74,12 @@
                 <el-form-item label="匿名开关">
                     <el-switch v-model="post.anonymous" :active-value="1" :inactive-value="0"></el-switch>
                 </el-form-item>
+                <el-form-item label="禁止投币">
+                    <el-switch v-model="post.disable_inspire_boxcoin" :active-value="1" :inactive-value="0"></el-switch>
+                </el-form-item>
+                <el-form-item label="禁止评论">
+                    <el-switch v-model="post.disable_comment" :active-value="1" :inactive-value="0"></el-switch>
+                </el-form-item>
                 <el-form-item label="阅读权限">
                     <el-radio-group v-model="post.visible">
                         <el-radio :label="0">公开</el-radio>
@@ -206,6 +212,9 @@ export default {
 
                 is_from_phone: 0,
                 anonymous: 0,
+
+                disable_inspire_boxcoin: 0,
+                disable_comment: 0,
             },
             currentDecorationId: "",
             // 选项
