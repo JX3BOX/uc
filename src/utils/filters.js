@@ -4,7 +4,7 @@ function showBodyType(val) {
 }
 
 import school_id_map from "@jx3box/jx3box-data/data/xf/schoolid.json";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 function showSchoolIcon(val) {
     let id = val || 0;
     return __imgPath + "image/school/" + id + ".png";

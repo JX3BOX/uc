@@ -29,7 +29,7 @@ export default {
         isWujie: {
             type: Number,
             default: 0,
-        }
+        },
     },
     model: {
         prop: "value",
@@ -43,12 +43,12 @@ export default {
                 wujie: "",
             },
             sq: "1,1,1,1,1,1,1,1,1,1,1,1",
-        }
+        };
     },
     computed: {
         client() {
             return this.isWujie ? "wujie" : "std";
-        }
+        },
     },
     watch: {
         value: {
@@ -63,25 +63,25 @@ export default {
                 } catch (error) {
                     console.log(error);
                 }
-            }
+            },
         },
         subtype: {
             immediate: true,
             handler(val) {
                 this.reloadTalent();
-            }
+            },
         },
         isWujie: {
             immediate: true,
             handler(val) {
                 if (val) {
-                    this.sq = "1,1,1,1"
+                    this.sq = "1,1,1,1";
                 } else {
-                    this.sq = "1,1,1,1,1,1,1,1,1,1,1,1"
+                    this.sq = "1,1,1,1,1,1,1,1,2,3";
                 }
                 this.reloadTalent();
-            }
-        }
+            },
+        },
     },
     mounted() {
         this.installTalent();
@@ -95,16 +95,20 @@ export default {
                 this.version.wujie = res.data?.data?.html;
             });
 
-            this.driver = new JX3_QIXUE({ version: this.version[this.client], editable: this.editable, client: this.client });
+            this.driver = new JX3_QIXUE({
+                version: this.version[this.client],
+                editable: this.editable,
+                client: this.client,
+            });
 
             this.reloadTalent();
 
             const vm = this;
-            $(document).on("JX3_QIXUE_Change", function (e, ins){
-                let __data = ins.code
+            $(document).on("JX3_QIXUE_Change", function (e, ins) {
+                let __data = ins.code;
 
                 vm.$emit("update", JSON.stringify(__data));
-            })
+            });
         },
         reloadTalent() {
             if (!this.subtype || this.subtype == "通用") return;
@@ -113,13 +117,13 @@ export default {
                 this.driver?.then((talent) => {
                     talent.load({
                         xf: this.subtype,
-                        sq: this.sq,
                         client: this.client,
+                        sq: this.sq,
                         version: this.version[this.client],
                     });
                 });
             });
-        }
-    }
-}
+        },
+    },
+};
 </script>

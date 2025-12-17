@@ -9,9 +9,9 @@
 <script>
 import AppLayout from "@/layouts/author/AppLayout.vue";
 // 2025贺卡
-import Default2025 from "@/components/author/birthday/default2025.vue";
+import Default2025 from "@/components/card/birthday/default2025.vue";
 // 2024贺卡
-import Default from "@/components/author/birthday/default.vue";
+import Default from "@/components/card/birthday/default.vue";
 export default {
     name: "BirthdayCard",
     components: {
@@ -25,7 +25,7 @@ export default {
         };
     },
     mounted() {
-        const skin = this.$route.params.skin;
+        const skin = this.$route.query.skin;
         const data = {
             default2025: Default2025,
             default: Default,

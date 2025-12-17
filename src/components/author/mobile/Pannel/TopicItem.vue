@@ -64,7 +64,7 @@
 <script>
 import dayjs from 'dayjs'
 import { getLink } from "@jx3box/jx3box-common/js/utils";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box";
+import { __cdn } from "@/utils/config";
 import wx from "weixin-js-sdk";
 
 

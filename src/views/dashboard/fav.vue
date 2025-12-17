@@ -97,7 +97,7 @@
 import { getMyFavs, delFav, deleteVisitHistory } from "@/service/dashboard/fav";
 import { getLink, getTypeLabel } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
-import { __postType, __wikiType, __appType, __gameType } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __postType, __wikiType, __appType, __gameType } from "@/utils/config";
 import VisitLog from "@/components/dashboard/fav/visit_log.vue";
 import WaitList from "@/components/dashboard/fav/wait_list.vue";
 import RssList from "@/components/dashboard/fav/rss_list.vue";

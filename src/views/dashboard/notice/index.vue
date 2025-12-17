@@ -17,7 +17,7 @@
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 import wechat from "./wechat.vue";
 import email from "./email.vue";
 import phone from "./phone.vue";

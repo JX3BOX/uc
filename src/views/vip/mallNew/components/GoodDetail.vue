@@ -21,9 +21,9 @@
                         <i class="el-icon-circle-check" v-if="good.canBuy.level"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
-                    <div class="condition-item" :class="{ canBuy: good.canBuy.vip_limit }">
+                    <div class="condition-item" :class="{ canBuy: good.vip_limit }" v-if="good.vip_limit !== 0">
                         会员专属
-                        <i class="el-icon-circle-check" v-if="good.canBuy.vip_limit"></i>
+                        <i class="el-icon-circle-check" v-if="good.vip_limit"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
                     <div class="condition-item" :class="{ canBuy: good.canBuy.box_coin }" v-if="good.price_boxcoin">
@@ -72,7 +72,7 @@ import Like from "./Like.vue";
 import BuyConfirm from "./BuyConfirm.vue";
 import Skeleton from "@/views/vip/mallNew/components/skeleton/index.vue";
 import { throttle } from "lodash";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 export default {
     name: "GoodMallDetail",
     components: {
@@ -243,10 +243,13 @@ export default {
     }
     .card {
         width: 500px;
-        height: 500px;
+        height: 480px;
         display: flex;
         justify-content: center;
         align-items: center;
+        img{
+            object-fit: cover;
+        }
         .skeleton-container {
             background-color: #fff;
             padding: 10px;
@@ -255,7 +258,7 @@ export default {
     }
     .buy-detail {
         width: 500px;
-        height: 180px;
+        height: 200px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -352,9 +355,9 @@ export default {
 
         .good-comment {
             width: 500px;
-            height: 77px;
+            height: 100px;
             box-sizing: border-box;
-            padding: 6px 43px;
+            padding: 0 43px;
             overflow: scroll;
             scrollbar-width: none;
             color: rgba(#fff, 0.75);

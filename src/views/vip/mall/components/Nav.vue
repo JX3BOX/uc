@@ -91,7 +91,7 @@
 import types from "@/assets/data/vip/goods_types.json";
 import User from "@jx3box/jx3box-common/js/user";
 import { getConfig } from "@/service/vip/cms";
-import { __userLevelColor, __Root, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userLevelColor, __Root, __cdn } from "@/utils/config";
 export default {
     name: "GoodsNav",
     data: function () {

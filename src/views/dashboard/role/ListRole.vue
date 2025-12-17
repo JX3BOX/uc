@@ -169,7 +169,7 @@ import {
     defaultRole,
 } from "@/service/dashboard/role.js";
 import school_id_map from "@jx3box/jx3box-data/data/xf/schoolid.json";
-import { __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath, __cdn } from "@/utils/config";
 import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
 import { showSchoolIcon, showSchoolName, showTime, getThumbnail } from "@/utils/filters";
 

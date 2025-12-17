@@ -64,7 +64,7 @@
 <script>
 import uc from "@/components/dashboard/uc.vue";
 import { getDecoration, getEmotion, setDecoration } from "@/service/dashboard/decoration";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 import { themeTab } from "@/assets/data/dashboard/tabs.json";
 export default {
     name: "emotion",

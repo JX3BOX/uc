@@ -1,6 +1,6 @@
 import { $cms, $next } from "@jx3box/jx3box-common/js/https.js";
 import axios from "axios";
-import { __imgPath, __dataPath, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath, __dataPath, __cdn } from "@/utils/config";
 
 function getDecoration(params) {
     return $cms().get(`/api/cms/user/decoration`, {
@@ -29,9 +29,8 @@ function updateAvatarFrame(data) {
     return $cms().put("/api/cms/user/my/avatar-frame", data);
 }
 
-function getHonor() {
-    // return axios.get(`${__imgPath}decoration/honor.json?${Date.now()}`);
-    return $cms().get("/api/cms/user/config/honor");
+function getHonor(params) {
+    return $cms().get("/api/cms/user/config/honor", {params});
 }
 
 function getUserHonors(uid) {

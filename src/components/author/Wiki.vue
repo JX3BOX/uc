@@ -50,7 +50,7 @@
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
 import { getWikis } from "@/service/author/helper.js";
-import { __wikiType, __clients, __Root, __OriginRoot } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __wikiType, __clients, __Root, __OriginRoot } from "@/utils/config";
 export default {
     name: "Cj",
     props: [],

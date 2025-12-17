@@ -63,7 +63,7 @@ import callback from "@/utils/callback.js";
 import result from "@/components/vip/result.vue";
 import simple_header from "@/components/vip/simple_header.vue";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 export default {
     data: function() {
         return {

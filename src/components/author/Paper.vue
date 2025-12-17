@@ -45,7 +45,7 @@
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
 import { getPapers } from "@/service/author/next.js";
-import {  __clients , __Root, __OriginRoot} from "@jx3box/jx3box-common/data/jx3box.json";
+import {  __clients , __Root, __OriginRoot} from "@/utils/config";
 export default {
     name: "Paper",
     props: [],

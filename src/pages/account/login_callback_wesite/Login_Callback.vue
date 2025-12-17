@@ -15,7 +15,7 @@
 <script>
 import CardHeader from "@/components/account/CardHeader.vue";
 import User from "@jx3box/jx3box-common/js/user";
-import { __Root, __OriginRoot } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, __OriginRoot } from "@/utils/config";
 const client = location.host.includes("origin") ? "origin" : "std";
 import { directMixins } from "@/utils/direct_mixins";
 

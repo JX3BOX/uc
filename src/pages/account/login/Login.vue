@@ -78,7 +78,7 @@ import Union from "@/components/account/Union.vue";
 const { validator } = require("sterilizer");
 const cookie = require("@/utils/cookie");
 import { loginByEmail } from "@/service/account/email.js";
-import { __Root, __Links } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, __Links } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import Msg from "@/components/account/Msg.vue";
 export default {

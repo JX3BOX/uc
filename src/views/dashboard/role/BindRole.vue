@@ -49,7 +49,7 @@
 
 <script>
 import { getToken, createRole } from "@/service/dashboard/role.js";
-import { __imgPath, __ossMirror } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath, __ossMirror } from "@/utils/config";
 import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
 // import roleform from "@/components/dashboard/role/roleform.vue";
 export default {

@@ -48,7 +48,7 @@ import { updateAvatar, uploadAvatar, getUserOverview } from "@/service/dashboard
 import User from "@jx3box/jx3box-common/js/user";
 import { showAvatar } from "@jx3box/jx3box-common/js/utils";
 import frames from "@jx3box/jx3box-common/data/user_avatar_frame.json";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 export default {
     name: "avatar",
     props: [],

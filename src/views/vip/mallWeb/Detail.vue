@@ -73,7 +73,7 @@ import User from "@jx3box/jx3box-common/js/user";
 import Skeleton from "../mallNew/components/skeleton/index.vue";
 import Like from "../mallNew/components/Like.vue";
 import { throttle } from "lodash";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 import BuyConfirm from "./components/BuyConfirm.vue";
 export default {
     name: "mall_detail_web",

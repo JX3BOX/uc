@@ -49,7 +49,7 @@
 
 <script>
 import { uploadEmotion } from "@/service/publish/pvx";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 const imgtypes = ["jpg", "png", "gif", "bmp", "webp", "jpeg", "JPG", "PNG", "GIF", "BMP", "WEBP", "JPEG"];
 
 export default {

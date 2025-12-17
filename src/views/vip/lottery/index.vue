@@ -240,7 +240,7 @@ import { getBreadcrumb, getConfig } from "@/service/vip/cms";
 import { getBlindBox, goodLucky, getMyLucky, getLuckyConfig, getMyInfo } from "@/service/vip/lottery";
 import { cloneDeep, throttle, zip } from "lodash";
 import { resolveImagePath } from "@jx3box/jx3box-common/js/utils";
-import { __Root, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, __cdn } from "@/utils/config";
 import "@/assets/css/vip/lottery/hacker.less";
 import "@/assets/css/vip/lottery/dragon.less";
 import "@/assets/css/vip/lottery/normal.less";

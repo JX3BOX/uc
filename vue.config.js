@@ -76,6 +76,12 @@ module.exports = {
             template : 'public/app.html',
             filename:'register_callback/index.html',
         },
+        card: {
+            title: "贺卡 - JX3BOX",
+            entry: "src/pages/card/index.js",
+            template: "public/app.html",
+            filename: "card/index.html",
+        }
     },
     //❤️ Proxy ~
     devServer: {

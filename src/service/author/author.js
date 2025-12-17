@@ -1,5 +1,5 @@
 import { $next, $team } from "./axios";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 import axios from "axios";
 
 function getDouyu(ids) {

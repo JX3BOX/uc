@@ -33,7 +33,7 @@
 <script>
 import { getLink, showBanner } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
-import { __postType, __clients, __Root, __OriginRoot, __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __postType, __clients, __Root, __OriginRoot, __imgPath } from "@/utils/config";
 import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
 import SubTabContent from "@/components/publish/me/Pannel/SubTabContent.vue";
 import { getMyPosts } from "@/service/publish/cms";

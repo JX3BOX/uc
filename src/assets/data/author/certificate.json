@@ -1060,5 +1060,111 @@
                 }
             }
         }
+    },
+    "22": {
+        "key": 22,
+        "element": {
+            "rank": {
+                "type": "rank",
+                "content": "",
+                "style": {
+                    "fontName": "ALIMAMASHUHEITI-BOLD",
+                    "topThreeStyle": {
+                        "textAlign": "center",
+                        "fontSize": 65,
+                        "left": 640,
+                        "top": 720,
+                        "color": "#ffffff"
+                    },
+                    "otherStyle": {
+                        "textAlign": "center",
+                        "fontSize": 45,
+                        "left": 640,
+                        "top": 720,
+                        "color": "#ffffff"
+                    }
+                }
+            },
+            "subRank": {
+                "type": "text",
+                "content": "No.{{rank}}",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 30,
+                    "left": 640,
+                    "top": 770,
+                    "color": "#ffffff"
+                }
+            },
+            "time": {
+                "type": "text",
+                "content": "通关用时 / hh时mm分ss秒",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 22,
+                    "left": 640,
+                    "top": 920,
+                    "color": "#818181"
+                }
+            },
+            "mapTime": {
+                "type": "text",
+                "content": "通关时间 / yyyy年MM月dd日hh时mm分ss秒",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 22,
+                    "left": 640,
+                    "top": 960,
+                    "color": "#818181"
+                }
+            },
+            "name": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 32,
+                    "left": 640,
+                    "top": 1210,
+                    "color": "#000000"
+                }
+            },
+            "colonel": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 23,
+                    "left": 640,
+                    "top": 1245,
+                    "color": "#666666"
+                }
+            },
+            "team": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 15,
+                    "left": 640,
+                    "top": 1350,
+                    "color": "#666666",
+                    "width": 700,
+                    "height": 25
+                }
+            },
+            "signTime": {
+                "type": "text",
+                "content": "yyyy/MM/dd",
+                "addUrl": "/rank/#/gongyuecheng/rank",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 15,
+                    "left": 80,
+                    "top": 1660,
+                    "color": "#24292E"
+                }
+            }
+        }
     }
 }

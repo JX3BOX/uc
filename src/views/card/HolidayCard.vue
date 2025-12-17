@@ -8,21 +8,22 @@
 
 <script>
 import { some } from "lodash";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 import cardType from "@/assets/data/author/card.json";
 import { getHolidayCard } from "@/service/author/card";
 import HeaderLessLayout from "@/layouts/author/HeaderLessLayout.vue";
-import DefaultTemplate from "@/components/author/card/DefaultTemplate.vue";
-import CardChildren from "@/components/author/card/CardChildren.vue";
-import CardSpring from "@/components/author/card/CardSpring.vue";
-import CardNewYear from "@/components/author/card/CardNewYear.vue";
-import CardChristmas from "@/components/author/card/CardChristmas.vue";
-import CardQixi from "@/components/author/card/CardQixi.vue";
-import CardDragonBoat from "@/components/author/card/CardDragonBoat.vue";
-import CardLantern from "@/components/author/card/CardLantern.vue";
-import CardAutumn from "@/components/author/card/CardAutumn.vue";
-import DoubleScreen from "@/components/author/card/DoubleScreen.vue";
-import OneScreen from "@/components/author/card/OneScreen.vue";
+import DefaultTemplate from "@/components/card/holiday/DefaultTemplate.vue";
+import CardChildren from "@/components/card/holiday/CardChildren.vue";
+import CardSpring from "@/components/card/holiday/CardSpring.vue";
+import CardNewYear from "@/components/card/holiday/CardNewYear.vue";
+import CardChristmas from "@/components/card/holiday/CardChristmas.vue";
+import CardQixi from "@/components/card/holiday/CardQixi.vue";
+import CardDragonBoat from "@/components/card/holiday/CardDragonBoat.vue";
+import CardLantern from "@/components/card/holiday/CardLantern.vue";
+import CardAutumn from "@/components/card/holiday/CardAutumn.vue";
+import DoubleScreen from "@/components/card/holiday/DoubleScreen.vue";
+import OneScreen from "@/components/card/holiday/OneScreen.vue";
+import Anniversary from "@/components/card/holiday/CardAnniversary.vue";
 import User from "@jx3box/jx3box-common/js/user";
 
 export default {
@@ -40,6 +41,7 @@ export default {
         CardAutumn,
         DoubleScreen,
         OneScreen,
+        Anniversary,
     },
     data: function () {
         return {
@@ -51,7 +53,7 @@ export default {
     computed: {
         // 用户id
         user_id() {
-            return this.$route.params.uid;
+            return this.$route.query.uid;
         },
         // 打开的卡号id
         my_card_id() {
@@ -63,7 +65,7 @@ export default {
         },
         // 当前卡号对应的活动id
         event_id() {
-            return this.$route.params.event_id;
+            return this.$route.query.event_id;
         },
         // 活动id对应的活动key
         event_key() {
@@ -88,6 +90,7 @@ export default {
         // 组件数据
         component_data() {
             const _data = {
+                anniversary: this.anniversary_data,
                 default: this.default_data,
                 children: this.children_data,
                 spring: this.spring_data,
@@ -109,15 +112,44 @@ export default {
             const countImgList = String(this.fontCount)
                 .split("")
                 .map((item) => `${this.imgLink}${item}.png`);
+            const size = this.cardType[this.event_id]?.size;
+            const percentage = this.cardType[this.event_id]?.percentage;
+            const imgList = this.imgList.map((item) => {
+                if (item.length) {
+                    return item.map((e) => `${this.imgLink}${e}`);
+                } else {
+                    return `${this.imgLink}${item}`;
+                }
+            });
             const data = {
-                imgList: this.imgList.map((item) => `${this.imgLink}${item}`),
+                imgList,
                 fontCount: this.fontCount,
                 countImg: `${this.imgLink}${this.fontCount}.png`,
                 countImgList,
                 count,
+                size,
+                percentage,
             };
             if (bg) data.countBg = `${this.imgLink}${bg}`;
+
             return data;
+        },
+        // 周年庆-2025
+        anniversary_data() {
+            const imgList = this.imgList.map((item) => {
+                if (item.length) {
+                    return item.map((e) => `${this.imgLink}${e}`);
+                } else {
+                    return `${this.imgLink}${item}`;
+                }
+            });
+            return {
+                oneImg: imgList[0],
+                bg1: imgList[1],
+                bg2: imgList[2],
+                imgList: imgList[3],
+                txtList: this.cardType[this.event_id]?.txtList,
+            };
         },
         // 儿童节
         children_data() {
@@ -179,7 +211,7 @@ export default {
                 fontCount: this.fontCount,
                 countImg: `${this.imgLink}${this.fontCount}.png`,
                 imgList: this.imgList.map((item) => `${this.imgLink}${item}`),
-                vImg: `${this.imgLink}/v${this.fontCount}.png`,
+                vImg: `${this.imgLink}v${this.fontCount}.png`,
                 bgImg: `${this.imgLink}bg.png`,
             };
         },
@@ -205,11 +237,14 @@ export default {
     },
     methods: {
         close() {
+            // window.opener = null;
+            // window.open("", "_self");
+            // window.close();
             this.goBack();
             window.parent.postMessage("closeHolidayCard", "*");
         },
         goBack() {
-            this.$router.push({ name: "index", params: { id: this.user_id } });
+            // window.location.href = `/author/${this.user_id}`;
         },
         load() {
             if (!User.isLogin()) return;
@@ -225,7 +260,14 @@ export default {
             });
         },
         checkMatch(list) {
-            return some(list, { id: ~~this.my_card_id, event_id: ~~this.event_id });
+            if (!list || !Array.isArray(list)) return false;
+            const cardId = parseInt(this.my_card_id);
+            const eventId = parseInt(this.event_id);
+
+            // 验证卡号和活动ID是否有效
+            if (isNaN(cardId) || isNaN(eventId)) return false;
+
+            return some(list, { id: cardId, event_id: eventId });
         },
     },
 };

@@ -165,7 +165,7 @@
 </template>
 
 <script>
-import { __Root, __postType, __wikiType, __appType, __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, __postType, __wikiType, __appType, __imgPath } from "@/utils/config";
 import Tinymce from "@jx3box/jx3box-editor/src/Tinymce";
 import CollectionPublic from "@jx3box/jx3box-editor/service/enum/CollectionPublic";
 import header from "@/components/publish/publish_header.vue";

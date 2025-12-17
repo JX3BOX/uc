@@ -1,5 +1,5 @@
 import { $next } from "@jx3box/jx3box-common/js/https";
-import { __Root } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
 

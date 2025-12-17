@@ -36,8 +36,7 @@
                                     placeholder="图标ID"
                                     :minlength="1"
                                     :maxlength="10"
-                                    :max="30000"
-                                    :min="0"
+                                    :min="1"
                                 >
                                     <template slot="prepend">
                                         <img class="u-icon" :src="icon(item)" />
@@ -152,7 +151,7 @@
 <script>
 import User from "@jx3box/jx3box-common/js/user";
 import { sterilizer } from "sterilizer/index.js";
-import { __iconPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __iconPath } from "@/utils/config";
 import isEmptyMeta from "@/utils/isEmptyMeta.js";
 import {cloneDeep} from "lodash";
 import publish_wujie_skill from "@/components/publish/publish_wujie_skill.vue";
@@ -298,7 +297,7 @@ export default {
         // 图标
         icon: function (item) {
             let id = isNaN(item.icon) ? 13 : ~~item.icon;
-            id = Math.max(0, Math.min(id, 30000));
+            // id = Math.max(0, Math.min(id, 30000));
             this.$set(item, "icon", id);
             return __iconPath + "icon/" + id + ".png";
         },

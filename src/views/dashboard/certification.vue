@@ -76,7 +76,7 @@ import uc from "@/components/dashboard/uc.vue";
 import { antiqueTab } from "@/assets/data/dashboard/tabs.json";
 import { teamCertificationRecordList } from "@/service/dashboard/treasure";
 import User from "@jx3box/jx3box-common/js/user";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 import tianTuanCertificateCode from "@/assets/data/dashboard/tianTuan_certificate_code.json";
 import { showSchoolIcon } from "@jx3box/jx3box-common/js/utils";
 

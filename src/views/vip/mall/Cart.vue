@@ -80,7 +80,7 @@
 
 <script>
 import { getThumbnail } from "@jx3box/jx3box-common/js/utils";
-import { __userLevel, __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userLevel, __imgPath } from "@/utils/config";
 import { forEach, cloneDeep, throttle, debounce } from "lodash";
 import User from "@jx3box/jx3box-common/js/user";
 export default {

@@ -50,7 +50,7 @@
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { __imgPath, __cdn, __cms } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath, __cdn, __cms } from "@/utils/config";
 import { unbindOAuth, checkOAuth } from "@/service/dashboard/profile";
 const client = location.href.includes("origin") ? "origin" : "std";
 import { unbindApp } from "@/service/dashboard/union";

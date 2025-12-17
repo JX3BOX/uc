@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { __imgPath, __cdn, __Root } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath, __cdn, __Root } from "@/utils/config";
 import { getGoodsRate, delGoodsRate, goodsRate } from "@/service/vip/mall";
 import User from "@jx3box/jx3box-common/js/user";
 export default {

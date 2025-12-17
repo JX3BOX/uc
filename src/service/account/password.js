@@ -1,5 +1,5 @@
 import { axios, $, $cms } from "./axios";
-import { __server, __cms } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __server, __cms } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import { encryptPassword } from "@/utils/pwd_encrypt";
 

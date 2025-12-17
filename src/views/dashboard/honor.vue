@@ -1,4 +1,5 @@
-/dashboard<template>
+/dashboard
+<template>
     <uc class="m-dashboard-honor m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tab-list="tabList">
         <template #header>
             <a
@@ -88,7 +89,7 @@ import uc from "@/components/dashboard/uc.vue";
 import { themeTab } from "@/assets/data/dashboard/tabs.json";
 import User from "@jx3box/jx3box-common/js/user";
 import { getMyInfo } from "@/service/dashboard/index.js";
-import { __userLevelColor, __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box";
+import { __userLevelColor, __imgPath, __cdn } from "@/utils/config";
 import { getHonor, getUserHonors, setHonor, cancelHonor } from "@/service/dashboard/decoration";
 import { cloneDeep, inRange } from "lodash";
 export default {
@@ -211,7 +212,7 @@ export default {
             return honorStr + honorConfig.suffix;
         },
         loadHonor() {
-            getHonor().then((res) => {
+            getHonor({ per:40 }).then((res) => {
                 this.honorList = res.data.data.list;
                 this.loadDecoration();
             });

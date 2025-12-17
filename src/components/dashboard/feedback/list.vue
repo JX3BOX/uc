@@ -46,7 +46,7 @@
 <script>
 import { getFeedbackList } from "@/service/dashboard/feedback";
 import { types, subtypes, statusMap, statusColors } from "@/assets/data/dashboard/feedback.json";
-import { __clients } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __clients } from "@/utils/config";
 import moment from "moment";
 export default {
     name: "FeedbackList",
