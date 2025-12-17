@@ -23,6 +23,7 @@ import CardLantern from "@/components/card/holiday/CardLantern.vue";
 import CardAutumn from "@/components/card/holiday/CardAutumn.vue";
 import DoubleScreen from "@/components/card/holiday/DoubleScreen.vue";
 import OneScreen from "@/components/card/holiday/OneScreen.vue";
+import Anniversary from "@/components/card/holiday/CardAnniversary.vue";
 import User from "@jx3box/jx3box-common/js/user";
 
 export default {
@@ -40,6 +41,7 @@ export default {
         CardAutumn,
         DoubleScreen,
         OneScreen,
+        Anniversary,
     },
     data: function () {
         return {
@@ -88,6 +90,7 @@ export default {
         // 组件数据
         component_data() {
             const _data = {
+                anniversary: this.anniversary_data,
                 default: this.default_data,
                 children: this.children_data,
                 spring: this.spring_data,
@@ -111,8 +114,15 @@ export default {
                 .map((item) => `${this.imgLink}${item}.png`);
             const size = this.cardType[this.event_id]?.size;
             const percentage = this.cardType[this.event_id]?.percentage;
+            const imgList = this.imgList.map((item) => {
+                if (item.length) {
+                    return item.map((e) => `${this.imgLink}${e}`);
+                } else {
+                    return `${this.imgLink}${item}`;
+                }
+            });
             const data = {
-                imgList: this.imgList.map((item) => `${this.imgLink}${item}`),
+                imgList,
                 fontCount: this.fontCount,
                 countImg: `${this.imgLink}${this.fontCount}.png`,
                 countImgList,
@@ -123,6 +133,23 @@ export default {
             if (bg) data.countBg = `${this.imgLink}${bg}`;
 
             return data;
+        },
+        // 周年庆-2025
+        anniversary_data() {
+            const imgList = this.imgList.map((item) => {
+                if (item.length) {
+                    return item.map((e) => `${this.imgLink}${e}`);
+                } else {
+                    return `${this.imgLink}${item}`;
+                }
+            });
+            return {
+                oneImg: imgList[0],
+                bg1: imgList[1],
+                bg2: imgList[2],
+                imgList: imgList[3],
+                txtList: this.cardType[this.event_id]?.txtList,
+            };
         },
         // 儿童节
         children_data() {
@@ -233,7 +260,14 @@ export default {
             });
         },
         checkMatch(list) {
-            return some(list, { id: ~~this.my_card_id, event_id: ~~this.event_id });
+            if (!list || !Array.isArray(list)) return false;
+            const cardId = parseInt(this.my_card_id);
+            const eventId = parseInt(this.event_id);
+
+            // 验证卡号和活动ID是否有效
+            if (isNaN(cardId) || isNaN(eventId)) return false;
+
+            return some(list, { id: cardId, event_id: eventId });
         },
     },
 };

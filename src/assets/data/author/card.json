@@ -130,5 +130,43 @@
             "margin": "-375px 0 0 -350px"
         },
         "percentage": "100%"
+    },
+    "34": {
+        "name": "2025魔盒周年庆",
+        "key": "box2025",
+        "type": "anniversary",
+        "component": "Anniversary",
+        "imgList": [
+            ["card.png", "button.png", "close.png"],
+            ["bg1.jpg", "girl1.png", "bg1.mp4"],
+            ["bg2.jpg", "girl2.png", "bg2.mp4"],
+            ["path0.png", "path1.png", "star0.png", "star1.png", "text1.png", "text2.png", "text3.png"]
+        ],
+        "txtList": [
+            {
+                "title": "魔盒积分",
+                "desc": "使用场景：可在魔盒商城兑换道具、积分抽奖"
+            },
+            {
+                "title": "魔盒6周年限定纪念魔卡",
+                "desc": "实装场景：魔盒论坛（魔吧）封面"
+            },
+            {
+                "title": "魔盒6周年限定头像框",
+                "desc": "实装场景：魔盒用户头像"
+            },
+            {
+                "title": "魔盒6周年限定纪念勋章",
+                "desc": "实装场景：魔盒帖子侧边栏、个人主页"
+            },
+            {
+                "title": "魔盒6周年限定称号",
+                "desc": "实装场景：魔盒帖子侧边栏、个人主页"
+            },
+            {
+                "title": "魔盒6周年限定主题装扮",
+                "desc": "实装场景：日历、侧边栏、圈人卡、个人主页、评论"
+            }
+        ]
     }
 }
