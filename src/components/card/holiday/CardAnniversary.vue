@@ -1,5 +1,5 @@
 <template>
-    <div class="Anniversary">
+    <div class="Anniversary" :class="{ nextStep }">
         <!-- 第一屏 -->
         <div class="m-card" v-if="!show">
             <img :src="oneImg[0]" alt="2025魔盒周年庆" />
@@ -63,20 +63,22 @@
                 </template>
                 <!-- 领取后内容 -->
                 <template v-else>
-                    <div v-for="(item, i) in txtList" :key="i" :class="['u-title', `u-title-${i + 1}`]">
-                        {{ item.title == "魔盒积分" ? `${data.count || 0}魔盒积分` : item.title }}
-                    </div></template
+                    <span v-for="(item, i) in txtList" :key="i" :class="['u-title', `u-title-${i + 1}`]">
+                        {{ item.title == "魔盒积分" ? `${data.count || "20"}魔盒积分` : item.title }}
+                    </span></template
                 >
             </div>
             <!-- 领取按钮 -->
             <div class="m-click" v-if="showNext && !nextStep">
                 <span class="u-circle" @click="getAll">摘星</span>
             </div>
+            <!-- 手机端按钮 -->
+            <img class="u-button" :src="oneImg[1]" alt="2025魔盒周年庆" @click="close" />
         </div>
     </div>
 </template>
 <script>
-import User from "@jx3box/jx3box-common/js/user";
+import { decorationReceive } from "@/service/author/cms";
 import { __imgPath } from "@/utils/config";
 export default {
     name: "cardAnniversary",
@@ -181,6 +183,11 @@ export default {
             .pointer;
             .size(60px);
             .rt(60px);
+        }
+        .u-button {
+            .none;
+            .pa;
+            .lb(5%);
         }
     }
     .m-bg {
@@ -584,6 +591,113 @@ export default {
     }
     to {
         opacity: 1;
+    }
+}
+</style>
+
+<style lang="less">
+@media screen and (max-width: @ipad) {
+    .Anniversary {
+        .m-card {
+            width: 90%;
+            height: auto;
+            margin: -30% 0 0 -45%;
+        }
+        .m-bg {
+            background: url("https://cdn.jx3box.com/design/card/festival/box2025/bg1.jpg") no-repeat center bottom;
+            background-size: cover;
+            .u-video,
+            .u-tips {
+                .none;
+            }
+            .u-box-girl-1 {
+                .size(auto,15%);
+            }
+        }
+        .m-star-box {
+            .pt(30%);
+            width: 100%;
+            height: 80%;
+
+            .m-title {
+                .u-img-title,
+                .u-img-title.light {
+                    height: 100px;
+                    width: auto;
+                }
+                .u-count {
+                    .fz(56px,100px);
+                }
+            }
+            .m-heart {
+                .pr;
+                flex: 0 0 auto;
+                .auto(x);
+            }
+            .u-txt {
+                .none;
+            }
+        }
+        .m-click {
+            .lb(50%,24%);
+            .ml(-120px);
+            .size(240px);
+            .u-circle {
+                .size(240px);
+            }
+        }
+    }
+    .Anniversary.nextStep {
+        .m-bg {
+            background: url("https://cdn.jx3box.com/design/card/festival/box2025/bg2.jpg") no-repeat center bottom;
+            background-size: cover;
+            .u-jx3box {
+                width: 50%;
+                height: auto;
+            }
+        }
+        .m-title {
+            .none;
+        }
+
+        .m-star-box {
+            .db;
+            .pt(30%);
+            .m-heart {
+                .none;
+            }
+        }
+        .u-box-girl-1 {
+            .none;
+        }
+        .u-box-girl-2 {
+            .rb(0,0);
+            margin: 0;
+        }
+        .u-title {
+            .dbi;
+            .fz(50px,160px);
+            .r(40px);
+            width: auto;
+            height: 160px;
+            position: static;
+            vertical-align: middle;
+            margin: 0 50% 50px 50px;
+            padding: 0 60px;
+            border: 5px solid #fff;
+            &::before {
+                content: "";
+                background: url("https://cdn.jx3box.com/design/card/festival/box2025/star1.png") no-repeat center;
+                background-size: 100% 100%;
+                vertical-align: middle;
+                .size(80px);
+                .dbi;
+                .mr(20px);
+            }
+        }
+        .m-anniversary .u-button {
+            .db;
+        }
     }
 }
 </style>
