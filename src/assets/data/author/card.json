@@ -140,7 +140,7 @@
             ["card.png", "button.png", "close.png"],
             ["bg1.jpg", "girl1.png", "bg1.mp4"],
             ["bg2.jpg", "girl2.png", "bg2.mp4"],
-            ["path0.png", "path1.png", "star0.png", "star1.png", "text1.png", "text2.png", "text3.png"]
+            ["path0@2x.png", "path1@2x.png", "star0.png", "star1.png", "text1.png", "text2.png", "text3.png"]
         ],
         "txtList": [
             {

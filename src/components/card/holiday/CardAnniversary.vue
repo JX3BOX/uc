@@ -8,24 +8,37 @@
         </div>
         <!-- 第二屏 -->
         <div class="m-anniversary" v-else>
+            <img class="u-close" v-if="nextStep" :src="oneImg[2]" alt="2025魔盒周年庆" @click="close" />
             <!-- 背景 -->
             <div class="m-bg">
-                <video class="u-video" autoplay muted loop :poster="bgImg[0]" preload="metadata">
-                    <source :src="bgImg[2]" type="video/mp4" />
+                <!-- 背景 -->
+                <video v-if="nextStep" class="u-video" autoplay muted loop :poster="bg2Img[0]" preload="metadata">
+                    <source :src="bg2Img[2]" type="video/mp4" />
                 </video>
-                <img class="u-box-girl" :src="bgImg[1]" alt="盒子娘" />
+                <video v-else class="u-video" autoplay muted loop :poster="bg1Img[0]" preload="metadata">
+                    <source :src="bg1Img[2]" type="video/mp4" />
+                </video>
+                <!-- 盒子娘小 -->
+                <img class="u-box-girl-1" :src="bg1Img[1]" alt="盒子娘（小）" />
+                <!-- 领取结算界面 -->
+                <template v-if="nextStep">
+                    <img class="u-box-girl-2" :src="bg2Img[1]" alt="盒子娘（大）" />
+                    <img class="u-jx3box" :src="imgList[6]" alt="魔盒团队爱你" />
+                    <span class="u-tips">已领取</span>
+                </template>
             </div>
             <!-- 内容 -->
             <div class="m-star-box">
+                <!-- 未领取时标题 -->
                 <div :class="['m-title', { nextStep }]">
                     <img
-                        :class="['u-title', { light: showNext }]"
+                        :class="['u-img-title', { light: showNext }]"
                         :src="showNext ? imgList[5] : imgList[4]"
                         :alt="showNext ? '摘下来看看' : '请依次点亮所有星星'"
                     />
                     <span class="u-count">({{ starCount }}/6)</span>
                 </div>
-
+                <!-- 心形 -->
                 <div class="m-heart">
                     <div :class="['u-heart u-heart-1', { nextStep }]"></div>
                     <div :class="['u-heart u-heart-2', { nextStep }, { light: showNext }]"></div>
@@ -37,6 +50,7 @@
                         @click="clickStar(i)"
                     />
                 </div>
+                <!-- 未领取时内容 -->
                 <template v-if="!nextStep">
                     <div
                         v-for="(item, i) in txtList"
@@ -47,7 +61,14 @@
                         <p>{{ item.desc }}</p>
                     </div>
                 </template>
+                <!-- 领取后内容 -->
+                <template v-else>
+                    <div v-for="(item, i) in txtList" :key="i" :class="['u-title', `u-title-${i + 1}`]">
+                        {{ item.title == "魔盒积分" ? `${data.count || 0}魔盒积分` : item.title }}
+                    </div></template
+                >
             </div>
+            <!-- 领取按钮 -->
             <div class="m-click" v-if="showNext && !nextStep">
                 <span class="u-circle" @click="nextStep = true">摘星</span>
             </div>
@@ -62,7 +83,7 @@ export default {
     props: ["data"],
     data: function () {
         return {
-            show: true,
+            show: false,
             light: false,
             starCount: 0,
             starList: [],
@@ -77,8 +98,11 @@ export default {
         oneImg() {
             return this.data.oneImg;
         },
-        bgImg() {
-            return this.light ? this.data.bg2 : this.data.bg1;
+        bg1Img() {
+            return this.data.bg1;
+        },
+        bg2Img() {
+            return this.data.bg2;
         },
         imgList() {
             return this.data.imgList;
@@ -139,6 +163,12 @@ export default {
         .lt(0);
         .rb(0);
         .z(9);
+        .u-close {
+            .pa;
+            .pointer;
+            .size(60px);
+            .rt(60px);
+        }
     }
     .m-bg {
         .pa;
@@ -150,16 +180,37 @@ export default {
             .w(100%);
             .lb(0);
         }
-        .u-box-girl {
-            .size(88px,160px);
+        .u-box-girl-1 {
             .pa;
+            .size(88px,160px);
             .lb(50%,0);
-            margin: -80px 0 0 -44px;
+            margin: 0 0 0 -44px;
+        }
+        .u-box-girl-2 {
+            .pa;
+            .lb(50%);
+            .size(864px,639px);
+            margin: 0 0 -100px -432px;
+            animation: girl 1.5s linear forwards;
+        }
+        .u-jx3box {
+            .pa;
+            .lt(220px,120px);
+            .size(438px,auto);
+            animation: down 1.5s linear forwards;
+        }
+        .u-tips {
+            .pa;
+            .color(#fff);
+            .fz(36px,60px);
+            .lb(50%,180px);
+            margin: 0 0 0 -1.5em;
+            animation: show 1.5s linear forwards;
         }
     }
     .m-star-box {
         .pr;
-        .size(622px,100%);
+        .size(750px,100%);
         .auto(x);
         .flex;
         flex-direction: column;
@@ -168,7 +219,7 @@ export default {
             flex-direction: column;
             align-items: center;
             padding: 80px 0 40px 0;
-            .u-title {
+            .u-img-title {
                 .size(420px,45px);
                 transition: all 0.5s ease-in-out;
                 &.light {
@@ -186,24 +237,24 @@ export default {
 
         .m-heart {
             .pr;
-            .w(622px);
+            .w(750px);
             flex: 1;
         }
         .u-heart {
             .pa;
-            .size(622px,424px);
+            .size(750px,560px);
             .tm(1);
             &-1 {
-                background-image: url("https://cdn.jx3box.com/design/card/festival/box2025/path0.png");
-                background-size: contain;
+                background-image: url("https://cdn.jx3box.com/design/card/festival/box2025/path0@2x.png");
+                background-size: 750px 560px;
                 background-repeat: no-repeat;
-                background-position: center;
+                background-position: center center;
             }
             &-2 {
-                background-image: url("https://cdn.jx3box.com/design/card/festival/box2025/path1.png");
-                background-size: contain;
+                background-image: url("https://cdn.jx3box.com/design/card/festival/box2025/path1@2x.png");
+                background-size: 750px 560px;
                 background-repeat: no-repeat;
-                background-position: center;
+                background-position: center center;
 
                 transform: translateZ(0);
                 will-change: transform, opacity;
@@ -218,7 +269,7 @@ export default {
                 }
             }
             &.nextStep {
-                animation: hide 2s linear forwards;
+                animation: hide 1.5s linear forwards;
             }
         }
         .u-star {
@@ -228,42 +279,40 @@ export default {
             &.light {
                 animation: rocking 1s ease-in-out infinite;
             }
-            &.nextStep {
-                top: auto;
-            }
             &-1 {
-                .lt(calc(50% - 60px),20px);
+                .lt(calc(50% - 60px),95px);
                 &.nextStep {
-                    animation: star-1 2s linear forwards;
+                    animation: star-1 1.5s linear forwards;
                 }
             }
             &-2 {
-                .lt(536px,56px);
+                .lt(540px,30px);
                 &.nextStep {
-                    animation: star-2 2s linear forwards;
+                    animation: star-2 1.5s linear forwards;
                 }
             }
             &-3 {
-                .lt(490px,236px);
+                .lt(560px,280px);
                 &.nextStep {
-                    animation: star-3 2s linear forwards;
+                    animation: star-3 1.5s linear forwards;
                 }
             }
             &-4 {
-                .lt(50%,330px);
+                .lt(calc(50% - 74px),414px);
                 &.nextStep {
-                    animation: star-4 2s linear forwards;
+                    animation: star-4 1.5s linear forwards;
                 }
             }
             &-5 {
-                .lt(34px,224px);
+                .lt(60px,270px);
                 &.nextStep {
-                    animation: star-5 2s linear forwards;
+                    animation: star-5 1.5s linear forwards;
                 }
             }
             &-6 {
+                .lt(54px);
                 &.nextStep {
-                    animation: star-6 2s linear forwards;
+                    animation: star-6 1.5s linear forwards;
                 }
             }
         }
@@ -307,6 +356,43 @@ export default {
         }
         &-6 {
             .lt(-440px,120px);
+        }
+    }
+    .u-title {
+        .pa;
+        .nobreak;
+        .r(12px);
+        .fz(24px);
+        user-select: none;
+        pointer-events: none;
+        color: #fff;
+        padding: 10px 40px;
+        border: 1px solid #fff;
+        background-color: rgba(0, 0, 0, 0.75);
+        animation: show 1.5s linear forwards;
+        &-1 {
+            .rt(50%,calc(100% - 480px));
+            .mr(300px);
+        }
+        &-2 {
+            .lt(50%,calc(100% - 240px));
+            .ml(700px);
+        }
+        &-3 {
+            .rt(50%,calc(100% - 380px));
+            .mr(500px);
+        }
+        &-4 {
+            .rt(50%,calc(100% - 240px));
+            .mr(700px);
+        }
+        &-5 {
+            .lt(50%,calc(100% - 480px));
+            .ml(300px);
+        }
+        &-6 {
+            .lt(50%,calc(100% - 380px));
+            .ml(500px);
         }
     }
     .m-click {
@@ -422,69 +508,69 @@ export default {
     }
 }
 @keyframes star-1 {
-    0% {
-        left: calc(50% - 60px); 
-        transform: rotate(0deg);
-    }
-    100% {
-        left: calc(50% + 30px);
-        bottom: 300px;
+    to {
+        .lt(calc(50% + 50px),calc(100% - 480px));
         transform: rotate(120deg);
     }
 }
 @keyframes star-2 {
-    0% {
-        left: 536px; 
-        transform: rotate(0deg);
-    }
-    100% {
-        left: 536px;
-        bottom: 200px;
+    to {
+        .lt(640px, calc(100% - 380px));
         transform: rotate(145deg);
     }
 }
 @keyframes star-3 {
-    0% {
-        left: 490px; 
-        transform: rotate(0deg);
-    }
-    100% {
-        left: 690px;
-        bottom: 50px;
+    to {
+        .lt(800px,calc(100% - 240px));
         transform: rotate(180deg);
     }
 }
 @keyframes star-4 {
-    0% {
-        left: 50%; 
-        transform: rotate(0deg);
-    }
-    100% {
-        left: calc(50% - 180px);
-        bottom: 300px;
+    to {
+        .lt(calc(50% - 190px),calc(100% - 480px));
         transform: rotate(60deg);
     }
 }
 @keyframes star-5 {
-    0% {
-        left: 34px; 
-        transform: rotate(0deg);
-    }
-    100% {
-        left: -50px;
-        bottom: 200px;
+    to {
+        .lt(-20px,calc(100% - 380px));
         transform: rotate(40deg);
     }
 }
 @keyframes star-6 {
+    to {
+        .lt(calc(-50% + 180px),calc(100% - 240px));
+        transform: rotate(30deg);
+    }
+}
+@keyframes girl {
     0% {
-        left: 0; 
-        transform: rotate(0deg);
+        transform: translateY(100%) scale(1);
+        opacity: 0;
     }
     100% {
-        left: calc(-50% + 150px);
-        bottom: 50px;
-        transform: rotate(30deg);
+        transform: translateY(0%) scale(1.2);
+        opacity: 1;
+    }
+}
+@keyframes down {
+    0% {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0);
+    }
+    to {
+        opacity: 1;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+}
+@keyframes show {
+    0% {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
     }
 }
 </style>

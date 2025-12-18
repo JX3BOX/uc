@@ -144,6 +144,7 @@ export default {
                 }
             });
             return {
+                count: this.cardType[this.event_id]?.count,
                 oneImg: imgList[0],
                 bg1: imgList[1],
                 bg2: imgList[2],
