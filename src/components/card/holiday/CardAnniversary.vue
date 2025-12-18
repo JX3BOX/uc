@@ -70,7 +70,7 @@
             </div>
             <!-- 领取按钮 -->
             <div class="m-click" v-if="showNext && !nextStep">
-                <span class="u-circle" @click="nextStep = true">摘星</span>
+                <span class="u-circle" @click="getAll">摘星</span>
             </div>
         </div>
     </div>
@@ -125,6 +125,19 @@ export default {
             this.starCount++;
             this.nextStar++;
             this.starList.push(i);
+        },
+        getAll() {
+            this.nextStep = true;
+            // decorationReceive({
+            //     key: "jx3box-birthday-6",
+            //     type: `atcard,homebg,sidebar,calendar,comment,avatar,palu,vip`,
+            // })
+            //     .then((e) => {
+            //         console.log(e, "领取成功");
+            //     })
+            //     .catch((e) => {
+            //         console.log(e, "领取失败");
+            //     });
         },
     },
 };
