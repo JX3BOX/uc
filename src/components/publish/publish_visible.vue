@@ -3,11 +3,11 @@
         <el-form-item label="阅读权限">
             <el-radio-group v-model="visible">
                 <el-radio label="0">公开</el-radio>
-                <el-radio label="1">仅自己可见</el-radio>
-                <el-radio label="2">仅亲友可见</el-radio>
+                <el-radio label="1" :disabled="disabled">仅自己可见</el-radio>
+                <el-radio label="2" :disabled="disabled">仅亲友可见</el-radio>
                 <el-radio label="3" disabled>密码可见</el-radio>
                 <el-radio label="4" disabled>付费可见</el-radio>
-                <el-radio label="5">粉丝可见</el-radio>
+                <el-radio label="5" :disabled="disabled">粉丝可见</el-radio>
             </el-radio-group>
         </el-form-item>
     </div>
@@ -16,7 +16,7 @@
 <script>
 export default {
     name: "",
-    props: ["data"],
+    props: ["data", "disabled"],
     components: {},
     data: function () {
         return {
@@ -29,7 +29,7 @@ export default {
     },
     watch: {
         data: function (newval) {
-            this.visible = newval;
+            this.visible = String(newval);
         },
         visible: {
             deep: true,

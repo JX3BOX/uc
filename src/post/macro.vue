@@ -83,7 +83,10 @@
                     <el-checkbox v-model="open_white_list" :true-label="1" :false-label="0">开启评论过滤</el-checkbox>
                 </publish-comment>
                 <publish-gift v-model="post.allow_gift"></publish-gift>
-                <publish-visible v-model="post.visible"></publish-visible>
+                <el-form-item label="匿名开关">
+                    <el-switch v-model="post.anonymous" active-color="#13ce66" :active-value="1" :inactive-value="0" @change="onAnonymousChange"></el-switch>
+                </el-form-item>
+                <publish-visible v-model="post.visible" :disabled="!!post.anonymous"></publish-visible>
                 <publish-guide :data="post"></publish-guide>
                 <publish-authors :id="id" :uid="post.post_author"></publish-authors>
             </div>
@@ -273,6 +276,8 @@ export default {
 
                 // 阅读权限（0公开，1仅自己，2亲友，3密码，4付费，5粉丝）
                 visible: 0,
+                // 匿名开关（0关闭|默认，1开启）
+                anonymous: 0,
 
                 is_wujie: 0,
             },

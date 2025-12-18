@@ -72,22 +72,23 @@
             <div class="m-publish-extend">
                 <el-divider content-position="left">设置</el-divider>
                 <el-form-item label="评论开关">
-                    <el-switch v-model="post.disable_comment" :active-value="1" :inactive-value="0"></el-switch>
+                    <!-- 默认应该是可以评论，但是是开的 -->
+                    <el-switch v-model="post.disable_comment" active-color="#13ce66" :active-value="0" :inactive-value="1"></el-switch>
                 </el-form-item>
                 <el-form-item label="礼物开关">
-                    <el-switch v-model="post.disable_inspire_boxcoin" :active-value="1" :inactive-value="0"></el-switch>
+                    <el-switch v-model="post.disable_inspire_boxcoin" active-color="#13ce66" :active-value="0" :inactive-value="1"></el-switch>
                 </el-form-item>
                 <el-form-item label="匿名开关">
-                    <el-switch v-model="post.anonymous" :active-value="1" :inactive-value="0"></el-switch>
+                    <el-switch v-model="post.anonymous" active-color="#13ce66" :active-value="1" :inactive-value="0" @change="onAnonymousChange"></el-switch>
                 </el-form-item>
                 <el-form-item label="阅读权限">
                     <el-radio-group v-model="post.visible">
                         <el-radio :label="0">公开</el-radio>
-                        <el-radio :label="1">仅自己可见</el-radio>
-                        <el-radio :label="2">仅亲友可见</el-radio>
-                        <el-radio :label="3">密码可见</el-radio>
+                        <el-radio :label="1" :disabled="!!post.anonymous">仅自己可见</el-radio>
+                        <el-radio :label="2" :disabled="!!post.anonymous">仅亲友可见</el-radio>
+                        <el-radio :label="3" :disabled="!!post.anonymous">密码可见</el-radio>
                         <!-- <el-radio label="4" disabled>付费可见</el-radio> -->
-                        <el-radio :label="5">粉丝可见</el-radio>
+                        <el-radio :label="5" :disabled="!!post.anonymous">粉丝可见</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="密码" v-if="post.visible == 3">
