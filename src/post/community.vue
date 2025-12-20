@@ -16,7 +16,7 @@
             <div class="m-publish-info">
                 <el-divider content-position="left">信息</el-divider>
                 <!-- 客户端 -->
-                <!-- <publish-client v-model="post.client" :showMobile="true"></publish-client> -->
+                <publish-client v-model="post.client" :showMobile="true"></publish-client>
                 <!-- 类型 -->
                 <publish-category v-model="post.category" :options="tags"></publish-category>
             </div>
@@ -161,6 +161,7 @@ import publish_revision from "@/components/publish/publish_revision.vue";
 import publish_category from "@/components/publish/publish_category.vue";
 import publish_at_authors from "@/components/publish/publish_at_authors.vue";
 import publish_reading_history from "@/components/publish/publish_reading_history.vue";
+import publish_client from "@/components/publish/publish_client.vue";
 
 // 数据逻辑
 import { getTopicBucket } from "@/service/publish/cms.js";
@@ -179,7 +180,7 @@ export default {
         "publish-collection": publish_collection,
         "publish-revision": publish_revision,
         "publish-category": publish_category,
-        // "publish-client": publish_client,
+        "publish-client": publish_client,
         "publish-at-authors": publish_at_authors,
         "publish-reading-history": publish_reading_history,
     },
@@ -361,6 +362,12 @@ export default {
                         this.loading = false;
                     });
             } else {
+                const data = {
+                    ...this.data,
+                }
+                if (this.category == '求助') {
+                    data.tags = ["未解决"]
+                }
                 push(this.data)
                     .then((res) => {
                         const result = res.data.data;
