@@ -169,6 +169,7 @@ import { cmsMetaMixin } from "@/utils/cmsMetaMixin";
 import { atAuthorMixin } from "@/utils/atAuthorMixin";
 import { getDecoration } from "@jx3box/jx3box-common-ui/service/cms";
 import { appendToCollection } from "@/service/publish/collection.js";
+import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
 
 export default {
     name: "community",
@@ -335,7 +336,13 @@ export default {
             this.loading = true;
             if (this.data.id) {
                 const fn = this.from === "admin" ? updateAdmin : update;
-                fn(this.data.id, this.data)
+                const data = {
+                    ...this.data,
+                }
+                if (!isMiniProgram()) {
+                    data.is_wx_audit = 0;
+                }
+                fn(this.data.id, data)
                     .then((res) => {
                         this.$message({
                             message: "更新成功",
@@ -368,7 +375,10 @@ export default {
                 if (this.category == '求助') {
                     data.tags = ["未解决"]
                 }
-                push(this.data)
+                if (!isMiniProgram()) {
+                    data.is_wx_audit = 0;
+                }
+                push(data)
                     .then((res) => {
                         const result = res.data.data;
                         this.$message({
