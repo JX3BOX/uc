@@ -2,9 +2,9 @@
     <div class="m-category-list">
         <span class="u-category">类别</span>
         <el-radio-group v-model="category" @input="updateCategory">
-            <el-tooltip v-for="item in options" :key="item.name" effect="dark" :content="item.remark" placement="top-start">
-                <el-radio border :label="item.name">{{ item.name }}</el-radio>
-            </el-tooltip>
+            <!-- <el-tooltip v-for="item in options" :key="item.name" effect="dark" :content="item.remark" placement="top-start"> -->
+                <el-radio v-for="item in options" :key="item.name" border :label="item.name">{{ item.label }}</el-radio>
+            <!-- </el-tooltip> -->
         </el-radio-group>
     </div>
 </template>

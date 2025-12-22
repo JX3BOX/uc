@@ -424,10 +424,11 @@ export default {
             return imgSrcs;
         },
         getTopicBucket() {
-            getTopicBucket({ type: "community" }).then((res) => {
-                const data = res.data.data;
-                this.tags = [...data];
-            });
+            // getTopicBucket({ type: "community" }).then((res) => {
+            //     const data = res.data.data;
+            //     this.tags = [...data];
+            // });
+            this.tags = community_types;
         },
         // 跳转前操作
         afterPublish: function (result) {
