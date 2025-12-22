@@ -208,15 +208,15 @@ export default {
         }
         .u-box-girl-2 {
             .pa;
-            .lb(50%);
-            .size(864px,639px);
-            margin: 0 0 -100px -432px;
+            .lb(50%,0);
+            .size(1500px,auto);
+            .ml(-750px);
             animation: girl 1.5s linear forwards;
         }
         .u-jx3box {
             .pa;
             .lt(220px,120px);
-            .size(438px,auto);
+            .size(520px,auto);
             animation: down 1.5s linear forwards;
         }
         .u-tips {
@@ -281,9 +281,9 @@ export default {
 
                 -webkit-mask-image: radial-gradient(circle 0px at center, transparent 0%, transparent 100%);
                 mask-image: radial-gradient(circle 0px at center, transparent 0%, transparent 100%);
-                transition: -webkit-mask-image 1s linear, mask-image 1s linear;
+                transition: -webkit-mask-image 0.4s linear, mask-image 0.4s linear;
                 &.light {
-                    animation: maskAnimation 1s linear forwards;
+                    animation: maskAnimation 0.4s linear forwards;
                     -webkit-mask-image: radial-gradient(circle 150px at center, transparent 0%, black 100%);
                     mask-image: radial-gradient(circle 150px at center, transparent 0%, black 100%);
                 }
@@ -340,7 +340,7 @@ export default {
     .u-txt {
         .pa;
         .r(12px);
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.1);
         padding: 20px;
         color: #fff;
         user-select: none;
@@ -366,10 +366,10 @@ export default {
             .rt(-340px,420px);
         }
         &-3 {
-            .lt(70%,700px);
+            .lt(70%,750px);
         }
         &-4 {
-            .rt(70%,700px);
+            .rt(70%,750px);
         }
         &-5 {
             .lt(-420px,420px);
@@ -418,7 +418,8 @@ export default {
     .m-click {
         .pf;
         .size(120px);
-        .rb(120px);
+        .rt(50%,760px);
+        .mr(-650px);
         .u-circle {
             .flex;
             .pr;
@@ -455,10 +456,10 @@ export default {
 }
 @keyframes pulse {
     0% {
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+        box-shadow: 0 0 0 0 rgba(235, 164, 0, 0.5);
     }
     100% {
-        box-shadow: 0 0 0 50px rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 0 50px rgba(235, 164, 0, 0.1);
     }
 }
 @keyframes maskAnimation {
@@ -639,11 +640,12 @@ export default {
             }
         }
         .m-click {
-            .lb(50%,24%);
-            .ml(-120px);
-            .size(240px);
+            .mr(-60px);
+            .size(120px);
+            top: calc(100% - 650px);
             .u-circle {
-                .size(240px);
+                .fz(30px,120px);
+                .size(120px);
             }
         }
     }
@@ -672,7 +674,7 @@ export default {
         }
         .u-box-girl-2 {
             .rb(0,0);
-            margin: 0;
+            margin: 0 0 0 -650px;
         }
         .u-title {
             .dbi;
@@ -697,6 +699,17 @@ export default {
         }
         .m-anniversary .u-button {
             .db;
+        }
+    }
+}
+@media screen and (max-width: @phone) {
+    .Anniversary .m-click {
+        .mr(-150px);
+        top: calc(50% + 200px);
+        .size(300px);
+        .u-circle {
+            .fz(60px,300px);
+            .size(300px);
         }
     }
 }
