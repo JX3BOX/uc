@@ -21,6 +21,12 @@ function getEmotion() {
     return axios.get(`${__dataPath}emotion/output/catalog.json?${Date.now()}`);
 }
 
+function getUserDecoration(params) {
+    return $cms().get("/api/cms/user/decoration/check", {
+        params,
+    });
+}
+
 function receive(user_id, val) {
     return $cms().post(`/api/cms/user/decoration/check-suit/${user_id}/${val}/for/avatar`);
 }
@@ -30,7 +36,7 @@ function updateAvatarFrame(data) {
 }
 
 function getHonor(params) {
-    return $cms().get("/api/cms/user/config/honor", {params});
+    return $cms().get("/api/cms/user/config/honor", { params });
 }
 
 function getUserHonors(uid) {
@@ -56,7 +62,7 @@ function getUserMedals(uid, params) {
 
 // 获取所有勋章
 function getMedals(params) {
-    return $cms().get("/api/cms/config/medal", {params});
+    return $cms().get("/api/cms/config/medal", { params });
 }
 
 // 用户佩戴或者取消佩戴勋章
@@ -68,6 +74,7 @@ export {
     getDecoration,
     setDecoration,
     getDecorationJson,
+    getUserDecoration,
     getEmotion,
     receive,
     updateAvatarFrame,
@@ -77,5 +84,5 @@ export {
     cancelHonor,
     getUserMedals,
     getMedals,
-    setMedal
+    setMedal,
 };

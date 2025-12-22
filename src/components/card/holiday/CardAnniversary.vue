@@ -79,6 +79,7 @@
 </template>
 <script>
 import { decorationReceive } from "@/service/author/cms";
+import { getUserDecoration } from "@/service/dashboard/decoration";
 import { __imgPath } from "@/utils/config";
 export default {
     name: "cardAnniversary",
@@ -130,16 +131,23 @@ export default {
         },
         getAll() {
             this.nextStep = true;
-            // decorationReceive({
-            //     key: "jx3box-birthday-6",
-            //     type: `atcard,homebg,sidebar,calendar,comment,avatar,palu,vip`,
-            // })
-            //     .then((e) => {
-            //         console.log(e, "领取成功");
-            //     })
-            //     .catch((e) => {
-            //         console.log(e, "领取失败");
-            //     });
+            getUserDecoration({
+                key: "jx3box-birthday-6",
+                type: "atcard,homebg,sidebar,calendar,comment,avatar,palu",
+            }).then((res) => {
+                const list = res.data?.data || [];
+                if (list.length) return;
+                decorationReceive({
+                    key: "jx3box-birthday-6",
+                    type: `atcard,homebg,sidebar,calendar,comment,avatar,palu`,
+                })
+                    .then((e) => {
+                        console.log(e, "领取成功");
+                    })
+                    .catch((e) => {
+                        console.log(e, "领取失败");
+                    });
+            });
         },
     },
 };
@@ -438,6 +446,7 @@ export default {
             &:hover {
                 background-color: #fff;
                 color: #000;
+                animation: pulse_hover 2s linear infinite;
             }
         }
     }
@@ -456,10 +465,18 @@ export default {
 }
 @keyframes pulse {
     0% {
-        box-shadow: 0 0 0 0 rgba(235, 164, 0, 0.5);
+        box-shadow: 0 0 0 0 rgba(235, 164, 0, 0.1);
     }
     100% {
         box-shadow: 0 0 0 50px rgba(235, 164, 0, 0.1);
+    }
+}
+@keyframes pulse_hover {
+    0% {
+        box-shadow: 0 0 0 0 rgba(235, 164, 0, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 0 50px rgba(235, 164, 0, 0.5);
     }
 }
 @keyframes maskAnimation {
