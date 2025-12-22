@@ -22,7 +22,8 @@
                 <img class="u-box-girl-1" :src="bg1Img[1]" alt="盒子娘（小）" />
                 <!-- 领取结算界面 -->
                 <template v-if="nextStep">
-                    <img class="u-box-girl-2" :src="bg2Img[1]" alt="盒子娘（大）" />
+                    <!-- <img class="" :src="bg2Img[1]" alt="盒子娘（大）" /> -->
+                    <div class="u-box-girl-2"></div>
                     <img class="u-jx3box" :src="imgList[6]" alt="魔盒团队爱你" />
                     <span class="u-tips">已领取</span>
                 </template>
@@ -78,8 +79,7 @@
     </div>
 </template>
 <script>
-import { decorationReceive } from "@/service/author/cms";
-import { getUserDecoration } from "@/service/dashboard/decoration";
+import { getUserDecoration, decorationReceive, medalReceive, medalCheck } from "@/service/dashboard/decoration";
 import { __imgPath } from "@/utils/config";
 export default {
     name: "cardAnniversary",
@@ -133,13 +133,13 @@ export default {
             this.nextStep = true;
             getUserDecoration({
                 key: "jx3box-birthday-6",
-                type: "atcard,homebg,sidebar,calendar,comment,avatar,palu",
+                type: "honor",
             }).then((res) => {
                 const list = res.data?.data || [];
                 if (list.length) return;
                 decorationReceive({
                     key: "jx3box-birthday-6",
-                    type: `atcard,homebg,sidebar,calendar,comment,avatar,palu`,
+                    type: `atcard,homebg,sidebar,calendar,comment,avatar,palu,honor`,
                 })
                     .then((e) => {
                         console.log(e, "领取成功");
@@ -147,6 +147,16 @@ export default {
                     .catch((e) => {
                         console.log(e, "领取失败");
                     });
+            });
+            medalCheck({
+                medal_name: "jx3box-birthday-6",
+            }).then((res) => {
+                if (res.data?.data == true) return;
+                medalReceive({
+                    medal_name: "jx3box-birthday-6",
+                }).then((e) => {
+                    console.log(e, "领取成功");
+                });
             });
         },
     },
@@ -216,16 +226,18 @@ export default {
         }
         .u-box-girl-2 {
             .pa;
-            .lb(50%,0);
-            .size(1500px,auto);
-            .ml(-750px);
-            animation: girl 1.5s linear forwards;
+            .lb(0);
+            .rt(0);
+            .full;
+            background: url("https://cdn.jx3box.com/design/card/festival/box2025/girl2.png") center 84px no-repeat;
+            background-size: contain;
+            animation: girl 1s linear forwards;
         }
         .u-jx3box {
             .pa;
             .lt(220px,120px);
             .size(520px,auto);
-            animation: down 1.5s linear forwards;
+            animation: down 1s linear forwards;
         }
         .u-tips {
             .pa;
@@ -233,7 +245,7 @@ export default {
             .fz(36px,60px);
             .lb(50%,180px);
             margin: 0 0 0 -1.5em;
-            animation: show 1.5s linear forwards;
+            animation: show 1s linear forwards;
         }
     }
     .m-star-box {
@@ -297,7 +309,7 @@ export default {
                 }
             }
             &.nextStep {
-                animation: hide 1.5s linear forwards;
+                animation: hide 1s linear forwards;
             }
         }
         .u-star {
@@ -310,37 +322,37 @@ export default {
             &-1 {
                 .lt(calc(50% - 60px),95px);
                 &.nextStep {
-                    animation: star-1 1.5s linear forwards;
+                    animation: star-1 1s linear forwards;
                 }
             }
             &-2 {
                 .lt(540px,30px);
                 &.nextStep {
-                    animation: star-2 1.5s linear forwards;
+                    animation: star-2 1s linear forwards;
                 }
             }
             &-3 {
                 .lt(560px,280px);
                 &.nextStep {
-                    animation: star-3 1.5s linear forwards;
+                    animation: star-3 1s linear forwards;
                 }
             }
             &-4 {
                 .lt(calc(50% - 74px),414px);
                 &.nextStep {
-                    animation: star-4 1.5s linear forwards;
+                    animation: star-4 1s linear forwards;
                 }
             }
             &-5 {
                 .lt(60px,270px);
                 &.nextStep {
-                    animation: star-5 1.5s linear forwards;
+                    animation: star-5 1s linear forwards;
                 }
             }
             &-6 {
                 .lt(54px);
                 &.nextStep {
-                    animation: star-6 1.5s linear forwards;
+                    animation: star-6 1s linear forwards;
                 }
             }
         }
@@ -397,7 +409,7 @@ export default {
         padding: 10px 40px;
         border: 1px solid #fff;
         background-color: rgba(0, 0, 0, 0.75);
-        animation: show 1.5s linear forwards;
+        animation: show 1s linear forwards;
         &-1 {
             .rt(50%,calc(100% - 480px));
             .mr(300px);
@@ -691,7 +703,8 @@ export default {
         }
         .u-box-girl-2 {
             .rb(0,0);
-            margin: 0 0 0 -650px;
+            top: auto;
+            height: 50%;
         }
         .u-title {
             .dbi;

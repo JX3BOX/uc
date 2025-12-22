@@ -7,6 +7,11 @@ function getDecoration(params) {
         params,
     });
 }
+function medalCheck(params) {
+    return $cms().get("/api/cms/user/medal/check", {
+        params,
+    });
+}
 
 function setDecoration(data) {
     return $cms().post(`/api/cms/user/decoration`, data);
@@ -59,6 +64,10 @@ function getUserMedals(uid, params) {
         params,
     });
 }
+// 用户领取勋章
+function medalReceive(data) {
+    return $cms().post("/api/cms/user/medal/receive", data);
+}
 
 // 获取所有勋章
 function getMedals(params) {
@@ -68,6 +77,11 @@ function getMedals(params) {
 // 用户佩戴或者取消佩戴勋章
 function setMedal(uid, medal_id, is_wear) {
     return $next().put(`/api/next2/user/${uid}/medals/${medal_id}/wear/${is_wear}`);
+}
+
+// 发放活动装扮
+function decorationReceive(data) {
+    return $cms().post("/api/cms/user/decoration/receive", data);
 }
 
 export {
@@ -85,4 +99,7 @@ export {
     getUserMedals,
     getMedals,
     setMedal,
+    medalCheck,
+    medalReceive,
+    decorationReceive,
 };

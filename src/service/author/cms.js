@@ -65,10 +65,6 @@ function getCertification(id) {
     return $team().get(`/api/team/team-certification-record/item/${id}`);
 }
 
-function decorationReceive(data) {
-    return $cms().post("/api/cms/user/decoration/receive", data);
-}
-
 export {
     getPosts,
     getUserInfo,
@@ -81,5 +77,4 @@ export {
     getDecorationJson,
     getDBM,
     getCertification,
-    decorationReceive,
 };
