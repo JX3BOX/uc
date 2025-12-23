@@ -705,6 +705,7 @@ export default {
             .rb(0,0);
             top: auto;
             height: 50%;
+            background-position: 280px 0;
         }
         .u-title {
             .dbi;
