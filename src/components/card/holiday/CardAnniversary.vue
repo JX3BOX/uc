@@ -71,7 +71,7 @@
             </div>
             <!-- 领取按钮 -->
             <div class="m-click" v-if="showNext && !nextStep">
-                <span class="u-circle" @click="getAll">摘星</span>
+                <span class="u-circle" @click="nextStep = true">摘星</span>
             </div>
             <!-- 手机端按钮 -->
             <img class="u-button" :src="oneImg[1]" alt="2025魔盒周年庆" @click="close" />
@@ -79,7 +79,6 @@
     </div>
 </template>
 <script>
-import { getUserDecoration, decorationReceive, medalReceive, medalCheck } from "@/service/dashboard/decoration";
 import { __imgPath } from "@/utils/config";
 export default {
     name: "cardAnniversary",
@@ -114,7 +113,6 @@ export default {
             return this.data.txtList;
         },
     },
-    watch: {},
     methods: {
         change() {
             this.show = true;
@@ -128,36 +126,6 @@ export default {
             this.starCount++;
             this.nextStar++;
             this.starList.push(i);
-        },
-        getAll() {
-            this.nextStep = true;
-            getUserDecoration({
-                key: "jx3box-birthday-6",
-                type: "honor",
-            }).then((res) => {
-                const list = res.data?.data || [];
-                if (list.length) return;
-                decorationReceive({
-                    key: "jx3box-birthday-6",
-                    type: `atcard,homebg,sidebar,calendar,comment,avatar,palu,honor`,
-                })
-                    .then((e) => {
-                        console.log(e, "领取成功");
-                    })
-                    .catch((e) => {
-                        console.log(e, "领取失败");
-                    });
-            });
-            medalCheck({
-                medal_name: "jx3box-birthday-6",
-            }).then((res) => {
-                if (res.data?.data == true) return;
-                medalReceive({
-                    medal_name: "jx3box-birthday-6",
-                }).then((e) => {
-                    console.log(e, "领取成功");
-                });
-            });
         },
     },
 };
