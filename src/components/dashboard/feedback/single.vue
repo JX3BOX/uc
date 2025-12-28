@@ -64,7 +64,7 @@
                         <i class="u-client" :class="[data.client, `u-${data.client}`]">{{ client }}</i>
                     </div>
                     <span class="u-time u-subblock">提交时间：{{ formateTime(data.created_at) }}</span>
-                    <span class="u-time u-subblock" v-if="data.refer">来源：<a :href="data.refer">{{ data.refer }}</a></span>
+                    <span class="u-time u-subblock" v-if="data.refer">来源：<a :href="data.refer" target="_blank">{{ data.refer }}</a></span>
                 </div>
                 <div class="m-block m-dev">
                     <div class="u-subblock">
