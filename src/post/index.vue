@@ -186,9 +186,7 @@ export default {
             return this.$store.state.profile;
         },
         isAuth() {
-            return (
-                !!this.profile.wechat_mp_openid || !!this.profile.wechat_miniprogram_openid || !!this.profile.user_phone
-            );
+            return this.profile.user_group >= 16;
         },
     },
     methods: {
