@@ -59,7 +59,12 @@
                             <span class="u-user-name">{{ data.user.display_name }}</span>
                         </a>
                     </div>
+                    <div class="u-subblock">
+                        <span class="u-label">客户端：</span>
+                        <i class="u-client" :class="[data.client, `u-${data.client}`]">{{ client }}</i>
+                    </div>
                     <span class="u-time u-subblock">提交时间：{{ formateTime(data.created_at) }}</span>
+                    <span class="u-time u-subblock" v-if="data.refer">来源：<a :href="data.refer">{{ data.refer }}</a></span>
                 </div>
                 <div class="m-block m-dev">
                     <div class="u-subblock">
@@ -298,6 +303,7 @@ import AdminGift from "@jx3box/jx3box-common-ui/assets/img/widget/admin_gift.svg
 import assign from "./components/assign.vue";
 import edit from "./components/edit.vue";
 import status from "./components/status.vue";
+import {__clients} from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
     name: "FeedbackSingle",
     components: {
@@ -366,6 +372,9 @@ export default {
             const index = this.statusList.findIndex((item) => item.value === this.data.status) + 1;
             return index;
         },
+        client() {
+            return __clients[this.data.client]
+        }
     },
     watch: {
         id: {

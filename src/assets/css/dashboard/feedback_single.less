@@ -226,6 +226,29 @@
             color: #f00;
         }
     }
+
+    @origin: #0eb7ce;
+    @std: #f0b400;
+    @all: #a26ef7;
+    .u-client {
+        font-style: normal;
+        .fz(12px);
+        padding: 2px 5px;
+        .r(2px);
+        line-height: 1.2;
+        border: 1px solid @std;
+        color: @std;
+        .dbi;
+
+        &.origin {
+            border: 1px solid @origin;
+            color: @origin;
+        }
+        &.all {
+            border: 1px solid @all;
+            color: @all;
+        }
+    }
 }
 .m-teammate {
     display: flex;
