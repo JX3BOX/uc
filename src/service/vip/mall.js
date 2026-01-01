@@ -54,7 +54,7 @@ function checkOwnedStatus(id) {
 }
 // 获取魔卡皮肤json
 function getSkinJson() {
-    let url = __cdn + `design/decoration/community_skin.json?${new Date().getTime()}`;
+    let url = __cdn + `design/decoration/community_skin.json`;
     return axios.get(url);
 }
 
