@@ -18,12 +18,12 @@ function setDecoration(data) {
 }
 
 function getDecorationJson() {
-    let url = __cdn + `design/decoration/index.json?${Date.now()}`;
+    let url = __cdn + `design/decoration/index.json`;
     return axios.get(url);
 }
 
 function getEmotion() {
-    return axios.get(`${__dataPath}emotion/output/catalog.json?${Date.now()}`);
+    return axios.get(`${__dataPath}emotion/output/catalog.json`);
 }
 
 function getUserDecoration(params) {

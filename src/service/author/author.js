@@ -15,7 +15,7 @@ function getUserMedals(uid) {
 }
 
 function getFrames() {
-    return axios.get(__imgPath + `data/user_avatar_frame.json?${Date.now()}}`);
+    return axios.get(__imgPath + `data/user_avatar_frame.json`);
 }
 
 function getUserPublicTeams(uid) {

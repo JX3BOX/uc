@@ -169,7 +169,7 @@ export default {
     },
     filters: {
         thumbnail: function (url) {
-            return __imgPath + url + "?v=" + Date.now();
+            return __imgPath + url;
         },
     },
     created: function () {},
