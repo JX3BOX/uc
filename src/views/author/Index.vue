@@ -99,7 +99,7 @@ export default {
             });
         },
         showDecoration: function (val, type) {
-            return __cdn + `design/decoration/images/${val}/${type}.png}`;
+            return __cdn + `design/decoration/images/${val}/${type}.png`;
         },
         setDecoration(theme) {
             this.decorationMe = theme;
