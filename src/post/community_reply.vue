@@ -22,7 +22,7 @@
 <script>
 import Tinymce from "@jx3box/jx3box-editor/src/Tinymce";
 import publish_header from "@/components/publish/publish_header.vue";
-import { getMyReply, updateMyReply } from "@/service/publish/community.js";
+import { getMyReply, updateMyReply, getAdminReply, updateAdminReply } from "@/service/publish/community.js";
 import { pick } from "lodash";
 export default {
     name: "community_reply",
@@ -42,22 +42,28 @@ export default {
             },
             loading: false,
             processing: false,
+
+            from: ""
         };
     },
     watch: {
-        id: {
+        $route: {
             immediate: true,
-            handler: function (newval) {
-                if (newval) {
-                    this.loadData();
+            deep: true,
+            handler() {
+                const from = this.$route.query?.from;
+                if (from) {
+                    this.from = from;
                 }
+                this.loadData();
             },
         },
     },
     methods: {
         loadData() {
             this.loading = true;
-            getMyReply(this.id)
+            const fn = this.from === "admin" ? getAdminReply : getMyReply;
+            fn(this.id)
                 .then((res) => {
                     this.data = res.data.data;
                 })
@@ -68,7 +74,8 @@ export default {
         onSubmit() {
             this.processing = true;
             const data = pick(this.data, ["content"]);
-            updateMyReply(this.id, data)
+            const fn = this.from === "admin" ? updateAdminReply : updateMyReply;
+            fn(this.id, data)
                 .then(() => {
                     this.$message({
                         message: "更新回帖成功",
