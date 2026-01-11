@@ -4,7 +4,7 @@
 
         <div class="m-macro-box">
             <div class="m-macro-talent m-macro-item">
-                <h5 class="u-title">技巧概述</h5>
+                <h5 class="u-title">技巧概述 *</h5>
                 <el-input
                     v-model="pvpData.content"
                     placeholder="请在此处输入技巧概述，最多200个字。"
@@ -12,129 +12,135 @@
                     show-word-limit
                     maxlength="200"
                     :rows="5"
+                    required
                 >
                 </el-input>
             </div>
-            <div class="m-macro-talent m-macro-item" v-if="client != 'origin'">
-                <!-- <el-input v-model="pvpData.talent" placeholder="奇穴方案编码" @change="checkTalent(pvpData.talent)">
-                    <template slot="prepend">
-                        <a class="u-get" target="_blank" href="/macro/talent">
-                            <i class="el-icon-warning"></i>
-                            获取编码
-                        </a>
-                    </template>
-                </el-input> -->
-                <publish-qixue v-model="pvpData.talent" :subtype="subtype" :is-wujie="isWujie"></publish-qixue>
-            </div>
-            <div class="m-macro-talent m-macro-item" v-if="client === 'origin' && subtype !== '通用'">
-                <h5 class="u-title">镇派方案</h5>
-                <div class="m-macro-talent-simulator">
-                    <div class="qx-container"></div>
+            <el-checkbox class="u-talent" v-model="pvpData.has_talent" :true-label="1" :false-label="0">设置奇穴</el-checkbox>
+            <template v-if="pvpData.has_talent">
+                <div class="m-macro-talent m-macro-item" v-if="client != 'origin'">
+                    <!-- <el-input v-model="pvpData.talent" placeholder="奇穴方案编码" @change="checkTalent(pvpData.talent)">
+                        <template slot="prepend">
+                            <a class="u-get" target="_blank" href="/macro/talent">
+                                <i class="el-icon-warning"></i>
+                                获取编码
+                            </a>
+                        </template>
+                    </el-input> -->
+                    <publish-qixue v-model="pvpData.talent" :subtype="subtype" :is-wujie="isWujie"></publish-qixue>
                 </div>
-                <el-input v-model="pvpData.talent" placeholder="镇派方案编码" @change="checkTalent(pvpData.talent)">
-                    <template slot="prepend">
-                        <a class="u-get" target="_blank" href="/macro/talent2">
-                            <i class="el-icon-warning"></i>
-                            获取编码
-                        </a>
-                    </template>
-                </el-input>
-            </div>
-
-            <div class="m-macro-talent m-macro-item" v-show="subtype !== '通用'">
-                <h5 class="u-title">{{ client === "std" ? "奇穴" : "镇派" }}讲解</h5>
-                <el-input
-                    v-model="pvpData.talent_desc"
-                    placeholder="输入内容（选填）"
-                    type="textarea"
-                    show-word-limit
-                    maxlength="400"
-                    :rows="4"
-                >
-                </el-input>
-            </div>
-        </div>
-
-        <div class="m-macro-box">
-            <div class="m-macro-header">
-                <el-button class="m-macro-addbutton" icon="el-icon-circle-plus-outline" type="primary" @click="addCombo"
-                    >添加连招</el-button
-                >
-            </div>
-
-            <el-tabs class="tabs-sort" v-model="activeIndex" type="card" closable @tab-remove="removeCombo">
-                <el-tab-pane
-                    v-for="(item, i) in pvpData.data"
-                    :key="i"
-                    :name="i + 1 + ''"
-                    :class="`tab-content${i + 1}`"
-                >
-                    <span slot="label" class="u-tab-box">
-                        <span class="u-tab-name" :title="item.name">{{ "连招" + zhNum[i] + " - " + item.name }}</span>
-                    </span>
-                    <el-form-item label="连招名称" class="m-macro-desc">
-                        <el-input
-                            v-model="item.name"
-                            placeholder="请输入连招名称"
-                            :minlength="1"
-                            :maxlength="maxlength"
-                            show-word-limit
-                            @change="checkDataName(item)"
-                        >
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item label="技能连招">
-                        <div class="u-skills">
-                            <template v-if="item.sq">
-                                <span
-                                    v-for="(skill, index) in item.sq"
-                                    :key="skill.SkillID + '' + index"
-                                    class="u-skill"
-                                    @contextmenu.prevent="(event) => onContextmenu(event, skill)"
-                                >
-                                    <img
-                                        class="u-skill-icon"
-                                        :src="iconLink(skill.IconID)"
-                                        :alt="skill.IconID"
-                                        :title="skill.Name"
-                                    />
-                                    <i class="u-gcd-icon" v-show="skill.WithoutGcd">
-                                        <i class="el-icon-time"></i>
-                                    </i>
-                                    <i class="u-remove-icon" title="移除" @click="removeSkill(index)"
-                                        ><i class="el-icon-close"></i
-                                    ></i>
-                                </span>
-                            </template>
-                        </div>
-                        <el-button type="primary" size="medium" @click="addSkill" icon="el-icon-plus"
-                            >新增技能</el-button
-                        >
-                    </el-form-item>
-                    <el-form-item label="连招说明" class="m-macro-desc">
-                        <el-input
-                            v-model="item.desc"
-                            type="textarea"
-                            maxlength="200"
-                            :rows="3"
-                            show-word-limit
-                            placeholder="连招简要说明（选填）"
-                        ></el-input>
-                    </el-form-item>
-                    <div class="m-macro-op">
-                        <el-button
-                            class="u-macro-remove-fix"
-                            @click="removeCombo(i + 1)"
-                            type="danger"
-                            plain
-                            icon="el-icon-delete"
-                            size="small"
-                            >移除本连招</el-button
-                        >
+                <div class="m-macro-talent m-macro-item" v-if="client === 'origin' && subtype !== '通用'">
+                    <h5 class="u-title">镇派方案</h5>
+                    <div class="m-macro-talent-simulator">
+                        <div class="qx-container"></div>
                     </div>
-                </el-tab-pane>
-            </el-tabs>
+                    <el-input v-model="pvpData.talent" placeholder="镇派方案编码" @change="checkTalent(pvpData.talent)">
+                        <template slot="prepend">
+                            <a class="u-get" target="_blank" href="/macro/talent2">
+                                <i class="el-icon-warning"></i>
+                                获取编码
+                            </a>
+                        </template>
+                    </el-input>
+                </div>
+
+                <div class="m-macro-talent m-macro-item" v-show="subtype !== '通用'">
+                    <h5 class="u-title">{{ client === "std" ? "奇穴" : "镇派" }}讲解</h5>
+                    <el-input
+                        v-model="pvpData.talent_desc"
+                        placeholder="输入内容（选填）"
+                        type="textarea"
+                        show-word-limit
+                        maxlength="400"
+                        :rows="4"
+                    >
+                    </el-input>
+                </div>
+            </template>
         </div>
+        <el-checkbox class="u-talent" v-model="pvpData.has_sq" :true-label="1" :false-label="0">设置连招</el-checkbox>
+        <template v-if="pvpData.has_sq">
+            <div class="m-macro-box">
+                <div class="m-macro-header">
+                    <el-button class="m-macro-addbutton" icon="el-icon-circle-plus-outline" type="primary" @click="addCombo"
+                        >添加连招</el-button
+                    >
+                </div>
+
+                <el-tabs class="tabs-sort" v-model="activeIndex" type="card" closable @tab-remove="removeCombo">
+                    <el-tab-pane
+                        v-for="(item, i) in pvpData.data"
+                        :key="i"
+                        :name="i + 1 + ''"
+                        :class="`tab-content${i + 1}`"
+                    >
+                        <span slot="label" class="u-tab-box">
+                            <span class="u-tab-name" :title="item.name">{{ "连招" + zhNum[i] + " - " + item.name }}</span>
+                        </span>
+                        <el-form-item label="连招名称" class="m-macro-desc">
+                            <el-input
+                                v-model="item.name"
+                                placeholder="请输入连招名称"
+                                :minlength="1"
+                                :maxlength="maxlength"
+                                show-word-limit
+                                @change="checkDataName(item)"
+                            >
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="技能连招">
+                            <div class="u-skills">
+                                <template v-if="item.sq">
+                                    <span
+                                        v-for="(skill, index) in item.sq"
+                                        :key="skill.SkillID + '' + index"
+                                        class="u-skill"
+                                        @contextmenu.prevent="(event) => onContextmenu(event, skill)"
+                                    >
+                                        <img
+                                            class="u-skill-icon"
+                                            :src="iconLink(skill.IconID)"
+                                            :alt="skill.IconID"
+                                            :title="skill.Name"
+                                        />
+                                        <i class="u-gcd-icon" v-show="skill.WithoutGcd">
+                                            <i class="el-icon-time"></i>
+                                        </i>
+                                        <i class="u-remove-icon" title="移除" @click="removeSkill(index)"
+                                            ><i class="el-icon-close"></i
+                                        ></i>
+                                    </span>
+                                </template>
+                            </div>
+                            <el-button type="primary" size="medium" @click="addSkill" icon="el-icon-plus"
+                                >新增技能</el-button
+                            >
+                        </el-form-item>
+                        <el-form-item label="连招说明" class="m-macro-desc">
+                            <el-input
+                                v-model="item.desc"
+                                type="textarea"
+                                maxlength="200"
+                                :rows="3"
+                                show-word-limit
+                                placeholder="连招简要说明（选填）"
+                            ></el-input>
+                        </el-form-item>
+                        <div class="m-macro-op">
+                            <el-button
+                                class="u-macro-remove-fix"
+                                @click="removeCombo(i + 1)"
+                                type="danger"
+                                plain
+                                icon="el-icon-delete"
+                                size="small"
+                                >移除本连招</el-button
+                            >
+                        </div>
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+        </template>
         <slot></slot>
 
         <skillDialog
@@ -169,6 +175,8 @@ const default_meta = {
             desc: "",
         },
     ],
+    has_talent: 0,
+    has_sq: 0,
 };
 export default {
     name: "publishPvp",
@@ -240,7 +248,7 @@ export default {
         // 删除宏
         removeCombo: function (name) {
             if (this.pvpData.data.length < 2) {
-                this.$alert("必须保留1个宏", "消息", {
+                this.$alert("必须保留1个连招", "消息", {
                     confirmButtonText: "确定",
                 });
                 return;

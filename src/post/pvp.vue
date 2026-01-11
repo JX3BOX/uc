@@ -211,6 +211,8 @@ export default {
                     talent: "",
                     talent_desc: "", // 奇穴讲解
                     content: "",
+                    has_talent: 0, // 是否有奇穴
+                    has_sq: 0, // 是否有连招
                     data: [
                         {
                             name: "",
@@ -312,6 +314,7 @@ export default {
         // 发布
         publish: function (status, skip) {
             if (!this.post.tags?.length) return this.$message.error("类型必选");
+            if (!this.post.post_meta.content.trim()) return this.$message.error("技巧概述不能为空");
             this.post.post_status = status;
             this.processing = true;
 
