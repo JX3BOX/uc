@@ -13,7 +13,10 @@
         <meta name="renderer" content="webkit" />
         <title><%= htmlWebpackPlugin.options.title %></title>
         <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
-        <script src="https://cdn.jx3box.com/static/tinymce/tinymce.min.js?v=1.8.8"></script>
+        <script>
+            window.RX_TINYMCE_ROOT = "https://cdn.jx3box.com/static/tinymce";
+        </script>
+        <script src="https://cdn.jx3box.com/static/tinymce/tinymce.min.js"></script>
     </head>
     <body>
         <div id="app"></div>
