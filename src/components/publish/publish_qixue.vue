@@ -42,45 +42,38 @@ export default {
                 std: "",
                 wujie: "",
             },
-            sq: "1,1,1,1,1,1,1,1,1,1,1,1",
+            sq: "1,1,1,1,1,1,1,1,2,3",
         };
     },
     computed: {
         client() {
             return this.isWujie ? "wujie" : "std";
         },
+        reloadTrigger() {
+            return [this.client, this.subtype, this.value];
+        },
     },
     watch: {
-        value: {
-            immediate: true,
-            deep: true,
+        reloadTrigger: {
             handler(val) {
-                if (!val) return;
-                try {
-                    let __data = JSON.parse(val);
-                    this.sq = __data.sq;
-                    this.reloadTalent();
-                } catch (error) {
-                    console.log(error);
+                const shouldLength = this.client === "std" ? 10 : 4;
+                let __data;
+                if (this.value) {
+                    try {
+                        __data = JSON.parse(this.value);
+                    } catch (error) {
+                        console.error(error);
+                    }
                 }
-            },
-        },
-        subtype: {
-            immediate: true,
-            handler(val) {
-                this.reloadTalent();
-            },
-        },
-        isWujie: {
-            immediate: true,
-            handler(val) {
-                if (val) {
-                    this.sq = "1,1,1,1";
+                if (!__data || __data.sq.split(",").length !== shouldLength) {
+                    // 未传入数据，或者传入的value格式不对
+                    this.sq = Array.from({ length: shouldLength }, (_, i) => (i < 7 ? 1 : i - 6)).join(",");
                 } else {
-                    this.sq = "1,1,1,1,1,1,1,1,2,3";
+                    this.sq = __data.sq;
                 }
                 this.reloadTalent();
             },
+            immediate: true,
         },
     },
     mounted() {
