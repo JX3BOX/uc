@@ -16,7 +16,9 @@
                 >
                 </el-input>
             </div>
-            <el-checkbox class="u-talent" v-model="pvpData.has_talent" :true-label="1" :false-label="0">设置奇穴</el-checkbox>
+            <el-checkbox class="u-talent" v-model="pvpData.has_talent" :true-label="1" :false-label="0"
+                >设置奇穴</el-checkbox
+            >
             <template v-if="pvpData.has_talent">
                 <div class="m-macro-talent m-macro-item" v-if="client != 'origin'">
                     <!-- <el-input v-model="pvpData.talent" placeholder="奇穴方案编码" @change="checkTalent(pvpData.talent)">
@@ -62,7 +64,11 @@
         <template v-if="pvpData.has_sq">
             <div class="m-macro-box">
                 <div class="m-macro-header">
-                    <el-button class="m-macro-addbutton" icon="el-icon-circle-plus-outline" type="primary" @click="addCombo"
+                    <el-button
+                        class="m-macro-addbutton"
+                        icon="el-icon-circle-plus-outline"
+                        type="primary"
+                        @click="addCombo"
                         >添加连招</el-button
                     >
                 </div>
@@ -75,7 +81,9 @@
                         :class="`tab-content${i + 1}`"
                     >
                         <span slot="label" class="u-tab-box">
-                            <span class="u-tab-name" :title="item.name">{{ "连招" + zhNum[i] + " - " + item.name }}</span>
+                            <span class="u-tab-name" :title="item.name">{{
+                                "连招" + zhNum[i] + " - " + item.name
+                            }}</span>
                         </span>
                         <el-form-item label="连招名称" class="m-macro-desc">
                             <el-input
@@ -367,3 +375,11 @@ export default {
     },
 };
 </script>
+
+<style lang="less">
+.m-publish-pvp .m-macro-box {
+    .u-skill .u-skill-icon {
+        .size(48px);
+    }
+}
+</style>
