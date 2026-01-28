@@ -488,8 +488,9 @@ export default {
         async loadTeammates() {
             try {
                 let res = await getTeammates();
-                this.teammates = res.data.data.filter(
-                    (item) => item.group && ["mp", "developer", "designer"].includes(item.group)
+                // this.teammates = res.data.data
+                this.teammates =   res.data.data.filter(
+                    (item) => item.group && ["mp", "developer","editor", "designer"].includes(item.group)
                 );
             } catch (e) {
                 console.log(e);
