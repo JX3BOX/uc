@@ -147,6 +147,26 @@ export default {
                         message: "请认真填写，否则将申请将不会被通过",
                         trigger: "blur",
                     },
+                    {
+                        validator: (rule, value, callback) => {
+                            if (!value) {
+                                callback(new Error("描述内容不能为空"));
+                                return;
+                            }
+                            const urlStart = "https://www.jx3box.com/";
+                            let count = 0;
+
+                            const parts = value.split(urlStart);
+                            count = parts.length - 1;
+
+                            if (count < 3) {
+                                callback(new Error(`请提交至少3个作品链接，当前有 ${count} 个`));
+                            } else {
+                                callback();
+                            }
+                        },
+                        trigger: ["blur", "change"],
+                    },
                 ],
             },
             user: User, // 用户信息
@@ -286,7 +306,7 @@ export default {
     .u-title-text {
         .flex;
         align-items: center;
-        gap:10px;
+        gap: 10px;
     }
 
     .u-sign {
