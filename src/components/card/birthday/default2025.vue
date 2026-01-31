@@ -68,7 +68,7 @@ export default {
             return this.$route.query.id;
         },
         uid: function () {
-            return this.$route.params.uid || 0;
+            return this.$route.query.uid || 0;
         },
         isMine: function () {
             return this.uid == this.user.uid;
