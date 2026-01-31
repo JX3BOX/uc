@@ -168,5 +168,12 @@
                 "desc": "实装场景：日历、侧边栏、圈人卡、个人主页、评论"
             }
         ]
+    },
+    "35":{
+        "name": "2026春节",
+        "key": "springFestival2026",
+        "type": "spring_two",
+        "component": "CardSpringTwo",
+        "imgList": ["text1.png", "text2.png","text3.png","text4.png"]
     }
 }

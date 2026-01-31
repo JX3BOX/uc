@@ -15,6 +15,7 @@ import HeaderLessLayout from "@/layouts/author/HeaderLessLayout.vue";
 import DefaultTemplate from "@/components/card/holiday/DefaultTemplate.vue";
 import CardChildren from "@/components/card/holiday/CardChildren.vue";
 import CardSpring from "@/components/card/holiday/CardSpring.vue";
+import CardSpringTwo from "@/components/card/holiday/CardSpringTwo.vue";
 import CardNewYear from "@/components/card/holiday/CardNewYear.vue";
 import CardChristmas from "@/components/card/holiday/CardChristmas.vue";
 import CardQixi from "@/components/card/holiday/CardQixi.vue";
@@ -33,6 +34,7 @@ export default {
         DefaultTemplate,
         CardChildren,
         CardSpring,
+        CardSpringTwo,
         CardNewYear,
         CardChristmas,
         CardQixi,
@@ -77,6 +79,7 @@ export default {
         },
         // 活动对应的图片列表
         imgList() {
+            console.log(this.cardType[this.event_id]?.imgList);
             return this.cardType[this.event_id]?.imgList || [];
         },
         // 活动抽中的数量
@@ -94,6 +97,7 @@ export default {
                 default: this.default_data,
                 children: this.children_data,
                 spring: this.spring_data,
+                spring_two: this.spring_two_data,
                 newyear: this.newyear_data,
                 christmas: this.christmas_data,
                 qixi: this.qixi_data,
@@ -103,6 +107,7 @@ export default {
                 double: this.double_data,
                 one: this.one_data,
             };
+            console.log(_data[this.cardType[this.event_id]?.type]);
             return _data[this.cardType[this.event_id]?.type];
         },
         // 默认数据
@@ -115,7 +120,7 @@ export default {
             const size = this.cardType[this.event_id]?.size;
             const percentage = this.cardType[this.event_id]?.percentage;
             const imgList = this.imgList.map((item) => {
-                if (item.length) {
+                if (Array.isArray(item)) {
                     return item.map((e) => `${this.imgLink}${e}`);
                 } else {
                     return `${this.imgLink}${item}`;
@@ -137,7 +142,7 @@ export default {
         // 周年庆-2025
         anniversary_data() {
             const imgList = this.imgList.map((item) => {
-                if (item.length) {
+                if (Array.isArray(item)) { 
                     return item.map((e) => `${this.imgLink}${e}`);
                 } else {
                     return `${this.imgLink}${item}`;
@@ -177,6 +182,15 @@ export default {
                 countImg: `${this.imgLink}${this.fontCount}.png`,
             };
             return hasYear ? _year : _default;
+        },
+        // 春节双红包
+        spring_two_data() {
+            return {
+                cover: `${this.imgLink}cover.jpg`,
+                count: this.fontCount || 30,
+                titleList: this.imgList.map((item) => `${this.imgLink}${item}`),
+                imgLink: this.imgLink,
+            };
         },
         // 元旦
         newyear_data() {
