@@ -112,10 +112,12 @@ export default {
     gap: 80px;
     .cover {
         .z(2);
-        cursor: pointer;
+        .pointer;
+        .r(5px);
         .size(570px,294px);
         transition: transform 0.3s ease;
         transform-origin: center center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16);
         &.active {
             transform: rotate(-10deg);
         }
@@ -142,6 +144,7 @@ export default {
         .lt(10px,5px);
         cursor: pointer;
         transition: all 0.3s ease;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
         &.active {
             transform: rotate(-10deg);
         }
@@ -159,7 +162,7 @@ export default {
         transform: rotate(-10deg) translateX(0);
     }
     50% {
-        transform: rotate(-5deg) translateX(1200px);
+        transform: rotate(-10deg) translateX(2000px);
         z-index: 3;
     }
     100% {
