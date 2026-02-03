@@ -7,9 +7,9 @@
             :key="index"
             :style="{
                 top: currentPositions[index].top + 'px',
-                left: currentPositions[index].left + 'px',
-                transform: index === 1 ? `rotate(${rotateDeg}deg)` : 'none',
-                transformOrigin: index === 1 ? 'bottom center' : 'center',
+                left: currentPositions[index].left + 'px', 
+                transform: `rotate(${index === 1 ? stepRotateDeg : randomDeg[index]}deg)`,
+                transformOrigin: 'center',
             }"
         />
     </div>
@@ -32,19 +32,22 @@ export default {
 
         const circleTargetPositions = [
             { top: 83, left: 33 },
-            { top: 86, left: 92 },
+            { top: 86, left: 98 },
             { top: 81, left: 183 },
             { top: 155, left: 72 },
             { top: 154, left: 146 },
             { top: 155, left: 10 },
             { top: 155, left: 194 },
         ];
+        const finalPosForIndex1 = { top: 91, left: 108 };
 
         return {
             initPositions: circleInitPositions,
-            targetPositions: circleTargetPositions,
+            circleTargetPositions,
+            finalPosForIndex1,
             currentPositions: circleInitPositions,
-            rotateDeg: 0,
+            stepRotateDeg: 0,
+            randomDeg: Array(7).fill(0),
         };
     },
     mounted() {
@@ -53,9 +56,15 @@ export default {
     methods: {
         fallToTarget() {
             setTimeout(() => {
-                this.currentPositions = [...this.targetPositions];
+                this.currentPositions = [...this.circleTargetPositions];
+                this.randomDeg = this.randomDeg.map(() => Math.floor(Math.random() * 100) - 25);
+                this.stepRotateDeg = -15;
+
                 setTimeout(() => {
-                    this.rotateDeg = 25;
+                    this.currentPositions = this.currentPositions.map((pos, idx) =>
+                        idx === 1 ? this.finalPosForIndex1 : pos
+                    );
+                    this.stepRotateDeg = 45;
                 }, 500);
             }, 500);
         },
