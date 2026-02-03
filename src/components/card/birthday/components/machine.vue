@@ -34,7 +34,7 @@
 
 <script>
 export default {
-    props: ["imgPath"],
+    props: ["imgPath", "reward"],
 };
 </script>
 

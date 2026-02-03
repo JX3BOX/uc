@@ -1,3 +1,4 @@
+@birthday2026: "https://cdn.jx3box.com/design/card/birthday/2026/";
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -27,5 +28,80 @@ body,
     background-color: #0a040f;
     .u-video {
         .full;
+    }
+    .m-lamp {
+        .mb(20px);
+        .size(100px, 26px);
+    }
+    .m-ball {
+        .pr;
+        .size(100%,230px);
+        .mb(150px);
+        &::after {
+            content: "";
+            .pa;
+            .lt(0,-1px);
+            .size(284px,232px);
+            .z(2);
+            background: url("@{birthday2026}reflection.png") no-repeat center center;
+            background-size: 284px, 232px;
+        }
+        .m-ball-box {
+            .pr;
+            .size(100%);
+            .x;
+            box-sizing: border-box;
+            padding: 12px 34px 16px 34px;
+            .circle-container {
+                .pa;
+                .lt(0);
+            }
+        }
+        .u-compass {
+            .size(200px);
+        }
+    }
+    .m-reward {
+        .u-switch {
+            .fr;
+            .pointer;
+            .mr(30px);
+            .w(100px);
+            transition: transform 0.3s ease-in-out;
+            transform: rotate(0deg);
+            will-change: transform;
+            &.reward {
+                transform: rotate(90deg);
+            }
+        }
+    }
+}
+
+@keyframes fall {
+    0% {
+        opacity: 1;
+        transform: translate(0, -100px) scale(0.8);
+    }
+    70% {
+        transform: translate(var(--end-x), 0px) scale(1);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(var(--end-x), 0px) scale(1);
+    }
+}
+
+@keyframes bounce {
+    0% {
+        transform: translate(var(--end-x), 0px) scale(1);
+    }
+    30% {
+        transform: translate(calc(var(--end-x) + 20px), -30px) scale(1.05);
+    }
+    60% {
+        transform: translate(calc(var(--end-x) - 10px), 10px) scale(0.98);
+    }
+    100% {
+        transform: translate(var(--final-x, 0px), var(--final-y, 300px)) scale(1);
     }
 }

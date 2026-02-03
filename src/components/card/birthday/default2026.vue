@@ -1,12 +1,29 @@
 <template>
     <div class="p-birthday">
         <!-- <video class="u-video" :src="`${imgPath}bg.mp4`" type="video/mp4" autoplay loop muted></video> -->
-        <machine :imgPath="imgPath"> </machine>
+        <machine :imgPath="imgPath">
+            <!-- 跑马灯 -->
+            <div class="m-lamp"></div>
+            <!-- 抽奖球 -->
+            <div class="m-ball">
+                <div class="m-ball-box">
+                    <img class="u-compass" :src="`${imgPath}compass.svg`" />
+                    <ball :imgPath="imgPath" :reward="reward" ></ball>
+                </div>
+            </div>
+            <!-- 奖励 -->
+            <div class="m-reward">
+                <!-- 中奖 -->
+                <!-- 开关 -->
+                <img :src="`${imgPath}knob.svg`" :class="`u-switch ${reward ? 'reward' : ''}`" @click="toggleReward" />
+            </div>
+        </machine>
     </div>
 </template>
 
 <script>
-import machine from "./machine.vue";
+import machine from "./components/machine.vue";
+import ball from "./components/ball.vue";
 import { getBirthdayDetail } from "@/service/author/birthday";
 import User from "@jx3box/jx3box-common/js/user";
 import { __cdn } from "@/utils/config";
@@ -17,10 +34,12 @@ export default {
             data: "",
             imgPath: __cdn + "design/card/birthday/2026/",
             star: "baiyang",
+            reward: false,
         };
     },
     components: {
         machine,
+        ball,
     },
     computed: {
         isLogin() {
@@ -58,6 +77,7 @@ export default {
                     this.goBack();
                 });
         },
+
         // goBack() {
         //     this.$router.push({ name: "index", params: { id: this.uid } });
         // },
@@ -92,6 +112,14 @@ export default {
                 }
             }
             this.star = "baiyang";
+        },
+        toggleReward() {
+            this.reward = true;
+            this.$nextTick(() => {
+                setTimeout(() => {
+                    this.reward = false;
+                }, 1000);
+            });
         },
     },
 };
