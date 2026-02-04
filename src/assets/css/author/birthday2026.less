@@ -19,6 +19,10 @@ body,
     .pr;
     min-width: 1200px;
     min-height: 960px;
+    .u-video {
+        .full;
+        .pa;
+    }
 }
 .p-birthday {
     .pr;
@@ -59,9 +63,17 @@ body,
         }
         .u-compass {
             .size(200px);
+            transform-origin: center center;
+            will-change: transform;
+            transform: rotate(0deg);
+            &.reward {
+                animation: compassRotate 2s ease-in-out forwards;
+            }
         }
     }
     .m-reward {
+        .pr;
+        height: 100px;
         .u-switch {
             .fr;
             .pointer;
@@ -73,6 +85,75 @@ body,
             &.reward {
                 transform: rotate(90deg);
             }
+        }
+        .u-finger {
+            .pa;
+            .w(90px);
+            .rb(100px,-50px);
+            .z(1);
+            user-select: none;
+            pointer-events: none;
+            animation: moveBlink 2s forwards;
+        }
+        .u-reward {
+            .pa;
+            .pointer;
+            .lt(45px,7px);
+            opacity: 0;
+            animation: moveOpacity 2s forwards;
+        }
+    }
+    .m-show {
+        .pf;
+        width: 100%;
+        height: 100%;
+        .lt(0);
+        .rb(0);
+        .z(3);
+        background-color: rgba(0, 0, 0, 0.45);
+    }
+    .m-show-content {
+        .pa;
+        .pointer;
+        .size(600px);
+        .lt(50%);
+        margin: -318px 0 0 -350px;
+        .u-halo {
+            .size(100%);
+            animation: infiniteRotate 2s linear infinite;
+        }
+        .u-icon {
+            .size(60px);
+            .pa;
+            .lt(50%);
+            margin: -30px 0 0 -30px;
+            animation: toScale 1s linear forwards;
+        }
+    }
+    .m-card {
+        .pf;
+        .size(920px,620px);
+        .lt(50%);
+        margin: -310px 0 0 -460px;
+        animation: toOpacity 2s forwards;
+        .u-star {
+            .pa;
+            .rt(156px,146px);
+            transform: rotate(-1deg);
+            width: 150px;
+        }
+        .u-girl {
+            .pa;
+            .rt(10px,40px);
+            .w(300px);
+            animation: girlScale 1s ease-in-out forwards;
+        }
+        .u-name {
+            .pa;
+            .fz(28px);
+            .lt(180px,180px);
+            transform: rotate(-2deg);
+            color: #514f7a;
         }
     }
 }
@@ -103,5 +184,90 @@ body,
     }
     100% {
         transform: translate(var(--final-x, 0px), var(--final-y, 300px)) scale(1);
+    }
+}
+@keyframes compassRotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+@keyframes moveBlink {
+    0% {
+        right: 100px;
+        bottom: -50px;
+        opacity: 1;
+    }
+    40% {
+        right: 66px;
+        bottom: -8px;
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        right: 66px;
+        bottom: -8px;
+        opacity: 0;
+    }
+}
+@keyframes moveOpacity {
+    0% {
+        left: 45px;
+        top: 7px;
+        opacity: 0;
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-38deg);
+        left: 16px;
+        top: 42px;
+        opacity: 1;
+    }
+}
+@keyframes infiniteRotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+@keyframes toScale {
+    from {
+        transform: scale(1) rotate(18deg);
+    }
+    to {
+        transform: scale(3) rotate(18deg);
+    }
+}
+
+@keyframes toOpacity {
+    0% {
+        opacity: 0;
+        margin: -610px 0 0 -460px;
+    }
+    50% {
+        opacity: 0.7;
+        margin: -310px 0 0 -460px;
+    }
+    100% {
+        opacity: 1;
+        margin: -310px 0 0 -460px;
+    }
+}
+
+@keyframes girlScale {
+    0% {
+        transform: scale(2) rotate(-30deg);
+    }
+    100% {
+        transform: scale(1) rotate(0);
     }
 }

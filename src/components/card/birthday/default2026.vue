@@ -1,29 +1,57 @@
 <template>
     <div class="p-birthday">
-        <!-- <video class="u-video" :src="`${imgPath}bg.mp4`" type="video/mp4" autoplay loop muted></video> -->
-        <machine :imgPath="imgPath">
-            <!-- 跑马灯 -->
-            <div class="m-lamp"></div>
-            <!-- 抽奖球 -->
-            <div class="m-ball">
-                <div class="m-ball-box">
-                    <img class="u-compass" :src="`${imgPath}compass.svg`" />
-                    <ball :imgPath="imgPath" :reward="reward" ></ball>
+        <video class="u-video" :src="`${imgPath}bg.mp4?12`" type="video/mp4" autoplay loop muted></video>
+        <template v-if="!card">
+            <machine :imgPath="imgPath">
+                <!-- 跑马灯 -->
+                <lamp :imgPath="imgPath" :reward="reward" :once="once" />
+                <!-- 抽奖球 -->
+                <div class="m-ball">
+                    <div class="m-ball-box">
+                        <img class="u-compass" :class="{ reward }" :src="`${imgPath}compass.svg`" />
+                        <ball :imgPath="imgPath" :reward="reward"></ball>
+                    </div>
+                </div>
+                <!-- 奖励 -->
+                <div class="m-reward">
+                    <!-- 中奖 -->
+                    <template v-if="!show">
+                        <img class="u-reward" v-if="once" :src="`${imgPath}egg1.svg`" />
+                    </template> 
+                    <!-- 开关 -->
+                    <img
+                        :src="`${imgPath}finger.svg`"
+                        :class="`u-finger ${reward || once ? 'hide' : ''}`"
+                        @click="toggleReward"
+                    />
+                    <img
+                        :src="`${imgPath}knob.svg`"
+                        :class="`u-switch ${reward ? 'reward' : ''}`"
+                        @click="toggleReward"
+                    />
+                </div>
+            </machine>
+            <!-- 展示奖励 -->
+            <div class="m-show" v-if="show">
+                <div class="m-show-content" @click="card = true">
+                    <img :src="`${imgPath}halo.svg`" class="u-halo" />
+                    <img class="u-icon" :src="`${imgPath}egg1.svg`" />
                 </div>
             </div>
-            <!-- 奖励 -->
-            <div class="m-reward">
-                <!-- 中奖 -->
-                <!-- 开关 -->
-                <img :src="`${imgPath}knob.svg`" :class="`u-switch ${reward ? 'reward' : ''}`" @click="toggleReward" />
-            </div>
-        </machine>
+        </template>
+        <div class="m-card" v-else>
+            <span class="u-name">祝：{{ name }} </span>
+            <img class="u-star" :src="`${imgPath}star/${star}/date.svg`" />
+            <img :src="`${imgPath}card.png`" />
+            <img class="u-girl" :src="`${imgPath}star/${star}/girl.png`" />
+        </div>
     </div>
 </template>
 
 <script>
 import machine from "./components/machine.vue";
 import ball from "./components/ball.vue";
+import lamp from "./components/lamp.vue";
 import { getBirthdayDetail } from "@/service/author/birthday";
 import User from "@jx3box/jx3box-common/js/user";
 import { __cdn } from "@/utils/config";
@@ -35,11 +63,15 @@ export default {
             imgPath: __cdn + "design/card/birthday/2026/",
             star: "baiyang",
             reward: false,
+            once: false,
+            show: false,
+            card: false,
         };
     },
     components: {
         machine,
         ball,
+        lamp,
     },
     computed: {
         isLogin() {
@@ -63,7 +95,7 @@ export default {
     },
 
     mounted() {
-        // this.isLogin ? this.loadData() : this.goBack();
+        this.isLogin ? this.loadData() : this.goBack();
     },
     methods: {
         loadData() {
@@ -76,11 +108,10 @@ export default {
                 .catch(() => {
                     this.goBack();
                 });
+        }, 
+        goBack() {
+            this.$router.push({ name: "index", params: { id: this.uid } });
         },
-
-        // goBack() {
-        //     this.$router.push({ name: "index", params: { id: this.uid } });
-        // },
         getStar() {
             const date = new Date(this.data.birthday);
             const month = date.getMonth() + 1;
@@ -114,12 +145,15 @@ export default {
             this.star = "baiyang";
         },
         toggleReward() {
+            if (this.once) return;
             this.reward = true;
-            this.$nextTick(() => {
+            setTimeout(() => {
+                this.reward = false;
+                this.once = true;
                 setTimeout(() => {
-                    this.reward = false;
-                }, 1000);
-            });
+                    this.show = true;
+                }, 2200);
+            }, 2000);
         },
     },
 };
