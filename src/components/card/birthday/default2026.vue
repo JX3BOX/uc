@@ -50,6 +50,9 @@
             <img class="u-star" :src="`${imgPath}star/${star}/date.svg`" />
             <img :src="`${imgPath}card.png`" />
             <img class="u-girl" :src="`${imgPath}star/${star}/girl.png`" />
+            <span class="u-date">
+                {{ date }}
+            </span>
         </div>
     </div>
 </template>
@@ -60,6 +63,7 @@ import ball from "./components/ball.vue";
 import lamp from "./components/lamp.vue";
 import { getBirthdayDetail } from "@/service/author/birthday";
 import User from "@jx3box/jx3box-common/js/user";
+import dayjs from "dayjs";
 import { __cdn } from "@/utils/config";
 export default {
     name: "Default2026",
@@ -98,12 +102,18 @@ export default {
         name: function () {
             return this.user.name;
         },
+        date() {
+            return this.dateFormat(this.data.birthday);
+        },
     },
 
     mounted() {
-        // this.isLogin ? this.loadData() : this.goBack();
+        this.isLogin ? this.loadData() : this.goBack();
     },
     methods: {
+        dateFormat: function (val) {
+            return dayjs(val).format("YYYY.MM.DD");
+        },
         loadData() {
             if (!this.isMine) return this.goBack();
             getBirthdayDetail(this.id)
