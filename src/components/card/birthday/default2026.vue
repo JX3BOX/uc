@@ -1,6 +1,6 @@
 <template>
     <div class="p-birthday">
-        <video class="u-video" :src="`${imgPath}bg.mp4?12`" type="video/mp4" autoplay loop muted></video>
+        <video class="u-star-video" :src="`${imgPath}bg.mp4?12`" type="video/mp4" autoplay loop muted></video>
         <template v-if="!card">
             <machine :imgPath="imgPath">
                 <!-- 跑马灯 -->
@@ -17,7 +17,7 @@
                     <!-- 中奖 -->
                     <template v-if="!show">
                         <img class="u-reward" v-if="once" :src="`${imgPath}egg1.svg`" />
-                    </template> 
+                    </template>
                     <!-- 开关 -->
                     <img
                         :src="`${imgPath}finger.svg`"
@@ -29,6 +29,12 @@
                         :class="`u-switch ${reward ? 'reward' : ''}`"
                         @click="toggleReward"
                     />
+                </div>
+                <div class="u-txt">
+                    <template v-if="!reward && !once">点击旋钮开启</template>
+                    <template v-if="once">
+                        <span class="u-open">点击开启</span>
+                    </template>
                 </div>
             </machine>
             <!-- 展示奖励 -->
@@ -95,7 +101,7 @@ export default {
     },
 
     mounted() {
-        this.isLogin ? this.loadData() : this.goBack();
+        // this.isLogin ? this.loadData() : this.goBack();
     },
     methods: {
         loadData() {
@@ -108,7 +114,7 @@ export default {
                 .catch(() => {
                     this.goBack();
                 });
-        }, 
+        },
         goBack() {
             this.$router.push({ name: "index", params: { id: this.uid } });
         },

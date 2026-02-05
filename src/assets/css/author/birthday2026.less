@@ -19,19 +19,19 @@ body,
     .pr;
     min-width: 1200px;
     min-height: 960px;
-    .u-video {
-        .full;
-        .pa;
-    }
 }
 .p-birthday {
     .pr;
     .flex;
+    .clip;
     justify-content: center;
     align-items: center;
     background-color: #0a040f;
-    .u-video {
+    .u-star-video {
+        .pa;
         .full;
+        .lt(0);
+        .rb(0);
     }
     .m-lamp {
         .mb(20px);
@@ -69,6 +69,18 @@ body,
             &.reward {
                 animation: compassRotate 2s ease-in-out forwards;
             }
+        }
+    }
+    .m-box .u-txt {
+        .pa;
+        .x;
+        .size(500px,50px);
+        .lb(86px,-32px);
+        .fz(28px,50px);
+        .ml(-120px);
+        color: #fff;
+        .u-open {
+            animation: showTxt 3s ease-in-out forwards;
         }
     }
     .m-reward {
@@ -127,7 +139,7 @@ body,
             .pa;
             .lt(50%);
             margin: -30px 0 0 -30px;
-            animation: toScale 1s linear forwards;
+            animation: toScale 0.5s linear forwards;
         }
     }
     .m-card {
@@ -244,7 +256,7 @@ body,
         transform: scale(1) rotate(18deg);
     }
     to {
-        transform: scale(3) rotate(18deg);
+        transform: scale(4.6) rotate(18deg);
     }
 }
 
@@ -269,5 +281,16 @@ body,
     }
     100% {
         transform: scale(1) rotate(0);
+    }
+}
+@keyframes showTxt {
+    0% {
+        opacity: 0;
+    }
+    80% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
     }
 }
