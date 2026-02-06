@@ -16,7 +16,7 @@
                 <div class="m-reward">
                     <!-- 中奖 -->
                     <template v-if="!show">
-                        <img class="u-reward" v-if="once" :src="`${imgPath}egg1.svg`" />
+                        <img class="u-reward" v-if="once" :src="`${imgPath}egg1.svg?jx3box`" />
                     </template>
                     <!-- 开关 -->
                     <img
@@ -71,7 +71,7 @@ export default {
         return {
             data: "",
             imgPath: __cdn + "design/card/birthday/2026/",
-            star: "baiyang",
+            star: "jinniu",
             reward: false,
             once: false,
             show: false,
@@ -134,7 +134,7 @@ export default {
             const day = date.getDate();
             const STAR = [
                 { sign: "baiyang", start: { month: 3, day: 21 }, end: { month: 4, day: 19 } },
-                { sign: "jiniu", start: { month: 4, day: 20 }, end: { month: 5, day: 20 } },
+                { sign: "jinniu", start: { month: 4, day: 20 }, end: { month: 5, day: 20 } },
                 { sign: "shuangzi", start: { month: 5, day: 21 }, end: { month: 6, day: 20 } },
                 { sign: "juxie", start: { month: 6, day: 21 }, end: { month: 7, day: 22 } },
                 { sign: "shizi", start: { month: 7, day: 23 }, end: { month: 8, day: 22 } },
