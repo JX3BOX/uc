@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
+import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
 import main from "@/pages/publish/main.vue";
 
 // 解决重复点击路由报错的BUG
@@ -336,7 +336,7 @@ const routes = [
     },
 ];
 
-if (isMiniProgram()){
+if (isMiniProgram() || isApp()) {
     routes.unshift({
         path: "/me",
         component: ()=> import("@/views/publish/me.vue")

@@ -1,10 +1,10 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
+import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
 
 Vue.use(VueRouter);
 
-const isMini = isMiniProgram();
+const isMini = isMiniProgram() || isApp();
 
 const routes = [
     { path: "/:id(\\d+)", name: "index", component: isMini? ()=> import("@/views/author/mobile/Index.vue"): () => import("@/views/author/Index.vue") },
