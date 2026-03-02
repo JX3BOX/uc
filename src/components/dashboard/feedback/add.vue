@@ -32,8 +32,8 @@
                     list-type="picture-card"
                     :on-preview="handlePictureCardPreview"
                     :on-remove="remove"
-                    :on-success="done"
-                    :on-error="fail"
+                    :auto-upload="false"
+                    :on-change="change"
                     :on-exceed="exceed"
                     :limit="max"
                     title="上传图片"
@@ -71,9 +71,10 @@
 </template>
 
 <script>
+import axios from "axios";
 import { types, subtypes } from "@/assets/data/dashboard/feedback.json";
 import { __cms } from "@/utils/config";
-const API_Root = process.env.NODE_ENV === "production" ? __cms : "/";
+const API_Root = __cms
 const API = API_Root + "api/cms/upload";
 
 import { feedback } from "@/service/dashboard/feedback";
@@ -99,6 +100,7 @@ export default {
             },
             url: API,
             imgs: [],
+            uploadedMap: {},
             loading: false,
             dialogImageUrl: "",
             dialogVisible: false,
@@ -116,18 +118,43 @@ export default {
         },
     },
     methods: {
-        // 提交图片成功
-        done: function (res) {
-            this.imgs = [...this.imgs, res.data[0]];
-        },
-        // 提交图片失败
-        fail: function (err) {
-            try {
-                let response = JSON.parse(err.message);
-                this.$message.error(`[${response.code}]${response.msg}`);
-            } catch {
-                this.$message.error("网络请求异常");
-            }
+        change(file) {
+            if (file.status === "success" || this.uploadedMap[file.uid]) return;
+            const fdata = new FormData();
+            fdata.append("file", file.raw);
+            axios
+                .post(API, fdata, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    withCredentials: true,
+                    auth: {
+                        username: (localStorage && localStorage.getItem("token")) || "",
+                        password: "cms common request",
+                    },
+                })
+                .then((res) => {
+                    if (res.data.code) {
+                        this.$message.error(`[${res.data.code}]${res.data.msg}`);
+                        return;
+                    }
+                    const imageUrl = res.data.data?.[0];
+                    if (!imageUrl) {
+                        this.$message.error("上传返回数据异常");
+                        return;
+                    }
+                    this.$set(this.uploadedMap, file.uid, imageUrl);
+                    this.imgs = [...this.imgs, imageUrl];
+                    file.url = imageUrl;
+                    file.status = "success";
+                })
+                .catch((err) => {
+                    if (err?.response?.data?.code) {
+                        this.$message.error(`[${err.response.data.code}]${err.response.data.msg || err.response.data.message}`);
+                    } else {
+                        this.$message.error("网络请求异常");
+                    }
+                });
         },
         // 图片上限
         exceed: function () {
@@ -139,7 +166,9 @@ export default {
         },
         // 移除图片
         remove: function (file) {
-            this.imgs = this.imgs.filter((img) => img !== file?.response?.data[0]);
+            const imageUrl = this.uploadedMap[file?.uid] || file?.response?.data?.[0] || file?.url;
+            this.imgs = this.imgs.filter((img) => img !== imageUrl);
+            if (file?.uid) this.$delete(this.uploadedMap, file.uid);
         },
         async submit() {
             this.loading = true;
@@ -155,6 +184,7 @@ export default {
                     this.$refs.upload.clearFiles();
                     this.form = this.$options.data().form;
                     this.imgs = [];
+                    this.uploadedMap = {};
                 })
                 .finally(() => {
                     this.loading = false;
@@ -174,10 +204,6 @@ export default {
                     const blob = item.getAsFile();
                     const file = new File([blob], new Date().getTime() + "-" + blob.name, { type: blob.type });
                     this.addFile(file);
-
-                    this.$nextTick(() => {
-                        this.$refs.upload.submit();
-                    });
                 }
             }
         },
