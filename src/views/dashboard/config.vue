@@ -83,6 +83,22 @@
                 </template>
                 <el-input v-model="conf.fav_link" placeholder="输入日历链接"></el-input>
             </el-form-item>
+            <el-form-item label="语言偏好">
+                <template #label>
+                    <span>语言偏好</span>
+                    <el-tooltip class="item" effect="dark" content="在小程序端默认的界面语言" placement="top"
+                        ><i class="el-icon-info"></i
+                    ></el-tooltip>
+                </template>
+                <el-select v-model="conf.default_lang">
+                    <el-option
+                        v-for="(item, key) in lang"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.locale"
+                    ></el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="客户端偏好">
                 <template #label>
                     <span>客户端偏好</span>
@@ -144,6 +160,8 @@
 
 <script>
 import { getUserConf, setUserConf } from "@/service/dashboard/conf";
+import lang from "@/assets/data/dashboard/lang.json";
+
 export default {
     name: "config",
     props: [],
@@ -169,6 +187,7 @@ export default {
                 fav_link: "",
                 default_client: "",
                 rss_need_level: 1,
+                default_lang: "zh-cn",
             },
 
             levelMap: new Array(8).fill(0).map((_, i) => {
@@ -177,6 +196,10 @@ export default {
                     value: i + 1,
                 };
             }),
+
+            lang,
+
+            oldLang: "",
         };
     },
     computed: {},
@@ -184,6 +207,8 @@ export default {
         loadData: function () {
             getUserConf().then((res) => {
                 this.conf = res?.data?.data;
+
+                this.oldLang = this.conf.default_lang;
             });
         },
         submit: function () {
@@ -192,6 +217,11 @@ export default {
                     message: "设置更新成功",
                     type: "success",
                 });
+
+                // 如果修改了语言设置，提示用户刷新页面以应用新的语言
+                if (this.oldLang !== this.conf.default_lang) {
+                    location.reload();
+                }
             });
         },
     },

@@ -1,0 +1,18 @@
+{
+    "zh-cn": {
+        "name": "简体中文",
+        "locale": "zh-cn"
+    },
+    "en-us": {
+        "name": "English",
+        "locale": "en-us"
+    },
+    "zh-tw": {
+        "name": "繁體中文",
+        "locale": "zh-tw"
+    },
+    "vi": {
+        "name": "Tiếng Việt",
+        "locale": "vi"
+    }
+}
