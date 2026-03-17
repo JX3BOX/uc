@@ -1,7 +1,8 @@
 import { pull } from "@/service/publish/cms";
-import { localDuration } from "@/pages/publish/setting.json";
+import settings from "@/pages/publish/setting.json";
 import { getCommitById } from "@/service/publish/version";
 import { cloneDeep } from "lodash";
+const { localDuration } = settings;
 
 export const AutoSaveMixin = {
     data() {

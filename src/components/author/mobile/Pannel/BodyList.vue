@@ -28,7 +28,8 @@
 <script>
 import { getThumbnail } from "@jx3box/jx3box-common/js/utils";
 import { getBodyList } from "@/service/author/next.js";
-import { bodyMap } from "@jx3box/jx3box-facedat/assets/data/index.json";
+import faceDat from "@jx3box/jx3box-facedat/assets/data/index.json";
+const { bodyMap } = faceDat
 export default {
     props: [],
     data: function () {

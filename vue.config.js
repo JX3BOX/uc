@@ -5,12 +5,12 @@ const pages = {
     //     template: "public/index.html",
     //     filename: "dashboard/index.html",
     // },
-    // publish: {
-    //     title: "发布中心 - JX3BOX",
-    //     entry: "src/pages/publish/index.js",
-    //     template: "public/index.html",
-    //     filename: "publish/index.html",
-    // },
+    publish: {
+        title: "发布中心 - JX3BOX",
+        entry: "src/pages/publish/index.js",
+        template: "public/index.html",
+        filename: "publish/index.html",
+    },
     author: {
         title: "作者 - JX3BOX",
         entry: "src/pages/author/index.js",

@@ -10,9 +10,9 @@ const routes = [
         component: isMini ? () => import("@/views/author/mobile/Index.vue") : () => import("@/views/author/Index.vue"),
         meta: {
             i18n: {
-                title: "page.author.title",
-                keywords: "page.author.keywords",
-                description: "page.author.description",
+                title: "pages.author.title",
+                keywords: "pages.author.keywords",
+                description: "pages.author.description",
             },
         },
     },
@@ -22,9 +22,9 @@ const routes = [
         component: () => import("@/views/author/Birthday.vue"),
         meta: {
             i18n: {
-                title: "page.birthday.title",
-                keywords: "page.birthday.keywords",
-                description: "page.birthday.description",
+                title: "pages.birthday.title",
+                keywords: "pages.birthday.keywords",
+                description: "pages.birthday.description",
             },
         },
     },
@@ -34,9 +34,9 @@ const routes = [
         component: () => import("@/views/author/certificate.vue"),
         meta: {
             i18n: {
-                title: "page.certificate.title",
-                keywords: "page.certificate.keywords",
-                description: "page.certificate.description",
+                title: "pages.certificate.title",
+                keywords: "pages.certificate.keywords",
+                description: "pages.certificate.description",
             },
         },
     },
@@ -46,9 +46,9 @@ const routes = [
         component: () => import("@/views/author/groupCertificate.vue"),
         meta: {
             i18n: {
-                title: "page.groupCertificate.title",
-                keywords: "page.groupCertificate.keywords",
-                description: "page.groupCertificate.description",
+                title: "pages.groupCertificate.title",
+                keywords: "pages.groupCertificate.keywords",
+                description: "pages.groupCertificate.description",
             },
         },
     },
@@ -58,9 +58,9 @@ const routes = [
         component: () => import("@/views/card/HolidayCard.vue"),
         meta: {
             i18n: {
-                title: "page.holidayCard.title",
-                keywords: "page.holidayCard.keywords",
-                description: "page.holidayCard.description",
+                title: "pages.holidayCard.title",
+                keywords: "pages.holidayCard.keywords",
+                description: "pages.holidayCard.description",
             },
         },
     },
@@ -70,9 +70,9 @@ const routes = [
         component: () => import("@/views/card/BirthdayCard.vue"),
         meta: {
             i18n: {
-                title: "page.birthdayCard.title",
-                keywords: "page.birthdayCard.keywords",
-                description: "page.birthdayCard.description",
+                title: "pages.birthdayCard.title",
+                keywords: "pages.birthdayCard.keywords",
+                description: "pages.birthdayCard.description",
             },
         },
     },

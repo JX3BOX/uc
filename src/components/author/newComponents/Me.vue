@@ -195,7 +195,8 @@
 import { follow, unfollow } from "@jx3box/jx3box-ui/service/follow";
 import { getAuthorRss, subscribeAuthor, unsubscribeAuthor } from "@jx3box/jx3box-common/js/rss";
 import { __userLevelColor, __imgPath, __cdn } from "@/utils/config";
-import { user as medal_map } from "@jx3box/jx3box-common/data/medals.json";
+import medalData from "@jx3box/jx3box-common/data/medals.json";
+const { user: medal_map } = medalData;
 import frames from "@jx3box/jx3box-common/data/user_avatar_frame.json";
 import User from "@jx3box/jx3box-common/js/user";
 import { tvLink } from "@jx3box/jx3box-common/js/utils";
