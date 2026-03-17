@@ -3,7 +3,7 @@
         <span class="u-category">类别</span>
         <el-radio-group v-model="category" @input="updateCategory">
             <!-- <el-tooltip v-for="item in options" :key="item.name" effect="dark" :content="item.remark" placement="top-start"> -->
-                <el-radio v-for="item in options" :key="item.name" border :label="item.name">{{ item.label }}</el-radio>
+            <el-radio v-for="item in options" :key="item.name" border :label="item.name">{{ item.label }}</el-radio>
             <!-- </el-tooltip> -->
         </el-radio-group>
     </div>
@@ -39,13 +39,10 @@ export default {
                     this.category = this.options?.[0]?.name;
                     this.$emit("update", this.category);
                 }
-            }
-        }
+            },
+        },
     },
-    model: {
-        prop: "value",
-        event: "update",
-    },
+    emits: ["update"],
     methods: {
         // 当 radio-group 内部的 category 变化时，更新到外部的 value 上
         updateCategory(newVal) {

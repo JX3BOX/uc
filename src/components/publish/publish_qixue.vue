@@ -31,10 +31,7 @@ export default {
             default: 0,
         },
     },
-    model: {
-        prop: "value",
-        event: "update",
-    },
+    emits: ["update"],
     data() {
         return {
             driver: null,

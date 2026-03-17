@@ -199,10 +199,7 @@ export default {
             },
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
         data: {
             immediate: true,
@@ -294,7 +291,7 @@ export default {
                 });
                 return;
             }
-            this.$set(data, "name", name);
+            data.name = name;
         },
         checkTalent: function (data) {
             try {
@@ -311,13 +308,13 @@ export default {
         icon: function (item) {
             let id = isNaN(item.icon) ? 13 : ~~item.icon;
             // id = Math.max(0, Math.min(id, 30000));
-            this.$set(item, "icon", id);
+            item.icon = id;
             return __iconPath + "icon/" + id + ".png";
         },
 
         // 标记
         onMarkChange: function (val) {
-            this.$set(this.macros.data[this.activeIndex - 1], "mark", val);
+            this.macros.data[this.activeIndex - 1].mark = val;
         },
     },
     created: function () {},
@@ -334,7 +331,7 @@ export default {
                 console.log(data);
                 _this.macros.data = [];
                 _this.$nextTick(function () {
-                    _this.$set(_this.macros, "data", data);
+                    _this.macros.data = data;
                 });
             },
         });
@@ -343,7 +340,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/deep/.el-tabs__item {
+::v-deep(.el-tabs__item) {
     display: inline-flex;
     align-items: center;
 }

@@ -1,28 +1,30 @@
 <template>
-    <el-popover ref="publish_mark" trigger="manual" v-model="visible" popper-class="m-publish-mark_popover">
+    <el-popover ref="publish_mark" trigger="manual" v-model:visible="visible" popper-class="m-publish-mark_popover">
         <div class="m-publish-marks">
             <div v-for="star in stars" class="m-publish-mark" :key="star" @click="onStarClick(star)">
-                <img :src="imgPath(star)" alt="" svg-inline>
+                <img :src="imgPath(star)" alt="" svg-inline />
             </div>
             <i class="u-remove el-icon-remove-outline" title="移除标记" @click="onRemove"></i>
         </div>
-        <div slot="reference" class="m-mark-content" @click="onVisibleChange">
-            <img v-if="star" :src="imgPath(star)" class="u-mark-img" alt="" svg-inline>
-            <span v-else class="u-mark-empty">/</span>
-        </div>
+        <template #reference>
+            <div class="m-mark-content" @click="onVisibleChange">
+                <img v-if="star" :src="imgPath(star)" class="u-mark-img" alt="" svg-inline />
+                <span v-else class="u-mark-empty">/</span>
+            </div>
+        </template>
     </el-popover>
 </template>
 
 <script>
 const stars = ["star", "star_red", "star_green", "star_blue"];
-import { onClickOutside } from '@vueuse/core'
+import { onClickOutside } from "@vueuse/core";
 export default {
-    name: 'publish_mark',
+    name: "publish_mark",
     props: {
         value: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
     data() {
         return {
@@ -30,21 +32,21 @@ export default {
 
             stars: stars,
 
-            star: ""
-        }
+            star: "",
+        };
     },
     watch: {
         value: {
             immediate: true,
             handler(val) {
                 this.star = val;
-            }
-        }
+            },
+        },
     },
     mounted() {
         onClickOutside(this.$refs.publish_mark.$el, () => {
             this.visible = false;
-        })
+        });
     },
     methods: {
         handleVisibleChange(visible) {
@@ -64,9 +66,9 @@ export default {
         },
         onVisibleChange() {
             this.visible = !this.visible;
-        }
-    }
-}
+        },
+    },
+};
 </script>
 
 <style lang="less">
@@ -91,7 +93,7 @@ export default {
         .pointer;
         font-size: 18px;
 
-        color: #F56C6C;
+        color: #f56c6c;
 
         // 45度旋转
         transform: rotate(-45deg);

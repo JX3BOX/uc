@@ -1,7 +1,7 @@
 <!-- 无界技能弹窗 -->
 <template>
     <el-dialog
-        :visible="modelValue"
+        v-model="modelValue"
         @close="onClose"
         title="添加技能"
         append-to-body
@@ -57,10 +57,7 @@ export default {
             default: "wujie",
         },
     },
-    model: {
-        prop: "modelValue",
-        event: "change",
-    },
+    emits: ["change", "selected"],
     data() {
         return {
             wujie_data: {

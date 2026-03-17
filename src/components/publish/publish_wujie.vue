@@ -16,10 +16,7 @@ export default {
             visible: 0,
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
         data: function (newval) {
             this.visible = newval;

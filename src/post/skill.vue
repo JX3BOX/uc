@@ -69,7 +69,7 @@ import header from "@/components/publish/publish_header.vue";
 import Tinymce from "@jx3box/jx3box-editor/src/Tinymce";
 
 // 本地依赖
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import User from "@jx3box/jx3box-common/js/user";
 import { iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
 import { getSkillList } from "@/service/publish/node"

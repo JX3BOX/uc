@@ -36,10 +36,7 @@ export default {
             banner: this.data,
         };
     },
-    model: {
-        prop: "data",
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
         data: function (newval) {
             this.banner = newval;

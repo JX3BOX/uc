@@ -10,7 +10,7 @@
             >
                 <img
                     class="u-pic"
-                    :src="item.id | xficon"
+                    :src="xficon(item.id)"
                     :alt="item.name"
                     onerror="this.src='https://img.jx3box.com/image/xf/0.png'"
                 />
@@ -32,10 +32,7 @@ export default {
             exact_client: this.client || "std",
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
         data: function (newval) {
             this.xf = newval;

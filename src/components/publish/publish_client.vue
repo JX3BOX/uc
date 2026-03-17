@@ -21,13 +21,8 @@ export default {
             client: this.data,
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
-        data: function (newval) {
-            this.client = newval;
         },
         client: {
             deep: true,
@@ -46,5 +41,3 @@ export default {
     components: {},
 };
 </script>
-
-

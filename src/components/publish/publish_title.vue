@@ -15,23 +15,20 @@
 <script>
 export default {
     name: "publish_title",
-    props: ["data","hideDiv","placeholder"],
+    props: ["data", "hideDiv", "placeholder"],
     data: function () {
         return {
             title: this.data,
         };
     },
-    model: {
-        prop: "data",   //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
-        data: function(newval) {
+        data: function (newval) {
             this.title = newval;
         },
         title: {
             deep: true,
-            handler: function(newval) {
+            handler: function (newval) {
                 this.$emit("update", newval);
             },
         },

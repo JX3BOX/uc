@@ -2,7 +2,7 @@
     <el-popover
         popper-class="m-haste-pop"
         trigger="manual"
-        v-model="showPop"
+        v-model:visible="showPop"
         placement="right"
         :visible-arrow="false"
         :open-delay="50"
@@ -11,12 +11,9 @@
             <div class="u-attr-name">推荐加速</div>
             <div class="u-haste-content" v-html="data.html"></div>
         </div>
-        <i
-            class="el-icon-info"
-            slot="reference"
-            @mouseover="toggle"
-            @mouseleave="toggle"
-        ></i>
+        <template #reference>
+            <i class="el-icon-info" @mouseover="toggle" @mouseleave="toggle"></i>
+        </template>
     </el-popover>
 </template>
 
@@ -53,13 +50,10 @@ export default {
         },
         loadData() {
             getHasteRecommend(this.mount, this.client).then((res) => {
-                this.data = res?.data?.data
+                this.data = res?.data?.data;
 
                 // 将加速推荐保存至本地sessionStorage
-                sessionStorage.setItem(
-                    `haste-${this.mount}`,
-                    JSON.stringify(this.data)
-                );
+                sessionStorage.setItem(`haste-${this.mount}`, JSON.stringify(this.data));
             });
         },
         init() {

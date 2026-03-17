@@ -52,13 +52,8 @@ export default {
             object: "",
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
-        data: {
-            immediate: true,
             deep: true,
             handler: function (newval) {
                 if (!newval || isEmptyMeta(newval)) {

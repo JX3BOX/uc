@@ -1,21 +1,16 @@
 <template>
     <div class="m-jx3data-box">
-        <el-button
-            class="m-jx3dat-addbutton"
-            icon="el-icon-circle-plus-outline"
-            type="primary"
-            @click="addLanren"
-        >添加数据</el-button>
+        <el-button class="m-jx3dat-addbutton" icon="el-icon-circle-plus-outline" type="primary" @click="addLanren"
+            >添加数据</el-button
+        >
         <el-tabs v-model="activeTab" type="card" closable @tab-remove="delLanren">
-            <el-tab-pane
-                v-for="(item, i) in lanrenDat.data"
-                :key="i"
-                :name="i + 1 + ''"
-            >
-                <span slot="label" class="m-jx3dat-tab-label">
-                    <i class="el-icon-box"></i>
-                    {{ item.lanren_type }}
-                </span>
+            <el-tab-pane v-for="(item, i) in lanrenDat.data" :key="i" :name="i + 1 + ''">
+                <template #label
+                    ><span class="m-jx3dat-tab-label">
+                        <i class="el-icon-box"></i>
+                        {{ item.lanren_type }}
+                    </span></template
+                >
                 <!-- 数据类型 -->
                 <div class="m-jx3dat-item">
                     <h5 class="u-title">数据类型</h5>
@@ -26,12 +21,7 @@
                 <!-- 数据标题 -->
                 <div class="m-jx3dat-item">
                     <h5 class="u-title">数据标题</h5>
-                    <el-input
-                        v-model="item.desc"
-                        placeholder="数据描述"
-                        :maxlength="50"
-                        show-word-limit
-                    ></el-input>
+                    <el-input v-model="item.desc" placeholder="数据描述" :maxlength="50" show-word-limit></el-input>
                 </div>
 
                 <div class="m-jx3dat-item m-jx3data-jx3dat">
@@ -41,20 +31,11 @@
                         当前数据文件将作为
                         <b>{{ item.lanren_type }}</b> 的文件上传，上传完后如若重新修改版本名称则需要重新上传对应文件
                     </div>
-                    <input
-                        class="u-data-input"
-                        type="file"
-                        :id="'lanren_' + i"
-                        @change="uploadLanren(item, i)"
-                    />
-                    <el-button
-                        type="primary"
-                        icon="el-icon-s-promotion"
-                        plain
-                        size="small"
-                        @click="selectLanren(i)"
-                    >上传数据文件</el-button>
-                    <span class="u-data-remark">{{item.origin_name}}</span>
+                    <input class="u-data-input" type="file" :id="'lanren_' + i" @change="uploadLanren(item, i)" />
+                    <el-button type="primary" icon="el-icon-s-promotion" plain size="small" @click="selectLanren(i)"
+                        >上传数据文件</el-button
+                    >
+                    <span class="u-data-remark">{{ item.origin_name }}</span>
                     <!-- <el-button
                         size="small"
                         type="primary"
@@ -72,10 +53,10 @@
                         :value="item.file"
                         v-if="item.file"
                     >
-                        <template slot="prepend">
+                        <template #prepend>
                             <span class="u-status">当前文件地址</span>
                         </template>
-                        <template slot="append">
+                        <template #append>
                             <span
                                 class="u-copy"
                                 v-clipboard:copy="item.file"
@@ -96,14 +77,14 @@
 <script>
 import { uploadLanrenFile } from "@/service/publish/jx3dat.js";
 // import { lanren_types } from "@jx3box/jx3box-common/data/lanren_types";
-import cloneDeep from 'lodash/cloneDeep'
-const now = Date.now()
+import cloneDeep from "lodash/cloneDeep";
+const now = Date.now();
 
 const default_meta = {
     data: [
         {
-            lanren_type: '副本数据',
-            key: 'dungeon',
+            lanren_type: "副本数据",
+            key: "dungeon",
             desc: "",
             status: true,
             file: "",
@@ -113,41 +94,38 @@ const default_meta = {
             origin_name: "",
             upload_status: false,
             pop: false,
-        }
+        },
     ],
 };
 
 export default {
     name: "publish_lanren",
     props: ["data", "user", "type"],
-    model: {
-        prop: "data",
-        event: "update-lanren",
-    },
+    emits: ["update-lanren"],
     data: () => ({
         activeTab: "1",
         lanrenDat: {},
         tabs: [],
-        lanren_types:[]
+        lanren_types: [],
     }),
     watch: {
         data: {
             immediate: true,
             handler(newval) {
                 if (!newval || newval.data.length === 1) {
-                    const [current] = newval.data
-                    if (current.name === '默认版') {
+                    const [current] = newval.data;
+                    if (current.name === "默认版") {
                         this.lanrenDat = cloneDeep(default_meta);
                     }
                 } else {
-                    const [current] = newval.data
+                    const [current] = newval.data;
                     // 判断传进来的数据是否为lanren数据，懒人数据是有key的
                     if (current.key) {
                         this.lanrenDat = newval;
                         this.lanrenDat.data.forEach((item) => {
                             item.pop = false;
-                            if(item._version === undefined){
-                                item._version = item.version
+                            if (item._version === undefined) {
+                                item._version = item.version;
                             }
                         });
                     } else {
@@ -159,11 +137,11 @@ export default {
         lanrenDat: {
             deep: true,
             handler(val) {
-                val.data.forEach(v => {
-                    v._version = v._version || now
-                })
-                this.$emit('update-lanren', val)
-            }
+                val.data.forEach((v) => {
+                    v._version = v._version || now;
+                });
+                this.$emit("update-lanren", val);
+            },
         },
     },
     methods: {
@@ -197,17 +175,17 @@ export default {
                 }
             });
         },
-        addLanren: function() {
+        addLanren: function () {
             this.lanrenDat.data.push({
                 lanren_type: "副本数据",
                 key: "dungeon",
                 desc: "",
                 status: true,
                 file: "",
-            })
+            });
         },
-        delLanren: function(name) {
-            if (name === '1') {
+        delLanren: function (name) {
+            if (name === "1") {
                 this.$alert("✘ 必须有一个数据", "消息", {
                     confirmButtonText: "确定",
                 });
@@ -238,8 +216,8 @@ export default {
          * @param {string} val 数据类型
          * @param {object} item 该条目
          */
-        handleTypeChange: function(val, item) {
-            this.$set(item, 'lanren_type', lanren_types[val])
+        handleTypeChange: function (val, item) {
+            item.lanren_type = lanren_types[val];
         },
         aniLanren: function (item) {
             item.isUploaded = true;

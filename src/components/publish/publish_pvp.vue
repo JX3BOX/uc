@@ -37,7 +37,7 @@
                         <div class="qx-container"></div>
                     </div>
                     <el-input v-model="pvpData.talent" placeholder="镇派方案编码" @change="checkTalent(pvpData.talent)">
-                        <template slot="prepend">
+                        <template #prepend>
                             <a class="u-get" target="_blank" href="/macro/talent2">
                                 <i class="el-icon-warning"></i>
                                 获取编码
@@ -80,11 +80,13 @@
                         :name="i + 1 + ''"
                         :class="`tab-content${i + 1}`"
                     >
-                        <span slot="label" class="u-tab-box">
-                            <span class="u-tab-name" :title="item.name">{{
-                                "连招" + zhNum[i] + " - " + item.name
-                            }}</span>
-                        </span>
+                        <template #label
+                            ><span class="u-tab-box">
+                                <span class="u-tab-name" :title="item.name">{{
+                                    "连招" + zhNum[i] + " - " + item.name
+                                }}</span>
+                            </span></template
+                        >
                         <el-form-item label="连招名称" class="m-macro-desc">
                             <el-input
                                 v-model="item.name"
@@ -204,10 +206,7 @@ export default {
             showSkillDialog: false,
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
         data: {
             immediate: true,
@@ -292,7 +291,7 @@ export default {
                 });
                 return;
             }
-            this.$set(data, "name", name);
+            data.name = name;
         },
         checkTalent: function (data) {
             try {
@@ -331,7 +330,7 @@ export default {
                     data.splice(newIndex, 0, currRow);
                     _this.pvpData.data[_this.activeIndex - 1].sq = [];
                     _this.$nextTick(function () {
-                        _this.$set(_this.pvpData.data[_this.activeIndex - 1], "sq", data);
+                        _this.pvpData.data[_this.activeIndex - 1].sq = data;
                     });
                 },
             });
@@ -343,7 +342,7 @@ export default {
                     {
                         label: !skill?.WithoutGcd ? "设置为无GCD技能" : "设置为有GCD技能",
                         onClick: () => {
-                            this.$set(skill, "WithoutGcd", !skill.WithoutGcd);
+                            skill.WithoutGcd = !skill.WithoutGcd;
                         },
                         icon: !skill?.WithoutGcd ? "el-icon-check" : "el-icon-close",
                     },
@@ -368,7 +367,7 @@ export default {
                 data.splice(newIndex, 0, currRow);
                 _this.pvpData.data = [];
                 _this.$nextTick(function () {
-                    _this.$set(_this.pvpData, "data", data);
+                    _this.pvpData.data = data;
                 });
             },
         });

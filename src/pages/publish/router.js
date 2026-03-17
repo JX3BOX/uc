@@ -1,13 +1,6 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
 import main from "@/pages/publish/main.vue";
-
-// 解决重复点击路由报错的BUG
-const originalPush = VueRouter.prototype.push;
-VueRouter.prototype.push = function push(location) {
-    return originalPush.call(this, location).catch((err) => err);
-};
 
 // COMMON
 const demo = () => import("@/post/demo.vue");
@@ -344,10 +337,9 @@ if (isMiniProgram() || isApp()) {
 }
 
 
-console.log(routes);
-const router = new VueRouter({
+const router = createRouter({
+    history: createWebHistory('/publish'),
     routes,
-    base: "/publish",
 });
 
 export default router;

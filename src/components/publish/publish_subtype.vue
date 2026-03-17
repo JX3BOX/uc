@@ -8,7 +8,8 @@
                     border
                     :key="key"
                     :disabled="frozen && $route.params.id && subtype != key"
-                >{{ name }}</el-radio>
+                    >{{ name }}</el-radio
+                >
             </el-radio-group>
         </el-form-item>
         <slot></slot>
@@ -24,10 +25,7 @@ export default {
             subtypes: this.options || [],
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
         data: function (newval) {
             this.subtype = newval;

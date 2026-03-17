@@ -167,7 +167,7 @@
 <script>
 import { __Root, __postType, __wikiType, __appType, __imgPath } from "@/utils/config";
 import Tinymce from "@jx3box/jx3box-editor/src/Tinymce";
-import CollectionPublic from "@jx3box/jx3box-editor/service/enum/CollectionPublic";
+import CollectionPublic from "@jx3box/jx3box-editor/src/service/enum/CollectionPublic";
 import header from "@/components/publish/publish_header.vue";
 import publish_banner from "@/components/publish/publish_banner.vue";
 import draggable from "vuedraggable";

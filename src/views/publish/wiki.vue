@@ -86,7 +86,7 @@
 import { getTypeLabel, getLink } from "@jx3box/jx3box-common/js/utils";
 import { __wikiType } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 const wikiTypes = {
     ...__wikiType,
     skill: "技能",

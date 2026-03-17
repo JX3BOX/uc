@@ -21,13 +21,8 @@ export default {
             tags: this.options || [],
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
-        data: function (newval) {
-            this.tag = newval || [];
         },
         tag: {
             deep: true,

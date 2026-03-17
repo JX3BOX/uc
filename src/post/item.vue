@@ -63,7 +63,7 @@ import header from "@/components/publish/publish_header.vue";
 import Tinymce from "@jx3box/jx3box-editor/src/Tinymce";
 
 // 本地依赖
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 
 import User from "@jx3box/jx3box-common/js/user";
 import { search_items } from "@/service/publish/item";

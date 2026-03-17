@@ -164,10 +164,9 @@ import publish_reading_history from "@/components/publish/publish_reading_histor
 import publish_client from "@/components/publish/publish_client.vue";
 
 // 数据逻辑
-import { getTopicBucket } from "@/service/publish/cms.js";
 import { cmsMetaMixin } from "@/utils/cmsMetaMixin";
 import { atAuthorMixin } from "@/utils/atAuthorMixin";
-import { getDecoration } from "@jx3box/jx3box-common-ui/service/cms";
+import { getDecoration } from "@jx3box/jx3box-ui/service/cms";
 import { appendToCollection } from "@/service/publish/collection.js";
 import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
 

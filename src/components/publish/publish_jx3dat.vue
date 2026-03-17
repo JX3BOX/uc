@@ -25,10 +25,12 @@
 
                 <el-tabs v-model="activeIndex" type="card" closable @tab-remove="delDBM">
                     <el-tab-pane v-for="(item, i) in jx3dats.data" :key="i" :name="i + 1 + ''">
-                        <span slot="label" class="m-jx3dat-tab-label">
-                            <i class="el-icon-box"></i>
-                            {{ item.name }}
-                        </span>
+                        <template #label
+                            ><span class="m-jx3dat-tab-label">
+                                <i class="el-icon-box"></i>
+                                {{ item.name }}
+                            </span></template
+                        >
                         <div class="m-jx3dat-item">
                             <h5 class="u-title">订阅名</h5>
                             <div class="u-group">
@@ -42,7 +44,7 @@
                                         :disabled="i == 0"
                                         :placeholder="i == 0 ? '默认版' : '版本名称'"
                                     >
-                                        <template slot="prepend">
+                                        <template #prepend>
                                             <b class="u-feed"
                                                 >{{ user.name }}{{ item.name == "默认版" ? "" : "#" + item.name }}</b
                                             >
@@ -110,10 +112,10 @@
                                 :value="item.file"
                                 v-if="item.file"
                             >
-                                <template slot="prepend">
+                                <template #prepend>
                                     <span class="u-status">当前文件地址</span>
                                 </template>
-                                <template slot="append">
+                                <template #append>
                                     <span
                                         class="u-copy"
                                         v-clipboard:copy="item.file"
@@ -151,24 +153,24 @@
                     <el-row class="u-tr">
                         <el-col :span="24">
                             <el-input v-model="jx3dats.github" placeholder="(非必填)">
-                                <template slot="prepend">Github订阅号</template>
-                                <template slot="append">@github</template>
+                                <template #prepend>Github订阅号</template>
+                                <template #append>@github</template>
                             </el-input>
                         </el-col>
                     </el-row>
                     <el-row class="u-tr">
                         <el-col :span="24">
                             <el-input v-model="jx3dats.gitee" placeholder="(非必填)">
-                                <template slot="prepend">Gitee订阅号</template>
-                                <template slot="append">@gitee</template>
+                                <template #prepend>Gitee订阅号</template>
+                                <template #append>@gitee</template>
                             </el-input>
                         </el-col>
                     </el-row>
                     <el-row class="u-tr">
                         <el-col :span="24">
                             <el-input v-model="jx3dats.aliyun" placeholder="(非必填)">
-                                <template slot="prepend">Aliyun订阅号</template>
-                                <template slot="append">@aliyun</template>
+                                <template #prepend>Aliyun订阅号</template>
+                                <template #append>@aliyun</template>
                             </el-input>
                         </el-col>
                     </el-row>
@@ -194,10 +196,10 @@
                 :disabled="true"
                 :value="jx3dats.down"
             >
-                <template slot="prepend">
+                <template #prepend>
                     <span class="u-status">当前文件地址</span>
                 </template>
-                <template slot="append">
+                <template #append>
                     <span
                         class="u-copy"
                         v-clipboard:copy="jx3dats.down || ''"
@@ -266,10 +268,7 @@ export default {
             reload: true,
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
         data: {
             immediate: true,
@@ -313,7 +312,7 @@ export default {
         // 上传DBM
         checkDataName: function (data) {
             let name = sterilizer(data.name).removeSpace().kill().toString();
-            this.$set(data, "name", name);
+            data.name = name;
         },
         selectDBM: function (i) {
             let fileInput = document.getElementById("jx3dat_" + i);

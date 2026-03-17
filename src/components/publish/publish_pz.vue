@@ -123,10 +123,7 @@ export default {
             selectedOptions: [],
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
         data: {
             immediate: true,

@@ -2,14 +2,11 @@
     <div class="m-publish-extend">
         <el-form-item label="关联">
             <el-select v-model="selected" style="width: 400px" popper-class="m-changelog-pop" clearable>
-                <el-option
-                    v-for="item in data"
-                    :key="item.id"
-                    :label="item.title"
-                    :value="item.id"
-                >
+                <el-option v-for="item in data" :key="item.id" :label="item.title" :value="item.id">
                     <el-tag size="small">{{ zlp_map[item.zlp] }}</el-tag>
-                    <span class="m-zlp-title"><time>{{ item.date }}</time> / {{ item.title }}</span>
+                    <span class="m-zlp-title"
+                        ><time>{{ item.date }}</time> / {{ item.title }}</span
+                    >
                 </el-option>
             </el-select>
         </el-form-item>
@@ -18,7 +15,7 @@
 
 <script>
 import { getPostMeta, setPostMeta, getChangelog } from "@/service/publish/cms";
-import {all_map} from "@jx3box/jx3box-common/data/jx3_zlp.json";
+import { all_map } from "@jx3box/jx3box-common/data/jx3_zlp.json";
 export default {
     name: "publish_extend",
     props: {
@@ -29,14 +26,11 @@ export default {
             },
         },
     },
-    model: {
-        prop: "post",
-        event: "update",
-    },
+    emits: ["update"],
     data() {
         return {
             selected: "",
-            data: []
+            data: [],
         };
     },
     computed: {
@@ -48,7 +42,7 @@ export default {
         },
         client() {
             return this.$store.state.client;
-        }
+        },
     },
     watch: {
         post: {
@@ -66,28 +60,28 @@ export default {
         loadChangelog() {
             const params = {
                 client: this.client,
-                _no_page: 1
-            }
-            getChangelog(params).then(res => {
+                _no_page: 1,
+            };
+            getChangelog(params).then((res) => {
                 this.data = res.data.data || [];
 
                 this.loadPostMeta();
-            })
+            });
         },
         loadPostMeta() {
             if (!this.post?.ID) return;
-            getPostMeta(this.post?.ID, 'link_changelog').then(res => {
+            getPostMeta(this.post?.ID, "link_changelog").then((res) => {
                 this.selected = ~~res.data?.data?.val || "";
-            })
+            });
         },
         setPostMeta(id) {
-            setPostMeta(id, 'link_changelog', String(this.selected))
+            setPostMeta(id, "link_changelog", String(this.selected));
         },
         clearPostMeta(id) {
-            setPostMeta(id, 'link_changelog', "")
-        }
-    }
-}
+            setPostMeta(id, "link_changelog", "");
+        },
+    },
+};
 </script>
 
 <style lang="less">

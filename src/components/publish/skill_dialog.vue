@@ -1,7 +1,7 @@
 <template>
     <el-dialog
         class="c-large-dialog"
-        :visible="modelValue"
+        v-model="modelValue"
         @close="close"
         title="技能库"
         append-to-body
@@ -32,13 +32,8 @@
                         <el-radio-button label="std">剑三</el-radio-button>
                         <el-radio-button label="origin">缘起</el-radio-button>
                     </el-radio-group>
-                    <el-input
-                        class="u-input"
-                        placeholder="请输入 ID 或 名称"
-                        v-model="query"
-                        @keyup.enter.native="search"
-                    >
-                        <template slot="prepend">ID ／名称</template>
+                    <el-input class="u-input" placeholder="请输入 ID 或 名称" v-model="query" @keyup.enter="search">
+                        <template #prepend>ID ／名称</template>
                     </el-input>
                 </div>
 
@@ -111,12 +106,12 @@
             </ul>
         </div>
         <!-- 插入按钮 -->
-        <span slot="footer" class="dialog-footer">
+        <template #footer>
             <el-button @click="close">取 消</el-button>
             <el-button type="primary" @click="submit">
                 {{ buttonTXT }}
             </el-button>
-        </span>
+        </template>
     </el-dialog>
 </template>
 
@@ -143,10 +138,7 @@ export default {
             default: "std",
         },
     },
-    model: {
-        prop: "modelValue",
-        event: "update:modelValue",
-    },
+    emits: ["update:modelValue", "submit"],
     data() {
         return {
             client: location.href.includes("origin") ? "origin" : "std",

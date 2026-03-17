@@ -138,7 +138,7 @@ import Tinymce from "@jx3box/jx3box-editor/src/Tinymce";
 
 // 本地依赖
 // import { WikiPost } from "@jx3box/jx3box-common/js/helper";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import User from "@jx3box/jx3box-common/js/user";
 import { get_menus, get_list, create_knowledge } from "@/service/publish/knowledge";
 import { iconLink, getLink } from "@jx3box/jx3box-common/js/utils";

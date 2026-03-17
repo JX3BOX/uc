@@ -1,12 +1,6 @@
 <template>
     <div class="m-publish-excerpt">
-        <el-input
-            v-model="excerpt"
-            :maxlength="200"
-            show-word-limit
-            type="textarea"
-            placeholder="摘要信息"
-        ></el-input>
+        <el-input v-model="excerpt" :maxlength="200" show-word-limit type="textarea" placeholder="摘要信息"></el-input>
         <slot></slot>
     </div>
 </template>
@@ -19,17 +13,14 @@ export default {
             excerpt: this.data,
         };
     },
-    model: {
-        prop: "data",   //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
-        data: function(newval) {
+        data: function (newval) {
             this.excerpt = newval;
         },
         excerpt: {
             deep: true,
-            handler: function(newval) {
+            handler: function (newval) {
                 this.$emit("update", newval);
             },
         },
@@ -42,7 +33,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-    .m-publish-excerpt{
-        .mb(10px);
-    }
+.m-publish-excerpt {
+    .mb(10px);
+}
 </style>

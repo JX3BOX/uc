@@ -17,10 +17,7 @@ export default {
             },
         },
     },
-    model: {
-        prop: "post",
-        event: "update",
-    },
+    emits: ["update"],
     data() {
         return {};
     },
@@ -33,5 +30,5 @@ export default {
             },
         },
     },
-}
+};
 </script>

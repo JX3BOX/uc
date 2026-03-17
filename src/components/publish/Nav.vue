@@ -9,18 +9,18 @@
             <span>草稿箱</span>
         </router-link>
 
-        <el-collapse v-model="group" class="m-nav-group" @click.native.stop>
+        <el-collapse v-model="group" class="m-nav-group" @click.stop>
             <el-collapse-item title="独立创作" name="cms">
-                <template slot="title">
+                <template #title>
                     <span class="u-title">独立创作</span>
                 </template>
-                <router-link :to="item.path" v-for="(item, key) in cms" :key="key" @click.native="closeSidebar">
+                <router-link :to="item.path" v-for="(item, key) in cms" :key="key" @click="closeSidebar">
                     <i class="el-icon-collection"></i>
                     <span>{{ item.name }}</span>
                     <span class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
                 </router-link>
                 <template v-if="isAdmin">
-                    <router-link :to="item.path" v-for="(item, key) in ads" :key="key" @click.native="closeSidebar">
+                    <router-link :to="item.path" v-for="(item, key) in ads" :key="key" @click="closeSidebar">
                         <i class="el-icon-collection"></i>
                         <span>{{ item.name }}</span>
                         <span class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
@@ -28,7 +28,7 @@
                 </template>
             </el-collapse-item>
             <el-collapse-item title="联合创作" name="union">
-                <template slot="title">
+                <template #title>
                     <span class="u-title">联合创作</span>
                 </template>
                 <router-link to="/union/active">
@@ -43,30 +43,30 @@
                 </router-link>
             </el-collapse-item>
             <el-collapse-item title="多人创作" name="wiki">
-                <template slot="title">
+                <template #title>
                     <span class="u-title">多人百科</span>
                 </template>
-                <router-link :to="item.path" v-for="(item, key) in wiki" :key="key" @click.native="closeSidebar">
+                <router-link :to="item.path" v-for="(item, key) in wiki" :key="key" @click="closeSidebar">
                     <i class="el-icon-collection"></i>
                     <span>{{ item.name }}</span>
                     <span class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
                 </router-link>
             </el-collapse-item>
             <el-collapse-item title="其它创作" name="app">
-                <template slot="title">
+                <template #title>
                     <span class="u-title">其它创作</span>
                 </template>
-                <router-link :to="item.path" v-for="(item, key) in app" :key="key" @click.native="closeSidebar">
+                <router-link :to="item.path" v-for="(item, key) in app" :key="key" @click="closeSidebar">
                     <i class="el-icon-collection"></i>
                     <span>{{ item.name }}</span>
                     <span class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
                 </router-link>
             </el-collapse-item>
             <el-collapse-item title="评论留言" name="comment">
-                <template slot="title">
+                <template #title>
                     <span class="u-title">评论留言</span>
                 </template>
-                <router-link :to="item.path" v-for="(item, key) in comment" :key="key" @click.native="closeSidebar">
+                <router-link :to="item.path" v-for="(item, key) in comment" :key="key" @click="closeSidebar">
                     <i class="el-icon-collection"></i>
                     <span>{{ item.name }}</span>
                     <span class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
@@ -80,7 +80,7 @@
 import { getMyPostsCount } from "@/service/publish/cms.js";
 import { get_my_post_total } from "@/service/publish/post.js";
 import { getNextStat } from "@/service/publish/next.js";
-import Bus from "@jx3box/jx3box-common-ui/service/bus";
+import Bus from "@jx3box/jx3box-ui/utils/bus.js";
 import User from "@jx3box/jx3box-common/js/user";
 export default {
     name: "Nav",

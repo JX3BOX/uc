@@ -27,35 +27,37 @@
                 :accept="accept"
             >
                 <!-- :accept="accept" -->
-                <i slot="default" class="el-icon-plus"></i>
+                <template #default>
+                    <i class="el-icon-plus"></i>
+                </template>
 
                 <!-- 文件项 -->
-                <div
-                    slot="file"
-                    slot-scope="{ file }"
-                    class="u-file-wrapper"
-                    @click="select(file)"
-                    :class="{
-                        isSelected: file.selected,
-                        disabled: file.status != 'success',
-                    }"
-                >
-                    <!-- 图片类型 -->
-                    <img v-if="file.is_img" class="el-upload-list__item-thumbnail u-imgbox" :src="file.url" alt />
-                    <!-- 勾选角标 -->
-                    <label v-show="file.selected" class="u-file-select-label">
-                        <i class="el-icon-upload-success el-icon-check"></i>
-                    </label>
-                </div>
+                <template #file="{ file }">
+                    <div
+                        class="u-file-wrapper"
+                        @click="select(file)"
+                        :class="{
+                            isSelected: file.selected,
+                            disabled: file.status != 'success',
+                        }"
+                    >
+                        <!-- 图片类型 -->
+                        <img v-if="file.is_img" class="el-upload-list__item-thumbnail u-imgbox" :src="file.url" alt />
+                        <!-- 勾选角标 -->
+                        <label v-show="file.selected" class="u-file-select-label">
+                            <i class="el-icon-upload-success el-icon-check"></i>
+                        </label>
+                    </div>
+                </template>
             </el-upload>
 
             <!-- 插入按钮 -->
-            <span slot="footer" class="dialog-footer">
+            <template #footer>
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="insert">
                     {{ buttonTXT }}
                 </el-button>
-            </span>
+            </template>
         </el-dialog>
     </div>
 </template>
@@ -182,7 +184,7 @@ export default {
         },
         select: function (file) {
             if (file.status == "success") {
-                this.$set(file, "selected", !file.selected);
+                file.selected = !file.selected;
                 file.selected ? this.selectedCount++ : this.selectedCount--;
             }
         },
@@ -216,7 +218,7 @@ export default {
         },
         resetSelectStatus: function () {
             this.fileList.forEach((file, i) => {
-                this.$set(this.fileList[i], "selected", false);
+                this.fileList[i].selected = false;
             });
             this.selectedCount = 0;
         },

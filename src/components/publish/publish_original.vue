@@ -15,10 +15,7 @@ export default {
             original: ~~this.data,
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
         data: function (newval) {
             this.original = ~~newval;

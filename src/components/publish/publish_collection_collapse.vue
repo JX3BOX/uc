@@ -14,10 +14,7 @@ export default {
             collection_collapse: false,
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
         data: {
             immediate: true,

@@ -1,12 +1,7 @@
 <template>
     <div class="m-publish-comment">
         <el-form-item label="评论开关">
-            <el-switch
-                v-model="comment"
-                active-color="#13ce66"
-                :active-value="0"
-                :inactive-value="1"
-            ></el-switch>
+            <el-switch v-model="comment" active-color="#13ce66" :active-value="0" :inactive-value="1"></el-switch>
         </el-form-item>
         <div class="m-comment-extend">
             <slot></slot>
@@ -22,10 +17,7 @@ export default {
             comment: this.data,
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
         data: function (newval) {
             this.comment = newval;
@@ -39,8 +31,7 @@ export default {
     },
     computed: {},
     methods: {},
-    mounted: function () {
-    },
+    mounted: function () {},
     components: {},
 };
 </script>

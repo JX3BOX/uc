@@ -1,12 +1,7 @@
 <template>
     <div class="m-publish-comment">
         <el-form-item label="礼物开关">
-            <el-switch
-                v-model="allow_gift"
-                active-color="#13ce66"
-                :active-value="1"
-                :inactive-value="0"
-            ></el-switch>
+            <el-switch v-model="allow_gift" active-color="#13ce66" :active-value="1" :inactive-value="0"></el-switch>
         </el-form-item>
         <slot></slot>
     </div>
@@ -20,10 +15,7 @@ export default {
             allow_gift: this.data,
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
         data: function (newval) {
             this.allow_gift = newval;

@@ -60,10 +60,7 @@ export default {
             search: "",
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     computed: {
         isEmpty: function () {
             return !this.search && !this.collections.length;

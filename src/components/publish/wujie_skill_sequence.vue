@@ -17,10 +17,12 @@
 
             <el-tabs class="tabs-sort" v-model="activeIndex" type="card" closable @tab-remove="removeMacro">
                 <el-tab-pane v-for="(item, i) in macros.data" :key="i" :name="i + 1 + ''">
-                    <span slot="label" class="u-tab-box">
-                        <img class="u-tabicon" :src="icon(item)" />
-                        <span class="u-tab-name" :title="item.name">{{ i + 1 + "号位-" + item.name }}</span>
-                    </span>
+                    <template #label
+                        ><span class="u-tab-box">
+                            <img class="u-tabicon" :src="icon(item)" />
+                            <span class="u-tab-name" :title="item.name">{{ i + 1 + "号位-" + item.name }}</span>
+                        </span></template
+                    >
                     <div class="m-macro-cloud m-macro-item">
                         <h5 class="u-title">
                             武学序列图标/名称
@@ -38,7 +40,7 @@
                                     :maxlength="10"
                                     :min="1"
                                 >
-                                    <template slot="prepend">
+                                    <template #prepend>
                                         <img class="u-icon" :src="icon(item)" />
                                     </template>
                                 </el-input>
@@ -52,7 +54,7 @@
                                     show-word-limit
                                     @change="checkDataName(item)"
                                 >
-                                    <template slot="prepend">
+                                    <template #prepend>
                                         <b class="u-feed">{{ nickname }}#{{ item.name }}</b>
                                     </template>
                                 </el-input>
@@ -70,7 +72,7 @@
                             placeholder="奇穴方案编码"
                             @change="checkTalent(item)"
                         >
-                            <template slot="prepend">
+                            <template #prepend>
                                 <a class="u-get" target="_blank" href="/app/talent">
                                     <i class="el-icon-warning"></i>
                                     获取编码
@@ -89,13 +91,9 @@
                             >
                         </div>
 
-                        <div class="m-selected-skills" :class="{'is-empty': !item.sq || !item.sq.length }">
+                        <div class="m-selected-skills" :class="{ 'is-empty': !item.sq || !item.sq.length }">
                             <draggable v-model="item.sq" class="m-skills-list" v-show="item.sq && item.sq.length">
-                                <li
-                                    v-for="(skill, index) in item.sq"
-                                    :key="skill.SkillID + '' + index"
-                                    class="m-skill"
-                                >
+                                <li v-for="(skill, index) in item.sq" :key="skill.SkillID + '' + index" class="m-skill">
                                     <div class="u-skill" v-if="skill && skill.IconID">
                                         <img class="u-skill-icon" :src="iconLink(skill.IconID)" :alt="skill.IconID" />
                                         <span class="u-name" :title="skill.Name">{{ skill.Name }}</span>
@@ -105,14 +103,20 @@
                                     ></i>
                                 </li>
                             </draggable>
-                            <el-alert show-icon type="warning" :closable="false" v-if="!item.sq || !item.sq.length" title="暂未选择技能"></el-alert>
+                            <el-alert
+                                show-icon
+                                type="warning"
+                                :closable="false"
+                                v-if="!item.sq || !item.sq.length"
+                                title="暂未选择技能"
+                            ></el-alert>
                         </div>
                     </div>
                     <el-form-item label="其它" class="m-macro-misc">
                         <el-row>
                             <el-col :span="8" class="u-speed">
                                 <el-input v-model="item.speed" placeholder="填写推荐的急速阈值">
-                                    <template slot="prepend"
+                                    <template #prepend
                                         >急速阈值
                                         <slot name="pre-prepend"></slot>
                                     </template>
@@ -144,7 +148,12 @@
         </div>
         <slot></slot>
 
-        <publish-wujie-skill v-model="showSkillDialog" :subtype="subtype" platform="wujie" @selected="onSelected"></publish-wujie-skill>
+        <publish-wujie-skill
+            v-model="showSkillDialog"
+            :subtype="subtype"
+            platform="wujie"
+            @selected="onSelected"
+        ></publish-wujie-skill>
     </div>
 </template>
 
@@ -153,12 +162,12 @@ import User from "@jx3box/jx3box-common/js/user";
 import { sterilizer } from "sterilizer/index.js";
 import { __iconPath } from "@/utils/config";
 import isEmptyMeta from "@/utils/isEmptyMeta.js";
-import {cloneDeep} from "lodash";
+import { cloneDeep } from "lodash";
 import publish_wujie_skill from "@/components/publish/publish_wujie_skill.vue";
 import { iconLink } from "@jx3box/jx3box-common/js/utils";
 
 import Sortable from "sortablejs";
-import draggable from 'vuedraggable';
+import draggable from "vuedraggable";
 // META空模板
 const default_meta = {
     data: [
@@ -188,10 +197,7 @@ export default {
             showSkillDialog: false,
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
         data: {
             immediate: true,
@@ -281,7 +287,7 @@ export default {
                 });
                 return;
             }
-            this.$set(data, "name", name);
+            data.name = name;
         },
         checkTalent: function (data) {
             try {
@@ -298,7 +304,7 @@ export default {
         icon: function (item) {
             let id = isNaN(item.icon) ? 13 : ~~item.icon;
             // id = Math.max(0, Math.min(id, 30000));
-            this.$set(item, "icon", id);
+            item.icon = id;
             return __iconPath + "icon/" + id + ".png";
         },
 
@@ -323,7 +329,7 @@ export default {
                 console.log(data);
                 _this.macros.data = [];
                 _this.$nextTick(function () {
-                    _this.$set(_this.macros, "data", data);
+                    _this.macros.data = data;
                 });
             },
         });
@@ -332,7 +338,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/deep/.el-tabs__item {
+::v-deep(.el-tabs__item) {
     display: inline-flex;
     align-items: center;
 }

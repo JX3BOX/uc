@@ -2,9 +2,9 @@
     <div class="m-content-tab-list">
         <el-tabs ref="tabList" class="m-content-tabs" :class="{ fixed: navBarFixed }" v-model="active">
             <el-tab-pane v-for="item in list" :key="item.value" :label="item.label" :name="item.value">
-                <span slot="label">
+                <template #label>
                     {{ item.label }}
-                </span>
+                </template>
             </el-tab-pane>
         </el-tabs>
         <div class="m-primary">

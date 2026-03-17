@@ -15,10 +15,12 @@
 
             <el-tabs class="tabs-sort" v-model="activeIndex" type="card" closable @tab-remove="removeSource">
                 <el-tab-pane v-for="(item, i) in data.data" :key="i" :name="i + 1 + ''">
-                    <span slot="label" class="u-tab-box">
-                        <i class="el-icon-tickets u-tab-icon"></i>
-                        <span class="u-tab-name" :title="item.name">{{ i + 1 + "号位-" + item.name }}</span>
-                    </span>
+                    <template #label>
+                        <span class="u-tab-box">
+                            <i class="el-icon-tickets u-tab-icon"></i>
+                            <span class="u-tab-name" :title="item.name">{{ i + 1 + "号位-" + item.name }}</span>
+                        </span>
+                    </template>
                     <div class="m-source-name m-macro-item">
                         <h5 class="u-title">名称</h5>
                         <el-input v-model="item.name" placeholder="输入资源名称"></el-input>
@@ -101,10 +103,7 @@ export default {
             default: () => {},
         },
     },
-    model: {
-        prop: "value",
-        event: "update",
-    },
+    emits: ["update"],
     data() {
         return {
             data: this.value,
@@ -124,10 +123,10 @@ export default {
                     this.data = val;
 
                     if (val?.down) {
-                        this.data.data.map(item => {
-                            item.mode = '1';
-                            item.file = val.down || '';
-                        })
+                        this.data.data.map((item) => {
+                            item.mode = "1";
+                            item.file = val.down || "";
+                        });
                     }
                 }
             },
@@ -210,7 +209,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/deep/.el-tabs__item {
+::v-deep(.el-tabs__item) {
     display: inline-flex;
     align-items: center;
 }

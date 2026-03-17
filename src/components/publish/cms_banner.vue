@@ -18,7 +18,7 @@ export default {
         },
         size: {
             type: [Array, Number],
-            default: () =>  [300, 100],
+            default: () => [300, 100],
         },
         info: {
             type: String,
@@ -30,19 +30,16 @@ export default {
             banner: this.data,
         };
     },
-    model: {
-        prop: "data",
-        event: "update",
-    },
+    emits: ["update"],
     watch: {
-        data : function (newval){
-            this.banner = newval
+        data: function (newval) {
+            this.banner = newval;
         },
-        banner: function(newval) {
+        banner: function (newval) {
             this.$emit("update", newval);
         },
     },
-}
+};
 </script>
 
 <style lang="less">
