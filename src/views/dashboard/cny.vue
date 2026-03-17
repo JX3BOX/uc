@@ -6,13 +6,13 @@
             余额 :
             <b :class="{ hasLeft: hasLeft }">{{ money }}</b>
             <!-- <a class="el-button u-btn el-button--primary el-button--mini" href="/vip/cny" target="_blank">充值</a> -->
-            <!-- <el-button class="u-btn" type="primary" @click="togglePullBox" size="mini" :disabled="!money"
+            <!-- <el-button class="u-btn" type="primary" @click="togglePullBox" size="small" :disabled="!money"
                 >提现</el-button
             > -->
         </div>
 
         <div class="m-credit-pull" v-if="showPullBox">
-            <el-alert class="m-boxcoin-ac" type="error" show-icon :closable="false" v-if="breadcrumb" size="mini">
+            <el-alert class="m-boxcoin-ac" type="error" show-icon :closable="false" v-if="breadcrumb" size="small">
                 <slot name="title"><div v-html="breadcrumb"></div></slot>
             </el-alert>
             <el-alert
@@ -143,7 +143,7 @@
                         background
                         :page-size="per"
                         :hide-on-single-page="true"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         layout="total, prev, pager, next, jumper"
                         :total="total"
                     ></el-pagination>

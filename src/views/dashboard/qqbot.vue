@@ -14,7 +14,7 @@
             :width="isPhone ? '95%' : ''"
             align="center"
             title="绑定魔盒QQ机器人"
-            :visible.sync="showDialog"
+            v-model="showDialog"
         >
             <div class="m-qqbot-content">
                 <span
@@ -29,7 +29,7 @@
                 </span>
             </div>
             <div class="m-custom-tip">
-                请复制以上内容，私聊发送给魔盒QQ机器人<br>
+                请复制以上内容，私聊发送给魔盒QQ机器人<br />
                 QQ: <b>{{ qq }}</b>
             </div>
         </el-dialog>
@@ -139,8 +139,8 @@ export default {
         max-width: 680px;
         .auto(x);
         .fz(14px,2);
-        b{
-            color:orange;
+        b {
+            color: orange;
         }
     }
 

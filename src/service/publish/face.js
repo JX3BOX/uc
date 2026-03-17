@@ -1,5 +1,4 @@
-import { $next } from "@jx3box/jx3box-common/js/https";
-
+import { $next } from "@jx3box/jx3box-common/js/api";
 
 export function delFace(id) {
     return $next().delete(`/api/face/${id}`);

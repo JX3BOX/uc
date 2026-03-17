@@ -1,34 +1,17 @@
 <template>
-    <div class="m-card" id="app">
+    <div class="m-card" >
         <el-card class="box-card">
             <CardHeader />
 
             <main v-if="step == 0" class="m-main">
-                <el-alert
-                    title="未知异常"
-                    type="error"
-                    description="非法请求或网络异常"
-                    show-icon
-                    :closable="false"
-                >
+                <el-alert title="未知异常" type="error" description="非法请求或网络异常" show-icon :closable="false">
                 </el-alert>
-                <el-button
-                    class="u-button u-submit"
-                    type="primary"
-                    @click="reset"
-                    >返回</el-button
-                >
+                <el-button class="u-button u-submit" type="primary" @click="reset">返回</el-button>
             </main>
 
             <!-- 1.是否存在可找回 -->
             <main v-if="step == 1" class="m-main">
-                <el-alert
-                    title="找回密码,请填写绑定的邮箱"
-                    type="warning"
-                    :closable="false"
-                    show-icon
-                >
-                </el-alert>
+                <el-alert title="找回密码,请填写绑定的邮箱" type="warning" :closable="false" show-icon> </el-alert>
                 <!-- 邮箱 -->
                 <div class="u-email">
                     <el-input
@@ -44,10 +27,7 @@
                             <i class="el-icon-message"></i>
                         </template>
                     </el-input>
-                    <i
-                        v-show="email_valid == true"
-                        class="el-icon-success u-ok"
-                    ></i>
+                    <i v-show="email_valid == true" class="el-icon-success u-ok"></i>
                     <div class="u-tip">
                         <el-alert
                             v-show="email_validate == false"
@@ -64,18 +44,10 @@
                             :closable="false"
                         ></el-alert>
                     </div>
-                    <el-button
-                        class="u-button"
-                        type="primary"
-                        @click="start"
-                        :disabled="!available"
-                        >下一步</el-button
-                    >
+                    <el-button class="u-button" type="primary" @click="start" :disabled="!available">下一步</el-button>
                 </div>
                 <footer class="m-footer">
-                    <p class="u-login">
-                        已有账号? <a href="/account/login">登录 &raquo;</a>
-                    </p>
+                    <p class="u-login">已有账号? <a href="/account/login">登录 &raquo;</a></p>
                     <p class="u-register">
                         <a href="/account/register">免费注册</a>
                     </p>
@@ -84,30 +56,16 @@
 
             <!-- 2.填写验证码与新密码 -->
             <main v-if="step == 2" class="m-main">
-                <el-alert
-                    title="请填写邮箱收到的验证码 (60分钟内有效)"
-                    type="success"
-                    :closable="false"
-                >
-                </el-alert>
+                <el-alert title="请填写邮箱收到的验证码 (60分钟内有效)" type="success" :closable="false"> </el-alert>
 
                 <!-- 验证码 -->
                 <div class="u-code">
-                    <el-input
-                        class="u-text u-code"
-                        v-model="code"
-                        placeholder="验证码"
-                        minlength="6"
-                        maxlength="6"
-                    >
+                    <el-input class="u-text u-code" v-model="code" placeholder="验证码" minlength="6" maxlength="6">
                         <template slot="prepend">
                             <i class="el-icon-key"></i>
                         </template>
                     </el-input>
-                    <i
-                        v-show="code_available == true"
-                        class="el-icon-success u-ok"
-                    ></i>
+                    <i v-show="code_available == true" class="el-icon-success u-ok"></i>
                     <div class="u-tip">
                         <el-alert
                             v-show="code_validate == false"
@@ -128,13 +86,7 @@
 
                 <!-- 新密码 -->
                 <div class="u-pass">
-                    <el-input
-                        class="u-text"
-                        placeholder="新密码"
-                        v-model="pwd1"
-                        show-password
-                        @change="checkPass"
-                    >
+                    <el-input class="u-text" placeholder="新密码" v-model="pwd1" show-password @change="checkPass">
                         <template slot="prepend">
                             <i class="el-icon-lock"></i>
                         </template>
@@ -152,13 +104,7 @@
 
                 <!-- 重复密码 -->
                 <div class="u-pass">
-                    <el-input
-                        class="u-text"
-                        placeholder="重复密码"
-                        v-model="pwd2"
-                        show-password
-                        @input="checkPass"
-                    >
+                    <el-input class="u-text" placeholder="重复密码" v-model="pwd2" show-password @input="checkPass">
                         <template slot="prepend">
                             <i class="el-icon-lock"></i>
                         </template>
@@ -175,50 +121,23 @@
                 </div>
 
                 <!-- 提交 -->
-                <el-button
-                    class="u-submit u-button"
-                    type="primary"
-                    @click="done"
-                    :disabled="!ready"
-                    >提交</el-button
-                >
+                <el-button class="u-submit u-button" type="primary" @click="done" :disabled="!ready">提交</el-button>
             </main>
 
             <!-- 3.提交后 -->
             <main v-if="step == 3" class="m-main">
                 <!-- 成功 -->
                 <template v-if="success == true">
-                    <el-alert
-                        title="重设成功"
-                        type="success"
-                        description="您的密码已重设"
-                        show-icon
-                        :closable="false"
-                    >
+                    <el-alert title="重设成功" type="success" description="您的密码已重设" show-icon :closable="false">
                     </el-alert>
-                    <a
-                        class="u-skip el-button u-button el-button--primary"
-                        href="/account/login"
-                        >立即登录</a
-                    >
+                    <a class="u-skip el-button u-button el-button--primary" href="/account/login">立即登录</a>
                 </template>
 
                 <!-- 失败 -->
                 <template v-if="success == false">
-                    <el-alert
-                        title="操作失败"
-                        type="error"
-                        :description="failtips"
-                        show-icon
-                        :closable="false"
-                    >
+                    <el-alert title="操作失败" type="error" :description="failtips" show-icon :closable="false">
                     </el-alert>
-                    <el-button
-                        class="u-button u-submit"
-                        type="primary"
-                        @click="reset"
-                        >返回</el-button
-                    >
+                    <el-button class="u-button u-submit" type="primary" @click="reset">返回</el-button>
                 </template>
             </main>
         </el-card>
@@ -234,7 +153,7 @@ import { checkEmail } from "@/service/account/email.js";
 import { __Root } from "@/utils/config";
 export default {
     name: "Password_Reset",
-    data: function() {
+    data: function () {
         return {
             step: 1,
             success: false,
@@ -257,19 +176,19 @@ export default {
             pass_validate_tip: "密码有效长度为6-50个字符",
             pass_accordance_tip: "两次密码不一致",
 
-            failtips:"",
+            failtips: "",
 
             homepage: __Root,
         };
     },
     computed: {
-        available: function() {
+        available: function () {
             return this.email_validate && this.email_valid;
         },
-        accordance: function() {
+        accordance: function () {
             return this.pwd1 === this.pwd2;
         },
-        ready: function() {
+        ready: function () {
             return (
                 this.available &&
                 // this.code_validate &&
@@ -280,7 +199,7 @@ export default {
         },
     },
     methods: {
-        checkEmail: function() {
+        checkEmail: function () {
             // 如果为空
             if (this.email == "") {
                 this.email_validate = null;
@@ -299,13 +218,13 @@ export default {
             if (result) {
                 checkEmail(this.email).then((res) => {
                     // 可以使用代表不存在
-                    this.email_valid = res.data.data?.isExist
+                    this.email_valid = res.data.data?.isExist;
                 });
             } else {
                 this.email_valid = null;
             }
         },
-        checkPass: function() {
+        checkPass: function () {
             // 如果为空
             if (this.pwd1 == "") {
                 this.pass_validate = null;
@@ -316,7 +235,7 @@ export default {
                 len: [6, 50],
             });
         },
-        start: function() {
+        start: function () {
             sendCode(this.email).then((res) => {
                 if (!res.data.code) {
                     this.step = 2;
@@ -326,7 +245,7 @@ export default {
                 }
             });
         },
-        checkCode: function() {
+        checkCode: function () {
             // 如果为空
             if (this.code == "") {
                 this.code_validate = null;
@@ -353,24 +272,26 @@ export default {
                 this.code_available = null;
             }
         },
-        done: function() {
+        done: function () {
             resetPassword({
                 email: this.email,
                 code: this.code,
                 password: this.pwd1,
-            }).then((res) => {
-                this.step = 3;
-                if(!res.data.code){
-                    this.success = true;
-                }else{
-                    this.failtips = res.data.msg
-                    this.success = false;
-                }
-            }).catch((err) => {
-                this.step = 0
             })
+                .then((res) => {
+                    this.step = 3;
+                    if (!res.data.code) {
+                        this.success = true;
+                    } else {
+                        this.failtips = res.data.msg;
+                        this.success = false;
+                    }
+                })
+                .catch((err) => {
+                    this.step = 0;
+                });
         },
-        reset: function() {
+        reset: function () {
             this.step = 1;
             this.success = null;
             this.email = "";
@@ -384,8 +305,8 @@ export default {
             this.pass_validate = null;
         },
     },
-    filters: {},
-    mounted: function() {},
+
+    mounted: function () {},
     components: {
         CardHeader,
     },

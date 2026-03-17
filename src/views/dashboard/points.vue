@@ -9,7 +9,13 @@
         <el-tabs class="m-tabs" type="border-card" v-model="tab_value" @tab-click="changeTab">
             <!-- 积分记录 -->
             <el-tab-pane label="积分记录" name="point">
-                <el-table class="m-table" :data="list" show-header cell-class-name="u-table-cell" header-cell-class-name="u-header-cell">
+                <el-table
+                    class="m-table"
+                    :data="list"
+                    show-header
+                    cell-class-name="u-table-cell"
+                    header-cell-class-name="u-header-cell"
+                >
                     <el-table-column label="类型">
                         <template slot-scope="scope">{{ formatType(scope.row.action_type) }}</template>
                     </el-table-column>
@@ -19,7 +25,14 @@
                         </div>
                     </el-table-column>
                     <el-table-column prop="count" label="源于作品">
-                        <a class="u-link" :href="getPostLink(scope.row)" target="_blank" v-if="getPostLink(scope.row)" slot-scope="scope"><i class="el-icon-link"></i> 点击查看 </a>
+                        <a
+                            class="u-link"
+                            :href="getPostLink(scope.row)"
+                            target="_blank"
+                            v-if="getPostLink(scope.row)"
+                            slot-scope="scope"
+                            ><i class="el-icon-link"></i> 点击查看
+                        </a>
                         <span v-else> - </span>
                     </el-table-column>
                     <el-table-column label="备注">
@@ -31,10 +44,24 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination class="m-packet-pages" background :page-size="per" :hide-on-single-page="true" :current-page.sync="page" layout="total, prev, pager, next, jumper" :total="total"></el-pagination>
+                <el-pagination
+                    class="m-packet-pages"
+                    background
+                    :page-size="per"
+                    :hide-on-single-page="true"
+                    v-model:current-page="page"
+                    layout="total, prev, pager, next, jumper"
+                    :total="total"
+                ></el-pagination>
             </el-tab-pane>
             <el-tab-pane label="经验记录" name="ex">
-                <el-table class="m-table" :data="list" show-header cell-class-name="u-table-cell" header-cell-class-name="u-header-cell">
+                <el-table
+                    class="m-table"
+                    :data="list"
+                    show-header
+                    cell-class-name="u-table-cell"
+                    header-cell-class-name="u-header-cell"
+                >
                     <el-table-column label="类型">
                         <template slot-scope="scope">{{ formatType(scope.row.action_type) }}</template>
                     </el-table-column>
@@ -44,7 +71,14 @@
                         </div>
                     </el-table-column>
                     <el-table-column prop="count" label="源于作品">
-                        <a class="u-link" :href="getPostLink(scope.row)" target="_blank" v-if="getPostLink(scope.row)" slot-scope="scope"><i class="el-icon-link"></i> 点击查看 </a>
+                        <a
+                            class="u-link"
+                            :href="getPostLink(scope.row)"
+                            target="_blank"
+                            v-if="getPostLink(scope.row)"
+                            slot-scope="scope"
+                            ><i class="el-icon-link"></i> 点击查看
+                        </a>
                         <span v-else> - </span>
                     </el-table-column>
                     <el-table-column label="备注">
@@ -56,8 +90,15 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination class="m-packet-pages" background :page-size="per" :hide-on-single-page="true" :current-page.sync="page" layout="total, prev, pager, next, jumper" :total="total"></el-pagination>
-
+                <el-pagination
+                    class="m-packet-pages"
+                    background
+                    :page-size="per"
+                    :hide-on-single-page="true"
+                    v-model:current-page="page"
+                    layout="total, prev, pager, next, jumper"
+                    :total="total"
+                ></el-pagination>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -102,12 +143,12 @@ export default {
         loadData() {
             this.loading = true;
             this.$router.push({
-                name: 'points',
+                name: "points",
                 query: {
                     tab: this.tab_value,
                     page: this.page,
-                }
-            })
+                },
+            });
             const fn = this.tab_value === "point" ? getPointsHistory : getExperienceHistory;
             fn(this.params)
                 .then((res) => {
@@ -127,7 +168,7 @@ export default {
         formatRemark: function (str) {
             if (str) {
                 if (str.length > 18) {
-                    return str.slice(0,18) + "...";
+                    return str.slice(0, 18) + "...";
                 } else {
                     return str;
                 }
@@ -137,7 +178,7 @@ export default {
         },
         changeTab() {
             this.page = 1;
-            this.loadData()
+            this.loadData();
         },
         showTime,
     },

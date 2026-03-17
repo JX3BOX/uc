@@ -1,8 +1,6 @@
 import { pull } from "@/service/publish/cms";
-import { webDuration, localDuration } from "@/pages/publish/setting.json";
-import { addRevision, getRevision } from "@/service/publish/revision";
+import { localDuration } from "@/pages/publish/setting.json";
 import { getCommitById } from "@/service/publish/version";
-import hash from "object-hash";
 import { cloneDeep } from "lodash";
 
 export const AutoSaveMixin = {
@@ -13,7 +11,7 @@ export const AutoSaveMixin = {
             webTimer: "",
         };
     },
-    beforeDestroy: function () {
+    beforeUnmount: function () {
         // 清空引用，释放内存
         clearInterval(this.localTimer);
         this.localTimer = null;

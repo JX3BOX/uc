@@ -41,7 +41,14 @@
         </div>
 
         <div class="m-mall-list" v-loading="loading" v-if="list && list.length">
-            <Item v-for="item in list" :key="item.id" :isPro="isPro" :data="item" :skinJson="skinJson" :myVirtualItems="myVirtualItems" />
+            <Item
+                v-for="item in list"
+                :key="item.id"
+                :isPro="isPro"
+                :data="item"
+                :skinJson="skinJson"
+                :myVirtualItems="myVirtualItems"
+            />
         </div>
         <div class="m-mall-null" v-else><el-empty description="当前条件下没有找的符合的记录"></el-empty></div>
 
@@ -50,7 +57,7 @@
             background
             :hide-on-single-page="true"
             @current-change="changePage"
-            :current-page.sync="pageIndex"
+            v-model:current-page="pageIndex"
             :page-size="pageSize"
             layout="total, prev, pager, next"
             :total="total"

@@ -16,13 +16,13 @@
                         </thead>
                         <tbody>
                             <tr v-for="(item, i) in list" :key="i">
-                                <td>{{ item.product_id | showProduct }}</td>
+                                <td>{{ showProduct(item.product_id) }}</td>
                                 <td>{{ item.id }}</td>
-                                <td>¥{{ item.total_fee | showPrice }}</td>
-                                <td>{{ item.pay_type | showPayType }}</td>
+                                <td>¥{{ showPrice(item.total_fee) }}</td>
+                                <td>{{ showPayType(item.pay_type) }}</td>
                                 <td>{{ item.transaction_id }}</td>
-                                <td>{{ item.pay_status | showPayStatus }}</td>
-                                <td>{{ item.created_time | showTime }}</td>
+                                <td>{{ showPayStatus(item.pay_status) }}</td>
+                                <td>{{ showTime(item.created_time) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -33,7 +33,7 @@
                             layout="total, prev, pager, next,jumper"
                             :page-size="per"
                             :total="total"
-                            :current-page.sync="page"
+                            v-model:current-page="page"
                         ></el-pagination>
                     </div>
                 </div>
@@ -81,17 +81,6 @@ export default {
                 this.total = res.data.data.page.total;
             });
         },
-    },
-    watch: {
-        params: {
-            deep: true,
-            immediate: true,
-            handler: function () {
-                this.loadData();
-            },
-        },
-    },
-    filters: {
         showProduct: function (val) {
             return products[val];
         },
@@ -105,6 +94,15 @@ export default {
             return val ? (val / 100).toFixed(2) : "0.00";
         },
         showTime,
+    },
+    watch: {
+        params: {
+            deep: true,
+            immediate: true,
+            handler: function () {
+                this.loadData();
+            },
+        },
     },
     mounted: function () {},
 };

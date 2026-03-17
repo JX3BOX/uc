@@ -8,7 +8,7 @@
     <div class="m-credit m-feedback">
         <h2 class="u-title">
             <i class="el-icon-phone-outline"></i> 反馈中心
-            <el-button class="u-back" size="mini" plain icon="el-icon-arrow-left" @click="goBack">返回</el-button>
+            <el-button class="u-back" size="small" plain icon="el-icon-arrow-left" @click="goBack">返回</el-button>
         </h2>
 
         <router-view></router-view>

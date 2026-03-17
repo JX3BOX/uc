@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div >
         <Header :key="currentKey"></Header>
         <div class="m-mall-breadcrumb-container">
             <MallBreadcrumb></MallBreadcrumb>

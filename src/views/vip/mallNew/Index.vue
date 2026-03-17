@@ -143,7 +143,7 @@ export default {
         });
         this.loadData();
     },
-    beforeDestroy() {
+    beforeUnmount() {
         window.removeEventListener("resize", this.handleResize);
         window.removeEventListener("resize", this.getBoundCart);
     },

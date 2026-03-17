@@ -1,4 +1,4 @@
-import { $pay, $cms } from "@jx3box/jx3box-common/js/https";
+import { $pay, $cms } from "@jx3box/jx3box-common/js/api";
 import { __cdn } from "@/utils/config";
 import axios from "axios";
 function getItem(id) {

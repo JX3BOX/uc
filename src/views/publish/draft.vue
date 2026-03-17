@@ -4,12 +4,16 @@
             <h1 class="m-title">
                 <i class="el-icon-receiving"></i> 草稿箱
                 <el-tooltip class="item" effect="dark" placement="top" popper-class="m-draft-help-tip">
-                    <div slot="content">以下草稿是编辑器在当前浏览器下产生的临时本地草稿HTML源码，<br />并不存在于服务器中，仅用于断网或窗口异常关闭时恢复。</div>
+                    <div slot="content">
+                        以下草稿是编辑器在当前浏览器下产生的临时本地草稿HTML源码，<br />并不存在于服务器中，仅用于断网或窗口异常关闭时恢复。
+                    </div>
                     <span class="u-help"><i class="el-icon-question"></i> <span>使用帮助</span></span>
                 </el-tooltip>
             </h1>
             <div class="u-op">
-                <el-button plain icon="el-icon-delete" size="small" @click="clean" :disabled="!isNotNull">清空</el-button>
+                <el-button plain icon="el-icon-delete" size="small" @click="clean" :disabled="!isNotNull"
+                    >清空</el-button
+                >
                 <el-dropdown class="u-dropdown" trigger="click" @command="handleCommand">
                     <el-button size="small" type="primary" :disabled="!canBatchOperate">
                         批量操作<i class="el-icon-arrow-down el-icon--right"></i>
@@ -28,11 +32,32 @@
                             <el-checkbox class="u-checkbox" label="" v-model="item.checked"></el-checkbox>
                             <!-- <i class="u-item-icon" :class="!!item.active ? 'el-icon-folder-opened' : 'el-icon-folder'"></i> -->
                             <i class="u-item-icon el-icon-document"></i>
-                            <span class="u-item-key">{{ item | itemName }} <em class="u-item-time" v-if="item.data.cache_time">( {{ item | formatDate }} )</em></span>
+                            <span class="u-item-key"
+                                >{{ itemName(item) }}
+                                <em class="u-item-time" v-if="item.data.cache_time"
+                                    >( {{ formatDate(item.data.cache_time) }} )</em
+                                ></span
+                            >
                             <div class="u-op">
-                                <el-button type="primary" plain icon="el-icon-view" size="mini" class="u-delete" @click.stop="preview(item)">预览</el-button>
+                                <el-button
+                                    type="primary"
+                                    plain
+                                    icon="el-icon-view"
+                                    size="small"
+                                    class="u-delete"
+                                    @click.stop="preview(item)"
+                                    >预览</el-button
+                                >
                                 <el-popconfirm title="确定删除吗？" @confirm="del(item, i)">
-                                    <el-button slot="reference" plain icon="el-icon-delete" size="mini" class="u-delete" @click.stop>删除</el-button>
+                                    <el-button
+                                        slot="reference"
+                                        plain
+                                        icon="el-icon-delete"
+                                        size="small"
+                                        class="u-delete"
+                                        @click.stop
+                                        >删除</el-button
+                                    >
                                 </el-popconfirm>
                             </div>
                         </div>
@@ -55,16 +80,16 @@ export default {
     name: "draft",
     props: [],
     components: {},
-    data: function() {
+    data: function () {
         return {
             data: [],
         };
     },
     computed: {
-        isSupported: function() {
+        isSupported: function () {
             return !!window.localStorage;
         },
-        isNotNull: function() {
+        isNotNull: function () {
             return !!this.data && !!this.data.length;
         },
         isWeb({ activeName }) {
@@ -79,7 +104,7 @@ export default {
     },
     methods: {
         // 加载
-        loadDrafts: async function() {
+        loadDrafts: async function () {
             let len = await this.db.length();
             const data = [];
             for (let i = 0; i < len; i++) {
@@ -96,7 +121,7 @@ export default {
             this.$set(this, "data", data);
         },
         // 清空
-        clean: function() {
+        clean: function () {
             this.$alert("此操作不可逆！请谨慎操作！", "警告", {
                 confirmButtonText: "确定清空",
                 callback: (action) => {
@@ -114,31 +139,31 @@ export default {
             });
         },
         // 预览
-        preview: function(item) {
+        preview: function (item) {
             this.$router.push(`/${item.data.post_type}/${item.data.ID}?mode=draft&key=${item.key}`);
         },
         // 删除
-        del: function(item, i) {
+        del: function (item, i) {
             this.db.removeItem(item.key).then(() => {
                 this.data.splice(i, 1);
             });
         },
         // 复制
-        onCopy: function(val) {
+        onCopy: function (val) {
             this.$notify({
                 title: "复制成功",
                 message: "草稿源码复制成功",
                 type: "success",
             });
         },
-        onError: function() {
+        onError: function () {
             this.$notify.error({
                 title: "复制失败",
                 message: "请手动复制",
             });
         },
 
-        handleCommand: function(command) {
+        handleCommand: function (command) {
             switch (command) {
                 case "batchDel":
                     this.$confirm("此操作不可逆！请谨慎操作！", "警告", {
@@ -162,20 +187,18 @@ export default {
                     break;
             }
         },
-    },
-    filters: {
         itemName(item) {
             return item?.data?.post_title || `${item.key}`;
         },
         formatDate(item) {
-            let time = item?.data?.cache_time
-            return time ? showRecently(new Date(time)) : '';
+            let time = item?.data?.cache_time;
+            return time ? showRecently(new Date(time)) : "";
         },
     },
-    created: function() {
+    created: function () {
         this.loadDrafts();
     },
-    mounted: function() {},
+    mounted: function () {},
 };
 </script>
 

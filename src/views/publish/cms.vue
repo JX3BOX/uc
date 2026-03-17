@@ -22,7 +22,11 @@
                 <li v-for="(item, i) in data" :key="i">
                     <i class="u-icon">
                         <img src="@/assets/img/publish/works/repo.svg" v-if="item.post_status == 'publish'" />
-                        <img v-else src="@/assets/img/publish/works/draft.svg" :title="item.post_status | statusFormat" />
+                        <img
+                            v-else
+                            src="@/assets/img/publish/works/draft.svg"
+                            :title="statusFormat(item.post_status)"
+                        />
                     </i>
                     <a class="u-title" target="_blank" :href="postLink(item.post_type, item.ID)">{{
                         item.post_title || "无标题"
@@ -30,28 +34,28 @@
                     <div class="u-desc">
                         <span class="u-desc-subitem">
                             <i class="el-icon-view"></i>
-                            {{ item.visible | visibleFormat }}
+                            {{ visibleFormat(item.visible) }}
                         </span>
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ item.post_date | dateFormat }}
+                            {{ dateFormat(item.post_date) }}
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
                             更新 :
-                            {{ item.post_modified | dateFormat }}
+                            {{ dateFormat(item.post_modified) }}
                         </time>
                     </div>
 
                     <el-button-group class="u-action">
                         <el-button
-                            size="mini"
+                            size="small"
                             icon="el-icon-edit"
                             title="编辑"
                             @click="edit(item.post_type, item.ID)"
                         ></el-button>
-                        <el-button size="mini" icon="el-icon-delete" title="删除" @click="del(item.ID)"></el-button>
+                        <el-button size="small" icon="el-icon-delete" title="删除" @click="del(item.ID)"></el-button>
                     </el-button-group>
                 </li>
             </ul>
@@ -68,7 +72,7 @@
                 background
                 :page-size="per"
                 :hide-on-single-page="true"
-                :current-page.sync="page"
+                v-model:current-page="page"
                 layout="total, prev, pager, next, jumper"
                 :total="total"
             ></el-pagination>
@@ -202,8 +206,6 @@ export default {
         isSimpleType: function (val) {
             return simpleTypes.includes(val);
         },
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(val));
         },

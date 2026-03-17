@@ -126,7 +126,7 @@ export default {
             },
         },
     },
-    beforeDestroy() {
+    beforeUnmount() {
         clearInterval(this.timer);
     },
     methods: {

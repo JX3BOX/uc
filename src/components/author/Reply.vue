@@ -30,7 +30,7 @@
             :hide-on-single-page="true"
             layout="prev, pager, next"
             :total="total"
-            :current-page.sync="page"
+            v-model:current-page="page"
             :page-size="per"
         >
         </el-pagination>

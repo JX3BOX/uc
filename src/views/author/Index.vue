@@ -3,9 +3,9 @@
         <div class="m-theme" :style="themeStyle">
             <div class="m-author" :class="isAdmin ? 'm-author-admin' : ''">
                 <Me :decorationMe="decorationMe" :honor="honor" />
-                <Footer></Footer>
             </div>
         </div>
+        <CommonFooter></CommonFooter>
     </AppLayout>
 </template>
 
@@ -133,7 +133,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 @import "~@/assets/css/author/app.less";
 @import "~@/assets/css/author/post.less";
 .m-theme {

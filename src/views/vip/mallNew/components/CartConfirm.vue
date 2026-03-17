@@ -1,5 +1,10 @@
 <template>
-    <el-dialog :visible.sync="$store.state.mallNew.cartConfirmIsShow" width="412px" :show-close="false" custom-class="m-cart-confirm">
+    <el-dialog
+        v-model="$store.state.mallNew.cartConfirmIsShow"
+        width="412px"
+        :show-close="false"
+        custom-class="m-cart-confirm"
+    >
         <div class="content">
             <div class="title">购物车结算</div>
             <div class="text">
@@ -12,12 +17,18 @@
             </div>
         </div>
         <div class="btn-box">
-            <el-button round @click="$store.dispatch('mallNew/changeCartConfirmIsShow', false)" size="mini" style="width: 77px; font-size: 12px">再想想</el-button>
+            <el-button
+                round
+                @click="$store.dispatch('mallNew/changeCartConfirmIsShow', false)"
+                size="small"
+                style="width: 77px; font-size: 12px"
+                >再想想</el-button
+            >
             <el-button
                 round
                 @click="buyGoods"
-                size="mini"
-                style="width: 77px; font-size: 12px; background-color: rgba(255, 163, 43, 1);color: #fff;"
+                size="small"
+                style="width: 77px; font-size: 12px; background-color: rgba(255, 163, 43, 1); color: #fff"
                 >确认</el-button
             >
         </div>

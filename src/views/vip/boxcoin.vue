@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <Header></Header>
+    <div >
+        <CommonHeader></CommonHeader>
         <!-- <Breadcrumb name="充值盒币" slug="vip" root="/vip/boxcoin" :publishEnable="false" :adminEnable="false" :feedbackEnable="true">
             <img slot="logo" svg-inline src="@/assets/img/vip/logo.svg" />
         </Breadcrumb> -->
@@ -31,7 +31,7 @@
                             <el-form-item label="支付金额">
                                 <div>
                                     <span>¥</span>
-                                    <b class="u-price">{{ count | formatPrice }}</b>
+                                    <b class="u-price">{{ formatPrice(count) }}</b>
                                     <span>元</span>
                                 </div>
                             </el-form-item>
@@ -62,7 +62,7 @@
             :returnUrl="returnUrl"
             @done="finish"
         />
-        <Footer></Footer>
+        <CommonFooter></CommonFooter>
     </div>
 </template>
 
@@ -126,17 +126,15 @@ export default {
         goBack: function () {
             this.done = false;
         },
+        formatPrice: function (val) {
+            return val && (~~val).toFixed(2);
+        },
     },
     created: function () {
         this.isLogin && this.loadAsset();
 
         let params = new URLSearchParams(location.search);
         this.refer = params.get("redirect") || "";
-    },
-    filters: {
-        formatPrice: function (val) {
-            return val && (~~val).toFixed(2);
-        },
     },
     components: {
         paypop,

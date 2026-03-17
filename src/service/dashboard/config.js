@@ -1,11 +1,13 @@
-import { $cms } from "@jx3box/jx3box-common/js/https";
+import { $cms } from "@jx3box/jx3box-common/js/api";
 
 export function getConfig(key) {
-    return $cms().get("/api/cms/config",{
-        params:{
-            key:key
-        }
-    }).then((res) => {
-        return res?.data?.data.val
-    })
+    return $cms()
+        .get("/api/cms/config", {
+            params: {
+                key: key,
+            },
+        })
+        .then((res) => {
+            return res?.data?.data.val;
+        });
 }

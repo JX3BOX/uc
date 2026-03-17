@@ -22,7 +22,7 @@
             background
             :hide-on-single-page="true"
             :page-size="pageSize"
-            :current-page.sync="pageIndex"
+            v-model:current-page="pageIndex"
             layout="total, prev, pager, next"
             :total="total"
             @current-change="currentChange"

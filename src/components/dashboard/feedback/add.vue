@@ -44,7 +44,7 @@
                 >
                     <i class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
-                <el-dialog :visible.sync="dialogVisible">
+                <el-dialog v-model="dialogVisible">
                     <img width="100%" :src="dialogImageUrl" alt="" />
                 </el-dialog>
             </div>
@@ -74,7 +74,7 @@
 import axios from "axios";
 import { types, subtypes } from "@/assets/data/dashboard/feedback.json";
 import { __cms } from "@/utils/config";
-const API_Root = __cms
+const API_Root = __cms;
 const API = API_Root + "api/cms/upload";
 
 import { feedback } from "@/service/dashboard/feedback";
@@ -150,7 +150,9 @@ export default {
                 })
                 .catch((err) => {
                     if (err?.response?.data?.code) {
-                        this.$message.error(`[${err.response.data.code}]${err.response.data.msg || err.response.data.message}`);
+                        this.$message.error(
+                            `[${err.response.data.code}]${err.response.data.msg || err.response.data.message}`
+                        );
                     } else {
                         this.$message.error("网络请求异常");
                     }

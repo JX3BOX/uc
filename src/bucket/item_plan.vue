@@ -19,8 +19,8 @@
 				</time>
 			</div>
 			<el-button-group class="u-action">
-				<el-button size="mini" icon="el-icon-edit" title="编辑" @click="plan_edit(plan.id)"></el-button>
-				<el-button size="mini" icon="el-icon-delete" title="删除" @click="plan_delete(plan.id)"></el-button>
+				<el-button size="small" icon="el-icon-edit" title="编辑" @click="plan_edit(plan.id)"></el-button>
+				<el-button size="small" icon="el-icon-delete" title="删除" @click="plan_delete(plan.id)"></el-button>
 			</el-button-group>
 		</li>
 	</ul>

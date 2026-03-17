@@ -1,4 +1,4 @@
-import { $node } from "@jx3box/jx3box-common/js/https.js";
+import { $node } from "@jx3box/jx3box-common/js/api.js";
 
 function get_list(params) {
     return $node()({

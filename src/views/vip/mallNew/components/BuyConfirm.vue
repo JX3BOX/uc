@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :visible.sync="isShow" width="380px" :show-close="false" custom-class="m-buy-confirm">
+    <el-dialog v-model="isShow" width="380px" :show-close="false" custom-class="m-buy-confirm">
         <div class="content">
             <img :src="item.goods_images[0]" alt="" style="width: 120px; height: 120px" />
             <div class="text">
@@ -9,8 +9,8 @@
             </div>
         </div>
         <div class="btn-box">
-            <el-button round @click="isShow = false" size="mini" style="width: 77px; font-size: 12px">取消</el-button>
-            <el-button type="primary" round @click="buyGoods" size="mini" style="width: 77px; font-size: 12px"
+            <el-button round @click="isShow = false" size="small" style="width: 77px; font-size: 12px">取消</el-button>
+            <el-button type="primary" round @click="buyGoods" size="small" style="width: 77px; font-size: 12px"
                 >确定</el-button
             >
         </div>

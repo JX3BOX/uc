@@ -1,4 +1,4 @@
-import { $cms } from "@jx3box/jx3box-common/js/https.js";
+import { $cms } from "@jx3box/jx3box-common/js/api.js";
 
 function get_menus() {
     return $cms()({

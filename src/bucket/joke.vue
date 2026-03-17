@@ -37,12 +37,12 @@
 
                     <el-button-group class="u-action">
                         <el-button
-                            size="mini"
+                            size="small"
                             icon="el-icon-edit"
                             @click="edit(type, item.id)"
                             title="编辑"
                         ></el-button>
-                        <el-button size="mini" icon="el-icon-delete" @click="del(item.id, i)" title="删除"></el-button>
+                        <el-button size="small" icon="el-icon-delete" @click="del(item.id, i)" title="删除"></el-button>
                     </el-button-group>
                 </li>
             </ul>
@@ -59,7 +59,7 @@
                 background
                 :page-size="per"
                 :hide-on-single-page="true"
-                :current-page.sync="page"
+                v-model:current-page="page"
                 layout="total, prev, pager, next, jumper"
                 :total="total"
             ></el-pagination>
@@ -141,8 +141,6 @@ export default {
         postLink: function (type, id) {
             return getLink(type, id);
         },
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(val));
         },

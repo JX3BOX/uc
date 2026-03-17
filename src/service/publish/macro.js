@@ -1,4 +1,4 @@
-import { $next } from "@jx3box/jx3box-common/js/https";
+import { $next } from "@jx3box/jx3box-common/js/api";
 import { __Root } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
@@ -6,7 +6,7 @@ import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
 function syncRedis(data) {
     let redisData = transferForRedis(data);
     console.log("正在执行redis同步作业:", redisData);
-    return $next({mute:true}).post("/api/macro/publish", redisData);
+    return $next({ mute: true }).post("/api/macro/publish", redisData);
 }
 
 function transferForRedis(data) {
@@ -19,9 +19,9 @@ function transferForRedis(data) {
         post_id: pid,
         post_status: data.post_status,
         data: {},
-        lang: data.lang || 'cn',
+        lang: data.lang || "cn",
         original: !!data.original,
-        client : data.client
+        client: data.client,
     };
 
     let xf = xfmap[data.post_subtype]["id"] + "";
@@ -61,7 +61,7 @@ function transferForRedis(data) {
             desc: desc,
 
             about: __Root + "macro/" + pid,
-            client : data.client
+            client: data.client,
         };
     });
 

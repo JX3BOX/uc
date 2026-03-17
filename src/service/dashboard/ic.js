@@ -1,7 +1,7 @@
-import { $cms } from "@jx3box/jx3box-common/js/https";
+import { $cms } from "@jx3box/jx3box-common/js/api";
 
 function genInvitation() {
-    return $cms().post(`/api/cms/user/invitation/register`,{});
+    return $cms().post(`/api/cms/user/invitation/register`, {});
 }
 
 function getMyInvitation() {

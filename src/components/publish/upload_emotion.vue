@@ -1,18 +1,31 @@
 <template>
     <div class="c-upload">
         <!-- 上传触发按钮 -->
-        <el-button type="primary" @click="dialogVisible = true" icon="el-icon-upload" :disabled="!enable">{{ btn_txt }}</el-button>
+        <el-button type="primary" @click="dialogVisible = true" icon="el-icon-upload" :disabled="!enable">{{
+            btn_txt
+        }}</el-button>
 
         <!-- 弹出界面 -->
-        <el-dialog class="c-large-dialog" title="上传" :visible.sync="dialogVisible">
+        <el-dialog class="c-large-dialog" title="上传" v-model="dialogVisible">
             <!-- 清空按钮 -->
-            <el-button class="u-upload-clear" plain icon="el-icon-delete" size="mini" @click="clear">清空</el-button>
+            <el-button class="u-upload-clear" plain icon="el-icon-delete" size="small" @click="clear">清空</el-button>
 
             <!-- 限制提示 -->
             <el-alert class="u-upload-tip" :title="tip" type="info" show-icon :closable="false"></el-alert>
 
             <!-- 文件区 -->
-            <el-upload action="" list-type="picture-card" :auto-upload="false" :limit="10" multiple with-credentials :file-list="fileList" :on-change="change" ref="uploadbox" :accept="accept">
+            <el-upload
+                action=""
+                list-type="picture-card"
+                :auto-upload="false"
+                :limit="10"
+                multiple
+                with-credentials
+                :file-list="fileList"
+                :on-change="change"
+                ref="uploadbox"
+                :accept="accept"
+            >
                 <!-- :accept="accept" -->
                 <i slot="default" class="el-icon-plus"></i>
 
@@ -78,13 +91,15 @@ export default {
         // 文件大小限制
         sizeLimit: {
             type: Number,
-            default: 5
+            default: 5,
         },
     },
     data: function () {
         return {
             dialogVisible: false,
-            tip: this.desc || `一次最多同时上传${this.max}个文件（单个文件不超过${this.sizeLimit}M），格式限常见的图片、文档、数据表及压缩包`,
+            tip:
+                this.desc ||
+                `一次最多同时上传${this.max}个文件（单个文件不超过${this.sizeLimit}M），格式限常见的图片、文档、数据表及压缩包`,
             btn_txt: this.text || "上传附件",
 
             fileList: [],
@@ -175,7 +190,9 @@ export default {
             let list = [];
             this.fileList.forEach((file) => {
                 if (file.selected) {
-                    file.is_img ? list.push(`<img src="${file.url}" />`) : list.push(`<a target="_blank" href="${file.url}">${file.name}</a>`);
+                    file.is_img
+                        ? list.push(`<img src="${file.url}" />`)
+                        : list.push(`<a target="_blank" href="${file.url}">${file.name}</a>`);
                 }
             });
             this.insertList = list.join(" \n");

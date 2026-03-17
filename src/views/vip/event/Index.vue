@@ -5,7 +5,7 @@
                 <el-col :span="6" v-for="(item, i) in list" :key="i">
                     <router-link :to="item.path" class="u-item">
                         <div class="u-img">
-                            <img :src="item.img | showBanner" />
+                            <img :src="showBanner(item.img)" />
                         </div>
                         <div class="u-desc">{{ item.desc }}</div>
                     </router-link>
@@ -15,24 +15,22 @@
     </div>
 </template>
 <script>
-import { getThumbnail,resolveImagePath } from "@jx3box/jx3box-common/js/utils";
+import { getThumbnail, resolveImagePath } from "@jx3box/jx3box-common/js/utils";
 export default {
     name: "Index",
     props: [],
-    data: function() {
+    data: function () {
         return {
             list: [
                 {
                     path: "rank-2",
                     desc: "第二届秘境百强榜活动会员奖励",
-                    img:
-                        "https://oss.jx3box.com/upload/post/2021/6/28/2699633.png",
+                    img: "https://oss.jx3box.com/upload/post/2021/6/28/2699633.png",
                 },
                 {
                     path: "rank-1-sponsors",
                     desc: "第一届竞速活动赞助单位领取1年PRO会员",
-                    img:
-                        "https://oss.jx3box.com/upload/post/2021/3/20/3481617.png",
+                    img: "https://oss.jx3box.com/upload/post/2021/3/20/3481617.png",
                 },
                 // {
                 //     path: "vizir-500",
@@ -43,19 +41,17 @@ export default {
                 {
                     path: "kol-1",
                     desc: "KOL铭牌领取",
-                    img:
-                        "https://oss.jx3box.com/upload/post/2021/3/20/8189870.png",
+                    img: "https://oss.jx3box.com/upload/post/2021/3/20/8189870.png",
                 },
             ],
         };
     },
     computed: {},
-    methods: {},
-    filters: {
-        showBanner: function(val) {
-            return resolveImagePath(val)
+    methods: {
+        showBanner: function (val) {
+            return resolveImagePath(val);
         },
     },
-    mounted: function() {},
+    mounted: function () {},
 };
 </script>

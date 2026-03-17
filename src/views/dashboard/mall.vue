@@ -31,10 +31,15 @@
                                 <td>
                                     <div class="u-op">
                                         <!-- 未支付 -->
-                                        <el-tooltip effect="dark" content="点击支付" placement="top" v-if="showPay(item.order)">
+                                        <el-tooltip
+                                            effect="dark"
+                                            content="点击支付"
+                                            placement="top"
+                                            v-if="showPay(item.order)"
+                                        >
                                             <el-button
                                                 link
-                                                size="mini"
+                                                size="small"
                                                 type="success"
                                                 plain
                                                 icon="el-icon-wallet"
@@ -48,7 +53,7 @@
                                             <el-tooltip effect="dark" content="确认收货" placement="top">
                                                 <el-button
                                                     link
-                                                    size="mini"
+                                                    size="small"
                                                     plain
                                                     icon="el-icon-circle-check"
                                                     @click="isReceipt(item.order.id)"
@@ -58,7 +63,12 @@
                                         </template>
 
                                         <!-- 未发货允许操作： 取消订单 -->
-                                        <el-tooltip effect="dark" content="取消订单" placement="top" v-if="item.order.order_status == 0">
+                                        <el-tooltip
+                                            effect="dark"
+                                            content="取消订单"
+                                            placement="top"
+                                            v-if="item.order.order_status == 0"
+                                        >
                                             <el-popconfirm
                                                 confirm-button-text="确定"
                                                 cancel-button-text="取消"
@@ -67,7 +77,7 @@
                                                 @confirm="cancel(item.order.id)"
                                             >
                                                 <el-button
-                                                    size="mini"
+                                                    size="small"
                                                     slot="reference"
                                                     type="info"
                                                     plain
@@ -83,7 +93,7 @@
                                                 <el-button
                                                     icon="el-icon-chat-dot-square"
                                                     @click="handleShow('comment', item.order.id)"
-                                                    size="mini"
+                                                    size="small"
                                                     plain
                                                     circle
                                                 ></el-button>
@@ -101,7 +111,7 @@
                             layout="total, prev, pager, next,jumper"
                             :page-size="pageSize"
                             :total="total"
-                            :current-page.sync="pageIndex"
+                            v-model:current-page="pageIndex"
                         ></el-pagination>
                     </div>
                 </div>
@@ -110,7 +120,7 @@
                 </div>
             </div>
         </div>
-        <el-dialog :title="title" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+        <el-dialog :title="title" v-model="dialogVisible" width="30%" :before-close="handleClose">
             <GoodComment :order_id="order_id" :type="type" @close="handleClose" />
         </el-dialog>
     </uc>

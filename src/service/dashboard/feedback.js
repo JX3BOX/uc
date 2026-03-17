@@ -1,4 +1,4 @@
-import { $pay, $next, $cms } from "@jx3box/jx3box-common/js/https";
+import { $pay, $next, $cms } from "@jx3box/jx3box-common/js/api";
 
 /**
  * 用户注销

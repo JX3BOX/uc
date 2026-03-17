@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import uploadImage from '@jx3box/jx3box-common-ui/src/upload/upload_banner.vue'
+import uploadImage from "@jx3box/jx3box-ui/src/upload/UploadBanner.vue";
 
 export default {
     name: "post_banner",
@@ -41,30 +41,30 @@ export default {
         event: "update",
     },
     watch: {
-        data : function (newval){
-            this.banner = newval
+        data: function (newval) {
+            this.banner = newval;
         },
-        banner: function(newval) {
+        banner: function (newval) {
             this.$emit("update", newval);
         },
     },
     computed: {
         bannerSize() {
-            return this.isCms ? this.size?.map((item) => item * 2) : this.size
+            return this.isCms ? this.size?.map((item) => item * 2) : this.size;
         },
-    }
+    },
 };
 </script>
 
 <style lang="less">
 .m-publish-banner {
-    .u-tip{
-        padding:5px 15px;
+    .u-tip {
+        padding: 5px 15px;
     }
     // img {
     //     max-width: 180px;
     // }
-    .avatar-uploader{
+    .avatar-uploader {
         .mt(10px);
     }
     .avatar-uploader .el-upload {
@@ -85,12 +85,12 @@ export default {
         line-height: 100px;
         text-align: center;
     }
-    .u-remove{
+    .u-remove {
         background-color: #c2c2c2;
-        border-color:#c2c2c2;
-        &:hover{
+        border-color: #c2c2c2;
+        &:hover {
             background-color: #fc3c3c;
-            border-color:#fc3c3c;
+            border-color: #fc3c3c;
         }
     }
 }

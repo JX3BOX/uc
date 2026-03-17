@@ -2,7 +2,7 @@
     <div class="v-sync-data">
         <h2 class="u-title">
             <i class="el-icon-connection"></i> 同步数据
-            <el-button slot="reference" class="u-back" size="mini" icon="el-icon-arrow-left" @click="goBack"
+            <el-button slot="reference" class="u-back" size="small" icon="el-icon-arrow-left" @click="goBack"
                 >返回</el-button
             >
         </h2>

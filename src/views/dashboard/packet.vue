@@ -8,7 +8,7 @@
                 class="u-btn"
                 type="primary"
                 @click="togglePullBox"
-                size="mini"
+                size="small"
                 :disabled="!money"
                 >提现</el-button
             > -->
@@ -52,7 +52,7 @@
                                 </td>
                                 <td>{{ formatType(item.action_type) }}</td>
                                 <td>{{ item.is_success ? "已处理" : "未处理" }}</td>
-                                <td>{{ item.description || item.remark || '-' }}</td>
+                                <td>{{ item.description || item.remark || "-" }}</td>
                                 <td>{{ formatDate(item.created_at) }}</td>
                             </tr>
                         </table>
@@ -72,7 +72,7 @@
                         background
                         :page-size="per"
                         :hide-on-single-page="true"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         layout="total, prev, pager, next, jumper"
                         :total="total"
                     >
@@ -135,7 +135,7 @@
                         background
                         :page-size="per"
                         :hide-on-single-page="true"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         layout="total, prev, pager, next, jumper"
                         :total="total"
                     >

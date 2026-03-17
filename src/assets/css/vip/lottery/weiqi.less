@@ -1,4 +1,4 @@
-.weiqi{
+.weiqi {
     .m-video {
         .pr;
         .size(1920px,1000px);
@@ -24,13 +24,13 @@
             background-image: url("@{weiqi_blindbox}棋盘格.png");
             background-size: cover;
             .u-box {
-                &:hover{
-                    animation: float .1s infinite;
+                &:hover {
+                    animation: float 0.1s infinite;
                 }
                 .size(130px,130px);
                 background: none;
                 .u-img {
-                    .full;
+                    .size(100%);
                     .lt(0);
                     margin: 0;
                 }
@@ -163,19 +163,19 @@
 }
 @keyframes float {
     0% {
-        transform: translate(0px,0px);
+        transform: translate(0px, 0px);
     }
     25% {
-        transform: translate(2px,2px);
+        transform: translate(2px, 2px);
     }
     50% {
-        transform: translate(2px,-2px);
+        transform: translate(2px, -2px);
     }
     75% {
-        transform: translate(-2px,-2px);
+        transform: translate(-2px, -2px);
     }
     100% {
-        transform: translate(-2px,2px);
+        transform: translate(-2px, 2px);
     }
 }
 @keyframes up {
@@ -186,6 +186,6 @@
         transform: translateY(-150px) rotateX(360deg);
     }
     100% {
-        transform: translateY(-2000px) scale(1.5) rotateX(100000deg);;
+        transform: translateY(-2000px) scale(1.5) rotateX(100000deg);
     }
 }

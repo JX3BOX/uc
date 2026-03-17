@@ -2,9 +2,7 @@
     <div class="m-post" v-loading="loading">
         <!-- 列表 -->
         <div v-if="list && list.length" class="m-topic-list">
-            <topic-item v-for="(item, i) in list" :item="item" :key="i + item" class="u-item">
-
-            </topic-item>
+            <topic-item v-for="(item, i) in list" :item="item" :key="i + item" class="u-item"> </topic-item>
         </div>
         <div class="m-empty" v-else>
             <img src="https://cdn.jx3box.com/design/miniprogram/empty.png" width="80%" />
@@ -72,14 +70,17 @@ export default {
                 return __cdn + `design/random_cover/${randomNum}.jpg`;
             }
         },
-        loadMore(){
+        loadMore() {
             if (this.loading) return;
-            if (document.documentElement.scrollTop + window.innerHeight + 100 >= document.documentElement.scrollHeight) {
+            if (
+                document.documentElement.scrollTop + window.innerHeight + 100 >=
+                document.documentElement.scrollHeight
+            ) {
                 if (this.list.length < this.total) {
                     this.page++;
                 }
             }
-        }
+        },
     },
     watch: {
         params: {
@@ -93,17 +94,16 @@ export default {
     mounted() {
         window.addEventListener("scroll", this.loadMore);
     },
-    destroyed() {
+    unmounted() {
         window.removeEventListener("scroll", this.loadMore);
-    }
+    },
 };
 </script>
 
 <style lang="less">
-.m-topic-list{
+.m-topic-list {
     display: flex;
     gap: 20px;
     flex-direction: column;
-
 }
 </style>

@@ -1,4 +1,4 @@
-import { $helper, $cms } from "@jx3box/jx3box-common/js/https.js";
+import { $helper, $cms } from "@jx3box/jx3box-common/js/api.js";
 
 // 获取我的文章总数
 function get_my_post_total() {
@@ -24,7 +24,7 @@ function get_posts_by_type(type, params) {
 // 获取topic bucket
 function get_topic_bucket(params) {
     return $cms().get("/api/cms/topic/bucket", {
-        params
+        params,
     });
 }
 

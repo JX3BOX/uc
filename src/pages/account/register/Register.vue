@@ -1,5 +1,5 @@
 <template>
-    <div class="m-card m-register" id="app">
+    <div class="m-card m-register" >
         <el-card class="box-card">
             <CardHeader />
             <Msg />
@@ -7,15 +7,35 @@
                 <form ref="registerForm" class="m-form">
                     <!-- 账号 -->
                     <div class="u-email">
-                        <el-input class="u-text u-email" v-model="email" placeholder="邮箱地址" minlength="3" maxlength="50" type="email" @change="checkEmail">
+                        <el-input
+                            class="u-text u-email"
+                            v-model="email"
+                            placeholder="邮箱地址"
+                            minlength="3"
+                            maxlength="50"
+                            type="email"
+                            @change="checkEmail"
+                        >
                             <template slot="prepend">
                                 <i class="el-icon-message"></i>
                             </template>
                         </el-input>
                         <i v-show="email_available == true" class="el-icon-success u-ok"></i>
                         <div class="u-tip">
-                            <el-alert v-show="email_validate == false" :title="email_validate_tip" type="error" show-icon :closable="false"></el-alert>
-                            <el-alert v-show="email_available == false" :title="email_available_tip" type="error" show-icon :closable="false"></el-alert>
+                            <el-alert
+                                v-show="email_validate == false"
+                                :title="email_validate_tip"
+                                type="error"
+                                show-icon
+                                :closable="false"
+                            ></el-alert>
+                            <el-alert
+                                v-show="email_available == false"
+                                :title="email_available_tip"
+                                type="error"
+                                show-icon
+                                :closable="false"
+                            ></el-alert>
                         </div>
                     </div>
 
@@ -26,7 +46,14 @@
                                 <i class="el-icon-postcard"></i>
                             </template>
                         </el-input>
-                        <el-button class="u-code-btn" size="mini" type="primary" @click="getCode" :disabled="code_disabled">{{ code_text }}</el-button>
+                        <el-button
+                            class="u-code-btn"
+                            size="small"
+                            type="primary"
+                            @click="getCode"
+                            :disabled="code_disabled"
+                            >{{ code_text }}</el-button
+                        >
                     </div>
 
                     <!-- 密码 -->
@@ -37,7 +64,13 @@
                             </template>
                         </el-input>
                         <div class="u-tip">
-                            <el-alert v-show="pass_validate == false" :title="pass_validate_tip" type="error" show-icon :closable="false"></el-alert>
+                            <el-alert
+                                v-show="pass_validate == false"
+                                :title="pass_validate_tip"
+                                type="error"
+                                show-icon
+                                :closable="false"
+                            ></el-alert>
                         </div>
                     </div>
 
@@ -53,17 +86,20 @@
                     <div class="u-terms">
                         <el-checkbox v-model="agreement" class="u-checkbox">
                             我已阅读并同意
-                            <a href="/about/license" target="_blank">《用户协议》</a>、<a href="/about/privacy" target="_blank">《隐私政策》</a>、<a href="/about/treaty" target="_blank"
-                                >《创作公约》</a
-                            >
+                            <a href="/about/license" target="_blank">《用户协议》</a>、<a
+                                href="/about/privacy"
+                                target="_blank"
+                                >《隐私政策》</a
+                            >、<a href="/about/treaty" target="_blank">《创作公约》</a>
                         </el-checkbox>
                     </div>
-
                 </form>
                 <!-- 提交 -->
-                <el-button class="u-submit u-button" type="primary" @click="submit" :disabled="!ready"> 注册 </el-button>
+                <el-button class="u-submit u-button" type="primary" @click="submit" :disabled="!ready">
+                    注册
+                </el-button>
 
-                <Union mode="register" :includes="['qq','wechat','weibo']" />
+                <Union mode="register" :includes="['qq', 'wechat', 'weibo']" />
 
                 <footer class="m-footer">
                     <p class="u-login">
@@ -77,7 +113,14 @@
             </main>
 
             <main v-if="success == true" class="m-main">
-                <el-alert title="注册成功" type="success" description="恭喜，您现在已经是「魔盒」的一员啦！" show-icon :closable="false"> </el-alert>
+                <el-alert
+                    title="注册成功"
+                    type="success"
+                    description="恭喜，您现在已经是「魔盒」的一员啦！"
+                    show-icon
+                    :closable="false"
+                >
+                </el-alert>
                 <a class="u-skip el-button u-button el-button--primary" :href="login_url">立即登录</a>
             </main>
 
@@ -212,13 +255,12 @@ export default {
             }*/
         },
         getCode: function () {
-            registerByEmail({ email: this.email }).then(res => {
-
-                if(res.data.code){
-                    let msg = '';
-                    if(res.data.code == 99999){
-                        msg = '抱歉,暂不支持该邮件服务商,请更换邮箱服务商';
-                    }else{
+            registerByEmail({ email: this.email }).then((res) => {
+                if (res.data.code) {
+                    let msg = "";
+                    if (res.data.code == 99999) {
+                        msg = "抱歉,暂不支持该邮件服务商,请更换邮箱服务商";
+                    } else {
                         msg = res.data.msg;
                     }
                     this.$message({
@@ -243,10 +285,10 @@ export default {
                         this.code_text = "发送验证码";
                     }
                 }, 1000);
-            })
+            });
         },
     },
-    filters: {},
+
     mounted: function () {
         this.checkDirect();
     },

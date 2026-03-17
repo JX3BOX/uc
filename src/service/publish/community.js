@@ -1,4 +1,4 @@
-import { $next } from "@jx3box/jx3box-common/js/https";
+import { $next } from "@jx3box/jx3box-common/js/api";
 
 const API_PREFIX = `/api/next2`;
 // 发布

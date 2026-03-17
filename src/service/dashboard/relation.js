@@ -1,4 +1,4 @@
-import { $team } from "@jx3box/jx3box-common/js/https";
+import { $team } from "@jx3box/jx3box-common/js/api";
 
 // 关系网类型
 export function getRelationNetTypes() {

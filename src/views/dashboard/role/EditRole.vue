@@ -5,7 +5,7 @@
             <el-button
                 slot="reference"
                 class="u-back"
-                size="mini"
+                size="small"
                 plain
                 icon="el-icon-arrow-left"
                 @click="goBack"

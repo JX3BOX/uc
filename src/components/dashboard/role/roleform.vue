@@ -11,18 +11,8 @@
                 ></el-input>
             </el-form-item>
             <el-form-item label="服务器">
-                <el-select
-                    v-model="form.server"
-                    placeholder="请选择服务器"
-                    filterable
-                    @change="setDefaultServer"
-                >
-                    <el-option
-                        v-for="server in servers"
-                        :key="server"
-                        :label="server"
-                        :value="server"
-                    ></el-option>
+                <el-select v-model="form.server" placeholder="请选择服务器" filterable @change="setDefaultServer">
+                    <el-option v-for="server in servers" :key="server" :label="server" :value="server"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="门派">
@@ -53,12 +43,7 @@
                 ></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button
-                    class="u-btn"
-                    type="primary"
-                    @click="submit"
-                    :disabled="building"
-                >{{ btn_txt }}</el-button>
+                <el-button class="u-btn" type="primary" @click="submit" :disabled="building">{{ btn_txt }}</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -67,8 +52,8 @@
 <script>
 import servers from "@jx3box/jx3box-data/data/server/server_list.json";
 import school_map from "@jx3box/jx3box-data/data/xf/schoolid.json";
-import { bodyMap  } from "@jx3box/jx3box-facedat/assets/data/index.json";
-import { showSchoolIcon } from "@/utils/filters"
+import { bodyMap } from "@jx3box/jx3box-facedat/assets/data/index.json";
+import { showSchoolIcon } from "@/utils/filters";
 export default {
     props: ["data", "btn_txt", "processing"],
     data: function () {
@@ -84,7 +69,7 @@ export default {
             building: this.processing || false,
 
             servers,
-            body_map : bodyMap,
+            body_map: bodyMap,
             school_map,
         };
     },
@@ -120,12 +105,9 @@ export default {
         },
         setDefaultServer: function (val) {
             // 下次新建角色时无需再选择服务器
-            localStorage &&
-                localStorage.setItem("team_role_default_server", val);
+            localStorage && localStorage.setItem("team_role_default_server", val);
         },
-    },
-    filters: {
-        showSchoolIcon
+        showSchoolIcon,
     },
     mounted: function () {},
     components: {},

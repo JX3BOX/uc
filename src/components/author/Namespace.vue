@@ -3,14 +3,16 @@
         <!-- 列表 -->
         <div v-if="list && list.length" class="m-archive-list">
             <ul class="u-list">
-                <li v-for="(item, i) in list"  :key="i + item" class="u-item">
+                <li v-for="(item, i) in list" :key="i + item" class="u-item">
                     <!-- 标题 -->
                     <h2 class="u-post">
                         <!-- 标题文字 -->
-                        <a :href="item.link || defult_link" class="u-title" target="_blank">{{ item.key || "无标题" }}</a>
+                        <a :href="item.link || defult_link" class="u-title" target="_blank">{{
+                            item.key || "无标题"
+                        }}</a>
                     </h2>
                     <!-- 字段 -->
-                    <div class="u-content u-desc">
+                    <div class="u-desc">
                         {{ item.desc || "这个词条没有任何描述" }}
                     </div>
 
@@ -18,14 +20,14 @@
                     <div class="u-misc">
                         <span class="u-date">
                             Updated on
-                            <time >{{ item.updated | dateFormat }}</time>
+                            <time>{{ dateFormat(item.updated) }}</time>
                         </span>
                     </div>
                 </li>
             </ul>
         </div>
         <div class="m-empty" v-else>
-            <img src='@/assets/img/author/null.png' width="80%">
+            <img src="@/assets/img/author/null.png" width="80%" />
         </div>
 
         <el-pagination
@@ -34,7 +36,7 @@
             :hide-on-single-page="true"
             layout="prev, pager, next"
             :total="total"
-            :current-page.sync="page"
+            v-model:current-page="page"
             :page-size="per"
         >
         </el-pagination>
@@ -46,7 +48,7 @@ import dateFormat from "@/utils/dateFormat";
 import { getNamespaces } from "@/service/author/helper.js";
 export default {
     props: [],
-    data: function() {
+    data: function () {
         return {
             loading: false,
             list: [],
@@ -57,22 +59,22 @@ export default {
         };
     },
     computed: {
-        params: function() {
+        params: function () {
             return {
                 user_id: this.uid,
                 page: this.page,
                 per: this.per,
             };
         },
-        uid : function (){
-            return ~~this.$store.state.uid
+        uid: function () {
+            return ~~this.$store.state.uid;
         },
-        userdata: function() {
+        userdata: function () {
             return this.$store.state.userdata;
         },
     },
     methods: {
-        loadData: function() {
+        loadData: function () {
             if (!this.uid) return;
             this.loading = true;
             getNamespaces(this.params)
@@ -84,9 +86,7 @@ export default {
                     this.loading = false;
                 });
         },
-    },
-    filters: {
-        dateFormat: function(val) {
+        dateFormat: function (val) {
             return dateFormat(new Date(~~val * 1000));
         },
     },
@@ -94,11 +94,11 @@ export default {
         params: {
             deep: true,
             immediate: true,
-            handler: function() {
+            handler: function () {
                 this.loadData();
             },
         },
     },
-    mounted: function() {},
+    mounted: function () {},
 };
 </script>

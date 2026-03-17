@@ -32,7 +32,7 @@
                         <el-button
                             type="text"
                             icon="el-icon-chat-round"
-                            size="mini"
+                            size="small"
                             @click="showInput = !showInput"
                             v-if="!item.reply && is_admin"
                         >
@@ -42,7 +42,7 @@
                             type="text"
                             v-if="is_admin"
                             icon="el-icon-delete"
-                            size="mini"
+                            size="small"
                             @click="delComment(item.id)"
                         >
                             删除
@@ -50,8 +50,8 @@
                         <div class="m-input" v-if="showInput">
                             <el-input type="textarea" placeholder="请输入回复内容" v-model="content"> </el-input>
                             <div class="m-button">
-                                <el-button type="primary" size="mini" @click="reply(item.id)">提交</el-button>
-                                <el-button type="text" size="mini" @click="showInput = false">收起</el-button>
+                                <el-button type="primary" size="small" @click="reply(item.id)">提交</el-button>
+                                <el-button type="text" size="small" @click="showInput = false">收起</el-button>
                             </div>
                         </div>
                         <div class="m-reply" v-if="item.reply">

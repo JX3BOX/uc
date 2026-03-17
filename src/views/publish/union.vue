@@ -5,7 +5,7 @@
                 联合创作
                 <span class="u-subtype">
                     <i class="el-icon-arrow-right"></i>
-                    <span>{{subtype}}</span>
+                    <span>{{ subtype }}</span>
                 </span>
             </h2>
         </div>
@@ -26,47 +26,48 @@
                             class="u-title"
                             target="_blank"
                             :href="postLink(item.union_post_raw.post_type, item.union_post_raw.ID)"
-                        >{{ item.union_post_raw.post_title || "无标题" }}</a>
+                            >{{ item.union_post_raw.post_title || "无标题" }}</a
+                        >
                         <div class="u-desc">
                             <span class="u-desc-subitem">
                                 <i class="el-icon-view"></i>
-                                {{ item.union_post_raw.visible | visibleFormat }}
+                                {{ visibleFormat(item.union_post_raw.visible) }}
                             </span>
                             <time class="u-desc-subitem">
                                 <i class="el-icon-finished"></i>
                                 发布 :
-                                {{ item.union_post_raw.post_date | dateFormat }}
+                                {{ dateFormat(item.union_post_raw.post_date) }}
                             </time>
                             <time class="u-desc-subitem">
                                 <i class="el-icon-refresh"></i>
                                 更新 :
-                                {{ item.union_post_raw.post_modified | dateFormat }}
+                                {{ dateFormat(item.union_post_raw.post_modified) }}
                             </time>
                         </div>
 
                         <el-button-group class="u-action">
                             <el-button
-                                size="mini"
+                                size="small"
                                 icon="el-icon-edit"
                                 title="编辑"
                                 @click="edit(item.union_post_raw.post_type, item.union_post_raw.ID)"
                             ></el-button>
                             <el-button
                                 v-if="isActive"
-                                size="mini"
+                                size="small"
                                 icon="el-icon-delete"
                                 title="删除"
-                                @click="del(item.union_post_raw.ID,i)"
+                                @click="del(item.union_post_raw.ID, i)"
                             ></el-button>
                             <el-popconfirm
                                 v-else
                                 title="确认退出该作品的联合创作者身份吗？"
-                                @confirm="quit(item.union_post_raw.ID,i)"
+                                @confirm="quit(item.union_post_raw.ID, i)"
                             >
                                 <el-button
                                     slot="reference"
                                     class="u-quit"
-                                    size="mini"
+                                    size="small"
                                     icon="el-icon-download"
                                     title="退出联合身份"
                                 ></el-button>
@@ -88,7 +89,7 @@
                 background
                 :page-size="per"
                 :hide-on-single-page="true"
-                :current-page.sync="page"
+                v-model:current-page="page"
                 layout="total, prev, pager, next, jumper"
                 :total="total"
             ></el-pagination>
@@ -100,10 +101,7 @@
 import { del } from "@/service/publish/cms.js";
 import { getUnionPosts, quitUnionPost } from "@/service/publish/union.js";
 import { editLink, getLink } from "@jx3box/jx3box-common/js/utils.js";
-import {
-    __postType,
-    __visibleMap,
-} from "@/utils/config";
+import { __postType, __visibleMap } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 export default {
     name: "work",
@@ -122,7 +120,7 @@ export default {
             return {
                 page: this.page,
                 per: this.per,
-                is_active : ~~this.isActive,
+                is_active: ~~this.isActive,
             };
         },
         subtype: function () {
@@ -186,8 +184,6 @@ export default {
                 },
             });
         },
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(val));
         },

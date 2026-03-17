@@ -1,6 +1,6 @@
 <template>
     <el-drawer
-        :visible.sync="showValue"
+        v-model="showValue"
         :show-close="false"
         :with-header="false"
         custom-class="simple-more-action-drawer"
@@ -14,10 +14,9 @@
             <div class="c-var m-simple">
                 <div class="m-group">
                     <div v-for="(action, groupIndex) in actions" :key="groupIndex" class="m-list">
-                        <template v-for="(item, itemIndex) in action.list">
+                        <template v-for="(item, itemIndex) in action.list" :key="itemIndex">
                             <div
                                 v-if="!item.type"
-                                :key="itemIndex"
                                 class="m-item"
                                 :style="item?.color ? { color: item.color } : {}"
                                 @click="onSelect(item)"
@@ -29,9 +28,12 @@
                             </div>
                             <div
                                 v-else
-                                :key="itemIndex"
                                 class="m-item"
-                                :style="defaultTypeInfo[item.type]?.color ? { color: defaultTypeInfo[item.type]?.color } : {}"
+                                :style="
+                                    defaultTypeInfo[item.type]?.color
+                                        ? { color: defaultTypeInfo[item.type]?.color }
+                                        : {}
+                                "
                                 @click="onSelect(defaultTypeInfo[item.type])"
                             >
                                 <el-icon v-if="defaultTypeInfo[item.type]?.icon" :class="['u-icon']">
@@ -50,90 +52,89 @@
 </template>
 
 <script>
-
 export default {
     name: "SimpleMoreAction",
     props: {
         show: {
             type: Boolean,
-            default: false
+            default: false,
         },
         actions: {
             type: Array,
-            default: () => []
+            default: () => [],
         },
         iconShow: {
             type: Boolean,
-            default: false
+            default: false,
         },
         sourceId: {
             type: [String, Number],
-            default: ""
+            default: "",
         },
         sourceType: {
             type: String,
-            default: ""
+            default: "",
         },
         isTime: {
             type: Boolean,
-            default: false
+            default: false,
         },
         favInfo: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
         rssStatus: {
             type: Object,
-            default: () => ({})
+            default: () => ({}),
         },
         title: {
             type: String,
-            default: ""
-        }
+            default: "",
+        },
     },
-    emits: ['update:show', 'select', 'close'],
-    computed:{
+    emits: ["update:show", "select", "close"],
+    computed: {
         showValue: {
             get() {
                 return this.show;
             },
             set(value) {
                 this.$emit("update:show", value);
-            }
-        }
+            },
+        },
     },
     data() {
         return {
             theme: "light",
-            t:true,
+            t: true,
             defaultTypeInfo: {
                 report: {
                     name: "举报",
                     icon: "Warning",
-                    method: "report"
+                    method: "report",
                 },
                 edit: {
                     name: "编辑",
                     icon: "Edit",
-                    method: "edit"
+                    method: "edit",
                 },
                 del: {
                     name: "删除",
                     icon: "Delete",
                     method: "del",
-                    color: "#FF5959"
+                    color: "#FF5959",
                 },
                 block: {
                     name: "屏蔽",
                     icon: "CircleClose",
-                    method: "block"
+                    method: "block",
                 },
                 share: {
                     name: "分享",
                     icon: "Share",
-                    method: "share"
-                }
-            }
+                    method: "share",
+                },
+            },
         };
     },
     methods: {
@@ -142,66 +143,63 @@ export default {
         },
         onSelect(item) {
             this.$emit("select", item);
-            this.onClose()
+            this.onClose();
         },
-
-    }
+    },
 };
 </script>
 
-<style lang="less" >
+<style lang="less">
 .simple-more-action-drawer {
-
     border-radius: 20px 20px 0 0;
     .el-drawer__body {
         padding: 0;
     }
 
-    .m-simple{
+    .m-simple {
         max-width: 100%;
         padding: 20px 20px 30px;
         box-sizing: border-box;
         background: var(--primary-brand-4, #282828);
 
-        .m-icon-tools{
+        .m-icon-tools {
             display: flex;
             padding: 8px 30px;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 40rpx;
 
-            .icon{
+            .icon {
                 width: 36px;
                 height: 36px;
             }
 
-            .m-item{
+            .m-item {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 gap: 8px;
                 width: 70px;
-                color: var(--primary-brand-2, #FEDAA3);
+                color: var(--primary-brand-2, #fedaa3);
 
-
-                &.active{
+                &.active {
                     opacity: 50%;
 
-                    .icon{
+                    .icon {
                     }
                 }
             }
         }
 
-        .m-group{
+        .m-group {
             display: flex;
             flex-direction: column;
             gap: 12px;
 
-            .m-list{
+            .m-list {
                 border-radius: 12px;
                 overflow: hidden;
-                .m-item{
+                .m-item {
                     box-sizing: border-box;
                     display: flex;
                     padding: 12px 20px;
@@ -209,14 +207,13 @@ export default {
                     width: 100%;
                     background: var(--black-5, rgba(28, 28, 28, 0.05));
                     align-items: center;
-                    .u-icon{
+                    .u-icon {
                         width: 20px;
                         height: 20px;
                     }
-                    color: var(--black-40, rgba(28, 28, 28, 0.40));
+                    color: var(--black-40, rgba(28, 28, 28, 0.4));
 
-                    .u-name{
-
+                    .u-name {
                         /* 14 Regular */
                         font-size: 14px;
                         font-style: normal;
@@ -226,7 +223,6 @@ export default {
                 }
             }
         }
-
     }
 
     @media (prefers-color-scheme: dark) {
@@ -260,6 +256,4 @@ export default {
         }
     }
 }
-
-
 </style>

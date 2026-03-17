@@ -1,4 +1,4 @@
-import { $next } from "@jx3box/jx3box-common/js/https";
+import { $next } from "@jx3box/jx3box-common/js/api";
 
 function getMsgs(params) {
     return $next().get(`/api/next2/userdata/messages`, { params });

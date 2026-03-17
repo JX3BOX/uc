@@ -3,7 +3,7 @@
         <div class="m-carts">
             <div class="m-cart-item">
                 <el-checkbox v-model="isAll" class="u-check-all" @change="allChange">全选</el-checkbox>
-                <el-button v-if="number" type="info" plain size="mini" icon="el-icon-delete" @click="handleClear"
+                <el-button v-if="number" type="info" plain size="small" icon="el-icon-delete" @click="handleClear"
                     >清空</el-button
                 >
             </div>

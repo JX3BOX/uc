@@ -2,16 +2,15 @@
     <div class="m-exam">
         <el-tabs class="m-tabs" v-model="active" type="card">
             <el-tab-pane v-for="item in types" :key="item.value" :label="item.label" :name="item.value" :lazy="true">
-                <span slot="label">
+                <template #label>
                     <i :class="item.icon"></i>
                     {{ item.label }}
-                </span>
+                </template>
             </el-tab-pane>
         </el-tabs>
         <div class="m-primary">
-            <component :is="currentComponent" v-if="activeType === active"/>
+            <component :is="currentComponent" v-if="activeType === active" />
         </div>
-
     </div>
 </template>
 
@@ -27,7 +26,7 @@ export default {
         Face,
         Paper,
         Question,
-        Body
+        Body,
     },
     data: function () {
         return {
@@ -37,25 +36,25 @@ export default {
                     label: "捏脸",
                     value: "Face",
                     component: Face,
-                    icon:'el-icon-grape'
+                    icon: "el-icon-grape",
                 },
                 {
                     label: "体型",
                     value: "Body",
                     component: Body,
-                    icon:'el-icon-watermelon'
+                    icon: "el-icon-watermelon",
                 },
                 {
                     label: "试卷",
                     value: "Paper",
                     component: Paper,
-                    icon : 'el-icon-ice-cream-round'
+                    icon: "el-icon-ice-cream-round",
                 },
                 {
                     label: "题目",
                     value: "Question",
                     component: Question,
-                    icon : 'el-icon-lollipop'
+                    icon: "el-icon-lollipop",
                 },
             ],
         };
@@ -68,7 +67,5 @@ export default {
             return this.types.find((item) => item.value === this.active).value;
         },
     },
-}
+};
 </script>
-
-

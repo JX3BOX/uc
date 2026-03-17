@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <Header></Header>
+    <div >
+        <CommonHeader></CommonHeader>
         <Main class="m-vip-container" :withoutRight="true" :withoutLeft="true">
             <div class="m-namespace m-boxcoin">
                 <div class="m-namespace-box m-boxcoin-box" v-if="!done">
@@ -51,7 +51,7 @@
             :returnUrl="returnUrl"
             @done="finish"
         />
-        <Footer></Footer>
+        <CommonFooter></CommonFooter>
     </div>
 </template>
 
@@ -125,17 +125,15 @@ export default {
         goBack: function () {
             this.done = false;
         },
+        formatPrice: function (val) {
+            return val && (~~val).toFixed(2);
+        },
     },
     created: function () {
         this.isLogin && this.loadAsset();
 
         let params = new URLSearchParams(location.search);
         this.refer = params.get("redirect") || "";
-    },
-    filters: {
-        formatPrice: function (val) {
-            return val && (~~val).toFixed(2);
-        },
     },
     components: {
         paypop,

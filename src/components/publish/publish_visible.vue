@@ -20,7 +20,7 @@ export default {
     components: {},
     data: function () {
         return {
-            visible: '0',
+            visible: "0",
         };
     },
     model: {
@@ -38,18 +38,13 @@ export default {
             },
         },
     },
-    computed: {},
-    methods: {},
-    filters: {},
-    created: function () {},
-    mounted: function () {},
 };
 </script>
 
 <style scoped lang="less">
-    .m-publish-visible{
-        .el-radio{
-            .mb(0);
-        }
+.m-publish-visible {
+    .el-radio {
+        .mb(0);
     }
+}
 </style>

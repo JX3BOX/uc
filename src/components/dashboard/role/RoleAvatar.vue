@@ -14,12 +14,9 @@ export default {
     computed: {},
     methods: {
         showAvatar: function (mount, body_type) {
-            return (
-                __cdn + "design/avatar/xisai/" + mount + "-" + body_type + ".png"
-            );
+            return __cdn + "design/avatar/xisai/" + mount + "-" + body_type + ".png";
         },
     },
-    filters: {},
     created: function () {},
     mounted: function () {},
 };

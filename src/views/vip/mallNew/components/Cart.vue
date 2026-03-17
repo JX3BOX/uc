@@ -17,7 +17,7 @@
                     全选&nbsp;({{ $store.getters["mallNew/checked_num"] }}/{{ $store.getters["mallNew/num"] }})
                 </div>
             </div>
-            <el-button type="info" plain size="mini" @click="handleClear">清空</el-button>
+            <el-button type="info" plain size="small" @click="handleClear">清空</el-button>
         </div>
         <div class="m-cart-items">
             <div class="m-cart-item" v-for="item in list" :key="item.id" :class="{ cannotBuy: item.can_buy === 0 }">

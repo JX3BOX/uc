@@ -139,13 +139,13 @@ export default {
         this.getBoundCart();
         window.addEventListener("resize", this.getBoundCart);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         window.removeEventListener("resize", this.getBoundCart);
     },
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .m-mall-web {
     width: 100%;
     height: calc(100vh - 64px - 9.6vw);

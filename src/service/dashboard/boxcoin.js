@@ -4,7 +4,7 @@
  * @LastEditTime: 2022-07-19 14:34:21
  * @Description:
  */
-import { $pay, $cms } from "@jx3box/jx3box-common/js/https";
+import { $pay, $cms } from "@jx3box/jx3box-common/js/api";
 
 function getBoxcoinCashHistory(params) {
     return $pay().get(`/api/my/boxcoin/cashout/history`, {
@@ -19,8 +19,8 @@ function getBoxcoinGotHistory(params) {
 }
 
 function cashBoxcoin(data, params) {
-    return $pay().post(`/api/my/boxcoin/cashout`, data,{
-        params
+    return $pay().post(`/api/my/boxcoin/cashout`, data, {
+        params,
     });
 }
 

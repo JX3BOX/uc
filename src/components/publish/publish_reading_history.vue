@@ -2,19 +2,26 @@
     <div class="m-reading-history">
         <el-button type="primary" @click="view" size="small" icon="el-icon-document">阅读记录</el-button>
 
-        <el-drawer title="阅读记录" :visible.sync="show" z-index="2100" class="m-history-drawer" append-to-body>
-            <h3 class="u-history-title" slot="title">阅读记录</h3>
+        <el-drawer title="阅读记录" v-model="show" z-index="2100" class="m-history-drawer" append-to-body>
+            <template #title>
+                <h3 class="u-history-title">阅读记录</h3>
+            </template>
             <main class="m-history-container" v-loading="loading">
                 <div class="m-history-list">
                     <ul class="u-list" v-if="data && data.length">
                         <li class="m-history-item" v-for="(item, i) in data" :key="i">
                             <span class="u-name">
                                 <i class="u-icon el-icon-tickets"></i>
-                                <a :href="authorLink(item.user_info.id)" class="u-creator" v-if="item.user_info" title="创建人">
+                                <a
+                                    :href="authorLink(item.user_info.id)"
+                                    class="u-creator"
+                                    v-if="item.user_info"
+                                    title="创建人"
+                                >
                                     <img class="u-avatar" :src="showAvatar(item.user_info.avatar)" />
                                     {{ item.user_info.display_name }}
                                 </a>
-                                <em class="u-time">{{ item.created_at  }} 访问了此帖</em>
+                                <em class="u-time">{{ item.created_at }} 访问了此帖</em>
                             </span>
                         </li>
 
@@ -25,7 +32,7 @@
                             layout="prev,pager,next,->,total"
                             :total="total"
                             :page-size="per"
-                            :current-page.sync="page"
+                            v-model:current-page="page"
                         ></el-pagination>
                     </ul>
 
@@ -89,7 +96,7 @@ export default {
                 id: this.postId,
                 category: this.category,
                 subcategory: this.subcategory,
-            }
+            };
 
             getReadingHistory(data, this.params)
                 .then((res) => {

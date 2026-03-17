@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div >
         <Header :key="headerKey" ></Header>
         <Breadcrumb name="个人中心" slug="dashboard" root="/dashboard" :crumbEnable="true">
             <img slot="logo" svg-inline src="@/assets/img/dashboard/logo.svg" />

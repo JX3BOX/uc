@@ -32,25 +32,25 @@
                         <span v-if="activeTab == 'topic'">{{ item.title || item.content || "无标题" }}</span>
                         <span class="u-title_content" v-else v-html="getContent(item)"></span>
                         <!-- <div class="u-tags">
-                            <el-tag type="danger" size="mini" v-if="item.is_top == 1">置顶</el-tag>
-                            <el-tag type="danger" size="mini" v-if="item.is_star == 1">加精</el-tag>
-                            <el-tag type="danger" size="mini" v-if="item.is_hight == 1">高亮</el-tag>
+                            <el-tag type="danger" size="small" v-if="item.is_top == 1">置顶</el-tag>
+                            <el-tag type="danger" size="small" v-if="item.is_star == 1">加精</el-tag>
+                            <el-tag type="danger" size="small" v-if="item.is_hight == 1">高亮</el-tag>
                         </div> -->
                     </a>
                     <div class="u-desc">
                         <span class="u-desc-subitem">
                             <i class="el-icon-view"></i>
-                            {{ (item.is_self_visit || item.visible) | visibleFormat }}
+                            {{ visibleFormat(item.is_self_visit || item.visible) }}
                         </span>
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ item.created_at | dateFormat }}
+                            {{ dateFormat(item.created_at) }}
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
                             更新 :
-                            {{ item.updated_at | dateFormat }}
+                            {{ dateFormat(item.updated_at) }}
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-receiving"></i>
@@ -60,8 +60,8 @@
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-button size="mini" icon="el-icon-edit" title="编辑" @click="edit(item)"></el-button>
-                        <el-button size="mini" icon="el-icon-delete" title="删除" @click="del(item)"></el-button>
+                        <el-button size="small" icon="el-icon-edit" title="编辑" @click="edit(item)"></el-button>
+                        <el-button size="small" icon="el-icon-delete" title="删除" @click="del(item)"></el-button>
                     </el-button-group>
                 </li>
             </ul>
@@ -78,7 +78,7 @@
                 background
                 :page-size="per"
                 :hide-on-single-page="true"
-                :current-page.sync="page"
+                v-model:current-page="page"
                 layout="total, prev, pager, next, jumper"
                 :total="total"
             ></el-pagination>
@@ -263,8 +263,6 @@ export default {
             }
             return "";
         },
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(val));
         },

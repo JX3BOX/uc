@@ -1,55 +1,48 @@
 <template>
-   <sub-tab-content :list="list" @change-tab="changeTab">
-       <div class="m-post" v-loading="loading">
-           <!--        </el-timeline>-->
-           <div v-if="posts && posts.length" class="m-archive-list">
-               <div class="u-list">
-                       <a class="u-item" target="_blank" :href="postLink(item.type, `${item.source_id}/${item.id}`, item.client)" v-for="(item, i) in posts" :key="i + item">
-                           <!-- Banner -->
+    <sub-tab-content :list="list" @change-tab="changeTab">
+        <div class="m-post" v-loading="loading">
+            <!--        </el-timeline>-->
+            <div v-if="posts && posts.length" class="m-archive-list">
+                <div class="u-list">
+                    <a
+                        class="u-item"
+                        target="_blank"
+                        :href="postLink(item.type, `${item.source_id}/${item.id}`, item.client)"
+                        v-for="(item, i) in posts"
+                        :key="i + item"
+                    >
+                        <!-- Banner -->
 
-<!--                           <el-image class="u-banner" fit="cover"  :src="getBanner(item, item.post_subtype, item.type)" :key="item.ID" />-->
-                           <span class="u-info-img" v-text="getTypeLabel(item.type)"></span>
+                        <!--                           <el-image class="u-banner" fit="cover"  :src="getBanner(item, item.post_subtype, item.type)" :key="item.ID" />-->
+                        <span class="u-info-img" v-text="getTypeLabel(item.type)"></span>
 
-                           <!-- 标题 -->
-                           <div class="u-post">
-                               <!-- 标题文字 -->
-                               <div class="u-title"  target="_blank">
-
-                                   {{item.title || "无标题" }}
-                                   <span v-if="item.checked == 0" class="u-mark pending">⌛ 等待审核</span>
-                                   <span v-if="item.checked == 1" class="u-mark">✔ 审核通过</span>
-                                   <span v-if="item.checked == 2" class="u-mark reject">❌ 审核驳回</span>
-                                   <span v-if="item.checked == 3" class="u-mark hold">🔐 等待验证</span>
-
-                               </div>
-                               <!--                        <div class="u-desc">-->
-                               <!--                            {{ item.post_excerpt || item.post_title || "这个作者很懒,什么都没有留下" }}-->
-                               <!--                        </div>-->
-                               <time class="u-time">{{ item.updated | dateFormat }}</time>
-                           </div>
-                       </a>
-
-               </div>
-           </div>
-           <!-- <el-alert v-else title="没有找到相关条目" type="info" show-icon> </el-alert> -->
-           <div class="m-empty" v-else>
-               <img src="https://cdn.jx3box.com/design/miniprogram/empty.png" width="80%" />
-           </div>
-       </div>
-   </sub-tab-content>
+                        <!-- 标题 -->
+                        <div class="u-post">
+                            <!-- 标题文字 -->
+                            <div class="u-title" target="_blank">
+                                {{ item.title || "无标题" }}
+                                <span v-if="item.checked == 0" class="u-mark pending">⌛ 等待审核</span>
+                                <span v-if="item.checked == 1" class="u-mark">✔ 审核通过</span>
+                                <span v-if="item.checked == 2" class="u-mark reject">❌ 审核驳回</span>
+                                <span v-if="item.checked == 3" class="u-mark hold">🔐 等待验证</span>
+                            </div>
+                            <time class="u-time">{{ dateFormat(item.updated) }}</time>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <!-- <el-alert v-else title="没有找到相关条目" type="info" show-icon> </el-alert> -->
+            <div class="m-empty" v-else>
+                <img src="https://cdn.jx3box.com/design/miniprogram/empty.png" width="80%" />
+            </div>
+        </div>
+    </sub-tab-content>
 </template>
 
 <script>
 import { getLink, showBanner } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
-import {
-    __postType,
-    __clients,
-    __Root,
-    __OriginRoot,
-    __imgPath,
-    __wikiType,
-} from "@/utils/config";
+import { __postType, __clients, __Root, __OriginRoot, __imgPath, __wikiType } from "@/utils/config";
 import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
 import SubTabContent from "@/components/publish/me/Pannel/SubTabContent.vue";
 import { getMineWiki } from "@/service/publish/wiki";
@@ -63,8 +56,8 @@ export default {
     props: {
         list: {
             type: Array,
-            default: () => []
-        }
+            default: () => [],
+        },
     },
     data: function () {
         return {
@@ -78,7 +71,7 @@ export default {
                 std: __Root.slice(0, -1),
                 origin: __OriginRoot.slice(0, -1),
                 all: "",
-                "wujie": ""
+                wujie: "",
             },
         };
     },
@@ -94,19 +87,19 @@ export default {
         },
     },
     methods: {
-        changeTab(e){
+        changeTab(e) {
             this.currentTab = e;
             this.page = 1;
-            this.loadData(true)
+            this.loadData(true);
         },
         loadData: function (init = false) {
-            if (!this.currentTab || (this.posts>= this.total && !init)){
+            if (!this.currentTab || (this.posts >= this.total && !init)) {
                 return;
             }
             this.loading = true;
-            getMineWiki({...this.params,type: this.currentTab})
+            getMineWiki({ ...this.params, type: this.currentTab })
                 .then((res) => {
-                    if (init){
+                    if (init) {
                         this.posts = [];
                     }
                     this.posts = this.posts.concat(res.data.data.list || []);
@@ -150,19 +143,20 @@ export default {
                 return __imgPath + `image/banner/` + post_type + subtype + ".png";
             }
         },
-        loadMore(){
+        loadMore() {
             if (this.loading) return;
-            if (document.documentElement.scrollTop + window.innerHeight + 100 >= document.documentElement.scrollHeight) {
+            if (
+                document.documentElement.scrollTop + window.innerHeight + 100 >=
+                document.documentElement.scrollHeight
+            ) {
                 if (this.posts.length < this.total) {
                     this.page++;
                     this.loadData();
                 }
             }
-        }
-    },
-    filters: {
+        },
         dateFormat: function (val) {
-            return dateFormat(new Date(val*1000));
+            return dateFormat(new Date(val * 1000));
         },
         typeFormat: function (type) {
             return __postType[type];
@@ -172,31 +166,24 @@ export default {
             return __clients[val];
         },
     },
-    watch: {
-
-    },
     mounted() {
         window.addEventListener("scroll", this.loadMore);
     },
-    destroyed() {
+    beforeUnmount() {
         window.removeEventListener("scroll", this.loadMore);
-    }
+    },
 };
 </script>
 
 <style lang="less">
-
-.m-post{
+.m-post {
     width: 100%;
-    .m-archive-list{
-
-
-
-        .u-list{
+    .m-archive-list {
+        .u-list {
             display: flex;
             flex-direction: column;
             gap: 20px;
-            .u-item{
+            .u-item {
                 display: flex;
                 width: 100%;
                 justify-content: flex-start;
@@ -204,7 +191,7 @@ export default {
 
                 .u-info-img {
                     // float: left;
-                    left:10px;
+                    left: 10px;
                     width: 1em;
                     line-height: 1.3em;
                     margin-top: 4px;
@@ -212,25 +199,25 @@ export default {
                     padding: 4px 5px;
                     font-size: 12px;
                     background-color: #333333;
-                    color: #FFFFFF;
+                    color: #ffffff;
                     border-radius: 3px;
                 }
 
-                .u-banner{
+                .u-banner {
                     border-radius: 4px;
                     width: 126px;
                     height: 64.145px;
                     overflow: hidden;
-                    aspect-ratio: 126.00/64.15;
+                    aspect-ratio: 126/64.15;
                 }
 
-                .u-post{
+                .u-post {
                     flex: 1 0 0;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
-                    .u-title{
-                        color: var(--black-100, #FFF);
+                    .u-title {
+                        color: var(--black-100, #fff);
                         /* 14 Regular */
                         font-size: 14px;
                         font-style: normal;
@@ -265,8 +252,8 @@ export default {
                             }
                         }
                     }
-                    .u-time{
-                        color: var(--black-40, rgba(255, 255, 255, 0.40));
+                    .u-time {
+                        color: var(--black-40, rgba(255, 255, 255, 0.4));
 
                         /* 12 Regular */
                         font-size: 12px;
@@ -276,9 +263,7 @@ export default {
                     }
                 }
             }
-
         }
     }
 }
-
 </style>

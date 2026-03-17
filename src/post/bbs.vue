@@ -68,7 +68,7 @@
                 </publish-comment>
                 <publish-gift v-model="post.allow_gift"></publish-gift>
                 <publish-visible v-model="post.visible"></publish-visible>
-                <publish-guide :data="post"></publish-guide>
+                <publish-guide v-model:data="post"></publish-guide>
                 <publish-authors :id="id" :uid="post.post_author"></publish-authors>
             </div>
 

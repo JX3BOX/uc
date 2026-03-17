@@ -20,7 +20,7 @@
         </el-button>
         <el-dialog
             title="绑定微信公众号"
-            :visible.sync="visible"
+            v-model="visible"
             :width="isPhone ? '95%' : '400px'"
             custom-class="m-notice-wechat__dialog"
             :before-close="handleClose"
@@ -45,7 +45,7 @@
 <script>
 import { getWechatQrcode, unbindWechat } from "@/service/dashboard/profile";
 import { getMyInfo } from "@/service/dashboard/index";
-import { SSE } from "@jx3box/jx3box-common/js/https";
+import { SSE } from "@jx3box/jx3box-common/js/api";
 import User from "@jx3box/jx3box-common/js/user";
 import { __cms } from "@/utils/config";
 const base = `https://mp.weixin.qq.com/cgi-bin/showqrcode`;
@@ -156,7 +156,6 @@ export default {
     justify-content: center;
     align-items: center;
     gap: 10px;
-
 }
 .m-notice-wechat__dialog {
     .m-wechat-content {
@@ -171,7 +170,7 @@ export default {
             justify-content: center;
             .size(180px);
             .el-image__inner {
-                .full;
+                .size(100%);
             }
         }
         .u-error {
@@ -181,7 +180,7 @@ export default {
 
     .u-tip-small {
         font-size: 13px;
-        color: #F56C6C;
+        color: #f56c6c;
         font-weight: 600;
     }
 }

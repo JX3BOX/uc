@@ -5,7 +5,7 @@
             <el-button
                 slot="reference"
                 class="u-back"
-                size="mini"
+                size="small"
                 icon="el-icon-arrow-left"
                 @click="goBack"
             >返回列表</el-button>

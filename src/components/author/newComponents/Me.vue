@@ -2,7 +2,7 @@
     <div>
         <div class="m-author-header" :style="{ backgroundImage: `url(${userDefinedStyle.banner})` }">
             <div class="u-header-info">
-                <Avatar class="u-author-avatar" :uid="uid" :url="avatar" :size="avatarSize" :frame="avatar_frame" />
+                <CommonAvatar class="u-author-avatar" :uid="uid" :url="avatar" :size="avatarSize" :frame="avatar_frame" />
                 <div class="u-author-info">
                     <span class="u-name" :style="userDefinedStyle.userName">
                         <span @click="copyData(data.display_name || '匿名')">{{ data.display_name || "匿名" }}</span
@@ -48,25 +48,25 @@
                                 class="u-btn-attention"
                                 v-if="!subscribed"
                                 @click="follow"
-                                size="mini"
+                                size="small"
                                 >关注TA</el-button
-                                >
-                                <!-- :style="userDefinedStyle.btn" -->
+                            >
+                            <!-- :style="userDefinedStyle.btn" -->
                             <div class="u-already-attention" v-else>
                                 <el-button
                                     class="u-btn"
-                                    size="mini"
-                                    @mouseenter.native="attentionText = '取消关注'"
-                                    @mouseleave.native="attentionText = '已关注'"
+                                    size="small"
+                                    @mouseenter="attentionText = '取消关注'"
+                                    @mouseleave="attentionText = '已关注'"
                                     @click="unfollow"
                                     >{{ attentionText }}</el-button
                                 >
                                 <a :href="sendLink" target="_blank" v-if="canSendLetter">
-                                    <el-button class="u-btn u-send-msg" size="mini" :style="userDefinedStyle.sendMsg"
+                                    <el-button class="u-btn u-send-msg" size="small" :style="userDefinedStyle.sendMsg"
                                         >发消息</el-button
                                     ></a
                                 >
-                                <el-button class="u-btn u-btn-disabled" size="mini" :disabled="true" v-else
+                                <el-button class="u-btn u-btn-disabled" size="small" :disabled="true" v-else
                                     >发消息</el-button
                                 >
                             </div>
@@ -74,16 +74,17 @@
                         <div class="u-more" :style="userDefinedStyle.btn">
                             <el-popover placement="bottom-end" trigger="click" width="90" v-model="moreOperatePhone">
                                 <a href="/feedback" target="_blank">
-                                    <el-button size="mini" class="u-more-btn">举报</el-button> </a
+                                    <el-button size="small" class="u-more-btn">举报</el-button> </a
                                 ><br />
-                                <el-button size="mini" class="u-more-btn" @click="joinBlacklist">拉黑</el-button>
-                                <img
-                                    src="@/assets/img/author/more.svg"
-                                    svg-inline
-                                    slot="reference"
-                                    class="u-more-img"
-                                    :style="userDefinedStyle.btn"
-                                />
+                                <el-button size="small" class="u-more-btn" @click="joinBlacklist">拉黑</el-button>
+                                <template #reference>
+                                    <img
+                                        src="@/assets/img/author/more.svg"
+                                        svg-inline
+                                        class="u-more-img"
+                                        :style="userDefinedStyle.btn"
+                                    />
+                                </template>
                             </el-popover>
                         </div>
                     </div>
@@ -93,7 +94,7 @@
                             <i class="u-icon u-icon-join">
                                 <img svg-inline src="@/assets/img/author/join.svg" />
                             </i>
-                            <span>加入于 {{ data.user_registered | time }}</span>
+                            <span>加入于 {{ time(data.user_registered) }}</span>
                         </div>
                         <div
                             class="u-fans"
@@ -101,7 +102,7 @@
                             :style="userDefinedStyle.fans"
                             v-if="diffYearText"
                         >
-                            <el-tag type="primary" size="small">{{ diffYearText }}</el-tag>
+                            <el-tag type="primary">{{ diffYearText }}</el-tag>
                         </div>
                     </div>
                 </div>
@@ -121,25 +122,25 @@
                             class="u-btn-attention"
                             v-if="!subscribed"
                             @click="follow"
-                            size="mini"
+                            size="small"
                             >关注TA</el-button
-                            >
-                            <!-- :style="userDefinedStyle.btn" -->
+                        >
+                        <!-- :style="userDefinedStyle.btn" -->
                         <div class="u-already-attention" v-else>
                             <el-button
                                 class="u-btn"
-                                size="mini"
-                                @mouseenter.native="attentionText = '取消关注'"
-                                @mouseleave.native="attentionText = '已关注'"
+                                size="small"
+                                @mouseenter="attentionText = '取消关注'"
+                                @mouseleave="attentionText = '已关注'"
                                 @click="unfollow"
                                 >{{ attentionText }}</el-button
                             >
                             <a :href="sendLink" target="_blank" v-if="canSendLetter">
-                                <el-button class="u-btn u-send-msg" size="mini" :style="userDefinedStyle.sendMsg"
+                                <el-button class="u-btn u-send-msg" size="small" :style="userDefinedStyle.sendMsg"
                                     >发消息</el-button
                                 ></a
                             >
-                            <el-button class="u-btn u-btn-disabled" size="mini" :disabled="true" v-else
+                            <el-button class="u-btn u-btn-disabled" size="small" :disabled="true" v-else
                                 >发消息</el-button
                             >
                         </div>
@@ -149,19 +150,22 @@
                     </div>
                     <el-popover placement="bottom-end" trigger="click" width="90" v-model="moreOperate">
                         <a href="/feedback" target="_blank">
-                            <el-button size="mini" class="u-more-btn">举报</el-button> </a
+                            <el-button size="small" class="u-more-btn">举报</el-button> </a
                         ><br />
-                        <el-button v-if="!hadDeny" size="mini" class="u-more-btn" @click="joinBlacklist"
+                        <el-button v-if="!hadDeny" size="small" class="u-more-btn" @click="joinBlacklist"
                             >拉黑</el-button
                         >
-                        <div class="u-more" :style="userDefinedStyle.btn" slot="reference">
-                            <img
-                                src="@/assets/img/author/more.svg"
-                                svg-inline
-                                class="u-more-img"
-                                :style="userDefinedStyle.btn"
-                            /></div
-                    ></el-popover>
+                        <template #reference>
+                            <div class="u-more" :style="userDefinedStyle.btn">
+                                <img
+                                    src="@/assets/img/author/more.svg"
+                                    svg-inline
+                                    class="u-more-img"
+                                    :style="userDefinedStyle.btn"
+                                />
+                            </div>
+                        </template>
+                    </el-popover>
                 </div>
                 <!--        加入时间-->
                 <div class="m-common-box m-join-box u-in-phone">
@@ -169,10 +173,15 @@
                         <i class="u-icon u-icon-join">
                             <img svg-inline src="@/assets/img/author/join.svg" />
                         </i>
-                        <span>加入于 {{ data.user_registered | time }}</span>
+                        <span>加入于 {{ time(data.user_registered) }}</span>
                     </div>
-                    <div v-if="diffYearText" class="u-fans" :class="isSelf ? 'self' : ''" :style="userDefinedStyle.fans">
-                        <el-tag type="primary" size="small">{{ diffYearText }}</el-tag>
+                    <div
+                        v-if="diffYearText"
+                        class="u-fans"
+                        :class="isSelf ? 'self' : ''"
+                        :style="userDefinedStyle.fans"
+                    >
+                        <el-tag type="primary">{{ diffYearText }}</el-tag>
                     </div>
                 </div>
 
@@ -183,25 +192,26 @@
 </template>
 
 <script>
-import { follow, unfollow } from "@jx3box/jx3box-common-ui/service/follow";
+import { follow, unfollow } from "@jx3box/jx3box-ui/service/follow";
 import { getAuthorRss, subscribeAuthor, unsubscribeAuthor } from "@jx3box/jx3box-common/js/rss";
 import { __userLevelColor, __imgPath, __cdn } from "@/utils/config";
 import { user as medal_map } from "@jx3box/jx3box-common/data/medals.json";
 import frames from "@jx3box/jx3box-common/data/user_avatar_frame.json";
 import User from "@jx3box/jx3box-common/js/user";
-import { getFansCount } from "@jx3box/jx3box-common-ui/service/follow";
 import { tvLink } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
 import { deny, undeny, hadDenyUser } from "@/service/author/author";
 import Left from "./Left";
 import Primary from "./Primary";
-import Honor from "@jx3box/jx3box-common-ui/src/author/AuthorHonor.vue";
+import Honor from "@jx3box/jx3box-ui/src/author/AuthorHonor.vue";
+import CommonAvatar from "@jx3box/jx3box-ui/src/author/Avatar.vue"
 export default {
     name: "Me",
     components: {
         Left,
         Primary,
         Honor,
+        CommonAvatar,
     },
     props: {
         decorationMe: {
@@ -317,10 +327,10 @@ export default {
         // TODO: 后续改成图片
         diffYearText() {
             const obj = {
-                "3": "三年老粉",
-                "5": "五年元老",
-                "10": "十年长者",
-            }
+                3: "三年老粉",
+                5: "五年元老",
+                10: "十年长者",
+            };
 
             if (this.diffYear >= 10) {
                 return obj["10"];
@@ -331,14 +341,12 @@ export default {
             } else {
                 return "";
             }
-        }
-    },
-    filters: {
-        time: (val) => {
-            return dateFormat(new Date(val));
         },
     },
     methods: {
+        time: (val) => {
+            return dateFormat(new Date(val));
+        },
         copyData(text) {
             let _this = this;
             this.$copyText(String(text)).then(
@@ -417,13 +425,13 @@ export default {
             })
                 .then(() => {
                     unsubscribeAuthor({ id: this.uid })
-                    .then((res) => {
-                        this.$message.success("操作成功");
-                        this.subscribed = false;
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
+                        .then((res) => {
+                            this.$message.success("操作成功");
+                            this.subscribed = false;
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
                 })
                 .catch((_) => {});
         },

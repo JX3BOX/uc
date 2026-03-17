@@ -33,7 +33,7 @@
                     </div>
                 </div>
             </div>
-            <Footer></Footer>
+            <CommonFooter></CommonFooter>
         </div>
     </AppLayout>
 </template>

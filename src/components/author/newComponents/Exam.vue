@@ -2,15 +2,14 @@
     <div class="m-exam">
         <el-tabs class="m-tabs" v-model="active" type="card">
             <el-tab-pane v-for="item in types" :key="item.value" :label="item.label" :name="item.value" :lazy="true">
-                <span slot="label">
+                <template #label>
                     {{ item.label }}
-                </span>
+                </template>
             </el-tab-pane>
         </el-tabs>
         <div class="m-primary">
-            <component :is="currentComponent" v-if="activeType === active"/>
+            <component :is="currentComponent" v-if="activeType === active" />
         </div>
-
     </div>
 </template>
 
@@ -23,7 +22,6 @@ export default {
     components: {
         Question,
         Paper,
-
     },
     data: function () {
         return {
@@ -32,12 +30,12 @@ export default {
                 {
                     label: "题目",
                     value: "Question",
-                    component: Question
+                    component: Question,
                 },
                 {
                     label: "试卷",
                     value: "Paper",
-                    component: Paper
+                    component: Paper,
                 },
             ],
         };
@@ -50,8 +48,7 @@ export default {
             return this.types.find((item) => item.value === this.active).value;
         },
     },
-
-}
+};
 </script>
 
 <style lang="less">

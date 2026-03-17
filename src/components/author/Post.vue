@@ -18,7 +18,7 @@
                     </h2>
 
                     <!-- 字段 -->
-                    <div class="u-content u-desc">
+                    <div class="u-desc">
                         {{ item.post_excerpt || item.post_title || "这个作者很懒,什么都没有留下" }}
                     </div>
 
@@ -26,7 +26,7 @@
                     <div class="u-misc">
                         <span class="u-date">
                             Updated on
-                            <time>{{ item.post_modified | dateFormat }}</time>
+                            <time>{{ dateFormat(item.post_modified) }}</time>
                         </span>
                     </div>
                 </li>
@@ -42,7 +42,7 @@
             :hide-on-single-page="true"
             layout="prev, pager, next"
             :total="total"
-            :current-page.sync="page"
+            v-model:current-page="page"
             :page-size="per"
         >
         </el-pagination>
@@ -68,7 +68,7 @@ export default {
                 std: __Root.slice(0, -1),
                 origin: __OriginRoot.slice(0, -1),
                 all: "",
-                "wujie": ""
+                wujie: "",
             },
         };
     },
@@ -131,8 +131,6 @@ export default {
                 return __imgPath + `image/banner/` + post_type + subtype + ".png";
             }
         },
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(val));
         },
@@ -167,6 +165,7 @@ export default {
         margin: 0;
     }
     .u-title {
+        color: var(--el-color-primary);
         &:hover {
             color: @pink;
         }

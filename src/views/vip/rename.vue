@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <Header></Header>
+    <div >
+        <CommonHeader></CommonHeader>
         <div class="m-vip-container" v-if="isLogin">
             <div class="m-vip-rename">
                 <simple-header class="m-vip-rename-title" title="修改您的昵称" desc="Rename your nickname" />
@@ -79,7 +79,7 @@
             :returnUrl="returnUrl"
             @done="finish"
         />
-        <Footer></Footer>
+        <CommonFooter></CommonFooter>
     </div>
 </template>
 

@@ -12,7 +12,8 @@
                         icon="el-icon-circle-plus-outline"
                         type="primary"
                         @click="addDBM"
-                    >添加数据</el-button>
+                        >添加数据</el-button
+                    >
                     <a
                         class="m-jx3dat-help el-button el-button--success is-plain el-button--small"
                         href="/tool/13912"
@@ -39,12 +40,12 @@
                                         show-word-limit
                                         @change="checkDataName(item)"
                                         :disabled="i == 0"
-                                        :placeholder="i == 0 ? '默认版': '版本名称'"
+                                        :placeholder="i == 0 ? '默认版' : '版本名称'"
                                     >
                                         <template slot="prepend">
-                                            <b
-                                                class="u-feed"
-                                            >{{ user.name}}{{item.name =="默认版"? "": "#" +item.name}}</b>
+                                            <b class="u-feed"
+                                                >{{ user.name }}{{ item.name == "默认版" ? "" : "#" + item.name }}</b
+                                            >
                                         </template>
                                     </el-input>
                                 </div>
@@ -60,7 +61,7 @@
                                         content="设置不公开后,仍然可以通过订阅名下载,仅不做展示"
                                         placement="top"
                                     >
-                                        <span class="u-status">{{item.status? "公开": "私有"}}</span>
+                                        <span class="u-status">{{ item.status ? "公开" : "私有" }}</span>
                                     </el-tooltip>
                                 </div>
                             </div>
@@ -79,22 +80,19 @@
                             <div class="u-warning">
                                 <i class="el-icon-warning-outline"></i>
                                 当前数据文件将作为
-                                <b>{{ item.name }}</b>的文件上传，上传完后如若重新修改版本名称则需要重新上传对应文件
+                                <b>{{ item.name }}</b
+                                >的文件上传，上传完后如若重新修改版本名称则需要重新上传对应文件
                             </div>
-                            <input
-                                class="u-data-input"
-                                type="file"
-                                :id="'jx3dat_' + i"
-                                @change="uploadDBM(item, i)"
-                            />
+                            <input class="u-data-input" type="file" :id="'jx3dat_' + i" @change="uploadDBM(item, i)" />
                             <el-button
                                 type="primary"
                                 icon="el-icon-s-promotion"
                                 plain
                                 size="small"
                                 @click="selectDBM(i)"
-                            >上传数据文件</el-button>
-                            <span class="u-data-remark">{{item.origin_name}}</span>
+                                >上传数据文件</el-button
+                            >
+                            <span class="u-data-remark">{{ item.origin_name }}</span>
                             <!-- <el-button
                                 size="small"
                                 type="primary"
@@ -185,14 +183,10 @@
         <!-- 其它类型上传字段 -->
         <el-form-item v-else label="数据" class="m-jx3dat-other">
             <input class="u-data-input" type="file" id="otherdata" @change="uploadDat" />
-            <el-button
-                type="primary"
-                icon="el-icon-s-promotion"
-                plain
-                size="medium"
-                @click="selectDat"
-            >上传数据文件</el-button>
-            <span class="u-data-remark">{{jx3dats.origin_name}}</span>
+            <el-button type="primary" icon="el-icon-s-promotion" plain size="medium" @click="selectDat"
+                >上传数据文件</el-button
+            >
+            <span class="u-data-remark">{{ jx3dats.origin_name }}</span>
             <el-input
                 v-if="jx3dats.down"
                 class="u-fileurl"
@@ -227,7 +221,7 @@ import { sterilizer } from "sterilizer/index.js";
 import isEmptyMeta from "@/utils/isEmptyMeta.js";
 
 // 引入 lanren 组件
-import publish_lanren from './publish_laren';
+import publish_lanren from "./publish_laren";
 // META空模板
 const default_meta = {
     data: [
@@ -256,7 +250,7 @@ export default {
     name: "publish_jx3dat",
     props: ["data", "type"],
     components: {
-        'publish-lanren': publish_lanren
+        "publish-lanren": publish_lanren,
     },
     data: function () {
         return {
@@ -269,7 +263,7 @@ export default {
             tempname: "",
             isVIP: false,
             // 用于重置数据
-            reload: true
+            reload: true,
         };
     },
     model: {
@@ -287,8 +281,8 @@ export default {
                     this.jx3dats = newval;
                     this.jx3dats.data.forEach((item) => {
                         item.pop = false;
-                        if(item._version === undefined){
-                            item._version = item.version
+                        if (item._version === undefined) {
+                            item._version = item.version;
                         }
                     });
                 }
@@ -312,11 +306,7 @@ export default {
             return this.type;
         },
         totalVersions: function () {
-            return (
-                this.jx3dats &&
-                this.jx3dats.data &&
-                this.jx3dats.data.length + 1
-            );
+            return this.jx3dats && this.jx3dats.data && this.jx3dats.data.length + 1;
         },
     },
     methods: {
@@ -463,21 +453,10 @@ export default {
             });
         },
     },
-    filters: {},
     created: function () {
         User.isVIP().then((data) => {
             this.isVIP = data;
         });
     },
-    // mounted: function () {
-    //     if (!this.data || isEmptyMeta(this.data)) {
-    //         this.jx3dats = lodash.cloneDeep(default_meta);
-    //     } else {
-    //         this.jx3dats = this.data;
-    //         this.jx3dats.data.forEach((item) => {
-    //             item.pop = false;
-    //         });
-    //     }
-    // },
 };
 </script>

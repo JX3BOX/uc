@@ -196,7 +196,7 @@ export default {
             .pa;
             .lb(0);
             .rt(0);
-            .full;
+            .size(100%);
             background: url("https://cdn.jx3box.com/design/card/festival/box2025/girl2.png") center 84px no-repeat;
             background-size: contain;
             animation: girl 1s linear forwards;

@@ -25,7 +25,11 @@
                 v-model="fbdata.fb_name"
                 @change="subtypeChange(key)"
             >
-                <img :src="fb.icon | thumbnail(fb.icon)" :alt="key" onerror="this.src='https://img.jx3box.com/image/fb_map_thumbnail/undefined.png'"/>
+                <img
+                    :src="thumbnail(fb.icon)"
+                    :alt="key"
+                    onerror="this.src='https://img.jx3box.com/image/fb_map_thumbnail/undefined.png'"
+                />
                 <span>{{ key }}</span>
             </el-radio>
         </el-form-item>
@@ -62,7 +66,7 @@ import isEmptyMeta from "@/utils/isEmptyMeta.js";
 import fbmap_std from "@jx3box/jx3box-data/data/fb/fb_map.json";
 import fbmap_origin from "@jx3box/jx3box-data/data/fb/fb_map_origin.json";
 import { __ossMirror, __imgPath } from "@/utils/config";
-import Bus from "@/utils/bus.js";
+import Bus from '@jx3box/jx3box-ui/utils/bus';
 // META空模板
 const default_meta = {
     fb_zlp: "",
@@ -166,8 +170,6 @@ export default {
             this.fbdata.fb_boss = [];
             this.fbdata.fb_level = [];
         },
-    },
-    filters: {
         thumbnail: function (url) {
             return __imgPath + url;
         },
@@ -176,10 +178,13 @@ export default {
     mounted: function () {
         this.setDefaultOption();
         // 当切换客户端版本时
-        Bus.$on("changeClient", (client) => {
+        Bus.on("changeClient", (client) => {
             this.setDefaultOption();
         });
     },
+    beforeUnmount() {
+        Bus.off("changeClient")
+    }
 };
 </script>
 <style lang="less">

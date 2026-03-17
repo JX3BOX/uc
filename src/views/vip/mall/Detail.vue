@@ -67,11 +67,11 @@
                         <el-divider content-position="left"><i class="el-icon-unlock"></i> 兑换需求</el-divider>
                         <span class="u-line" v-if="item.end_sell_time">
                             <i class="el-icon-time"></i> 可兑换时间：
-                            <el-tag :type="isExpire(item.end_sell_time) ? 'success' : 'warning'" size="mini">{{
+                            <el-tag :type="isExpire(item.end_sell_time) ? 'success' : 'warning'" size="small">{{
                                 item.start_sell_time
                             }}</el-tag>
                             -
-                            <el-tag :type="isExpire(item.end_sell_time) ? 'success' : 'warning'" size="mini">{{
+                            <el-tag :type="isExpire(item.end_sell_time) ? 'success' : 'warning'" size="small">{{
                                 item.end_sell_time
                             }}</el-tag>
                         </span>
@@ -236,7 +236,7 @@
 <script>
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
 import Comment from "./components/comment.vue";
-import UserPop from "@jx3box/jx3box-common-ui/src/author/UserPop.vue";
+import UserPop from "@jx3box/jx3box-ui/src/author/UserPop.vue";
 import Picture from "./components/Picture.vue";
 import Order from "./components/Order.vue";
 import Skeleton from "./components/skeleton/index.vue";

@@ -1,5 +1,5 @@
 <template>
-    <el-dialog class="w-dialog m-feedback-assign" :visible.sync="show" :title="title" @close="close">
+    <el-dialog class="w-dialog m-feedback-assign" v-model="show" :title="title" @close="close">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
             <el-form-item label="项目" prop="repository">
                 <el-input v-model="form.repository" placeholder="请输入GitHub仓库" clearable></el-input>

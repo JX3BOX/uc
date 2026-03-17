@@ -93,7 +93,7 @@
             <!-- 弹窗 -->
             <el-dialog
                 :title="title"
-                :visible.sync="dialogVisible"
+                v-model="dialogVisible"
                 width="30%"
                 :before-close="close"
                 custom-class="m-edit-dialog"
@@ -147,7 +147,7 @@ import {
     toConfirm,
     appendGoodsRate,
     delGoodsRate,
-    getOrderId
+    getOrderId,
 } from "@/service/dashboard/goods";
 import { orderStatus, payStatus } from "@/assets/data/dashboard/mall.json";
 import uc from "@/components/dashboard/uc";

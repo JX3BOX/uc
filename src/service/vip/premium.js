@@ -1,11 +1,11 @@
-import { $pay, $cms } from "@jx3box/jx3box-common/js/https";
+import { $pay, $cms } from "@jx3box/jx3box-common/js/api";
 
 function getFreePro() {
     return $pay().get("/api/gift/developer/apply/vip");
 }
 
 function checkIsTeammate() {
-    return $cms().get(`/api/cms/account/teammate/check`)
+    return $cms().get(`/api/cms/account/teammate/check`);
 }
 
 export { getFreePro, checkIsTeammate };

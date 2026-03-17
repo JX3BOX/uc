@@ -2,7 +2,7 @@
     <el-dialog
         class="c-pay-pop"
         :title="title"
-        :visible.sync="visible"
+        v-model="visible"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
         :width="width"
@@ -178,8 +178,6 @@ export default {
                 }
             });
         },
-    },
-    filters: {
         formatPrice: function (val) {
             return (val && (val / 100).toFixed(2)) || "-";
         },

@@ -80,7 +80,7 @@
                         :hide-on-single-page="true"
                         :page-size="per"
                         :total="total"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         @current-change="changePage"
                     ></el-pagination>
                 </template>

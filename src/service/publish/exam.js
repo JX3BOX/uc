@@ -1,4 +1,4 @@
-import { $next } from "@jx3box/jx3box-common/js/https";
+import { $next } from "@jx3box/jx3box-common/js/api";
 
 function getQuestion(id) {
     return $next().get("/api/question/" + id);
@@ -36,12 +36,12 @@ function getPapers(query) {
     });
 }
 
-function deleteQuestion(id){
-    return $next().delete(`/api/question/my/${id}`)
+function deleteQuestion(id) {
+    return $next().delete(`/api/question/my/${id}`);
 }
 
-function deletePaper(id){
-    return $next().delete(`/api/question/exam-paper/my/${id}`)
+function deletePaper(id) {
+    return $next().delete(`/api/question/exam-paper/my/${id}`);
 }
 
 export {
@@ -54,5 +54,5 @@ export {
     getPaper,
     getPapers,
     deleteQuestion,
-    deletePaper
+    deletePaper,
 };

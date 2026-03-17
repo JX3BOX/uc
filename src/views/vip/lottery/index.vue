@@ -1,6 +1,6 @@
 <template>
-    <div id="app" :class="theme" v-loading="loading">
-        <Header></Header>
+    <div  :class="theme" v-loading="loading">
+        <CommonHeader></CommonHeader>
         <div class="p-event-blindbox">
             <!-- 模糊背景 -->
             <div class="m-video" v-if="isVideo">
@@ -58,7 +58,7 @@
                                 </div>
                                 <el-dialog
                                     title="奖品速览"
-                                    :visible.sync="preview"
+                                    v-model="preview"
                                     width="80%"
                                     :before-close="() => (preview = false)"
                                     :append-to-body="true"
@@ -373,7 +373,7 @@ export default {
     },
     methods: {
         loadUser() {
-            if(this.isLogin){
+            if (this.isLogin) {
                 getMyInfo().then((res) => {
                     this.user = res.data.data;
                 });
@@ -624,7 +624,7 @@ export default {
             this.history = false;
         },
     },
-    destroyed() {
+    beforeUnmount() {
         clearInterval(this.scrollInterval);
     },
 };

@@ -77,9 +77,7 @@
                     <GoodItem v-for="(item, index) in list" :key="index" :good="item"></GoodItem>
                 </template>
                 <template v-else>
-                    <div class="u-null">
-                        <i class="el-icon-warning-outline"></i> 暂无数据
-                    </div>
+                    <div class="u-null"><i class="el-icon-warning-outline"></i> 暂无数据</div>
                 </template>
             </div>
             <div class="pagination">
@@ -87,8 +85,8 @@
                     :layout="query.pageSize == 10 ? 'total,prev, pager, next' : 'prev, pager, next'"
                     :pager-count="5"
                     :total="query.total"
-                    :page-size.sync="query.pageSize"
-                    :current-page.sync="query.pageIndex"
+                    v-model:page-size="query.pageSize"
+                    v-model:current-page="query.pageIndex"
                     @current-change="handleCurrentChange"
                     hide-on-single-page
                 >
@@ -267,13 +265,13 @@ export default {
             gap: 16px;
             align-content: flex-start;
 
-            .u-null{
+            .u-null {
                 .x;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 .w(100%);
-                padding:200px 0;
+                padding: 200px 0;
             }
         }
         .pagination {

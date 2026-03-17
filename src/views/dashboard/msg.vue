@@ -1,4 +1,5 @@
-/dashboard<template>
+/dashboard
+<template>
     <uc
         class="m-dashboard-frame m-dashboard-skin"
         icon="el-icon-bell"
@@ -54,13 +55,13 @@
                     </div>
                     <el-button-group class="u-action">
                         <el-button
-                            size="mini"
+                            size="small"
                             icon="el-icon-check"
                             title="设为已读"
                             @click="read(item)"
                             :disabled="item.read == 1"
                         ></el-button>
-                        <el-button size="mini" icon="el-icon-delete" title="删除" @click="del(item)"></el-button>
+                        <el-button size="small" icon="el-icon-delete" title="删除" @click="del(item)"></el-button>
                     </el-button-group>
                 </li>
             </ul>
@@ -78,8 +79,8 @@
                 background
                 :hide-on-single-page="true"
                 @current-change="changePage"
-                :current-page.sync="page"
-                :page-size.sync="limit"
+                v-model:current-page="page"
+                v-model:page-size="limit"
                 layout="total, prev, pager, next, jumper"
                 :total="total"
             ></el-pagination>
@@ -104,7 +105,7 @@ import CommentDetail from "@/components/dashboard/msg/CommentDetail.vue";
 
 const redirectMap = {
     team_member_list: "/team/my/org/{id}?tab=manage-member",
-}
+};
 
 export default {
     name: "msg",

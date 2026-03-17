@@ -2,8 +2,10 @@
     <div class="m-revision">
         <el-button type="primary" @click="view" size="small" icon="el-icon-folder">历史版本</el-button>
 
-        <el-drawer title="历史版本" :visible.sync="show" z-index="2100" class="m-revision-drawer" append-to-body>
-            <h3 class="u-revision-title" slot="title">历史版本</h3>
+        <el-drawer title="历史版本" v-model="show" z-index="2100" class="m-revision-drawer" append-to-body>
+            <template #title>
+                <h3 class="u-revision-title">历史版本</h3>
+            </template>
             <main class="m-revision-container" v-loading="loading">
                 <div class="m-revision-list">
                     <ul class="u-list" v-if="list.length">
@@ -21,7 +23,7 @@
                         small
                         layout="prev, pager, next"
                         :total="total"
-                        :current-page.sync="index"
+                        v-model:current-page="index"
                         hide-on-single-page
                     >
                     </el-pagination>

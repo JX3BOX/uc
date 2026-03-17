@@ -48,7 +48,7 @@
                 <div class="m-whitelist-list u-list" v-if="list && list.length">
                     <div class="u-item" v-for="(item, i) in list" :key="item.kith_id || item.id">
                         <a class="u-item-pic" :href="userLink(item)" target="_blank">
-                            <img class="u-item-avatar" :src="getAvatar(item) | showAvatar" />
+                            <img class="u-item-avatar" :src="showAvatar(getAvatar(item))" />
                         </a>
                         <a class="u-item-name" :href="userLink(item)" target="_blank">{{ getName(item) }}</a>
                         <template v-if="active === 'whitelist'">
@@ -58,14 +58,14 @@
                         <div class="u-item-btns">
                             <template v-if="active === 'whitelist'">
                                 <el-popconfirm title="确认删除亲友关系吗？" @confirm="remove(item.kith_id, i)">
-                                    <el-button slot="reference" type="warning" size="mini" icon="el-icon-delete"
+                                    <el-button slot="reference" type="warning" size="small" icon="el-icon-delete"
                                         >删除</el-button
                                     >
                                 </el-popconfirm>
 
                                 <el-button
                                     @click="edit(item.kith_id, item)"
-                                    size="mini"
+                                    size="small"
                                     icon="el-icon-edit"
                                     class="u-btn-edit"
                                     >编辑</el-button
@@ -74,7 +74,7 @@
                             <template v-else>
                                 <el-button
                                     @click="removeOther(item)"
-                                    size="mini"
+                                    size="small"
                                     icon="el-icon-delete"
                                     class="u-btn-delete"
                                     >移除</el-button
@@ -105,7 +105,7 @@
             ></el-input>
             <div class="u-list" v-if="userdata">
                 <div class="u-item">
-                    <img class="u-item-avatar" :src="userdata.user_avatar | showAvatar" :alt="userdata.display_name" />
+                    <img class="u-item-avatar" :src="showAvatar(userdata.user_avatar)" :alt="userdata.display_name" />
                     <div class="u-item-info">
                         <span class="u-item-uid">UID：{{ userdata.ID }}</span>
                         <b class="u-item-name">{{ userdata.display_name }}</b>
@@ -571,6 +571,10 @@ export default {
             }
             return (item.kith_info || item).display_name;
         },
+        showAvatar: function (val) {
+            return showAvatar(val, "m");
+        },
+        authorLink,
     },
     mounted: function () {
         this.loadRelationNetTypes().then(() => {
@@ -601,12 +605,6 @@ export default {
                 this.identity = "member";
             }
         });
-    },
-    filters: {
-        showAvatar: function (val) {
-            return showAvatar(val, "m");
-        },
-        authorLink,
     },
 };
 </script>

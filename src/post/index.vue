@@ -5,7 +5,7 @@
             <el-tooltip content="成为签约作者，获取更多福利与权益" placement="top">
                 <a
                     href="/dashboard/cooperation"
-                    size="mini"
+                    size="small"
                     type="primary"
                     class="el-button el-tooltip el-button--primary el-button--mini u-btn"
                     target="_blank"

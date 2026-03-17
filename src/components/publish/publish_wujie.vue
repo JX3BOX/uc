@@ -31,18 +31,13 @@ export default {
             },
         },
     },
-    computed: {},
-    methods: {},
-    filters: {},
-    created: function () {},
-    mounted: function () {},
 };
 </script>
 
 <style scoped lang="less">
-    .m-publish-visible{
-        .el-radio{
-            .mb(0);
-        }
+.m-publish-visible {
+    .el-radio {
+        .mb(0);
     }
+}
 </style>

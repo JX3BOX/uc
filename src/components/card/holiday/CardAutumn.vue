@@ -57,7 +57,7 @@ export default {
     }
 
     .u-card {
-        .full;
+        .size(100%);
         span {
             .db;
             .pa;

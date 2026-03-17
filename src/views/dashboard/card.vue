@@ -49,7 +49,7 @@
                                         type="primary"
                                         icon="el-icon-view"
                                         @click="getSn(scope.$index, scope.row)"
-                                        size="mini"
+                                        size="small"
                                         plain
                                         >点击查看</el-button
                                     >
@@ -57,7 +57,7 @@
                                         class="u-btn"
                                         v-else
                                         type="txt"
-                                        size="mini"
+                                        size="small"
                                         icon="el-icon-document-copy"
                                         v-clipboard:copy="'' + scope.row.code"
                                         v-clipboard:success="onCopy"
@@ -89,7 +89,7 @@
                                 <el-button
                                     v-show="!scope.row.used_by_self"
                                     type="text"
-                                    size="mini"
+                                    size="small"
                                     @click="onSnUsedClick(scope.row)"
                                     >（标记使用）</el-button
                                 >
@@ -118,7 +118,7 @@
                         background
                         :page-size="per"
                         :hide-on-single-page="true"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         layout="total, prev, pager, next, jumper"
                         :total="total"
                     ></el-pagination>
@@ -147,7 +147,7 @@
                                         type="primary"
                                         icon="el-icon-view"
                                         @click="getVirtualCode(scope.$index, scope.row)"
-                                        size="mini"
+                                        size="small"
                                         plain
                                         >点击查看</el-button
                                     >
@@ -155,7 +155,7 @@
                                         class="u-btn"
                                         v-else
                                         type="txt"
-                                        size="mini"
+                                        size="small"
                                         icon="el-icon-document-copy"
                                         v-clipboard:copy="'' + scope.row.code"
                                         v-clipboard:success="onCopy"
@@ -190,7 +190,7 @@
                                 <el-button
                                     v-show="!scope.row.owner.used_by_self"
                                     type="text"
-                                    size="mini"
+                                    size="small"
                                     @click="onVirtualUsedClick(scope.row)"
                                     >（标记使用）</el-button
                                 >
@@ -219,7 +219,7 @@
                         background
                         :page-size="per"
                         :hide-on-single-page="true"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         layout="total, prev, pager, next, jumper"
                         :total="total"
                     ></el-pagination>
@@ -253,7 +253,7 @@
                                                 class="u-btn"
                                                 v-if="scope.row.key"
                                                 type="txt"
-                                                size="mini"
+                                                size="small"
                                                 icon="el-icon-document-copy"
                                                 v-clipboard:copy="'' + scope.row.key"
                                                 v-clipboard:success="onCopy"
@@ -268,7 +268,7 @@
                                                 type="primary"
                                                 icon="el-icon-view"
                                                 @click="getKeycode(scope.$index, scope.row)"
-                                                size="mini"
+                                                size="small"
                                                 plain
                                                 >点击查看</el-button
                                             >
@@ -276,7 +276,7 @@
                                                 class="u-btn"
                                                 v-if="scope.row.code"
                                                 type="txt"
-                                                size="mini"
+                                                size="small"
                                                 icon="el-icon-document-copy"
                                                 v-clipboard:copy="'' + scope.row.code"
                                                 v-clipboard:success="onCopy"
@@ -310,7 +310,7 @@
                                 <el-button
                                     v-show="!scope.row.used_by_self"
                                     type="text"
-                                    size="mini"
+                                    size="small"
                                     @click="onKeyCodeUsedClick(scope.row)"
                                     >（标记使用）</el-button
                                 >
@@ -332,7 +332,7 @@
                         background
                         :page-size="per"
                         :hide-on-single-page="true"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         layout="total, prev, pager, next, jumper"
                         :total="total"
                     ></el-pagination>

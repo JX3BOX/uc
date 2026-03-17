@@ -1,10 +1,6 @@
 <template>
     <div class="cardQixi" @click.stop>
-        <div
-            v-if="fontCount"
-            :class="['u-count', { active }]"
-            :style="{ backgroundImage: `url('${countImg}')` }"
-        ></div>
+        <div v-if="fontCount" :class="['u-count', { active }]" :style="{ backgroundImage: `url('${countImg}')` }"></div>
         <div v-else :class="['u-count', { active }]">零</div>
         <img :src="imgList[0]" class="u-img u-text" :class="{ active }" @click="close" />
         <img :src="imgList[1]" class="u-img u-bg" :class="{ active }" />
@@ -23,9 +19,9 @@ export default {
         imgList() {
             return this.data?.imgList;
         },
-        countImg(){
+        countImg() {
             return this.data?.countImg;
-        }
+        },
     },
     data() {
         return {
@@ -71,7 +67,7 @@ export default {
     }
     .u-img {
         .pa;
-        .full;
+        .size(100%);
         .pointer;
         .lt(0,120px);
         transition: all 0.3s ease-in-out;

@@ -145,7 +145,7 @@
                 background
                 :page-size="per"
                 :hide-on-single-page="true"
-                :current-page.sync="page"
+                v-model:current-page="page"
                 @current-change="currentChange"
                 layout="total, prev, pager, next, jumper"
                 :total="total"

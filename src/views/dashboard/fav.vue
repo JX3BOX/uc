@@ -41,7 +41,7 @@
                             </div>
                             <el-button-group class="u-action">
                                 <el-button
-                                    size="mini"
+                                    size="small"
                                     icon="el-icon-delete"
                                     title="取消收藏"
                                     @click="del(item.id)"
@@ -57,7 +57,7 @@
                         background
                         :hide-on-single-page="true"
                         :page-size="per"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         layout="total, prev, pager, next, jumper"
                         :total="total"
                         @current-change="currentChange"
@@ -67,17 +67,15 @@
             </el-tab-pane>
             <el-tab-pane label="订阅" name="sub">
                 <span slot="label"><i class="u-tab-icon el-icon-news"></i> 订阅</span>
-                <rss-list
-                    v-if="favChangeCount === 'sub'"
-                />
+                <rss-list v-if="favChangeCount === 'sub'" />
             </el-tab-pane>
             <el-tab-pane label="历史记录" name="log">
                 <span slot="label"><i class="el-icon-time"></i> 历史记录 </span>
                 <visit-log
                     v-if="favChangeCount === 'log'"
-                   :type="searchType"
-                   :search="search"
-                   @change-search="changeSearch"
+                    :type="searchType"
+                    :search="search"
+                    @change-search="changeSearch"
                 />
             </el-tab-pane>
             <el-tab-pane label="稍后再看" name="watch_later">
@@ -88,7 +86,7 @@
                     :search="search"
                     @change-search="changeSearch"
                 />
-          </el-tab-pane>
+            </el-tab-pane>
         </el-tabs>
     </div>
 </template>
@@ -157,7 +155,7 @@ export default {
         },
     },
     methods: {
-        loadFav(){
+        loadFav() {
             this.loading = true;
             this.showPagination = false;
             this.$router.push({
@@ -184,28 +182,29 @@ export default {
                 });
         },
         loadData() {
-            if (this.favChangeCount === 'fav'){
-                this.loadFav()
+            if (this.favChangeCount === "fav") {
+                this.loadFav();
             }
         },
-        changeSearch(val){
+        changeSearch(val) {
             this.search = val;
         },
         del: function (id) {
-            this.$confirm('确定要取消收藏吗？', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                delFav(id).then(() => {
-                    this.$message({
-                        type: "success",
-                        message: `取消收藏成功`,
+            this.$confirm("确定要取消收藏吗？", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning",
+            })
+                .then(() => {
+                    delFav(id).then(() => {
+                        this.$message({
+                            type: "success",
+                            message: `取消收藏成功`,
+                        });
+                        this.loadData();
                     });
-                    this.loadData();
-                });
-            }).catch(() => {
-            });
+                })
+                .catch(() => {});
         },
         getLink,
         getTypeLabel(type) {
@@ -230,7 +229,7 @@ export default {
             if (!val) val = "all";
             this.$router.push({ name: "fav", params: { subtype: val } });
         },
-        favChangeCount(){
+        favChangeCount() {
             this.$router.push({
                 name: "fav",
                 query: {
@@ -238,7 +237,7 @@ export default {
                     tabs: this.favChangeCount,
                 },
             });
-        }
+        },
     },
     mounted: function () {
         this.favChangeCount = this.$route.query.tabs || "fav";
@@ -249,6 +248,6 @@ export default {
 };
 </script>
 
-<style  lang="less">
+<style lang="less">
 @import "~@/assets/css/dashboard/fav.less";
 </style>

@@ -5,7 +5,7 @@
                 <!-- 自己 -->
                 <div class="u-item" v-if="me.id">
                     <a class="u-item-pic" :href="userLink(me)" target="_blank">
-                        <img class="u-item-avatar" :src="getAvatar(me) | showAvatar" />
+                        <img class="u-item-avatar" :src="showAvatar(getAvatar(me))" />
                     </a>
                     <a class="u-item-name" :href="userLink(me)" target="_blank">{{ getName(me) }}</a>
                 </div>
@@ -28,13 +28,13 @@
                                 <i class="el-icon-close"></i>
                             </div> -->
                         <a class="u-item-pic" :href="userLink(myLover)" target="_blank">
-                            <img class="u-item-avatar" :src="getAvatar(myLover) | showAvatar" />
+                            <img class="u-item-avatar" :src="showAvatar(getAvatar(myLover))" />
                         </a>
                         <a class="u-item-name" :href="userLink(myLover)" target="_blank">{{ getName(myLover) }}</a>
                         <div class="u-action">
                             <div class="u-item-remark" v-if="!myLover.status">
                                 <div class="u-pending"><i class="el-icon-time"></i>等待确认中...</div>
-                                <el-button plain type="info" @click.stop="onCancel(myLover)" size="mini"
+                                <el-button plain type="info" @click.stop="onCancel(myLover)" size="small"
                                     >取消</el-button
                                 >
                             </div>
@@ -207,8 +207,6 @@ export default {
                     this.loading = false;
                 });
         },
-    },
-    filters: {
         showAvatar: function (val) {
             return showAvatar(val, "m");
         },

@@ -1,4 +1,4 @@
-import { $cms } from "@jx3box/jx3box-common/js/https";
+import { $cms } from "@jx3box/jx3box-common/js/api";
 
 function getPost(post_id) {
     return $cms().get(`/api/cms/post/${post_id}`);
@@ -34,4 +34,13 @@ function acceptKithInvitation(user_id) {
     return $cms().put(`/api/cms/user/kith/${user_id}/invitation`);
 }
 
-export { getPost, getUser, quitUnionPost, isExistPostInvitation, acceptPostInvitation, isExistKithInvitation, refuseKithInvitation, acceptKithInvitation };
+export {
+    getPost,
+    getUser,
+    quitUnionPost,
+    isExistPostInvitation,
+    acceptPostInvitation,
+    isExistKithInvitation,
+    refuseKithInvitation,
+    acceptKithInvitation,
+};

@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :visible.sync="isShow" :show-close="false" custom-class="m-cart-confirm">
+    <el-dialog v-model="isShow" :show-close="false" custom-class="m-cart-confirm">
         <div class="content">
             <div class="title">购物车结算</div>
             <div class="text">
@@ -12,13 +12,13 @@
             </div>
         </div>
         <div class="btn-box">
-            <el-button round @click="isShow = false" size="mini" style="width: 20.5333vw; font-size: 3.2vw"
+            <el-button round @click="isShow = false" size="small" style="width: 20.5333vw; font-size: 3.2vw"
                 >再想想</el-button
             >
             <el-button
                 round
                 @click="buyGoods"
-                size="mini"
+                size="small"
                 style="width: 20.5333vw; font-size: 3.2vw; background-color: rgba(255, 163, 43, 1); color: #fff"
                 >确认</el-button
             >

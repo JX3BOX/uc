@@ -8,7 +8,7 @@
             <div class="m-publish-emotion m-publish-emotion-edit" v-if="id">
                 <el-form-item label="图片">
                     <div class="u-pic" v-if="data && data.url">
-                        <img class="u-img" :src="data.url | showThumbnail" />
+                        <img class="u-img" :src="showThumbnail(data.url)" />
                         <i class="u-mask"></i>
                         <i class="u-preview" @click="previewHandle(data)">
                             <i class="el-icon-zoom-in"></i>
@@ -18,43 +18,38 @@
                         <div v-if="data && data.url" class="u-emotion">
                             <img :src="data.url" />
                             <i class="u-emotion-mask"></i>
-                            <i
-                                class="u-emotion-delete el-icon-delete"
-                                title="移除"
-                                @click="handleRemove"
-                            ></i>
+                            <i class="u-emotion-delete el-icon-delete" title="移除" @click="handleRemove"></i>
                         </div>
-                        <div
-                            v-else
-                            class="u-upload el-upload el-upload--picture-card"
-                            @click="select"
-                        >
+                        <div v-else class="u-upload el-upload el-upload--picture-card" @click="select">
                             <i class="el-icon-plus"></i>
                         </div>
-                        <input
-                            class="u-upload-input"
-                            type="file"
-                            @change="upload"
-                            ref="uploadInput"
-                        />
+                        <input class="u-upload-input" type="file" @change="upload" ref="uploadInput" />
                     </div>
                     <el-button
                         v-if="data && data.url"
                         class="u-remove-btn"
                         icon="el-icon-delete"
                         @click="removePic"
-                        size="mini"
-                    >移除</el-button>
+                        size="small"
+                        >移除</el-button
+                    >
                 </el-form-item>
                 <el-form-item label="描述">
                     <el-input v-model="data.desc" :maxlength="120" show-word-limit placeholder="图片说明"></el-input>
                 </el-form-item>
                 <el-form-item label="类别">
                     <el-select v-model="data.type" placeholder="选择门派（非必选）">
-                        <el-option v-for="(item,i) in schoolmap" :key="i" :value="i" :label="item">
-                            <div style="display: flex;align-items: center;">
-                                <img class="u-icon" style="margin-right: 20px" width="24" height="24" :src="i | showSchoolIcon" :alt="item" />
-                                {{item}}
+                        <el-option v-for="(item, i) in schoolmap" :key="i" :value="i" :label="item">
+                            <div style="display: flex; align-items: center">
+                                <img
+                                    class="u-icon"
+                                    style="margin-right: 20px"
+                                    width="24"
+                                    height="24"
+                                    :src="showSchoolIcon(i)"
+                                    :alt="item"
+                                />
+                                {{ item }}
                             </div>
                         </el-option>
                     </el-select>
@@ -67,11 +62,7 @@
                 </el-form-item>
                 <!-- 按钮 -->
                 <div class="m-publish-buttons">
-                    <el-button
-                        type="primary"
-                        @click="update"
-                        :disabled="processing"
-                    >更 &nbsp;&nbsp; 新</el-button>
+                    <el-button type="primary" @click="update" :disabled="processing">更 &nbsp;&nbsp; 新</el-button>
                 </div>
             </div>
 
@@ -87,9 +78,7 @@
                         desc="一次最多同时上传10个文件（不超过5M）"
                         :accept="supportTypes"
                     />
-                    <div class="u-tip">
-                        <i class="el-icon-info"></i> 图片格式支持gif/png/jpg/bmp/webp
-                    </div>
+                    <div class="u-tip"><i class="el-icon-info"></i> 图片格式支持gif/png/jpg/bmp/webp</div>
                 </div>
 
                 <!-- 列表 -->
@@ -104,12 +93,13 @@
                                         icon="el-icon-delete"
                                         @click="deleteHandle(i)"
                                         type="info"
-                                        size="mini"
-                                    >删除</el-button>
+                                        size="small"
+                                        >删除</el-button
+                                    >
                                 </div>
                             </div>
                             <div class="u-pic">
-                                <img class="u-img" :src="item.url | showThumbnail" />
+                                <img class="u-img" :src="showThumbnail(item.url)" />
                                 <i class="u-mask"></i>
                                 <i class="u-preview" @click="previewHandle(item)">
                                     <i class="el-icon-zoom-in"></i>
@@ -132,15 +122,27 @@
                                     v-model="item.author"
                                     placeholder="（非必填）"
                                     v-if="!item.original"
-                                    size="mini"
+                                    size="small"
                                 >
                                     <span slot="prepend">原作者</span>
                                 </el-input>
-                                <el-select v-model="item.type" size="mini" style="margin-left: 10px;" placeholder="请选择门派（非必选）">
-                                    <el-option v-for="(school,i) in schoolmap" :key="i" :value="i" :label="school">
-                                        <div style="display: flex;align-items: center;">
-                                            <img class="u-icon" style="margin-right: 20px" width="24" height="24" :src="i | showSchoolIcon" :alt="item" />
-                                            {{school}}
+                                <el-select
+                                    v-model="item.type"
+                                    size="small"
+                                    style="margin-left: 10px"
+                                    placeholder="请选择门派（非必选）"
+                                >
+                                    <el-option v-for="(school, i) in schoolmap" :key="i" :value="i" :label="school">
+                                        <div style="display: flex; align-items: center">
+                                            <img
+                                                class="u-icon"
+                                                style="margin-right: 20px"
+                                                width="24"
+                                                height="24"
+                                                :src="showSchoolIcon(i)"
+                                                :alt="item"
+                                            />
+                                            {{ school }}
                                         </div>
                                     </el-option>
                                 </el-select>
@@ -149,17 +151,13 @@
                     </div>
                     <!-- 按钮 -->
                     <div class="m-publish-buttons">
-                        <el-button
-                            type="primary"
-                            @click="publish"
-                            :disabled="processing"
-                        >发 &nbsp;&nbsp; 布</el-button>
+                        <el-button type="primary" @click="publish" :disabled="processing">发 &nbsp;&nbsp; 布</el-button>
                     </div>
                 </div>
             </div>
         </el-form>
         <!-- 预览 -->
-        <el-dialog class="m-publish-emotion-preview" :visible.sync="dialogVisible" title="预览">
+        <el-dialog class="m-publish-emotion-preview" v-model="dialogVisible" title="预览">
             <img :src="dialogImageUrl" />
         </el-dialog>
     </div>
@@ -177,12 +175,7 @@ import UploadImages from "@jx3box/jx3box-editor/src/Upload.vue";
 import UploadEmotion from "@/components/publish/upload_emotion.vue";
 
 // 数据逻辑
-import {
-    postEmotions,
-    getEmotion,
-    updateEmotion,
-    uploadEmotion,
-} from "@/service/publish/pvx.js";
+import { postEmotions, getEmotion, updateEmotion, uploadEmotion } from "@/service/publish/pvx.js";
 
 export default {
     name: "emotion",
@@ -201,8 +194,7 @@ export default {
             schoolmap,
 
             // 图片类型
-            supportTypes:
-                "image/png, image/jpeg, image/gif, image/bmp, image/webp",
+            supportTypes: "image/png, image/jpeg, image/gif, image/bmp, image/webp",
 
             // 图片列表
             list: [],
@@ -244,7 +236,7 @@ export default {
                         url: item.url,
                         original: 0,
                         author: "",
-                        type: ''
+                        type: "",
                     });
                 }
             });
@@ -268,7 +260,7 @@ export default {
                         message: "发布成功,请等待审核",
                         type: "success",
                     });
-                    this.list = []
+                    this.list = [];
                 })
                 .finally(() => {
                     this.processing = false;
@@ -322,6 +314,12 @@ export default {
         handleRemove() {
             this.data.url = "";
         },
+        showThumbnail: function (val) {
+            return getThumbnail(val, 146);
+        },
+        showSchoolIcon: function (val) {
+            return __imgPath + "image/school/" + val + ".png";
+        },
     },
     watch: {
         "$route.params.id": {
@@ -329,14 +327,6 @@ export default {
             handler: function (val) {
                 val && this.init();
             },
-        },
-    },
-    filters: {
-        showThumbnail: function (val) {
-            return getThumbnail(val, 146);
-        },
-        showSchoolIcon: function (val) {
-            return __imgPath + "image/school/" + val + ".png";
         },
     },
 };

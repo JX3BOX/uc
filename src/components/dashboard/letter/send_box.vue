@@ -9,7 +9,7 @@
                 <span class="u-current-sum" :class="{ over: isOver }">{{ currentSum }}</span>
                 <span class="u-max-sum">/{{ max }}</span>
             </span>
-            <el-button size="mini" :disabled="isOver || !currentSum" @click="send">发送</el-button>
+            <el-button size="small" :disabled="isOver || !currentSum" @click="send">发送</el-button>
         </div>
     </div>
 </template>

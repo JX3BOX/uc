@@ -1,7 +1,7 @@
-import { $pay, $cms } from "@jx3box/jx3box-common/js/https";
+import { $pay, $cms } from "@jx3box/jx3box-common/js/api";
 
 function checkNickname(name) {
-    return $pay({mute:true}).get("/api/vip/i/rename/check", {
+    return $pay({ mute: true }).get("/api/vip/i/rename/check", {
         params: {
             name: name,
         },

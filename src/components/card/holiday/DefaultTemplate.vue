@@ -92,10 +92,14 @@ export default {
     .pr;
     .pointer;
     .auto(x);
-    .ct(o,360px,610px);
+    //.ct(o,360px,610px);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     .size(360px,610px);
     .u-img {
-        .full;
+        .size(100%);
         perspective: 1000px;
         transform-style: preserve-3d;
         transition: all 2s;
@@ -161,10 +165,14 @@ export default {
     .pr;
     .pointer;
     .auto(x);
-    .ct(o,420px,720px);
+    //.ct(o,420px,720px);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     .size(420px,720px);
     .u-img {
-        .full;
+        .size(100%);
     }
     .u-img-cover {
         .pa;

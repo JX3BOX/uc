@@ -19,7 +19,7 @@
                     <span><i class="el-icon-date"></i> {{ dateFormat(item.created_at) }} </span>
                 </div>
                 <el-button-group class="u-action">
-                    <el-button size="mini" icon="el-icon-delete" title="删除记录" @click="del(item.id)"></el-button>
+                    <el-button size="small" icon="el-icon-delete" title="删除记录" @click="del(item.id)"></el-button>
                 </el-button-group>
             </li>
         </ul>

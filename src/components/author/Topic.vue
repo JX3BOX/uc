@@ -18,7 +18,7 @@
                     </h2>
 
                     <!-- 字段 -->
-                    <div class="u-content u-desc">
+                    <div class="u-desc">
                         {{ item.introduction || "" }}
                     </div>
 
@@ -42,7 +42,7 @@
             background
             layout="prev, pager, next"
             :total="total"
-            :current-page.sync="page"
+            v-model:current-page="page"
             :page-size="per"
         >
         </el-pagination>

@@ -12,8 +12,7 @@
         <div class="m-dashboard-box">
             <ul class="m-dashboard-box-list" v-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
-                    <i class="u-icon el-icon-chat-line-square">
-                    </i>
+                    <i class="u-icon el-icon-chat-line-square"> </i>
                     <a class="u-title" target="_blank" :href="postLink(item.category, item.postID)">{{
                         item.content || "未知"
                     }}</a>
@@ -22,13 +21,13 @@
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ item.commentDate | dateFormat }}
+                            {{ dateFormat(item.commentDate) }}
                         </time>
                     </div>
 
                     <el-button-group class="u-action">
                         <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-                            <el-button size="mini" icon="el-icon-delete" @click="del(item.id, i)"></el-button>
+                            <el-button size="small" icon="el-icon-delete" @click="del(item.id, i)"></el-button>
                         </el-tooltip>
                     </el-button-group>
                 </li>
@@ -46,7 +45,7 @@
                 background
                 :page-size="per"
                 :hide-on-single-page="true"
-                :current-page.sync="page"
+                v-model:current-page="page"
                 layout="total, prev, pager, next, jumper"
                 :total="total"
             ></el-pagination>
@@ -111,6 +110,9 @@ export default {
                 },
             });
         },
+        dateFormat: function (val) {
+            return dateFormat(new Date(val));
+        },
     },
     watch: {
         params: {
@@ -118,11 +120,6 @@ export default {
             handler: function () {
                 this.loadData();
             },
-        },
-    },
-    filters: {
-        dateFormat: function (val) {
-            return dateFormat(new Date(val));
         },
     },
     mounted: function () {

@@ -5,7 +5,7 @@
             <div class="m-info">
                 <div class="u-title">更新邮箱</div>
                 <div class="u-email">
-                    当前邮箱地址：<span class="u-value">{{ email || "当前未绑定邮箱" }}<el-tag v-if="email" class="u-status" :type="verified ? 'success' : 'warning'" size="mini">{{ verified ? '已验证' : '未验证' }}</el-tag></span>
+                    当前邮箱地址：<span class="u-value">{{ email || "当前未绑定邮箱" }}<el-tag v-if="email" class="u-status" :type="verified ? 'success' : 'warning'" size="small">{{ verified ? '已验证' : '未验证' }}</el-tag></span>
                 </div>
 
                 <el-form :model="form" ref="form" :rules="rules" status-icon>

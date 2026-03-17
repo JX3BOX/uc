@@ -25,7 +25,7 @@
                     :label="school"
                     class="u-school"
                 >
-                    <img width="24" height="24" :src="school_id | showSchoolIcon" />
+                    <img width="24" height="24" :src="showSchoolIcon(school_id)" />
                     {{ school }}
                 </el-option>
             </el-select>
@@ -44,7 +44,7 @@
                     </router-link>
                     <span class="u-title">
                         <router-link class="u-rolename" :to="'/role/' + item.ID">{{ item.name }}</router-link>
-                        <el-tag v-if="item.is_default_role" size="mini" type="warning">默认</el-tag>
+                        <el-tag v-if="item.is_default_role" size="small" type="warning">默认</el-tag>
                         <span class="u-star" :class="{ on: item.priority }" @click="starRole(item)">
                             <el-tooltip
                                 class="item"
@@ -64,8 +64,8 @@
                         </span>
                         <span class="u-mount">
                             <em>门派</em>
-                            <img class="u-icon" :src="item.mount | showSchoolIcon" />
-                            {{ item.mount | showSchoolName }}
+                            <img class="u-icon" :src="showSchoolIcon(item.mount)" />
+                            {{ showSchoolName(item.mount) }}
                         </span>
                         <!-- <span class="u-team-name" v-if="item.team_relation && item.team_relation.team_id">
                             <em>团队名</em>
@@ -87,7 +87,9 @@
                     </span>
                     <span class="u-time u-achievement"
                         >成就数据:
-                        <template v-if="item.sync_achievements"><i class="el-icon-success u-success"></i>已同步</template>
+                        <template v-if="item.sync_achievements"
+                            ><i class="el-icon-success u-success"></i>已同步</template
+                        >
                         <template v-else><i class="el-icon-warning-outline u-warning"></i>未同步</template>
                     </span>
                     <div class="u-op">
@@ -140,12 +142,7 @@
                 </router-link>
             </div>
         </template>
-        <el-dialog
-            title="设置备注"
-            :visible.sync="noteVisible"
-            :width="isPhone ? '95%' : '30%'"
-            class="m-team-note-dialog"
-        >
+        <el-dialog title="设置备注" v-model="noteVisible" :width="isPhone ? '95%' : '30%'" class="m-team-note-dialog">
             <div>
                 <el-input v-model="note" placeholder="请输入内容" :maxlength="20" :show-word-limit="true"></el-input>
             </div>
@@ -176,18 +173,13 @@ import { showSchoolIcon, showSchoolName, showTime, getThumbnail } from "@/utils/
 // 计算排序权重
 const getWeight = (role) => {
     if (role.is_default_role) return 0; // 默认角色优先级最高
-    if (role.priority) return 1;        // 收藏角色第二
-    if (!role.custom) return 2;         // 认证角色第三
-    return 3;                            // 其他角色最后
+    if (role.priority) return 1; // 收藏角色第二
+    if (!role.custom) return 2; // 认证角色第三
+    return 3; // 其他角色最后
 };
 export default {
     name: "ListRole",
     props: [],
-    filters: {
-        showSchoolIcon,
-        showSchoolName,
-        showTime,
-    },
     data: function () {
         return {
             data: [],
@@ -212,11 +204,14 @@ export default {
             return {
                 mount: this.mount,
                 name: this.name,
-                _no_page: 1
+                _no_page: 1,
             };
         },
     },
     methods: {
+        showSchoolIcon,
+        showSchoolName,
+        showTime,
         unbind: function (id) {
             this.$confirm("在网站进行解绑游戏内需要小退方可生效", "提示", {
                 confirmButtonText: "确定解绑",
@@ -246,7 +241,6 @@ export default {
                     // 认证角色第二梯队（即custom=0，就是游戏内绑定的，而不是自定义的）
                     // 其它角色
                     this.data.sort((a, b) => {
-
                         const weightA = getWeight(a);
                         const weightB = getWeight(b);
 

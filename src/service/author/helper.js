@@ -1,5 +1,5 @@
-import { $helper } from './axios'
-import { $cms } from "@jx3box/jx3box-common/js/https.js"
+import { $helper } from "./axios";
+import { $cms } from "@jx3box/jx3box-common/js/api.js";
 
 function getCollections(params) {
     return $cms().get(`/api/cms/post/collection`, { params });

@@ -44,7 +44,7 @@ export default {
 <style lang="less" scope>
 .OneScreen {
     .pf;
-    .full;
+    .size(100%);
     .lt(0, 0);
     .z(10);
     background-color: rgba(36, 41, 46, 0.8);

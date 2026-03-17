@@ -1,15 +1,17 @@
 <template>
-    <div class="m-card" id="app">
+    <div class="m-card" >
         <el-card class="box-card">
             <CardHeader />
 
             <main v-if="success == true" class="m-main">
-                <el-alert title="登录成功" type="success" description="欢迎回来(#^.^#)" show-icon :closable="false"> </el-alert>
+                <el-alert title="登录成功" type="success" description="欢迎回来(#^.^#)" show-icon :closable="false">
+                </el-alert>
                 <a class="u-skip el-button u-button el-button--primary" :href="redirect">即将跳转</a>
             </main>
 
             <main v-if="success == false" class="m-main">
-                <el-alert title="登录失败" type="error" description="令牌不合法或已过期" show-icon :closable="false"> </el-alert>
+                <el-alert title="登录失败" type="error" description="令牌不合法或已过期" show-icon :closable="false">
+                </el-alert>
                 <a class="u-skip el-button u-button el-button--primary" :href="login_url">返回登录</a>
             </main>
         </el-card>
@@ -28,12 +30,12 @@ export default {
     data: function () {
         return {
             success: null,
-            redirect: client =='origin' ? __OriginRoot : __Root,
-            login_url: __Links.account.login
+            redirect: client == "origin" ? __OriginRoot : __Root,
+            login_url: __Links.account.login,
         };
     },
     methods: {},
-    filters: {},
+
     mounted: function () {
         let params = new URLSearchParams(location.search);
         let data = {};

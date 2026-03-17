@@ -43,9 +43,6 @@ export default {
     beforeUnmount() {
         this.clearTimer();
     },
-    destroyed() {
-        this.clearTimer();
-    },
     methods: {
         initAnimation() {
             this.clearTimer();

@@ -39,24 +39,24 @@
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ new Date(post.created * 1000) | dateFormat }}
+                            {{ dateFormat(new Date(post.created * 1000)) }}
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
                             更新 :
-                            {{ new Date(post.updated * 1000) | dateFormat }}
+                            {{ dateFormat(new Date(post.updated * 1000)) }}
                         </time>
                     </div>
 
                     <el-button-group class="u-action">
                         <el-button
-                            size="mini"
+                            size="small"
                             icon="el-icon-edit"
                             :disabled="post.checked == 1 || post.checked == 3"
                             title="编辑"
                             @click="post_edit(post)"
                         ></el-button>
-                        <el-button size="mini" icon="el-icon-delete" title="删除" @click="post_del(post)"></el-button>
+                        <el-button size="small" icon="el-icon-delete" title="删除" @click="post_del(post)"></el-button>
                     </el-button-group>
                 </li>
             </ul>
@@ -169,8 +169,6 @@ export default {
         getLink: function (post) {
             return getLink(post?.type, post?.source_id) + "/" + post?.id;
         },
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(val));
         },

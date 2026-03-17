@@ -2,25 +2,25 @@
     <div class="m-post" v-loading="loading">
         <!-- 列表 -->
         <div v-if="list && list.length" class="m-reply-list">
-                <div v-for="(item, i) in list" :key="i + item" class="m-reply-item" @click="toDetail(item)">
-                    <div class="m-ext-info">
-                        <div class="u-tag">
-                            {{ item.topic?.category }}
-                        </div>
-                        <time class="u-time">{{ dateFormat(item.created_at) }}</time>
+            <div v-for="(item, i) in list" :key="i + item" class="m-reply-item" @click="toDetail(item)">
+                <div class="m-ext-info">
+                    <div class="u-tag">
+                        {{ item.topic?.category }}
                     </div>
-                   <div class="m-content-card">
-                       <!-- 标题 -->
-                       <div class="u-content">
-                           <!-- 标题文字 -->
-                           {{cleanContent(item.content)}}
-                       </div>
+                    <time class="u-time">{{ dateFormat(item.created_at) }}</time>
+                </div>
+                <div class="m-content-card">
+                    <!-- 标题 -->
+                    <div class="u-content">
+                        <!-- 标题文字 -->
+                        {{ cleanContent(item.content) }}
+                    </div>
 
-                       <!-- 作者 -->
-                       <div class="u-reply-title">
-                            {{item.topic?.title}}
-                       </div>
-                   </div>
+                    <!-- 作者 -->
+                    <div class="u-reply-title">
+                        {{ item.topic?.title }}
+                    </div>
+                </div>
             </div>
         </div>
         <div class="m-empty" v-else>
@@ -31,7 +31,7 @@
 
 <script>
 import { getLink } from "@jx3box/jx3box-common/js/utils";
-import dayjs from 'dayjs'
+import dayjs from "dayjs";
 import { getTopicReplyList } from "@/service/author/author.js";
 export default {
     props: [],
@@ -56,17 +56,17 @@ export default {
             };
         },
     },
-    methods:{
-        toDetail(item){
-            const wx = require('weixin-js-sdk');
-            wx.miniProgram?.navigateTo({url: `/pages/publish/detail/detail?id=${item.topic_id}`})
+    methods: {
+        toDetail(item) {
+            const wx = require("weixin-js-sdk");
+            wx.miniProgram?.navigateTo({ url: `/pages/publish/detail/detail?id=${item.topic_id}` });
         },
         loadData: function () {
             if (!this.uid) return;
             this.loading = true;
             getTopicReplyList(this.params)
                 .then((res) => {
-                    this.list = this.list.concat(res.data.data.list||[]);
+                    this.list = this.list.concat(res.data.data.list || []);
                     this.total = res.data.data.page.pageTotal;
                 })
                 .finally(() => {
@@ -82,17 +82,20 @@ export default {
         dateFormat: function (val) {
             return dayjs(val).format("YYYY-M-DD HH:mm:ss");
         },
-        cleanContent(content){
+        cleanContent(content) {
             return content?.replace(/<img[^>]*>/g, "#图片")?.replace(/<\/?[^>]+(>|$)/g, "");
         },
-        loadMore(){
+        loadMore() {
             if (this.loading) return;
-            if (document.documentElement.scrollTop + window.innerHeight + 100 >= document.documentElement.scrollHeight) {
+            if (
+                document.documentElement.scrollTop + window.innerHeight + 100 >=
+                document.documentElement.scrollHeight
+            ) {
                 if (this.list.length < this.total) {
                     this.page++;
                 }
             }
-        }
+        },
     },
     watch: {
         params: {
@@ -106,30 +109,29 @@ export default {
     mounted() {
         window.addEventListener("scroll", this.loadMore);
     },
-    destroyed() {
+    unmounted() {
         window.removeEventListener("scroll", this.loadMore);
-    }
+    },
 };
 </script>
 
-
 <style lang="less">
-.m-reply-list{
+.m-reply-list {
     display: flex;
     flex-direction: column;
     gap: 10px;
     width: 100%;
-    .m-reply-item{
+    .m-reply-item {
         display: flex;
         flex-direction: column;
         gap: 8px;
-        .m-ext-info{
+        .m-ext-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
             align-self: stretch;
 
-            .u-tag{
+            .u-tag {
                 display: flex;
                 padding: 3px 16px;
                 align-items: center;
@@ -139,7 +141,7 @@ export default {
                 border: 1px solid rgba(40, 40, 40, 0.05);
                 background: var(--primary-brand-4, #282828);
 
-                color: var(--black-40, rgba(255, 255, 255, 0.40));
+                color: var(--black-40, rgba(255, 255, 255, 0.4));
 
                 /* 12 Bold */
                 font-size: 12px;
@@ -147,8 +149,8 @@ export default {
                 font-weight: 700;
                 line-height: 18px; /* 150% */
             }
-            .u-time{
-                color: var(--black-40, rgba(255, 255, 255, 0.40));
+            .u-time {
+                color: var(--black-40, rgba(255, 255, 255, 0.4));
                 /* 12 Regular */
                 font-size: 12px;
                 font-style: normal;
@@ -157,7 +159,7 @@ export default {
             }
         }
 
-        .m-content-card{
+        .m-content-card {
             display: flex;
             padding: 12px;
             flex-direction: column;
@@ -165,10 +167,10 @@ export default {
             gap: 8px;
 
             border-radius: var(--8, 8px);
-            background: var(--black-5, rgba(255, 255, 255, 0.10));
+            background: var(--black-5, rgba(255, 255, 255, 0.1));
 
-            .u-content{
-                color: var(--black-80, rgba(255, 255, 255, 0.80));
+            .u-content {
+                color: var(--black-80, rgba(255, 255, 255, 0.8));
 
                 font-size: 14px;
                 font-style: normal;
@@ -182,19 +184,16 @@ export default {
                 box-sizing: border-box;
 
                 border-radius: 8px;
-                background: var(--white-80, rgba(28, 28, 28, 0.80));
+                background: var(--white-80, rgba(28, 28, 28, 0.8));
 
                 // 超出换行
                 overflow: hidden;
                 max-width: 100%;
                 // 最多28个中文字符
-
-
-
             }
 
-            .u-reply-title{
-                color: var(--black-20, rgba(255, 255, 255, 0.20));
+            .u-reply-title {
+                color: var(--black-20, rgba(255, 255, 255, 0.2));
 
                 /* 12 Regular */
                 font-size: 12px;

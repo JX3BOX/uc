@@ -1,34 +1,42 @@
 <template>
     <div class="m-mobile-me">
-        <div class="m-user-header" :style="{ backgroundColor: userDefinedStyle.bgColor, backgroundImage: `url(${userDefinedStyle.banner || ''})` }">
+        <div
+            class="m-user-header"
+            :style="{
+                backgroundColor: userDefinedStyle.bgColor,
+                backgroundImage: `url(${userDefinedStyle.banner || ''})`,
+            }"
+        >
             <div class="m-bg"></div>
             <div class="m-header">
                 <div class="m-name-avatar">
-                    <div class="m-avatar-box" :class="{'no-frame':!avatar_frame}" >
+                    <div class="m-avatar-box" :class="{ 'no-frame': !avatar_frame }">
                         <Avatar :uid="uid" :url="avatar" :size="80" />
-                        <img  class="u-frame" :src="frameUrl" />
+                        <img class="u-frame" :src="frameUrl" />
                     </div>
                     <div class="u-name-uid">
-                        {{name}}
-                        <div class="u-uid">UID {{uid}}</div>
+                        {{ name }}
+                        <div class="u-uid">UID {{ uid }}</div>
                     </div>
                 </div>
                 <div class="m-info-box">
                     <div v-if="uid" class="u-info">
-                        <div class="u-level u-value" >Lv.{{ level }} <span class="u-tip">用户</span></div>
-                        <div class="u-fans u-value"> {{ fansNum }} <span class="u-tip">粉丝</span></div>
-                        <div class="u-gift u-value"> {{ boxcoin_count | formatBoxcoin }} <span class="u-tip">累计打赏</span></div>
+                        <div class="u-level u-value">Lv.{{ level }} <span class="u-tip">用户</span></div>
+                        <div class="u-fans u-value">{{ fansNum }} <span class="u-tip">粉丝</span></div>
+                        <div class="u-gift u-value">
+                            {{ formatBoxcoin(boxcoin_count) }} <span class="u-tip">累计打赏</span>
+                        </div>
                     </div>
                     <div v-if="data.user_bio" class="m-signature">
                         {{ data.user_bio || "这个人太懒了~没有写签名。" }}
                     </div>
                     <div v-if="isSuperAuthor || isPRO" class="m-ext-info">
                         <div v-if="isSuperAuthor" class="u-author">签约作者</div>
-                        <div v-if="isPRO"  class="u-pro"><span>Pro 专业版</span> </div>
+                        <div v-if="isPRO" class="u-pro"><span>Pro 专业版</span></div>
                     </div>
                     <div class="m-op">
                         <button class="u-btn u-subscribe" :class="{ 'is-subscribe': subscribed }" @click="follow">
-                            {{ hadDeny?"已拉黑":subscribed ? (isFollower?'互相关注':'已关注') : '关注TA' }}
+                            {{ hadDeny ? "已拉黑" : subscribed ? (isFollower ? "互相关注" : "已关注") : "关注TA" }}
                         </button>
                         <div class="u-more" @click="openMore">
                             <img class="u-icon" svg-inline src="@/assets/img/author/mobile/nav_more.svg" />
@@ -37,8 +45,8 @@
                 </div>
             </div>
         </div>
-        <ContentTabList :list="filterTabs"/>
-        <simple-more-action  :show.sync="actionShow" :actions="actions" @close="closeMore" @select="onSelect" />
+        <ContentTabList :list="filterTabs" />
+        <simple-more-action v-model:show="actionShow" :actions="actions" @close="closeMore" @select="onSelect" />
     </div>
 </template>
 
@@ -51,7 +59,7 @@ import User from "@jx3box/jx3box-common/js/user";
 import { showAvatar, tvLink } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
 import { deny, undeny, hadDenyUser, isFollower } from "@/service/author/author";
-import { getFansList, getSummary } from "@jx3box/jx3box-common-ui/service/author";
+import { getFansList, getSummary } from "@jx3box/jx3box-ui/service/author";
 
 import ContentTabList from "@/components/author/mobile/ContentTabList.vue";
 import RoleInfo from "@/components/author/mobile/Pannel/RoleInfo.vue";
@@ -64,7 +72,6 @@ import FaceList from "@/components/author/mobile/Pannel/FaceList.vue";
 import BodyList from "@/components/author/mobile/Pannel/BodyList.vue";
 import SimpleMoreAction from "@/components/author/mobile/MoreAction.vue";
 import wx from "weixin-js-sdk";
-
 
 export default {
     name: "MobileMe",
@@ -79,12 +86,12 @@ export default {
                 return {};
             },
         },
-        privateConf:{
+        privateConf: {
             type: Object,
             default: function () {
                 return {};
             },
-        }
+        },
     },
     watch: {
         decorationMe: {
@@ -137,8 +144,8 @@ export default {
             // 关注
             subscribed: false,
             fansNum: 0,
-            fans_count:0,
-            boxcoin_count:0,
+            fans_count: 0,
+            boxcoin_count: 0,
             isFollower: false,
             actionShow: false,
 
@@ -147,22 +154,21 @@ export default {
                     label: "角色",
                     value: "UserInfo",
                     component: RoleInfo,
-                    key:'role_is_public',
+                    key: "role_is_public",
                 },
                 {
                     label: "动态",
                     value: "BoxMoment",
                     component: BoxMoment,
-                    key:'personal_activities_is_public',
-
+                    key: "personal_activities_is_public",
                 },
                 {
                     label: "文章",
                     value: "Works",
                     component: CmsPosts,
-                    key:'article_is_public',
+                    key: "article_is_public",
 
-                    children:[
+                    children: [
                         {
                             label: "宏库",
                             value: "macro",
@@ -183,14 +189,14 @@ export default {
                             label: "工具",
                             value: "tool",
                         },
-                    ]
+                    ],
                 },
                 {
                     label: "帖子",
                     value: "Other",
-                    key: 'community_topic_is_public',
+                    key: "community_topic_is_public",
                     component: SubTabContent,
-                    children:[
+                    children: [
                         {
                             label: "发帖",
                             value: "Topic",
@@ -201,27 +207,27 @@ export default {
                             value: "Reply",
                             component: ReplyList,
                         },
-                    ]
+                    ],
                 },
                 {
                     label: "捏脸",
                     value: "Data",
-                    key: 'make_face_is_public',
+                    key: "make_face_is_public",
                     component: SubTabContent,
-                    children:[
+                    children: [
                         {
                             label: "捏脸",
                             value: "face",
                             component: FaceList,
-                            icon:'el-icon-grape'
+                            icon: "el-icon-grape",
                         },
                         {
                             label: "体型",
                             value: "body",
                             component: BodyList,
-                            icon:'el-icon-watermelon'
+                            icon: "el-icon-watermelon",
                         },
-                    ]
+                    ],
                 },
                 // {
                 //     label: "配装",
@@ -234,7 +240,7 @@ export default {
         };
     },
     computed: {
-        name(){
+        name() {
             return this.data?.display_name || "匿名";
         },
         uid: function () {
@@ -243,8 +249,8 @@ export default {
         data: function () {
             return this.$store.state.userdata;
         },
-        isDarkMode(){
-            return window.matchMedia('(prefers-color-scheme: dark)').matches;
+        isDarkMode() {
+            return window.matchMedia("(prefers-color-scheme: dark)").matches;
         },
         avatar: function () {
             return this.data.user_avatar || "";
@@ -274,11 +280,11 @@ export default {
             return __imgPath + "image/tv/" + this.data.tv_type + ".png";
         },
         frameUrl: function () {
-            if (!this.avatar_frame){
-                return require(`@/assets/img/author/mobile/default_${this.isDarkMode?'dark':'light'}.svg`)
+            if (!this.avatar_frame) {
+                return require(`@/assets/img/author/mobile/default_${this.isDarkMode ? "dark" : "light"}.svg`);
             }
 
-            return __imgPath +`avatar/images/${this.avatar_frame}/${this.avatar_frame}.svg`;
+            return __imgPath + `avatar/images/${this.avatar_frame}/${this.avatar_frame}.svg`;
         },
         isLogin: function () {
             return User.isLogin();
@@ -295,18 +301,18 @@ export default {
         diffYear() {
             return this.getYearDiff(this.data.user_registered);
         },
-        filterTabs(){
-            return this.tabs.filter(i=>{
-                return this.privateConf[i.key]!==0
-            })
+        filterTabs() {
+            return this.tabs.filter((i) => {
+                return this.privateConf[i.key] !== 0;
+            });
         },
         // TODO: 后续改成图片
         diffYearText() {
             const obj = {
-                "3": "三年老粉",
-                "5": "五年元老",
-                "10": "十年长者",
-            }
+                3: "三年老粉",
+                5: "五年元老",
+                10: "十年长者",
+            };
 
             if (this.diffYear >= 10) {
                 return obj["10"];
@@ -318,12 +324,10 @@ export default {
                 return "";
             }
         },
-        actions(){
+        actions() {
             const res = [
                 {
-                    list: [
-
-                    ],
+                    list: [],
                 },
                 {
                     list: [
@@ -333,8 +337,8 @@ export default {
                         },
                     ],
                 },
-            ]
-            if (!this.hadDeny){
+            ];
+            if (!this.hadDeny) {
                 res[0].list.push({
                     method: "black",
                     name: this.hadDeny ? "取消拉黑" : "拉黑",
@@ -343,26 +347,24 @@ export default {
 
             res[0].list.push({
                 method: "report",
-                name:  "举报",
+                name: "举报",
             });
 
             return res;
-        }
-    },
-    filters: {
+        },
         time: (val) => {
             return dateFormat(new Date(val));
         },
-        formatBoxcoin(val){
-            if(val > 10000){
-                return `${(val /10000).toFixed(2)}w`
+        formatBoxcoin(val) {
+            if (val > 10000) {
+                return `${(val / 10000).toFixed(2)}w`;
             }
             return val;
-        }
+        },
     },
     methods: {
         showAvatar,
-        onSelect(item){
+        onSelect(item) {
             if (item.method === "black") {
                 this.joinBlacklist();
             } else if (item.method === "report") {
@@ -373,7 +375,7 @@ export default {
             }
         },
 
-        closeMore(){
+        closeMore() {
             this.actionShow = false;
         },
         copyData(text) {
@@ -403,7 +405,7 @@ export default {
                 ...this.decorationMe,
             };
 
-            this.userDefinedStyle.bgColor =decoration.bgColor;
+            this.userDefinedStyle.bgColor = decoration.bgColor;
             if (!decoration.status) return;
             if (decoration.highlightcolor) {
                 this.userDefinedStyle.fans = {
@@ -443,8 +445,8 @@ export default {
                     webp.includes(decoration.name) ? "webp" : "png"
                 }`;
         },
-        openMore(){
-           this.actionShow = true
+        openMore() {
+            this.actionShow = true;
         },
         // 关注
         follow() {
@@ -455,7 +457,7 @@ export default {
             if (!this.uid) {
                 return;
             }
-            if (this.subscribed){
+            if (this.subscribed) {
                 this.$confirm("确定不再关注此人？", "提示", {
                     confirmButtonText: "确定",
                     cancelButtonText: "取消",
@@ -472,7 +474,7 @@ export default {
                             });
                     })
                     .catch((_) => {});
-            }else{
+            } else {
                 subscribeAuthor({ id: this.uid, data: { title: this.display_name } })
                     .then((res) => {
                         this.subscribed = true;
@@ -482,8 +484,6 @@ export default {
                         console.log(err);
                     });
             }
-
-
         },
         showLevelColor(level) {
             return __userLevelColor[level];
@@ -584,7 +584,6 @@ export default {
 
             return Math.floor(years);
         },
-
     },
     created() {
         this.avatarSizeChange();
@@ -607,6 +606,6 @@ export default {
 };
 </script>
 
-<style  lang="less">
+<style lang="less">
 @import "~@/assets/css/author/mobile/mobile_me";
 </style>

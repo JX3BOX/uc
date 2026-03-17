@@ -38,17 +38,17 @@
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-button size="mini" icon="el-icon-edit" @click="edit(item.id)" title="编辑"></el-button>
+                        <el-button size="small" icon="el-icon-edit" @click="edit(item.id)" title="编辑"></el-button>
                         <el-button
                             v-if="item.status == 1"
-                            size="mini"
+                            size="small"
                             icon="el-icon-download"
                             @click="handleOffline(item.id)"
                             title="下架"
                         ></el-button>
                         <el-button
                             v-else
-                            size="mini"
+                            size="small"
                             icon="el-icon-upload2"
                             @click="handleOnline(item.id)"
                             title="上架"
@@ -69,7 +69,7 @@
                 background
                 :page-size="per"
                 :hide-on-single-page="true"
-                :current-page.sync="page"
+                v-model:current-page="page"
                 layout="total, prev, pager, next, jumper"
                 :total="total"
             ></el-pagination>

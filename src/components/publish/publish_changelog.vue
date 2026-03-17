@@ -8,7 +8,7 @@
                     :label="item.title"
                     :value="item.id"
                 >
-                    <el-tag size="mini">{{ zlp_map[item.zlp] }}</el-tag>
+                    <el-tag size="small">{{ zlp_map[item.zlp] }}</el-tag>
                     <span class="m-zlp-title"><time>{{ item.date }}</time> / {{ item.title }}</span>
                 </el-option>
             </el-select>

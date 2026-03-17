@@ -12,7 +12,7 @@
     </div>
 </template>
 <script>
-import Bus from '@/utils/bus.js'
+import Bus from '@jx3box/jx3box-ui/utils/bus';
 export default {
     name: "publish_client",
     props: ["data",'forbidAll','showMobile'],
@@ -39,7 +39,7 @@ export default {
     computed: {},
     methods: {
         handleChange : function (){
-            Bus.$emit('changeClient',this.client)
+            Bus.emit('changeClient',this.client)
         }
     },
     mounted: function () {},

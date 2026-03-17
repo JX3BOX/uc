@@ -59,7 +59,7 @@
                                     :class="item2.isHave ? (item2.using ? 'select' : '') : 'noHave'"
                                     @click="setStatus(i, i2, item2)"
                                 >
-                                    <el-image :src="item2 | showDecoration" fit="contain" />
+                                    <el-image :src="showDecoration(item2)" fit="contain" />
                                 </div>
                                 <div class="u-decoration-name">{{ item2.text }}</div>
                             </div>
@@ -292,14 +292,12 @@ export default {
                 });
             });
         },
-    },
-    mounted: function () {
-        this.loadDecoration();
-    },
-    filters: {
         showDecoration: function (item) {
             return __cdn + `design/decoration/images/${item.val}/${item.type}_preview.png`;
         },
+    },
+    mounted: function () {
+        this.loadDecoration();
     },
     components: {
         uc,

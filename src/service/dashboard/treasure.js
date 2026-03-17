@@ -1,4 +1,4 @@
-import { $team, $pay, $next } from "@jx3box/jx3box-common/js/https";
+import { $team, $pay, $next } from "@jx3box/jx3box-common/js/api";
 
 // 获取个人团队成绩证书列表
 function teamCertificationRecordList(params) {

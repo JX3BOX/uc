@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div >
         <Header :key="currentKey"></Header>
         <Main :withoutRight="true" :withoutLeft="true">
             <div class="m-premium-container">
@@ -14,7 +14,7 @@
                 </div>
             </div>
         </Main>
-        <Footer></Footer>
+        <CommonFooter></CommonFooter>
     </div>
 </template>
 

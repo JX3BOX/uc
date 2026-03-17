@@ -10,12 +10,12 @@
                 remote
                 placeholder="输入关键词进行搜索"
                 :remote-method="remoteMethodPrev"
-                v-model="data.prev_post"
+                v-model="prevPost"
                 clearable
             >
                 <el-option v-for="item in prev" :key="item.ID" :value="item.ID" :label="item.post_title">
                     <div class="u-post-select__item">
-                        <el-tag size="mini" v-if="item.post_type" :type="item.visible != 0 ? 'warning' : ''">{{
+                        <el-tag size="small" v-if="item.post_type" :type="item.visible != 0 ? 'warning' : ''">{{
                             showPostType(item.post_type)
                         }}</el-tag>
                         {{ item.post_title }}
@@ -31,12 +31,12 @@
                 remote
                 placeholder="输入关键词进行搜索"
                 :remote-method="remoteMethodNext"
-                v-model="data.next_post"
+                v-model="nextPost"
                 clearable
             >
                 <el-option v-for="item in next" :key="item.ID" :value="item.ID" :label="item.post_title">
                     <div class="u-post-select__item">
-                        <el-tag size="mini" v-if="item.post_type" :type="item.visible != 0 ? 'warning' : ''">{{
+                        <el-tag size="small" v-if="item.post_type" :type="item.visible != 0 ? 'warning' : ''">{{
                             showPostType(item.post_type)
                         }}</el-tag>
                         {{ item.post_title }}
@@ -44,9 +44,6 @@
                 >
             </el-select>
         </div>
-        <!-- <el-tooltip content="只可选择公开的文章">
-            <i class="el-icon-question" style="margin-left: 10px;"></i>
-        </el-tooltip> -->
     </div>
 </template>
 
@@ -56,6 +53,7 @@ import { getMyPosts } from "@/service/publish/cms";
 import { cloneDeep } from "lodash";
 export default {
     name: "PublishGuide",
+    emits: ["update:data"],
     props: {
         data: {
             type: Object,
@@ -71,6 +69,22 @@ export default {
         };
     },
     computed: {
+        prevPost: {
+            get() {
+                return this.data?.prev_post;
+            },
+            set(val) {
+                this.updateData({ prev_post: val });
+            },
+        },
+        nextPost: {
+            get() {
+                return this.data?.next_post;
+            },
+            set(val) {
+                this.updateData({ next_post: val });
+            },
+        },
         form() {
             return {
                 prev_post: this.data.prev_post,
@@ -107,6 +121,9 @@ export default {
         this.next = cloneDeep(res);
     },
     methods: {
+        updateData(patch) {
+            this.$emit("update:data", { ...this.data, ...patch });
+        },
         async remoteMethodPrev(keyword) {
             if (keyword) {
                 const params = {

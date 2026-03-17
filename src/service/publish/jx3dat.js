@@ -1,16 +1,16 @@
-import { $next, $cms } from "@jx3box/jx3box-common/js/https";
+import { $next, $cms } from "@jx3box/jx3box-common/js/api";
 import { __Root } from "@/utils/config";
-import axios from 'axios';
+import axios from "axios";
 
 // 上传
 function uploadData(formdata) {
     return $cms().post("/api/cms/upload/jx3dat", formdata);
 }
-const pull = process.env.NODE_ENV === "production" ? 'https://pull.jx3box.com/' : "/"   //西山居服务器
+const pull = process.env.NODE_ENV === "production" ? "https://pull.jx3box.com/" : "/"; //西山居服务器
 // const pull = 'https://pull.jx3box.com/'
 function uploadHub(formdata) {
-    return axios.post(pull + "api/plugins/my-team-mon/v2", formdata,{
-        withCredentials : true
+    return axios.post(pull + "api/plugins/my-team-mon/v2", formdata, {
+        withCredentials: true,
     });
 }
 
@@ -18,7 +18,7 @@ function uploadHub(formdata) {
 function syncRedis(data) {
     let redisData = transferForRedis(data);
     console.log("正在执行redis同步作业:", redisData);
-    return $next({mute:true}).post("/api/plugins/jx3dat/publish", redisData)
+    return $next({ mute: true }).post("/api/plugins/jx3dat/publish", redisData);
 }
 
 function transferForRedis(data) {
@@ -33,7 +33,7 @@ function transferForRedis(data) {
         data: {},
         lang: data.lang || "cn",
         original: !!data.original,
-        client : data.client
+        client: data.client,
     };
 
     data.post_meta.data.forEach((item, i) => {
@@ -56,7 +56,7 @@ function transferForRedis(data) {
             version: Date.now(),
             _version: Date.now(),
             status: !!item.status,
-            client : data.client
+            client: data.client,
         };
     });
 
@@ -64,9 +64,9 @@ function transferForRedis(data) {
 }
 
 const uploadLanrenFile = (formData) => {
-    return axios.post(pull + 'api/plugins/lanren-file', formData, {
-        withCredentials: true
-    })
-}
+    return axios.post(pull + "api/plugins/lanren-file", formData, {
+        withCredentials: true,
+    });
+};
 
 export { uploadHub, uploadData, syncRedis, uploadLanrenFile };

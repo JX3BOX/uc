@@ -2,7 +2,9 @@
     <div class="m-publish-collection-relation">
         <h5 class="u-schema">
             <!-- <span class="u-label">关联小册</span> -->
-            <a class="u-add el-button el-button--primary el-button--mini" href="/publish/#/collection" target="_blank">+ 创建小册</a>
+            <a class="u-add el-button el-button--primary el-button--mini" href="/publish/#/collection" target="_blank"
+                >+ 创建小册</a
+            >
             <slot></slot>
             <a class="u-help u-icon-links" href="/tool/20891" target="_blank">
                 <i class="el-icon-question"></i> 小册帮助指南
@@ -25,12 +27,14 @@
                 :label="item.title"
                 :value="item.id"
             ></el-option>
-            <div slot="empty" class="u-collection-null">
-                <div>
-                    没有找到匹配结果，
-                    <a href="/publish/#/collection" target="_blank">创建小册</a>
+            <template #empty>
+                <div class="u-collection-null">
+                    <div>
+                        没有找到匹配结果，
+                        <a href="/publish/#/collection" target="_blank">创建小册</a>
+                    </div>
                 </div>
-            </div>
+            </template>
         </el-select>
         <div class="u-tip" v-if="isEmpty">
             <i class="el-icon-info"></i> 当前没有任何小册，
@@ -119,7 +123,6 @@ export default {
     components: {},
 };
 </script>
-
 
 <style lang="less">
 .u-collection-null {

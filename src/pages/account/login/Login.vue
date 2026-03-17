@@ -1,5 +1,5 @@
 <template>
-    <div class="m-card" id="app">
+    <div class="m-card" >
         <el-card class="box-card">
             <CardHeader />
             <Msg />
@@ -8,25 +8,52 @@
                     <form ref="loginForm">
                         <!-- 账号 -->
                         <div class="u-email">
-                            <el-input class="u-text u-email" v-model="email" placeholder="邮箱地址" minlength="3" maxlength="50" @change="checkEmail">
-                                <template slot="prepend">
+                            <el-input
+                                class="u-text u-email"
+                                v-model="email"
+                                placeholder="邮箱地址"
+                                minlength="3"
+                                maxlength="50"
+                                @change="checkEmail"
+                            >
+
+                                <template #prepend>
                                     <i class="el-icon-message"></i>
                                 </template>
                             </el-input>
                             <div class="u-tip">
-                                <el-alert v-show="email_validate == false" :title="email_validate_tip" type="error" show-icon :closable="false"></el-alert>
+                                <el-alert
+                                    v-show="email_validate == false"
+                                    :title="email_validate_tip"
+                                    type="error"
+                                    show-icon
+                                    :closable="false"
+                                ></el-alert>
                             </div>
                         </div>
 
                         <!-- 密码 -->
                         <div class="u-pass">
-                            <el-input class="u-text" placeholder="输入密码" v-model="pass" show-password @input="checkPass" @keyup.enter.native="submit">
-                                <template slot="prepend">
+                            <el-input
+                                class="u-text"
+                                placeholder="输入密码"
+                                v-model="pass"
+                                show-password
+                                @input="checkPass"
+                                @keyup.enter="submit"
+                            >
+                                <template #prepend>
                                     <i class="el-icon-lock"></i>
                                 </template>
                             </el-input>
                             <div class="u-tip">
-                                <el-alert v-show="pass_validate == false" :title="pass_validate_tip" type="error" show-icon :closable="false"></el-alert>
+                                <el-alert
+                                    v-show="pass_validate == false"
+                                    :title="pass_validate_tip"
+                                    type="error"
+                                    show-icon
+                                    :closable="false"
+                                ></el-alert>
                             </div>
                         </div>
 
@@ -48,21 +75,25 @@
                 </main>
 
                 <main v-if="success == true" class="m-main">
-                    <el-alert title="登录成功" type="success" description="欢迎回来(#^.^#)" show-icon :closable="false"> </el-alert>
+                    <el-alert title="登录成功" type="success" description="欢迎回来(#^.^#)" show-icon :closable="false">
+                    </el-alert>
                     <a class="u-skip el-button u-button el-button--primary" :href="redirect">{{ redirect_button }}</a>
                 </main>
 
                 <main v-if="success == false" class="m-main">
-                    <el-alert title="登录失败" type="error" :description="errors" show-icon :closable="false"> </el-alert>
+                    <el-alert title="登录失败" type="error" :description="errors" show-icon :closable="false">
+                    </el-alert>
                     <el-button class="u-button u-submit" type="primary" @click="reset">返回</el-button>
                 </main>
             </template>
             <template v-else>
                 <div class="m-login-in">
                     <el-alert class="u-current-info" type="warning" show-icon :closable="false" center>
-                        <span slot="title"
-                            >已登录为 <b>{{ username }}</b></span
-                        >
+                        <template #title>
+                            <span
+                                >已登录为 <b>{{ username }}</b></span
+                            >
+                        </template>
                     </el-alert>
                     <el-button class="u-logout" type="danger" @click="logout" size="medium">登 出</el-button>
                 </div>
@@ -119,7 +150,7 @@ export default {
             return __Links.account.register + "?redirect=" + this.redirect;
         },
         reset_url: function () {
-            return "/account/password_reset"
+            return "/account/password_reset";
         },
     },
     methods: {
@@ -175,16 +206,18 @@ export default {
                                 name: data?.user?.display_name,
                                 status: data?.user?.user_status,
                                 bind_wx: data?.user?.wechat_unionid ? 1 : 0,
-                                avatar: data?.user?.user_avatar || '',
-                            }
+                                avatar: data?.user?.user_avatar || "",
+                            };
                             User.update(_data)
                                 .then(() => {
-
                                     if (this.isAlternate) {
-                                        localStorage.setItem(`jx3box-alternate-${_data.uid}`, JSON.stringify({
-                                            ..._data,
-                                            created_at: Number(localStorage.getItem("created_at")),
-                                        }));
+                                        localStorage.setItem(
+                                            `jx3box-alternate-${_data.uid}`,
+                                            JSON.stringify({
+                                                ..._data,
+                                                created_at: Number(localStorage.getItem("created_at")),
+                                            })
+                                        );
                                     }
 
                                     // 跳转至来源页
@@ -260,7 +293,6 @@ export default {
             });
         },
     },
-    filters: {},
     mounted: function () {
         this.checkDirect();
     },

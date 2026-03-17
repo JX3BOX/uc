@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <Header></Header>
+    <div >
+        <CommonHeader></CommonHeader>
         <div class="m-vip-container">
             <div class="m-vip-index">
                 <!-- <el-alert title="Nothing yet" type="warning" show-icon> </el-alert> -->
@@ -18,7 +18,7 @@
                 </el-row>
             </div>
         </div>
-        <Footer></Footer>
+        <CommonFooter></CommonFooter>
     </div>
 </template>
 

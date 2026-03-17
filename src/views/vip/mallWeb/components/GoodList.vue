@@ -40,7 +40,7 @@ export default {
     mounted() {
         this.$refs.goodList.addEventListener("scroll", this.handleScroll);
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.$refs.goodList.removeEventListener("scroll", this.handleScroll);
     },
 };

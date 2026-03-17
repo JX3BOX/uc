@@ -84,7 +84,7 @@ export default {
     // 第二屏
     .m-second {
         .pr;
-        .full;
+        .size(100%);
         .animation {
             .h(100%);
             .pa;

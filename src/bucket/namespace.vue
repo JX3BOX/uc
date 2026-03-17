@@ -2,59 +2,34 @@
     <div class="m-dashboard m-dashboard-work m-dashboard-other">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">剑三铭牌</h2>
-            <a
-                :href="publishLink"
-                class="u-publish el-button el-button--primary el-button--small"
-            >
+            <a :href="publishLink" class="u-publish el-button el-button--primary el-button--small">
                 <i class="el-icon-document"></i> 创建铭牌
             </a>
         </div>
 
         <div class="m-namespace-box" v-loading="loading">
-            <el-row
-                class="m-namespace-list"
-                :gutter="20"
-                v-if="list && list.length"
-            >
+            <el-row class="m-namespace-list" :gutter="20" v-if="list && list.length">
                 <el-col :span="6" v-for="(item, i) in list" :key="i">
                     <div class="u-namespace-item">
                         <div class="u-item">
                             <div class="u-box">
                                 <div class="u-title">
-                                    <span
-                                        class="el-icon-postcard u-icon"
-                                    ></span>
-                                    <a
-                                        class="u-name"
-                                        target="_blank"
-                                        :href="item.link"
-                                        >{{ item.key || "未知" }}</a
-                                    >
+                                    <span class="el-icon-postcard u-icon"></span>
+                                    <a class="u-name" target="_blank" :href="item.link">{{ item.key || "未知" }}</a>
                                 </div>
                                 <div class="u-desc">
                                     <span class="u-status u-desc-subitem">
                                         状态:
-                                        <b :class="`status${item.status}`">{{
-                                            statusmap[item.status]
-                                        }}</b>
+                                        <b :class="`status${item.status}`">{{ statusmap[item.status] }}</b>
                                     </span>
-                                    <time class="u-time u-desc-subitem"
-                                        >创建于 :
-                                        {{ item.created | dateFormat }}</time
-                                    >
+                                    <time class="u-time u-desc-subitem">创建于 : {{ item.created | dateFormat }}</time>
                                 </div>
                             </div>
                             <el-button-group class="u-action">
                                 <el-button
-                                    size="mini"
+                                    size="small"
                                     icon="el-icon-edit"
-                                    @click="
-                                        edit(
-                                            item.ID,
-                                            item.source_type,
-                                            item.source_id
-                                        )
-                                    "
+                                    @click="edit(item.ID, item.source_type, item.source_id)"
                                     title="编辑"
                                 ></el-button>
                             </el-button-group>
@@ -76,7 +51,7 @@
                     layout="total, prev, pager, next,jumper"
                     :page-size="per"
                     :total="total"
-                    :current-page.sync="page"
+                    v-model:current-page="page"
                     :hide-on-single-page="true"
                 ></el-pagination>
             </div>
@@ -136,14 +111,12 @@ export default {
                     this.loading = false;
                 });
         },
-    },
-    mounted: function () {
-        this.loadData();
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(~~val * 1000));
         },
+    },
+    mounted: function () {
+        this.loadData();
     },
     watch: {
         params: {

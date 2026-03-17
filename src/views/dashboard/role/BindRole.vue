@@ -7,7 +7,7 @@
                     <i class="el-icon-plus"></i> 自定义角色
                 </router-link>
             </div> -->
-            <el-button slot="reference" class="u-back" size="mini" icon="el-icon-arrow-left" @click="goBack"
+            <el-button slot="reference" class="u-back" size="small" icon="el-icon-arrow-left" @click="goBack"
                 >返回</el-button
             >
         </h2>

@@ -1,5 +1,5 @@
 <template>
-    <el-dialog class="w-dialog m-invite-user-dialog" width="500" :visible.sync="show" :title="title" @close="close">
+    <el-dialog class="w-dialog m-invite-user-dialog" width="500" v-model="show" :title="title" @close="close">
         <div class="m-invite-user">
             <el-input
                 class="u-input"
@@ -11,7 +11,7 @@
             ></el-input>
             <div class="u-list" v-if="userdata">
                 <div class="u-item">
-                    <img class="u-avatar" :src="userdata.user_avatar | showAvatar" :alt="userdata.display_name" />
+                    <img class="u-avatar" :src="showAvatar(userdata.user_avatar)" :alt="userdata.display_name" />
                     <div class="u-info">
                         <span class="u-uid">UID：{{ userdata.ID }}</span>
                         <b class="u-name">{{ userdata.display_name }}</b>
@@ -93,12 +93,10 @@ export default {
             },
         },
     },
-    filters: {
+    methods: {
         showAvatar: function (val) {
             return showAvatar(val, "m");
         },
-    },
-    methods: {
         close() {
             this.show = false;
             this.$emit("close", false);

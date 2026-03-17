@@ -1,17 +1,19 @@
 <template>
-    <el-dialog class="w-dialog m-wait-list-dialog" :visible.sync="show" title="待处理列表" @close="close">
+    <el-dialog class="w-dialog m-wait-list-dialog" v-model="show" title="待处理列表" @close="close">
         <div class="m-wait-list" v-loading="loading">
             <div class="u-item" v-for="(item, i) in waitList" :key="i">
                 <div class="u-close" v-if="!item.status" @click.stop="onReject(item)">
                     <i class="el-icon-close"></i>
                 </div>
                 <a class="u-item-pic" :href="userLink(item)" target="_blank">
-                    <img class="u-item-avatar" :src="getAvatar(item) | showAvatar" />
+                    <img class="u-item-avatar" :src="showAvatar(getAvatar(item))" />
                 </a>
                 <a class="u-item-name" :href="userLink(item)" target="_blank">{{ getName(item) }}</a>
                 <div class="u-action">
                     <span class="u-item-remark" v-if="!item.status">
-                        <el-button v-if="list.length <= 1" size="mini" @click="onAccept(item)" type="success" plain>接受</el-button>
+                        <el-button v-if="list.length <= 1" size="small" @click="onAccept(item)" type="success" plain
+                            >接受</el-button
+                        >
                     </span>
                 </div>
             </div>
@@ -61,12 +63,10 @@ export default {
             },
         },
     },
-    filters: {
+    methods: {
         showAvatar: function (val) {
             return showAvatar(val, "m");
         },
-    },
-    methods: {
         close() {
             this.show = false;
             this.$emit("close", false);
@@ -149,7 +149,7 @@ export default {
             .u-action {
                 position: absolute;
                 bottom: 20px;
-                left:50%;
+                left: 50%;
                 transform: translateX(-50%);
             }
             .x;

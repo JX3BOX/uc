@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div >
         <div class="m-mall-web-header">
             <Header :key="currentKey"></Header>
             <Breadcrumb></Breadcrumb>
@@ -84,6 +84,6 @@ export default {
     }
 }
 .no-click {
-    .full;
+    .size(100%);
 }
 </style>

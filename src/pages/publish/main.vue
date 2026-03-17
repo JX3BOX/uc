@@ -1,6 +1,6 @@
 <template>
     <div id="main">
-        <Header></Header>
+        <CommonHeader></CommonHeader>
         <Breadcrumb name="创作中心" slug="publish" root="/publish" :crumbEnable="true">
             <img slot="logo" svg-inline src="@/assets/img/publish/publish.svg" />
         </Breadcrumb>

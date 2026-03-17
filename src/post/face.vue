@@ -27,7 +27,7 @@
                             circle
                             :plain="item.file === faceData.file ? false : true"
                             @click="setMain(item)"
-                            size="mini"
+                            size="small"
                             title="设为主数据"
                         />
                         <span class="u-attachment-text">
@@ -35,7 +35,7 @@
                         </span>
                         <!-- <span class="u-attachment-key">唯一标识符：<b>{{ item.file }}</b></span> -->
                         <span class="u-attachment-remark">
-                            <el-input v-model="item.describe" placeholder="备注" size="mini"></el-input>
+                            <el-input v-model="item.describe" placeholder="备注" size="small"></el-input>
                         </span>
                         <el-button
                             class="u-btn"
@@ -44,7 +44,7 @@
                             circle
                             plain
                             @click="removeFile(item.id)"
-                            size="mini"
+                            size="small"
                             title="移除"
                         />
                     </div>

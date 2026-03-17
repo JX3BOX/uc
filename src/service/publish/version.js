@@ -1,4 +1,4 @@
-import { $next } from "@jx3box/jx3box-common/js/https";
+import { $next } from "@jx3box/jx3box-common/js/api";
 
 // 获取提交记录
 export function getCommitHistories(content_meta_id, params) {

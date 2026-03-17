@@ -1,21 +1,24 @@
 <template>
     <div class="m-author-info">
         <div class="m-top">
-            <div class="u-title">
-                TA的作品
-            </div>
+            <div class="u-title">TA的作品</div>
             <el-tabs class="m-tabs" v-model="active" stretch>
-                <el-tab-pane v-for="item in types" :key="item.value" :label="item.label" :name="item.value" :lazy="true">
-                <span slot="label">
-                    {{ item.label }}
-                </span>
+                <el-tab-pane
+                    v-for="item in types"
+                    :key="item.value"
+                    :label="item.label"
+                    :name="item.value"
+                    :lazy="true"
+                >
+                    <template #label>
+                        {{ item.label }}
+                    </template>
                 </el-tab-pane>
             </el-tabs>
         </div>
         <div class="m-primary">
-            <component :is="currentComponent" v-if="activeType === active"/>
+            <component :is="currentComponent" v-if="activeType === active" />
         </div>
-
     </div>
 </template>
 
@@ -41,7 +44,7 @@ export default {
         Data,
         Jokes,
         Emotions,
-        Fallow
+        Fallow,
     },
     data: function () {
         return {
@@ -83,14 +86,13 @@ export default {
             return this.types.find((item) => item.value === this.active)?.value;
         },
     },
-
-}
+};
 </script>
 
 <style lang="less">
 @import "~@/assets/css/author/newCss/left.less";
 @import "~@/assets/css/author/newCss/content.less";
-.m-empty{
+.m-empty {
     text-align: center;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <Header></Header>
+    <div >
+        <CommonHeader></CommonHeader>
         <!-- <Breadcrumb name="充值金箔" slug="vip" root="/vip/cny" :publishEnable="false" :adminEnable="false" :feedbackEnable="true">
             <img slot="logo" svg-inline src="@/assets/img/vip/logo.svg" />
         </Breadcrumb> -->
@@ -31,7 +31,7 @@
                             <el-form-item label="支付金额">
                                 <div>
                                     <span>¥</span>
-                                    <b class="u-price">{{ count | formatPrice }}</b>
+                                    <b class="u-price">{{ formatPrice(count) }}</b>
                                     <span>元</span>
                                 </div>
                             </el-form-item>
@@ -64,7 +64,7 @@
             :returnUrl="returnUrl"
             @done="finish"
         />
-        <Footer></Footer>
+        <CommonFooter></CommonFooter>
     </div>
 </template>
 
@@ -136,6 +136,9 @@ export default {
                 this.cny_enable = Number(res.val);
             });
         },
+        formatPrice: function (val) {
+            return val && (~~val / 100).toFixed(2);
+        },
     },
     created: function () {
         if (this.isLogin) {
@@ -146,11 +149,6 @@ export default {
 
         let params = new URLSearchParams(location.search);
         this.refer = params.get("redirect") || "";
-    },
-    filters: {
-        formatPrice: function (val) {
-            return val && (~~val / 100).toFixed(2);
-        },
     },
     components: {
         paypop,

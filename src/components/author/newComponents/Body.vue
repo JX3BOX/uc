@@ -2,17 +2,17 @@
     <div class="m-post" v-loading="loading">
         <!-- 列表 -->
         <div v-if="list && list.length" class="m-share-list">
-            <div v-for="(item, i) in list"  :key="i + item" class="u-share-item">
+            <div v-for="(item, i) in list" :key="i + item" class="u-share-item">
                 <a class="u-face" :href="`/body/${item.id}`" target="_blank">
                     <i class="u-img">
-                        <img class="u-pic" :src="showThumb(item)" loading="lazy" style="object-fit: cover;" />
+                        <img class="u-pic" :src="showThumb(item)" loading="lazy" style="object-fit: cover" />
                     </i>
                 </a>
                 <i class="u-star-mark" v-if="!!item.star">STAR</i>
             </div>
         </div>
         <div class="m-empty" v-else>
-            <img src='@/assets/img/author/null.png' width="80%">
+            <img src="@/assets/img/author/null.png" width="80%" />
         </div>
 
         <el-pagination
@@ -21,7 +21,7 @@
             :hide-on-single-page="true"
             layout="prev, pager, next"
             :total="total"
-            :current-page.sync="pageIndex"
+            v-model:current-page="pageIndex"
             :page-size="pageSize"
         >
         </el-pagination>
@@ -34,29 +34,29 @@ import { getThumbnail } from "@jx3box/jx3box-common/js/utils";
 import { getBodyList } from "@/service/author/next.js";
 export default {
     props: [],
-    data: function() {
+    data: function () {
         return {
             loading: false,
             list: [],
             total: 1,
-            pageSize:12,
-            pageIndex: 1
+            pageSize: 12,
+            pageIndex: 1,
         };
     },
-    computed : {
-        params : function (){
+    computed: {
+        params: function () {
             return {
                 user_id: this.uid,
                 pageIndex: this.pageIndex,
                 pageSize: this.pageSize,
-            }
+            };
         },
-        uid : function (){
-            return ~~this.$store.state.uid
+        uid: function () {
+            return ~~this.$store.state.uid;
         },
     },
     methods: {
-        loadData: function() {
+        loadData: function () {
             if (!this.uid) {
                 return;
             }
@@ -71,26 +71,23 @@ export default {
                 });
         },
         showThumb: function (item) {
-            let url=item.images?.[0];
-            return url ? getThumbnail(url,360) : require("@/assets/img/author/body_null.png");
+            let url = item.images?.[0];
+            return url ? getThumbnail(url, 360) : require("@/assets/img/author/body_null.png");
         },
-        dateFormat: function(val) {
-            return dayjs(val).format('YYYY-MM-DD HH:mm:ss')
+        dateFormat: function (val) {
+            return dayjs(val).format("YYYY-MM-DD HH:mm:ss");
         },
     },
-    watch : {
-        params : {
-            deep:true,
-            immediate:true,
-            handler : function (){
+    watch: {
+        params: {
+            deep: true,
+            immediate: true,
+            handler: function () {
                 this.loadData();
-            }
-        }
+            },
+        },
     },
-    mounted: function() {
-
-    },
-
+    mounted: function () {},
 };
 </script>
 <style lang="less">

@@ -152,12 +152,12 @@
                 <div class="m-feedback-thx">
                     <el-divider content-position="left"
                         ><i class="el-icon-coin"></i> 反馈回馈
-                        <el-button v-if="isAdmin" size="mini" class="u-thx-trigger" type="success" @click="onThx"
+                        <el-button v-if="isAdmin" size="small" class="u-thx-trigger" type="success" @click="onThx"
                             >品鉴</el-button
                         ></el-divider
                     >
                     <div class="u-thx-table">
-                        <el-table size="mini" stripe border :data="thxData">
+                        <el-table size="small" stripe border :data="thxData">
                             <el-table-column label="参与打赏" prop="ext_operate_user_info">
                                 <template #default="{ row }">
                                     <div class="m-user">

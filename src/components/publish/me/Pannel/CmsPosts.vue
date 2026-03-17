@@ -1,33 +1,40 @@
 <template>
-   <sub-tab-content :list="list" @change-tab="changeTab">
-       <div class="m-post" v-loading="loading">
-           <!--        </el-timeline>-->
-           <div v-if="posts && posts.length" class="m-archive-list">
-               <div class="u-list">
-                       <a class="u-item" target="_blank" :href="postLink(item.post_type, item.ID, item.client)" v-for="(item, i) in posts" :key="i + item">
-                           <!-- Banner -->
+    <sub-tab-content :list="list" @change-tab="changeTab">
+        <div class="m-post" v-loading="loading">
+            <!--        </el-timeline>-->
+            <div v-if="posts && posts.length" class="m-archive-list">
+                <div class="u-list">
+                    <a
+                        class="u-item"
+                        target="_blank"
+                        :href="postLink(item.post_type, item.ID, item.client)"
+                        v-for="(item, i) in posts"
+                        :key="i + item"
+                    >
+                        <!-- Banner -->
 
-                           <el-image class="u-banner" fit="cover"  :src="getBanner(item, item.post_subtype, item.post_type)" :key="item.ID" />
+                        <el-image
+                            class="u-banner"
+                            fit="cover"
+                            :src="getBanner(item, item.post_subtype, item.post_type)"
+                            :key="item.ID"
+                        />
 
-                           <!-- 标题 -->
-                           <div class="u-post">
-                               <!-- 标题文字 -->
-                               <div class="u-title"  target="_blank">{{item.post_title || "无标题" }}</div>
-                               <!--                        <div class="u-desc">-->
-                               <!--                            {{ item.post_excerpt || item.post_title || "这个作者很懒,什么都没有留下" }}-->
-                               <!--                        </div>-->
-                               <time class="u-time">{{ item.post_modified | dateFormat }}</time>
-                           </div>
-                       </a>
-
-               </div>
-           </div>
-           <!-- <el-alert v-else title="没有找到相关条目" type="info" show-icon> </el-alert> -->
-           <div class="m-empty" v-else>
-               <img src="https://cdn.jx3box.com/design/miniprogram/empty.png" width="80%" />
-           </div>
-       </div>
-   </sub-tab-content>
+                        <!-- 标题 -->
+                        <div class="u-post">
+                            <!-- 标题文字 -->
+                            <div class="u-title" target="_blank">{{ item.post_title || "无标题" }}</div>
+                            <time class="u-time">{{ dateFormat(item.post_modified) }}</time>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <!-- <el-alert v-else title="没有找到相关条目" type="info" show-icon> </el-alert> -->
+            <div class="m-empty" v-else>
+                <img src="https://cdn.jx3box.com/design/miniprogram/empty.png" width="80%" />
+            </div>
+        </div>
+    </sub-tab-content>
 </template>
 
 <script>
@@ -42,8 +49,8 @@ export default {
     props: {
         list: {
             type: Array,
-            default: () => []
-        }
+            default: () => [],
+        },
     },
     data: function () {
         return {
@@ -57,7 +64,7 @@ export default {
                 std: __Root.slice(0, -1),
                 origin: __OriginRoot.slice(0, -1),
                 all: "",
-                "wujie": ""
+                wujie: "",
             },
         };
     },
@@ -73,19 +80,19 @@ export default {
         },
     },
     methods: {
-        changeTab(e){
+        changeTab(e) {
             this.currentTab = e;
             this.page = 1;
-            this.loadData(true)
+            this.loadData(true);
         },
         loadData: function (init = false) {
-            if (!this.currentTab || (this.posts>= this.total && !init)){
+            if (!this.currentTab || (this.posts >= this.total && !init)) {
                 return;
             }
             this.loading = true;
-            getMyPosts({...this.params,type: this.currentTab})
+            getMyPosts({ ...this.params, type: this.currentTab })
                 .then((res) => {
-                    if (init){
+                    if (init) {
                         this.posts = [];
                     }
                     this.posts = this.posts.concat(res.data.data.list || []);
@@ -126,17 +133,18 @@ export default {
                 return __imgPath + `image/banner/` + post_type + subtype + ".png";
             }
         },
-        loadMore(){
+        loadMore() {
             if (this.loading) return;
-            if (document.documentElement.scrollTop + window.innerHeight + 100 >= document.documentElement.scrollHeight) {
+            if (
+                document.documentElement.scrollTop + window.innerHeight + 100 >=
+                document.documentElement.scrollHeight
+            ) {
                 if (this.posts.length < this.total) {
                     this.page++;
                     this.loadData();
                 }
             }
-        }
-    },
-    filters: {
+        },
         dateFormat: function (val) {
             return dateFormat(new Date(val));
         },
@@ -148,48 +156,44 @@ export default {
             return __clients[val];
         },
     },
-    watch: {
-
-    },
     mounted() {
         window.addEventListener("scroll", this.loadMore);
     },
-    destroyed() {
+    beforeUnmount() {
         window.removeEventListener("scroll", this.loadMore);
-    }
+    },
 };
 </script>
 
 <style lang="less">
-
-.m-post{
+.m-post {
     width: 100%;
-    .m-archive-list{
-        .u-list{
+    .m-archive-list {
+        .u-list {
             display: flex;
             flex-direction: column;
             gap: 20px;
-            .u-item{
+            .u-item {
                 display: flex;
                 width: 100%;
                 justify-content: flex-start;
                 gap: 12px;
 
-                .u-banner{
+                .u-banner {
                     border-radius: 4px;
                     width: 126px;
                     height: 64.145px;
                     overflow: hidden;
-                    aspect-ratio: 126.00/64.15;
+                    aspect-ratio: 126/64.15;
                 }
 
-                .u-post{
+                .u-post {
                     flex: 1 0 0;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
-                    .u-title{
-                        color: var(--black-100, #FFF);
+                    .u-title {
+                        color: var(--black-100, #fff);
                         /* 14 Regular */
                         font-size: 14px;
                         font-style: normal;
@@ -202,8 +206,8 @@ export default {
                         -webkit-line-clamp: 2;
                         overflow: hidden;
                     }
-                    .u-time{
-                        color: var(--black-40, rgba(255, 255, 255, 0.40));
+                    .u-time {
+                        color: var(--black-40, rgba(255, 255, 255, 0.4));
 
                         /* 12 Regular */
                         font-size: 12px;
@@ -213,9 +217,7 @@ export default {
                     }
                 }
             }
-
         }
     }
 }
-
 </style>

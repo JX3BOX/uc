@@ -28,6 +28,10 @@
         .u-content {
             padding: 20px;
         }
+
+        .el-tabs__item  {
+            gap: 4px;
+        }
     }
     .m-right {
         .w(350px);
@@ -57,7 +61,9 @@
                 }
                 .u-already-attention {
                     .flex;
-                    .flex(x, space-between);
+                    //.flex(x, space-between);
+                    justify-content: space-between;
+
                     .u-btn {
                         .w(145px);
                         .h(40px);
@@ -93,6 +99,9 @@
                 transform: rotate(-90deg);
                 .size(40px);
                 border-radius: 6px;
+                .flex;
+                align-items: center;
+                justify-content: center;
                 .u-more-img {
                     fill: #b4b2b3;
                 }
@@ -100,8 +109,8 @@
         }
         .m-join-box {
             .flex;
-            .grid(x, space-between);
             align-items: center;
+            justify-content: space-between;
             padding: 10px 20px;
         }
         .u-join,

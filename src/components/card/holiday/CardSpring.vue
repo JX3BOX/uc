@@ -85,15 +85,19 @@ export default {
 }
 .cardSpring {
     .pf;
-    .full;
+    .size(100%);
     .lt(0);
     .u-springFestival-card {
         .pointer;
         .size(392px,720px);
-        .ct(o,392px,720px);
+        //.ct(o,392px,720px);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         .u-img {
             .pa;
-            .full;
+            .size(100%);
             .lt(0);
             transition: all 0.5s;
         }
@@ -122,7 +126,11 @@ export default {
     .cardSpring {
         .u-springFestival-card {
             .size(600px,1100px);
-            .ct(o,600px,1100px);
+            //.ct(o,600px,1100px);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
     }
 }

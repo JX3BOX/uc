@@ -34,19 +34,19 @@
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ new Date(comment.created * 1000) | dateFormat }}
+                            {{ dateFormat(new Date(comment.created * 1000)) }}
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
                             更新 :
-                            {{ new Date(comment.updated * 1000) | dateFormat }}
+                            {{ dateFormat(new Date(comment.updated * 1000)) }}
                         </time>
                     </div>
 
                     <el-button-group class="u-action">
                         <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
                             <el-button
-                                size="mini"
+                                size="small"
                                 icon="el-icon-delete"
                                 title="删除"
                                 @click="comment_del(comment)"
@@ -152,8 +152,6 @@ export default {
                 },
             });
         },
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(val));
         },

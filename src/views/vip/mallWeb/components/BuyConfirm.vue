@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :visible.sync="isShow" width="85%" :show-close="false" custom-class="m-buy-confirm">
+    <el-dialog v-model="isShow" width="85%" :show-close="false" custom-class="m-buy-confirm">
         <div class="content">
             <img
                 :src="item?.goods_images?.[0] ? item.goods_images[0] : '@/assets/img/publish/logo.svg'"
@@ -12,14 +12,14 @@
             </div>
         </div>
         <div class="btn-box">
-            <el-button round @click.stop="isShow = false" size="mini" style="width: 20.5333vw; font-size: 3.2vw"
+            <el-button round @click.stop="isShow = false" size="small" style="width: 20.5333vw; font-size: 3.2vw"
                 >取消</el-button
             >
             <el-button
                 type="primary"
                 round
                 @click.stop="buyGoods"
-                size="mini"
+                size="small"
                 style="width: 20.5333vw; font-size: 3.2vw"
                 >确定</el-button
             >

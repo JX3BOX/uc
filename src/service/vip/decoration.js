@@ -1,4 +1,4 @@
-import { $cms } from "@jx3box/jx3box-common/js/https.js";
+import { $cms } from "@jx3box/jx3box-common/js/api.js";
 import axios from "axios";
 import { __cdn } from "@/utils/config";
 function getDecoration(params) {

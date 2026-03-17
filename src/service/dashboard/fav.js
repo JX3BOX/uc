@@ -1,4 +1,4 @@
-import { $next } from "@jx3box/jx3box-common/js/https";
+import { $next } from "@jx3box/jx3box-common/js/api";
 function getMyFavs(params) {
     return $next()
         .get(`/api/article/favorites/my`, {
@@ -19,8 +19,8 @@ function getVisitHistory(params) {
     });
 }
 
-function deleteVisitHistory(id){
-    return $next().delete(`api/next2/userdata/visit-history/item/${id}`,);
+function deleteVisitHistory(id) {
+    return $next().delete(`api/next2/userdata/visit-history/item/${id}`);
 }
 
 function getWaitWatch(params) {
@@ -29,8 +29,8 @@ function getWaitWatch(params) {
     });
 }
 
-function deleteWaitWatch(id){
-    return $next().delete(`api/next2/userdata/favorite/item/${id}`,);
+function deleteWaitWatch(id) {
+    return $next().delete(`api/next2/userdata/favorite/item/${id}`);
 }
 
 function getRssList(params) {
@@ -39,8 +39,8 @@ function getRssList(params) {
     });
 }
 
-function deleteRss(id){
-    return $next().delete(`api/next2/rss/subscribe/${id}`,);
+function deleteRss(id) {
+    return $next().delete(`api/next2/rss/subscribe/${id}`);
 }
 
-export { getMyFavs, delFav,getVisitHistory,getWaitWatch,deleteVisitHistory,deleteWaitWatch, getRssList, deleteRss };
+export { getMyFavs, delFav, getVisitHistory, getWaitWatch, deleteVisitHistory, deleteWaitWatch, getRssList, deleteRss };

@@ -11,7 +11,7 @@
         }}</el-button>
         <el-dialog
             title="绑定手机"
-            :visible.sync="visible"
+            v-model="visible"
             :width="isPhone ? '95%' : '400px'"
             custom-class="m-notice-phone__dialog"
             :before-close="handleClose"
@@ -36,12 +36,20 @@
                                 <i class="el-icon-lock"></i>
                             </template>
                             <template #append>
-                                <el-button :disabled="canSendCode" @click="sendCode">{{ interval > 0 ? interval + 's' : '发送验证码' }}</el-button>
+                                <el-button :disabled="canSendCode" @click="sendCode">{{
+                                    interval > 0 ? interval + "s" : "发送验证码"
+                                }}</el-button>
                             </template>
                         </el-input>
                     </el-form-item>
                 </el-form>
-                <el-button class="u-btn" type="primary" @click="verify" :disabled="!this.form.user_phone || !this.form.code">确认</el-button>
+                <el-button
+                    class="u-btn"
+                    type="primary"
+                    @click="verify"
+                    :disabled="!this.form.user_phone || !this.form.code"
+                    >确认</el-button
+                >
             </div>
         </el-dialog>
     </div>
@@ -98,13 +106,13 @@ export default {
                     },
                 ],
                 code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
-            }
+            },
         };
     },
     computed: {
         canSendCode() {
             return !this.form.user_phone || this.interval > 0 || this.form.user_phone == this.phone || this.hasBind;
-        }
+        },
     },
     methods: {
         phoneStr: function (phone) {
@@ -130,7 +138,7 @@ export default {
                 return;
             }
             this.interval = 60;
-            sendPhoneCode({phone: this.form.user_phone}).then((res) => {
+            sendPhoneCode({ phone: this.form.user_phone }).then((res) => {
                 this.timer = setInterval(() => {
                     if (this.interval > 0) {
                         this.interval--;
@@ -148,7 +156,7 @@ export default {
                 this.$message.error("手机号格式错误");
                 return;
             }
-            verifyPhone({phone: this.form.user_phone, code: this.form.code}).then((res) => {
+            verifyPhone({ phone: this.form.user_phone, code: this.form.code }).then((res) => {
                 this.$message.success("绑定成功");
                 this.visible = false;
                 this.phone = this.form.user_phone;
@@ -160,7 +168,7 @@ export default {
             this.phone = res.data.data.user_phone;
         });
     },
-    beforeDestroy: function () {
+    beforeUnmount: function () {
         clearInterval(this.timer);
     },
 };
@@ -187,7 +195,7 @@ export default {
             justify-content: center;
             .size(180px);
             .el-image__inner {
-                .full;
+                .size(100%);
             }
         }
         .u-error {

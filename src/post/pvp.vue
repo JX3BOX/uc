@@ -83,7 +83,7 @@
                     <el-switch v-model="post.anonymous" active-color="#13ce66" :active-value="1" :inactive-value="0" @change="onAnonymousChange"></el-switch>
                 </el-form-item>
                 <publish-visible v-model="post.visible" :disabled="!!post.anonymous"></publish-visible>
-                <publish-guide :data="post"></publish-guide>
+                <publish-guide v-model:data="post"></publish-guide>
                 <publish-authors :id="id" :uid="post.post_author"></publish-authors>
             </div>
 

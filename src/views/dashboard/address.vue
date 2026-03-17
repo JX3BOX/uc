@@ -22,10 +22,27 @@
                         <template slot-scope="scope">
                             <div>
                                 <!--编辑-->
-                                <el-button circle @click="edit(scope.row)" icon="el-icon-edit-outline" size="mini"></el-button>
+                                <el-button
+                                    circle
+                                    @click="edit(scope.row)"
+                                    icon="el-icon-edit-outline"
+                                    size="small"
+                                ></el-button>
                                 <!--删除-->
-                                <el-popconfirm confirm-button-text="确定" cancel-button-text="取消" icon="el-icon-info" title="确定删除吗？" @confirm="del(scope.row.id)">
-                                    <el-button style="margin-left: 10px" slot="reference" circle size="mini" icon="el-icon-delete"></el-button>
+                                <el-popconfirm
+                                    confirm-button-text="确定"
+                                    cancel-button-text="取消"
+                                    icon="el-icon-info"
+                                    title="确定删除吗？"
+                                    @confirm="del(scope.row.id)"
+                                >
+                                    <el-button
+                                        style="margin-left: 10px"
+                                        slot="reference"
+                                        circle
+                                        size="small"
+                                        icon="el-icon-delete"
+                                    ></el-button>
                                 </el-popconfirm>
                             </div>
                         </template>
@@ -33,7 +50,7 @@
                 </el-table>
             </div>
             <!-- 地址表单 -->
-            <el-dialog custom-class="m-address-dialog" :visible.sync="visible" title="我的地址" width="750px">
+            <el-dialog custom-class="m-address-dialog" v-model="visible" title="我的地址" width="750px">
                 <el-form :model="form" :rules="rules" ref="ruleForm" label-position="top">
                     <el-form-item label="联系人" prop="contact_name">
                         <el-input placeholder="请输入名称" v-model="form.contact_name"></el-input>

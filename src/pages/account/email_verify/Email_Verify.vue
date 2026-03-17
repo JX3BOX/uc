@@ -1,5 +1,5 @@
 <template>
-    <div class="m-card" id="app">
+    <div class="m-card" >
         <el-card class="box-card">
             <CardHeader />
 
@@ -34,11 +34,7 @@
                 >
                 </el-alert>
 
-                <a
-                    class="u-skip el-button u-button el-button--primary"
-                    :href="homepage"
-                    >返回首页</a
-                >
+                <a class="u-skip el-button u-button el-button--primary" :href="homepage">返回首页</a>
             </main>
         </el-card>
         <Bottom />
@@ -52,7 +48,7 @@ import { __Root } from "@/utils/config";
 
 export default {
     name: "Register",
-    data: function() {
+    data: function () {
         return {
             success: null,
             homepage: __Root,
@@ -60,16 +56,16 @@ export default {
         };
     },
     computed: {
-        ready: function() {
+        ready: function () {
             return this.token;
         },
     },
     methods: {
-        parse: function() {
+        parse: function () {
             let search = new URLSearchParams(document.location.search);
             this.token = search.get("token");
         },
-        verify: function() {
+        verify: function () {
             verifyEmail({
                 token: this.token,
             })
@@ -89,8 +85,7 @@ export default {
                 });
         },
     },
-    filters: {},
-    mounted: function() {
+    mounted: function () {
         // 解析请求字符串
         this.parse();
 

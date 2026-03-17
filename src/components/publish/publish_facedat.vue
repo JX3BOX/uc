@@ -1,9 +1,8 @@
 <template>
     <div class="m-publish-facedat">
-
         <el-divider content-position="left">① 数据</el-divider>
         <el-form-item label="数据">
-            <input class="u-data-input" type="file" id="face_file" @change="processFile" accept=".jx3dat, .dat, .ini"/>
+            <input class="u-data-input" type="file" id="face_file" @change="processFile" accept=".jx3dat, .dat, .ini" />
             <el-button type="primary" @click="selectData" icon="el-icon-upload2">上传脸型数据</el-button>
             <span class="u-data-ready" v-show="facedat.file">
                 <i class="el-icon-success"></i>
@@ -35,7 +34,7 @@ import isEmptyMeta from "@/utils/isEmptyMeta.js";
 import UploadAlbum from "@jx3box/jx3box-editor/src/UploadAlbum.vue";
 import { load as parseFace } from "@jx3box/jx3box-facedat/src/DataRouter.js";
 import { uploadFacedata } from "@/service/publish/share.js";
-import {bodyMap} from '@jx3box/jx3box-facedat/assets/data/index.json'
+import { bodyMap } from "@jx3box/jx3box-facedat/assets/data/index.json";
 // META空模板
 const default_meta = {
     author: "", //原作者
@@ -50,7 +49,7 @@ export default {
     data: function () {
         return {
             facedat: this.data,
-            object : ''
+            object: "",
         };
     },
     model: {
@@ -78,10 +77,10 @@ export default {
         "facedat.author": function (val) {
             this.$emit("updateMeta", { key: "meta_1", val: val });
         },
-        "facedat.data" : function (val){
-            let body_type = this.object.nRoleType
+        "facedat.data": function (val) {
+            let body_type = this.object.nRoleType;
             this.$emit("updateMeta", { key: "post_subtype", val: bodyMap[body_type] });
-        }
+        },
     },
     computed: {},
     methods: {
@@ -104,7 +103,7 @@ export default {
         },
         processFile: function (e) {
             let file = e.target.files[0];
-            if(file && file.size > 16384) {
+            if (file && file.size > 16384) {
                 this.$message({
                     message: "文件过大，限 16KB 以内",
                     type: "error",
@@ -127,8 +126,7 @@ export default {
                 try {
                     vm.object = parseFace(e.target.result)?.data;
                     vm.json = JSON.stringify(vm.object);
-                }
-                catch(ex) {
+                } catch (ex) {
                     console.log(ex);
                     vm.$notify.error({
                         title: "错误",
@@ -142,11 +140,15 @@ export default {
 
                 // 解析成功开始上传
                 if (vm.object && vm.json) {
-                    setTimeout(() => vm.$notify({
-                            title: "成功",
-                            message: "数据读取成功，开始上传",
-                            type: "success",
-                        }), 0);
+                    setTimeout(
+                        () =>
+                            vm.$notify({
+                                title: "成功",
+                                message: "数据读取成功，开始上传",
+                                type: "success",
+                            }),
+                        0
+                    );
                     vm.uploadData(file);
                     vm.done = true;
                     vm.$emit("success", {
@@ -165,9 +167,5 @@ export default {
             fr.readAsArrayBuffer(file);
         },
     },
-    filters: {},
-    created: function () {},
-    mounted: function () {},
 };
 </script>
-

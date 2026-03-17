@@ -8,7 +8,8 @@
                 type="primary"
                 @click="addItem"
                 :disabled="list.length >= limit"
-            >添加配装</el-button>
+                >添加配装</el-button
+            >
             <slot name="prepend" class="m-publish-pz-prepend"></slot>
         </div>
         <div class="m-publish-pz-list">
@@ -18,8 +19,8 @@
                 draggable=".u-item"
                 v-bind="{ animation: 150, scrollSensitivity: 200 }"
             >
-                <div class="u-item" v-for="(item,i) in list" :key="i">
-                    <span class="u-item-order">{{ i + 1}}.</span>
+                <div class="u-item" v-for="(item, i) in list" :key="i">
+                    <span class="u-item-order">{{ i + 1 }}.</span>
                     <i class="u-item-drag el-icon-rank"></i>
                     <div class="u-item-select">
                         <el-select
@@ -40,14 +41,12 @@
                                 :value="option.id"
                                 class="m-publish-pz-select-option"
                             >
-                                <i
-                                    class="u-client i-client"
-                                    :class="option.client || 'std'"
-                                >{{option.client == 'origin' ? '缘起' : '剑三'}}</i>
-                                <i
-                                    class="u-level i-client"
-                                    :class="option.client || 'std'"
-                                >Lv.{{ option.global_level || '-' }}</i>
+                                <i class="u-client i-client" :class="option.client || 'std'">{{
+                                    option.client == "origin" ? "缘起" : "剑三"
+                                }}</i>
+                                <i class="u-level i-client" :class="option.client || 'std'"
+                                    >Lv.{{ option.global_level || "-" }}</i
+                                >
                                 <span>{{ option.title }}</span>
                             </el-option>
                         </el-select>
@@ -66,18 +65,15 @@
                     <div class="u-item-op">
                         <a
                             class="preview el-button delete el-button--text"
-                            :href="item.id | getLink"
+                            :href="getLink(item.id)"
                             v-if="item.id"
                             target="_blank"
                         >
                             <i class="el-icon-view"></i>预览
                         </a>
-                        <el-button
-                            class="delete"
-                            type="text"
-                            icon="el-icon-delete"
-                            @click="removeItem(i)"
-                        >删除</el-button>
+                        <el-button class="delete" type="text" icon="el-icon-delete" @click="removeItem(i)"
+                            >删除</el-button
+                        >
                     </div>
                 </div>
             </draggable>
@@ -91,7 +87,7 @@
 import draggable from "vuedraggable";
 import { getMyPzList } from "@/service/publish/app.js";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
-import {cloneDeep, unionBy} from "lodash";
+import { cloneDeep, unionBy } from "lodash";
 export default {
     name: "PublishPz",
     props: {
@@ -124,7 +120,7 @@ export default {
             options: [],
             search_loading: false,
 
-            selectedOptions: []
+            selectedOptions: [],
         };
     },
     model: {
@@ -158,7 +154,9 @@ export default {
             return _params;
         },
         computedOptions: function () {
-            return this.selectedOptions?.length ? unionBy([...this.options, ...this.selectedOptions], 'id') : [...this.options];
+            return this.selectedOptions?.length
+                ? unionBy([...this.options, ...this.selectedOptions], "id")
+                : [...this.options];
         },
     },
     methods: {
@@ -194,8 +192,6 @@ export default {
         removeItem: function (i) {
             this.list.splice(i, 1);
         },
-    },
-    filters: {
         getLink: function (val) {
             return getLink("pz", val);
         },

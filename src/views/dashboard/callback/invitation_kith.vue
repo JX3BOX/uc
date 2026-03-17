@@ -1,33 +1,26 @@
 <template>
     <div class="m-callback m-invitation-kith">
-        <h1 class="u-title">
-            <i class="el-icon-message"></i> 邀请
-        </h1>
+        <h1 class="u-title"><i class="el-icon-message"></i> 邀请</h1>
         <p class="u-desc">你收到了一条亲友邀请。</p>
         <div class="u-post">
             <div class="u-post-avatar">
-                <img :src="userdata.user_avatar | showAvatar" />
+                <img :src="showAvatar(userdata.user_avatar)" />
             </div>
             <div class="u-post-info">
-                <a
-                    class="u-post-title"
-                    :href="uid | authorLink"
-                    target="_blank"
-                >{{userdata.display_name}}</a>
+                <a class="u-post-title" :href="authorLink(uid)" target="_blank">{{ userdata.display_name }}</a>
                 <div class="u-post-desc">
                     <i class="el-icon-date"></i>
-                    <time class="u-post-time">{{info.updated | dateFormat}}</time>
+                    <time class="u-post-time">{{ dateFormat(info.updated) }}</time>
                 </div>
             </div>
         </div>
         <div class="u-btns">
-            <el-button
-                type="primary"
-                icon="el-icon-check"
-                :disabled="alreadyAccept"
-                @click="accept"
-            >{{ alreadyAccept ? "已接受" : "接受" }}</el-button>
-            <el-button type="info" icon="el-icon-close" @click="confirmQuit" :disabled="alreadyAccept">{{ alreadyAccept ? "解除亲友关系" : "拒绝" }}</el-button>
+            <el-button type="primary" icon="el-icon-check" :disabled="alreadyAccept" @click="accept">{{
+                alreadyAccept ? "已接受" : "接受"
+            }}</el-button>
+            <el-button type="info" icon="el-icon-close" @click="confirmQuit" :disabled="alreadyAccept">{{
+                alreadyAccept ? "解除亲友关系" : "拒绝"
+            }}</el-button>
         </div>
     </div>
 </template>
@@ -40,11 +33,7 @@ import {
     refuseKithInvitation,
     acceptKithInvitation,
 } from "@/service/dashboard/callback.js";
-import {
-    getLink,
-    showAvatar,
-    authorLink,
-} from "@jx3box/jx3box-common/js/utils";
+import { getLink, showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
 export default {
     name: "InvitationKith",
@@ -58,9 +47,7 @@ export default {
     },
     computed: {
         info: function () {
-            return JSON.parse(
-                Base64.decode(decodeURIComponent(this.$route.query.info))
-            );
+            return JSON.parse(Base64.decode(decodeURIComponent(this.$route.query.info)));
         },
         uid: function () {
             return this.info?.source_id;
@@ -94,16 +81,16 @@ export default {
                 this.record = res.data?.data;
             });
         },
-        confirmQuit: function() {
+        confirmQuit: function () {
             this.$confirm("确定解除亲友关系吗？", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 type: "warning",
             })
-            .then(() => {
-                this.refuse();
-            })
-            .catch(() => {});
+                .then(() => {
+                    this.refuse();
+                })
+                .catch(() => {});
         },
         refuse: function () {
             refuseKithInvitation(this.uid).then(() => {
@@ -123,8 +110,6 @@ export default {
                 this.$router.push("/privacy?tab=whitelist");
             });
         },
-    },
-    filters: {
         authorLink,
         showAvatar,
         dateFormat: function (val) {

@@ -2,10 +2,10 @@
     <div class="m-exam">
         <el-tabs class="m-tabs" v-model="active" type="card">
             <el-tab-pane v-for="item in types" :key="item.value" :label="item.label" :name="item.value" :lazy="true">
-                <span slot="label">
+                <template #label>
                     <i :class="item.icon"></i>
                     {{ item.label }}
-                </span>
+                </template>
             </el-tab-pane>
         </el-tabs>
         <div class="m-primary">
