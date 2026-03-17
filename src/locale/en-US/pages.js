@@ -264,4 +264,244 @@ export default {
             description: "JX3BOX my publishing.",
         },
     },
+    dashboard: {
+        title: "Dashboard",
+        keywords: "JX3,JX3BOX,dashboard,account,profile",
+        description: "JX3BOX dashboard: messages, assets, roles, and account settings.",
+        index: {
+            title: "Dashboard Home",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard home.",
+        },
+        msg: {
+            title: "Messages",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard messages.",
+        },
+        letter: {
+            title: "Direct Messages",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard direct messages.",
+        },
+        fav: {
+            title: "Favorites",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard favorites.",
+        },
+        purchases: {
+            title: "Purchases",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard purchases.",
+        },
+        frame: {
+            title: "Avatar Frames",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard avatar frames.",
+        },
+        theme: {
+            title: "Themes",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard themes.",
+        },
+        emotion: {
+            title: "Emojis",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard emojis.",
+        },
+        honor: {
+            title: "Honors",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard honors.",
+        },
+        medal: {
+            title: "Medals",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard medals.",
+        },
+        treasure: {
+            title: "Collections",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard collections and certificates.",
+        },
+        certification: {
+            title: "Certificates",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard certificates.",
+        },
+        holiday_card: {
+            title: "Holiday Cards",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard holiday cards.",
+        },
+        birthday_card: {
+            title: "Birthday Cards",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard birthday cards.",
+        },
+        mall: {
+            title: "Mall",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard mall.",
+        },
+        orders: {
+            title: "Orders",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard orders.",
+        },
+        packet: {
+            title: "Red Packets",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard red packets.",
+        },
+        boxcoin: {
+            title: "Boxcoin",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard boxcoin.",
+        },
+        cny: {
+            title: "Gold Foil",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard gold foil account.",
+        },
+        points: {
+            title: "Points",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard points.",
+        },
+        tasks: {
+            title: "Tasks",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard tasks.",
+        },
+        card: {
+            title: "Card Codes",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard card codes.",
+        },
+        ic: {
+            title: "Invite Codes",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard invite codes.",
+        },
+        bind_role: {
+            title: "Bind Character",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard character binding.",
+        },
+        sync_data: {
+            title: "Sync Character Data",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard character data sync.",
+        },
+        list_role: {
+            title: "Characters",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard character list.",
+        },
+        add_role: {
+            title: "Add Character",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard add character.",
+        },
+        edit_role: {
+            title: "Edit Character",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard edit character.",
+        },
+        view_role: {
+            title: "Character Details",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard character details.",
+        },
+        profile: {
+            title: "Profile",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard profile settings.",
+        },
+        avatar: {
+            title: "Avatar",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard avatar settings.",
+        },
+        pwd: {
+            title: "Change Password",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard change password.",
+        },
+        notice: {
+            title: "Notifications",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard notifications.",
+        },
+        connect: {
+            title: "Account Connections",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard account connections.",
+        },
+        config: {
+            title: "Settings",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard settings.",
+        },
+        cooperation: {
+            title: "Cooperation",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard cooperation info.",
+        },
+        privacy: {
+            title: "Privacy",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard privacy settings.",
+        },
+        filter: {
+            title: "Content Filter",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard content filter.",
+        },
+        address: {
+            title: "Shipping Address",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard shipping address.",
+        },
+        auth: {
+            title: "Verification",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard account verification.",
+        },
+        order_detail: {
+            title: "Order Details",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard order details.",
+        },
+        feedback: {
+            title: "Feedback",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard feedback center.",
+        },
+        feedback_index: {
+            title: "Submit Feedback",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard submit and view feedback.",
+        },
+        feedback_erase: {
+            title: "Account Deletion",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard account deletion request.",
+        },
+        feedback_single: {
+            title: "Feedback Details",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard feedback details.",
+        },
+        invitation_creators: {
+            title: "Co-creation Invitation",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard co-creation invitation.",
+        },
+        invitation_kith: {
+            title: "Invitation Callback",
+            keywords: "JX3,JX3BOX,dashboard,account,profile",
+            description: "JX3BOX dashboard invitation callback.",
+        },
+    },
 };

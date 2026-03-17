@@ -1,6 +1,6 @@
 <template>
     <nav class="m-nav">
-        <a class="m-nav-publish el-button el-button--primary" href="/publish" target="_blank">
+        <a class="m-nav-publish el-button el-button--large el-button--primary" href="/publish" target="_blank">
             <!-- <i class="el-icon-edit-outline"></i> -->
             <span>前往创作中心</span>
         </a>
@@ -27,9 +27,9 @@ import { feedback } from "@/utils/config";
 import dashboardLink from "@/utils/dashboardLink.js";
 import navList from "@/assets/data/dashboard/nav.json";
 const profile_routes = ["profile", "avatar", "pwd", "connect", "email", "address", "notice"];
-const theme_routes = ["theme", "frame", "emotion", "honor"];
+const theme_routes = ["theme", "frame", "emotion", "honor", "medal"];
 const mall_routes = ["mall", "orders"];
-const msg_routes = ["msg", "letter"]
+const msg_routes = ["msg", "letter"];
 export default {
     name: "Nav",
     data: function () {
@@ -57,7 +57,7 @@ export default {
             return val === "/mall" && mall_routes.includes(this.$route.name) ? "on" : "";
         },
         isMsg: function (val) {
-            return val === '/msg' && msg_routes.includes(this.$route.name) ? "on" : "";
+            return val === "/msg" && msg_routes.includes(this.$route.name) ? "on" : "";
         },
     },
     mounted: function () {},

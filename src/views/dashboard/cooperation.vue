@@ -107,7 +107,7 @@ import {
     getContractAuthorLogs,
     getLastContractAuthorLog,
 } from "@/service/dashboard/cooperation";
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 import { pick } from "lodash";
 import dayjs from "dayjs";
 export default {

@@ -94,11 +94,11 @@
                             </tr>
                             <tr v-for="(item, i) in my_packet_history" :key="i">
                                 <td>
-                                    <b>{{ item.money | formatMoney }}</b>
+                                    <b>{{ formatMoney(item.money) }}</b>
                                 </td>
-                                <td>{{ item.pay_type | formatPaytype }}</td>
+                                <td>{{ formatPaytype(item.pay_type) }}</td>
                                 <td>
-                                    {{ item.accept_account | encryptAccount }}
+                                    {{ encryptAccount(item.accept_account) }}
                                 </td>
                                 <td
                                     :class="{
@@ -107,7 +107,7 @@
                                         isPending: item.status > 1,
                                     }"
                                 >
-                                    {{ item.status | formatHistoryStatus }}
+                                    {{ formatHistoryStatus(item.status) }}
                                 </td>
                                 <td>
                                     {{
@@ -116,7 +116,7 @@
                                             : item.why
                                     }}
                                 </td>
-                                <td>{{ item.created_at | formatDate }}</td>
+                                <td>{{ formatDate(item.created_at) }}</td>
                             </tr>
                         </table>
                     </div>

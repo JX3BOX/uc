@@ -259,4 +259,244 @@ export default {
             description: "剑网3魔盒（JX3BOX）我的发布。",
         },
     },
+    dashboard: {
+        title: "个人中心",
+        keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+        description: "剑网3魔盒（JX3BOX）个人中心：消息通知、资产、角色与账号设置等。",
+        index: {
+            title: "个人中心",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）个人中心首页。",
+        },
+        msg: {
+            title: "消息通知",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）消息通知。",
+        },
+        letter: {
+            title: "私信",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）私信。",
+        },
+        fav: {
+            title: "收藏夹",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）收藏内容管理。",
+        },
+        purchases: {
+            title: "已购资源",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）已购资源。",
+        },
+        frame: {
+            title: "头像框",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）头像框管理。",
+        },
+        theme: {
+            title: "主题装扮",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）主题装扮设置。",
+        },
+        emotion: {
+            title: "表情",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）表情管理。",
+        },
+        honor: {
+            title: "荣誉",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）荣誉展示。",
+        },
+        medal: {
+            title: "勋章",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）勋章展示。",
+        },
+        treasure: {
+            title: "藏品",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）藏品与证书。",
+        },
+        certification: {
+            title: "证书",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）证书与成就展示。",
+        },
+        holiday_card: {
+            title: "节日贺卡",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）节日贺卡。",
+        },
+        birthday_card: {
+            title: "生日贺卡",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）生日贺卡。",
+        },
+        mall: {
+            title: "商城",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）商城入口。",
+        },
+        orders: {
+            title: "订单",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）订单记录。",
+        },
+        packet: {
+            title: "红包",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）红包记录。",
+        },
+        boxcoin: {
+            title: "盒币",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）盒币记录。",
+        },
+        cny: {
+            title: "金箔",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）金箔账户。",
+        },
+        points: {
+            title: "积分",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）积分记录。",
+        },
+        tasks: {
+            title: "任务",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）任务列表。",
+        },
+        card: {
+            title: "卡密",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）卡密管理。",
+        },
+        ic: {
+            title: "盒码",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）盒码与邀请码。",
+        },
+        bind_role: {
+            title: "角色绑定",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）角色绑定。",
+        },
+        sync_data: {
+            title: "角色同步",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）角色数据同步。",
+        },
+        list_role: {
+            title: "角色列表",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）角色列表。",
+        },
+        add_role: {
+            title: "新增角色",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）新增角色。",
+        },
+        edit_role: {
+            title: "编辑角色",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）编辑角色。",
+        },
+        view_role: {
+            title: "角色详情",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）角色详情。",
+        },
+        profile: {
+            title: "个人资料",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）个人资料设置。",
+        },
+        avatar: {
+            title: "头像设置",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）头像设置。",
+        },
+        pwd: {
+            title: "修改密码",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）修改密码。",
+        },
+        notice: {
+            title: "站内通知",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）站内通知。",
+        },
+        connect: {
+            title: "账号绑定",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）第三方账号绑定。",
+        },
+        config: {
+            title: "设置",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）个人设置。",
+        },
+        cooperation: {
+            title: "合作信息",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）合作信息。",
+        },
+        privacy: {
+            title: "隐私设置",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）隐私设置。",
+        },
+        filter: {
+            title: "内容过滤",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）内容过滤设置。",
+        },
+        address: {
+            title: "收货地址",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）收货地址管理。",
+        },
+        auth: {
+            title: "账号认证",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）账号认证。",
+        },
+        order_detail: {
+            title: "订单详情",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）订单详情。",
+        },
+        feedback: {
+            title: "反馈中心",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）反馈中心。",
+        },
+        feedback_index: {
+            title: "提交反馈",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）提交反馈与查看反馈。",
+        },
+        feedback_erase: {
+            title: "账号注销",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）账号注销申请。",
+        },
+        feedback_single: {
+            title: "反馈详情",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）反馈详情。",
+        },
+        invitation_creators: {
+            title: "联合创作邀请",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）联合创作邀请处理。",
+        },
+        invitation_kith: {
+            title: "邀请回调",
+            keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
+            description: "剑网3魔盒（JX3BOX）邀请回调处理。",
+        },
+    },
 };

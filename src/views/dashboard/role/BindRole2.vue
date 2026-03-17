@@ -64,7 +64,7 @@
 
 <script>
 import { getToken, getRoles } from "@/service/dashboard/role.js";
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 import User from "@jx3box/jx3box-common/js/user";
 import { __imgPath, __cdn } from "@/utils/config";
 import { showSchoolIcon, showSchoolName, showTime, getThumbnail } from "@/utils/filters";

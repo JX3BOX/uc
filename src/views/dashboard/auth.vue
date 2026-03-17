@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system";
 import { checkOAuth } from "@/service/dashboard/profile";
 import { getMyInfo } from "@/service/dashboard/index.js";
 import uc from "@/components/dashboard/uc.vue";

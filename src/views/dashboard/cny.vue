@@ -157,7 +157,7 @@
 import { showTime } from "@jx3box/jx3box-common/js/moment";
 import types from "@/assets/data/dashboard/cny_types.json";
 import paytypes from "@/assets/data/dashboard/paytypes.json";
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 import { cashOut, getBalance, getHistory } from "@/service/dashboard/cny";
 import { getBoxcoinConfig } from "@/service/dashboard/boxcoin";
 import { getConfig } from "@/service/dashboard/config";

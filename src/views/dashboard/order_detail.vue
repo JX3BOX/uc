@@ -154,7 +154,7 @@ import {
 import { orderStatus, payStatus } from "@/assets/data/dashboard/mall.json";
 import uc from "@/components/dashboard/uc";
 import { mallTab } from "@/assets/data/dashboard/tabs.json";
-import { append } from "domutils/lib/manipulation";
+import { append } from "domutils";
 export default {
     name: "orderDetail",
     components: { uc },

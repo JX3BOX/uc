@@ -27,9 +27,11 @@
         >
             <div class="m-wechat-content" v-loading="loading">
                 <el-image class="u-qr" v-if="ticket" :src="qrcodeValue" lazy>
-                    <div slot="error" class="u-error">
-                        <i class="el-icon-picture-outline"></i>
-                    </div>
+                    <template #error>
+                        <div class="u-error">
+                            <i class="el-icon-picture-outline"></i>
+                        </div>
+                    </template>
                 </el-image>
                 <i class="u-tip">打开微信扫一扫，关注公众号接收通知告警</i>
                 <small class="u-tip-small">关注之后需要重新登陆方可生效</small>

@@ -1,10 +1,10 @@
 const pages = {
-    // dashboard: {
-    //     title: "个人中心 - JX3BOX",
-    //     entry: "src/pages/dashboard/index.js",
-    //     template: "public/index.html",
-    //     filename: "dashboard/index.html",
-    // },
+    dashboard: {
+        title: "个人中心 - JX3BOX",
+        entry: "src/pages/dashboard/index.js",
+        template: "public/index.html",
+        filename: "dashboard/index.html",
+    },
     publish: {
         title: "发布中心 - JX3BOX",
         entry: "src/pages/publish/index.js",

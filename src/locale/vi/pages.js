@@ -264,4 +264,244 @@ export default {
             description: "Bài đăng của tôi trên JX3BOX.",
         },
     },
+    dashboard: {
+        title: "Trung tâm cá nhân",
+        keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+        description: "Trung tâm cá nhân JX3BOX: tin nhắn, tài sản, nhân vật và cài đặt tài khoản.",
+        index: {
+            title: "Trung tâm cá nhân",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Trang chủ trung tâm cá nhân JX3BOX.",
+        },
+        msg: {
+            title: "Thông báo",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Thông báo trên trung tâm cá nhân JX3BOX.",
+        },
+        letter: {
+            title: "Tin nhắn riêng",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Tin nhắn riêng trên trung tâm cá nhân JX3BOX.",
+        },
+        fav: {
+            title: "Yêu thích",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Nội dung yêu thích trên JX3BOX.",
+        },
+        purchases: {
+            title: "Đã mua",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Nội dung đã mua trên JX3BOX.",
+        },
+        frame: {
+            title: "Khung avatar",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Quản lý khung avatar JX3BOX.",
+        },
+        theme: {
+            title: "Chủ đề",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Chủ đề và trang trí JX3BOX.",
+        },
+        emotion: {
+            title: "Biểu cảm",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Biểu cảm trên JX3BOX.",
+        },
+        honor: {
+            title: "Danh hiệu",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Danh hiệu trên JX3BOX.",
+        },
+        medal: {
+            title: "Huy chương",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Huy chương trên JX3BOX.",
+        },
+        treasure: {
+            title: "Bộ sưu tập",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Bộ sưu tập và chứng chỉ JX3BOX.",
+        },
+        certification: {
+            title: "Chứng chỉ",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Chứng chỉ trên JX3BOX.",
+        },
+        holiday_card: {
+            title: "Thiệp lễ",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Thiệp lễ trên JX3BOX.",
+        },
+        birthday_card: {
+            title: "Thiệp sinh nhật",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Thiệp sinh nhật trên JX3BOX.",
+        },
+        mall: {
+            title: "Cửa hàng",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Cửa hàng JX3BOX.",
+        },
+        orders: {
+            title: "Đơn hàng",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Đơn hàng JX3BOX.",
+        },
+        packet: {
+            title: "Hồng bao",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Hồng bao JX3BOX.",
+        },
+        boxcoin: {
+            title: "Boxcoin",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Boxcoin trên JX3BOX.",
+        },
+        cny: {
+            title: "Lá vàng",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Tài khoản lá vàng JX3BOX.",
+        },
+        points: {
+            title: "Điểm",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Điểm trên JX3BOX.",
+        },
+        tasks: {
+            title: "Nhiệm vụ",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Nhiệm vụ trên JX3BOX.",
+        },
+        card: {
+            title: "Mã thẻ",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Mã thẻ trên JX3BOX.",
+        },
+        ic: {
+            title: "Mã mời",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Mã mời trên JX3BOX.",
+        },
+        bind_role: {
+            title: "Liên kết nhân vật",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Liên kết nhân vật JX3BOX.",
+        },
+        sync_data: {
+            title: "Đồng bộ nhân vật",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Đồng bộ dữ liệu nhân vật JX3BOX.",
+        },
+        list_role: {
+            title: "Danh sách nhân vật",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Danh sách nhân vật JX3BOX.",
+        },
+        add_role: {
+            title: "Thêm nhân vật",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Thêm nhân vật trên JX3BOX.",
+        },
+        edit_role: {
+            title: "Chỉnh sửa nhân vật",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Chỉnh sửa nhân vật JX3BOX.",
+        },
+        view_role: {
+            title: "Chi tiết nhân vật",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Chi tiết nhân vật JX3BOX.",
+        },
+        profile: {
+            title: "Hồ sơ",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Cài đặt hồ sơ JX3BOX.",
+        },
+        avatar: {
+            title: "Avatar",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Cài đặt avatar JX3BOX.",
+        },
+        pwd: {
+            title: "Đổi mật khẩu",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Đổi mật khẩu JX3BOX.",
+        },
+        notice: {
+            title: "Thông báo hệ thống",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Thông báo hệ thống JX3BOX.",
+        },
+        connect: {
+            title: "Liên kết tài khoản",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Liên kết tài khoản bên thứ ba JX3BOX.",
+        },
+        config: {
+            title: "Cài đặt",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Cài đặt cá nhân JX3BOX.",
+        },
+        cooperation: {
+            title: "Hợp tác",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Thông tin hợp tác JX3BOX.",
+        },
+        privacy: {
+            title: "Quyền riêng tư",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Cài đặt quyền riêng tư JX3BOX.",
+        },
+        filter: {
+            title: "Bộ lọc nội dung",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Bộ lọc nội dung JX3BOX.",
+        },
+        address: {
+            title: "Địa chỉ nhận hàng",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Quản lý địa chỉ nhận hàng JX3BOX.",
+        },
+        auth: {
+            title: "Xác thực tài khoản",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Xác thực tài khoản JX3BOX.",
+        },
+        order_detail: {
+            title: "Chi tiết đơn hàng",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Chi tiết đơn hàng JX3BOX.",
+        },
+        feedback: {
+            title: "Phản hồi",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Trung tâm phản hồi JX3BOX.",
+        },
+        feedback_index: {
+            title: "Gửi phản hồi",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Gửi và xem phản hồi JX3BOX.",
+        },
+        feedback_erase: {
+            title: "Xóa tài khoản",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Yêu cầu xóa tài khoản JX3BOX.",
+        },
+        feedback_single: {
+            title: "Chi tiết phản hồi",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Chi tiết phản hồi JX3BOX.",
+        },
+        invitation_creators: {
+            title: "Mời đồng sáng tạo",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Lời mời đồng sáng tạo JX3BOX.",
+        },
+        invitation_kith: {
+            title: "Phản hồi lời mời",
+            keywords: "JX3,JX3BOX,trung tâm cá nhân,tài khoản,quản lý",
+            description: "Phản hồi lời mời JX3BOX.",
+        },
+    },
 };

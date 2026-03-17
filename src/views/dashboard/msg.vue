@@ -13,12 +13,15 @@
                     class="m-dashboard-work-search"
                     placeholder="请输入搜索内容"
                     v-model="keyword"
-                    @keyup.enter.native="changePage(1)"
+                    @keyup.enter="changePage(1)"
+                    size="large"
                 >
-                    <template slot="prepend">关键词</template>
-                    <el-button slot="append" icon="Search" @click="changePage(1)"></el-button>
+                    <template #prepend>关键词</template>
+                    <template #append>
+                        <el-button icon="Search" @click="changePage(1)"></el-button>
+                    </template>
                 </el-input>
-                <el-button class="u-read-all" type="primary" @click="read(null)">
+                <el-button class="u-read-all" size="large" type="primary" @click="read(null)">
                     <i class="el-icon el-icon-check"></i>
                     <span v-text="'全部设为已读'"></span>
                 </el-button>
@@ -55,7 +58,7 @@
                     </div>
                     <el-button-group class="u-action">
                         <el-button
-                            icon="el-icon-check"
+                            icon="Check"
                             title="设为已读"
                             @click="read(item)"
                             :disabled="item.read == 1"

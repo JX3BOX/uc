@@ -264,4 +264,244 @@ export default {
             description: "劍網3魔盒（JX3BOX）我的發佈。",
         },
     },
+    dashboard: {
+        title: "個人中心",
+        keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+        description: "劍網3魔盒（JX3BOX）個人中心：訊息、資產、角色與帳號設定等。",
+        index: {
+            title: "個人中心",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）個人中心首頁。",
+        },
+        msg: {
+            title: "訊息通知",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）訊息通知。",
+        },
+        letter: {
+            title: "私訊",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）私訊。",
+        },
+        fav: {
+            title: "收藏",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）收藏內容管理。",
+        },
+        purchases: {
+            title: "已購資源",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）已購資源。",
+        },
+        frame: {
+            title: "頭像框",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）頭像框管理。",
+        },
+        theme: {
+            title: "主題裝扮",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）主題裝扮設定。",
+        },
+        emotion: {
+            title: "表情",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）表情管理。",
+        },
+        honor: {
+            title: "榮譽",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）榮譽展示。",
+        },
+        medal: {
+            title: "勳章",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）勳章展示。",
+        },
+        treasure: {
+            title: "藏品",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）藏品與證書。",
+        },
+        certification: {
+            title: "證書",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）證書與成就展示。",
+        },
+        holiday_card: {
+            title: "節日賀卡",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）節日賀卡。",
+        },
+        birthday_card: {
+            title: "生日賀卡",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）生日賀卡。",
+        },
+        mall: {
+            title: "商城",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）商城入口。",
+        },
+        orders: {
+            title: "訂單",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）訂單記錄。",
+        },
+        packet: {
+            title: "紅包",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）紅包記錄。",
+        },
+        boxcoin: {
+            title: "盒幣",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）盒幣記錄。",
+        },
+        cny: {
+            title: "金箔",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）金箔帳戶。",
+        },
+        points: {
+            title: "積分",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）積分記錄。",
+        },
+        tasks: {
+            title: "任務",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）任務列表。",
+        },
+        card: {
+            title: "卡密",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）卡密管理。",
+        },
+        ic: {
+            title: "盒碼",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）盒碼與邀請碼。",
+        },
+        bind_role: {
+            title: "角色綁定",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）角色綁定。",
+        },
+        sync_data: {
+            title: "角色同步",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）角色資料同步。",
+        },
+        list_role: {
+            title: "角色列表",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）角色列表。",
+        },
+        add_role: {
+            title: "新增角色",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）新增角色。",
+        },
+        edit_role: {
+            title: "編輯角色",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）編輯角色。",
+        },
+        view_role: {
+            title: "角色詳情",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）角色詳情。",
+        },
+        profile: {
+            title: "個人資料",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）個人資料設定。",
+        },
+        avatar: {
+            title: "頭像設定",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）頭像設定。",
+        },
+        pwd: {
+            title: "修改密碼",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）修改密碼。",
+        },
+        notice: {
+            title: "站內通知",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）站內通知。",
+        },
+        connect: {
+            title: "帳號綁定",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）第三方帳號綁定。",
+        },
+        config: {
+            title: "設定",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）個人設定。",
+        },
+        cooperation: {
+            title: "合作資訊",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）合作資訊。",
+        },
+        privacy: {
+            title: "隱私設定",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）隱私設定。",
+        },
+        filter: {
+            title: "內容過濾",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）內容過濾設定。",
+        },
+        address: {
+            title: "收貨地址",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）收貨地址管理。",
+        },
+        auth: {
+            title: "帳號認證",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）帳號認證。",
+        },
+        order_detail: {
+            title: "訂單詳情",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）訂單詳情。",
+        },
+        feedback: {
+            title: "回饋中心",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）回饋中心。",
+        },
+        feedback_index: {
+            title: "提交回饋",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）提交回饋與查看回饋。",
+        },
+        feedback_erase: {
+            title: "帳號註銷",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）帳號註銷申請。",
+        },
+        feedback_single: {
+            title: "回饋詳情",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）回饋詳情。",
+        },
+        invitation_creators: {
+            title: "聯合創作邀請",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）聯合創作邀請處理。",
+        },
+        invitation_kith: {
+            title: "邀請回調",
+            keywords: "劍網3,魔盒,JX3BOX,個人中心,帳號,管理",
+            description: "劍網3魔盒（JX3BOX）邀請回調處理。",
+        },
+    },
 };

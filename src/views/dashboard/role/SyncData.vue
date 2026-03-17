@@ -2,14 +2,14 @@
     <div class="v-sync-data">
         <h2 class="u-title">
             <i class="el-icon-connection"></i> 同步数据
-            <el-button slot="reference" class="u-back" icon="ArrowLeft" @click="goBack">返回</el-button>
+            <el-button class="u-back" icon="ArrowLeft" @click="goBack">返回</el-button>
         </h2>
         <div class="m-tutorial" v-html="notice"></div>
     </div>
 </template>
 
 <script>
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 export default {
     name: "SyncData",
     data() {

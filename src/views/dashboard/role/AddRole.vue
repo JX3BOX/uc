@@ -2,7 +2,7 @@
     <div class="v-role-add">
         <h2 class="u-title">
             <i class="el-icon-circle-plus-outline"></i> 创建角色
-            <el-button slot="reference" class="u-back" icon="ArrowLeft" @click="goBack">返回列表</el-button>
+            <el-button class="u-back" icon="ArrowLeft" @click="goBack">返回列表</el-button>
         </h2>
         <roleform :data="form" @submit="submit" btn_txt="创建" :processing="processing" />
     </div>

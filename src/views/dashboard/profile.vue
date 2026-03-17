@@ -30,7 +30,7 @@
             </el-form-item>
 
             <el-form-item class="u-name">
-                <div slot="label">
+                <template #label>
                     <el-tooltip
                         class="item"
                         effect="dark"
@@ -41,12 +41,12 @@
                             <i class="el-icon-lock"></i> QQ
                         </div>
                     </el-tooltip>
-                </div>
+                </template>
                 <el-input v-model="form.qq_number" placeholder="请输入QQ号码"></el-input>
             </el-form-item>
 
             <el-form-item class="u-birthday">
-                <div slot="label">
+                <template #label>
                     <el-tooltip
                         class="item"
                         effect="dark"
@@ -57,7 +57,7 @@
                             <i class="el-icon-lock"></i> 生日
                         </div>
                     </el-tooltip>
-                </div>
+                </template>
                 <el-date-picker
                     v-model="form.birthday"
                     type="date"
@@ -68,7 +68,7 @@
                 ></el-date-picker>
             </el-form-item>
             <!-- <el-form-item class="u-phone">
-                <div slot="label">
+                <template #label>
                     <el-tooltip
                         class="item"
                         effect="dark"
@@ -79,12 +79,12 @@
                             <i class="el-icon-lock"></i> 联系电话
                         </div>
                     </el-tooltip>
-                </div>
+                </template>
                 <el-input v-model="form.phone" placeholder="请输入收货电话"></el-input>
             </el-form-item> -->
 
             <!-- <el-form-item class="u-address">
-                <div slot="label">
+                <template #label>
                     <el-tooltip
                         class="item"
                         effect="dark"
@@ -95,7 +95,7 @@
                             <i class="el-icon-lock"></i> 联系地址
                         </div>
                     </el-tooltip>
-                </div>
+                </template>
                 <el-input v-model="form.address" placeholder="请输入收货地址" type="textarea"></el-input>
             </el-form-item> -->
 

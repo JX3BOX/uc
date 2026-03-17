@@ -7,7 +7,7 @@
                 placeholder="按 Ctrl+Enter 可快速发送消息"
                 v-model="content"
                 id="letterInput"
-                @keydown.ctrl.enter.native="send"
+                @keydown.ctrl.enter="send"
             ></el-input>
         </div>
         <div class="u-send-action">

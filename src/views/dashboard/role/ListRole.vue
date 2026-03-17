@@ -30,7 +30,7 @@
                 </el-option>
             </el-select>
             <el-input class="u-name" v-model="name" placeholder="请输入角色名称">
-                <template slot="prepend"> <i class="el-icon-search"></i> 查找 </template>
+                <template #prepend> <i class="el-icon-search"></i> 查找 </template>
             </el-input>
         </div>
         <div class="m-team-rolelist" v-if="data && data.length">
@@ -106,26 +106,28 @@
                             <el-button type="default">
                                 更多<i class="el-icon-arrow-down el-icon--right"></i>
                             </el-button>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item :command="{ item, command: 'default' }">
-                                    <i class="el-icon-setting"></i>
-                                    {{ item.is_default_role ? "取消默认" : "设为默认" }}
-                                </el-dropdown-item>
-                                <el-dropdown-item v-if="!item.custom" :command="{ item, command: 'unbind' }">
-                                    <i class="el-icon-remove-outline"></i>
-                                    解绑
-                                </el-dropdown-item>
-                                <template v-else>
-                                    <el-dropdown-item :command="{ item, command: 'edit' }">
-                                        <i class="el-icon-edit-outline"></i>
-                                        编辑
+                            <template #dropdown>
+                                <el-dropdown-menu>
+                                    <el-dropdown-item :command="{ item, command: 'default' }">
+                                        <i class="el-icon-setting"></i>
+                                        {{ item.is_default_role ? "取消默认" : "设为默认" }}
                                     </el-dropdown-item>
-                                    <el-dropdown-item :command="{ item, command: 'delete' }">
-                                        <i class="el-icon-delete"></i>
-                                        删除
+                                    <el-dropdown-item v-if="!item.custom" :command="{ item, command: 'unbind' }">
+                                        <i class="el-icon-remove-outline"></i>
+                                        解绑
                                     </el-dropdown-item>
-                                </template>
-                            </el-dropdown-menu>
+                                    <template v-else>
+                                        <el-dropdown-item :command="{ item, command: 'edit' }">
+                                            <i class="el-icon-edit-outline"></i>
+                                            编辑
+                                        </el-dropdown-item>
+                                        <el-dropdown-item :command="{ item, command: 'delete' }">
+                                            <i class="el-icon-delete"></i>
+                                            删除
+                                        </el-dropdown-item>
+                                    </template>
+                                </el-dropdown-menu>
+                            </template>
                         </el-dropdown>
                     </div>
                 </li>
@@ -146,10 +148,12 @@
             <div>
                 <el-input v-model="note" placeholder="请输入内容" :maxlength="20" :show-word-limit="true"></el-input>
             </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="noteVisible = false">取 消</el-button>
-                <el-button type="primary" @click="confirmNote">确 定</el-button>
-            </span>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="noteVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="confirmNote">确 定</el-button>
+                </span>
+            </template>
         </el-dialog>
     </div>
 </template>

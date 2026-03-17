@@ -43,7 +43,7 @@
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 import { updateAvatar, uploadAvatar, getUserOverview } from "@/service/dashboard/profile";
 import User from "@jx3box/jx3box-common/js/user";
 import { showAvatar } from "@jx3box/jx3box-common/js/utils";

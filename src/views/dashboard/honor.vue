@@ -1,6 +1,6 @@
 /dashboard
 <template>
-    <uc class="m-dashboard-honor m-dashboard-skin" icon="Brush" title="主题装扮" :tab-list="tabList">
+    <uc class="m-dashboard-honor m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tab-list="tabList">
         <template #header>
             <a
                 class="u-link el-button el-button--default el-button--mini is-round is-plain"

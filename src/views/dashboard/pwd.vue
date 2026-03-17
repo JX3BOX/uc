@@ -26,7 +26,7 @@
                         show-password
                         @change="checkPass"
                     >
-                        <template slot="prepend">
+                        <template #prepend>
                             <img
                                 class="i-pass"
                                 svg-inline
@@ -54,7 +54,7 @@
                         show-password
                         @input="checkPass"
                     >
-                        <template slot="prepend">
+                        <template #prepend>
                             <img
                                 class="i-pass"
                                 svg-inline

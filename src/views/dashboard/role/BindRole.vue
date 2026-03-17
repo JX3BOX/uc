@@ -7,12 +7,14 @@
                     <i class="el-icon-plus"></i> 自定义角色
                 </router-link>
             </div> -->
-            <el-button slot="reference" class="u-back" icon="ArrowLeft" @click="goBack">返回</el-button>
+            <el-button class="u-back" icon="ArrowLeft" @click="goBack">返回</el-button>
         </h2>
         <div class="m-role-bind">
             <el-tabs v-model="tab">
                 <el-tab-pane label="插件绑定（仅正式服可用）" name="std">
-                    <span slot="label">插件绑定<span class="u-tab-tip">（仅正式服可用）</span></span>
+                    <template #label>
+                        <span>插件绑定<span class="u-tab-tip">（仅正式服可用）</span></span>
+                    </template>
                     <div class="m-token" v-loading="loading">
                         <h2 class="u-title-name">
                             绑定令牌
@@ -48,7 +50,7 @@
 <script>
 import { getToken, createRole } from "@/service/dashboard/role.js";
 import { __imgPath, __ossMirror } from "@/utils/config";
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 // import roleform from "@/components/dashboard/role/roleform.vue";
 export default {
     name: "BindRole",

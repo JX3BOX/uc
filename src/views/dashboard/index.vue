@@ -1,7 +1,13 @@
 <template>
     <div class="m-dashboard m-dashboard-index">
         <div class="m-basicinfo">
-            <Avatar class="u-avatar" :uid="uid" :url="info.user_avatar" size="l" :frame="info.user_avatar_frame" />
+            <CommonAvatar
+                class="u-avatar"
+                :uid="uid"
+                :url="info.user_avatar"
+                size="l"
+                :frame="info.user_avatar_frame"
+            />
             <div class="u-info">
                 <h1 class="u-name">
                     <span class="u-name-txt">{{ info.display_name }}</span>
@@ -92,8 +98,8 @@
                         ></el-progress>
                     </a>
                 </div>
-                <div class="u-medals" v-if="medals && medals.length">
-                    <medal :medals="medals" :showIcon="showMedalIcon"></medal>
+                <div class="u-medals">
+                    <medal :uid="uid"></medal>
                 </div>
             </div>
         </div>
@@ -301,10 +307,10 @@ import boxcoin_types from "@/assets/data/dashboard/boxcoin_types.json";
 import cny_types from "@/assets/data/dashboard/cny_types.json";
 import { products, pay_status, pay_types } from "@/assets/data/dashboard/pay_order.json";
 import moment from "moment";
-import avatar from "./avatar.vue";
-import medal from "@jx3box/jx3box-common-ui/src/medal/medal.vue";
+import medal from "@jx3box/jx3box-ui/src/author/AuthorMedals.vue";
+import CommonAvatar from "@jx3box/jx3box-ui/src/author/Avatar.vue";
 export default {
-    components: { avatar, medal },
+    components: { medal, CommonAvatar },
     name: "index",
     props: [],
     data: function () {
@@ -421,12 +427,6 @@ export default {
                 this.asset = data;
             });
         },
-        loadMedals: function () {
-            if (!this.uid) return;
-            getUserMedals(this.uid).then((res) => {
-                this.medals = res.data.data || [];
-            });
-        },
         loadFrames: function () {
             getFrames().then((res) => {
                 if (res.data) {
@@ -442,7 +442,6 @@ export default {
         init: function () {
             this.loadUserInfo();
             this.loadAsset();
-            this.loadMedals();
             this.loadAssetLogs();
         },
         getPostLink: function (post_type, post_id) {

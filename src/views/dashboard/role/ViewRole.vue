@@ -18,7 +18,7 @@
                     icon="Delete"
                 >删除</el-button>
             </div>-->
-            <el-button slot="reference" class="u-back" plain icon="ArrowLeft" @click="goBack">返回</el-button>
+            <el-button class="u-back" plain icon="ArrowLeft" @click="goBack">返回</el-button>
         </h2>
         <div class="m-role-detail" v-if="data">
             <div class="m-role-info">
@@ -34,10 +34,10 @@
                             class="u-author-avatar"
                             width="24"
                             height="24"
-                            :src="data.user_avatar | showAvatar"
+                            :src="showAvatar(data.user_avatar)"
                             alt=""
                         />
-                        <a class="u-author-name" :href="data.uid | authorLink" target="_blank">
+                        <a class="u-author-name" :href="authorLink(data.uid)" target="_blank">
                             {{ data.display_name }}
                         </a>
                     </span>
@@ -47,12 +47,12 @@
                     </span>
                     <span class="u-school">
                         <em>门派</em>
-                        {{ data.mount | showSchoolName }}
-                        <img class="u-icon" :src="data.mount | showSchoolIcon" />
+                        {{ showSchoolName(data.mount) }}
+                        <img class="u-icon" :src="showSchoolIcon(data.mount)" />
                     </span>
                     <span class="u-body">
                         <em>体型</em>
-                        {{ data.body_type | showBodyType }}
+                        {{ showBodyType(data.body_type) }}
                     </span>
                 </div>
                 <div class="u-meta">
@@ -62,7 +62,7 @@
                     </span>
                     <span class="u-remark">
                         <em>绑定于</em>
-                        {{ data.created_at | showTime }}
+                        {{ showTime(data.created_at) }}
                     </span>
                 </div>
             </div>
@@ -93,7 +93,7 @@
                 <template v-if="teams && teams.length">
                     <div class="u-teams">
                         <router-link class="u-team" :to="'/org/' + item.team_id" v-for="(item, i) in teams" :key="i">
-                            <img class="u-team-logo" v-if="item.team_logo" :src="item.team_logo | showTeamLogo" />
+                            <img class="u-team-logo" v-if="item.team_logo" :src="showTeamLogo(item.team_logo)" />
                             <img class="u-team-logo" v-else src="@/assets/img/dashboard/null.png" />
                             <span class="u-team-name">{{ item.team_name }}</span>
                         </router-link>

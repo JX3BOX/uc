@@ -22,7 +22,7 @@
 <script>
 import DOMPurify from "dompurify";
 import User from "@jx3box/jx3box-common/js/user";
-import { getArticle } from "@jx3box/jx3box-common/js/api_misc";
+import { getArticle } from "@jx3box/jx3box-common/js/system";
 import { leave } from "@/service/dashboard/feedback";
 export default {
     name: "FeedbackErase",

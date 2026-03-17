@@ -191,7 +191,7 @@
                 </div>
                 <div class="m-reply" v-if="done">
                     <el-divider content-position="left"><i class="el-icon-chat-line-square"></i> 回复处理</el-divider>
-                    <Comment :id="id" category="feedback" order="desc" />
+                    <CommonComment :id="id" category="feedback" order="desc" />
                 </div>
             </main>
 
@@ -282,17 +282,17 @@
 
 <script>
 import DOMPurify from "dompurify";
-import { getFeedback, updateFeedback, getFeedbackLog } from "@/service/dashboard/feedback";
+import { getFeedback, getFeedbackLog } from "@/service/dashboard/feedback";
 import { getTeammates } from "@/service/dashboard/index";
 import { types, subtypes, statusMap, statusColors } from "@/assets/data/dashboard/feedback.json";
 import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import moment from "moment";
-import Comment from "@jx3box/jx3box-comment-ui/src/Comment.vue";
+import CommonComment from "@jx3box/jx3box-ui/src/single/Comment.vue";
 // 打赏相关
 import { getPostBoxcoinRecords, recoveryBoxcoin } from "@/service/dashboard/thx.js";
-import Homework from "@jx3box/jx3box-common-ui/src/interact/Homework.vue";
+import Homework from "@jx3box/jx3box-ui/src/interact/Homework.vue";
 import User from "@jx3box/jx3box-common/js/user";
-import AdminGift from "@jx3box/jx3box-common-ui/assets/img/widget/admin_gift.svg";
+import AdminGift from "@jx3box/jx3box-ui/assets/img/widget/admin_gift.svg";
 import assign from "./components/assign.vue";
 import edit from "./components/edit.vue";
 import status from "./components/status.vue";
@@ -300,7 +300,7 @@ import { __clients } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
     name: "FeedbackSingle",
     components: {
-        Comment,
+        CommonComment,
         Homework,
         assign,
         edit,

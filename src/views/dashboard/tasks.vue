@@ -33,7 +33,7 @@
 import { getTasks, getCheckTasks } from "@/service/dashboard/tasks.js";
 import { __imgPath } from "@/utils/config";
 import taskItem from "@/components/dashboard/task/item.vue";
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 export default {
     name: "tasks",
     components: {

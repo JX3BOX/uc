@@ -179,7 +179,7 @@ import {
     getBoxcoinConfig,
     getBoxcoinOverview,
 } from "@/service/dashboard/boxcoin.js";
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 import { omit } from "lodash";
 export default {
     name: "Boxcoin",

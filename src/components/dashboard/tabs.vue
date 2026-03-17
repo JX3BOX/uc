@@ -1,5 +1,5 @@
 <template>
-    <el-tabs class="m-dashboard-tabs" v-model="active" @tab-click="changeTab">
+    <el-tabs class="m-dashboard-tabs" v-model="active" @tab-change="changeTab">
         <el-tab-pane v-for="item in tabs" :key="item.name" :name="item.name">
             <template #label
                 ><i :class="item.icon" class="u-tab-icon"></i> {{ item.label }}
@@ -78,7 +78,7 @@ export default {
 
             getMessageUnread().then((res) => {
                 this.count.message = res.data.data?.unread_count || 0;
-            })
+            });
         },
     },
     mounted: function () {

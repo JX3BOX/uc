@@ -38,7 +38,7 @@
 import add from "./add.vue";
 import list from "./list.vue";
 import pending from "./pending.vue";
-import { getMenu } from "@jx3box/jx3box-common/js/api_misc";
+import { getMenu } from "@jx3box/jx3box-common/js/system";
 export default {
     name: "FeedbackIndex",
     components: {

@@ -337,7 +337,7 @@ import {
 import { getVirtual } from "@/service/dashboard/goods";
 import keycodeOptions from "@/assets/data/dashboard/card_keycode.json";
 import snOptions from "@/assets/data/dashboard/card_sn.json";
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system";
 import { cloneDeep } from "lodash";
 
 // import _ from "lodash";

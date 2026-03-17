@@ -53,7 +53,7 @@
 <script>
 import { showTime } from "@jx3box/jx3box-common/js/moment";
 import { genInvitation, getMyInvitation } from "@/service/dashboard/ic.js";
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 export default {
     name: "Ic",
     props: [],

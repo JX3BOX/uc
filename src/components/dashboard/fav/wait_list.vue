@@ -5,7 +5,7 @@
                 class="m-dashboard-work-search"
                 placeholder="请输入搜索内容"
                 v-model="currentSearch"
-                @keyup.enter.native="handleChange"
+                @keyup.enter="handleChange"
                 clearable
                 @clear="handleChange"
             >

@@ -40,7 +40,9 @@
                         <div class="u-frame-item">
                             <div class="u-picbox" v-for="(item, i) in frameList" :key="i">
                                 <el-tooltip effect="dark" placement="top" :open-delay="200">
-                                    <div slot="content">{{ item.desc }}<br />{{ item.postscript }}</div>
+                                    <template #content>
+                                        <div>{{ item.desc }}<br />{{ item.postscript }}</div>
+                                    </template>
                                     <div class="u-pic" :class="setClass(item)" @click="setAvatar(item)">
                                         <el-image :src="frameUrl(item.name)" fit="contain" v-if="item.name" />
                                         <div v-else class="u-noFrame"></div>
