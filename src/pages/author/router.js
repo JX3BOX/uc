@@ -22,9 +22,9 @@ const routes = [
         component: () => import("@/views/author/Birthday.vue"),
         meta: {
             i18n: {
-                title: "pages.birthday.title",
-                keywords: "pages.birthday.keywords",
-                description: "pages.birthday.description",
+                title: "pages.author.birthday.title",
+                keywords: "pages.author.birthday.keywords",
+                description: "pages.author.birthday.description",
             },
         },
     },
@@ -34,9 +34,9 @@ const routes = [
         component: () => import("@/views/author/certificate.vue"),
         meta: {
             i18n: {
-                title: "pages.certificate.title",
-                keywords: "pages.certificate.keywords",
-                description: "pages.certificate.description",
+                title: "pages.author.certificate.title",
+                keywords: "pages.author.certificate.keywords",
+                description: "pages.author.certificate.description",
             },
         },
     },
@@ -46,9 +46,9 @@ const routes = [
         component: () => import("@/views/author/groupCertificate.vue"),
         meta: {
             i18n: {
-                title: "pages.groupCertificate.title",
-                keywords: "pages.groupCertificate.keywords",
-                description: "pages.groupCertificate.description",
+                title: "pages.author.groupCertificate.title",
+                keywords: "pages.author.groupCertificate.keywords",
+                description: "pages.author.groupCertificate.description",
             },
         },
     },
@@ -58,9 +58,9 @@ const routes = [
         component: () => import("@/views/card/HolidayCard.vue"),
         meta: {
             i18n: {
-                title: "pages.holidayCard.title",
-                keywords: "pages.holidayCard.keywords",
-                description: "pages.holidayCard.description",
+                title: "pages.author.holidayCard.title",
+                keywords: "pages.author.holidayCard.keywords",
+                description: "pages.author.holidayCard.description",
             },
         },
     },
@@ -70,9 +70,9 @@ const routes = [
         component: () => import("@/views/card/BirthdayCard.vue"),
         meta: {
             i18n: {
-                title: "pages.birthdayCard.title",
-                keywords: "pages.birthdayCard.keywords",
-                description: "pages.birthdayCard.description",
+                title: "pages.author.birthdayCard.title",
+                keywords: "pages.author.birthdayCard.keywords",
+                description: "pages.author.birthdayCard.description",
             },
         },
     },

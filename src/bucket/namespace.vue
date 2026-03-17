@@ -2,7 +2,7 @@
     <div class="m-dashboard m-dashboard-work m-dashboard-other">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">剑三铭牌</h2>
-            <a :href="publishLink" class="u-publish el-button el-button--primary el-button--small">
+            <a :href="publishLink" class="u-publish el-button el-button--primary">
                 <i class="el-icon-document"></i> 创建铭牌
             </a>
         </div>
@@ -22,13 +22,12 @@
                                         状态:
                                         <b :class="`status${item.status}`">{{ statusmap[item.status] }}</b>
                                     </span>
-                                    <time class="u-time u-desc-subitem">创建于 : {{ item.created | dateFormat }}</time>
+                                    <time class="u-time u-desc-subitem">创建于 : {{ dateFormat(item.created) }}</time>
                                 </div>
                             </div>
                             <el-button-group class="u-action">
                                 <el-button
-                                    size="small"
-                                    icon="el-icon-edit"
+                                    icon="Edit"
                                     @click="edit(item.ID, item.source_type, item.source_id)"
                                     title="编辑"
                                 ></el-button>

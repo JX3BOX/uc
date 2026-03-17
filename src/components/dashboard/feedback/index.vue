@@ -23,7 +23,7 @@
             </el-tabs>
         </section>
         <aside class="m-feedback-aside">
-            <el-button class="u-btn" size="small" type="warning" plain @click="handleEraseClick">注销账号</el-button>
+            <el-button class="u-btn" type="warning" plain @click="handleEraseClick">注销账号</el-button>
             <div class="m-feedback-faq">
                 <div class="u-title"><i class="el-icon-question"></i> FAQ</div>
                 <div class="u-list" v-for="item in faq" :key="item.link">

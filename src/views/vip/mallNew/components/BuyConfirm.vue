@@ -9,10 +9,8 @@
             </div>
         </div>
         <div class="btn-box">
-            <el-button round @click="isShow = false" size="small" style="width: 77px; font-size: 12px">取消</el-button>
-            <el-button type="primary" round @click="buyGoods" size="small" style="width: 77px; font-size: 12px"
-                >确定</el-button
-            >
+            <el-button round @click="isShow = false" style="width: 77px; font-size: 12px">取消</el-button>
+            <el-button type="primary" round @click="buyGoods" style="width: 77px; font-size: 12px">确定</el-button>
         </div>
     </el-dialog>
 </template>

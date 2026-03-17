@@ -2,14 +2,18 @@
     <div class="m-dashboard-work m-dashboard-cms" v-loading="loading">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">{{ typeLabel }}</h2>
-            <a :href="publishLink" class="u-publish el-button el-button--primary el-button--small">
+            <a :href="publishLink" class="u-publish el-button el-button--primary el-button">
                 <i class="el-icon-document"></i> 发布作品
             </a>
         </div>
 
         <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search">
-            <span slot="prepend">关键词</span>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+            <template #prepend>
+                <span>关键词</span>
+            </template>
+            <template #append>
+                <el-button icon="Search"></el-button>
+            </template>
         </el-input>
 
         <div class="m-dashboard-work-filter">
@@ -49,13 +53,8 @@
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-button
-                            size="small"
-                            icon="el-icon-edit"
-                            title="编辑"
-                            @click="edit(item.post_type, item.ID)"
-                        ></el-button>
-                        <el-button size="small" icon="el-icon-delete" title="删除" @click="del(item.ID)"></el-button>
+                        <el-button icon="Edit" title="编辑" @click="edit(item.post_type, item.ID)"></el-button>
+                        <el-button icon="Delete" title="删除" @click="del(item.ID)"></el-button>
                     </el-button-group>
                 </li>
             </ul>

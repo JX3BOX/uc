@@ -2,14 +2,18 @@
     <div class="m-dashboard m-dashboard-work m-dashboard-other">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">剑三小册</h2>
-            <a :href="publishLink" class="u-publish el-button el-button--primary el-button--small">
+            <a :href="publishLink" class="u-publish el-button el-button--primary">
                 <i class="el-icon-document"></i> 创建小册
             </a>
         </div>
 
         <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search">
-            <span slot="prepend">关键词</span>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+            <template #prepend>
+                <span>关键词</span>
+            </template>
+            <template #append>
+                <el-button icon="Search"></el-button>
+            </template>
         </el-input>
 
         <div class="m-dashboard-box" v-loading="loading">
@@ -20,34 +24,24 @@
                             <img v-if="item.public" svg-inline src="@/assets/img/publish/works/repo.svg" />
                             <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" />
                         </i>
-                        <a class="u-title" target="_blank" :href="item.id | getCollectionLink">
+                        <a class="u-title" target="_blank" :href="getCollectionLink(item.id)">
                             {{ item.title || "无标题" }}
                         </a>
                         <div class="u-desc">
                             <time class="u-desc-subitem">
                                 <i class="el-icon-finished"></i>
                                 发布 :
-                                {{ item.created | dateFormat }}
+                                {{ dateFormat(item.created) }}
                             </time>
                             <time class="u-desc-subitem">
                                 <i class="el-icon-refresh"></i>
                                 更新 :
-                                {{ item.updated | dateFormat }}
+                                {{ dateFormat(item.updated) }}
                             </time>
                         </div>
                         <el-button-group class="u-action">
-                            <el-button
-                                size="small"
-                                icon="el-icon-edit"
-                                @click="post_edit(item.id)"
-                                title="编辑"
-                            ></el-button>
-                            <el-button
-                                size="small"
-                                icon="el-icon-delete"
-                                @click="post_del(item.id)"
-                                title="删除"
-                            ></el-button>
+                            <el-button icon="Edit" @click="post_edit(item.id)" title="编辑"></el-button>
+                            <el-button icon="Delete" @click="post_del(item.id)" title="删除"></el-button>
                         </el-button-group>
                     </li>
                 </ul>

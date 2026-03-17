@@ -8,7 +8,7 @@
                 class="u-btn"
                 type="primary"
                 @click="togglePullBox"
-                size="small"
+                
                 :disabled="!money"
                 >提现</el-button
             > -->

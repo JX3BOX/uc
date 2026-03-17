@@ -23,6 +23,11 @@ export default {
     },
     emits: ["update"],
     watch: {
+        data: {
+            deep: true,
+            handler: function (newval) {
+                this.tag = newval || [];
+            },
         },
         tag: {
             deep: true,

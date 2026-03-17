@@ -56,7 +56,6 @@
                     icon="el-icon-shopping-cart-1"
                     circle
                     :id="`btnCart_${item.id}`"
-                    size="small"
                     @click.prevent="handleAddCart"
                 ></el-button>
                 <!-- 购物车轨迹 -->
@@ -65,7 +64,7 @@
                 </div>
             </template>
             <span v-else class="is-had">
-                <el-button disabled icon="el-icon-shopping-cart-1" circle size="small"></el-button>
+                <el-button disabled icon="el-icon-shopping-cart-1" circle></el-button>
             </span>
         </div>
     </router-link>

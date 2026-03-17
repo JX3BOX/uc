@@ -4,7 +4,7 @@
         <div class="m-publish-pz-header">
             <el-button
                 class="u-add u-btn"
-                icon="el-icon-circle-plus-outline"
+                icon="CirclePlus"
                 type="primary"
                 @click="addItem"
                 :disabled="list.length >= limit"
@@ -17,65 +17,66 @@
                 class="u-list"
                 :list="list"
                 draggable=".u-item"
+                item-key="id"
                 v-bind="{ animation: 150, scrollSensitivity: 200 }"
             >
-                <div class="u-item" v-for="(item, i) in list" :key="i">
-                    <span class="u-item-order">{{ i + 1 }}.</span>
-                    <i class="u-item-drag el-icon-rank"></i>
-                    <div class="u-item-select">
-                        <el-select
-                            v-model="item.id"
-                            placeholder="请选择配装方案"
-                            clearable
-                            filterable
-                            remote
-                            :loading="search_loading"
-                            @visible-change="listOptions"
-                            :remote-method="searchOptions"
-                            size="small"
-                        >
-                            <el-option
-                                v-for="option in computedOptions"
-                                :key="option.id"
-                                :label="option.title"
-                                :value="option.id"
-                                class="m-publish-pz-select-option"
+                <template #item="{ element, index }">
+                    <div class="u-item">
+                        <span class="u-item-order">{{ index + 1 }}.</span>
+                        <i class="u-item-drag el-icon-rank"></i>
+                        <div class="u-item-select">
+                            <el-select
+                                v-model="element.id"
+                                placeholder="请选择配装方案"
+                                clearable
+                                filterable
+                                remote
+                                :loading="search_loading"
+                                @visible-change="listOptions"
+                                :remote-method="searchOptions"
+                                size="large"
                             >
-                                <i class="u-client i-client" :class="option.client || 'std'">{{
-                                    option.client == "origin" ? "缘起" : "剑三"
-                                }}</i>
-                                <i class="u-level i-client" :class="option.client || 'std'"
-                                    >Lv.{{ option.global_level || "-" }}</i
+                                <el-option
+                                    v-for="option in computedOptions"
+                                    :key="option.id"
+                                    :label="option.title"
+                                    :value="option.id"
+                                    class="m-publish-pz-select-option"
                                 >
-                                <span>{{ option.title }}</span>
-                            </el-option>
-                        </el-select>
+                                    <i class="u-client i-client" :class="option.client || 'std'">{{
+                                        option.client == "origin" ? "缘起" : "剑三"
+                                    }}</i>
+                                    <i class="u-level i-client" :class="option.client || 'std'"
+                                        >Lv.{{ option.global_level || "-" }}</i
+                                    >
+                                    <span>{{ option.title }}</span>
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="u-item-name">
+                            <el-input
+                                v-model="element.name"
+                                placeholder="请输入配装简称"
+                                clearable
+                                :maxlength="12"
+                                :minlength="1"
+                                :show-word-limit="true"
+                                size="large"
+                            ></el-input>
+                        </div>
+                        <div class="u-item-op">
+                            <a
+                                class="preview el-button delete el-button--text"
+                                :href="getLink(element.id)"
+                                v-if="element.id"
+                                target="_blank"
+                            >
+                                <i class="el-icon-view"></i>预览
+                            </a>
+                            <el-button class="delete" link icon="Delete" @click="removeItem(index)">删除</el-button>
+                        </div>
                     </div>
-                    <div class="u-item-name">
-                        <el-input
-                            v-model="item.name"
-                            placeholder="请输入配装简称"
-                            clearable
-                            :maxlength="12"
-                            :minlength="1"
-                            :show-word-limit="true"
-                            size="small"
-                        ></el-input>
-                    </div>
-                    <div class="u-item-op">
-                        <a
-                            class="preview el-button delete el-button--text"
-                            :href="getLink(item.id)"
-                            v-if="item.id"
-                            target="_blank"
-                        >
-                            <i class="el-icon-view"></i>预览
-                        </a>
-                        <el-button class="delete" type="text" icon="el-icon-delete" @click="removeItem(i)"
-                            >删除</el-button
-                        >
-                    </div>
-                </div>
+                </template>
             </draggable>
         </div>
         <slot name="append" class="m-publish-pz-append"></slot>
@@ -201,7 +202,7 @@ export default {
     .mt(10px);
     .u-item {
         display: flex;
-        line-height: 40px;
+        // line-height: 40px;
     }
     .u-item-order {
         .fz(12px);

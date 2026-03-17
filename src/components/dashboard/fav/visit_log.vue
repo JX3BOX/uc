@@ -1,9 +1,19 @@
 <template>
     <div class="m-dashboard-box" v-loading="loading">
         <div class="m-dashboard-msg-header">
-            <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="currentSearch" clearable @clear="loadData">
-                <template slot="prepend">关键词</template>
-                <el-button slot="append" icon="el-icon-search"></el-button>
+            <el-input
+                class="m-dashboard-work-search"
+                placeholder="请输入搜索内容"
+                v-model="currentSearch"
+                clearable
+                @clear="loadData"
+            >
+                <template #prepend>
+                    <span>关键词</span>
+                </template>
+                <template #append>
+                    <el-button icon="Search"></el-button>
+                </template>
             </el-input>
         </div>
         <ul class="m-dashboard-box-list" v-if="data.length">
@@ -11,15 +21,20 @@
                 <i class="u-icon">
                     <img svg-inline src="@/assets/img/dashboard/works/repo.svg" />
                 </i>
-                <a class="u-title" target="_blank" :href="getLink(item.source_type, item.content_meta && item.content_meta.content_id || item.source_id)">{{
-                    item.content_meta && item.content_meta.title || item.title || "无标题"
-                }}</a>
+                <a
+                    class="u-title"
+                    target="_blank"
+                    :href="
+                        getLink(item.source_type, (item.content_meta && item.content_meta.content_id) || item.source_id)
+                    "
+                    >{{ (item.content_meta && item.content_meta.title) || item.title || "无标题" }}</a
+                >
                 <div class="u-desc">
                     <span class="u-category"><i class="el-icon-folder"></i> {{ getTypeLabel(item.source_type) }} </span>
                     <span><i class="el-icon-date"></i> {{ dateFormat(item.created_at) }} </span>
                 </div>
                 <el-button-group class="u-action">
-                    <el-button size="small" icon="el-icon-delete" title="删除记录" @click="del(item.id)"></el-button>
+                    <el-button icon="Delete" title="删除记录" @click="del(item.id)"></el-button>
                 </el-button-group>
             </li>
         </ul>

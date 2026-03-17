@@ -4,11 +4,7 @@
 
         <div class="m-macro-box m-tool-source-box">
             <div class="m-tool-source-header">
-                <el-button
-                    class="m-macro-addbutton"
-                    icon="el-icon-circle-plus-outline"
-                    type="primary"
-                    @click="addSource"
+                <el-button class="m-macro-addbutton" icon="CirclePlus" type="primary" @click="addSource"
                     >添加资源</el-button
                 >
             </div>
@@ -28,8 +24,8 @@
                     <div class="m-source-mode m-macro-item">
                         <h5 class="u-title">模式</h5>
                         <el-radio-group v-model="item.mode" size="large">
-                            <el-radio label="0" border>远程</el-radio>
-                            <el-radio label="1" border>本地</el-radio>
+                            <el-radio value="0" border>远程</el-radio>
+                            <el-radio value="1" border>本地</el-radio>
                         </el-radio-group>
                     </div>
                     <div class="m-source-file m-macro-item" v-if="item.mode == 1">
@@ -46,9 +42,7 @@
                                 :id="'tool_' + i"
                                 @change="(e) => uploadSource(e, i)"
                             />
-                            <el-button type="primary" icon="el-icon-s-promotion" @click="selectSource(i)"
-                                >上传文件</el-button
-                            >
+                            <el-button type="primary" icon="Promotion" @click="selectSource(i)">上传文件</el-button>
                             <span class="u-data-remark">{{ files[i] && files[i].name }}</span>
                             <div class="u-file" v-if="item.file">
                                 <span class="u-file__label">当前文件下载：</span>

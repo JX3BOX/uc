@@ -8,7 +8,7 @@
         append-to-body
     >
         <el-radio-group class="m-box" v-model="id" v-if="list && list.length">
-            <el-radio :label="item.id" border v-for="(item, i) in list" :key="i">
+            <el-radio :value="item.id" border v-for="(item, i) in list" :key="i">
                 <div class="m-card">
                     <span>{{ item.contact_name }}</span>
                     <span>电话：{{ item.contact_phone }}</span>
@@ -19,10 +19,10 @@
         <a class="m-card m-no-address" href="/dashboard/address" target="_blank" v-else>
             没有可切换的地址，点击管理地址
         </a>
-        <span slot="footer" class="m-footer">
+        <template #footer>
             <el-button @click="close">取 消</el-button>
             <el-button type="primary" @click="submit">确 定</el-button>
-        </span>
+        </template>
     </el-dialog>
 </template>
 

@@ -16,8 +16,8 @@
                 ></el-input>
             </el-form-item>
             <el-form-item label="可见性">
-                <el-radio v-model="data.public" :label="1">公开</el-radio>
-                <el-radio v-model="data.public" :label="0">私有</el-radio>
+                <el-radio v-model="data.public" :value="1">公开</el-radio>
+                <el-radio v-model="data.public" :value="0">私有</el-radio>
             </el-form-item>
             <!-- 清单描述 -->
             <el-form-item label="描述">
@@ -33,12 +33,10 @@
             <!-- 清单类型 -->
             <el-form-item label="类型">
                 <el-radio-group v-model="data.type" size="medium" @change="resetPages">
-                    <el-radio-button label="1">道具清单</el-radio-button>
-                    <el-radio-button label="2">装备清单</el-radio-button>
+                    <el-radio-button value="1">道具清单</el-radio-button>
+                    <el-radio-button value="2">装备清单</el-radio-button>
                 </el-radio-group>
-                <el-button class="u-add-plan" size="medium" icon="el-icon-plus" @click="addRelation"
-                    >新增分组</el-button
-                >
+                <el-button class="u-add-plan" size="medium" icon="Plus" @click="addRelation">新增分组</el-button>
             </el-form-item>
             <!-- 制作清单 -->
             <el-form-item label="清单">
@@ -48,7 +46,7 @@
                         <el-input
                             class="u-title"
                             placeholder="请输入物品名称（可适配中括号）"
-                            prefix-icon="el-icon-search"
+                            prefix-icon="Search"
                             v-model.lazy.trim="keyword"
                         ></el-input>
                         <draggable
@@ -74,7 +72,6 @@
                             :page-size="per"
                             :total="total"
                             v-model:current-page="page"
-                            size="small"
                         ></el-pagination>
                     </div>
                     <!-- 物品子清单 -->
@@ -109,7 +106,6 @@
                                             <div class="u-count">
                                                 <span>数量：</span>
                                                 <el-input-number
-                                                    size="small"
                                                     v-model.number="item.count"
                                                     :min="1"
                                                     label="数字"
@@ -159,12 +155,7 @@
             </el-form-item>
             <!-- 提交表单 -->
             <el-form-item>
-                <el-button
-                    class="u-publish"
-                    icon="el-icon-s-promotion"
-                    type="primary"
-                    @click="submit"
-                    :loading="loading"
+                <el-button class="u-publish" icon="Promotion" type="primary" @click="submit" :loading="loading"
                     >提交物品清单</el-button
                 >
             </el-form-item>

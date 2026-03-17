@@ -16,7 +16,7 @@
                     @keyup.enter.native="changePage(1)"
                 >
                     <template slot="prepend">关键词</template>
-                    <el-button slot="append" icon="el-icon-search" @click="changePage(1)"></el-button>
+                    <el-button slot="append" icon="Search" @click="changePage(1)"></el-button>
                 </el-input>
                 <el-button class="u-read-all" type="primary" @click="read(null)">
                     <i class="el-icon el-icon-check"></i>
@@ -55,13 +55,12 @@
                     </div>
                     <el-button-group class="u-action">
                         <el-button
-                            size="small"
                             icon="el-icon-check"
                             title="设为已读"
                             @click="read(item)"
                             :disabled="item.read == 1"
                         ></el-button>
-                        <el-button size="small" icon="el-icon-delete" title="删除" @click="del(item)"></el-button>
+                        <el-button icon="Delete" title="删除" @click="del(item)"></el-button>
                     </el-button-group>
                 </li>
             </ul>

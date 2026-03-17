@@ -9,8 +9,8 @@
             <el-form-item label="门派">
                 <el-select v-model="data.type" placeholder="请选择门派">
                     <el-option v-for="s in schools" :key="s.value" :value="s.key" :label="s.value">
-                        <span style="float: left;">{{ s.value }}</span>
-                        <span style="float: right;">
+                        <span style="float: left">{{ s.value }}</span>
+                        <span style="float: right">
                             <img :src="s.path" width="32" :alt="s.key" />
                         </span>
                     </el-option>
@@ -44,12 +44,12 @@
                         v-if="inputVisible"
                         v-model="inputValue"
                         ref="saveTagInput"
-                        size="small"
+                        
                         @keyup.enter.native="handleInputConfirm"
                         @blur="handleInputConfirm"
                     >
                     </el-input>
-                    <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新标签</el-button>
+                    <el-button v-else class="button-new-tag"  @click="showInput">+ 新标签</el-button>
                 </div>
             </el-form-item>-->
 
@@ -147,10 +147,7 @@ export default {
                 await this.$nextTick();
 
                 myField.focus();
-                myField.setSelectionRange(
-                    endPos + value.length,
-                    endPos + value.length
-                );
+                myField.setSelectionRange(endPos + value.length, endPos + value.length);
             } else {
                 this.data.content = value;
             }
@@ -227,31 +224,24 @@ export default {
              * 依次判定表情字符为1，2，3个的情况
              */
             const emotion_1 = str.match(regex_1)
-                ? str
-                      .match(regex_1)
-                      .filter((emotion) => emotionKeys.includes(emotion))
+                ? str.match(regex_1).filter((emotion) => emotionKeys.includes(emotion))
                 : [];
 
             emotion_1.forEach((emotion) => str.replace(emotion, ""));
 
             const emotion_2 = str.match(regex_2)
-                ? str
-                      .match(regex_2)
-                      .filter((emotion) => emotionKeys.includes(emotion))
+                ? str.match(regex_2).filter((emotion) => emotionKeys.includes(emotion))
                 : [];
 
             emotion_2.forEach((emotion) => str.replace(emotion, ""));
 
             const emotion_3 = str.match(regex_3)
-                ? str
-                      .match(regex_3)
-                      .filter((emotion) => emotionKeys.includes(emotion))
+                ? str.match(regex_3).filter((emotion) => emotionKeys.includes(emotion))
                 : [];
 
             emotion_3.forEach((emotion) => str.replace(emotion, ""));
 
-            const emotionLength =
-                emotion_1.length + emotion_2.length + emotion_3.length;
+            const emotionLength = emotion_1.length + emotion_2.length + emotion_3.length;
 
             this.contentLength = emotionLength;
 
@@ -290,24 +280,27 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .m-publish-joke-emotion {
     max-height: 168px;
     overflow: auto;
-}
-.el-tag {
-    margin-right: 10px;
-}
-.button-new-tag {
-    // margin-left: 10px;
-    height: 32px;
-    line-height: 30px;
-    padding-top: 0;
-    padding-bottom: 0;
-}
-.input-new-tag {
-    width: 90px;
-    margin-left: 10px;
-    vertical-align: bottom;
+    .c-jx3box-emotion-item {
+        box-sizing: content-box;
+    }
+    .el-tag {
+        margin-right: 10px;
+    }
+    .button-new-tag {
+        // margin-left: 10px;
+        height: 32px;
+        line-height: 30px;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .input-new-tag {
+        width: 90px;
+        margin-left: 10px;
+        vertical-align: bottom;
+    }
 }
 </style>

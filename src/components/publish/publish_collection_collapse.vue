@@ -1,5 +1,5 @@
 <template>
-    <el-checkbox class="u-collapse" v-model="collection_collapse" :true-label="1" :false-label="0"
+    <el-checkbox class="u-collapse" v-model="collection_collapse" :true-value="1" :fasle-value="0"
         >默认展开</el-checkbox
     >
 </template>

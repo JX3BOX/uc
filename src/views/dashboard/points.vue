@@ -17,29 +17,32 @@
                     header-cell-class-name="u-header-cell"
                 >
                     <el-table-column label="类型">
-                        <template slot-scope="scope">{{ formatType(scope.row.action_type) }}</template>
+                        <template #default="scope">{{ formatType(scope.row.action_type) }}</template>
                     </el-table-column>
                     <el-table-column label="数量">
-                        <div class="u-count" :class="{ isNegative: Number(scope.row.count) < 0 }" slot-scope="scope">
-                            <span>{{ Number(scope.row.count) > 0 ? "+" : "" }}</span> <b>{{ scope.row.count }}</b>
-                        </div>
+                        <template #default="scope">
+                            <div class="u-count" :class="{ isNegative: Number(scope.row.count) < 0 }">
+                                <span>{{ Number(scope.row.count) > 0 ? "+" : "" }}</span> <b>{{ scope.row.count }}</b>
+                            </div>
+                        </template>
                     </el-table-column>
                     <el-table-column prop="count" label="源于作品">
-                        <a
-                            class="u-link"
-                            :href="getPostLink(scope.row)"
-                            target="_blank"
-                            v-if="getPostLink(scope.row)"
-                            slot-scope="scope"
-                            ><i class="el-icon-link"></i> 点击查看
-                        </a>
-                        <span v-else> - </span>
+                        <template #default="scope">
+                            <a
+                                class="u-link"
+                                :href="getPostLink(scope.row)"
+                                target="_blank"
+                                v-if="getPostLink(scope.row)"
+                                ><i class="el-icon-link"></i> 点击查看
+                            </a>
+                            <span v-else> - </span>
+                        </template>
                     </el-table-column>
                     <el-table-column label="备注">
-                        <template slot-scope="scope">{{ formatRemark(scope.row.remark) }}</template>
+                        <template #default="scope">{{ formatRemark(scope.row.remark) }}</template>
                     </el-table-column>
                     <el-table-column label="时间">
-                        <template slot-scope="scope">
+                        <template #default="scope">
                             <span>{{ showTime(scope.row.created_at) }}</span>
                         </template>
                     </el-table-column>
@@ -63,29 +66,32 @@
                     header-cell-class-name="u-header-cell"
                 >
                     <el-table-column label="类型">
-                        <template slot-scope="scope">{{ formatType(scope.row.action_type) }}</template>
+                        <template #default="scope">{{ formatType(scope.row.action_type) }}</template>
                     </el-table-column>
                     <el-table-column label="数量">
-                        <div class="u-count" :class="{ isNegative: Number(scope.row.count) < 0 }" slot-scope="scope">
-                            <span>{{ Number(scope.row.count) > 0 ? "+" : "" }}</span> <b>{{ scope.row.count }}</b>
-                        </div>
+                        <template #default="scope">
+                            <div class="u-count" :class="{ isNegative: Number(scope.row.count) < 0 }">
+                                <span>{{ Number(scope.row.count) > 0 ? "+" : "" }}</span> <b>{{ scope.row.count }}</b>
+                            </div>
+                        </template>
                     </el-table-column>
                     <el-table-column prop="count" label="源于作品">
-                        <a
-                            class="u-link"
-                            :href="getPostLink(scope.row)"
-                            target="_blank"
-                            v-if="getPostLink(scope.row)"
-                            slot-scope="scope"
-                            ><i class="el-icon-link"></i> 点击查看
-                        </a>
-                        <span v-else> - </span>
+                        <template #default="scope">
+                            <a
+                                class="u-link"
+                                :href="getPostLink(scope.row)"
+                                target="_blank"
+                                v-if="getPostLink(scope.row)"
+                                ><i class="el-icon-link"></i> 点击查看
+                            </a>
+                            <span v-else> - </span>
+                        </template>
                     </el-table-column>
                     <el-table-column label="备注">
-                        <template slot-scope="scope">{{ formatRemark(scope.row.remark) }}</template>
+                        <template #default="scope">{{ formatRemark(scope.row.remark) }}</template>
                     </el-table-column>
                     <el-table-column label="时间">
-                        <template slot-scope="scope">
+                        <template #default="scope">
                             <span>{{ showTime(scope.row.created_at) }}</span>
                         </template>
                     </el-table-column>

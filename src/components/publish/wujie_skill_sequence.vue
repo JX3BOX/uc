@@ -3,11 +3,11 @@
         <el-divider content-position="left">武学助手序列</el-divider>
         <div class="m-macro-box">
             <div class="m-macro-header">
-                <el-button class="m-macro-addbutton" icon="el-icon-circle-plus-outline" type="primary" @click="addMacro"
+                <el-button class="m-macro-addbutton" icon="CirclePlus" type="primary" @click="addMacro"
                     >添加序列</el-button
                 >
                 <!-- <a
-                    class="m-macro-help el-button el-button--success is-plain el-button--small"
+                    class="m-macro-help el-button el-button--success is-plain "
                     href="/tool/14671/"
                     target="_blank"
                 >
@@ -82,11 +82,7 @@
                     </div> -->
                     <div class="m-macro-macro">
                         <div class="m-macro-header">
-                            <el-button
-                                class="m-macro-addbutton"
-                                icon="el-icon-circle-plus-outline"
-                                type="primary"
-                                @click="addSkill"
+                            <el-button class="m-macro-addbutton" icon="CirclePlus" type="primary" @click="addSkill"
                                 >添加技能</el-button
                             >
                         </div>
@@ -138,8 +134,7 @@
                             @click="removeMacro(i + 1)"
                             type="danger"
                             plain
-                            icon="el-icon-delete"
-                            size="small"
+                            icon="Delete"
                             >移除本序列</el-button
                         >
                     </div>

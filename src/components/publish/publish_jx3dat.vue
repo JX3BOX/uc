@@ -7,18 +7,10 @@
         <template v-if="data_type == 1">
             <div class="m-jx3data-box">
                 <div class="m-jx3dat-header">
-                    <el-button
-                        class="m-jx3dat-addbutton"
-                        icon="el-icon-circle-plus-outline"
-                        type="primary"
-                        @click="addDBM"
+                    <el-button class="m-jx3dat-addbutton" icon="CirclePlus" type="primary" @click="addDBM"
                         >添加数据</el-button
                     >
-                    <a
-                        class="m-jx3dat-help el-button el-button--success is-plain el-button--small"
-                        href="/tool/13912"
-                        target="_blank"
-                    >
+                    <a class="m-jx3dat-help el-button el-button--success is-plain" href="/tool/13912" target="_blank">
                         <i class="el-icon-info"></i> 点击查看发布帮助
                     </a>
                 </div>
@@ -86,23 +78,10 @@
                                 >的文件上传，上传完后如若重新修改版本名称则需要重新上传对应文件
                             </div>
                             <input class="u-data-input" type="file" :id="'jx3dat_' + i" @change="uploadDBM(item, i)" />
-                            <el-button
-                                type="primary"
-                                icon="el-icon-s-promotion"
-                                plain
-                                size="small"
-                                @click="selectDBM(i)"
+                            <el-button type="primary" icon="Promotion" plain @click="selectDBM(i)"
                                 >上传数据文件</el-button
                             >
                             <span class="u-data-remark">{{ item.origin_name }}</span>
-                            <!-- <el-button
-                                size="small"
-                                type="primary"
-                                plain
-                                @click="uploadDBM(item, i)"
-                                icon="el-icon-s-promotion"
-                                >开始上传</el-button
-                            >-->
                             <el-input
                                 class="u-fileurl"
                                 :class="{ isUploaded: item.isUploaded }"
@@ -185,9 +164,7 @@
         <!-- 其它类型上传字段 -->
         <el-form-item v-else label="数据" class="m-jx3dat-other">
             <input class="u-data-input" type="file" id="otherdata" @change="uploadDat" />
-            <el-button type="primary" icon="el-icon-s-promotion" plain size="medium" @click="selectDat"
-                >上传数据文件</el-button
-            >
+            <el-button type="primary" icon="Promotion" plain size="medium" @click="selectDat">上传数据文件</el-button>
             <span class="u-data-remark">{{ jx3dats.origin_name }}</span>
             <el-input
                 v-if="jx3dats.down"

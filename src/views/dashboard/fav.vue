@@ -2,7 +2,7 @@
     <div class="m-dashboard m-dashboard-work m-dashboard-fav">
         <div class="m-dashboard-work-header">
             <h2 class="u-title"><i class="el-icon-star-off"></i> 收藏订阅</h2>
-            <el-select v-model="searchType" placeholder="类型过滤" class="u-filter" size="small" @change="handleChange">
+            <el-select v-model="searchType" placeholder="类型过滤" class="u-filter" @change="handleChange">
                 <el-option label="全部" value="all"> </el-option>
                 <el-option-group v-for="group in options" :key="group.label" :label="group.label">
                     <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
@@ -12,17 +12,19 @@
         </div>
         <el-tabs v-model="favChangeCount" @tab-click="loadData">
             <el-tab-pane label="收藏" name="fav">
-                <span slot="label"><i class="el-icon-star-off"></i> 收藏</span>
+                <template #label> <i class="el-icon-star-off"></i> 收藏 </template>
                 <div v-if="favChangeCount === 'fav'" class="m-dashboard-box" v-loading="loading">
                     <div class="m-dashboard-msg-header">
                         <el-input
                             class="m-dashboard-work-search"
                             placeholder="请输入搜索内容"
                             v-model="search"
-                            @keyup.enter.native="handleChange"
+                            @keyup.enter="handleChange"
                         >
-                            <template slot="prepend">关键词</template>
-                            <el-button slot="append" icon="el-icon-search" @click="handleChange"></el-button>
+                            <template #prepend>关键词</template>
+                            <template #append>
+                                <el-button icon="Search" @click="handleChange"></el-button>
+                            </template>
                         </el-input>
                     </div>
                     <ul class="m-dashboard-box-list" v-if="data.length">
@@ -40,12 +42,7 @@
                                 <span><i class="el-icon-date"></i> 于 {{ dateFormat(item.created) }} 加入收藏 </span>
                             </div>
                             <el-button-group class="u-action">
-                                <el-button
-                                    size="small"
-                                    icon="el-icon-delete"
-                                    title="取消收藏"
-                                    @click="del(item.id)"
-                                ></el-button>
+                                <el-button icon="Delete" title="取消收藏" @click="del(item.id)"></el-button>
                             </el-button-group>
                         </li>
                     </ul>
@@ -66,11 +63,11 @@
                 </div>
             </el-tab-pane>
             <el-tab-pane label="订阅" name="sub">
-                <span slot="label"><i class="u-tab-icon el-icon-news"></i> 订阅</span>
+                <template #label> <i class="u-tab-icon el-icon-news"></i> 订阅 </template>
                 <rss-list v-if="favChangeCount === 'sub'" />
             </el-tab-pane>
             <el-tab-pane label="历史记录" name="log">
-                <span slot="label"><i class="el-icon-time"></i> 历史记录 </span>
+                <template #label> <i class="el-icon-time"></i> 历史记录 </template>
                 <visit-log
                     v-if="favChangeCount === 'log'"
                     :type="searchType"
@@ -79,7 +76,7 @@
                 />
             </el-tab-pane>
             <el-tab-pane label="稍后再看" name="watch_later">
-                <span slot="label"><i class="el-icon-news"></i> 稍后再看</span>
+                <template #label> <i class="el-icon-news"></i> 稍后再看 </template>
                 <wait-list
                     v-if="favChangeCount === 'watch_later'"
                     :type="searchType"

@@ -18,20 +18,20 @@
                 :filter-multiple="false"
                 column-key="post_type"
             >
-                <template slot-scope="{ row }">
+                <template #default="{ row }">
                     <div>{{ postType(row.post_type) }}</div>
                 </template>
             </el-table-column>
             <el-table-column label="货币类型">
-                <template slot-scope="{ row }">
+                <template #default="{ row }">
                     {{ priceType(row.price_type) }}
                 </template>
             </el-table-column>
             <el-table-column label="货币数量" prop="price_count" />
             <el-table-column label="购买时间" prop="created_at" />
             <el-table-column>
-                <template slot-scope="{ row }">
-                    <el-button size="small" plain @click="toDetails(row)" icon="el-icon-view">查看</el-button>
+                <template #default="{ row }">
+                    <el-button plain @click="toDetails(row)" icon="View">查看</el-button>
                 </template>
             </el-table-column>
         </el-table>

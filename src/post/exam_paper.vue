@@ -74,12 +74,7 @@
             <el-form-item label class="m-publish-exam-content">
                 <!-- <tinymce :content="primary.whyami" :height="400" />
                 <upload class="u-editor-upload" />-->
-                <el-button
-                    class="u-publish"
-                    icon="el-icon-s-promotion"
-                    type="primary"
-                    @click="publish"
-                    :disabled="processing"
+                <el-button class="u-publish" icon="Promotion" type="primary" @click="publish" :disabled="processing"
                     >发布试卷</el-button
                 >
             </el-form-item>

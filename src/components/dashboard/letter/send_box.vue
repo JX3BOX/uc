@@ -2,14 +2,20 @@
     <div class="m-letter-sendbox" :class="{ disabled: disabled }">
         <sendTools @update:image="sendImage" @update:text="updateText" />
         <div class="u-send-content">
-            <el-input type="textarea" placeholder="按 Ctrl+Enter 可快速发送消息" v-model="content" id="letterInput" @keydown.ctrl.enter.native="send"></el-input>
+            <el-input
+                type="textarea"
+                placeholder="按 Ctrl+Enter 可快速发送消息"
+                v-model="content"
+                id="letterInput"
+                @keydown.ctrl.enter.native="send"
+            ></el-input>
         </div>
         <div class="u-send-action">
             <span class="u-text-sum">
                 <span class="u-current-sum" :class="{ over: isOver }">{{ currentSum }}</span>
                 <span class="u-max-sum">/{{ max }}</span>
             </span>
-            <el-button size="small" :disabled="isOver || !currentSum" @click="send">发送</el-button>
+            <el-button :disabled="isOver || !currentSum" @click="send">发送</el-button>
         </div>
     </div>
 </template>
@@ -62,7 +68,7 @@ export default {
         },
         async updateText(key) {
             const myField = document.querySelector(`#letterInput`);
-            const value = key
+            const value = key;
             if (myField.selectionStart || myField.selectionStart === 0) {
                 let startPos = myField.selectionStart;
                 let endPos = myField.selectionEnd;
@@ -75,14 +81,11 @@ export default {
                 await this.$nextTick();
 
                 myField.focus();
-                myField.setSelectionRange(
-                    endPos + value.length,
-                    endPos + value.length
-                );
+                myField.setSelectionRange(endPos + value.length, endPos + value.length);
             } else {
                 this.content = value;
             }
-        }
+        },
     },
 };
 </script>

@@ -6,12 +6,7 @@
                 <h3>【领取条件】</h3>
                 <p>网站前500名注册用户（UID &lt;= 500）</p>
                 <p>获赠90天PRO会员</p>
-                <el-button
-                    class="u-btn"
-                    type="warning"
-                    @click="getGift"
-                    :disabled="done"
-                    icon="el-icon-present"
+                <el-button class="u-btn" type="warning" @click="getGift" :disabled="done" icon="Present"
                     >点击领取</el-button
                 >
             </div>
@@ -23,12 +18,12 @@ import { getFreeVip } from "@/service/vip/event";
 import User from "@jx3box/jx3box-common/js/user";
 export default {
     props: [],
-    data: function() {
+    data: function () {
         return { done: false };
     },
     computed: {},
     methods: {
-        getGift: function() {
+        getGift: function () {
             if (User.getInfo().uid > 500) {
                 this.$alert("很遗憾，您没有活动领取资格", "消息", {
                     confirmButtonText: "确定",

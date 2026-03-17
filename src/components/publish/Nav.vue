@@ -1,10 +1,10 @@
 <template>
     <nav class="m-nav">
-        <router-link class="m-nav-publish el-button el-button--primary" to="/">
+        <router-link class="el-button el-button--large el-button--primary m-nav-publish" to="/">
             <i class="el-icon-edit-outline"></i>
             <span>创作台</span>
         </router-link>
-        <router-link class="m-nav-bucket el-button el-button--primary is-plain" to="/draft">
+        <router-link class="el-button el-button--large el-button--primary is-plain m-nav-bucket" to="/draft">
             <i class="el-icon-receiving"></i>
             <span>草稿箱</span>
         </router-link>

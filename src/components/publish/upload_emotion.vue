@@ -1,14 +1,14 @@
 <template>
     <div class="c-upload">
         <!-- 上传触发按钮 -->
-        <el-button type="primary" @click="dialogVisible = true" icon="el-icon-upload" :disabled="!enable">{{
+        <el-button type="primary" @click="dialogVisible = true" icon="Upload" :disabled="!enable">{{
             btn_txt
         }}</el-button>
 
         <!-- 弹出界面 -->
         <el-dialog class="c-large-dialog" title="上传" v-model="dialogVisible">
             <!-- 清空按钮 -->
-            <el-button class="u-upload-clear" plain icon="el-icon-delete" size="small" @click="clear">清空</el-button>
+            <el-button class="u-upload-clear" plain icon="Delete" @click="clear">清空</el-button>
 
             <!-- 限制提示 -->
             <el-alert class="u-upload-tip" :title="tip" type="info" show-icon :closable="false"></el-alert>

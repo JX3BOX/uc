@@ -5,8 +5,12 @@
         </div>
 
         <el-input class="m-dashboard-work-search u-source-search" placeholder="请输入搜索内容" v-model="search">
-            <template slot="prepend">关键词</template>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+            <template #prepend>
+                <span>关键词</span>
+            </template>
+            <template #append>
+                <el-button icon="Search"></el-button>
+            </template>
         </el-input>
 
         <div class="m-dashboard-box">
@@ -27,7 +31,7 @@
 
                     <el-button-group class="u-action">
                         <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-                            <el-button size="small" icon="el-icon-delete" @click="del(item.id, i)"></el-button>
+                            <el-button icon="Delete" @click="del(item.id, i)"></el-button>
                         </el-tooltip>
                     </el-button-group>
                 </li>

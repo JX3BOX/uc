@@ -25,11 +25,11 @@
                         >{{ statusmap[item.status] }}</b
                     >
                 </span>
-                <time class="u-time u-desc-subitem">提交于: {{ item.createTime | dateFormat }}</time>
+                <time class="u-time u-desc-subitem">提交于: {{ dateFormat(item.createTime) }}</time>
             </div>
             <el-button-group class="u-action">
-                <el-button size="small" icon="el-icon-edit" title="编辑" @click="edit(item.id)"></el-button>
-                <el-button size="small" icon="el-icon-delete" title="删除" @click="del(item.id, i)"></el-button>
+                <el-button icon="Edit" title="编辑" @click="edit(item.id)"></el-button>
+                <el-button icon="Delete" title="删除" @click="del(item.id, i)"></el-button>
             </el-button-group>
         </li>
     </ul>

@@ -30,26 +30,23 @@
                         v-loading="loading"
                     >
                         <el-table-column prop="type" label="类型" width="120px">
-                            <template slot-scope="scope">{{
+                            <template #default="scope">{{
                                 snOptions.types[scope.row.type] || scope.row.type || "其他"
                             }}</template>
                         </el-table-column>
                         <el-table-column prop="subtype" label="渠道" width="100px">
-                            <template slot-scope="scope">{{
-                                snOptions.subtypes[scope.row.subtype] || "其他"
-                            }}</template>
+                            <template #default="scope">{{ snOptions.subtypes[scope.row.subtype] || "其他" }}</template>
                         </el-table-column>
                         <el-table-column prop="describe" label="描述" width="160px"></el-table-column>
                         <el-table-column label="激活码" width="280">
-                            <template slot-scope="scope">
+                            <template #default="scope">
                                 <div class="u-code">
                                     <span class="u-txt">{{ scope.row.code || "****************" }}</span>
                                     <el-button
                                         v-if="!scope.row.code"
                                         type="primary"
-                                        icon="el-icon-view"
+                                        icon="View"
                                         @click="getSn(scope.$index, scope.row)"
-                                        size="small"
                                         plain
                                         >点击查看</el-button
                                     >
@@ -57,8 +54,7 @@
                                         class="u-btn"
                                         v-else
                                         type="txt"
-                                        size="small"
-                                        icon="el-icon-document-copy"
+                                        icon="DocumentCopy"
                                         v-clipboard:copy="'' + scope.row.code"
                                         v-clipboard:success="onCopy"
                                         v-clipboard:error="onError"
@@ -68,7 +64,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="过期时间" width="200">
-                            <template slot-scope="scope">
+                            <template #default="scope">
                                 <div class="u-time" v-if="scope.row.expire_at">
                                     <span class="u-tag" :class="compareTime(scope.row.expire_at, 'tag')">{{
                                         compareTime(scope.row.expire_at, "time")
@@ -81,16 +77,12 @@
                         <el-table-column label="发放时间" width="200" prop="grant_at"></el-table-column>
                         <el-table-column prop="remark" label="备注" width="200"> </el-table-column>
                         <el-table-column prop="used_by_self" label="是否使用">
-                            <template slot-scope="scope">
+                            <template #default="scope">
                                 <span class="u-used" :class="{ 'is-used': scope.row.used_by_self }">{{
                                     scope.row.used_by_self ? "是" : "否"
                                 }}</span>
 
-                                <el-button
-                                    v-show="!scope.row.used_by_self"
-                                    type="text"
-                                    size="small"
-                                    @click="onSnUsedClick(scope.row)"
+                                <el-button v-show="!scope.row.used_by_self" link @click="onSnUsedClick(scope.row)"
                                     >（标记使用）</el-button
                                 >
                             </template>
@@ -136,18 +128,17 @@
                         v-loading="loading"
                     >
                         <el-table-column label="名称" width="120px">
-                            <template slot-scope="scope">{{ scope.row.goods.title || "-" }}</template>
+                            <template #default="scope">{{ scope.row.goods.title || "-" }}</template>
                         </el-table-column>
                         <el-table-column label="激活码" width="330">
-                            <template slot-scope="scope">
+                            <template #default="scope">
                                 <div class="u-code">
                                     <span class="u-txt">{{ scope.row.code || "****************" }}</span>
                                     <el-button
                                         v-if="!scope.row.code"
                                         type="primary"
-                                        icon="el-icon-view"
+                                        icon="View"
                                         @click="getVirtualCode(scope.$index, scope.row)"
-                                        size="small"
                                         plain
                                         >点击查看</el-button
                                     >
@@ -155,8 +146,7 @@
                                         class="u-btn"
                                         v-else
                                         type="txt"
-                                        size="small"
-                                        icon="el-icon-document-copy"
+                                        icon="DocumentCopy"
                                         v-clipboard:copy="'' + scope.row.code"
                                         v-clipboard:success="onCopy"
                                         v-clipboard:error="onError"
@@ -166,7 +156,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="过期时间" width="200">
-                            <template slot-scope="scope">
+                            <template #default="scope">
                                 <div class="u-time" v-if="scope.row.goods.expire_at">
                                     <span class="u-tag" :class="compareTime(scope.row.goods.expire_at, 'tag')">{{
                                         compareTime(scope.row.goods.expire_at, "time")
@@ -177,20 +167,19 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" min-width="200">
-                            <template slot-scope="scope">
+                            <template #default="scope">
                                 {{ scope.row.goods.mark || scope.row.goods.subtitle }}
                             </template>
                         </el-table-column>
                         <el-table-column prop="used_by_self" label="是否使用">
-                            <template slot-scope="scope">
+                            <template #default="scope">
                                 <span class="u-used" :class="{ 'is-used': scope.row.owner.used_by_self }">{{
                                     scope.row.owner.used_by_self ? "是" : "否"
                                 }}</span>
 
                                 <el-button
                                     v-show="!scope.row.owner.used_by_self"
-                                    type="text"
-                                    size="small"
+                                    link
                                     @click="onVirtualUsedClick(scope.row)"
                                     >（标记使用）</el-button
                                 >
@@ -233,18 +222,18 @@
                         v-loading="loading"
                     >
                         <el-table-column prop="type" label="类型" width="120">
-                            <template slot-scope="scope">{{ keycodeOptions.types[scope.row.type] || "其他" }}</template>
+                            <template #default="scope">{{ keycodeOptions.types[scope.row.type] || "其他" }}</template>
                         </el-table-column>
                         <el-table-column prop="subtype" label="渠道" width="120">
-                            <template slot-scope="scope">{{
+                            <template #default="scope">{{
                                 keycodeOptions.subtypes[scope.row.subtype] || "其他"
                             }}</template>
                         </el-table-column>
                         <el-table-column label="面额" width="120">
-                            <template slot-scope="scope">{{ scope.row.count }}</template>
+                            <template #default="scope">{{ scope.row.count }}</template>
                         </el-table-column>
                         <el-table-column label="卡密" width="360">
-                            <template slot-scope="scope">
+                            <template #default="scope">
                                 <div class="u-card">
                                     <div class="u-count">
                                         <div class="u-line">
@@ -253,8 +242,7 @@
                                                 class="u-btn"
                                                 v-if="scope.row.key"
                                                 type="txt"
-                                                size="small"
-                                                icon="el-icon-document-copy"
+                                                icon="DocumentCopy"
                                                 v-clipboard:copy="'' + scope.row.key"
                                                 v-clipboard:success="onCopy"
                                                 v-clipboard:error="onError"
@@ -266,9 +254,8 @@
                                             <el-button
                                                 v-if="!scope.row.code"
                                                 type="primary"
-                                                icon="el-icon-view"
+                                                icon="View"
                                                 @click="getKeycode(scope.$index, scope.row)"
-                                                size="small"
                                                 plain
                                                 >点击查看</el-button
                                             >
@@ -276,8 +263,7 @@
                                                 class="u-btn"
                                                 v-if="scope.row.code"
                                                 type="txt"
-                                                size="small"
-                                                icon="el-icon-document-copy"
+                                                icon="DocumentCopy"
                                                 v-clipboard:copy="'' + scope.row.code"
                                                 v-clipboard:success="onCopy"
                                                 v-clipboard:error="onError"
@@ -289,7 +275,7 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="过期时间" width="200">
-                            <template slot-scope="scope">
+                            <template #default="scope">
                                 <div class="u-time" v-if="scope.row.expire_at">
                                     <span class="u-tag" :class="compareTime(scope.row.expire_at, 'tag')">{{
                                         compareTime(scope.row.expire_at, "time")
@@ -302,16 +288,12 @@
                         <el-table-column label="发放时间" width="200" prop="grant_at"></el-table-column>
                         <el-table-column prop="remark" label="备注" width="200"> </el-table-column>
                         <el-table-column prop="used_by_self" label="是否使用">
-                            <template slot-scope="scope">
+                            <template #default="scope">
                                 <span class="u-used" :class="{ 'is-used': scope.row.used_by_self }">{{
                                     scope.row.used_by_self ? "是" : "否"
                                 }}</span>
 
-                                <el-button
-                                    v-show="!scope.row.used_by_self"
-                                    type="text"
-                                    size="small"
-                                    @click="onKeyCodeUsedClick(scope.row)"
+                                <el-button v-show="!scope.row.used_by_self" link @click="onKeyCodeUsedClick(scope.row)"
                                     >（标记使用）</el-button
                                 >
                             </template>
@@ -506,7 +488,7 @@ export default {
                     let { code, key } = res.data.data;
                     row.code = code;
                     row.key = key;
-                    this.$set(this.list, index, row);
+                    this.list[index] = row;
                 });
             });
         },
@@ -519,7 +501,7 @@ export default {
             }).then(({ value }) => {
                 activationSn(row.id, { password: value }).then((res) => {
                     row.code = res.data.data.sn;
-                    this.$set(this.list, index, row);
+                    this.list[index] = row;
                 });
             });
         },

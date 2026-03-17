@@ -22,36 +22,36 @@
             </el-form-item>
             <el-form-item label="题型" class="m-publish-exam-type">
                 <el-radio-group v-model="primary.type">
-                    <el-radio label="radio" border>单选题</el-radio>
-                    <el-radio label="checkbox" border>多选题</el-radio>
+                    <el-radio value="radio" border>单选题</el-radio>
+                    <el-radio value="checkbox" border>多选题</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="选项" class="m-publish-exam-options">
                 <el-input placeholder="选项1 (支持html)" v-model="primary.options[0]">
-                    <template slot="prepend">A</template>
+                    <template #prepend>A</template>
                 </el-input>
                 <el-input placeholder="选项2 (支持html)" v-model="primary.options[1]">
-                    <template slot="prepend">B</template>
+                    <template #prepend>B</template>
                 </el-input>
                 <el-input placeholder="选项3 (支持html)" v-model="primary.options[2]">
-                    <template slot="prepend">C</template>
+                    <template #prepend>C</template>
                 </el-input>
                 <el-input placeholder="选项4 (支持html)" v-model="primary.options[3]">
-                    <template slot="prepend">D</template>
+                    <template #prepend>D</template>
                 </el-input>
             </el-form-item>
             <el-form-item label="答案" class="m-publish-exam-answer">
                 <el-radio-group v-model="answer_radio" v-if="primary.type == 'radio'">
-                    <el-radio :label="0">A</el-radio>
-                    <el-radio :label="1">B</el-radio>
-                    <el-radio :label="2">C</el-radio>
-                    <el-radio :label="3">D</el-radio>
+                    <el-radio :value="0">A</el-radio>
+                    <el-radio :value="1">B</el-radio>
+                    <el-radio :value="2">C</el-radio>
+                    <el-radio :value="3">D</el-radio>
                 </el-radio-group>
                 <el-checkbox-group v-model="answer_checkbox" v-else>
-                    <el-checkbox :label="0">A</el-checkbox>
-                    <el-checkbox :label="1">B</el-checkbox>
-                    <el-checkbox :label="2">C</el-checkbox>
-                    <el-checkbox :label="3">D</el-checkbox>
+                    <el-checkbox :value="0">A</el-checkbox>
+                    <el-checkbox :value="1">B</el-checkbox>
+                    <el-checkbox :value="2">C</el-checkbox>
+                    <el-checkbox :value="3">D</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
             <el-form-item label="难度" class="m-publish-exam-level">
@@ -67,12 +67,7 @@
 
             <el-form-item label="答案解析" class="m-publish-exam-content">
                 <Tinymce v-model="primary.whyami" :attachmentEnable="true" :resourceEnable="true" :height="400" />
-                <el-button
-                    class="u-publish"
-                    icon="el-icon-s-promotion"
-                    type="primary"
-                    @click="publish"
-                    :disabled="processing"
+                <el-button class="u-publish" icon="Promotion" type="primary" @click="publish" :disabled="processing"
                     >提交题目</el-button
                 >
             </el-form-item>
@@ -108,8 +103,8 @@ export default {
             loading: false,
 
             // 缓存答案
-            answer_radio : "",
-            answer_checkbox : [],
+            answer_radio: "",
+            answer_checkbox: [],
         };
     },
     computed: {
@@ -118,14 +113,14 @@ export default {
         },
     },
     watch: {
-        answer_radio : function (val) {
+        answer_radio: function (val) {
             this.primary.answer = [val];
         },
-        answer_checkbox : function (val) {
+        answer_checkbox: function (val) {
             this.primary.answer = val;
         },
-        'primary.answer' : function (val) {
-            if (this.primary.type == 'radio') {
+        "primary.answer": function (val) {
+            if (this.primary.type == "radio") {
                 this.answer_radio = val[0];
             } else {
                 this.answer_checkbox = val;

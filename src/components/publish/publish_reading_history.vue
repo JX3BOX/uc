@@ -1,9 +1,9 @@
 <template>
     <div class="m-reading-history">
-        <el-button type="primary" @click="view" size="small" icon="el-icon-document">阅读记录</el-button>
+        <el-button type="primary" @click="view" icon="Document">阅读记录</el-button>
 
-        <el-drawer title="阅读记录" v-model="show" z-index="2100" class="m-history-drawer" append-to-body>
-            <template #title>
+        <el-drawer title="阅读记录" v-model="show" :z-index="2100" class="m-history-drawer" append-to-body>
+            <template #header>
                 <h3 class="u-history-title">阅读记录</h3>
             </template>
             <main class="m-history-container" v-loading="loading">

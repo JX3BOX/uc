@@ -2,14 +2,18 @@
     <div>
         <div class="m-author-header" :style="{ backgroundImage: `url(${userDefinedStyle.banner})` }">
             <div class="u-header-info">
-                <CommonAvatar class="u-author-avatar" :uid="uid" :url="avatar" :size="avatarSize" :frame="avatar_frame" />
+                <CommonAvatar
+                    class="u-author-avatar"
+                    :uid="uid"
+                    :url="avatar"
+                    :size="avatarSize"
+                    :frame="avatar_frame"
+                />
                 <div class="u-author-info">
                     <span class="u-name" :style="userDefinedStyle.userName">
                         <span @click="copyData(data.display_name || '匿名')">{{ data.display_name || "匿名" }}</span
                         ><span class="u-uid" @click="copyData(data.ID || 0)">（UID : {{ data.ID || 0 }}）</span>
-                        <el-tag type="info" class="u-mute-tag" v-if="data.user_status" size="small" effect="dark"
-                            >已禁言</el-tag
-                        >
+                        <el-tag type="info" class="u-mute-tag" v-if="data.user_status" effect="dark">已禁言</el-tag>
                     </span>
                     <div class="u-tips">
                         <el-tooltip :content="`当前经验 ${data.experience || 0}`" placement="top">
@@ -43,40 +47,31 @@
                     <!-- 关注 -->
                     <div class="m-focus" v-if="!isSelf && isLogin">
                         <div class="u-btn-box">
-                            <el-button
-                                icon="el-icon-plus"
-                                class="u-btn-attention"
-                                v-if="!subscribed"
-                                @click="follow"
-                                size="small"
+                            <el-button icon="Plus" class="u-btn-attention" v-if="!subscribed" @click="follow"
                                 >关注TA</el-button
                             >
                             <!-- :style="userDefinedStyle.btn" -->
                             <div class="u-already-attention" v-else>
                                 <el-button
                                     class="u-btn"
-                                    size="small"
                                     @mouseenter="attentionText = '取消关注'"
                                     @mouseleave="attentionText = '已关注'"
                                     @click="unfollow"
                                     >{{ attentionText }}</el-button
                                 >
                                 <a :href="sendLink" target="_blank" v-if="canSendLetter">
-                                    <el-button class="u-btn u-send-msg" size="small" :style="userDefinedStyle.sendMsg"
+                                    <el-button class="u-btn u-send-msg" :style="userDefinedStyle.sendMsg"
                                         >发消息</el-button
                                     ></a
                                 >
-                                <el-button class="u-btn u-btn-disabled" size="small" :disabled="true" v-else
-                                    >发消息</el-button
-                                >
+                                <el-button class="u-btn u-btn-disabled" :disabled="true" v-else>发消息</el-button>
                             </div>
                         </div>
                         <div class="u-more" :style="userDefinedStyle.btn">
                             <el-popover placement="bottom-end" trigger="click" width="90" v-model="moreOperatePhone">
-                                <a href="/feedback" target="_blank">
-                                    <el-button size="small" class="u-more-btn">举报</el-button> </a
+                                <a href="/feedback" target="_blank"> <el-button class="u-more-btn">举报</el-button> </a
                                 ><br />
-                                <el-button size="small" class="u-more-btn" @click="joinBlacklist">拉黑</el-button>
+                                <el-button class="u-more-btn" @click="joinBlacklist">拉黑</el-button>
                                 <template #reference>
                                     <img
                                         src="@/assets/img/author/more.svg"
@@ -117,44 +112,32 @@
                 <!-- 关注 -->
                 <div class="m-focus u-in-phone" v-if="!isSelf && isLogin">
                     <div v-if="!hadDeny" class="u-btn-box">
-                        <el-button
-                            icon="el-icon-plus"
-                            class="u-btn-attention"
-                            v-if="!subscribed"
-                            @click="follow"
-                            size="small"
+                        <el-button icon="Plus" class="u-btn-attention" v-if="!subscribed" @click="follow"
                             >关注TA</el-button
                         >
                         <!-- :style="userDefinedStyle.btn" -->
                         <div class="u-already-attention" v-else>
                             <el-button
                                 class="u-btn"
-                                size="small"
                                 @mouseenter="attentionText = '取消关注'"
                                 @mouseleave="attentionText = '已关注'"
                                 @click="unfollow"
                                 >{{ attentionText }}</el-button
                             >
                             <a :href="sendLink" target="_blank" v-if="canSendLetter">
-                                <el-button class="u-btn u-send-msg" size="small" :style="userDefinedStyle.sendMsg"
+                                <el-button class="u-btn u-send-msg" :style="userDefinedStyle.sendMsg"
                                     >发消息</el-button
                                 ></a
                             >
-                            <el-button class="u-btn u-btn-disabled" size="small" :disabled="true" v-else
-                                >发消息</el-button
-                            >
+                            <el-button class="u-btn u-btn-disabled" :disabled="true" v-else>发消息</el-button>
                         </div>
                     </div>
                     <div class="u-btn-box" v-else>
                         <el-button type="info" class="u-btn-cancel-deny" @click="handleUnDeny">取消拉黑</el-button>
                     </div>
                     <el-popover placement="bottom-end" trigger="click" width="90" v-model="moreOperate">
-                        <a href="/feedback" target="_blank">
-                            <el-button size="small" class="u-more-btn">举报</el-button> </a
-                        ><br />
-                        <el-button v-if="!hadDeny" size="small" class="u-more-btn" @click="joinBlacklist"
-                            >拉黑</el-button
-                        >
+                        <a href="/feedback" target="_blank"> <el-button class="u-more-btn">举报</el-button> </a><br />
+                        <el-button v-if="!hadDeny" class="u-more-btn" @click="joinBlacklist">拉黑</el-button>
                         <template #reference>
                             <div class="u-more" :style="userDefinedStyle.btn">
                                 <img
@@ -205,7 +188,7 @@ import { deny, undeny, hadDenyUser } from "@/service/author/author";
 import Left from "./Left";
 import Primary from "./Primary";
 import Honor from "@jx3box/jx3box-ui/src/author/AuthorHonor.vue";
-import CommonAvatar from "@jx3box/jx3box-ui/src/author/Avatar.vue"
+import CommonAvatar from "@jx3box/jx3box-ui/src/author/Avatar.vue";
 export default {
     name: "Me",
     components: {

@@ -3,22 +3,14 @@
         <el-divider content-position="left">宏</el-divider>
         <div class="m-macro-box">
             <div class="m-macro-header">
-                <el-button class="m-macro-addbutton" icon="el-icon-circle-plus-outline" type="primary" @click="addMacro"
+                <el-button class="m-macro-addbutton" icon="CirclePlus" type="primary" @click="addMacro"
                     >添加宏</el-button
                 >
-                <a
-                    class="m-macro-docs el-button el-button--primary is-plain el-button--small"
-                    target="_blank"
-                    href="/tool/265/"
-                >
+                <a class="m-macro-docs el-button el-button--primary is-plain" target="_blank" href="/tool/265/">
                     <i class="el-icon-s-management"></i>
                     宏命令完整参考手册
                 </a>
-                <a
-                    class="m-macro-help el-button el-button--success is-plain el-button--small"
-                    href="/tool/14671/"
-                    target="_blank"
-                >
+                <a class="m-macro-help el-button el-button--success is-plain" href="/tool/14671/" target="_blank">
                     <i class="el-icon-info"></i> 点击查看发布帮助
                 </a>
             </div>
@@ -49,6 +41,7 @@
                                     :maxlength="10"
                                     :max="1000000"
                                     :min="0"
+                                    size="large"
                                 >
                                     <template #prepend>
                                         <img class="u-icon" :src="icon(item)" />
@@ -58,6 +51,7 @@
                             <div class="u-subblock m-macro-name">
                                 <el-input
                                     v-model="item.name"
+                                    size="large"
                                     placeholder="每个宏名称请使用自己名下唯一命名"
                                     :minlength="1"
                                     :maxlength="maxlength"
@@ -76,7 +70,12 @@
                         <div class="m-macro-talent-simulator">
                             <div class="qx-container"></div>
                         </div>
-                        <el-input v-model="item.talent" placeholder="奇穴方案编码" @change="checkTalent(item)">
+                        <el-input
+                            v-model="item.talent"
+                            size="large"
+                            placeholder="奇穴方案编码"
+                            @change="checkTalent(item)"
+                        >
                             <template #prepend>
                                 <a class="u-get" target="_blank" href="/app/talent">
                                     <i class="el-icon-warning"></i>
@@ -90,7 +89,12 @@
                         <div class="m-macro-talent-simulator">
                             <div class="qx-container"></div>
                         </div>
-                        <el-input v-model="item.talent" placeholder="镇派方案编码" @change="checkTalent(item)">
+                        <el-input
+                            v-model="item.talent"
+                            size="large"
+                            placeholder="镇派方案编码"
+                            @change="checkTalent(item)"
+                        >
                             <template #prepend>
                                 <a class="u-get" target="_blank" href="/macro/talent2">
                                     <i class="el-icon-warning"></i>
@@ -118,20 +122,16 @@
                         ></el-input>
                     </div>
                     <el-form-item label="其它" class="m-macro-misc">
-                        <el-row>
-                            <el-col :span="8" class="u-speed">
-                                <el-input v-model="item.speed" placeholder="填写推荐的急速阈值">
-                                    <template #prepend>
-                                        急速阈值
-                                        <slot name="pre-prepend"></slot>
-                                    </template>
-                                </el-input>
-                            </el-col>
-                            <el-col :span="8"></el-col>
-                        </el-row>
+                        <el-input v-model="item.speed" size="large" placeholder="填写推荐的急速阈值">
+                            <template #prepend>
+                                急速阈值
+                                <slot name="pre-prepend"></slot>
+                            </template>
+                        </el-input>
                     </el-form-item>
                     <el-form-item label="说明" class="m-macro-desc">
                         <el-input
+                            size="large"
                             v-model="item.desc"
                             type="textarea"
                             placeholder="重要说明（会出现在宏第一行）"
@@ -143,8 +143,7 @@
                             @click="removeMacro(i + 1)"
                             type="danger"
                             plain
-                            icon="el-icon-delete"
-                            size="small"
+                            icon="Delete"
                             >移除本宏</el-button
                         >
                     </div>

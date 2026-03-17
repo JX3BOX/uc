@@ -1,12 +1,8 @@
 <template>
     <div class="m-info" v-if="isAdmin">
-        <el-button type="warning" size="small" icon="el-icon-warning-outline" @click="report">举报</el-button>
-        <el-button type="danger" size="small" icon="el-icon-turn-off-microphone" @click="check(true)" v-if="!status"
-            >禁言</el-button
-        >
-        <el-button type="success" size="small" icon="el-icon-microphone" @click="check(false)" v-else
-            >解除禁言</el-button
-        >
+        <el-button type="warning" icon="Warning" @click="report">举报</el-button>
+        <el-button type="danger" icon="Mute" @click="check(true)" v-if="!status">禁言</el-button>
+        <el-button type="success" icon="Microphone" @click="check(false)" v-else>解除禁言</el-button>
         <el-dialog
             title="操作"
             v-model="dialogVisible"
@@ -67,12 +63,6 @@ export default {
                 confirmButtonText: "确定",
                 callback: (action) => {
                     if (action == "confirm") {
-                        // 旧版server
-                        // checkUser(this.uid, ~~status).then((res) => {
-                        //      this.next()
-                        // });
-
-                        // 新版helper
                         muteUser(this.uid, {
                             mute: this.status ? 0 : 1,
                             remark: this.reason,

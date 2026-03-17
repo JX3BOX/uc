@@ -14,7 +14,6 @@
                     </div>
                     <el-dropdown
                         v-if="isTeammate && data.status < 12"
-                        size="small"
                         split-button
                         trigger="click"
                         type="primary"
@@ -24,27 +23,19 @@
                         {{ statusText(data.status) }}
                         <template #dropdown>
                             <el-dropdown-menu>
-                                <el-dropdown-item @click.native="handleEdit">
-                                    <el-button class="u-btn" type="primary" size="small" icon="el-icon-edit-outline"
-                                        >编辑</el-button
-                                    >
+                                <el-dropdown-item @click="handleEdit">
+                                    <el-button class="u-btn" type="primary" icon="EditOutline">编辑</el-button>
                                 </el-dropdown-item>
-                                <el-dropdown-item v-if="data.status === 1" @click.native="handleTransfer">
-                                    <el-button class="u-btn" type="warning" size="small" icon="el-icon-right"
-                                        >转交</el-button
-                                    >
+                                <el-dropdown-item v-if="data.status === 1" @click="handleTransfer">
+                                    <el-button class="u-btn" type="warning" icon="Right">转交</el-button>
                                 </el-dropdown-item>
                                 <template v-if="data.status === 2">
-                                    <el-dropdown-item @click.native="handleCoordination">
-                                        <el-button class="u-btn" type="success" size="small" icon="el-icon-help"
-                                            >协同</el-button
-                                        >
+                                    <el-dropdown-item @click="handleCoordination">
+                                        <el-button class="u-btn" type="success" icon="Help">协同</el-button>
                                     </el-dropdown-item>
 
-                                    <el-dropdown-item @click.native="handleClose">
-                                        <el-button class="u-btn" type="info" size="small" icon="el-icon-circle-close"
-                                            >关闭
-                                        </el-button>
+                                    <el-dropdown-item @click="handleClose">
+                                        <el-button class="u-btn" type="info" icon="CircleClose">关闭 </el-button>
                                     </el-dropdown-item>
                                 </template>
                             </el-dropdown-menu>
@@ -64,7 +55,9 @@
                         <i class="u-client" :class="[data.client, `u-${data.client}`]">{{ client }}</i>
                     </div>
                     <span class="u-time u-subblock">提交时间：{{ formateTime(data.created_at) }}</span>
-                    <span class="u-time u-subblock" v-if="data.refer">来源：<a :href="data.refer" target="_blank">{{ data.refer }}</a></span>
+                    <span class="u-time u-subblock" v-if="data.refer"
+                        >来源：<a :href="data.refer" target="_blank">{{ data.refer }}</a></span
+                    >
                 </div>
                 <div class="m-block m-dev">
                     <div class="u-subblock">
@@ -152,12 +145,12 @@
                 <div class="m-feedback-thx">
                     <el-divider content-position="left"
                         ><i class="el-icon-coin"></i> 反馈回馈
-                        <el-button v-if="isAdmin" size="small" class="u-thx-trigger" type="success" @click="onThx"
+                        <el-button v-if="isAdmin" class="u-thx-trigger" type="success" @click="onThx"
                             >品鉴</el-button
                         ></el-divider
                     >
                     <div class="u-thx-table">
-                        <el-table size="small" stripe border :data="thxData">
+                        <el-table stripe border :data="thxData">
                             <el-table-column label="参与打赏" prop="ext_operate_user_info">
                                 <template #default="{ row }">
                                     <div class="m-user">
@@ -303,7 +296,7 @@ import AdminGift from "@jx3box/jx3box-common-ui/assets/img/widget/admin_gift.svg
 import assign from "./components/assign.vue";
 import edit from "./components/edit.vue";
 import status from "./components/status.vue";
-import {__clients} from "@jx3box/jx3box-common/data/jx3box.json";
+import { __clients } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
     name: "FeedbackSingle",
     components: {
@@ -373,8 +366,8 @@ export default {
             return index;
         },
         client() {
-            return __clients[this.data.client]
-        }
+            return __clients[this.data.client];
+        },
     },
     watch: {
         id: {
@@ -489,8 +482,8 @@ export default {
             try {
                 let res = await getTeammates();
                 // this.teammates = res.data.data
-                this.teammates =   res.data.data.filter(
-                    (item) => item.group && ["mp", "developer","editor", "designer"].includes(item.group)
+                this.teammates = res.data.data.filter(
+                    (item) => item.group && ["mp", "developer", "editor", "designer"].includes(item.group)
                 );
             } catch (e) {
                 console.log(e);

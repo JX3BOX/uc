@@ -1,8 +1,8 @@
 <template>
     <div class="m-post" v-loading="loading">
         <el-timeline class="m-post-list" v-if="list && list.length">
-            <el-timeline-item v-for="(item, i) in list" :key="i" :timestamp="item.updated | dateFormat" placement="top">
-                <h4 class="u-type">{{ item.type | showTypeLabel }}</h4>
+            <el-timeline-item v-for="(item, i) in list" :key="i" :timestamp="dateFormat(item.updated)" placement="top">
+                <h4 class="u-type">{{ showTypeLabel(item.type) }}</h4>
                 <p>
                     <a :href="postLink(item.id)" class="u-title" target="_blank">{{ item.title || "无标题" }}</a>
                 </p>

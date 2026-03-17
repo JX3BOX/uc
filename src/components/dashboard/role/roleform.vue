@@ -17,8 +17,8 @@
             </el-form-item>
             <el-form-item label="门派">
                 <el-radio-group v-model="form.mount" size="medium">
-                    <el-radio :label="key" v-for="(label, key) in school_map" :key="key" border>
-                        <img class="u-icon-school" :src="key | showSchoolIcon" />
+                    <el-radio :value="key" v-for="(label, key) in school_map" :key="key" border>
+                        <img class="u-icon-school" :src="showSchoolIcon(key)" />
                         {{ label }}
                     </el-radio>
                 </el-radio-group>

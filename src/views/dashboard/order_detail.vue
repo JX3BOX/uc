@@ -59,17 +59,19 @@
                                         >追加评价：{{ rate.add_comment }}</span
                                     >
                                     <el-input v-if="append" class="u-textarea" v-model="content">
-                                        <template slot="append">
+                                        <template #append>
                                             <span style="cursor: pointer" @click="appendComment">确定</span>
                                         </template>
                                     </el-input>
                                 </div>
                                 <div class="u-button">
-                                    <el-button @click="append = !append" type="text" v-if="order.order_status == 5">
+                                    <el-button @click="append = !append" link v-if="order.order_status == 5">
                                         追加评论
                                     </el-button>
                                     <el-popconfirm title="确认删除评价吗？" :width="200" @confirm="delComment(rate.id)">
-                                        <el-button slot="reference" type="text">删除</el-button>
+                                        <template #reference>
+                                            <el-button link>删除</el-button>
+                                        </template>
                                     </el-popconfirm>
                                 </div>
                             </div>

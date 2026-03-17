@@ -47,15 +47,13 @@
 
                         <el-button-group class="u-action">
                             <el-button
-                                size="small"
-                                icon="el-icon-edit"
+                                icon="Edit"
                                 title="编辑"
                                 @click="edit(item.union_post_raw.post_type, item.union_post_raw.ID)"
                             ></el-button>
                             <el-button
                                 v-if="isActive"
-                                size="small"
-                                icon="el-icon-delete"
+                                icon="Delete"
                                 title="删除"
                                 @click="del(item.union_post_raw.ID, i)"
                             ></el-button>
@@ -64,13 +62,9 @@
                                 title="确认退出该作品的联合创作者身份吗？"
                                 @confirm="quit(item.union_post_raw.ID, i)"
                             >
-                                <el-button
-                                    slot="reference"
-                                    class="u-quit"
-                                    size="small"
-                                    icon="el-icon-download"
-                                    title="退出联合身份"
-                                ></el-button>
+                                <template #reference>
+                                    <el-button class="u-quit" icon="Download" title="退出联合身份"></el-button>
+                                </template>
                             </el-popconfirm>
                         </el-button-group>
                     </template>

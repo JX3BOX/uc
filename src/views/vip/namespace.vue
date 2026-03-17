@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div>
         <CommonHeader></CommonHeader>
         <Main class="m-vip-container" :withoutRight="true" :withoutLeft="true">
             <div class="m-namespace m-boxcoin">
@@ -17,7 +17,7 @@
                                 </div>
                             </el-form-item>
                             <!-- <el-form-item label="购买数量">
-                                <el-radio-group v-model="count" size="small">
+                                <el-radio-group v-model="count" >
                                     <el-radio :label="1" border>1个铭牌</el-radio>
                                 </el-radio-group>
                             </el-form-item>
@@ -35,11 +35,15 @@
                     </div>
                 </div>
                 <result class="m-boxcoin-result" v-else>
-                    <div slot="title" class="m-boxcoin-result-title">购买成功</div>
-                    <div slot="desc" class="m-boxcoin-result-desc">
-                        <p>购买成功，<a :href="register_namespace_url" target="_blank">前往注册铭牌</a></p>
-                        <el-button class="u-back" @click="goBack" plain icon="el-icon-refresh-left">返回</el-button>
-                    </div>
+                    <template #title>
+                        <div class="m-boxcoin-result-title">购买成功</div>
+                    </template>
+                    <template #desc>
+                        <div class="m-boxcoin-result-desc">
+                            <p>购买成功，<a :href="register_namespace_url" target="_blank">前往注册铭牌</a></p>
+                            <el-button class="u-back" @click="goBack" plain icon="RefreshLeft">返回</el-button>
+                        </div>
+                    </template>
                 </result>
             </div>
         </Main>

@@ -2,14 +2,18 @@
     <div class="m-dashboard-work m-dashboard-cms" v-loading="loading">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">日历记录</h2>
-            <a :href="publishLink" class="u-publish el-button el-button--primary el-button--small">
+            <a :href="publishLink" class="u-publish el-button el-button--primary">
                 <i class="el-icon-document"></i> 贡献纪事
             </a>
         </div>
 
         <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model.lazy="search">
-            <span slot="prepend">关键词</span>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+            <template #prepend>
+                <span>关键词</span>
+            </template>
+            <template #append>
+                <el-button icon="Search"></el-button>
+            </template>
         </el-input>
 
         <div class="m-dashboard-box">
@@ -22,17 +26,17 @@
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ item.created_at | dateFormat }}
+                            {{ dateFormat(item.created_at) }}
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
                             更新 :
-                            {{ item.updated_at | dateFormat }}
+                            {{ dateFormat(item.updated_at) }}
                         </time>
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-button size="small" icon="el-icon-edit" @click="edit(item.id)" title="编辑"></el-button>
+                        <el-button icon="Edit" @click="edit(item.id)" title="编辑"></el-button>
                     </el-button-group>
                 </li>
             </ul>

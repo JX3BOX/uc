@@ -17,6 +17,7 @@
                     placeholder="输入任务名称（可适配中括号形式）「回车」进行搜索"
                     :remote-method="search_handle"
                     :loading="options.loading"
+                    size="large"
                 >
                     <el-option
                         v-for="source in options.sources"
@@ -46,17 +47,39 @@
                     show-word-limit
                     required
                     placeholder="请简单描述一下本次修订的说明"
+                    size="large"
                 ></el-input>
             </div>
 
             <div class="m-publish-content">
                 <el-divider content-position="left">攻略正文 *</el-divider>
                 <Tinymce v-model="post.content" :attachmentEnable="true" :resourceEnable="true" :height="400">
-                    <el-alert type="warning" class="m-latest-check" show-icon v-if="!isLatest && latest.post && current.post">
+                    <el-alert
+                        type="warning"
+                        class="m-latest-check"
+                        show-icon
+                        v-if="!isLatest && latest.post && current.post"
+                    >
                         <template #title>
-                            <span class="u-alert-title">当前百科已经有更新的版本，你的攻略可能已经失效，请先进行比对。</span>
-                            <el-link type="primary" icon="el-icon-link" :href="getLink(post.source_id)" target="_blank" class="u-view-latest">查看最新攻略</el-link>
-                            <el-link @click="getLatest" icon="el-icon-download" class="u-get-latest" type="primary" v-if="latest.post">获取最新攻略</el-link>
+                            <span class="u-alert-title"
+                                >当前百科已经有更新的版本，你的攻略可能已经失效，请先进行比对。</span
+                            >
+                            <el-link
+                                type="primary"
+                                icon="Link"
+                                :href="getLink(post.source_id)"
+                                target="_blank"
+                                class="u-view-latest"
+                                >查看最新攻略</el-link
+                            >
+                            <el-link
+                                @click="getLatest"
+                                icon="Download"
+                                class="u-get-latest"
+                                type="primary"
+                                v-if="latest.post"
+                                >获取最新攻略</el-link
+                            >
                         </template>
                     </el-alert>
                 </Tinymce>
@@ -64,12 +87,7 @@
 
             <div class="m-publish-commit">
                 <el-divider content-position="left"></el-divider>
-                <el-button
-                    class="u-publish"
-                    icon="el-icon-s-promotion"
-                    type="primary"
-                    @click="toPublish"
-                    :disabled="processing"
+                <el-button class="u-publish" icon="Promotion" type="primary" @click="toPublish" :disabled="processing"
                     >提交攻略</el-button
                 >
             </div>
@@ -111,7 +129,7 @@ export default {
             processing: false,
 
             latest: {},
-            current: {}
+            current: {},
         };
     },
     computed: {
@@ -122,10 +140,10 @@ export default {
             return this.$route.query?.post_id;
         },
         // 当前比最新的攻略是否更新
-        isLatest : function (){
-            if(!this.current?.post?.id || !this.latest?.post?.id) return false
-            return this.current.post.id == this.latest.post.id
-        }
+        isLatest: function () {
+            if (!this.current?.post?.id || !this.latest?.post?.id) return false;
+            return this.current.post.id == this.latest.post.id;
+        },
     },
     methods: {
         toPublish: function () {
@@ -216,7 +234,7 @@ export default {
         },
         loadData: function (client) {
             this.loading = true;
-            wiki.get({ type: 'quest', id: this.post.source_id }, { client: client })
+            wiki.get({ type: "quest", id: this.post.source_id }, { client: client })
                 .then((res) => {
                     let data = res.data;
                     // 数据填充
@@ -264,7 +282,7 @@ export default {
             this.loading = true;
             wiki.getById(this.id)
                 .then((res) => {
-                    this.current = res.data.data
+                    this.current = res.data.data;
                     let data = res.data;
                     // 数据填充
                     let post = data.data.post;
@@ -310,16 +328,16 @@ export default {
         // 获取最新的攻略
         loadLatest() {
             if (!this.post.source_id) return;
-            wiki.get({ type: "quest", id: this.post.source_id }).then(res => {
-                this.latest = res.data.data
-            })
+            wiki.get({ type: "quest", id: this.post.source_id }).then((res) => {
+                this.latest = res.data.data;
+            });
         },
         getLink(id) {
             return getLink("quest", id);
         },
         getLatest() {
-            this.post.content = this.latest.post?.content || ''
-        }
+            this.post.content = this.latest.post?.content || "";
+        },
     },
     created() {
         // 初始化搜索列表
@@ -330,11 +348,11 @@ export default {
         this.post.source_id = id ? parseInt(id) : null;
 
         // 获取最新的攻略
-        this.loadLatest()
+        this.loadLatest();
     },
     watch: {
         "post.source_id": {
-            handler: function(val) {
+            handler: function (val) {
                 if (!val) {
                     return;
                 }
@@ -343,15 +361,15 @@ export default {
                     return;
                 }
 
-                if(this.client == 'std'){
-                    this.loadData('std')
-                }else{
-                    this.loadData('origin').then((post) => {
-                        console.log('兼容获取')
-                        if(!post){
-                            this.loadData('std')
+                if (this.client == "std") {
+                    this.loadData("std");
+                } else {
+                    this.loadData("origin").then((post) => {
+                        console.log("兼容获取");
+                        if (!post) {
+                            this.loadData("std");
                         }
-                    })
+                    });
                 }
             },
         },

@@ -4,7 +4,7 @@
             <el-radio
                 v-for="(item, i) in xfmap"
                 v-model="xf"
-                :label="item.name"
+                :value="item.name"
                 :key="i"
                 v-show="item.client.includes(exact_client)"
             >
@@ -50,8 +50,14 @@ export default {
     },
     computed: {
         xfmap() {
-            delete xfmap["山居剑意"];
-            return xfmap;
+            const _xfmap = {};
+            for (let key in xfmap) {
+                const item = xfmap[key];
+                if (key !== "山居剑意" && item.client.includes(this.exact_client)) {
+                    _xfmap[key] = item;
+                }
+            }
+            return _xfmap;
         },
     },
     methods: {

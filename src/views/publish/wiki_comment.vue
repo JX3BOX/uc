@@ -10,8 +10,12 @@
             v-model="achievement_comment.keyword"
             @change="search_comment"
         >
-            <template slot="prepend">关键词</template>
-            <el-button slot="append" icon="el-icon-search" @click="search_comment"></el-button>
+            <template #prepend>
+                <span>关键词</span>
+            </template>
+            <template #append>
+                <el-button icon="Search" @click="search_comment"></el-button>
+            </template>
         </el-input>
 
         <div class="m-dashboard-box">
@@ -45,12 +49,7 @@
 
                     <el-button-group class="u-action">
                         <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-                            <el-button
-                                size="small"
-                                icon="el-icon-delete"
-                                title="删除"
-                                @click="comment_del(comment)"
-                            ></el-button>
+                            <el-button icon="Delete" title="删除" @click="comment_del(comment)"></el-button>
                         </el-tooltip>
                     </el-button-group>
                 </li>

@@ -1,7 +1,13 @@
 <template>
     <div class="m-publish-xf m-publish-mix-subtype">
         <el-form-item label="跨心法">
-            <el-select v-model="mix_subtype" multiple popper-class="m-mix-subtype__pop" style="width: 100%">
+            <el-select
+                v-model="mix_subtype"
+                size="large"
+                multiple
+                popper-class="m-mix-subtype__pop"
+                style="width: 100%"
+            >
                 <el-option
                     v-for="(item, i) in xfmap"
                     :label="item.name"
@@ -34,6 +40,11 @@ export default {
     },
     emits: ["update"],
     watch: {
+        data: {
+            deep: true,
+            handler: function (newval) {
+                this.mix_subtype = newval;
+            },
         },
         mix_subtype: {
             deep: true,

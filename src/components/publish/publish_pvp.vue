@@ -16,7 +16,7 @@
                 >
                 </el-input>
             </div>
-            <el-checkbox class="u-talent" v-model="pvpData.has_talent" :true-label="1" :false-label="0"
+            <el-checkbox class="u-talent" v-model="pvpData.has_talent" :true-value="1" :fasle-value="0"
                 >设置奇穴</el-checkbox
             >
             <template v-if="pvpData.has_talent">
@@ -60,15 +60,11 @@
                 </div>
             </template>
         </div>
-        <el-checkbox class="u-talent" v-model="pvpData.has_sq" :true-label="1" :false-label="0">设置连招</el-checkbox>
+        <el-checkbox class="u-talent" v-model="pvpData.has_sq" :true-value="1" :fasle-value="0">设置连招</el-checkbox>
         <template v-if="pvpData.has_sq">
             <div class="m-macro-box">
                 <div class="m-macro-header">
-                    <el-button
-                        class="m-macro-addbutton"
-                        icon="el-icon-circle-plus-outline"
-                        type="primary"
-                        @click="addCombo"
+                    <el-button class="m-macro-addbutton" icon="CirclePlus" type="primary" @click="addCombo"
                         >添加连招</el-button
                     >
                 </div>
@@ -122,9 +118,7 @@
                                     </span>
                                 </template>
                             </div>
-                            <el-button type="primary" size="medium" @click="addSkill" icon="el-icon-plus"
-                                >新增技能</el-button
-                            >
+                            <el-button type="primary" size="medium" @click="addSkill" icon="Plus">新增技能</el-button>
                         </el-form-item>
                         <el-form-item label="连招说明" class="m-macro-desc">
                             <el-input
@@ -142,8 +136,7 @@
                                 @click="removeCombo(i + 1)"
                                 type="danger"
                                 plain
-                                icon="el-icon-delete"
-                                size="small"
+                                icon="Delete"
                                 >移除本连招</el-button
                             >
                         </div>
@@ -357,6 +350,7 @@ export default {
     },
     mounted: function () {
         let el = document.querySelector(".tabs-sort .el-tabs__nav");
+        if (!el) return;
         const _this = this;
         let sortTabs = Sortable.create(el, {
             animation: 200,

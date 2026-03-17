@@ -2,8 +2,8 @@
     <div class="m-publish-lang">
         <el-form-item label="语言">
             <el-radio-group v-model="lang">
-                <el-radio label="cn">简体中文</el-radio>
-                <el-radio label="tr">繁體中文</el-radio>
+                <el-radio value="cn">简体中文</el-radio>
+                <el-radio value="tr">繁體中文</el-radio>
             </el-radio-group>
         </el-form-item>
         <slot></slot>

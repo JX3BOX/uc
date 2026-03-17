@@ -26,11 +26,19 @@
                         {{ token }}
                     </div>
                     <div class="u-subtitle">
-                        <span class="u-link-text"><img src="@/assets/img/dashboard/link.svg" alt="" />当前魔盒账号已绑定角色：</span>
-                        <el-button size="small" @click="toMoreRoles">更多角色</el-button>
+                        <span class="u-link-text"
+                            ><img src="@/assets/img/dashboard/link.svg" alt="" />当前魔盒账号已绑定角色：</span
+                        >
+                        <el-button @click="toMoreRoles">更多角色</el-button>
                     </div>
                     <ul class="u-roles">
-                        <router-link :to="'/role/' + item.ID" class="u-role" :class="{'is-default': item.is_default_role}" v-for="item in roles" :key="item.id">
+                        <router-link
+                            :to="'/role/' + item.ID"
+                            class="u-role"
+                            :class="{ 'is-default': item.is_default_role }"
+                            v-for="item in roles"
+                            :key="item.id"
+                        >
                             <img class="u-avatar" :src="showAvatar(item.mount, item.body_type)" />
                             <span class="u-name">{{ item.name }}</span>
                         </router-link>
@@ -138,7 +146,7 @@ export default {
         toMoreRoles() {
             const path = this.$router.resolve({ path: "/role" });
             window.open(path.href, "_blank");
-        }
+        },
     },
 };
 </script>

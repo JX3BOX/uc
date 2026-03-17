@@ -17,6 +17,7 @@
                     placeholder="输入物品名称/物品描述并按『回车』进行搜索"
                     :remote-method="search_handle"
                     :loading="options.loading"
+                    size="large"
                 >
                     <el-option v-for="item in options.sources" :key="item.id" :label="item.Name" :value="item.id">
                         <div class="m-selector-item">
@@ -34,17 +35,38 @@
 
             <div class="m-publish-remark">
                 <el-divider content-position="left">修订说明 *</el-divider>
-                <el-input v-model="post.remark" placeholder="请简单描述一下本次修订的说明"></el-input>
+                <el-input v-model="post.remark" size="large" placeholder="请简单描述一下本次修订的说明"></el-input>
             </div>
 
             <div class="m-publish-content">
                 <el-divider content-position="left">攻略正文 *</el-divider>
                 <Tinymce v-model="post.content" :attachmentEnable="true" :resourceEnable="true" :height="400">
-                    <el-alert type="warning" class="m-latest-check" show-icon v-if="!isLatest && latest.post && current.post">
+                    <el-alert
+                        type="warning"
+                        class="m-latest-check"
+                        show-icon
+                        v-if="!isLatest && latest.post && current.post"
+                    >
                         <template #title>
-                            <span class="u-alert-title">当前百科已经有更新的版本，你的攻略可能已经失效，请先进行比对。</span>
-                            <el-link type="primary" icon="el-icon-link" :href="getLink(post.source_id)" target="_blank" class="u-view-latest">查看最新攻略</el-link>
-                            <el-link @click="getLatest" icon="el-icon-download" class="u-get-latest" type="primary" v-if="latest.post">获取最新攻略</el-link>
+                            <span class="u-alert-title"
+                                >当前百科已经有更新的版本，你的攻略可能已经失效，请先进行比对。</span
+                            >
+                            <el-link
+                                type="primary"
+                                icon="Link"
+                                :href="getLink(post.source_id)"
+                                target="_blank"
+                                class="u-view-latest"
+                                >查看最新攻略</el-link
+                            >
+                            <el-link
+                                @click="getLatest"
+                                icon="Download"
+                                class="u-get-latest"
+                                type="primary"
+                                v-if="latest.post"
+                                >获取最新攻略</el-link
+                            >
                         </template>
                     </el-alert>
                 </Tinymce>
@@ -52,7 +74,9 @@
 
             <div class="m-publish-commit">
                 <el-divider content-position="left"></el-divider>
-                <el-button class="u-publish" icon="el-icon-s-promotion" type="primary" @click="toPublish" :disabled="processing">提交攻略</el-button>
+                <el-button class="u-publish" icon="Promotion" type="primary" @click="toPublish" :disabled="processing"
+                    >提交攻略</el-button
+                >
             </div>
         </el-form>
     </div>
@@ -69,7 +93,7 @@ import User from "@jx3box/jx3box-common/js/user";
 import { search_items } from "@/service/publish/item";
 import { iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
 
-import {uniqBy,pick} from 'lodash';
+import { uniqBy, pick } from "lodash";
 export default {
     name: "item",
     data() {
@@ -95,24 +119,24 @@ export default {
             compatible: false, // 是否兼容模式
 
             latest: {},
-            current: {}
+            current: {},
         };
     },
-    computed : {
-        client : function (){
-            return this.$store.state.client
+    computed: {
+        client: function () {
+            return this.$store.state.client;
         },
-        id : function (){
-            return this.$route.query?.post_id
+        id: function () {
+            return this.$route.query?.post_id;
         },
         // 当前比最新的攻略是否更新
-        isLatest : function (){
-            if(!this.current?.post?.id || !this.latest?.post?.id) return false
-            return this.current.post.id == this.latest.post.id
-        }
+        isLatest: function () {
+            if (!this.current?.post?.id || !this.latest?.post?.id) return false;
+            return this.current.post.id == this.latest.post.id;
+        },
     },
     methods: {
-        toPublish: function() {
+        toPublish: function () {
             if (!this.post.source_id) {
                 this.$message({
                     message: "请选择要修订攻略的物品",
@@ -149,7 +173,7 @@ export default {
                 user_nickname: User.getInfo().name,
                 content: this.post.content,
                 remark: this.post.remark,
-            }
+            };
             if (this.id) {
                 const _data = pick(data, ["level", "content", "remark"]);
                 wiki.update(this.id, { ..._data, client: this.client })
@@ -166,8 +190,8 @@ export default {
                     .finally(() => {
                         this.processing = false;
                     });
-            } else{
-                wiki.post({ type: 'item', ...data, client: this.client })
+            } else {
+                wiki.post({ type: "item", ...data, client: this.client })
                     .then((data) => {
                         data = data.data;
                         this.$message({
@@ -195,10 +219,11 @@ export default {
                 this.loading = false;
             });
         },
-        loadData: function(client) {
+        loadData: function (client) {
             if (!this.post.source_id) return;
             this.loading = true;
-            return wiki.get({ type: "item", id: this.post.source_id }, { client })
+            return wiki
+                .get({ type: "item", id: this.post.source_id }, { client })
                 .then((res) => {
                     let data = res.data;
                     // 数据填充
@@ -221,7 +246,7 @@ export default {
                         // 将选择项恢复至下拉框
                         if (this.compatible) {
                             // 兼容模式下，客户端为正式服的物品，不放入下拉框
-                            if (client !== 'std') this.options.sources = uniqBy([this.options.sources, item], "id");
+                            if (client !== "std") this.options.sources = uniqBy([this.options.sources, item], "id");
                         } else {
                             // 非兼容模式下的物品直接放入下拉框
                             this.options.sources = uniqBy([this.options.sources, item], "id");
@@ -234,11 +259,12 @@ export default {
                     this.loading = false;
                 });
         },
-        loadDataByPostId: function() {
+        loadDataByPostId: function () {
             this.loading = true;
-            return wiki.getById(this.id)
+            return wiki
+                .getById(this.id)
                 .then((res) => {
-                    this.current = res.data.data
+                    this.current = res.data.data;
                     let data = res.data;
                     // 数据填充
                     let post = data.data.post;
@@ -260,7 +286,7 @@ export default {
                         // 将选择项恢复至下拉框
                         if (this.compatible) {
                             // 兼容模式下，客户端为正式服的物品，不放入下拉框
-                            if (client !== 'std') this.options.sources = uniqBy([this.options.sources, item], "id");
+                            if (client !== "std") this.options.sources = uniqBy([this.options.sources, item], "id");
                         } else {
                             // 非兼容模式下的物品直接放入下拉框
                             this.options.sources = uniqBy([this.options.sources, item], "id");
@@ -276,16 +302,16 @@ export default {
         // 获取最新的攻略
         loadLatest() {
             if (!this.post.source_id) return;
-            wiki.get({ type: "item", id: this.post.source_id }).then(res => {
-                this.latest = res.data.data
-            })
+            wiki.get({ type: "item", id: this.post.source_id }).then((res) => {
+                this.latest = res.data.data;
+            });
         },
         getLink(id) {
             return getLink("item", id);
         },
         getLatest() {
-            this.post.content = this.latest.post?.content || ''
-        }
+            this.post.content = this.latest.post?.content || "";
+        },
     },
     created() {
         // 初始化搜索列表
@@ -296,25 +322,25 @@ export default {
         this.post.source_id = id ? id : null;
 
         // 获取最新的攻略
-        this.loadLatest()
+        this.loadLatest();
     },
     watch: {
         "post.source_id": {
-            handler: function() {
+            handler: function () {
                 if (this.id) {
                     this.loadDataByPostId();
                     return;
                 }
-                if(this.client == 'std'){
-                    this.loadData('std')
-                }else{
-                    this.loadData('origin').then((post) => {
-                        this.compatible = true
-                        console.log('兼容获取')
-                        if(!post){
-                            this.loadData('std')
+                if (this.client == "std") {
+                    this.loadData("std");
+                } else {
+                    this.loadData("origin").then((post) => {
+                        this.compatible = true;
+                        console.log("兼容获取");
+                        if (!post) {
+                            this.loadData("std");
                         }
-                    })
+                    });
                 }
             },
         },

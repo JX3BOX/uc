@@ -1,7 +1,7 @@
 @import "./work.less";
 
 .m-dashboard-wiki {
-    padding:20px;
+    padding: 20px;
 
     .u-mark {
         .ml(5px);
@@ -25,13 +25,14 @@
         }
     }
 
-    .u-wiki{
-        padding-left:40px;
+    .u-wiki {
+        padding-left: 40px;
     }
 
     .u-tab {
         // float: left;
-        .pa;left:10px;
+        .pa;
+        left: 10px;
         width: 1em;
         line-height: 1.3em;
         margin-top: 4px;
@@ -39,11 +40,12 @@
         padding: 4px 5px;
         font-size: 12px;
         background-color: #333333;
-        color: #FFFFFF;
+        color: #ffffff;
         border-radius: 3px;
+        box-sizing: content-box;
     }
 
-    .u-header{
+    .u-header {
         .flex;
         align-items: center;
     }
@@ -59,20 +61,21 @@
         color: #666666;
         margin: 10px 0 0;
 
-        &:after{
-            content:'|';
-            display:inline-block;
-            margin-left:8px;
-            margin-right:8px;
+        &:after {
+            content: "|";
+            display: inline-block;
+            margin-left: 8px;
+            margin-right: 8px;
         }
     }
 
-    .u-check_remark, .u-content{
-        &:after{
-            content:'|';
-            display:inline-block;
-            margin-left:8px;
-            margin-right:8px;
+    .u-check_remark,
+    .u-content {
+        &:after {
+            content: "|";
+            display: inline-block;
+            margin-left: 8px;
+            margin-right: 8px;
         }
     }
 }
@@ -80,8 +83,10 @@
 .m-latest-check {
     margin-bottom: 20px;
 
-    .u-alert-title {}
-    .u-view-latest {}
+    .u-alert-title {
+    }
+    .u-view-latest {
+    }
     .u-get-latest {
         margin-left: 20px;
     }

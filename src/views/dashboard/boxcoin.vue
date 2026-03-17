@@ -16,12 +16,10 @@
                 >
             </span>
             <!-- <a class="el-button u-btn el-button--primary el-button--mini" href="/vip/boxcoin" target="_blank">充值</a> -->
-            <el-button class="u-btn" type="primary" @click="togglePullBox" size="small" :disabled="!money"
-                >兑换</el-button
-            >
+            <el-button class="u-btn" type="primary" @click="togglePullBox" :disabled="!money">兑换</el-button>
         </div>
         <div class="m-credit-pull" v-if="showPullBox">
-            <el-alert class="m-boxcoin-ac" type="error" show-icon :closable="false" v-if="breadcrumb" size="small">
+            <el-alert class="m-boxcoin-ac" type="error" show-icon :closable="false" v-if="breadcrumb">
                 <slot name="title"><div v-html="breadcrumb"></div></slot>
             </el-alert>
             <el-alert class="m-boxcoin-tip" title="1盒币可兑换1通宝，不可折现" type="warning" show-icon>
@@ -41,16 +39,16 @@
                 </el-form-item>
                 <el-form-item label="兑换数目">
                     <el-radio-group v-model="pull.cash">
-                        <el-radio :label="1500" border :disabled="!canSelect(1500)" v-if="client == 'std'"
+                        <el-radio :value="1500" border :disabled="!canSelect(1500)" v-if="client == 'std'"
                             >1500通宝</el-radio
                         >
-                        <el-radio :label="2000" border :disabled="!canSelect(2000)" v-if="isAdmin">2000通宝</el-radio>
-                        <el-radio :label="3000" border :disabled="!canSelect(3000)">3000通宝</el-radio>
-                        <el-radio :label="5000" border :disabled="!canSelect(5000)">5000通宝</el-radio>
-                        <el-radio :label="10000" border :disabled="!canSelect(10000)">10000通宝</el-radio>
-                        <el-radio :label="50000" border :disabled="!canSelect(50000)">50000通宝</el-radio>
-                        <el-radio :label="100000" border :disabled="!canSelect(100000)">100000通宝</el-radio>
-                        <el-radio :label="200000" border :disabled="!canSelect(200000)">200000通宝</el-radio>
+                        <el-radio :value="2000" border :disabled="!canSelect(2000)" v-if="isAdmin">2000通宝</el-radio>
+                        <el-radio :value="3000" border :disabled="!canSelect(3000)">3000通宝</el-radio>
+                        <el-radio :value="5000" border :disabled="!canSelect(5000)">5000通宝</el-radio>
+                        <el-radio :value="10000" border :disabled="!canSelect(10000)">10000通宝</el-radio>
+                        <el-radio :value="50000" border :disabled="!canSelect(50000)">50000通宝</el-radio>
+                        <el-radio :value="100000" border :disabled="!canSelect(100000)">100000通宝</el-radio>
+                        <el-radio :value="200000" border :disabled="!canSelect(200000)">200000通宝</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="邮箱地址">

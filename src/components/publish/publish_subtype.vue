@@ -4,7 +4,7 @@
             <el-radio-group v-model="subtype">
                 <el-radio
                     v-for="(name, key) in subtypes"
-                    :label="key"
+                    :value="key"
                     border
                     :key="key"
                     :disabled="frozen && $route.params.id && subtype != key"

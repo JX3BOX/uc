@@ -1,7 +1,7 @@
 <template>
     <div class="m-publish-wujie">
         <el-form-item label="适用">
-            <el-checkbox :true-label="1" :false-label="0" v-model="visible">无界</el-checkbox>
+            <el-checkbox :true-value="1" :fasle-value="0" v-model="visible">无界</el-checkbox>
         </el-form-item>
     </div>
 </template>

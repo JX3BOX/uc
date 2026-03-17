@@ -7,9 +7,7 @@
                     <i class="el-icon-plus"></i> 自定义角色
                 </router-link>
             </div> -->
-            <el-button slot="reference" class="u-back" size="small" icon="el-icon-arrow-left" @click="goBack"
-                >返回</el-button
-            >
+            <el-button slot="reference" class="u-back" icon="ArrowLeft" @click="goBack">返回</el-button>
         </h2>
         <div class="m-role-bind">
             <el-tabs v-model="tab">
@@ -31,7 +29,7 @@
                             {{ token }}
                         </span>
                     </div>
-                   <div class="m-tutorial" v-html="notice"></div>
+                    <div class="m-tutorial" v-html="notice"></div>
                 </el-tab-pane>
                 <!-- <el-tab-pane label="自定义创建" name="origin">
                     <roleform :data="form" @submit="submit" btn_txt="创建" :processing="processing" />
@@ -72,7 +70,7 @@ export default {
             },
             processing: false,
 
-            notice: ""
+            notice: "",
         };
     },
     computed: {},
@@ -109,7 +107,7 @@ export default {
         },
         loadBreadCrumb: function () {
             getBreadcrumb("bind_role").then((res) => {
-                this.notice = res
+                this.notice = res;
             });
         },
     },

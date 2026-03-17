@@ -6,13 +6,13 @@
             余额 :
             <b :class="{ hasLeft: hasLeft }">{{ money }}</b>
             <!-- <a class="el-button u-btn el-button--primary el-button--mini" href="/vip/cny" target="_blank">充值</a> -->
-            <!-- <el-button class="u-btn" type="primary" @click="togglePullBox" size="small" :disabled="!money"
+            <!-- <el-button class="u-btn" type="primary" @click="togglePullBox"  :disabled="!money"
                 >提现</el-button
             > -->
         </div>
 
         <div class="m-credit-pull" v-if="showPullBox">
-            <el-alert class="m-boxcoin-ac" type="error" show-icon :closable="false" v-if="breadcrumb" size="small">
+            <el-alert class="m-boxcoin-ac" type="error" show-icon :closable="false" v-if="breadcrumb">
                 <slot name="title"><div v-html="breadcrumb"></div></slot>
             </el-alert>
             <el-alert
@@ -52,7 +52,7 @@
                         placeholder="请务必填写正确的金额"
                     >
                         <!-- <template slot="prepend"></template> -->
-                        <template slot="append">金箔（分）</template>
+                        <template #append>金箔（分）</template>
                     </el-input-number>
                     <div class="u-tip" v-if="pull.money">
                         手续费{{ formatMoney(fee) }}元，实际到账{{ formatMoney(real) }}元

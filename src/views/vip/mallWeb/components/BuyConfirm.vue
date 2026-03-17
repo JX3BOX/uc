@@ -12,15 +12,8 @@
             </div>
         </div>
         <div class="btn-box">
-            <el-button round @click.stop="isShow = false" size="small" style="width: 20.5333vw; font-size: 3.2vw"
-                >取消</el-button
-            >
-            <el-button
-                type="primary"
-                round
-                @click.stop="buyGoods"
-                size="small"
-                style="width: 20.5333vw; font-size: 3.2vw"
+            <el-button round @click.stop="isShow = false" style="width: 20.5333vw; font-size: 3.2vw">取消</el-button>
+            <el-button type="primary" round @click.stop="buyGoods" style="width: 20.5333vw; font-size: 3.2vw"
                 >确定</el-button
             >
         </div>

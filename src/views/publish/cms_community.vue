@@ -2,7 +2,7 @@
     <div class="m-dashboard-work m-dashboard-cms p-cms-community" v-loading="loading">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">论坛</h2>
-            <a :href="publishLink" class="u-publish el-button el-button--primary el-button--small">
+            <a :href="publishLink" class="u-publish el-button el-button--primary">
                 <i class="el-icon-document"></i> 发布作品
             </a>
         </div>
@@ -13,8 +13,12 @@
         </el-tabs>
 
         <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search">
-            <span slot="prepend">关键词</span>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+            <template #prepend>
+                <span>关键词</span>
+            </template>
+            <template #append>
+                <el-button icon="Search"></el-button>
+            </template>
         </el-input>
 
         <div class="m-dashboard-work-filter" v-if="activeTab == 'topic'">
@@ -32,9 +36,9 @@
                         <span v-if="activeTab == 'topic'">{{ item.title || item.content || "无标题" }}</span>
                         <span class="u-title_content" v-else v-html="getContent(item)"></span>
                         <!-- <div class="u-tags">
-                            <el-tag type="danger" size="small" v-if="item.is_top == 1">置顶</el-tag>
-                            <el-tag type="danger" size="small" v-if="item.is_star == 1">加精</el-tag>
-                            <el-tag type="danger" size="small" v-if="item.is_hight == 1">高亮</el-tag>
+                            <el-tag type="danger"  v-if="item.is_top == 1">置顶</el-tag>
+                            <el-tag type="danger"  v-if="item.is_star == 1">加精</el-tag>
+                            <el-tag type="danger"  v-if="item.is_hight == 1">高亮</el-tag>
                         </div> -->
                     </a>
                     <div class="u-desc">
@@ -60,8 +64,8 @@
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-button size="small" icon="el-icon-edit" title="编辑" @click="edit(item)"></el-button>
-                        <el-button size="small" icon="el-icon-delete" title="删除" @click="del(item)"></el-button>
+                        <el-button icon="Edit" title="编辑" @click="edit(item)"></el-button>
+                        <el-button icon="Delete" title="删除" @click="del(item)"></el-button>
                     </el-button-group>
                 </li>
             </ul>

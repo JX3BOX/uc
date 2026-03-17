@@ -20,6 +20,7 @@
             clearable
             placeholder="请选择一个小册（可选，非必填，可搜索）"
             @visible-change="visibleChange"
+            size="large"
         >
             <el-option
                 v-for="(item, index) in collections"

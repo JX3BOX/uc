@@ -28,7 +28,7 @@
                                     ></i>
                                 </td>
                                 <td>
-                                    <el-tag :type="item.status ? 'success' : 'info'" size="small">{{
+                                    <el-tag :type="item.status ? 'success' : 'info'">{{
                                         item.status ? "未使用" : "已使用"
                                     }}</el-tag>
                                 </td>

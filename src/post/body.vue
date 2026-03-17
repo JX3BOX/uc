@@ -23,27 +23,25 @@
                         <el-button
                             class="u-main"
                             :type="item.file === bodyData.file ? 'warning' : ''"
-                            icon="el-icon-star-off"
+                            icon="Star"
                             circle
                             :plain="item.file === bodyData.file ? false : true"
                             @click="setMain(item)"
-                            size="small"
                             title="设为主数据"
                         />
                         <span class="u-attachment-text"
                             >文件名: <b>{{ item.name }}</b></span
                         >
                         <span class="u-attachment-remark"
-                            ><el-input v-model="item.describe" placeholder="备注" size="small"></el-input
+                            ><el-input v-model="item.describe" placeholder="备注"></el-input
                         ></span>
                         <el-button
                             class="u-btn"
                             type="info"
-                            icon="el-icon-delete"
+                            icon="Delete"
                             circle
                             plain
                             @click="removeFile(item.id)"
-                            size="small"
                             title="移除"
                         />
                     </div>
@@ -85,19 +83,18 @@
                     <template #label>
                         <span>是否收费</span>
                         <el-tooltip content="仅签约作者可以发布收费作品">
-                            <i class="el-icon-warning-outline" style="margin-left: 2px;color: #c00;"></i>
+                            <i class="el-icon-warning-outline" style="margin-left: 2px; color: #c00"></i>
                         </el-tooltip>
                     </template>
                     <el-radio-group v-model="post.price_type" :disabled="!isSuperAuthor">
-                        <el-radio label="0">免费</el-radio>
-                        <!-- <el-radio label="1">盒币</el-radio> -->
-                        <el-radio label="2" v-if="cny_enable">收费(金箔)</el-radio>
+                        <el-radio value="0">免费</el-radio>
+                        <!-- <el-radio value="1">盒币</el-radio> -->
+                        <el-radio value="2" v-if="cny_enable">收费(金箔)</el-radio>
                     </el-radio-group>
                     <el-input-number
                         class="u-price"
                         v-model="post.price_count"
                         v-if="post.price_type != '0'"
-                        size="small"
                         :max="3000"
                         :min="0"
                     ></el-input-number>
@@ -112,7 +109,7 @@
 
                 <el-form-item label="体型">
                     <el-radio-group v-model="post.body_type">
-                        <el-radio :label="~~body_type" v-for="(body_label, body_type) in bodyMap" :key="body_type">
+                        <el-radio :value="~~body_type" v-for="(body_label, body_type) in bodyMap" :key="body_type">
                             {{ body_label.label }}
                         </el-radio>
                     </el-radio-group>

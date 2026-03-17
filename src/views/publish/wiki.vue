@@ -2,7 +2,7 @@
     <div class="m-dashboard m-dashboard-work m-dashboard-wiki" v-loading="loading">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">{{ typeLabel }}百科</h2>
-            <a :href="publishLink" class="u-publish el-button el-button--primary el-button--small"
+            <a :href="publishLink" class="u-publish el-button el-button--primary"
                 ><i class="el-icon-document"></i> 发布作品</a
             >
         </div>
@@ -13,8 +13,12 @@
             v-model="achievement_post.keyword"
             @change="search_post"
         >
-            <template slot="prepend">关键词</template>
-            <el-button slot="append" icon="el-icon-search" @click="search_post"></el-button>
+            <template #prepend>
+                <span>关键词</span>
+            </template>
+            <template #append>
+                <el-button icon="Search" @click="search_post"></el-button>
+            </template>
         </el-input>
 
         <div class="m-dashboard-box">
@@ -50,13 +54,12 @@
 
                     <el-button-group class="u-action">
                         <el-button
-                            size="small"
-                            icon="el-icon-edit"
+                            icon="Edit"
                             :disabled="post.checked == 1 || post.checked == 3"
                             title="编辑"
                             @click="post_edit(post)"
                         ></el-button>
-                        <el-button size="small" icon="el-icon-delete" title="删除" @click="post_del(post)"></el-button>
+                        <el-button icon="Delete" title="删除" @click="post_del(post)"></el-button>
                     </el-button-group>
                 </li>
             </ul>

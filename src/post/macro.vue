@@ -34,9 +34,11 @@
             <publish-macro v-if="!post.is_wujie" v-model="post.post_meta" :client="post.client">
                 <!-- 配装 -->
                 <publish-pz v-model="post.pz" :limit="8" :query="pz_query">
-                    <span class="u-pz-tip" slot="prepend">
-                        <i class="el-icon-warning-outline"></i> 展示你推荐的配装（不超过8个，非必选）
-                    </span>
+                    <template #prepend>
+                        <span class="u-pz-tip">
+                            <i class="el-icon-warning-outline"></i> 展示你推荐的配装（不超过8个，非必选）
+                        </span>
+                    </template>
                 </publish-pz>
                 <template #pre-prepend v-if="pz_query && pz_query.mount">
                     <pz-haste :client="post.client" :mount="pz_query.mount"></pz-haste>
@@ -48,9 +50,9 @@
             <!-- 正文 -->
             <div class="m-publish-content">
                 <el-divider content-position="left">正文</el-divider>
-                <el-radio-group class="m-publish-editormode" size="small" v-model="post.post_mode">
-                    <el-radio-button label="tinymce">可视化编辑器</el-radio-button>
-                    <el-radio-button label="markdown">Markdown</el-radio-button>
+                <el-radio-group class="m-publish-editormode" v-model="post.post_mode">
+                    <el-radio-button value="tinymce">可视化编辑器</el-radio-button>
+                    <el-radio-button value="markdown">Markdown</el-radio-button>
                 </el-radio-group>
                 <Markdown
                     v-model="post.post_content"
@@ -79,12 +81,18 @@
             <div class="m-publish-extend">
                 <el-divider content-position="left">设置</el-divider>
                 <publish-comment v-model="post.comment">
-                    <el-checkbox v-model="visible_for_self" :true-label="1" :false-label="0">仅自己可见</el-checkbox>
-                    <el-checkbox v-model="open_white_list" :true-label="1" :false-label="0">开启评论过滤</el-checkbox>
+                    <el-checkbox v-model="visible_for_self" :true-value="1" :fasle-value="0">仅自己可见</el-checkbox>
+                    <el-checkbox v-model="open_white_list" :true-value="1" :fasle-value="0">开启评论过滤</el-checkbox>
                 </publish-comment>
                 <publish-gift v-model="post.allow_gift"></publish-gift>
                 <el-form-item label="匿名开关">
-                    <el-switch v-model="post.anonymous" active-color="#13ce66" :active-value="1" :inactive-value="0" @change="onAnonymousChange"></el-switch>
+                    <el-switch
+                        v-model="post.anonymous"
+                        active-color="#13ce66"
+                        :active-value="1"
+                        :inactive-value="0"
+                        @change="onAnonymousChange"
+                    ></el-switch>
                 </el-form-item>
                 <publish-visible v-model="post.visible" :disabled="!!post.anonymous"></publish-visible>
                 <publish-guide v-model:data="post"></publish-guide>
@@ -112,7 +120,7 @@
                     type="error"
                     title="检测到您的内容存在不合规，将无法发布成功，并有禁言风险。"
                 ></el-alert>
-                <el-checkbox v-model="hasRead" :true-label="1" :false-label="0"
+                <el-checkbox v-model="hasRead" :true-value="1" :fasle-value="0"
                     >我已阅读并了解<a href="/notice/119" @click.stop target="_blank">《创作发布规范》</a></el-checkbox
                 >
             </div>
@@ -123,10 +131,14 @@
                     <el-button type="primary" @click="useDraft" :disabled="processing">使用此版本</el-button>
                 </template>
                 <template v-else>
-                    <el-button type="primary" @click="publish('publish', true)" :disabled="is_illegal || processing || !hasRead"
+                    <el-button
+                        size="large"
+                        type="primary"
+                        @click="publish('publish', true)"
+                        :disabled="is_illegal || processing || !hasRead"
                         >发 &nbsp;&nbsp; 布</el-button
                     >
-                    <el-button type="plain" @click="publish('draft', false)" :disabled="processing || !hasRead"
+                    <el-button size="large" plain @click="publish('draft', false)" :disabled="processing || !hasRead"
                         >保存为草稿</el-button
                     >
                 </template>

@@ -30,26 +30,15 @@
             <!-- 💛 栏目字段 -->
             <template>
                 <el-form-item label="原创">
-                    <el-switch v-model="post.original" active-color="#13ce66">
-                    </el-switch>
+                    <el-switch v-model="post.original" active-color="#13ce66"> </el-switch>
                 </el-form-item>
 
                 <!-- 1.选择坐标 -->
                 <el-form-item label="府邸坐标" class="m-house-coord">
                     <el-row :gutter="20">
                         <el-col :span="8">
-                            <el-select
-                                v-model="post.post_subtype"
-                                filterable
-                                placeholder="地图"
-                            >
-                                <el-option
-                                    v-for="item in maps"
-                                    :key="item"
-                                    :label="item"
-                                    :value="item"
-                                >
-                                </el-option>
+                            <el-select v-model="post.post_subtype" filterable placeholder="地图">
+                                <el-option v-for="item in maps" :key="item" :label="item" :value="item"> </el-option>
                             </el-select>
                         </el-col>
                         <el-col :span="8">
@@ -59,20 +48,12 @@
                                 filterable
                                 placeholder="服务器名"
                             >
-                                <el-option
-                                    v-for="item in servers"
-                                    :key="item"
-                                    :label="item"
-                                    :value="item"
-                                >
-                                </el-option>
+                                <el-option v-for="item in servers" :key="item" :label="item" :value="item"> </el-option>
                             </el-select>
                         </el-col>
                         <el-col :span="8"
-                            ><el-input
-                                v-model="post.post_meta.line"
-                                placeholder="所在分线"
-                                ><template slot="append">线</template></el-input
+                            ><el-input v-model="post.post_meta.line" placeholder="所在分线"
+                                ><template #append>线</template></el-input
                             ></el-col
                         >
                     </el-row>
@@ -86,27 +67,17 @@
                                 v-model="post.post_meta.num"
                                 placeholder="所在房号"
                                 @change="computeArea(post.post_meta.num)"
-                                ><template slot="append">号</template></el-input
+                                ><template #append>号</template></el-input
                             ></el-col
                         >
                         <el-col :span="8"
-                            ><el-input
-                                v-model="post.post_meta.area"
-                                placeholder="面积"
-                                ><template slot="append"
-                                    >平米</template
-                                ></el-input
+                            ><el-input v-model="post.post_meta.area" placeholder="面积"
+                                ><template #append>平米</template></el-input
                             ></el-col
                         >
                         <el-col :span="8"
-                            ><el-input
-                                v-model="post.post_meta.level"
-                                placeholder="房屋等级"
-                                :min="1"
-                                :max="99"
-                                ><template slot="prepend"
-                                    >等级</template
-                                ></el-input
+                            ><el-input v-model="post.post_meta.level" placeholder="房屋等级" :min="1" :max="99"
+                                ><template #prepend>等级</template></el-input
                             ></el-col
                         >
                     </el-row>
@@ -114,18 +85,12 @@
 
                 <!-- 3.家园图片 -->
                 <el-form-item label="家园图赏">
-                    <album
-                        :imgList="post.post_meta.pics"
-                        @albumChange="updateAlbum"
-                    ></album>
+                    <album :imgList="post.post_meta.pics" @albumChange="updateAlbum"></album>
                 </el-form-item>
 
                 <!-- 3.蓝图分享 -->
                 <el-form-item label="蓝图分享">
-                    <el-switch
-                        v-model="post.post_meta.hasData"
-                        active-color="#13ce66"
-                    ></el-switch>
+                    <el-switch v-model="post.post_meta.hasData" active-color="#13ce66"></el-switch>
                 </el-form-item>
                 <div class="m-publish-datalist" v-if="post.post_meta.hasData">
                     <div class="u-wrapper">
@@ -136,29 +101,14 @@
                             <el-col :span="6">操作</el-col>
                         </el-row>
                         <div class="u-tbody">
-                            <el-row
-                                class="u-tr"
-                                v-for="(data, i) in post.post_meta.blueprint"
-                                :key="i"
-                            >
+                            <el-row class="u-tr" v-for="(data, i) in post.post_meta.blueprint" :key="i">
                                 <el-col class="u-type" :span="6">
-                                    <el-radio
-                                        v-model="data.type"
-                                        label="全局设计图"
-                                        >全局设计图</el-radio
-                                    >
-                                    <el-radio
-                                        v-model="data.type"
-                                        label="局部设计图"
-                                        >局部设计图</el-radio
-                                    >
+                                    <el-radio v-model="data.type" value="全局设计图">全局设计图</el-radio>
+                                    <el-radio v-model="data.type" value="局部设计图">局部设计图</el-radio>
                                 </el-col>
 
                                 <el-col :span="6"
-                                    ><el-input
-                                        v-model="data.desc"
-                                        placeholder="蓝图说明"
-                                    ></el-input
+                                    ><el-input v-model="data.desc" placeholder="蓝图说明"></el-input
                                 ></el-col>
 
                                 <el-col :span="6" class="u-action">
@@ -169,17 +119,10 @@
                                         :id="'data_' + i"
                                         @change="uploadData($event, data, i)"
                                     />
-                                    <el-button
-                                        type="primary"
-                                        size="medium"
-                                        @click="selectData(i)"
-                                        icon="el-icon-upload2"
+                                    <el-button type="primary" size="medium" @click="selectData(i)" icon="Upload"
                                         >上传蓝图</el-button
                                     >
-                                    <span
-                                        class="u-data-ready"
-                                        v-show="data.file"
-                                    >
+                                    <span class="u-data-ready" v-show="data.file">
                                         <i class="el-icon-success"></i>
                                         已上传
                                     </span>
@@ -187,20 +130,12 @@
 
                                 <el-col :span="6" class="u-action">
                                     <!-- 增加 -->
-                                    <el-button
-                                        plain
-                                        @click="addData(i)"
-                                        icon="el-icon-circle-plus-outline"
-                                        size="medium"
+                                    <el-button plain @click="addData(i)" icon="CirclePlus" size="medium"
                                         >增加</el-button
                                     >
 
                                     <!-- 删除 -->
-                                    <el-button
-                                        type="danger"
-                                        v-if="i !== 0"
-                                        @click="delData(i)"
-                                        icon="el-icon-remove-outline"
+                                    <el-button type="danger" v-if="i !== 0" @click="delData(i)" icon="Remove"
                                         >删除</el-button
                                     >
                                 </el-col>
@@ -231,7 +166,7 @@ import lodash from "lodash";
 export default {
     name: "house",
     props: [],
-    data: function() {
+    data: function () {
         return {
             //基本 - 类型设置
             type: "house",
@@ -293,22 +228,22 @@ export default {
     computed: {},
     methods: {
         // 发布
-        toPublish: function() {
+        toPublish: function () {
             // console.log(this.build())
             this.doPublish(this.build(), this);
             // console.log(this.$store.state);
         },
         // 草稿
-        toDraft: function() {
+        toDraft: function () {
             this.doDraft(this.build(), this);
             // console.log(this.$store.state);
         },
         // 加载
-        init: function() {
+        init: function () {
             return this.doLoad(this);
         },
         // 设置检索meta
-        build: function() {
+        build: function () {
             let data = this.$store.state;
             data.post.meta_1 = data.post.post_meta.num; //房号
             data.post.meta_2 = data.post.post_meta.area; //面积
@@ -318,11 +253,11 @@ export default {
         },
 
         // 蓝图
-        selectData: function(i) {
+        selectData: function (i) {
             let fileInput = document.getElementById("data_" + i);
             fileInput.dispatchEvent(new MouseEvent("click"));
         },
-        uploadData: function(e, item, i) {
+        uploadData: function (e, item, i) {
             let formdata = new FormData();
             let file = e.target.files[0];
             formdata.append("file", file);
@@ -335,7 +270,7 @@ export default {
             });
         },
         // 添加行
-        addData: function(i) {
+        addData: function (i) {
             // 目前设置最多10个版本
             if (this.post.post_meta.blueprint.length > 10) {
                 this.$message.error("默认上限10个");
@@ -348,12 +283,12 @@ export default {
             });
         },
         // 删除行
-        delData: function(i) {
+        delData: function (i) {
             this.post.post_meta.blueprint.splice(i, 1);
         },
 
         // 图集
-        updateAlbum: function(filelist) {
+        updateAlbum: function (filelist) {
             let imglist = [];
             filelist.forEach((img) => {
                 imglist.push({
@@ -365,7 +300,7 @@ export default {
         },
 
         // 面积
-        computeArea: function(num) {
+        computeArea: function (num) {
             if (this.post.post_subtype) {
                 let mapid = housemap[this.post.post_subtype];
                 if (num) {
@@ -375,7 +310,7 @@ export default {
             }
         },
     },
-    mounted: function() {
+    mounted: function () {
         // 初始化默认文章数据
         this.init().then(() => {
             console.log("Init Post:", this.post);

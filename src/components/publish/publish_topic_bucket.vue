@@ -3,16 +3,10 @@
         <el-form-item :label="label">
             <el-popover popper-class="m-topic-bucket__pop" placement="bottom-start">
                 <template #reference>
-                    <el-button icon="el-icon-plus" size="small" trigger="click"></el-button>
+                    <el-button icon="Plus" trigger="click"></el-button>
                 </template>
                 <div class="m-topic_bucket__content">
-                    <el-input
-                        v-model="search"
-                        placeholder="输入关键词"
-                        prefix-icon="el-icon-search"
-                        size="small"
-                        @keypress.enter="onSearch"
-                    >
+                    <el-input v-model="search" placeholder="输入关键词" prefix-icon="Search" @keypress.enter="onSearch">
                     </el-input>
                     <div class="m-topic-bucket__list" v-if="list && list.length">
                         <el-checkbox-group v-model="selected">

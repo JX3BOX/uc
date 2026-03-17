@@ -3,12 +3,12 @@
         <div class="type-box">
             <el-form inline>
                 <el-form-item label="来源">
-                    <el-select v-model="form.type" placeholder="请选择问题来源" size="small">
+                    <el-select v-model="form.type" placeholder="请选择问题来源">
                         <el-option v-for="(value, key) in types" :key="key" :value="key" :label="value"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="类别">
-                    <el-select v-model="form.subtype" placeholder="请选择问题类别" size="small">
+                    <el-select v-model="form.subtype" placeholder="请选择问题类别">
                         <el-option v-for="(value, key) in subtypes" :key="key" :value="key" :label="value"></el-option>
                     </el-select>
                 </el-form-item>
@@ -20,7 +20,7 @@
                 type="textarea"
                 :rows="10"
                 placeholder="输入反馈内容"
-                @paste.native="handlePaste"
+                @paste="handlePaste"
             ></el-input>
         </div>
         <div class="m-feedback-actions">
@@ -39,7 +39,6 @@
                     title="上传图片"
                     with-credentials
                     accept="image/jpg, image/jpeg, image/gif, image/png, image/bmp"
-                    size="small"
                     multiple
                 >
                     <i class="el-icon-plus avatar-uploader-icon"></i>
@@ -50,7 +49,7 @@
             </div>
             <div class="m-feedback-visible">
                 <span class="u-label">是否公开：</span>
-                <el-checkbox class="u-checkbox" :true-label="1" :false-label="0" v-model="form.public"></el-checkbox>
+                <el-checkbox class="u-checkbox" :true-value="1" :fasle-value="0" v-model="form.public"></el-checkbox>
                 <!-- <el-tooltip v-show="!canSubmit" content="必须先填写类型，子类和内容">
                     <i class="el-icon-question"></i>
                 </el-tooltip> -->
@@ -58,7 +57,7 @@
             <div class="m-feedback-btn">
                 <el-button
                     class="u-submit"
-                    icon="el-icon-s-promotion"
+                    icon="Promotion"
                     type="primary"
                     :disabled="!canSubmit"
                     @click="submit"
@@ -143,7 +142,7 @@ export default {
                         this.$message.error("上传返回数据异常");
                         return;
                     }
-                    this.$set(this.uploadedMap, file.uid, imageUrl);
+                    this.uploadedMap[file.uid] = imageUrl;
                     this.imgs = [...this.imgs, imageUrl];
                     file.url = imageUrl;
                     file.status = "success";

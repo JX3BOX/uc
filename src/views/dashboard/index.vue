@@ -210,7 +210,7 @@
                 <div class="u-dates">
                     <i class="el-icon-date"></i>
                     <el-radio-group v-model="date">
-                        <el-radio v-for="(item, i) in dates" :key="i" :label="item.value">{{ item.label }}</el-radio>
+                        <el-radio v-for="(item, i) in dates" :key="i" :value="item.value">{{ item.label }}</el-radio>
                     </el-radio-group>
                 </div>
             </h2>

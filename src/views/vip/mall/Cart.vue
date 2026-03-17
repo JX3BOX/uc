@@ -3,9 +3,7 @@
         <div class="m-carts">
             <div class="m-cart-item">
                 <el-checkbox v-model="isAll" class="u-check-all" @change="allChange">全选</el-checkbox>
-                <el-button v-if="number" type="info" plain size="small" icon="el-icon-delete" @click="handleClear"
-                    >清空</el-button
-                >
+                <el-button v-if="number" type="info" plain icon="Delete" @click="handleClear">清空</el-button>
             </div>
             <div class="m-cart-item" v-for="item in list" :key="item.id">
                 <div class="m-left">
@@ -34,17 +32,10 @@
                 <div class="u-amount">
                     <el-input-number
                         v-model="item.amount"
-                        size="small"
                         :max="item.goods.stock"
                         @change="itemChange(item, $event)"
                     ></el-input-number>
-                    <el-button
-                        class="u-delete"
-                        circle
-                        size="small"
-                        icon="el-icon-delete"
-                        @click.stop="deleteGoods(item)"
-                    ></el-button>
+                    <el-button class="u-delete" circle icon="Delete" @click.stop="deleteGoods(item)"></el-button>
                 </div>
             </div>
         </div>

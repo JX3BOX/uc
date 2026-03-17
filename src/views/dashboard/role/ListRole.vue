@@ -16,7 +16,7 @@
             </div>
         </h2>
         <div class="m-role-list-filter">
-            <el-select size="small" v-model="mount" popper-class="m-school-pop">
+            <el-select v-model="mount" popper-class="m-school-pop">
                 <el-option label="全部" value=""></el-option>
                 <el-option
                     v-for="(school, school_id) in school_id_map"
@@ -29,7 +29,7 @@
                     {{ school }}
                 </el-option>
             </el-select>
-            <el-input class="u-name" v-model="name" placeholder="请输入角色名称" size="small">
+            <el-input class="u-name" v-model="name" placeholder="请输入角色名称">
                 <template slot="prepend"> <i class="el-icon-search"></i> 查找 </template>
             </el-input>
         </div>
@@ -44,7 +44,7 @@
                     </router-link>
                     <span class="u-title">
                         <router-link class="u-rolename" :to="'/role/' + item.ID">{{ item.name }}</router-link>
-                        <el-tag v-if="item.is_default_role" size="small" type="warning">默认</el-tag>
+                        <el-tag v-if="item.is_default_role" type="warning">默认</el-tag>
                         <span class="u-star" :class="{ on: item.priority }" @click="starRole(item)">
                             <el-tooltip
                                 class="item"
@@ -103,7 +103,7 @@
                         >
                         </el-switch>
                         <el-dropdown @command="handleCommand" trigger="click">
-                            <el-button type="default" size="small">
+                            <el-button type="default">
                                 更多<i class="el-icon-arrow-down el-icon--right"></i>
                             </el-button>
                             <el-dropdown-menu slot="dropdown">

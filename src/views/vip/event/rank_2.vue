@@ -14,13 +14,9 @@
                         ></el-option>
                     </el-select>
                 </div>
-                <el-button
-                    class="u-btn"
-                    type="warning"
-                    @click="getGift"
-                    :disabled="done"
-                    icon="el-icon-present"
-                >点击领取</el-button>
+                <el-button class="u-btn" type="warning" @click="getGift" :disabled="done" icon="Present"
+                    >点击领取</el-button
+                >
             </div>
         </div>
     </div>
@@ -34,33 +30,33 @@ export default {
             done: false,
             options: [
                 {
-                    label : '11-30名竞速排名（1年专业会员）',
-                    value : 'rank_2_top30'
+                    label: "11-30名竞速排名（1年专业会员）",
+                    value: "rank_2_top30",
                 },
                 {
-                    label : '31-100名竞速排名（1月专业会员）',
-                    value : 'rank_2_top100'
+                    label: "31-100名竞速排名（1月专业会员）",
+                    value: "rank_2_top100",
                 },
                 {
-                    label : '门派天团（1年高级会员）',
-                    value : 'rank_2_school'
+                    label: "门派天团（1年高级会员）",
+                    value: "rank_2_school",
                 },
                 {
-                    label : '个人天梯（1年高级会员）',
-                    value : 'rank_2_ladder'
+                    label: "个人天梯（1年高级会员）",
+                    value: "rank_2_ladder",
                 },
             ],
-            key : ''
+            key: "",
         };
     },
     computed: {},
     methods: {
         getGift: function () {
-            if(!this.key){
+            if (!this.key) {
                 this.$alert("请选择需要领取的奖项", "提醒", {
                     confirmButtonText: "确定",
                 });
-                return
+                return;
             }
             getFreeVip(this.key).then((res) => {
                 this.done = true;

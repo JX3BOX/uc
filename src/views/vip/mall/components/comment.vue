@@ -30,28 +30,19 @@
                     </div>
                     <div class="m-admin-comment">
                         <el-button
-                            type="text"
+                            link
                             icon="el-icon-chat-round"
-                            size="small"
                             @click="showInput = !showInput"
                             v-if="!item.reply && is_admin"
                         >
                             盒子娘回复
                         </el-button>
-                        <el-button
-                            type="text"
-                            v-if="is_admin"
-                            icon="el-icon-delete"
-                            size="small"
-                            @click="delComment(item.id)"
-                        >
-                            删除
-                        </el-button>
+                        <el-button link v-if="is_admin" icon="Delete" @click="delComment(item.id)"> 删除 </el-button>
                         <div class="m-input" v-if="showInput">
                             <el-input type="textarea" placeholder="请输入回复内容" v-model="content"> </el-input>
                             <div class="m-button">
-                                <el-button type="primary" size="small" @click="reply(item.id)">提交</el-button>
-                                <el-button type="text" size="small" @click="showInput = false">收起</el-button>
+                                <el-button type="primary" @click="reply(item.id)">提交</el-button>
+                                <el-button link @click="showInput = false">收起</el-button>
                             </div>
                         </div>
                         <div class="m-reply" v-if="item.reply">
@@ -118,7 +109,7 @@ export default {
                     message: "盒子娘评论成功",
                     type: "success",
                 });
-                this.showInput = false
+                this.showInput = false;
                 this.list = this.list.map((item) => {
                     if (item.id == id) item.reply = this.content;
                     return item;

@@ -13,14 +13,14 @@
         <div class="u-tips">
             <div class="u-checkbox"><el-checkbox v-model="agree">我已知晓并同意上述规则</el-checkbox></div>
             <div class="u-confirm">
-                <el-button size="small" type="danger" :disabled="!agree" @click="handleConfirm">确认注销</el-button>
+                <el-button type="danger" :disabled="!agree" @click="handleConfirm">确认注销</el-button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import DOMPurify from 'dompurify';
+import DOMPurify from "dompurify";
 import User from "@jx3box/jx3box-common/js/user";
 import { getArticle } from "@jx3box/jx3box-common/js/api_misc";
 import { leave } from "@/service/dashboard/feedback";
@@ -81,9 +81,9 @@ export default {
                     this.loading = false;
                 });
         },
-        sanitizedHTML(html){
+        sanitizedHTML(html) {
             return DOMPurify.sanitize(html);
-        }
+        },
     },
 };
 </script>

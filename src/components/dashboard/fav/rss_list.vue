@@ -5,12 +5,16 @@
                 class="m-dashboard-work-search"
                 placeholder="请输入搜索内容"
                 v-model="search"
-                @keyup.enter.native="loadData"
+                @keyup.enter="loadData"
                 clearable
                 @clear="loadData"
             >
-                <template slot="prepend">关键词</template>
-                <el-button slot="append" icon="el-icon-search"></el-button>
+                <template #prepend>
+                    <span>关键词</span>
+                </template>
+                <template #append>
+                    <el-button icon="Search"></el-button>
+                </template>
             </el-input>
         </div>
         <ul class="m-dashboard-box-list" v-if="data.length">
@@ -24,7 +28,7 @@
                     <span><i class="el-icon-date"></i> {{ dateFormat(item.created_at) }} </span>
                 </div>
                 <el-button-group class="u-action">
-                    <el-button size="small" icon="el-icon-delete" title="删除记录" @click="del(item.id)"></el-button>
+                    <el-button icon="Delete" title="删除记录" @click="del(item.id)"></el-button>
                 </el-button-group>
             </li>
         </ul>

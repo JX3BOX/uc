@@ -4,7 +4,7 @@
             <div class="m-search">
                 <el-input placeholder="请输入搜索内容" v-model.trim.lazy="search" class="input-with-select" clearable>
                     <span slot="prepend">关键词</span>
-                    <el-button slot="append" icon="el-icon-search"></el-button>
+                    <el-button slot="append" icon="Search"></el-button>
                 </el-input>
                 <!-- <el-badge
                     class="u-cart"

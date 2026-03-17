@@ -37,12 +37,14 @@
                     class="m-privacy-search"
                     placeholder="请输入搜索内容"
                     v-model="keyword"
-                    @keyup.enter.native="handleChange"
+                    @keyup.enter="handleChange"
                     clearable
                     @clear="handleChange"
                 >
-                    <template slot="prepend">关键词</template>
-                    <el-button slot="append" icon="el-icon-search" @click="handleChange"></el-button>
+                    <template #prepend>关键词</template>
+                    <template #append>
+                        <el-button icon="Search" @click="handleChange"></el-button>
+                    </template>
                 </el-input>
 
                 <div class="m-whitelist-list u-list" v-if="list && list.length">
@@ -58,25 +60,17 @@
                         <div class="u-item-btns">
                             <template v-if="active === 'whitelist'">
                                 <el-popconfirm title="确认删除亲友关系吗？" @confirm="remove(item.kith_id, i)">
-                                    <el-button slot="reference" type="warning" size="small" icon="el-icon-delete"
-                                        >删除</el-button
-                                    >
+                                    <template #reference>
+                                        <el-button type="warning" icon="Delete">删除</el-button>
+                                    </template>
                                 </el-popconfirm>
 
-                                <el-button
-                                    @click="edit(item.kith_id, item)"
-                                    size="small"
-                                    icon="el-icon-edit"
-                                    class="u-btn-edit"
+                                <el-button @click="edit(item.kith_id, item)" icon="Edit" class="u-btn-edit"
                                     >编辑</el-button
                                 >
                             </template>
                             <template v-else>
-                                <el-button
-                                    @click="removeOther(item)"
-                                    size="small"
-                                    icon="el-icon-delete"
-                                    class="u-btn-delete"
+                                <el-button @click="removeOther(item)" icon="Delete" class="u-btn-delete"
                                     >移除</el-button
                                 >
                             </template>
@@ -99,8 +93,8 @@
                 class="u-input"
                 v-model.number="uid"
                 placeholder="输入UID添加"
-                suffix-icon="el-icon-search"
-                @keyup.enter.native="search"
+                suffix-icon="Search"
+                @keyup.enter="search"
                 @change="search"
             ></el-input>
             <div class="u-list" v-if="userdata">

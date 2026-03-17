@@ -1,7 +1,7 @@
 <template>
     <el-dialog
         class="c-large-dialog"
-        v-model="modelValue"
+        v-model="dialogVisible"
         @close="close"
         title="技能库"
         append-to-body
@@ -29,8 +29,8 @@
             <div v-show="activeName === 'all'">
                 <div class="m-database-search">
                     <el-radio-group class="u-client" v-model="client" @change="search">
-                        <el-radio-button label="std">剑三</el-radio-button>
-                        <el-radio-button label="origin">缘起</el-radio-button>
+                        <el-radio-button value="std">剑三</el-radio-button>
+                        <el-radio-button value="origin">缘起</el-radio-button>
                     </el-radio-group>
                     <el-input class="u-input" placeholder="请输入 ID 或 名称" v-model="query" @keyup.enter="search">
                         <template #prepend>ID ／名称</template>
@@ -63,7 +63,7 @@
                         class="m-archive-more"
                         :class="{ show: hasNextPage }"
                         type="primary"
-                        icon="el-icon-arrow-down"
+                        icon="ArrowDown"
                         @click="appendPage"
                         >加载更多</el-button
                     >
@@ -155,6 +155,14 @@ export default {
         };
     },
     computed: {
+        dialogVisible: {
+            get() {
+                return this.modelValue;
+            },
+            set(val) {
+                this.$emit("update:modelValue", val);
+            },
+        },
         hasNextPage: function () {
             return this.total > 1 && this.page < this.pages;
         },

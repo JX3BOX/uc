@@ -1,5 +1,5 @@
 <template>
-    <div class="m-card m-register" >
+    <div class="m-card m-register">
         <el-card class="box-card">
             <CardHeader />
             <Msg />
@@ -46,14 +46,9 @@
                                 <i class="el-icon-postcard"></i>
                             </template>
                         </el-input>
-                        <el-button
-                            class="u-code-btn"
-                            size="small"
-                            type="primary"
-                            @click="getCode"
-                            :disabled="code_disabled"
-                            >{{ code_text }}</el-button
-                        >
+                        <el-button class="u-code-btn" type="primary" @click="getCode" :disabled="code_disabled">{{
+                            code_text
+                        }}</el-button>
                     </div>
 
                     <!-- 密码 -->

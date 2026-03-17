@@ -14,6 +14,7 @@
                     placeholder="请输入小册标题"
                     maxlength="30"
                     show-word-limit
+                    size="large"
                 ></el-input>
             </div>
 
@@ -89,7 +90,7 @@
                                                 :label="post.title"
                                             >
                                                 <div>
-                                                    <el-tag size="small" v-if="post.post_type">{{
+                                                    <el-tag v-if="post.post_type">{{
                                                         showPostType(post.post_type)
                                                     }}</el-tag>
                                                     {{ post.title }}
@@ -105,10 +106,20 @@
                                     ></el-input>
                                     <div class="w-select">
                                         <div class="u-select-label">图标</div>
-                                        <el-select v-model="item.icon" filterable clearable popper-class="m-collection-icon__select">
-                                            <el-option v-for="_icon in icons" :key="_icon.value" :value="_icon.value" :label="_icon.label">
+                                        <el-select
+                                            v-model="item.icon"
+                                            filterable
+                                            clearable
+                                            popper-class="m-collection-icon__select"
+                                        >
+                                            <el-option
+                                                v-for="_icon in icons"
+                                                :key="_icon.value"
+                                                :value="_icon.value"
+                                                :label="_icon.label"
+                                            >
                                                 <div class="u-collection-icon">
-                                                    <img class="u-icon" :src="iconUrl(_icon.value)" alt="">
+                                                    <img class="u-icon" :src="iconUrl(_icon.value)" alt="" />
                                                     {{ _icon.label }}
                                                 </div>
                                             </el-option>
@@ -156,7 +167,13 @@
                 </div>
             </div>
             <div class="m-publish-collection-publish">
-                <el-button class="u-button" type="primary" @click="submit" :loading="processing" :disabled="processing"
+                <el-button
+                    class="u-button"
+                    size="large"
+                    type="primary"
+                    @click="submit"
+                    :loading="processing"
+                    :disabled="processing"
                     >发 &nbsp;&nbsp; 布</el-button
                 >
             </div>
@@ -215,13 +232,12 @@ export default {
         id: function () {
             return this.$route.params.collection_id;
         },
-        icons: function() {
+        icons: function () {
             const icons = [];
             for (let key in xfid) {
                 icons.push({
                     value: `xf_${key}`,
                     label: xfid[key],
-
                 });
             }
             for (let key in schoolid) {
@@ -231,7 +247,7 @@ export default {
                 });
             }
             return icons;
-        }
+        },
     },
     methods: {
         tags_filters(query) {
@@ -423,7 +439,7 @@ export default {
             return this.source_types[type];
         },
         iconUrl: function (icon) {
-            const key = icon.replace("_", '/')
+            const key = icon.replace("_", "/");
             return `${__imgPath}image/${key}.png`;
         },
     },

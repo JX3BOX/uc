@@ -21,7 +21,7 @@
         </div>
         <div class="search-input">
             <el-input :value="query.title" placeholder="搜索商品关键词" @input="handleChange($event, 'title')">
-                <el-button slot="append" icon="el-icon-search"></el-button>
+                <el-button slot="append" icon="Search"></el-button>
             </el-input>
         </div>
     </div>

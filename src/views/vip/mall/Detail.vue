@@ -67,11 +67,11 @@
                         <el-divider content-position="left"><i class="el-icon-unlock"></i> 兑换需求</el-divider>
                         <span class="u-line" v-if="item.end_sell_time">
                             <i class="el-icon-time"></i> 可兑换时间：
-                            <el-tag :type="isExpire(item.end_sell_time) ? 'success' : 'warning'" size="small">{{
+                            <el-tag :type="isExpire(item.end_sell_time) ? 'success' : 'warning'">{{
                                 item.start_sell_time
                             }}</el-tag>
                             -
-                            <el-tag :type="isExpire(item.end_sell_time) ? 'success' : 'warning'" size="small">{{
+                            <el-tag :type="isExpire(item.end_sell_time) ? 'success' : 'warning'">{{
                                 item.end_sell_time
                             }}</el-tag>
                         </span>
@@ -102,7 +102,7 @@
                     <el-divider content-position="left"><i class="el-icon-shopping-bag-1"></i> 兑换详情</el-divider>
                     <div class="u-count">
                         <span class="u-number" v-if="item.stock">
-                            数量：<el-input-number v-model="number" :min="1" :max="maxNumber" size="small" />
+                            数量：<el-input-number v-model="number" :min="1" :max="maxNumber" />
                         </span>
                         <span class="u-stock"
                             >库存：<b>{{ item.stock }}</b></span
@@ -178,27 +178,6 @@
             <!-- 赠送 -->
             <UserPop title="赠送" :show="visible" @switchUserPop="presented" @confirm="presentedConfirm"></UserPop>
             <!-- 装扮步骤条 -->
-            <!-- <div class="m-step" v-if="showStep">
-                <div class="u-title">虚拟装扮使用步骤</div>
-                <el-steps align-center :active="3">
-                    <el-step>
-                        <template slot="description">
-                            <a :href="getLink()" target="_blank">
-                                <span class="u-step-desc">打开主题风格</span>
-                                <img src="../../assets/img/common/step1.png" />
-                            </a>
-                        </template>
-                    </el-step>
-                    <el-step>
-                        <template slot="description">
-                            <a :href="getLink()" target="_blank">
-                                <span class="u-step-desc">在主题装扮内找到对应菜单 </span>
-                                <img src="../../assets/img/common/step2.png" />
-                            </a>
-                        </template>
-                    </el-step>
-                </el-steps>
-            </div> -->
             <!-- 内容 -->
             <div class="m-extend">
                 <div class="m-tabs">

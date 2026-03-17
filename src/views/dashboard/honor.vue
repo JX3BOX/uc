@@ -1,6 +1,6 @@
 /dashboard
 <template>
-    <uc class="m-dashboard-honor m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tab-list="tabList">
+    <uc class="m-dashboard-honor m-dashboard-skin" icon="Brush" title="主题装扮" :tab-list="tabList">
         <template #header>
             <a
                 class="u-link el-button el-button--default el-button--mini is-round is-plain"
@@ -66,7 +66,7 @@
                     <div class="u-honor-item">
                         <div class="u-picbox" v-for="(item, i) in honorList" :key="i">
                             <el-tooltip effect="dark" placement="top" :open-delay="200">
-                                <div slot="content">{{ item.name }}</div>
+                                <template #content>{{ item.name }}</template>
                                 <div class="u-pic" :class="setClass(item)" @click="selectChange(item)">
                                     <div v-if="item.isCustomize" class="u-noHonor"></div>
                                     <el-image :src="imgUrl(item)" fit="contain" v-else />
@@ -212,7 +212,7 @@ export default {
             return honorStr + honorConfig.suffix;
         },
         loadHonor() {
-            getHonor({ per:40 }).then((res) => {
+            getHonor({ per: 40 }).then((res) => {
                 this.honorList = res.data.data.list;
                 this.loadDecoration();
             });
@@ -266,8 +266,8 @@ export default {
             this.isSelect = item;
         },
         reset() {
-            this.$set(this, "honorList", cloneDeep(this.list));
-            this.$set(this, "isSelect", cloneDeep(this.isSelectBak));
+            this.honorList = cloneDeep(this.list);
+            this.isSelect = cloneDeep(this.isSelectBak);
         },
         sortData(arr) {
             // 已有的称号

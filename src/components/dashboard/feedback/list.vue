@@ -1,6 +1,6 @@
 <template>
     <div class="m-feedback-list" v-loading="loading">
-        <el-table :data="data" highlight-current-row size="small" row-class-name="u-row" @row-click="viewFeedback">
+        <el-table :data="data" highlight-current-row row-class-name="u-row" @row-click="viewFeedback">
             <el-table-column label="状态" prop="status" width="100">
                 <template #default="{ row }">
                     <span class="u-status" :style="{ backgroundColor: statusColors[row.status] }">{{
@@ -26,7 +26,7 @@
             </el-table-column>
             <el-table-column label="操作" width="100">
                 <template #default>
-                    <el-button type="text" size="small">查看</el-button>
+                    <el-button link>查看</el-button>
                 </template>
             </el-table-column>
         </el-table>

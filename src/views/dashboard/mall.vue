@@ -39,7 +39,6 @@
                                         >
                                             <el-button
                                                 link
-                                                size="small"
                                                 type="success"
                                                 plain
                                                 icon="el-icon-wallet"
@@ -53,7 +52,6 @@
                                             <el-tooltip effect="dark" content="确认收货" placement="top">
                                                 <el-button
                                                     link
-                                                    size="small"
                                                     plain
                                                     icon="el-icon-circle-check"
                                                     @click="isReceipt(item.order.id)"
@@ -72,18 +70,18 @@
                                             <el-popconfirm
                                                 confirm-button-text="确定"
                                                 cancel-button-text="取消"
-                                                icon="el-icon-info"
+                                                icon="InfoFilled"
                                                 title="确定取消吗？"
                                                 @confirm="cancel(item.order.id)"
                                             >
-                                                <el-button
-                                                    size="small"
-                                                    slot="reference"
-                                                    type="info"
-                                                    plain
-                                                    icon="el-icon-circle-close"
-                                                    circle
-                                                ></el-button>
+                                                <template #reference>
+                                                    <el-button
+                                                        type="info"
+                                                        plain
+                                                        icon="el-icon-circle-close"
+                                                        circle
+                                                    ></el-button>
+                                                </template>
                                             </el-popconfirm>
                                         </el-tooltip>
 
@@ -93,7 +91,6 @@
                                                 <el-button
                                                     icon="el-icon-chat-dot-square"
                                                     @click="handleShow('comment', item.order.id)"
-                                                    size="small"
                                                     plain
                                                     circle
                                                 ></el-button>

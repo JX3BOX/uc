@@ -13,14 +13,12 @@
                     class="u-btn u-delete"
                     type="info"
                     plain
-                    size="small"
+                    
                     @click="delRole"
-                    icon="el-icon-delete"
+                    icon="Delete"
                 >删除</el-button>
             </div>-->
-            <el-button slot="reference" class="u-back" size="small" plain icon="el-icon-arrow-left" @click="goBack"
-                >返回</el-button
-            >
+            <el-button slot="reference" class="u-back" plain icon="ArrowLeft" @click="goBack">返回</el-button>
         </h2>
         <div class="m-role-detail" v-if="data">
             <div class="m-role-info">

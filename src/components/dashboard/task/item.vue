@@ -13,7 +13,6 @@
             </div>
             <div class="u-btn">
                 <el-button
-                    size="small"
                     :type="data.hasFinish ? 'success' : 'warning'"
                     :disabled="data.hasFinish"
                     :icon="(data.hasFinish && 'el-icon-check') || ''"

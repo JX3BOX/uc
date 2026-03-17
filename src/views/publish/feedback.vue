@@ -6,7 +6,7 @@
 
         <!-- <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search">
             <span slot="prepend">关键词</span>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+            <el-button slot="append" icon="Search"></el-button>
         </el-input>-->
 
         <div class="m-dashboard-work-filter">
@@ -37,7 +37,7 @@
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-button size="small" icon="el-icon-delete" title="删除" @click="del(item.ID, i)"></el-button>
+                        <el-button icon="Delete" title="删除" @click="del(item.ID, i)"></el-button>
                     </el-button-group>
                 </li>
             </ul>

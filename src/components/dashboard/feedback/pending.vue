@@ -3,14 +3,7 @@
         <!-- tool -->
         <div class="m-feedback-tool">
             <div class="m-feedback-tool__item">
-                <el-select
-                    v-model="select"
-                    class="u-select"
-                    slot="prepend"
-                    size="small"
-                    placeholder="请选择处理人"
-                    filterable
-                >
+                <el-select v-model="select" class="u-select" placeholder="请选择处理人" filterable>
                     <el-option
                         :label="item.teammate_info.display_name"
                         v-for="(item, i) in assigns"
@@ -32,7 +25,7 @@
                 </el-select>
             </div>
             <div class="m-feedback-tool__item">
-                <el-date-picker v-model="time" type="month" placeholder="选择月份" size="small" format="yyyy年MM月">
+                <el-date-picker v-model="time" type="month" placeholder="选择月份" format="yyyy年MM月">
                 </el-date-picker>
             </div>
             <el-checkbox class="u-only-check" v-model="onlyMe"> 指派给我的 </el-checkbox>
@@ -43,7 +36,6 @@
             <el-table
                 :data="data"
                 highlight-current-row
-                size="small"
                 @row-click="viewFeedback"
                 row-class-name="u-row"
                 @filter-change="filterChange"
@@ -134,9 +126,9 @@
                 <el-table-column label="操作" width="100">
                     <template #default="{ row }">
                         <el-tooltip :content="row.content" placement="top" popper-class="m-content-popover">
-                            <el-button type="text" size="small">查看</el-button>
+                            <el-button link>查看</el-button>
                         </el-tooltip>
-                        <el-button type="text" size="small" @click.stop="onRemarkClick(row)">备注</el-button>
+                        <el-button link @click.stop="onRemarkClick(row)">备注</el-button>
                     </template>
                 </el-table-column>
             </el-table>

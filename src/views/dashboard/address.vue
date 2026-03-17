@@ -2,47 +2,38 @@
     <uc>
         <div class="m-page-address">
             <!-- 显示地址 -->
-            <el-button type="primary" icon="el-icon-plus" @click="add" size="small">添加地址</el-button>
+            <el-button type="primary" icon="Plus" @click="add">添加地址</el-button>
 
             <div class="m-content">
-                <el-table :data="list" size="small">
+                <el-table :data="list">
                     <el-table-column prop="contact_name" label="姓名" width="180"> </el-table-column>
                     <el-table-column prop="contact_phone" label="电话" width="180"> </el-table-column>
                     <el-table-column label="默认地址" width="180">
-                        <template slot-scope="scope">
+                        <template #default="scope">
                             <el-switch v-model="scope.row.is_default" @change="change(scope.row)"> </el-switch>
                         </template>
                     </el-table-column>
                     <el-table-column label="地址">
-                        <template slot-scope="scope">
+                        <template #default="scope">
                             {{ scope.row.province }}{{ scope.row.city }}{{ scope.row.area }}{{ scope.row.address }}
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" width="180">
-                        <template slot-scope="scope">
+                        <template #default="scope">
                             <div>
                                 <!--编辑-->
-                                <el-button
-                                    circle
-                                    @click="edit(scope.row)"
-                                    icon="el-icon-edit-outline"
-                                    size="small"
-                                ></el-button>
+                                <el-button circle @click="edit(scope.row)" icon="el-icon-edit-outline"></el-button>
                                 <!--删除-->
                                 <el-popconfirm
                                     confirm-button-text="确定"
                                     cancel-button-text="取消"
-                                    icon="el-icon-info"
+                                    icon="InfoFilled"
                                     title="确定删除吗？"
                                     @confirm="del(scope.row.id)"
                                 >
-                                    <el-button
-                                        style="margin-left: 10px"
-                                        slot="reference"
-                                        circle
-                                        size="small"
-                                        icon="el-icon-delete"
-                                    ></el-button>
+                                    <template #reference>
+                                        <el-button style="margin-left: 10px" circle icon="Delete"></el-button>
+                                    </template>
                                 </el-popconfirm>
                             </div>
                         </template>
@@ -70,10 +61,12 @@
                         </div>
                     </el-form-item>
                 </el-form>
-                <span slot="footer" class="m-footer">
-                    <el-button @click="visible = false">取 消</el-button>
-                    <el-button type="primary" @click="submit('ruleForm')">确 定</el-button>
-                </span>
+                <template #footer>
+                    <span class="m-footer">
+                        <el-button @click="visible = false">取 消</el-button>
+                        <el-button type="primary" @click="submit('ruleForm')">确 定</el-button>
+                    </span>
+                </template>
             </el-dialog>
         </div>
     </uc>

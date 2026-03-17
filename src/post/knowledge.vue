@@ -9,19 +9,30 @@
             <div class="m-publish-source">
                 <el-divider content-position="left">选择通识 *</el-divider>
                 <el-radio-group class="m-publish-action" v-model="action">
-                    <el-radio-button label="new" :disabled="isEditMode">新建词条</el-radio-button>
-                    <el-radio-button label="update">维护已有词条</el-radio-button>
+                    <el-radio-button value="new" :disabled="isEditMode">新建词条</el-radio-button>
+                    <el-radio-button value="update">维护已有词条</el-radio-button>
                 </el-radio-group>
 
                 <!-- 编辑模式 -->
-                <el-input class="u-current-source" v-if="isEditMode" v-model="currentSource" disabled></el-input>
+                <el-input
+                    class="u-current-source"
+                    size="large"
+                    v-if="isEditMode"
+                    v-model="currentSource"
+                    disabled
+                ></el-input>
 
                 <!-- 创建模式 -->
                 <template v-else>
                     <template v-if="action == 'new'">
                         <!-- 创建词条 -->
                         <div class="u-create-source">
-                            <el-select class="u-source-type" placeholder="选择通识类型" v-model="knowledge.type">
+                            <el-select
+                                class="u-source-type"
+                                size="large"
+                                placeholder="选择通识类型"
+                                v-model="knowledge.type"
+                            >
                                 <el-option
                                     v-for="type in types"
                                     :key="type.name"
@@ -33,6 +44,7 @@
                                 class="u-source-name"
                                 placeholder="请输入通识名称"
                                 v-model="knowledge.name"
+                                size="large"
                             ></el-input>
                         </div>
                         <p class="u-source-add-tip">
@@ -51,6 +63,7 @@
                             :loading="options.loading"
                             clearable
                             @change="selectSource"
+                            size="large"
                         >
                             <el-option
                                 v-for="item in options.sources"
@@ -77,17 +90,39 @@
                     show-word-limit
                     required
                     placeholder="请简单描述一下本次修订说明"
+                    size="large"
                 ></el-input>
             </div>
 
             <div class="m-publish-content">
                 <el-divider content-position="left">通识正文 *</el-divider>
                 <Tinymce v-model="post.content" :attachmentEnable="true" :resourceEnable="true" :height="600">
-                    <el-alert type="warning" class="m-latest-check" show-icon v-if="!isLatest && latest.post && current.post">
+                    <el-alert
+                        type="warning"
+                        class="m-latest-check"
+                        show-icon
+                        v-if="!isLatest && latest.post && current.post"
+                    >
                         <template #title>
-                            <span class="u-alert-title">当前百科已经有更新的版本，你的攻略可能已经失效，请先进行比对。</span>
-                            <el-link type="primary" icon="el-icon-link" :href="getLink(post.source_id)" target="_blank" class="u-view-latest">查看最新攻略</el-link>
-                            <el-link @click="getLatest" icon="el-icon-download" class="u-get-latest" type="primary" v-if="latest.post">获取最新攻略</el-link>
+                            <span class="u-alert-title"
+                                >当前百科已经有更新的版本，你的攻略可能已经失效，请先进行比对。</span
+                            >
+                            <el-link
+                                type="primary"
+                                icon="Link"
+                                :href="getLink(post.source_id)"
+                                target="_blank"
+                                class="u-view-latest"
+                                >查看最新攻略</el-link
+                            >
+                            <el-link
+                                @click="getLatest"
+                                icon="Download"
+                                class="u-get-latest"
+                                type="primary"
+                                v-if="latest.post"
+                                >获取最新攻略</el-link
+                            >
                         </template>
                     </el-alert>
                 </Tinymce>
@@ -101,6 +136,7 @@
                     closable
                     :disable-transitions="false"
                     @close="post.tags.splice(key, 1)"
+                    size="large"
                     >{{ tag }}
                 </el-tag>
                 <el-input
@@ -108,20 +144,19 @@
                     v-if="inputVisible"
                     v-model="inputValue"
                     ref="saveTagInput"
-                    size="small"
                     placeholder="回车以添加"
-                    @keyup.enter.native="handleInputConfirm"
+                    @keyup.enter="handleInputConfirm"
                     @blur="handleInputConfirm"
                 >
                 </el-input>
-                <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 添加标签 </el-button>
+                <el-button v-else class="button-new-tag" @click="showInput">+ 添加标签 </el-button>
             </div>
 
             <div class="m-publish-commit">
                 <el-divider content-position="left"></el-divider>
                 <el-button
                     class="u-publish"
-                    icon="el-icon-s-promotion"
+                    icon="Promotion"
                     type="primary"
                     @click="handleSubmit"
                     :disabled="processing"
@@ -177,7 +212,7 @@ export default {
                 source_id: "",
                 remark: "",
                 tags: [],
-                client: ""
+                client: "",
             },
 
             // 杂项
@@ -187,33 +222,33 @@ export default {
             inputValue: "",
 
             latest: {},
-            current: {}
+            current: {},
         };
     },
     computed: {
         client: function () {
             return this.$store.state.client;
         },
-        id : function (){
-            return this.$route.query?.post_id
+        id: function () {
+            return this.$route.query?.post_id;
         },
         // 当前比最新的攻略是否更新
-        isLatest : function (){
-            if(!this.current?.post?.id || !this.latest?.post?.id) return false
-            return this.current.post.id == this.latest.post.id
+        isLatest: function () {
+            if (!this.current?.post?.id || !this.latest?.post?.id) return false;
+            return this.current.post.id == this.latest.post.id;
         },
     },
     methods: {
         // 加载指定通识
         loadData: function (id) {
             if (!id) return;
-            wiki.get({ type: "knowledge", id }, { client: 'all' }).then((res) => {
+            wiki.get({ type: "knowledge", id }, { client: "all" }).then((res) => {
                 // 设置通识
                 let source = res.data?.data?.source;
                 this.currentSource = source?.name;
                 this.post.source_id = source?.id;
 
-                this.latest = res.data.data
+                this.latest = res.data.data;
 
                 // 设置初始文章内容（基于最新审核版本）
                 let post = res.data?.data?.post;
@@ -223,16 +258,16 @@ export default {
             });
         },
         loadDataByPostId() {
-            return wiki.getById(this.id).then(res => {
+            return wiki.getById(this.id).then((res) => {
                 let source = res.data?.data?.source;
                 this.currentSource = source?.name;
                 this.post.source_id = source?.id;
 
-                this.current = res.data.data
-                this.post.content = this.current.post.content
-                this.post.remark = this.current.post.remark
-                this.post.tags = this.current.post.tags.split(',') || []
-            })
+                this.current = res.data.data;
+                this.post.content = this.current.post.content;
+                this.post.remark = this.current.post.remark;
+                this.post.tags = this.current.post.tags.split(",") || [];
+            });
         },
         // 加载可选类型
         loadTypes: function () {
@@ -327,10 +362,10 @@ export default {
             };
             wiki.post({ type: "knowledge", ...data, client: "all" })
                 .then(() => {
-                        this.$message({ message: "提交成功，请等待审核", type: "success" });
-                        setTimeout(() => {
-                            this.$router.push({ name: "wiki_post", params: { type: "knowledge" } });
-                        }, 500);
+                    this.$message({ message: "提交成功，请等待审核", type: "success" });
+                    setTimeout(() => {
+                        this.$router.push({ name: "wiki_post", params: { type: "knowledge" } });
+                    }, 500);
                 })
                 .finally(() => {
                     this.processing = false;
@@ -359,11 +394,11 @@ export default {
             }).label;
         },
         getLink(id) {
-            return getLink('knowledge', id)
+            return getLink("knowledge", id);
         },
         getLatest() {
-            this.post.content = this.latest.post?.content || ''
-        }
+            this.post.content = this.latest.post?.content || "";
+        },
     },
     watch: {
         // 根据路由判定进入的模式
@@ -378,7 +413,7 @@ export default {
                     this.loadData(val);
 
                     if (this.id) {
-                        this.loadDataByPostId()
+                        this.loadDataByPostId();
                     }
                     // 创建模式
                 } else {

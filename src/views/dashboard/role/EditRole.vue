@@ -2,14 +2,7 @@
     <div class="v-role-add">
         <h2 class="u-title">
             <i class="el-icon-setting"></i> 编辑角色
-            <el-button
-                slot="reference"
-                class="u-back"
-                size="small"
-                plain
-                icon="el-icon-arrow-left"
-                @click="goBack"
-            >返回</el-button>
+            <el-button class="u-back" plain icon="ArrowLeft" @click="goBack">返回</el-button>
         </h2>
         <roleform :data="form" @submit="submit" btn_txt="更新" :processing="processing" />
     </div>
@@ -45,9 +38,7 @@ export default {
     methods: {
         loadData: function () {
             getRole(this.id).then((res) => {
-                let hasRight =
-                    res.data.data.uid == User.getInfo().uid ||
-                    User.isSuperAdmin();
+                let hasRight = res.data.data.uid == User.getInfo().uid || User.isSuperAdmin();
                 if (!hasRight) {
                     this.$message.error("没有操作权限");
                     return;
@@ -75,10 +66,10 @@ export default {
                     this.processing = false;
                 });
         },
-        goBack : function (){
-            this.$router.push('/role')
+        goBack: function () {
+            this.$router.push("/role");
             // this.$router.go(-1)
-        }
+        },
     },
     mounted: function () {
         this.loadData();

@@ -4,25 +4,25 @@
             <el-checkbox-group v-model="list">
                 <div class="u-group">
                     <label class="el-checkbox"><span class="el-checkbox__label u-group-label">方向</span></label>
-                    <el-checkbox :label="game" v-for="game in options.game" :key="game">{{ game }}</el-checkbox>
+                    <el-checkbox :value="game" v-for="game in options.game" :key="game">{{ game }}</el-checkbox>
                 </div>
                 <div class="u-group">
                     <label class="el-checkbox"><span class="el-checkbox__label u-group-label">门派</span></label>
-                    <el-checkbox :label="item" v-for="item in school" :key="item">{{ item }}</el-checkbox>
+                    <el-checkbox :value="item" v-for="item in school" :key="item">{{ item }}</el-checkbox>
                 </div>
                 <div class="u-group">
                     <label class="el-checkbox"><span class="el-checkbox__label u-group-label">玩法</span></label>
-                    <el-checkbox :label="play" v-for="play in options.play" :key="play">{{ play }}</el-checkbox>
+                    <el-checkbox :value="play" v-for="play in options.play" :key="play">{{ play }}</el-checkbox>
                 </div>
                 <div class="u-group">
                     <label class="el-checkbox"><span class="el-checkbox__label u-group-label">学科</span></label>
-                    <el-checkbox :label="subject" v-for="subject in options.subject" :key="subject">{{
+                    <el-checkbox :value="subject" v-for="subject in options.subject" :key="subject">{{
                         subject
                     }}</el-checkbox>
                 </div>
                 <div class="u-group">
                     <label class="el-checkbox"><span class="el-checkbox__label u-group-label">领域</span></label>
-                    <el-checkbox :label="domain" v-for="domain in options.domain" :key="domain">{{
+                    <el-checkbox :value="domain" v-for="domain in options.domain" :key="domain">{{
                         domain
                     }}</el-checkbox>
                 </div>
@@ -44,13 +44,13 @@
             v-if="inputVisible"
             v-model="inputValue"
             ref="saveTagInput"
-            size="small"
+            
             @keyup.enter="handleInputConfirm"
             @blur="handleInputConfirm"
             placeholder="回车新增自定义标签"
         >
         </el-input>
-        <el-button v-else class="button-new-tag" size="small" @click="showInput"
+        <el-button v-else class="button-new-tag"  @click="showInput"
             >+ 添加自定义</el-button
         >
     </div> -->

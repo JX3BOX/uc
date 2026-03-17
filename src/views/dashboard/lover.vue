@@ -34,9 +34,7 @@
                         <div class="u-action">
                             <div class="u-item-remark" v-if="!myLover.status">
                                 <div class="u-pending"><i class="el-icon-time"></i>等待确认中...</div>
-                                <el-button plain type="info" @click.stop="onCancel(myLover)" size="small"
-                                    >取消</el-button
-                                >
+                                <el-button plain type="info" @click.stop="onCancel(myLover)">取消</el-button>
                             </div>
                         </div>
                     </div>

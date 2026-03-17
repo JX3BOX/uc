@@ -4,23 +4,23 @@
             <h1 class="m-title">
                 <i class="el-icon-receiving"></i> 草稿箱
                 <el-tooltip class="item" effect="dark" placement="top" popper-class="m-draft-help-tip">
-                    <div slot="content">
+                    <template #content>
                         以下草稿是编辑器在当前浏览器下产生的临时本地草稿HTML源码，<br />并不存在于服务器中，仅用于断网或窗口异常关闭时恢复。
-                    </div>
+                    </template>
                     <span class="u-help"><i class="el-icon-question"></i> <span>使用帮助</span></span>
                 </el-tooltip>
             </h1>
             <div class="u-op">
-                <el-button plain icon="el-icon-delete" size="small" @click="clean" :disabled="!isNotNull"
-                    >清空</el-button
-                >
+                <el-button plain icon="Delete" @click="clean" :disabled="!isNotNull">清空</el-button>
                 <el-dropdown class="u-dropdown" trigger="click" @command="handleCommand">
-                    <el-button size="small" type="primary" :disabled="!canBatchOperate">
+                    <el-button type="primary" :disabled="!canBatchOperate">
                         批量操作<i class="el-icon-arrow-down el-icon--right"></i>
                     </el-button>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="batchDel">批量删除</el-dropdown-item>
-                    </el-dropdown-menu>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item command="batchDel">批量删除</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
                 </el-dropdown>
             </div>
         </div>
@@ -39,25 +39,13 @@
                                 ></span
                             >
                             <div class="u-op">
-                                <el-button
-                                    type="primary"
-                                    plain
-                                    icon="el-icon-view"
-                                    size="small"
-                                    class="u-delete"
-                                    @click.stop="preview(item)"
+                                <el-button type="primary" plain icon="View" class="u-delete" @click.stop="preview(item)"
                                     >预览</el-button
                                 >
                                 <el-popconfirm title="确定删除吗？" @confirm="del(item, i)">
-                                    <el-button
-                                        slot="reference"
-                                        plain
-                                        icon="el-icon-delete"
-                                        size="small"
-                                        class="u-delete"
-                                        @click.stop
-                                        >删除</el-button
-                                    >
+                                    <template #reference>
+                                        <el-button plain icon="Delete" class="u-delete" @click.stop>删除</el-button>
+                                    </template>
                                 </el-popconfirm>
                             </div>
                         </div>
@@ -118,7 +106,7 @@ export default {
                 // }
             }
 
-            this.$set(this, "data", data);
+            this.data = data;
         },
         // 清空
         clean: function () {

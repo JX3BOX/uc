@@ -2,7 +2,7 @@
     <div class="m-notice-wechat u-notice-box">
         <div class="u-notice-value">
             <span class="u-value" v-if="isWechatVerified">******</span>
-            <el-tag class="u-notice-status" :type="isWechatVerified ? 'success' : 'info'" size="small">{{
+            <el-tag class="u-notice-status" :type="isWechatVerified ? 'success' : 'info'">{{
                 isWechatVerified ? "已绑定" : "未绑定"
             }}</el-tag>
         </div>

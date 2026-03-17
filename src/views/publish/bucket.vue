@@ -3,19 +3,19 @@
         <!-- 标题 -->
         <div class="m-dashboard-work-header">
             <h2 class="u-title">{{ title }}</h2>
-            <a
-                :href="publishLink"
-                class="u-publish el-button el-button--primary el-button--small"
-                v-if="type == 'item_plan'"
-            >
+            <a :href="publishLink" class="u-publish el-button el-button--primary" v-if="type == 'item_plan'">
                 <i class="el-icon-document"></i> 发布作品
             </a>
         </div>
 
         <!-- 搜索框 -->
         <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search">
-            <span slot="prepend">关键词</span>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+            <template #prepend>
+                <span>关键词</span>
+            </template>
+            <template #append>
+                <el-button icon="Search"></el-button>
+            </template>
         </el-input>
 
         <!-- 列表 -->

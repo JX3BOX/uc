@@ -5,7 +5,12 @@
             <div class="m-info">
                 <div class="u-title">更新邮箱</div>
                 <div class="u-email">
-                    当前邮箱地址：<span class="u-value">{{ email || "当前未绑定邮箱" }}<el-tag v-if="email" class="u-status" :type="verified ? 'success' : 'warning'" size="small">{{ verified ? '已验证' : '未验证' }}</el-tag></span>
+                    当前邮箱地址：<span class="u-value"
+                        >{{ email || "当前未绑定邮箱"
+                        }}<el-tag v-if="email" class="u-status" :type="verified ? 'success' : 'warning'">{{
+                            verified ? "已验证" : "未验证"
+                        }}</el-tag></span
+                    >
                 </div>
 
                 <el-form :model="form" ref="form" :rules="rules" status-icon>
@@ -27,23 +32,35 @@
                         ></el-input>
                     </el-form-item>
                 </el-form>
-                <el-alert class="u-alert" v-if="hasSendBindEmail" title="邮件发送成功" type="success" description="一封邮箱验证的邮件已发送至您的邮箱,请注意查收" show-icon :closable="false"> </el-alert>
+                <el-alert
+                    class="u-alert"
+                    v-if="hasSendBindEmail"
+                    title="邮件发送成功"
+                    type="success"
+                    description="一封邮箱验证的邮件已发送至您的邮箱,请注意查收"
+                    show-icon
+                    :closable="false"
+                >
+                </el-alert>
                 <div class="m-action">
                     <!-- 未发送验证邮件 -->
-                    <el-button v-if="!hasSendBindEmail"
+                    <el-button
+                        v-if="!hasSendBindEmail"
                         type="primary"
                         size="large"
                         :disabled="!!!form.email"
-                        icon="el-icon-position"
-                        @click="bind">
-                        发送验证邮件</el-button>
+                        icon="Position"
+                        @click="bind"
+                    >
+                        发送验证邮件</el-button
+                    >
                     <!-- 已发送验证邮件 -->
                     <el-button
                         v-if="hasSendBindEmail"
                         type="primary"
                         size="large"
                         :disabled="!!!form.code"
-                        icon="el-icon-position"
+                        icon="Position"
                         @click="submit"
                         :loading="loading"
                         >确认</el-button
@@ -80,7 +97,7 @@ export default {
         return {
             form: {
                 email: "",
-                code: ""
+                code: "",
             },
             rules: {
                 email: [
@@ -138,7 +155,7 @@ export default {
                     this.loading = true;
                     sendVerifyEmail(this.form.code).then((res) => {
                         this.$emit("update");
-                        this.$message.success("邮箱绑定成功")
+                        this.$message.success("邮箱绑定成功");
                         this.close();
                         this.loading = false;
                     });

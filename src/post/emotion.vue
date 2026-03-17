@@ -25,12 +25,7 @@
                         </div>
                         <input class="u-upload-input" type="file" @change="upload" ref="uploadInput" />
                     </div>
-                    <el-button
-                        v-if="data && data.url"
-                        class="u-remove-btn"
-                        icon="el-icon-delete"
-                        @click="removePic"
-                        size="small"
+                    <el-button v-if="data && data.url" class="u-remove-btn" icon="Delete" @click="removePic"
                         >移除</el-button
                     >
                 </el-form-item>
@@ -77,6 +72,7 @@
                         :onlyImage="true"
                         desc="一次最多同时上传10个文件（不超过5M）"
                         :accept="supportTypes"
+                        style="margin-top: 0"
                     />
                     <div class="u-tip"><i class="el-icon-info"></i> 图片格式支持gif/png/jpg/bmp/webp</div>
                 </div>
@@ -88,12 +84,7 @@
                             <div class="u-div">
                                 <i class="u-order">{{ i + 1 }}</i>
                                 <div class="u-op">
-                                    <el-button
-                                        class="u-delete"
-                                        icon="el-icon-delete"
-                                        @click="deleteHandle(i)"
-                                        type="info"
-                                        size="small"
+                                    <el-button class="u-delete" icon="Delete" @click="deleteHandle(i)" type="info"
                                         >删除</el-button
                                     >
                                 </div>
@@ -107,7 +98,7 @@
                             </div>
                             <div class="u-desc">
                                 <el-input v-model="item.desc" :maxlength="120" show-word-limit placeholder="图片说明">
-                                    <span slot="prepend">描述</span>
+                                    <template #prepend>描述</template>
                                 </el-input>
                             </div>
                             <div class="u-extend">
@@ -122,13 +113,11 @@
                                     v-model="item.author"
                                     placeholder="（非必填）"
                                     v-if="!item.original"
-                                    size="small"
                                 >
-                                    <span slot="prepend">原作者</span>
+                                    <template #prepend>原作者</template>
                                 </el-input>
                                 <el-select
                                     v-model="item.type"
-                                    size="small"
                                     style="margin-left: 10px"
                                     placeholder="请选择门派（非必选）"
                                 >

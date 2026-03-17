@@ -3,9 +3,8 @@
     <div class="m-publish-guide">
         <label class="el-form-item__label">前后引导 </label>
         <div class="u-condition u-prev" key="prev">
-            <span class="u-prepend el-input-group__prepend">上一篇</span>
+            <span class="u-prepend">上一篇</span>
             <el-select
-                size="small"
                 filterable
                 remote
                 placeholder="输入关键词进行搜索"
@@ -15,7 +14,7 @@
             >
                 <el-option v-for="item in prev" :key="item.ID" :value="item.ID" :label="item.post_title">
                     <div class="u-post-select__item">
-                        <el-tag size="small" v-if="item.post_type" :type="item.visible != 0 ? 'warning' : ''">{{
+                        <el-tag v-if="item.post_type" :type="item.visible != 0 ? 'warning' : ''">{{
                             showPostType(item.post_type)
                         }}</el-tag>
                         {{ item.post_title }}
@@ -24,9 +23,8 @@
             </el-select>
         </div>
         <div class="u-condition u-next" key="next">
-            <span class="u-prepend el-input-group__prepend">下一篇</span>
+            <span class="u-prepend">下一篇</span>
             <el-select
-                size="small"
                 filterable
                 remote
                 placeholder="输入关键词进行搜索"
@@ -36,7 +34,7 @@
             >
                 <el-option v-for="item in next" :key="item.ID" :value="item.ID" :label="item.post_title">
                     <div class="u-post-select__item">
-                        <el-tag size="small" v-if="item.post_type" :type="item.visible != 0 ? 'warning' : ''">{{
+                        <el-tag v-if="item.post_type" :type="item.visible != 0 ? 'warning' : ''">{{
                             showPostType(item.post_type)
                         }}</el-tag>
                         {{ item.post_title }}
@@ -151,7 +149,11 @@ export default {
             }
         },
         showPostType: function (type) {
-            return __postType[type];
+            const typeMap = {
+                ...__postType,
+                bbs: "茶馆",
+            };
+            return typeMap[type];
         },
         async loadPosts(params) {
             return await getMyPosts(params).then((res) => {
@@ -171,34 +173,47 @@ export default {
         width: 80px;
     }
     .u-condition {
-        height: 32px;
+        height: 40px;
         width: auto;
         .flex;
         align-items: center;
-        .el-input-group__prepend {
-            padding-left: 10px;
-            padding-right: 10px;
-        }
+
         .u-prepend {
-            .fl;
-            width: auto;
-            min-width: 50px;
+            background-color: #f5f7fa;
+            color: #909399;
+            border: 1px solid #dcdfe6;
+            border-right: none;
+            border-radius: 4px 0 0 4px;
+            padding: 0 15px;
+            min-width: 80px;
+            height: 40px !important;
             box-sizing: border-box;
-            .fz(12px);
-            height: 100%;
+            .fz(14px);
             .flex;
             align-items: center;
+            justify-content: center;
         }
+
         .el-select {
             .db;
-        }
-        .el-input__inner {
-            box-sizing: border-box;
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-        }
-        .el-input {
-            .w(200px);
+            .w(260px);
+            margin-left: -1px;
+
+            .el-select__wrapper {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                box-shadow: 0 0 0 1px #dcdfe6 inset;
+                height: 40px;
+                box-sizing: border-box;
+
+                &.is-focus {
+                    box-shadow: 0 0 0 1px @primary inset !important;
+                }
+            }
+
+            .el-input__inner {
+                height: 40px;
+            }
         }
     }
     .u-prev {

@@ -1,7 +1,7 @@
 <template>
     <div class="m-publish-zlp">
         <el-form-item label="资料片">
-            <el-select v-model="zlp" filterable :allow-create="true" placeholder="请选择适应资料片">
+            <el-select v-model="zlp" filterable size="large" :allow-create="true" placeholder="请选择适应资料片">
                 <el-option v-for="item in zlps" :key="item" :label="item" :value="item"></el-option>
             </el-select>
         </el-form-item>

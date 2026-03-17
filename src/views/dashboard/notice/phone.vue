@@ -2,11 +2,11 @@
     <div class="m-notice-phone u-notice-box">
         <div class="u-notice-value">
             <span class="u-address" v-if="phone">{{ phoneStr(phone) }}</span>
-            <el-tag class="u-notice-status" :type="phone ? 'success' : 'info'" size="small">{{
+            <el-tag class="u-notice-status" :type="phone ? 'success' : 'info'">{{
                 phone ? "已绑定" : "未绑定"
             }}</el-tag>
         </div>
-        <el-button type="primary" :circle="isPhone" class="u-bind-button" @click="visible = true" icon="el-icon-edit">{{
+        <el-button type="primary" :circle="isPhone" class="u-bind-button" @click="visible = true" icon="Edit">{{
             phone ? "修改手机" : "绑定手机"
         }}</el-button>
         <el-dialog

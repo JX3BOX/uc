@@ -1,8 +1,6 @@
 <template>
     <div class="m-jx3data-box">
-        <el-button class="m-jx3dat-addbutton" icon="el-icon-circle-plus-outline" type="primary" @click="addLanren"
-            >添加数据</el-button
-        >
+        <el-button class="m-jx3dat-addbutton" icon="CirclePlus" type="primary" @click="addLanren">添加数据</el-button>
         <el-tabs v-model="activeTab" type="card" closable @tab-remove="delLanren">
             <el-tab-pane v-for="(item, i) in lanrenDat.data" :key="i" :name="i + 1 + ''">
                 <template #label
@@ -32,18 +30,8 @@
                         <b>{{ item.lanren_type }}</b> 的文件上传，上传完后如若重新修改版本名称则需要重新上传对应文件
                     </div>
                     <input class="u-data-input" type="file" :id="'lanren_' + i" @change="uploadLanren(item, i)" />
-                    <el-button type="primary" icon="el-icon-s-promotion" plain size="small" @click="selectLanren(i)"
-                        >上传数据文件</el-button
-                    >
+                    <el-button type="primary" icon="Promotion" plain @click="selectLanren(i)">上传数据文件</el-button>
                     <span class="u-data-remark">{{ item.origin_name }}</span>
-                    <!-- <el-button
-                        size="small"
-                        type="primary"
-                        plain
-                        @click="uploadLaren(item, i)"
-                        icon="el-icon-s-promotion"
-                        >开始上传</el-button
-                    >-->
                     <el-input
                         class="u-fileurl"
                         :class="{ isUploaded: item.isUploaded }"

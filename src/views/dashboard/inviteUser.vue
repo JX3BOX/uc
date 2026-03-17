@@ -5,8 +5,8 @@
                 class="u-input"
                 v-model.number="uid"
                 placeholder="输入UID添加"
-                suffix-icon="el-icon-search"
-                @keyup.enter.native="search"
+                suffix-icon="Search"
+                @keyup.enter="search"
                 @change="search"
             ></el-input>
             <div class="u-list" v-if="userdata">

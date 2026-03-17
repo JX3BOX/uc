@@ -2,14 +2,18 @@
     <div class="m-dashboard-work m-dashboard-cms" v-loading="loading">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">捏脸数据</h2>
-            <a :href="publishLink" class="u-publish el-button el-button--primary el-button--small">
+            <a :href="publishLink" class="u-publish el-button el-button--primary">
                 <i class="el-icon-document"></i> 发布数据
             </a>
         </div>
 
         <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model.lazy="search">
-            <span slot="prepend">关键词</span>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+            <template #prepend>
+                <span>关键词</span>
+            </template>
+            <template #append>
+                <el-button icon="Search"></el-button>
+            </template>
         </el-input>
 
         <div class="m-dashboard-box">
@@ -38,22 +42,14 @@
                     </div>
 
                     <el-button-group class="u-action">
-                        <!-- <el-button size="small" icon="el-icon-delete" @click="del(item.id)" :disabled="item.price_type != 0" title="删除"></el-button> -->
-                        <el-button size="small" icon="el-icon-edit" @click="edit(item.id)" title="编辑"></el-button>
+                        <el-button icon="Edit" @click="edit(item.id)" title="编辑"></el-button>
                         <el-button
                             v-if="item.status == 1"
-                            size="small"
-                            icon="el-icon-download"
+                            icon="Download"
                             @click="handleOffline(item.id)"
                             title="下架"
                         ></el-button>
-                        <el-button
-                            v-else
-                            size="small"
-                            icon="el-icon-upload2"
-                            @click="handleOnline(item.id)"
-                            title="上架"
-                        ></el-button>
+                        <el-button v-else icon="Upload" @click="handleOnline(item.id)" title="上架"></el-button>
                     </el-button-group>
                 </li>
             </ul>

@@ -20,14 +20,12 @@
             <el-button
                 round
                 @click="$store.dispatch('mallNew/changeCartConfirmIsShow', false)"
-                size="small"
                 style="width: 77px; font-size: 12px"
                 >再想想</el-button
             >
             <el-button
                 round
                 @click="buyGoods"
-                size="small"
                 style="width: 77px; font-size: 12px; background-color: rgba(255, 163, 43, 1); color: #fff"
                 >确认</el-button
             >

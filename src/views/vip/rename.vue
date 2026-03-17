@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div>
         <CommonHeader></CommonHeader>
         <div class="m-vip-container" v-if="isLogin">
             <div class="m-vip-rename">
@@ -8,7 +8,13 @@
                     <div v-if="!had_renamed"><i class="el-icon-s-opportunity"></i> 每个账号拥有一次免费更名机会</div>
                     <div v-else>
                         当前剩余可改名次数 <b>{{ count }}</b>
-                        <el-button @click="toPurchaseRenameCard" type="primary" size="small" icon="el-icon-shopping-cart-2" style="margin-left: 10px;">购买改名卡</el-button>
+                        <el-button
+                            @click="toPurchaseRenameCard"
+                            type="primary"
+                            icon="ShoppingCart"
+                            style="margin-left: 10px"
+                            >购买改名卡</el-button
+                        >
                     </div>
                 </div>
                 <el-form
@@ -47,12 +53,7 @@
                             :disabled="!status"
                             >提交</el-button
                         >
-                        <el-button
-                            @click="buy"
-                            type="primary"
-                            class="u-submit u-submit-buy"
-                            v-else
-                            icon="el-icon-shopping-cart-2"
+                        <el-button @click="buy" type="primary" class="u-submit u-submit-buy" v-else icon="ShoppingCart"
                             >购买改名次数</el-button
                         >
                     </el-form-item>
@@ -211,7 +212,7 @@ export default {
         toPurchaseRenameCard() {
             const url = "/vip/mall/38";
             window.open(url, "_blank");
-        }
+        },
     },
     mounted: function () {
         this.checkPermission();

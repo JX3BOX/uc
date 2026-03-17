@@ -6,11 +6,9 @@
         <div class="m-publish-namespace-box">
             <header class="m-publish-namespace-header">
                 <div class="u-tip">
-                    铭牌是一个可以通过关键词快速访问的功能，例如定义铭牌 "某某气纯宏"，则可以在浏览器地址栏中通过快速输入
-                    <a
-                        href="https://剑网3.com/某某气纯宏"
-                        target="_blank"
-                    >
+                    铭牌是一个可以通过关键词快速访问的功能，例如定义铭牌
+                    "某某气纯宏"，则可以在浏览器地址栏中通过快速输入
+                    <a href="https://剑网3.com/某某气纯宏" target="_blank">
                         <b>剑网3.com/某某气纯宏</b>
                     </a>
                     访问你输入的链接
@@ -39,14 +37,20 @@
             <div class="m-namspace-tips" v-if="success">
                 <el-alert title="提交成功，请等待审核" type="success" show-icon></el-alert>
             </div>
-            <el-form class="m-publish-namespace-form" :rules="rules" :model="form">
+            <el-form class="m-publish-namespace-form" :rules="rules" :model="form" label-width="80px">
                 <el-form-item label="关键词" prop="key">
-                    <el-input v-model="form.key" placeholder="全局唯一关键词"></el-input>
-                    <el-alert style="margin-top: 5px;" v-if="!available" title="已有关键词，请重新输入" type="error" show-icon />
+                    <el-input v-model="form.key" placeholder="全局唯一关键词" size="large"></el-input>
+                    <el-alert
+                        style="margin-top: 5px"
+                        v-if="!available"
+                        title="已有关键词，请重新输入"
+                        type="error"
+                        show-icon
+                    />
                 </el-form-item>
                 <el-form-item label="链接" prop="link">
-                    <el-input v-model="form.link" placeholder="请输入跳转地址">
-                        <template slot="prepend">https://</template>
+                    <el-input v-model="form.link" size="large" placeholder="请输入跳转地址">
+                        <template #prepend>https://</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="描述">
@@ -55,15 +59,18 @@
                         placeholder="请输入关于铭牌的描述"
                         maxlength="30"
                         show-word-limit
+                        size="large"
                     ></el-input>
                 </el-form-item>
                 <el-form-item label>
                     <el-button
                         class="u-submit"
+                        size="large"
                         type="primary"
                         :disabled="!ready || processing"
                         @click="onSubmit"
-                    >提交</el-button>
+                        >提交</el-button
+                    >
                 </el-form-item>
             </el-form>
         </div>
@@ -73,12 +80,7 @@
 <script>
 import { sterilizer } from "sterilizer/index.js";
 import pubheader from "@/components/publish/publish_header.vue";
-import {
-    getNamespaceByKey,
-    getNamespaceById,
-    createNamespace,
-    updateNamespace,
-} from "@/service/publish/namespace";
+import { getNamespaceByKey, getNamespaceById, createNamespace, updateNamespace } from "@/service/publish/namespace";
 import User from "@jx3box/jx3box-common/js/user";
 import lodash from "lodash";
 const default_form = {
@@ -140,10 +142,7 @@ export default {
                 this.available = true;
                 return;
             }
-            this.form.key = sterilizer(this.form.key)
-                .kill()
-                .removeSpace()
-                .toString();
+            this.form.key = sterilizer(this.form.key).kill().removeSpace().toString();
             if (this.form.key == this.key_cache) {
                 this.available = true;
                 return;
@@ -196,9 +195,9 @@ export default {
         },
         onSuccess() {
             this.success = true;
-            this.$notify.success({title: "成功", message: "提交成功", showClose: false});
+            this.$notify.success({ title: "成功", message: "提交成功", showClose: false });
             setTimeout(() => {
-                this.$router.push({name: 'bucket_namespace'})
+                this.$router.push({ name: "bucket_namespace" });
             }, 500);
         },
     },

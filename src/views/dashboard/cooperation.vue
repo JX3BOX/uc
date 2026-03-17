@@ -4,13 +4,11 @@
             <span class="u-title-text">
                 <i class="el-icon-reading"></i>
                 签约中心
-                <el-tag class="u-sign" size="small" type="success" v-if="isSuperAuthor"
+                <el-tag class="u-sign" type="success" v-if="isSuperAuthor"
                     >签约时长：{{ signDuration }}{{ signDurationType }}</el-tag
                 >
             </span>
-            <el-button type="primary" @click="openPage" size="small" v-if="isSuperAuthor" icon="el-icon-unlock">
-                敏感词测试
-            </el-button>
+            <el-button type="primary" @click="openPage" v-if="isSuperAuthor" icon="Unlock"> 敏感词测试 </el-button>
         </h2>
         <div class="m-cooperation-ac m-block" v-html="data"></div>
         <div class="m-cooperation-form m-block">
@@ -92,7 +90,7 @@
                         type="primary"
                         class="u-submit"
                         @click="submitForm('form')"
-                        icon="el-icon-s-promotion"
+                        icon="Promotion"
                         :disabled="isSuperAuthor || processing"
                         >提交签约申请</el-button
                     >

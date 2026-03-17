@@ -1,7 +1,7 @@
 <!-- 无界技能弹窗 -->
 <template>
     <el-dialog
-        v-model="modelValue"
+        v-model="dialogVisible"
         @close="onClose"
         title="添加技能"
         append-to-body
@@ -57,7 +57,7 @@ export default {
             default: "wujie",
         },
     },
-    emits: ["change", "selected"],
+    emits: ["update:modelValue", "change", "selected"],
     data() {
         return {
             wujie_data: {
@@ -78,10 +78,21 @@ export default {
             }
         },
     },
+    computed: {
+        dialogVisible: {
+            get() {
+                return this.modelValue;
+            },
+            set(val) {
+                this.$emit("update:modelValue", val);
+                this.$emit("change", val);
+            },
+        },
+    },
     methods: {
         iconLink,
         onClose() {
-            this.$emit("change", false);
+            this.dialogVisible = false;
             this.selectedSkills = [];
         },
         onConfirm() {

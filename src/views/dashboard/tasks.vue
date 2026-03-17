@@ -16,7 +16,6 @@
                         <div class="u-box">
                             <a class="u-title" :href="groupInfo[key].url" target="_blank">{{ groupInfo[key].name }}</a>
                             <el-button
-                                size="small"
                                 :type="groupInfo[key].open ? 'primary' : ''"
                                 @click="groupInfo[key].open = !groupInfo[key].open"
                                 >{{ groupInfo[key].open ? "折叠" : "展开"

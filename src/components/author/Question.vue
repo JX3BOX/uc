@@ -15,7 +15,6 @@
                     <div class="u-desc">
                         <el-tag
                             type="primary"
-                            size="small"
                             v-for="(tag, index) in JSON.parse(item.tags || [])"
                             :key="'tag' + index"
                             class="u-tag"

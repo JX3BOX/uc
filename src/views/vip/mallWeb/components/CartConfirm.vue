@@ -12,13 +12,10 @@
             </div>
         </div>
         <div class="btn-box">
-            <el-button round @click="isShow = false" size="small" style="width: 20.5333vw; font-size: 3.2vw"
-                >再想想</el-button
-            >
+            <el-button round @click="isShow = false" style="width: 20.5333vw; font-size: 3.2vw">再想想</el-button>
             <el-button
                 round
                 @click="buyGoods"
-                size="small"
                 style="width: 20.5333vw; font-size: 3.2vw; background-color: rgba(255, 163, 43, 1); color: #fff"
                 >确认</el-button
             >

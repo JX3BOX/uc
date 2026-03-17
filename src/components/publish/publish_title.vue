@@ -7,6 +7,7 @@
             :minlength="2"
             show-word-limit
             required
+            size="large"
             :placeholder="placeholder || '请填写标题'"
         ></el-input>
         <slot></slot>

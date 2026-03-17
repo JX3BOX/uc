@@ -1,12 +1,12 @@
 <template>
     <el-tabs class="m-dashboard-tabs" v-model="active" @tab-click="changeTab">
         <el-tab-pane v-for="item in tabs" :key="item.name" :name="item.name">
-            <span slot="label"
+            <template #label
                 ><i :class="item.icon" class="u-tab-icon"></i> {{ item.label }}
                 <span v-if="showCount" class="u-count" :class="count[countMap[item.name]] ? 'is-orange' : ''"
                     >({{ count[countMap[item.name]] || 0 }})</span
                 >
-            </span>
+            </template>
         </el-tab-pane>
     </el-tabs>
 </template>

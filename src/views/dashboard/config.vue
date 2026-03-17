@@ -3,15 +3,15 @@
         <h2 class="u-title"><i class="el-icon-setting"></i> 全局设置</h2>
         <el-form class="m-config-form" label-position="left" label-width="120px">
             <el-form-item label="编辑器模式">
-                <el-radio-group v-model="conf.editor_mode" size="small">
-                    <el-radio-button label="tinymce">可视化</el-radio-button>
-                    <el-radio-button label="markdown">Markdown</el-radio-button>
+                <el-radio-group v-model="conf.editor_mode">
+                    <el-radio-button value="tinymce">可视化</el-radio-button>
+                    <el-radio-button value="markdown">Markdown</el-radio-button>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="评论默认排序">
-                <el-radio-group v-model="conf.cmt_order" size="small">
-                    <el-radio-button label="DESC">最新靠前</el-radio-button>
-                    <el-radio-button label="ASC">最早靠前</el-radio-button>
+                <el-radio-group v-model="conf.cmt_order">
+                    <el-radio-button value="DESC">最新靠前</el-radio-button>
+                    <el-radio-button value="ASC">最早靠前</el-radio-button>
                 </el-radio-group>
             </el-form-item>
             <!-- <el-form-item label="接受赠礼">
