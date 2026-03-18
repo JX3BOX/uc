@@ -2,7 +2,7 @@ import { $node } from "@jx3box/jx3box-common/js/api.js";
 
 function get_list(params) {
     return $node()({
-        method: "GET",
+        method: "POST",
         url: `/quests`,
         params: params,
     });

@@ -69,7 +69,7 @@
 
 <script>
 import User from "@jx3box/jx3box-common/js/user";
-import Like from "@jx3box/jx3box-common-ui/src/interact/Like2.vue";
+import Like from "@jx3box/jx3box-ui/src/interact/Like.vue";
 import Skeleton from "@/views/vip/mallNew/components/skeleton/index.vue";
 import { throttle } from "lodash";
 // import { getItem } from "@/service/vip/mall";

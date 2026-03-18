@@ -19,7 +19,7 @@
                     </template>
                     <div class="m-source-name m-macro-item">
                         <h5 class="u-title">名称</h5>
-                        <el-input v-model="item.name" placeholder="输入资源名称"></el-input>
+                        <el-input v-model="item.name" size="large" placeholder="输入资源名称"></el-input>
                     </div>
                     <div class="m-source-mode m-macro-item">
                         <h5 class="u-title">模式</h5>
@@ -57,7 +57,7 @@
                     </div>
                     <div class="m-source-file m-macro-item" v-if="item.mode == 0">
                         <h5 class="u-title">文件</h5>
-                        <el-input v-model="item.file" placeholder="输入文件地址（例如网盘地址）"></el-input>
+                        <el-input v-model="item.file" size="large" placeholder="输入文件地址（例如网盘地址）"></el-input>
                     </div>
                     <div class="m-source-remark m-macro-item">
                         <h5 class="u-title">备注</h5>

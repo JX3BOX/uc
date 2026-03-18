@@ -59,7 +59,7 @@
                     v-for="level in level_list"
                     :value="level.mode"
                     :key="level.mode + level.map_id"
-                ></el-checkbox>
+                >{{ level.mode }}</el-checkbox>
             </el-checkbox-group>
         </el-form-item>
         <slot></slot>

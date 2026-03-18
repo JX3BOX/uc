@@ -241,6 +241,8 @@ export default {
         .ml(10px);
     }
     .u-item-op {
+    .flex;
+    align-items: center;
         .ml(20px);
         .preview {
             .mr(10px);
