@@ -12,11 +12,6 @@ setTimeout(() => {
     $.defaults.headers.common['user-device-fingerprint'] = User.getDeviceFingerprint();
 }, 1500);
 
-import Vue from "vue";
-import { Message, Notification } from "element-ui";
-Vue.prototype.$message = Message;
-Vue.prototype.$notify = Notification;
-
 function installInterceptors(target){
     target['interceptors']['response'].use(
         function(response) {

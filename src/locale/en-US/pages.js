@@ -34,6 +34,43 @@ export default {
             description: "JX3BOX home: news, community updates, and world bulletin.",
         },
     },
+    account: {
+        login: {
+            title: "Sign In",
+            keywords: "JX3,JX3BOX,account,login",
+            description: "JX3BOX account sign-in page.",
+        },
+        register: {
+            title: "Sign Up",
+            keywords: "JX3,JX3BOX,account,register",
+            description: "JX3BOX account sign-up page.",
+        },
+        password_reset: {
+            title: "Reset Password",
+            keywords: "JX3,JX3BOX,account,password",
+            description: "JX3BOX account password reset page.",
+        },
+        email_verify: {
+            title: "Email Verification",
+            keywords: "JX3,JX3BOX,account,email",
+            description: "JX3BOX account email verification page.",
+        },
+        login_callback: {
+            title: "Sign-in Callback",
+            keywords: "JX3,JX3BOX,account,login",
+            description: "JX3BOX sign-in callback page.",
+        },
+        login_callback_wesite: {
+            title: "Website Sign-in Callback",
+            keywords: "JX3,JX3BOX,account,login",
+            description: "JX3BOX website sign-in callback page.",
+        },
+        register_callback: {
+            title: "Sign-up Callback",
+            keywords: "JX3,JX3BOX,account,register",
+            description: "JX3BOX sign-up callback page.",
+        },
+    },
     publish: {
         title: "Creator Center",
         keywords: "JX3,JX3BOX,creator,publish,content",

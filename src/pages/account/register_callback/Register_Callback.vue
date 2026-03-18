@@ -8,7 +8,7 @@
                 <Union mode="login" :includes="[from]" />
             </main>
         </el-card>
-        <Bottom />
+        <CommonBottom />
     </div>
 </template>
 

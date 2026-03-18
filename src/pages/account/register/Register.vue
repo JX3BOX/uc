@@ -15,8 +15,9 @@
                             maxlength="50"
                             type="email"
                             @change="checkEmail"
+                            size="large"
                         >
-                            <template slot="prepend">
+                            <template #prepend>
                                 <i class="el-icon-message"></i>
                             </template>
                         </el-input>
@@ -41,8 +42,8 @@
 
                     <!-- 验证码 -->
                     <div class="u-code">
-                        <el-input class="u-text" placeholder="验证码" v-model="code">
-                            <template slot="prepend">
+                        <el-input class="u-text" placeholder="验证码" size="large" v-model="code">
+                            <template #prepend>
                                 <i class="el-icon-postcard"></i>
                             </template>
                         </el-input>
@@ -53,8 +54,8 @@
 
                     <!-- 密码 -->
                     <div class="u-pass">
-                        <el-input class="u-text" placeholder="输入密码" v-model="pass" show-password @input="checkPass">
-                            <template slot="prepend">
+                        <el-input class="u-text" placeholder="输入密码" size="large" v-model="pass" show-password @input="checkPass">
+                            <template #prepend>
                                 <i class="el-icon-lock"></i>
                             </template>
                         </el-input>
@@ -71,8 +72,8 @@
 
                     <!-- 邀请码 -->
                     <div class="u-invite">
-                        <el-input class="u-text" placeholder="邀请码（非必填）" v-model="invite">
-                            <template slot="prepend">
+                        <el-input class="u-text" size="large" placeholder="邀请码（非必填）" v-model="invite">
+                            <template #prepend>
                                 <i class="el-icon-present"></i>
                             </template>
                         </el-input>
@@ -90,7 +91,7 @@
                     </div>
                 </form>
                 <!-- 提交 -->
-                <el-button class="u-submit u-button" type="primary" @click="submit" :disabled="!ready">
+                <el-button class="u-submit u-button" type="primary" size="large" @click="submit" :disabled="!ready">
                     注册
                 </el-button>
 
@@ -124,7 +125,7 @@
                 <el-button class="u-button u-submit" type="primary" @click="reset">返回</el-button>
             </main>
         </el-card>
-        <Bottom />
+        <CommonBottom />
     </div>
 </template>
 
@@ -135,6 +136,7 @@ import { checkEmail, registerByEmail, verifyEmail } from "@/service/account/emai
 import { __Root } from "@/utils/config";
 import Msg from "@/components/account/Msg.vue";
 import Union from "@/components/account/Union.vue";
+import {ElMessage} from "element-plus";
 
 export default {
     name: "Register",
@@ -258,17 +260,11 @@ export default {
                     } else {
                         msg = res.data.msg;
                     }
-                    this.$message({
-                        message: msg,
-                        type: "error",
-                    });
+                    ElMessage.error(msg);
                     return;
                 }
 
-                this.$message({
-                    message: "验证码已发送至您的邮箱",
-                    type: "success",
-                });
+                ElMessage.success("验证码已发送至您的邮箱");
                 // 倒计时
                 this.interval = 60;
                 this.code_text = this.interval + "s";

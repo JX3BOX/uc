@@ -34,6 +34,43 @@ export default {
             description: "劍網3魔盒（JX3BOX）首頁：公告資訊、社群內容、江湖快報等。",
         },
     },
+    account: {
+        login: {
+            title: "登入",
+            keywords: "劍網3,魔盒,JX3BOX,帳號,登入",
+            description: "JX3BOX 帳號登入頁面。",
+        },
+        register: {
+            title: "註冊",
+            keywords: "劍網3,魔盒,JX3BOX,帳號,註冊",
+            description: "JX3BOX 帳號註冊頁面。",
+        },
+        password_reset: {
+            title: "重設密碼",
+            keywords: "劍網3,魔盒,JX3BOX,帳號,密碼",
+            description: "JX3BOX 帳號密碼重設頁面。",
+        },
+        email_verify: {
+            title: "電子郵件驗證",
+            keywords: "劍網3,魔盒,JX3BOX,帳號,電子郵件",
+            description: "JX3BOX 帳號電子郵件驗證頁面。",
+        },
+        login_callback: {
+            title: "登入回調",
+            keywords: "劍網3,魔盒,JX3BOX,帳號,登入",
+            description: "JX3BOX 登入回調頁面。",
+        },
+        login_callback_wesite: {
+            title: "登入回調（微站）",
+            keywords: "劍網3,魔盒,JX3BOX,帳號,登入",
+            description: "JX3BOX 微站登入回調頁面。",
+        },
+        register_callback: {
+            title: "註冊回調",
+            keywords: "劍網3,魔盒,JX3BOX,帳號,註冊",
+            description: "JX3BOX 註冊回調頁面。",
+        },
+    },
     publish: {
         title: "創作中心",
         keywords: "劍網3,魔盒,JX3BOX,創作,發佈,投稿",

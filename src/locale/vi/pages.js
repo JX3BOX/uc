@@ -34,6 +34,43 @@ export default {
             description: "Trang chủ JX3BOX: tin tức, cộng đồng và bản tin giang hồ.",
         },
     },
+    account: {
+        login: {
+            title: "Dang nhap",
+            keywords: "JX3,JX3BOX,tai khoan,dang nhap",
+            description: "Trang dang nhap tai khoan JX3BOX.",
+        },
+        register: {
+            title: "Dang ky",
+            keywords: "JX3,JX3BOX,tai khoan,dang ky",
+            description: "Trang dang ky tai khoan JX3BOX.",
+        },
+        password_reset: {
+            title: "Dat lai mat khau",
+            keywords: "JX3,JX3BOX,tai khoan,mat khau",
+            description: "Trang dat lai mat khau tai khoan JX3BOX.",
+        },
+        email_verify: {
+            title: "Xac minh email",
+            keywords: "JX3,JX3BOX,tai khoan,email",
+            description: "Trang xac minh email tai khoan JX3BOX.",
+        },
+        login_callback: {
+            title: "Dang nhap callback",
+            keywords: "JX3,JX3BOX,tai khoan,dang nhap",
+            description: "Trang callback dang nhap JX3BOX.",
+        },
+        login_callback_wesite: {
+            title: "Dang nhap callback (website)",
+            keywords: "JX3,JX3BOX,tai khoan,dang nhap",
+            description: "Trang callback dang nhap website JX3BOX.",
+        },
+        register_callback: {
+            title: "Dang ky callback",
+            keywords: "JX3,JX3BOX,tai khoan,dang ky",
+            description: "Trang callback dang ky JX3BOX.",
+        },
+    },
     publish: {
         title: "Trung tâm sáng tạo",
         keywords: "JX3,JX3BOX,người sáng tạo,đăng,nội dung",

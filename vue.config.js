@@ -25,48 +25,48 @@ const pages = {
     // },
 
     // // account
-    // login: {
-    //     title: "登录 - JX3BOX",
-    //     entry: "src/pages/account/login/login.js",
-    //     template: "public/app.html",
-    //     filename: "login/index.html",
-    // },
-    // register: {
-    //     title: "注册 - JX3BOX",
-    //     entry: "src/pages/account/register/register.js",
-    //     template: "public/app.html",
-    //     filename: "register/index.html",
-    // },
+    login: {
+        title: "登录 - JX3BOX",
+        entry: "src/pages/account/login/login.js",
+        template: "public/app.html",
+        filename: "login/index.html",
+    },
+    register: {
+        title: "注册 - JX3BOX",
+        entry: "src/pages/account/register/register.js",
+        template: "public/app.html",
+        filename: "register/index.html",
+    },
     // email_verify: {
     //     title: "邮箱验证 - JX3BOX",
     //     entry: "src/pages/account/email_verify/email_verify.js",
     //     template: "public/app.html",
     //     filename: "email_verify/index.html",
     // },
-    // password_reset: {
-    //     title: "密码重设 - JX3BOX",
-    //     entry: "src/pages/account/password_reset/password_reset.js",
-    //     template: "public/app.html",
-    //     filename: "password_reset/index.html",
-    // },
-    // login_callback: {
-    //     title: "登录成功 - JX3BOX",
-    //     entry: "src/pages/account/login_callback/login_callback.js",
-    //     template: "public/app.html",
-    //     filename: "login_callback/index.html",
-    // },
-    // login_callback_wesite: {
-    //     title: "登录成功 - JX3BOX",
-    //     entry: "src/pages/account/login_callback_wesite/login_callback.js",
-    //     template: "public/app.html",
-    //     filename: "login_callback_wesite/index.html",
-    // },
-    // register_callback: {
-    //     title: "注册成功 - JX3BOX",
-    //     entry: "src/pages/account/register_callback/register_callback.js",
-    //     template: "public/app.html",
-    //     filename: "register_callback/index.html",
-    // },
+    password_reset: {
+        title: "密码重设 - JX3BOX",
+        entry: "src/pages/account/password_reset/password_reset.js",
+        template: "public/app.html",
+        filename: "password_reset/index.html",
+    },
+    login_callback: {
+        title: "登录成功 - JX3BOX",
+        entry: "src/pages/account/login_callback/login_callback.js",
+        template: "public/app.html",
+        filename: "login_callback/index.html",
+    },
+    login_callback_wesite: {
+        title: "登录成功 - JX3BOX",
+        entry: "src/pages/account/login_callback_wesite/login_callback.js",
+        template: "public/app.html",
+        filename: "login_callback_wesite/index.html",
+    },
+    register_callback: {
+        title: "注册成功 - JX3BOX",
+        entry: "src/pages/account/register_callback/register_callback.js",
+        template: "public/app.html",
+        filename: "register_callback/index.html",
+    },
     // card: {
     //     title: "贺卡 - JX3BOX",
     //     entry: "src/pages/card/index.js",

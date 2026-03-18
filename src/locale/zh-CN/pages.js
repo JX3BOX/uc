@@ -29,6 +29,43 @@ export default {
             description: "剑网3魔盒（JX3BOX）首页：公告资讯、社区内容、江湖快报等。",
         },
     },
+    account: {
+        login: {
+            title: "登录",
+            keywords: "剑网3,魔盒,JX3BOX,账号,登录",
+            description: "JX3BOX 账号登录页面。",
+        },
+        register: {
+            title: "注册",
+            keywords: "剑网3,魔盒,JX3BOX,账号,注册",
+            description: "JX3BOX 账号注册页面。",
+        },
+        password_reset: {
+            title: "重置密码",
+            keywords: "剑网3,魔盒,JX3BOX,账号,密码",
+            description: "JX3BOX 账号密码重置页面。",
+        },
+        email_verify: {
+            title: "邮箱验证",
+            keywords: "剑网3,魔盒,JX3BOX,账号,邮箱",
+            description: "JX3BOX 账号邮箱验证页面。",
+        },
+        login_callback: {
+            title: "登录回调",
+            keywords: "剑网3,魔盒,JX3BOX,账号,登录",
+            description: "JX3BOX 登录回调页面。",
+        },
+        login_callback_wesite: {
+            title: "登录回调（微站）",
+            keywords: "剑网3,魔盒,JX3BOX,账号,登录",
+            description: "JX3BOX 微站登录回调页面。",
+        },
+        register_callback: {
+            title: "注册回调",
+            keywords: "剑网3,魔盒,JX3BOX,账号,注册",
+            description: "JX3BOX 注册回调页面。",
+        },
+    },
     publish: {
         title: "创作中心",
         keywords: "剑网3,魔盒,JX3BOX,创作,发布,投稿",

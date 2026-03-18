@@ -46,7 +46,7 @@
                             :closable="false"
                         ></el-alert>
                     </div>
-                    <el-button class="u-button" type="primary" @click="start" :disabled="!available">下一步</el-button>
+                    <el-button class="u-button" type="primary" @click="start" :disabled="!available" size="large">下一步</el-button>
                 </div>
                 <footer class="m-footer">
                     <p class="u-login">已有账号? <a href="/account/login">登录 &raquo;</a></p>
@@ -62,7 +62,7 @@
 
                 <!-- 验证码 -->
                 <div class="u-code">
-                    <el-input class="u-text u-code" v-model="code" placeholder="验证码" minlength="6" maxlength="6">
+                    <el-input class="u-text u-code" v-model="code" placeholder="验证码" size="large" minlength="6" maxlength="6">
                         <template #prepend>
                             <i class="el-icon-key"></i>
                         </template>
@@ -123,7 +123,7 @@
                 </div>
 
                 <!-- 提交 -->
-                <el-button class="u-submit u-button" type="primary" @click="done" :disabled="!ready">提交</el-button>
+                <el-button class="u-submit u-button" type="primary" @click="done" size="large" :disabled="!ready">提交</el-button>
             </main>
 
             <!-- 3.提交后 -->
@@ -143,7 +143,7 @@
                 </template>
             </main>
         </el-card>
-        <Bottom />
+        <CommonBottom />
     </div>
 </template>
 
@@ -153,6 +153,7 @@ const { validator } = require("sterilizer");
 import { sendCode, checkCode, resetPassword } from "@/service/account/password.js";
 import { checkEmail } from "@/service/account/email.js";
 import { __Root } from "@/utils/config";
+import {ElMessage} from "element-plus";
 export default {
     name: "Password_Reset",
     data: function () {
@@ -242,7 +243,7 @@ export default {
                 if (!res.data.code) {
                     this.step = 2;
                 } else {
-                    this.$message.error(res.data.msg);
+                    ElMessage.error(res.data.msg);
                     this.step = 0;
                 }
             });

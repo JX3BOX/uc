@@ -15,6 +15,7 @@
                                 minlength="3"
                                 maxlength="50"
                                 @change="checkEmail"
+                                size="large"
                             >
 
                                 <template #prepend>
@@ -41,6 +42,7 @@
                                 show-password
                                 @input="checkPass"
                                 @keyup.enter="submit"
+                                size="large"
                             >
                                 <template #prepend>
                                     <i class="el-icon-lock"></i>
@@ -58,7 +60,7 @@
                         </div>
 
                         <!-- 提交 -->
-                        <el-button class="u-submit u-button" type="primary" @click="submit">登录</el-button>
+                        <el-button class="u-submit u-button" type="primary" @click="submit" size="large">登录</el-button>
                     </form>
 
                     <Union mode="login" :includes="['qq', 'wechat', 'weibo']" />
@@ -99,7 +101,7 @@
                 </div>
             </template>
         </el-card>
-        <Bottom />
+        <CommonBottom />
     </div>
 </template>
 
@@ -278,7 +280,7 @@ export default {
             }
         },
         checkDeviceID: function () {
-            User.generateFingerprint();
+            User.generateFingerprint(() => {});
         },
         skip: function () {
             if (this.redirect) {

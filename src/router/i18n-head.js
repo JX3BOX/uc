@@ -62,6 +62,11 @@ function buildHeadObjFromRoute(to, i18n) {
     };
 }
 
+function buildHeadObjFromI18nMeta(i18nMeta, i18n) {
+    if (!i18nMeta) return;
+    return buildHeadObjFromRoute({ meta: { i18n: i18nMeta } }, i18n);
+}
+
 export function initRouterI18nHead(router, i18n, head) {
     if (!router || !i18n || !head || typeof head.addHeadObjs !== "function") return;
 
@@ -92,4 +97,31 @@ export function initRouterI18nHead(router, i18n, head) {
     // 首次进入时也补一遍（避免首屏 title 没被覆盖）
     headObjRef.value = buildHeadObjFromRoute(router.currentRoute.value, i18n) || headObjRef.value;
     head.updateDOM();
+}
+
+export function initPageI18nHead(i18n, head, i18nMeta) {
+    if (!i18n || !head || typeof head.addHeadObjs !== "function") return;
+
+    const headObjRef = ref({
+        title: undefined,
+        htmlAttrs: undefined,
+        meta: [],
+    });
+    head.addHeadObjs(headObjRef);
+
+    const updateHead = () => {
+        headObjRef.value = buildHeadObjFromI18nMeta(i18nMeta, i18n) || headObjRef.value;
+        head.updateDOM();
+    };
+
+    // 语言切换后重刷 head
+    const localeRef = i18n.global && i18n.global.locale;
+    if (localeRef && typeof localeRef === "object" && "value" in localeRef) {
+        watch(
+            () => localeRef.value,
+            () => updateHead()
+        );
+    }
+
+    updateHead();
 }

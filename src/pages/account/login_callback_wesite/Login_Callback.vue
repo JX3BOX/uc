@@ -8,7 +8,7 @@
                 <a class="u-skip el-button u-button el-button--primary" :href="redirect">{{ redirect_button }}</a>
             </main>
         </el-card>
-        <Bottom />
+        <CommonBottom />
     </div>
 </template>
 

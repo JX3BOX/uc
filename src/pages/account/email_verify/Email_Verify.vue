@@ -37,7 +37,7 @@
                 <a class="u-skip el-button u-button el-button--primary" :href="homepage">返回首页</a>
             </main>
         </el-card>
-        <Bottom />
+        <CommonBottom />
     </div>
 </template>
 
