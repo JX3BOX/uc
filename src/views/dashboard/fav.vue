@@ -2,7 +2,7 @@
     <div class="m-dashboard m-dashboard-work m-dashboard-fav">
         <div class="m-dashboard-work-header">
             <h2 class="u-title"><i class="el-icon-star-off"></i> 收藏订阅</h2>
-            <el-select v-model="searchType" placeholder="类型过滤" class="u-filter" @change="handleChange">
+            <el-select v-model="searchType" placeholder="类型过滤" class="u-filter" @change="handleChange" style="width:200px;">
                 <el-option label="全部" value="all"> </el-option>
                 <el-option-group v-for="group in options" :key="group.label" :label="group.label">
                     <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
@@ -10,7 +10,7 @@
                 </el-option-group>
             </el-select>
         </div>
-        <el-tabs v-model="favChangeCount" @tab-click="loadData">
+        <el-tabs v-model="favChangeCount" @tab-change="loadData">
             <el-tab-pane label="收藏" name="fav">
                 <template #label> <i class="el-icon-star-off"></i> 收藏 </template>
                 <div v-if="favChangeCount === 'fav'" class="m-dashboard-box" v-loading="loading">
@@ -20,6 +20,7 @@
                             placeholder="请输入搜索内容"
                             v-model="search"
                             @keyup.enter="handleChange"
+                            size="large"
                         >
                             <template #prepend>关键词</template>
                             <template #append>

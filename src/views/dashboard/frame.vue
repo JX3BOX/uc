@@ -55,15 +55,16 @@
             </div>
         </div>
         <div class="m-btn">
-            <el-button type="primary" @click="updateAvatarFrame">确认</el-button>
-            <el-button @click="reset">清除所有装扮</el-button>
+            <el-button type="primary" @click="updateAvatarFrame" size="large">确认</el-button>
+            <el-button @click="reset" size="large">清除所有装扮</el-button>
         </div>
     </uc>
 </template>
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { themeTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { themeTab } = tabsData;
 import User from "@jx3box/jx3box-common/js/user";
 import { showAvatar } from "@jx3box/jx3box-common/js/utils";
 import { __imgPath } from "@/utils/config";

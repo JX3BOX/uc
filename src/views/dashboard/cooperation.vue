@@ -59,19 +59,19 @@
                 :disabled="isSuperAuthor || !checked"
             >
                 <el-form-item class="u-item" label="昵称" prop="nickname">
-                    <el-input v-model="form.nickname" placeholder="请输入昵称"></el-input>
+                    <el-input v-model="form.nickname" placeholder="请输入昵称" size="large"></el-input>
                 </el-form-item>
 
                 <el-form-item class="u-item" label="QQ" prop="qq">
-                    <el-input v-model="form.qq" placeholder="请输入联系QQ"></el-input>
+                    <el-input v-model="form.qq" placeholder="请输入联系QQ" size="large"></el-input>
                 </el-form-item>
 
                 <el-form-item class="u-item" label="电话" prop="phone">
-                    <el-input v-model="form.phone" placeholder="请输入联系电话"></el-input>
+                    <el-input v-model="form.phone" placeholder="请输入联系电话" size="large"></el-input>
                 </el-form-item>
 
                 <el-form-item class="u-item" label="社交平台" prop="weibo">
-                    <el-input v-model="form.weibo" placeholder="请输入微博/B站地址"></el-input>
+                    <el-input v-model="form.weibo" placeholder="请输入微博/B站地址" size="large"></el-input>
                 </el-form-item>
 
                 <el-form-item class="u-item" label="自述" prop="description">
@@ -82,6 +82,7 @@
                         placeholder="详述自己的一些作品"
                         v-model="form.description"
                         show-word-limit
+                        size="large"
                     ></el-input>
                 </el-form-item>
 
@@ -91,6 +92,7 @@
                         class="u-submit"
                         @click="submitForm('form')"
                         icon="Promotion"
+                        size="large"
                         :disabled="isSuperAuthor || processing"
                         >提交签约申请</el-button
                     >

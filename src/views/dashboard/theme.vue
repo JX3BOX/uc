@@ -69,8 +69,8 @@
             </div>
         </div>
         <div class="u-btn">
-            <el-button type="primary" @click="decorationSubmit">确认</el-button>
-            <el-button @click="reset">重置</el-button>
+            <el-button type="primary" @click="decorationSubmit" size="large">确认</el-button>
+            <el-button @click="reset" size="large">重置</el-button>
         </div>
     </uc>
 </template>
@@ -81,7 +81,8 @@ import { getDecoration, setDecoration, getDecorationJson } from "@/service/dashb
 import User from "@jx3box/jx3box-common/js/user";
 import { __imgPath, __cdn } from "@/utils/config";
 import { cloneDeep, flatten } from "lodash";
-import { themeTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { themeTab } = tabsData;
 
 const sortBy = function (sort) {
     return (x, y) => {

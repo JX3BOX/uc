@@ -35,17 +35,19 @@
             </el-form>
         </div>
         <div class="m-credit-table m-packet-table" v-loading="loading">
-            <el-tabs v-model="activeName" @tab-click="changeType" type="border-card">
+            <el-tabs v-model="activeName" @tab-change="changeType" type="border-card">
                 <el-tab-pane label="红包记录" name="my_packet_list">
                     <div class="m-packet-table" v-if="my_packet_list && my_packet_list.length">
                         <table class="m-packet-in-list">
-                            <tr>
-                                <th>红包金额</th>
-                                <th>红包类型</th>
-                                <th>红包状态</th>
-                                <th>备注</th>
-                                <th>收入时间</th>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>红包金额</th>
+                                    <th>红包类型</th>
+                                    <th>红包状态</th>
+                                    <th>备注</th>
+                                    <th>收入时间</th>
+                                </tr>
+                            </thead>
                             <tr v-for="(item, i) in my_packet_list" :key="i">
                                 <td>
                                     <b>{{ formatMoney(item.money) }}</b>

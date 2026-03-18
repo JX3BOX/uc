@@ -6,7 +6,7 @@
                 phone ? "已绑定" : "未绑定"
             }}</el-tag>
         </div>
-        <el-button type="primary" :circle="isPhone" class="u-bind-button" @click="visible = true" icon="Edit">{{
+        <el-button type="primary" size="large" :circle="isPhone" class="u-bind-button" @click="visible = true" icon="Edit">{{
             phone ? "修改手机" : "绑定手机"
         }}</el-button>
         <el-dialog
@@ -22,7 +22,7 @@
                 <i class="u-tip">打开微信扫一扫，{{ phone ? "修改" : "绑定" }}手机号</i>
             </div> -->
             <div class="m-phone-content">
-                <el-form :model="form" :rules="rules" status-icon ref="phoneRef">
+                <el-form :model="form" :rules="rules" status-icon ref="phoneRef" size="large">
                     <el-form-item label="" prop="user_phone">
                         <el-input v-model="form.user_phone" placeholder="输入手机号">
                             <template #prepend>

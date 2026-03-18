@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :visible="modelValue" @close="close" custom-class="m-email-dialog" :width="isPhone ? '90%' : '950px'">
+    <el-dialog v-model="visible" @close="close" class="m-email-dialog" :width="isPhone ? '90%' : '950px'">
         <div class="m-content">
             <div class="m-pic"></div>
             <div class="m-info">
@@ -89,10 +89,7 @@ export default {
             default: false,
         },
     },
-    model: {
-        prop: "modelValue",
-        event: "update:modelValue",
-    },
+    emits: ["update:modelValue", "update"],
     data() {
         return {
             form: {
@@ -111,7 +108,18 @@ export default {
             hasSendBindEmail: false,
 
             isPhone: window.innerWidth < 768,
+            visible: false,
         };
+    },
+    watch: {
+        modelValue(val) {
+            this.visible = val;
+        },
+        visible(val) {
+            if (!val) {
+                this.close();
+            }
+        }
     },
     computed: {
         btnText() {

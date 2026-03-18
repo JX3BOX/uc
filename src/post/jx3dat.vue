@@ -119,7 +119,8 @@
 // 公共模块
 import User from "@jx3box/jx3box-common/js/user";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
-import { jx3dat_types, jx3dat_tags } from "@/assets/data/publish/jx3dat.json";
+import jx3Dat from "@/assets/data/publish/jx3dat.json";
+const { jx3dat_types, jx3dat_tags } = jx3Dat;
 
 // 本地模块
 import Tinymce from "@jx3box/jx3box-editor/src/Tinymce";

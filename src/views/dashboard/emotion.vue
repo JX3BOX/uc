@@ -40,7 +40,7 @@
             </div>
         </div>
         <div class="m-actions">
-            <el-button icon="el-icon-circle-check" type="primary" @click="onSave" :loading="loading"
+            <el-button icon="CircleCheck" type="primary" @click="onSave" :loading="loading" size="large"
                 >确定激活({{ selectedKeys.length }}/5)</el-button
             >
             <div class="u-tip">自定义表情包最多只能同时激活五个。挑选完毕后，需点击按钮方可实装。</div>
@@ -65,7 +65,8 @@
 import uc from "@/components/dashboard/uc.vue";
 import { getDecoration, getEmotion, setDecoration } from "@/service/dashboard/decoration";
 import { __imgPath } from "@/utils/config";
-import { themeTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { themeTab } = tabsData;
 export default {
     name: "emotion",
     props: [],

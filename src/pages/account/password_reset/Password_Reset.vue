@@ -1,3 +1,4 @@
+
 <template>
     <div class="m-card" >
         <el-card class="box-card">
@@ -22,8 +23,9 @@
                         maxlength="50"
                         type="email"
                         @input="checkEmail"
+                        size="large"
                     >
-                        <template slot="prepend">
+                        <template #prepend>
                             <i class="el-icon-message"></i>
                         </template>
                     </el-input>
@@ -61,7 +63,7 @@
                 <!-- 验证码 -->
                 <div class="u-code">
                     <el-input class="u-text u-code" v-model="code" placeholder="验证码" minlength="6" maxlength="6">
-                        <template slot="prepend">
+                        <template #prepend>
                             <i class="el-icon-key"></i>
                         </template>
                     </el-input>
@@ -86,8 +88,8 @@
 
                 <!-- 新密码 -->
                 <div class="u-pass">
-                    <el-input class="u-text" placeholder="新密码" v-model="pwd1" show-password @change="checkPass">
-                        <template slot="prepend">
+                    <el-input class="u-text" placeholder="新密码" size="large" v-model="pwd1" show-password @change="checkPass">
+                        <template #prepend>
                             <i class="el-icon-lock"></i>
                         </template>
                     </el-input>
@@ -104,8 +106,8 @@
 
                 <!-- 重复密码 -->
                 <div class="u-pass">
-                    <el-input class="u-text" placeholder="重复密码" v-model="pwd2" show-password @input="checkPass">
-                        <template slot="prepend">
+                    <el-input class="u-text" placeholder="重复密码" size="large" v-model="pwd2" show-password @input="checkPass">
+                        <template #prepend>
                             <i class="el-icon-lock"></i>
                         </template>
                     </el-input>

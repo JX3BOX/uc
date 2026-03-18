@@ -16,7 +16,7 @@
 
 <script>
 import { upload } from "@/service/dashboard/index.js";
-import Emotion from "@jx3box/jx3box-emotion/src/Emotion.vue";
+import Emotion from "@jx3box/jx3box-emotion/src/Emotion2.vue";
 export default {
     name: "sendTools",
     components: {

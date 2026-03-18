@@ -6,13 +6,15 @@
                 <div class="m-order-list" v-if="list && list.length">
                     <table>
                         <thead>
-                            <th>产品</th>
-                            <th>订单编号</th>
-                            <th>金额</th>
-                            <th>支付方式</th>
-                            <th>交易号</th>
-                            <th>交易状态</th>
-                            <th>订单创建时间</th>
+                            <tr>
+                                <th>产品</th>
+                                <th>订单编号</th>
+                                <th>金额</th>
+                                <th>支付方式</th>
+                                <th>交易号</th>
+                                <th>交易状态</th>
+                                <th>订单创建时间</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(item, i) in list" :key="i">
@@ -27,15 +29,14 @@
                         </tbody>
                     </table>
                     <!-- 分页 -->
-                    <div class="m-order-pages">
-                        <el-pagination
-                            background
-                            layout="total, prev, pager, next,jumper"
-                            :page-size="per"
-                            :total="total"
-                            v-model:current-page="page"
-                        ></el-pagination>
-                    </div>
+                    <el-pagination
+                        class="m-order-pages"
+                        background
+                        layout="total, prev, pager, next,jumper"
+                        :page-size="per"
+                        :total="total"
+                        v-model:current-page="page"
+                    ></el-pagination>
                 </div>
                 <div class="m-order-null" v-else>
                     <el-alert title="还有任何订单记录" type="info" show-icon></el-alert>
@@ -46,9 +47,11 @@
 </template>
 <script>
 import { getOrderList } from "@/service/dashboard/order.js";
-import { products, pay_status, pay_types } from "@/assets/data/dashboard/pay_order.json";
+import orderData from "@/assets/data/dashboard/pay_order.json";
+const { products, pay_status, pay_types } = orderData;
 import { showTime } from "@jx3box/jx3box-common/js/moment";
-import { mallTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { mallTab } = tabsData;
 import uc from "@/components/dashboard/uc.vue";
 export default {
     name: "orders",

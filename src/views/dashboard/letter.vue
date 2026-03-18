@@ -25,7 +25,8 @@
 
 <script>
 // data
-import { msgTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { msgTab } = tabsData;
 // utils
 import { cloneDeep } from "lodash";
 import { getMyInfo } from "@/service/dashboard/index.js";

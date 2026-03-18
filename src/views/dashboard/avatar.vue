@@ -35,8 +35,8 @@
             </div>
         </div>
         <div class="u-profile-btn">
-            <el-button type="primary" @click="submit">确认</el-button>
-            <el-button @click="reset">重置</el-button>
+            <el-button type="primary" @click="submit" size="large">确认</el-button>
+            <el-button @click="reset" size="large">重置</el-button>
         </div>
     </uc>
 </template>

@@ -67,17 +67,19 @@
             </el-form>
         </div>
         <div class="m-credit-table m-packet-table" v-loading="loading">
-            <el-tabs v-model="tab" @tab-click="changeType" type="border-card">
+            <el-tabs v-model="tab" @tab-change="changeType" type="border-card">
                 <el-tab-pane label="盒币记录" name="in" lazy>
                     <div class="m-packet-table" v-if="list && list.length">
                         <table class="m-boxcoin-in-list m-packet-in-list">
-                            <tr>
-                                <th>类型</th>
-                                <th>数量</th>
-                                <th>源于作品</th>
-                                <th>备注</th>
-                                <th>时间</th>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>类型</th>
+                                    <th>数量</th>
+                                    <th>源于作品</th>
+                                    <th>备注</th>
+                                    <th>时间</th>
+                                </tr>
+                            </thead>
                             <tr v-for="(item, i) in list" :key="i">
                                 <td>{{ formatType(item.action_type) }}</td>
                                 <td class="u-count" :class="showBoxcoinCls(item)">
@@ -118,15 +120,17 @@
                 <el-tab-pane label="兑换记录" name="out" lazy>
                     <div class="m-packet-table" v-if="list && list.length">
                         <table class="m-boxcoin-out-list m-packet-in-list">
-                            <tr>
-                                <th>数量</th>
-                                <th>大区</th>
-                                <th>账号</th>
-                                <th>邮箱</th>
-                                <th>处理状态</th>
-                                <th>备注</th>
-                                <th>申请时间</th>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>数量</th>
+                                    <th>大区</th>
+                                    <th>账号</th>
+                                    <th>邮箱</th>
+                                    <th>处理状态</th>
+                                    <th>备注</th>
+                                    <th>申请时间</th>
+                                </tr>
+                            </thead>
                             <tr v-for="(item, i) in list" :key="i">
                                 <td>
                                     <b>{{ item.cash }}通宝</b>

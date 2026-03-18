@@ -6,7 +6,7 @@
                 verified ? "已验证" : "未验证"
             }}</el-tag>
         </div>
-        <el-button type="primary" :circle="isPhone" class="u-button" @click="visible = true" icon="Edit">{{
+        <el-button type="primary" :circle="isPhone" size="large" class="u-button" @click="visible = true" icon="Edit">{{
             verified ? "修改邮箱" : "绑定邮箱"
         }}</el-button>
 

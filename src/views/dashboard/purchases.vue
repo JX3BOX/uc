@@ -50,7 +50,8 @@
 
 <script>
 import { getPurchases } from "@/service/dashboard/purchases";
-import { priceType, postType } from "@/assets/data/dashboard/purchase.json";
+import purchaseData from "@/assets/data/dashboard/purchase.json";
+const { priceType, postType } = purchaseData;
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 export default {
     name: "purchasesList",

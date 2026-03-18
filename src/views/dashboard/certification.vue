@@ -73,9 +73,9 @@
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { antiqueTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { antiqueTab } = tabsData;
 import { teamCertificationRecordList } from "@/service/dashboard/treasure";
-import User from "@jx3box/jx3box-common/js/user";
 import { __cdn } from "@/utils/config";
 import tianTuanCertificateCode from "@/assets/data/dashboard/tianTuan_certificate_code.json";
 import { showSchoolIcon } from "@jx3box/jx3box-common/js/utils";
@@ -113,7 +113,7 @@ export default {
                 pageSize: this.per,
             }).then((res) => {
                 this.total = res.data.data.page.total;
-                this.list = res.data.data.list;
+                this.list = res.data.data?.list || [];
             });
         },
         handleCurrentChange(current) {

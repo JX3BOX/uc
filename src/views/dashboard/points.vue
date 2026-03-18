@@ -6,7 +6,7 @@
             <b :class="money > 0 ? 'u-have' : ''" class="u-num">{{ money }}</b>
             <a class="el-button u-btn el-button--primary el-button--mini" href="/vip/mall" target="_blank">兑换</a>
         </div>
-        <el-tabs class="m-tabs" type="border-card" v-model="tab_value" @tab-click="changeTab">
+        <el-tabs class="m-tabs" type="border-card" v-model="tab_value" @tab-change="changeTab">
             <!-- 积分记录 -->
             <el-tab-pane label="积分记录" name="point">
                 <el-table
@@ -53,6 +53,7 @@
                     :page-size="per"
                     :hide-on-single-page="true"
                     v-model:current-page="page"
+                    @current-change="handlePageChange"
                     layout="total, prev, pager, next, jumper"
                     :total="total"
                 ></el-pagination>
@@ -102,6 +103,7 @@
                     :page-size="per"
                     :hide-on-single-page="true"
                     v-model:current-page="page"
+                    @current-change="handlePageChange"
                     layout="total, prev, pager, next, jumper"
                     :total="total"
                 ></el-pagination>
@@ -186,15 +188,11 @@ export default {
             this.page = 1;
             this.loadData();
         },
-        showTime,
-    },
-    watch: {
-        params: {
-            deep: true,
-            handler: function () {
-                this.loadData();
-            },
+        handlePageChange(val) {
+            this.page = val;
+            this.loadData();
         },
+        showTime,
     },
     created: function () {
         this.tab_value = this.$route.query.tab || "point";

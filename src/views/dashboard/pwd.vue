@@ -25,6 +25,7 @@
                         v-model="pwd1"
                         show-password
                         @change="checkPass"
+                        size="large"
                     >
                         <template #prepend>
                             <img
@@ -53,6 +54,7 @@
                         v-model="pwd2"
                         show-password
                         @input="checkPass"
+                        size="large"
                     >
                         <template #prepend>
                             <img
@@ -79,6 +81,7 @@
                     type="primary"
                     @click="done"
                     :disabled="!ready"
+                    size="large"
                     >提交</el-button
                 >
             </form>

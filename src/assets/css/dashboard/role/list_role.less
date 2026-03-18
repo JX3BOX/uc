@@ -92,13 +92,19 @@
             }
         }
         .u-meta {
-            .db;
+            .flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            overflow: hidden;
             .fz(12px, 1.8);
             .pr;
             left: -2px;
 
             em {
+                display: inline-flex;
+                align-items: center;
                 margin-right: 5px;
+                height: 20px;
                 padding: 3px 6px;
                 border-radius: 2px;
                 font-style: normal;
@@ -110,12 +116,21 @@
                 .mr(15px);
             }
         }
+        .u-note {
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
         .u-mount {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+            line-height: 1;
             img {
                 .size(18px);
-                .y(-3px);
-                .mr(3px);
             }
         }
 
@@ -199,6 +214,11 @@
                         .mb(0);
                     }
                 }
+            }
+            .u-note {
+                white-space: normal;
+                overflow: visible;
+                text-overflow: clip;
             }
             .u-op {
                 .ps;

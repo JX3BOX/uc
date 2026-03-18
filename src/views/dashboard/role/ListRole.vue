@@ -4,7 +4,7 @@
             <i class="el-icon-coordinate"></i> 我的角色
             <!-- <goback /> -->
             <div class="u-op">
-                <router-link to="/role/bind" class="el-button el-button--primary el-button--mini">
+                <router-link to="/role/bind" class="el-button el-button--primary el-button--default">
                     <i class="el-icon-connection"></i> 绑定角色
                 </router-link>
                 <!-- <router-link to="/role/sync" class="el-button el-button--primary el-button--mini">
@@ -16,7 +16,7 @@
             </div>
         </h2>
         <div class="m-role-list-filter">
-            <el-select v-model="mount" popper-class="m-school-pop">
+            <el-select v-model="mount" popper-class="m-school-pop" style="width:200px;" size="large">
                 <el-option label="全部" value=""></el-option>
                 <el-option
                     v-for="(school, school_id) in school_id_map"
@@ -29,7 +29,7 @@
                     {{ school }}
                 </el-option>
             </el-select>
-            <el-input class="u-name" v-model="name" placeholder="请输入角色名称">
+            <el-input class="u-name" v-model="name" placeholder="请输入角色名称" size="large">
                 <template #prepend> <i class="el-icon-search"></i> 查找 </template>
             </el-input>
         </div>

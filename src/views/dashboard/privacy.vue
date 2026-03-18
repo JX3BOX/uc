@@ -3,7 +3,7 @@
         <div class="m-whitelist-primary" v-loading="loading">
             <h2 class="m-whitelist-title u-title"><i class="el-icon-ship"></i> 隐私设置</h2>
 
-            <el-tabs v-model="active" @tab-click="tabChange">
+            <el-tabs v-model="active" @tab-change="tabChange">
                 <template v-if="relationNetTypes.length">
                     <el-tab-pane
                         :label="item.name"

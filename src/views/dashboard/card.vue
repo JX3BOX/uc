@@ -14,8 +14,8 @@
             <div class="m-boxcoin-tip__content" v-html="bread"></div>
         </el-alert>
         <div class="m-keycode-tab">
-            <el-tabs type="border-card" v-model="tab" @tab-click="tabClick">
-                <el-tab-pane label="激活码(直发)" name="sn">
+            <el-tabs type="border-card" v-model="tab" @tab-change="tabClick">
+                <el-tab-pane label="激活码(直发)" name="sn" lazy>
                     <template #label>
                         <span class="u-tab--title">激活码</span>
                         (<span class="u-tab--desc">直发</span>)
@@ -53,11 +53,9 @@
                                     <el-button
                                         class="u-btn"
                                         v-else
-                                        type="txt"
+                                        link
                                         icon="DocumentCopy"
-                                        v-clipboard:copy="'' + scope.row.code"
-                                        v-clipboard:success="onCopy"
-                                        v-clipboard:error="onError"
+                                        @click="copyToClipboard(scope.row.code)"
                                         >复制</el-button
                                     >
                                 </div>
@@ -115,7 +113,7 @@
                         :total="total"
                     ></el-pagination>
                 </el-tab-pane>
-                <el-tab-pane label="激活码(积分兑换|抽奖)" name="virtual">
+                <el-tab-pane label="激活码(积分兑换|抽奖)" name="virtual" lazy>
                     <template #label>
                         <span class="u-tab--title">激活码</span>
                         (<span class="u-tab--desc">积分兑换|抽奖</span>)
@@ -145,11 +143,9 @@
                                     <el-button
                                         class="u-btn"
                                         v-else
-                                        type="txt"
+                                        link
                                         icon="DocumentCopy"
-                                        v-clipboard:copy="'' + scope.row.code"
-                                        v-clipboard:success="onCopy"
-                                        v-clipboard:error="onError"
+                                        @click="copyToClipboard(scope.row.code)"
                                         >复制</el-button
                                     >
                                 </div>
@@ -213,7 +209,7 @@
                         :total="total"
                     ></el-pagination>
                 </el-tab-pane>
-                <el-tab-pane label="一卡通" name="keycode">
+                <el-tab-pane label="一卡通" name="keycode" lazy>
                     <el-table
                         class="m-table"
                         v-if="keycodeList.length"
@@ -241,11 +237,9 @@
                                             <el-button
                                                 class="u-btn"
                                                 v-if="scope.row.key"
-                                                type="txt"
+                                                link
                                                 icon="DocumentCopy"
-                                                v-clipboard:copy="'' + scope.row.key"
-                                                v-clipboard:success="onCopy"
-                                                v-clipboard:error="onError"
+                                                @click="copyToClipboard(scope.row.key)"
                                                 >复制卡号</el-button
                                             >
                                         </div>
@@ -262,11 +256,9 @@
                                             <el-button
                                                 class="u-btn"
                                                 v-if="scope.row.code"
-                                                type="txt"
+                                                link
                                                 icon="DocumentCopy"
-                                                v-clipboard:copy="'' + scope.row.code"
-                                                v-clipboard:success="onCopy"
-                                                v-clipboard:error="onError"
+                                                @click="copyToClipboard(scope.row.code)"
                                                 >复制卡密</el-button
                                             >
                                         </div>
@@ -593,18 +585,20 @@ export default {
                 .catch(() => {});
         },
 
-        onCopy: function (val) {
-            this.$notify({
-                title: "复制成功",
-                message: "复制内容 : " + val.text,
-                type: "success",
-            });
-        },
-        onError: function () {
-            this.$notify.error({
-                title: "复制失败",
-                message: "请手动复制",
-            });
+        async copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(String(text));
+                this.$notify({
+                    title: "复制成功",
+                    message: "复制内容 : " + text,
+                    type: "success",
+                });
+            } catch (err) {
+                this.$notify.error({
+                    title: "复制失败",
+                    message: "请手动复制",
+                });
+            }
         },
         currentChange(val) {
             this.page = val;
@@ -612,7 +606,7 @@ export default {
         },
         tabClick(tab) {
             this.page = 1;
-            this.tab = tab.name;
+            this.tab = tab;
             this[this.loadName]();
         },
     },

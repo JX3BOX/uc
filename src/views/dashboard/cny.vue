@@ -93,14 +93,16 @@
                             "created_at": "2022-08-07 00:33:33",
                             "process_success": false //相关业务是否执行成功 -->
 
-                            <tr>
-                                <th>类型</th>
-                                <th>来源</th>
-                                <th>去向</th>
-                                <th>数量</th>
-                                <th>备注</th>
-                                <th>时间</th>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>类型</th>
+                                    <th>来源</th>
+                                    <th>去向</th>
+                                    <th>数量</th>
+                                    <th>备注</th>
+                                    <th>时间</th>
+                                </tr>
+                            </thead>
                             <tr v-for="(item, i) in list" :key="i">
                                 <td>
                                     {{ item.description || formatType(item.action_type) || "未知" }}

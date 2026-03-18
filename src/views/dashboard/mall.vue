@@ -6,14 +6,16 @@
                 <div class="m-mall-list" v-if="list && list.length">
                     <table>
                         <thead>
-                            <th>兑换时间</th>
-                            <th>兑换商品</th>
-                            <th>订单号</th>
-                            <th>数量</th>
-                            <th>订单状态</th>
-                            <th>付款状态</th>
-                            <th>是否为赠送</th>
-                            <th>操作</th>
+                            <tr>
+                                <th>兑换时间</th>
+                                <th>兑换商品</th>
+                                <th>订单号</th>
+                                <th>数量</th>
+                                <th>订单状态</th>
+                                <th>付款状态</th>
+                                <th>是否为赠送</th>
+                                <th>操作</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(item, i) in list" :key="i">
@@ -102,15 +104,14 @@
                         </tbody>
                     </table>
                     <!-- 分页 -->
-                    <div class="m-mall-pages">
                         <el-pagination
+                         class="m-mall-pages"
                             background
                             layout="total, prev, pager, next,jumper"
                             :page-size="pageSize"
                             :total="total"
                             v-model:current-page="pageIndex"
                         ></el-pagination>
-                    </div>
                 </div>
                 <div class="m-mall-null" v-else>
                     <el-alert title="还有任何订单记录" type="info" show-icon></el-alert>
@@ -127,8 +128,10 @@
 import uc from "@/components/dashboard/uc.vue";
 import GoodComment from "@/components/dashboard/form/comment.vue";
 import { getOrder, closeOrder, toPay, toConfirm } from "@/service/dashboard/goods";
-import { payStatus, orderStatus } from "@/assets/data/dashboard/mall.json";
-import { mallTab } from "@/assets/data/dashboard/tabs.json";
+import mallData from "@/assets/data/dashboard/mall.json";
+const { payStatus, orderStatus } = mallData;
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { mallTab } = tabsData;
 export default {
     name: "mall",
     components: {

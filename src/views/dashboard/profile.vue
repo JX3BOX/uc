@@ -20,6 +20,7 @@
                     v-model="form.jx3_server"
                     filterable
                     placeholder="请输入服务器"
+                    size="large"
                 >
                     <el-option v-for="item in servers" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
@@ -37,29 +38,21 @@
                         content="此项不会被公开,仅用于赛事联系或其它确认"
                         placement="left"
                     >
-                        <div>
-                            <i class="el-icon-lock"></i> QQ
-                        </div>
+                        <div><i class="el-icon-lock"></i> QQ</div>
                     </el-tooltip>
                 </template>
-                <el-input v-model="form.qq_number" placeholder="请输入QQ号码"></el-input>
+                <el-input v-model="form.qq_number" size="large" placeholder="请输入QQ号码"></el-input>
             </el-form-item>
 
             <el-form-item class="u-birthday">
                 <template #label>
-                    <el-tooltip
-                        class="item"
-                        effect="dark"
-                        content="此项不会被公开,仅用于礼品发放"
-                        placement="left"
-                    >
-                        <div>
-                            <i class="el-icon-lock"></i> 生日
-                        </div>
+                    <el-tooltip class="item" effect="dark" content="此项不会被公开,仅用于礼品发放" placement="left">
+                        <div><i class="el-icon-lock"></i> 生日</div>
                     </el-tooltip>
                 </template>
                 <el-date-picker
                     v-model="form.birthday"
+                    size="large"
                     type="date"
                     placeholder="选择日期"
                     value-format="yyyy-MM-dd"
@@ -111,29 +104,19 @@
                     placeholder="签名内容"
                     v-model="form.user_bio"
                     show-word-limit
+                    size="large"
                 ></el-input>
             </el-form-item>
 
             <el-form-item class="u-tv" label="直播间">
-                <el-row>
-                    <el-col :span="4">
-                        <div class="u-tv-type">
-                            <el-select v-model="form.tv_type" placeholder="请选择平台">
-                                <el-option
-                                    v-for="(label, val) in tvmap"
-                                    :key="val"
-                                    :label="label"
-                                    :value="val"
-                                ></el-option>
-                            </el-select>
-                        </div>
-                    </el-col>
-                    <el-col :span="20">
-                        <div class="u-tv-id" style="margin-left:10px;">
-                            <el-input v-model="form.tv_id" placeholder="请输入直播间房间号"></el-input>
-                        </div>
-                    </el-col>
-                </el-row>
+                <div class="u-tv-type">
+                    <el-select v-model="form.tv_type" style="width: 140px" size="large" placeholder="请选择平台">
+                        <el-option v-for="(label, val) in tvmap" :key="val" :label="label" :value="val"></el-option>
+                    </el-select>
+                </div>
+                <div class="u-tv-id" style="margin-left: 10px;flex: 1">
+                    <el-input v-model="form.tv_id" size="large" placeholder="请输入直播间房间号"></el-input>
+                </div>
             </el-form-item>
 
             <el-form-item class="u-btns" label>

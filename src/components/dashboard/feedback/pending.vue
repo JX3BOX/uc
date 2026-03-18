@@ -3,7 +3,7 @@
         <!-- tool -->
         <div class="m-feedback-tool">
             <div class="m-feedback-tool__item">
-                <el-select v-model="select" class="u-select" placeholder="请选择处理人" filterable>
+                <el-select v-model="select" class="u-select" placeholder="请选择处理人" filterable style="width:200px">
                     <el-option
                         :label="item.teammate_info.display_name"
                         v-for="(item, i) in assigns"

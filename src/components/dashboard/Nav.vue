@@ -12,7 +12,7 @@
                     v-for="child in item.children"
                     :to="child.path"
                     :key="child.path"
-                    :class="isProfile(child.path) || isTheme(child.path) || isMall(child.path) || isMsg(child.path)"
+                    :class="isProfile(child.path) || isTheme(child.path) || isMall(child.path) || isMsg(child.path) || isFavor(child.path) || isTreasure(child.path)"
                 >
                     <i :class="child.icon"></i>
                     <span>{{ child.name }}</span>
@@ -26,10 +26,12 @@
 import { feedback } from "@/utils/config";
 import dashboardLink from "@/utils/dashboardLink.js";
 import navList from "@/assets/data/dashboard/nav.json";
-const profile_routes = ["profile", "avatar", "pwd", "connect", "email", "address", "notice"];
+const profile_routes = ["profile", "avatar", "pwd", "connect", "email", "address", "notice", "auth"];
 const theme_routes = ["theme", "frame", "emotion", "honor", "medal"];
 const mall_routes = ["mall", "orders"];
 const msg_routes = ["msg", "letter"];
+const fav_routes = ["fav"];
+const treasure_routes = ["certification", "holidayCard", "birthdayCard"];
 export default {
     name: "Nav",
     data: function () {
@@ -58,6 +60,12 @@ export default {
         },
         isMsg: function (val) {
             return val === "/msg" && msg_routes.includes(this.$route.name) ? "on" : "";
+        },
+        isFavor: function (val) {
+            return val === "/fav" && fav_routes.includes(this.$route.name) ? "on" : "";
+        },
+        isTreasure: function (val) {
+            return val === "/treasure" && treasure_routes.includes(this.$route.name) ? "on" : "";
         },
     },
     mounted: function () {},

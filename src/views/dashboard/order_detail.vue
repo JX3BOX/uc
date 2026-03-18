@@ -151,9 +151,11 @@ import {
     delGoodsRate,
     getOrderId,
 } from "@/service/dashboard/goods";
-import { orderStatus, payStatus } from "@/assets/data/dashboard/mall.json";
+import mallData from "@/assets/data/dashboard/mall.json";
+const { orderStatus, payStatus } = mallData;
 import uc from "@/components/dashboard/uc";
-import { mallTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { mallTab } = tabsData;
 import { append } from "domutils";
 export default {
     name: "orderDetail",

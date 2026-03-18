@@ -24,8 +24,7 @@
                     >
                         立即绑定
                     </el-button>
-                    <el-button v-else @click="unbind(types[type].uuid)" size="large" type="danger">
-                        <span class="u-status"> 解除绑定 </span>
+                    <el-button v-else @click="unbind(types[type].uuid)" size="large" type="danger">解除绑定
                     </el-button>
                 </div>
                 <qqbot :data="data" @refresh="loadAuth"></qqbot>

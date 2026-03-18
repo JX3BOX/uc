@@ -21,7 +21,7 @@
                         :plain="!!item.is_wear"
                     >
                         <i :class="item.is_wear ? 'el-icon-help' : 'el-icon-s-help'"></i>
-                        {{ item.is_wear ? "卸下" : "佩戴" }}
+                        {{ item.is_wear ? " 卸下" : " 佩戴" }}
                     </el-button>
                 </div>
             </div>
@@ -38,7 +38,8 @@
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { themeTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { themeTab } = tabsData;
 import User from "@jx3box/jx3box-common/js/user";
 import { getUserMedals, getMedals, setMedal } from "@/service/dashboard/decoration";
 import { __cdn } from "@/utils/config";

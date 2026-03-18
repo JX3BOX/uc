@@ -3,12 +3,12 @@
         <div class="type-box">
             <el-form inline>
                 <el-form-item label="来源">
-                    <el-select v-model="form.type" placeholder="请选择问题来源">
+                    <el-select v-model="form.type" placeholder="请选择问题来源" style="width:200px">
                         <el-option v-for="(value, key) in types" :key="key" :value="key" :label="value"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="类别">
-                    <el-select v-model="form.subtype" placeholder="请选择问题类别">
+                    <el-select v-model="form.subtype" placeholder="请选择问题类别" style="width:200px">
                         <el-option v-for="(value, key) in subtypes" :key="key" :value="key" :label="value"></el-option>
                     </el-select>
                 </el-form-item>

@@ -32,7 +32,8 @@
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { antiqueTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { antiqueTab } = tabsData;
 import { getHolidayCard } from "@/service/dashboard/treasure";
 
 export default {

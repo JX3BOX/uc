@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { markRaw } from "vue";
 import uc from "@/components/dashboard/uc.vue";
 import { __imgPath } from "@/utils/config";
 import wechat from "./wechat.vue";
@@ -23,7 +24,7 @@ import email from "./email.vue";
 import phone from "./phone.vue";
 export default {
     name: "notice",
-    components: { uc, wechat, email },
+    components: { uc, wechat: markRaw(wechat), email: markRaw(email), phone: markRaw(phone) },
     data: function () {
         return {
             list: [

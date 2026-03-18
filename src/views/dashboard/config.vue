@@ -81,7 +81,7 @@
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
                 </template>
-                <el-input v-model="conf.fav_link" placeholder="输入日历链接"></el-input>
+                <el-input v-model="conf.fav_link" size="large" placeholder="输入日历链接"></el-input>
             </el-form-item>
             <el-form-item label="语言偏好">
                 <template #label>
@@ -90,7 +90,7 @@
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
                 </template>
-                <el-select v-model="conf.default_lang">
+                <el-select v-model="conf.default_lang" size="large">
                     <el-option
                         v-for="(item, key) in lang"
                         :key="key"
@@ -106,7 +106,7 @@
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
                 </template>
-                <el-select v-model="conf.default_client">
+                <el-select v-model="conf.default_client" size="large">
                     <el-option label="正式服（旗舰版/无界）" value="std"></el-option>
                     <el-option label="怀旧服（缘起）" value="origin"></el-option>
                 </el-select>
@@ -122,7 +122,7 @@
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
                 </template>
-                <el-select v-model="conf.rss_need_level">
+                <el-select v-model="conf.rss_need_level" size="large">
                     <el-option
                         v-for="item in levelMap"
                         :key="item.value"
@@ -152,7 +152,7 @@
                 <el-switch v-model="conf.achievement_process" active-color="#13ce66" active-text="同步" :active-value="1" :inactive-value="0" disabled></el-switch>
             </el-form-item> -->
             <el-form-item label="" class="u-btns">
-                <el-button class="u-publish" type="primary" @click="submit">保存</el-button>
+                <el-button class="u-publish" type="primary" @click="submit" size="large">保存</el-button>
             </el-form-item>
         </el-form>
     </div>

@@ -11,11 +11,6 @@
             <div class="u-info">
                 <h1 class="u-name">
                     <span class="u-name-txt">{{ info.display_name }}</span>
-                    <!-- <el-tooltip class="item" effect="dark" content="修改昵称" placement="top">
-                        <a class="u-edit-name" href="/vip/rename?from=dashboard_index">
-                            <i class="el-icon-edit-outline"></i>
-                        </a>
-                    </el-tooltip> -->
                     <div class="u-name-meta">
                         <span
                             class="u-superauth"
@@ -300,12 +295,13 @@
 import { __userGroup, __imgPath, __userLevelColor, __userLevel, __cdn } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
-import { getUserMedals, getMyAssetLogs, getMyInfo } from "@/service/dashboard/index.js";
+import { getMyAssetLogs, getMyInfo } from "@/service/dashboard/index.js";
 import { showDate } from "@jx3box/jx3box-common/js/moment";
 import asset_types from "@/assets/data/dashboard/asset_log_types.json";
 import boxcoin_types from "@/assets/data/dashboard/boxcoin_types.json";
 import cny_types from "@/assets/data/dashboard/cny_types.json";
-import { products, pay_status, pay_types } from "@/assets/data/dashboard/pay_order.json";
+import orderData from "@/assets/data/dashboard/pay_order.json";
+const { products, pay_status, pay_types } = orderData;
 import moment from "moment";
 import medal from "@jx3box/jx3box-ui/src/author/AuthorMedals.vue";
 import CommonAvatar from "@jx3box/jx3box-ui/src/author/Avatar.vue";

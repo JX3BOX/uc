@@ -93,7 +93,8 @@
 </template>
 
 <script>
-import { msgTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { msgTab } = tabsData;
 import { getMsgs, readMsg, removeMsg, readAll, getCommentMsgDetail } from "@/service/dashboard/msg.js";
 import { showTime } from "@jx3box/jx3box-common/js/moment.js";
 import { getLink } from "@jx3box/jx3box-common/js/utils";

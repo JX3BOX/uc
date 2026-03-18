@@ -79,6 +79,13 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 import "@/assets/css/tailwind.css";
 
 // 7. 其它扩展
+// Suppress Chrome ResizeObserver loop error overlay during rapid tab/table reflow
+const __roErrorRE = /ResizeObserver loop (limit exceeded|completed with undelivered notifications)/;
+window.addEventListener("error", (e) => {
+    if (__roErrorRE.test(e.message)) {
+        e.stopImmediatePropagation();
+    }
+});
 
 // Final.Mount DOM
 app.mount("#app");

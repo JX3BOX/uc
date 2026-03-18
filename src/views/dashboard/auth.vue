@@ -19,6 +19,7 @@
                         :type="!checkStatus(type) ? 'primary' : 'danger'"
                         @click="toBind(type)"
                         v-if="!checkStatus(type)"
+                        size="large"
                     >
                         前往绑定
                     </el-button>
