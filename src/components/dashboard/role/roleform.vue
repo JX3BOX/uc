@@ -52,7 +52,8 @@
 <script>
 import servers from "@jx3box/jx3box-data/data/server/server_list.json";
 import school_map from "@jx3box/jx3box-data/data/xf/schoolid.json";
-import { bodyMap } from "@jx3box/jx3box-facedat/assets/data/index.json";
+import faceData from "@jx3box/jx3box-facedat/assets/data/index.json";
+const { bodyMap } = faceData;
 import { showSchoolIcon } from "@/utils/filters";
 export default {
     props: ["data", "btn_txt", "processing"],

@@ -15,7 +15,8 @@
 
 <script>
 import { getPostMeta, setPostMeta, getChangelog } from "@/service/publish/cms";
-import { all_map } from "@jx3box/jx3box-common/data/jx3_zlp.json";
+import zlpData from "@jx3box/jx3box-common/data/jx3_zlp.json";
+const { all_map } = zlpData;
 export default {
     name: "publish_extend",
     props: {

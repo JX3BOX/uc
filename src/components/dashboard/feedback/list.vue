@@ -45,7 +45,8 @@
 
 <script>
 import { getFeedbackList } from "@/service/dashboard/feedback";
-import { types, subtypes, statusMap, statusColors } from "@/assets/data/dashboard/feedback.json";
+import feedbackData from "@/assets/data/dashboard/feedback.json";
+const { types, subtypes, statusMap, statusColors } = feedbackData;
 import { __clients } from "@/utils/config";
 import moment from "moment";
 export default {

@@ -34,7 +34,8 @@ import isEmptyMeta from "@/utils/isEmptyMeta.js";
 import UploadAlbum from "@jx3box/jx3box-editor/src/UploadAlbum.vue";
 import { load as parseFace } from "@jx3box/jx3box-facedat/src/DataRouter.js";
 import { uploadFacedata } from "@/service/publish/share.js";
-import { bodyMap } from "@jx3box/jx3box-facedat/assets/data/index.json";
+import faceData from "@jx3box/jx3box-facedat/assets/data/index.json";
+const { bodyMap } = faceData;
 // META空模板
 const default_meta = {
     author: "", //原作者

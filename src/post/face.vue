@@ -171,7 +171,8 @@ import { DecalDatabase } from "@jx3box/jx3box-facedat/src/DecalDatabase";
 import User from "@jx3box/jx3box-common/js/user.js";
 import cloneDeep from "lodash/cloneDeep";
 import { __clients } from "@/utils/config";
-import { bodyMap, majorMap, faceSubtype } from "@jx3box/jx3box-facedat/assets/data/index.json";
+import faceData from "@jx3box/jx3box-facedat/assets/data/index.json";
+const { bodyMap, majorMap, faceSubtype } = faceData;
 import { getConfig } from "@/service/publish/cms";
 export default {
     name: "face",

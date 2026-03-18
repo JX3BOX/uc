@@ -134,7 +134,6 @@
 </template>
 
 <script>
-import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { getAttachmentOfPost, addBody, getBody, updateBody } from "@/service/publish/body";
 import publishHeader from "@/components/publish/publish_header.vue";
 import publishTitle from "@/components/publish/publish_title.vue";
@@ -142,10 +141,11 @@ import publishOriginal from "@/components/publish/publish_original.vue";
 import faceAttachment from "@/components/publish/face_attachment.vue";
 import UploadAlbum from "@jx3box/jx3box-editor/src/UploadAlbum.vue";
 import publishBanner from "@/components/publish/publish_banner.vue";
-import { bodyMap } from "@jx3box/jx3box-facedat/assets/data/index.json";
+import faceData from "@jx3box/jx3box-facedat/assets/data/index.json";
 import User from "@jx3box/jx3box-common/js/user.js";
 import cloneDeep from "lodash/cloneDeep";
 import { getConfig } from "@/service/publish/cms";
+const { bodyMap } = faceData;
 export default {
     name: "pvxbody",
     components: {

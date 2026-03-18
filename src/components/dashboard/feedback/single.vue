@@ -284,7 +284,8 @@
 import DOMPurify from "dompurify";
 import { getFeedback, getFeedbackLog } from "@/service/dashboard/feedback";
 import { getTeammates } from "@/service/dashboard/index";
-import { types, subtypes, statusMap, statusColors } from "@/assets/data/dashboard/feedback.json";
+import feedbackData from "@/assets/data/dashboard/feedback.json";
+const { types, subtypes, statusMap, statusColors } = feedbackData;
 import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import moment from "moment";
 import CommonComment from "@jx3box/jx3box-ui/src/single/Comment.vue";
@@ -296,7 +297,8 @@ import AdminGift from "@jx3box/jx3box-ui/assets/img/widget/admin_gift.svg";
 import assign from "./components/assign.vue";
 import edit from "./components/edit.vue";
 import status from "./components/status.vue";
-import { __clients } from "@jx3box/jx3box-common/data/jx3box.json";
+import jx3boxData from "@jx3box/jx3box-common/data/jx3box.json";
+const { __clients } = jx3boxData;
 export default {
     name: "FeedbackSingle",
     components: {

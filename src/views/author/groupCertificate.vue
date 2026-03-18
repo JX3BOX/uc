@@ -129,7 +129,7 @@ export default {
         loadDrawImage(src) {
             const newImg = new Image();
             newImg.setAttribute("crossOrigin", "anonymous");
-            newImg.src = require(src);
+            newImg.src = src;
             return new Promise((resolve, reject) => {
                 newImg.onload = () => {
                     resolve(newImg);

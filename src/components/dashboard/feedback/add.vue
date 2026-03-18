@@ -71,7 +71,8 @@
 
 <script>
 import axios from "axios";
-import { types, subtypes } from "@/assets/data/dashboard/feedback.json";
+import feedbackData from "@/assets/data/dashboard/feedback.json";
+const { types, subtypes } = feedbackData;
 import { __cms } from "@/utils/config";
 const API_Root = __cms;
 const API = API_Root + "api/cms/upload";

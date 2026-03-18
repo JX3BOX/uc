@@ -27,8 +27,9 @@
 
 <script>
 import { getThumbnail } from "@jx3box/jx3box-common/js/utils";
-import { bodyMap } from "@jx3box/jx3box-facedat/assets/data/index.json";
+import faceData from "@jx3box/jx3box-facedat/assets/data/index.json";
 import { getBodyList } from "@/service/publish/body";
+const { bodyMap } = faceData;
 export default {
     props: [],
     data: function () {

@@ -1,4 +1,5 @@
-import { bodyMap } from "@jx3box/jx3box-facedat/assets/data/index.json";
+import faceData from "@jx3box/jx3box-facedat/assets/data/index.json";
+const { bodyMap } = faceData;
 function showBodyType(val) {
     return bodyMap[val]?.label || "未知";
 }

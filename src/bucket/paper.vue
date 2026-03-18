@@ -36,7 +36,8 @@
 </template>
 
 <script>
-import { types } from "@/assets/data/publish/exam.json";
+import examData from "@/assets/data/publish/exam.json";
+const { types } = examData;
 import dateFormat from "@/utils/dateFormat";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { deletePaper } from "@/service/publish/exam.js";

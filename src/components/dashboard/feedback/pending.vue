@@ -148,7 +148,8 @@
 
 <script>
 import { getMiscfeedback, getTeammates, updateFeedback } from "@/service/dashboard/feedback";
-import { types, subtypes, statusMap, statusColors, filterOptions } from "@/assets/data/dashboard/feedback.json";
+import feedbackData from "@/assets/data/dashboard/feedback.json";
+const { types, subtypes, statusMap, statusColors, filterOptions } = feedbackData;
 import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
 import moment from "moment";

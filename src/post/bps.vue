@@ -137,7 +137,8 @@
 <script>
 // 公共模块
 import { getLink } from "@jx3box/jx3box-common/js/utils";
-import { bps_pve, bps_pvp } from "@jx3box/jx3box-common/data/post_topics.json";
+import topicData from "@jx3box/jx3box-common/data/post_topics.json";
+const { bps_pve, bps_pvp } = topicData;
 
 // 本地模块
 import Tinymce from "@jx3box/jx3box-editor/src/Tinymce";
