@@ -76,6 +76,71 @@ export default {
         keywords: "JX3,JX3BOX,thep,le,sinh nhat",
         description: "Trang thep JX3BOX: thep le va thep sinh nhat.",
     },
+    vip: {
+        title: "Trung tam thanh vien",
+        keywords: "JX3,JX3BOX,thanh vien,nap tien,diem,cua hang",
+        description: "Trung tam thanh vien JX3BOX: nap tien, diem, cua hang va dich vu thanh vien.",
+        boxcoin: {
+            title: "Nap Boxcoin",
+            keywords: "JX3,JX3BOX,thanh vien,nap tien,boxcoin",
+            description: "Trang nap Boxcoin JX3BOX.",
+        },
+        cny: {
+            title: "Nap Kim bo",
+            keywords: "JX3,JX3BOX,thanh vien,nap tien,kim bo",
+            description: "Trang nap kim bo JX3BOX.",
+        },
+        lottery: {
+            title: "Quay thuong diem",
+            keywords: "JX3,JX3BOX,thanh vien,diem,quay thuong",
+            description: "Trang quay thuong diem JX3BOX.",
+        },
+        premium: {
+            title: "Mo thanh vien",
+            keywords: "JX3,JX3BOX,thanh vien,mo",
+            description: "Trang mo thanh vien JX3BOX.",
+        },
+        rename: {
+            title: "Doi biet danh",
+            keywords: "JX3,JX3BOX,thanh vien,biet danh",
+            description: "Trang doi biet danh JX3BOX.",
+        },
+        namespace: {
+            title: "Bang ten JX3",
+            keywords: "JX3,JX3BOX,thanh vien,bang ten",
+            description: "Trang bang ten JX3BOX.",
+        },
+        mall: {
+            title: "Cua hang diem",
+            keywords: "JX3,JX3BOX,thanh vien,diem,cua hang",
+            description: "Trang cua hang diem JX3BOX.",
+            list: {
+                title: "Cua hang diem",
+                keywords: "JX3,JX3BOX,thanh vien,diem,cua hang",
+                description: "Trang danh sach cua hang diem JX3BOX.",
+            },
+            batchOrder: {
+                title: "Cua hang diem - Don hang",
+                keywords: "JX3,JX3BOX,thanh vien,diem,don hang",
+                description: "Trang don hang cua hang diem JX3BOX.",
+            },
+            order: {
+                title: "Cua hang diem - Don hang",
+                keywords: "JX3,JX3BOX,thanh vien,diem,don hang",
+                description: "Trang chi tiet don hang cua hang diem JX3BOX.",
+            },
+            detail: {
+                title: "Cua hang diem - Chi tiet san pham",
+                keywords: "JX3,JX3BOX,thanh vien,diem,san pham",
+                description: "Trang chi tiet san pham cua hang diem JX3BOX.",
+            },
+            cart: {
+                title: "Cua hang diem - Gio hang",
+                keywords: "JX3,JX3BOX,thanh vien,diem,gio hang",
+                description: "Trang gio hang cua hang diem JX3BOX.",
+            },
+        },
+    },
     publish: {
         title: "Trung tâm sáng tạo",
         keywords: "JX3,JX3BOX,người sáng tạo,đăng,nội dung",

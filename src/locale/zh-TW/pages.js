@@ -76,6 +76,71 @@ export default {
         keywords: "劍網3,魔盒,JX3BOX,賀卡,節日,生日",
         description: "劍網3魔盒（JX3BOX）賀卡頁面：節日賀卡與生日賀卡。",
     },
+    vip: {
+        title: "會員中心",
+        keywords: "劍網3,魔盒,JX3BOX,會員,充值,積分,商城",
+        description: "劍網3魔盒（JX3BOX）會員中心：充值、積分、商城與會員服務。",
+        boxcoin: {
+            title: "盒幣充值",
+            keywords: "劍網3,魔盒,JX3BOX,會員,充值,盒幣",
+            description: "劍網3魔盒（JX3BOX）盒幣充值頁面。",
+        },
+        cny: {
+            title: "金箔充值",
+            keywords: "劍網3,魔盒,JX3BOX,會員,充值,金箔",
+            description: "劍網3魔盒（JX3BOX）金箔充值頁面。",
+        },
+        lottery: {
+            title: "積分抽獎",
+            keywords: "劍網3,魔盒,JX3BOX,會員,積分,抽獎",
+            description: "劍網3魔盒（JX3BOX）積分抽獎頁面。",
+        },
+        premium: {
+            title: "開通會員",
+            keywords: "劍網3,魔盒,JX3BOX,會員,開通",
+            description: "劍網3魔盒（JX3BOX）開通會員頁面。",
+        },
+        rename: {
+            title: "修改暱稱",
+            keywords: "劍網3,魔盒,JX3BOX,會員,暱稱",
+            description: "劍網3魔盒（JX3BOX）修改暱稱頁面。",
+        },
+        namespace: {
+            title: "劍三銘牌",
+            keywords: "劍網3,魔盒,JX3BOX,會員,銘牌",
+            description: "劍網3魔盒（JX3BOX）劍三銘牌頁面。",
+        },
+        mall: {
+            title: "積分商城",
+            keywords: "劍網3,魔盒,JX3BOX,會員,積分,商城",
+            description: "劍網3魔盒（JX3BOX）積分商城頁面。",
+            list: {
+                title: "積分商城",
+                keywords: "劍網3,魔盒,JX3BOX,會員,積分,商城",
+                description: "劍網3魔盒（JX3BOX）積分商城列表頁面。",
+            },
+            batchOrder: {
+                title: "積分商城 - 訂單",
+                keywords: "劍網3,魔盒,JX3BOX,會員,積分,訂單",
+                description: "劍網3魔盒（JX3BOX）積分商城訂單頁面。",
+            },
+            order: {
+                title: "積分商城 - 訂單",
+                keywords: "劍網3,魔盒,JX3BOX,會員,積分,訂單",
+                description: "劍網3魔盒（JX3BOX）積分商城訂單詳情頁面。",
+            },
+            detail: {
+                title: "積分商城 - 商品詳情",
+                keywords: "劍網3,魔盒,JX3BOX,會員,積分,商品",
+                description: "劍網3魔盒（JX3BOX）積分商城商品詳情頁面。",
+            },
+            cart: {
+                title: "積分商城 - 購物車",
+                keywords: "劍網3,魔盒,JX3BOX,會員,積分,購物車",
+                description: "劍網3魔盒（JX3BOX）積分商城購物車頁面。",
+            },
+        },
+    },
     publish: {
         title: "創作中心",
         keywords: "劍網3,魔盒,JX3BOX,創作,發佈,投稿",

@@ -1,14 +1,14 @@
 <template>
-    <div class="search-bar">
-        <div class="select-box">
+    <div class="m-search-bar">
+        <div class="m-select-box">
             <div class="select-item">
-                <el-select :value="c_level" @change="handleChange($event, 'level')" placeholder="等级限制">
+                <el-select :value="c_level" @change="handleChange($event, 'level')" placeholder="等级限制" style="width:120px">
                     <el-option v-for="item in level_options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </div>
             <div class="select-item">
-                <el-select :value="query.vip_limit" @change="handleChange($event, 'vip_limit')" placeholder="会员限制">
+                <el-select :value="query.vip_limit" @change="handleChange($event, 'vip_limit')" placeholder="会员限制" style="width:120px">
                     <el-option v-for="item in member_options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
@@ -16,7 +16,9 @@
         </div>
         <div class="search-input">
             <el-input :value="query.title" placeholder="搜索商品关键词" @input="handleChange($event, 'title')">
-                <el-button slot="append" icon="Search"></el-button>
+                <template #append>
+                    <el-button icon="Search"></el-button>
+                </template>
             </el-input>
         </div>
     </div>
@@ -99,69 +101,35 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
-.search-bar {
+<style lang="less">
+.m-search-bar {
     width: 100%;
     margin-bottom: 24px;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    .select-box {
-        display: flex;
-        .select-item {
-            /deep/.el-select {
-                input {
-                    width: 100px;
-                    height: 24px;
-                    padding: 0;
-                    border: none;
-                    background: transparent;
-                    font-size: 14px;
-                    color: rgba(255, 255, 255, 1);
-                    &::placeholder {
-                        font-size: 14px;
-                        color: rgba(255, 255, 255, 1);
-                    }
-                }
-                .el-input__suffix {
-                    right: 0;
-                    height: 24px;
-                    i {
-                        line-height: 24px;
-                        font-size: 12px;
-                    }
-                }
-            }
-            &:not(:last-child) {
-                .mr(24px);
-            }
+
+    .el-select__wrapper {
+        background-color: transparent;
+        box-shadow: none !important;
+    }
+    .el-input__wrapper {
+        background-color: transparent;
+        box-shadow: 0 0 0 1px hsla(0,0%,100%,.5) inset;
+
+        &.is-focus {
+            box-shadow: 0 0 0 1px hsla(0,0%,100%,.5) inset;
         }
     }
-    .search-input {
-        /deep/.el-input {
-            border: 0.5px solid rgba(255, 255, 255, 0.5);
-            border-radius: 4px;
-            input {
-                width: 164px;
-                height: 24px;
-                padding-left: 10px;
-                border: none;
-                background: transparent;
-                font-size: 14px;
-                color: rgba(255, 255, 255, 1);
-                &::placeholder {
-                    font-size: 14px;
-                    color: rgba(255, 255, 255, 0.5);
-                }
-            }
-            .el-input-group__append {
-                width: 36px;
-                padding: 0;
-                background: rgba(255, 255, 255, 0.75);
-                color: rgba(0, 0, 0, 1);
-                text-align: center;
-            }
-        }
+    .el-input-group__append {
+        width: 36px;
+        padding: 0;
+        background: rgba(255, 255, 255, 0.75);
+        color: rgba(0, 0, 0, 1);
+        text-align: center;
+    }
+    .m-select-box {
+        .flex;
     }
 }
 </style>

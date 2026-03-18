@@ -71,6 +71,71 @@ export default {
         keywords: "剑网3,魔盒,JX3BOX,贺卡,节日,生日",
         description: "剑网3魔盒（JX3BOX）贺卡页面：节日贺卡与生日贺卡。",
     },
+    vip: {
+        title: "会员中心",
+        keywords: "剑网3,魔盒,JX3BOX,会员,充值,积分,商城",
+        description: "剑网3魔盒（JX3BOX）会员中心：充值、积分、商城与会员服务。",
+        boxcoin: {
+            title: "盒币充值",
+            keywords: "剑网3,魔盒,JX3BOX,会员,充值,盒币",
+            description: "剑网3魔盒（JX3BOX）盒币充值页面。",
+        },
+        cny: {
+            title: "金箔充值",
+            keywords: "剑网3,魔盒,JX3BOX,会员,充值,金箔",
+            description: "剑网3魔盒（JX3BOX）金箔充值页面。",
+        },
+        lottery: {
+            title: "积分抽奖",
+            keywords: "剑网3,魔盒,JX3BOX,会员,积分,抽奖",
+            description: "剑网3魔盒（JX3BOX）积分抽奖页面。",
+        },
+        premium: {
+            title: "开通会员",
+            keywords: "剑网3,魔盒,JX3BOX,会员,开通",
+            description: "剑网3魔盒（JX3BOX）开通会员页面。",
+        },
+        rename: {
+            title: "修改昵称",
+            keywords: "剑网3,魔盒,JX3BOX,会员,昵称",
+            description: "剑网3魔盒（JX3BOX）修改昵称页面。",
+        },
+        namespace: {
+            title: "剑三铭牌",
+            keywords: "剑网3,魔盒,JX3BOX,会员,铭牌",
+            description: "剑网3魔盒（JX3BOX）剑三铭牌页面。",
+        },
+        mall: {
+            title: "积分商城",
+            keywords: "剑网3,魔盒,JX3BOX,会员,积分,商城",
+            description: "剑网3魔盒（JX3BOX）积分商城页面。",
+            list: {
+                title: "积分商城",
+                keywords: "剑网3,魔盒,JX3BOX,会员,积分,商城",
+                description: "剑网3魔盒（JX3BOX）积分商城列表页面。",
+            },
+            batchOrder: {
+                title: "积分商城 - 订单",
+                keywords: "剑网3,魔盒,JX3BOX,会员,积分,订单",
+                description: "剑网3魔盒（JX3BOX）积分商城订单页面。",
+            },
+            order: {
+                title: "积分商城 - 订单",
+                keywords: "剑网3,魔盒,JX3BOX,会员,积分,订单",
+                description: "剑网3魔盒（JX3BOX）积分商城订单详情页面。",
+            },
+            detail: {
+                title: "积分商城 - 商品详情",
+                keywords: "剑网3,魔盒,JX3BOX,会员,积分,商品",
+                description: "剑网3魔盒（JX3BOX）积分商城商品详情页面。",
+            },
+            cart: {
+                title: "积分商城 - 购物车",
+                keywords: "剑网3,魔盒,JX3BOX,会员,积分,购物车",
+                description: "剑网3魔盒（JX3BOX）积分商城购物车页面。",
+            },
+        },
+    },
     publish: {
         title: "创作中心",
         keywords: "剑网3,魔盒,JX3BOX,创作,发布,投稿",

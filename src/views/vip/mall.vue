@@ -1,6 +1,6 @@
 <template>
     <div >
-        <Header :key="currentKey"></Header>
+        <CommonHeader :key="currentKey"></CommonHeader>
         <Breadcrumb
             name="积分商城"
             slug="mall"

@@ -1,7 +1,7 @@
 <template>
     <div >
         <div class="m-mall-web-header">
-            <Header :key="currentKey"></Header>
+            <CommonHeader :key="currentKey"></CommonHeader>
             <Breadcrumb></Breadcrumb>
         </div>
         <div

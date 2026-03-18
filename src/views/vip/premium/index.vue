@@ -1,6 +1,5 @@
 <template>
-    <div >
-        <Header :key="currentKey"></Header>
+        <CommonHeader :key="currentKey"></CommonHeader>
         <Main :withoutRight="true" :withoutLeft="true">
             <div class="m-premium-container">
                 <img class="u-vip-title" src="@/assets/img/vip/vip2/title.png" alt="" srcset="" />
@@ -15,7 +14,6 @@
             </div>
         </Main>
         <CommonFooter></CommonFooter>
-    </div>
 </template>
 
 <script>

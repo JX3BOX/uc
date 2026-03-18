@@ -273,7 +273,7 @@ export default {
 <style lang="less">
 .m-mall-box {
     width: 100%;
-    min-height: calc(100vh - 100px);
+    min-height: calc(100vh - 96px);
     background: url("@{design}mall/bg.png") no-repeat center center;
     background-size: 100% 100%;
     display: flex;

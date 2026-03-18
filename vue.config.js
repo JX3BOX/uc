@@ -17,12 +17,12 @@ const pages = {
         template: "public/index.html",
         filename: "author/index.html",
     },
-    // vip: {
-    //     title: "会员中心 - JX3BOX",
-    //     entry: "src/pages/vip/index.js",
-    //     template: "public/index.html",
-    //     filename: "vip/index.html",
-    // },
+    vip: {
+        title: "会员中心 - JX3BOX",
+        entry: "src/pages/vip/index.js",
+        template: "public/index.html",
+        filename: "vip/index.html",
+    },
 
     // // account
     login: {

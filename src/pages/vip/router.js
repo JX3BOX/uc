@@ -1,69 +1,57 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
-// 解决重复点击路由报错的BUG
-const originalPush = VueRouter.prototype.push;
-VueRouter.prototype.push = function push(location) {
-    return originalPush.call(this, location).catch((err) => err);
-};
-
-Vue.use(VueRouter);
 const routes = [
-    { name: "index", path: "/", component: () => import("@/views/vip/index.vue") },
-
-    // 商城
-    // {
-    //     path: "/mall",
-    //     name: "mall",
-    //     redirect: "/mall/list",
-    //     component: () => import("@/views/vip/mall.vue"),
-    //     meta: { title: "积分商城" },
-    //     children: [
-    //         {
-    //             name: "mall_list",
-    //             path: "list",
-    //             component: () => import("@/views/vip/mall/Index.vue"),
-    //             meta: { keepAlive: true, title: "积分商城" },
-    //         },
-    //         { name: "mall_detail", path: ":id(\\d+)", component: () => import("@/views/vip/mall/Detail.vue") },
-    //         {
-    //             name: "mall_order",
-    //             path: "order",
-    //             component: () => import("@/views/vip/mall/Order.vue"),
-    //             title: "积分商城",
-    //         },
-    //         {
-    //             name: "mall_batch_order",
-    //             path: "batch",
-    //             component: () => import("@/views/vip/mall/BatchOrder.vue"),
-    //             meta: {
-    //                 title: "积分商城 - 订单",
-    //             },
-    //         },
-    //         // {
-    //         //     name: "mall_cart",
-    //         //     path: "cart",
-    //         //     component: () => import("@/views/vip/mall/Cart.vue"),
-    //         //     meta: {
-    //         //         title: "积分商城 - 购物车",
-    //         //     },
-    //         // },
-    //     ],
-    // },
-
+    {
+        name: "index",
+        path: "/",
+        component: () => import("@/views/vip/index.vue"),
+        meta: {
+            i18n: {
+                title: "pages.vip.title",
+                keywords: "pages.vip.keywords",
+                description: "pages.vip.description",
+            },
+        },
+    },
     // 货币充值
     {
         name: "boxcoin",
         path: "/boxcoin",
         component: () => import("@/views/vip/boxcoin.vue"),
-        meta: { title: "盒币充值" },
+        meta: {
+            title: "盒币充值",
+            i18n: {
+                title: "pages.vip.boxcoin.title",
+                keywords: "pages.vip.boxcoin.keywords",
+                description: "pages.vip.boxcoin.description",
+            },
+        },
     },
-    { name: "cny", path: "/cny", component: () => import("@/views/vip/cny.vue"), meta: { title: "金箔充值" } },
+    {
+        name: "cny",
+        path: "/cny",
+        component: () => import("@/views/vip/cny.vue"),
+        meta: {
+            title: "金箔充值",
+            i18n: {
+                title: "pages.vip.cny.title",
+                keywords: "pages.vip.cny.keywords",
+                description: "pages.vip.cny.description",
+            },
+        },
+    },
     {
         name: "lottery",
         path: "/lottery",
         component: () => import("@/views/vip/lottery/index.vue"),
-        meta: { title: "积分抽奖" },
+        meta: {
+            title: "积分抽奖",
+            i18n: {
+                title: "pages.vip.lottery.title",
+                keywords: "pages.vip.lottery.keywords",
+                description: "pages.vip.lottery.description",
+            },
+        },
     },
 
     // 系统商品
@@ -71,33 +59,82 @@ const routes = [
         name: "premium",
         path: "/premium",
         component: () => import("@/views/vip/premium/index.vue"),
-        meta: { title: "开通会员" },
+        meta: {
+            title: "开通会员",
+            i18n: {
+                title: "pages.vip.premium.title",
+                keywords: "pages.vip.premium.keywords",
+                description: "pages.vip.premium.description",
+            },
+        },
     },
-    { name: "rename", path: "/rename", component: () => import("@/views/vip/rename.vue"), meta: { title: "修改昵称" } },
+    {
+        name: "rename",
+        path: "/rename",
+        component: () => import("@/views/vip/rename.vue"),
+        meta: {
+            title: "修改昵称",
+            i18n: {
+                title: "pages.vip.rename.title",
+                keywords: "pages.vip.rename.keywords",
+                description: "pages.vip.rename.description",
+            },
+        },
+    },
     {
         name: "namespace",
         path: "/namespace",
         component: () => import("@/views/vip/namespace.vue"),
-        meta: { title: "剑三铭牌" },
+        meta: {
+            title: "剑三铭牌",
+            i18n: {
+                title: "pages.vip.namespace.title",
+                keywords: "pages.vip.namespace.keywords",
+                description: "pages.vip.namespace.description",
+            },
+        },
     },
     {
         name: "mallNew",
         path: "/mall",
         component: () => import("@/views/vip/mallNew.vue"),
-        meta: { title: "积分商城" },
+        meta: {
+            title: "积分商城",
+            i18n: {
+                title: "pages.vip.mall.title",
+                keywords: "pages.vip.mall.keywords",
+                description: "pages.vip.mall.description",
+            },
+        },
         redirect: "mall/list",
         children: [
             {
                 name: "mall_list_new",
                 path: "list",
                 component: () => import("@/views/vip/mallNew/Index.vue"),
-                meta: { keepAlive: true, title: "积分商城" },
+                meta: {
+                    keepAlive: true,
+                    title: "积分商城",
+                    i18n: {
+                        title: "pages.vip.mall.list.title",
+                        keywords: "pages.vip.mall.list.keywords",
+                        description: "pages.vip.mall.list.description",
+                    },
+                },
             },
             {
                 name: "mall_list_new_id",
                 path: ":id(\\d+)",
                 component: () => import("@/views/vip/mallNew/Index.vue"),
-                meta: { keepAlive: true, title: "积分商城" },
+                meta: {
+                    keepAlive: true,
+                    title: "积分商城",
+                    i18n: {
+                        title: "pages.vip.mall.list.title",
+                        keywords: "pages.vip.mall.list.keywords",
+                        description: "pages.vip.mall.list.description",
+                    },
+                },
             },
             {
                 name: "mall_batch_order_new",
@@ -105,13 +142,25 @@ const routes = [
                 component: () => import("@/views/vip/mallNew/BatchOrder.vue"),
                 meta: {
                     title: "积分商城 - 订单",
+                    i18n: {
+                        title: "pages.vip.mall.batchOrder.title",
+                        keywords: "pages.vip.mall.batchOrder.keywords",
+                        description: "pages.vip.mall.batchOrder.description",
+                    },
                 },
             },
             {
                 name: "mall_order_new",
                 path: "order/:id(\\d+)",
                 component: () => import("@/views/vip/mallNew/Order.vue"),
-                title: "积分商城 - 订单",
+                meta: {
+                    title: "积分商城 - 订单",
+                    i18n: {
+                        title: "pages.vip.mall.order.title",
+                        keywords: "pages.vip.mall.order.keywords",
+                        description: "pages.vip.mall.order.description",
+                    },
+                },
             },
         ],
     },
@@ -119,20 +168,42 @@ const routes = [
         name: "mallWeb",
         path: "/mallWeb",
         component: () => import("@/views/vip/mallWeb.vue"),
-        meta: { title: "积分商城" },
+        meta: {
+            title: "积分商城",
+            i18n: {
+                title: "pages.vip.mall.title",
+                keywords: "pages.vip.mall.keywords",
+                description: "pages.vip.mall.description",
+            },
+        },
         redirect: "/mallWeb/list",
         children: [
             {
                 name: "mall_list_web",
                 path: "list",
                 component: () => import("@/views/vip/mallWeb/Index.vue"),
-                meta: { keepAlive: true, title: "积分商城" },
+                meta: {
+                    keepAlive: true,
+                    title: "积分商城",
+                    i18n: {
+                        title: "pages.vip.mall.list.title",
+                        keywords: "pages.vip.mall.list.keywords",
+                        description: "pages.vip.mall.list.description",
+                    },
+                },
             },
             {
                 name: "mall_detail_web",
                 path: ":id(\\d+)",
                 component: () => import("@/views/vip/mallWeb/Detail.vue"),
-                title: "积分商城 - 商品详情",
+                meta: {
+                    title: "积分商城 - 商品详情",
+                    i18n: {
+                        title: "pages.vip.mall.detail.title",
+                        keywords: "pages.vip.mall.detail.keywords",
+                        description: "pages.vip.mall.detail.description",
+                    },
+                },
             },
             {
                 name: "mall_batch_order_web",
@@ -140,13 +211,25 @@ const routes = [
                 component: () => import("@/views/vip/mallNew/BatchOrder.vue"),
                 meta: {
                     title: "积分商城 - 订单",
+                    i18n: {
+                        title: "pages.vip.mall.batchOrder.title",
+                        keywords: "pages.vip.mall.batchOrder.keywords",
+                        description: "pages.vip.mall.batchOrder.description",
+                    },
                 },
             },
             {
                 name: "mall_order_web",
                 path: "order/:id(\\d+)",
                 component: () => import("@/views/vip/mallNew/Order.vue"),
-                title: "积分商城 - 订单",
+                meta: {
+                    title: "积分商城 - 订单",
+                    i18n: {
+                        title: "pages.vip.mall.order.title",
+                        keywords: "pages.vip.mall.order.keywords",
+                        description: "pages.vip.mall.order.description",
+                    },
+                },
             },
             {
                 name: "mall_cart_web",
@@ -154,16 +237,20 @@ const routes = [
                 component: () => import("@/views/vip/mallWeb/Cart.vue"),
                 meta: {
                     title: "积分商城 - 购物车",
+                    i18n: {
+                        title: "pages.vip.mall.cart.title",
+                        keywords: "pages.vip.mall.cart.keywords",
+                        description: "pages.vip.mall.cart.description",
+                    },
                 },
             },
         ],
     },
 ];
 
-const router = new VueRouter({
-    mode: "history",
+const router = createRouter({
+    history: createWebHistory("/vip"),
     routes,
-    base: "/vip",
 });
 
 router.beforeEach((to, from, next) => {

@@ -76,6 +76,71 @@ export default {
         keywords: "JX3,JX3BOX,cards,holiday,birthday",
         description: "JX3BOX cards page: holiday and birthday cards.",
     },
+    vip: {
+        title: "Membership Center",
+        keywords: "JX3,JX3BOX,membership,top-up,points,mall",
+        description: "JX3BOX membership center: top-ups, points, mall, and member services.",
+        boxcoin: {
+            title: "Boxcoin Top-up",
+            keywords: "JX3,JX3BOX,membership,top-up,boxcoin",
+            description: "JX3BOX Boxcoin top-up page.",
+        },
+        cny: {
+            title: "Gold Foil Top-up",
+            keywords: "JX3,JX3BOX,membership,top-up,gold",
+            description: "JX3BOX gold foil top-up page.",
+        },
+        lottery: {
+            title: "Points Lottery",
+            keywords: "JX3,JX3BOX,membership,points,lottery",
+            description: "JX3BOX points lottery page.",
+        },
+        premium: {
+            title: "Activate Membership",
+            keywords: "JX3,JX3BOX,membership,activate",
+            description: "JX3BOX membership activation page.",
+        },
+        rename: {
+            title: "Change Nickname",
+            keywords: "JX3,JX3BOX,membership,nickname",
+            description: "JX3BOX nickname change page.",
+        },
+        namespace: {
+            title: "JX3 Nameplate",
+            keywords: "JX3,JX3BOX,membership,nameplate",
+            description: "JX3BOX JX3 nameplate page.",
+        },
+        mall: {
+            title: "Points Mall",
+            keywords: "JX3,JX3BOX,membership,points,mall",
+            description: "JX3BOX points mall page.",
+            list: {
+                title: "Points Mall",
+                keywords: "JX3,JX3BOX,membership,points,mall",
+                description: "JX3BOX points mall list page.",
+            },
+            batchOrder: {
+                title: "Points Mall - Orders",
+                keywords: "JX3,JX3BOX,membership,points,orders",
+                description: "JX3BOX points mall orders page.",
+            },
+            order: {
+                title: "Points Mall - Orders",
+                keywords: "JX3,JX3BOX,membership,points,orders",
+                description: "JX3BOX points mall order detail page.",
+            },
+            detail: {
+                title: "Points Mall - Item Details",
+                keywords: "JX3,JX3BOX,membership,points,item",
+                description: "JX3BOX points mall item detail page.",
+            },
+            cart: {
+                title: "Points Mall - Cart",
+                keywords: "JX3,JX3BOX,membership,points,cart",
+                description: "JX3BOX points mall cart page.",
+            },
+        },
+    },
     publish: {
         title: "Creator Center",
         keywords: "JX3,JX3BOX,creator,publish,content",

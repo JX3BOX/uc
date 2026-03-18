@@ -38,7 +38,9 @@
                             @input="checkName"
                             :disabled="!count"
                         >
-                            <i slot="append" class="u-status" :class="checkicon"></i>
+                            <template #append>
+                                <i class="u-status" :class="checkicon"></i>
+                            </template>
                         </el-input>
                         <el-alert v-if="!isEmpty" :title="checktips" :type="status ? 'success' : 'error'" show-icon>
                         </el-alert>
@@ -59,13 +61,17 @@
                     </el-form-item>
                 </el-form>
                 <result v-else>
-                    <div slot="title" class="m-rename-result-title">
-                        修改成功，新昵称<b>{{ new_name || "未知" }}</b>
-                    </div>
-                    <div slot="desc" class="m-rename-result-desc">
-                        <i class="el-icon-info"></i>
-                        修改昵称后部分应用需要自行重新更新作品方可生效，<a href="/account/login">重新登录</a>
-                    </div>
+                    <template #title>
+                        <div class="m-rename-result-title">
+                            修改成功，新昵称<b>{{ new_name || "未知" }}</b>
+                        </div>
+                    </template>
+                    <template #desc>
+                        <div class="m-rename-result-desc">
+                            <i class="el-icon-info"></i>
+                            修改昵称后部分应用需要自行重新更新作品方可生效，<a href="/account/login">重新登录</a>
+                        </div>
+                    </template>
                 </result>
             </div>
         </div>

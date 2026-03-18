@@ -1,6 +1,6 @@
 <template>
     <div >
-        <Header :key="currentKey"></Header>
+        <CommonHeader :key="currentKey"></CommonHeader>
         <div class="m-mall-breadcrumb-container">
             <MallBreadcrumb></MallBreadcrumb>
         </div>
@@ -41,10 +41,10 @@ export default {
 <style lang="less" scoped>
 .m-mall-breadcrumb-container {
     background: black;
-    margin-top: 64px;
+    margin-top: 60px;
     height: 36px;
     position: sticky;
-    top: 64px;
+    top: 60px;
     z-index: 100;
 }
 </style>

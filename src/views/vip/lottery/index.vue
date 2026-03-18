@@ -19,7 +19,7 @@
                             <img :src="`${themeImg}logo.svg?123`" alt="魔盒盲盒" />
                             <el-tooltip effect="light" placement="right-start">
                                 <img class="u-info" :src="`${__imgRoot}desc.svg`" alt="活动说明" />
-                                <div class="m-blindbox-info" slot="content">
+                                <div class="m-blindbox-info">
                                     {{ info }}
                                 </div>
                             </el-tooltip>
@@ -97,9 +97,11 @@
                                 </el-dialog>
                                 <el-tooltip effect="light" placement="right-start">
                                     <span class="u-odds" v-show="odds">+ 概率公式</span>
-                                    <div class="m-blindbox-info" slot="content">
-                                        {{ odds }}
-                                    </div>
+                                    <template #content>
+                                        <div class="m-blindbox-info">
+                                            {{ odds }}
+                                        </div>
+                                    </template>
                                 </el-tooltip>
                             </div>
                             <!-- 展示奖品 -->

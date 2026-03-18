@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="isShow" width="380px" :show-close="false" custom-class="m-buy-confirm">
+    <el-dialog v-model="isShow" width="380px" :show-close="false" class="m-buy-confirm">
         <div class="content">
             <img :src="item.goods_images[0]" alt="" style="width: 120px; height: 120px" />
             <div class="text">
@@ -87,8 +87,11 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
-/deep/.m-buy-confirm {
+<style lang="less">
+.m-buy-confirm {
+    &.el-dialog {
+        padding: 0;
+    }
     .el-dialog__header {
         padding: 0;
     }
