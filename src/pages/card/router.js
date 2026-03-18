@@ -1,26 +1,25 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import Index from "@/views/card/Index.vue";
 
-Vue.use(VueRouter);
 
 const routes = [
     {
         path: "/",
         name: "index",
         component: Index,
+        meta: {
+            i18n: {
+                title: "pages.card.title",
+                keywords: "pages.card.keywords",
+                description: "pages.card.description",
+            }
+        }
     },
 ]
 
-const router = new VueRouter({
+const router = createRouter({
+    history: createWebHistory("/card/"),
     routes,
-    mode: "history",
-    base: "/card/",
-});
-
-router.beforeEach((to, from, next) => {
-    console.log('Router navigation:', to.path);
-    next();
 });
 
 export default router;

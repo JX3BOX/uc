@@ -79,7 +79,6 @@ export default {
         },
         // 活动对应的图片列表
         imgList() {
-            console.log(this.cardType[this.event_id]?.imgList);
             return this.cardType[this.event_id]?.imgList || [];
         },
         // 活动抽中的数量

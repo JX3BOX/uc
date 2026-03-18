@@ -71,6 +71,11 @@ export default {
             description: "JX3BOX sign-up callback page.",
         },
     },
+    card: {
+        title: "Cards",
+        keywords: "JX3,JX3BOX,cards,holiday,birthday",
+        description: "JX3BOX cards page: holiday and birthday cards.",
+    },
     publish: {
         title: "Creator Center",
         keywords: "JX3,JX3BOX,creator,publish,content",

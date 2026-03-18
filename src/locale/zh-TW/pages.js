@@ -71,6 +71,11 @@ export default {
             description: "JX3BOX 註冊回調頁面。",
         },
     },
+    card: {
+        title: "賀卡",
+        keywords: "劍網3,魔盒,JX3BOX,賀卡,節日,生日",
+        description: "劍網3魔盒（JX3BOX）賀卡頁面：節日賀卡與生日賀卡。",
+    },
     publish: {
         title: "創作中心",
         keywords: "劍網3,魔盒,JX3BOX,創作,發佈,投稿",

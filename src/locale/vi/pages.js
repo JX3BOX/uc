@@ -71,6 +71,11 @@ export default {
             description: "Trang callback dang ky JX3BOX.",
         },
     },
+    card: {
+        title: "Thiep",
+        keywords: "JX3,JX3BOX,thep,le,sinh nhat",
+        description: "Trang thep JX3BOX: thep le va thep sinh nhat.",
+    },
     publish: {
         title: "Trung tâm sáng tạo",
         keywords: "JX3,JX3BOX,người sáng tạo,đăng,nội dung",
