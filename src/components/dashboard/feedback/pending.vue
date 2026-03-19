@@ -126,9 +126,9 @@
                 <el-table-column label="操作" width="100">
                     <template #default="{ row }">
                         <el-tooltip :content="row.content" placement="top" popper-class="m-content-popover">
-                            <el-button link>查看</el-button>
+                            <el-button type="primary" link size="small">查看</el-button>
                         </el-tooltip>
-                        <el-button link @click.stop="onRemarkClick(row)">备注</el-button>
+                        <el-button link type="primary" @click.stop="onRemarkClick(row)" size="small">备注</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -368,6 +368,9 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    .el-table {
+        font-size: 12px;
+    }
 
     .u-row * {
         .pointer !important;
@@ -391,6 +394,7 @@ export default {
         .u-assign {
             display: flex;
             align-items: center;
+            color: var(--el-color-primary);
             .u-assign-avatar {
                 .size(24px);
                 .r(100%);

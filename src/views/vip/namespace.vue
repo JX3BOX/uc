@@ -10,7 +10,7 @@
                             <i class="el-icon-question"></i>
                             铭牌可通过关键词快速在浏览器中输入<b>剑网3.com/您的关键词</b>访问您所指定的链接地址。
                         </div>
-                        <el-form ref="form" label-width="80px" :label-position="position">
+                        <el-form ref="form" label-width="80px" :label-position="position" size="large">
                             <el-form-item label="当前拥有">
                                 <div class="u-current">
                                     <b>{{ (asset && asset.namespace_card_count) || 0 }}</b>

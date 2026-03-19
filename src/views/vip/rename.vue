@@ -24,6 +24,7 @@
                     label-position="left"
                     v-if="!done"
                     :class="{ isNormal: count }"
+                    size="large"
                 >
                     <el-form-item class="u-old-name" label="当前昵称">
                         <b>{{ old_name }}</b>
@@ -50,7 +51,7 @@
                             @click="submit"
                             type="primary"
                             class="u-submit u-submit-rename"
-                            icon="el-icon-check"
+                            icon="Check"
                             v-if="count"
                             :disabled="!status"
                             >提交</el-button

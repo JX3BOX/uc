@@ -120,6 +120,7 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    font-size: 12px;
 
     .u-row * {
         .pointer !important;
