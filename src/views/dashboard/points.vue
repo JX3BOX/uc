@@ -8,7 +8,7 @@
         </div>
         <el-tabs class="m-tabs" type="border-card" v-model="tab_value" @tab-change="changeTab">
             <!-- 积分记录 -->
-            <el-tab-pane label="积分记录" name="point">
+            <el-tab-pane label="积分记录" name="point" lazy>
                 <el-table
                     class="m-table"
                     :data="list"
@@ -58,7 +58,7 @@
                     :total="total"
                 ></el-pagination>
             </el-tab-pane>
-            <el-tab-pane label="经验记录" name="ex">
+            <el-tab-pane label="经验记录" name="ex" lazy>
                 <el-table
                     class="m-table"
                     :data="list"

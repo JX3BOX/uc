@@ -82,10 +82,11 @@ const commonDomains = require("@jx3box/jx3box-common/data/jx3box.json");
 module.exports = {
     productionSourceMap: false,
     //❤️ define path for static files ~
-    publicPath:
-        process.env.BUILD_PREVIEW ? "/" + process.env.APP_NAME :
-        process.env.NODE_ENV === "development" ? "/" :
-        process.env.STATIC_PATH + "/" + process.env.APP_NAME,
+    publicPath: process.env.BUILD_PREVIEW
+        ? "/" + process.env.APP_NAME
+        : process.env.NODE_ENV === "development"
+        ? "/"
+        : process.env.STATIC_PATH + "/" + process.env.APP_NAME,
 
     //🌈多页面配置，详见 https://cli.vuejs.org/zh/config/#pages
     pages: pages,
@@ -98,6 +99,16 @@ module.exports = {
         proxy: buildEnvProxy(),
         allowedHosts: "all",
         port: process.env.DEV_PORT || 12028,
+        client: {
+            overlay: {
+                runtimeErrors: (error) => {
+                    if (error.message === "ResizeObserver loop completed with undelivered notifications.") {
+                        return false;
+                    }
+                    return true;
+                },
+            },
+        },
     },
 
     // 依赖包（element-plus/theme-chalk 等）会输出大量 Sass deprecation 警告

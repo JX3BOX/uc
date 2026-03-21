@@ -48,6 +48,7 @@
                                         icon="View"
                                         @click="getSn(scope.$index, scope.row)"
                                         plain
+                                        size="small"
                                         >点击查看</el-button
                                     >
                                     <el-button
@@ -55,13 +56,14 @@
                                         v-else
                                         link
                                         icon="DocumentCopy"
+                                        size="small"
                                         @click="copyToClipboard(scope.row.code)"
                                         >复制</el-button
                                     >
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column label="过期时间" width="200">
+                        <el-table-column label="过期时间" width="250">
                             <template #default="scope">
                                 <div class="u-time" v-if="scope.row.expire_at">
                                     <span class="u-tag" :class="compareTime(scope.row.expire_at, 'tag')">{{
@@ -76,13 +78,14 @@
                         <el-table-column prop="remark" label="备注" width="200"> </el-table-column>
                         <el-table-column prop="used_by_self" label="是否使用">
                             <template #default="scope">
-                                <span class="u-used" :class="{ 'is-used': scope.row.used_by_self }">{{
-                                    scope.row.used_by_self ? "是" : "否"
-                                }}</span>
-
-                                <el-button v-show="!scope.row.used_by_self" link @click="onSnUsedClick(scope.row)"
-                                    >（标记使用）</el-button
-                                >
+                                <el-icon
+                                    class="u-used-icon"
+                                    :class="{ 'is-used': scope.row.used_by_self }"
+                                    @click="onSnUsedClick(scope.row)"
+                                    size="20"
+                                    :color="scope.row.used_by_self ? '#67C23A' : ''"
+                                    ><CircleCheckFilled></CircleCheckFilled
+                                ></el-icon>
                             </template>
                         </el-table-column>
                         <el-table-column prop="activate_url" label="激活地址">
@@ -138,6 +141,7 @@
                                         icon="View"
                                         @click="getVirtualCode(scope.$index, scope.row)"
                                         plain
+                                        size="small"
                                         >点击查看</el-button
                                     >
                                     <el-button
@@ -145,13 +149,14 @@
                                         v-else
                                         link
                                         icon="DocumentCopy"
+                                        size="small"
                                         @click="copyToClipboard(scope.row.code)"
                                         >复制</el-button
                                     >
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column label="过期时间" width="200">
+                        <el-table-column label="过期时间" width="250">
                             <template #default="scope">
                                 <div class="u-time" v-if="scope.row.goods.expire_at">
                                     <span class="u-tag" :class="compareTime(scope.row.goods.expire_at, 'tag')">{{
@@ -169,16 +174,14 @@
                         </el-table-column>
                         <el-table-column prop="used_by_self" label="是否使用">
                             <template #default="scope">
-                                <span class="u-used" :class="{ 'is-used': scope.row.owner.used_by_self }">{{
-                                    scope.row.owner.used_by_self ? "是" : "否"
-                                }}</span>
-
-                                <el-button
-                                    v-show="!scope.row.owner.used_by_self"
-                                    link
+                                <el-icon
+                                    class="u-used-icon"
+                                    :class="{ 'is-used': scope.row.owner.used_by_self }"
                                     @click="onVirtualUsedClick(scope.row)"
-                                    >（标记使用）</el-button
-                                >
+                                    size="20"
+                                    :color="scope.row.owner.used_by_self ? '#67C23A' : ''"
+                                    ><CircleCheckFilled></CircleCheckFilled
+                                ></el-icon>
                             </template>
                         </el-table-column>
                         <el-table-column prop="activate_url" label="激活地址">
@@ -251,6 +254,7 @@
                                                 icon="View"
                                                 @click="getKeycode(scope.$index, scope.row)"
                                                 plain
+                                                size="small"
                                                 >点击查看</el-button
                                             >
                                             <el-button
@@ -258,6 +262,7 @@
                                                 v-if="scope.row.code"
                                                 link
                                                 icon="DocumentCopy"
+                                                size="small"
                                                 @click="copyToClipboard(scope.row.code)"
                                                 >复制卡密</el-button
                                             >
@@ -266,7 +271,7 @@
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column label="过期时间" width="200">
+                        <el-table-column label="过期时间" width="250">
                             <template #default="scope">
                                 <div class="u-time" v-if="scope.row.expire_at">
                                     <span class="u-tag" :class="compareTime(scope.row.expire_at, 'tag')">{{
@@ -281,13 +286,14 @@
                         <el-table-column prop="remark" label="备注" width="200"> </el-table-column>
                         <el-table-column prop="used_by_self" label="是否使用">
                             <template #default="scope">
-                                <span class="u-used" :class="{ 'is-used': scope.row.used_by_self }">{{
-                                    scope.row.used_by_self ? "是" : "否"
-                                }}</span>
-
-                                <el-button v-show="!scope.row.used_by_self" link @click="onKeyCodeUsedClick(scope.row)"
-                                    >（标记使用）</el-button
-                                >
+                                <el-icon
+                                    class="u-used-icon"
+                                    :class="{ 'is-used': scope.row.used_by_self }"
+                                    @click="onKeyCodeUsedClick(scope.row)"
+                                    size="20"
+                                    :color="scope.row.used_by_self ? '#67C23A' : ''"
+                                    ><CircleCheckFilled></CircleCheckFilled
+                                ></el-icon>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -534,6 +540,7 @@ export default {
 
         // 标记使用
         onKeyCodeUsedClick(row) {
+            if (row.used_by_self) return;
             this.$confirm("确认标记为已使用吗？", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
