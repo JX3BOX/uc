@@ -9,7 +9,7 @@
     <LeftSidebar class="m-dashboard-left">
         <Nav />
     </LeftSidebar>
-    <Main :withoutRight="true" class="m-dashboard-container">
+    <Main :withoutRight="true" class="m-dashboard-container p-dashboard">
         <router-view />
     </Main>
 </template>
@@ -44,6 +44,7 @@ export default {
 </script>
 
 <style lang="less">
+@import "~@/assets/css/dashboard/app.less";
 @import "~@/assets/css/dashboard/dashboard.less";
 @import "~@/assets/css/miniprogram.less";
 </style>

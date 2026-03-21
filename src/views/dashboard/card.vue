@@ -243,6 +243,7 @@
                                                 link
                                                 icon="DocumentCopy"
                                                 @click="copyToClipboard(scope.row.key)"
+                                                size="small"
                                                 >复制卡号</el-button
                                             >
                                         </div>
