@@ -20,6 +20,7 @@ jobs:
               run: |
                   npm install
                   npm run build:dev
+                  mv dist uc
 
             ## TODO:下方修改1处
             - name: GrayEnv
@@ -28,7 +29,7 @@ jobs:
                   host: ${{ secrets.HOST_NANJING2 }}
                   username: ${{ secrets.DEPLOY_USER }}
                   key: ${{ secrets.DEPLOY_KEY }}
-                  source: dist/*
+                  source: uc/*
                   target: /www/wwwroot/jx3box/test
                   timeout: 600s
                   command_timeout: 600s

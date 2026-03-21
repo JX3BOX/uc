@@ -82,7 +82,10 @@ const commonDomains = require("@jx3box/jx3box-common/data/jx3box.json");
 module.exports = {
     productionSourceMap: false,
     //❤️ define path for static files ~
-    publicPath: process.env.NODE_ENV === "development" ? "/" : process.env.STATIC_PATH + "/" + process.env.APP_NAME,
+    publicPath:
+        process.env.BUILD_PREVIEW ? "/" + process.env.APP_NAME :
+        process.env.NODE_ENV === "development" ? "/" :
+        process.env.STATIC_PATH + "/" + process.env.APP_NAME,
 
     //🌈多页面配置，详见 https://cli.vuejs.org/zh/config/#pages
     pages: pages,

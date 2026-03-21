@@ -68,6 +68,9 @@ export default {
             this.$refs.buyConfirm.isShow = true;
         }, 2000),
         addCart: throttle(function (e) {
+            if (!User.isLogin()) {
+                return User.toLogin();
+            }
             const num = this.$store.state.mall.cart?.find((item) => item.goods_id === this.good.id)?.amount || 0;
             if (1 + num > this.good.stock) {
                 return this.$message({
