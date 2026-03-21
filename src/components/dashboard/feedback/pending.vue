@@ -353,7 +353,7 @@ export default {
                         done();
                     }
                 },
-            });
+            }).catch(() => {});
         },
     },
     mounted() {

@@ -72,7 +72,7 @@ export default {
                                 message: res.data.msg || "注销失败",
                             });
                         });
-                });
+                }).catch(() => {})
             });
         },
         loadAlertInfo() {
