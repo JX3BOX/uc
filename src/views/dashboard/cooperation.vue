@@ -165,7 +165,7 @@ export default {
                                 callback();
                             }
                         },
-                        trigger: ["blur", "change"],
+                        trigger: "blur",
                     },
                 ],
             },
