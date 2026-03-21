@@ -78,6 +78,11 @@ export default {
     .u-notice-status {
         margin-left: 5px;
     }
+    .u-notice-box {
+        flex: 1;
+        justify-content: space-between !important;
+        max-width: 600px;
+    }
 }
 
 @media screen and (max-width: @phone) {
@@ -94,9 +99,6 @@ export default {
             flex-direction: column;
             padding: 0;
             gap: 10px;
-        }
-        .u-notice-box {
-            flex: 1;
         }
     }
 }

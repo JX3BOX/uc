@@ -124,9 +124,10 @@ export default {
 
 <style lang="less">
 .m-auth {
+    color:@color;
     .m-block {
         background-color: #fafbfc;
-        border: 1px solid @color-link;
+        border: 1px solid @v4primary;
         margin: 15px 15px 5px 15px;
         padding: 10px 10px 10px 30px;
         border-radius: 6px;

@@ -244,7 +244,6 @@
                                                 icon="DocumentCopy"
                                                 size="small"
                                                 @click="copyToClipboard(scope.row.key)"
-                                                size="small"
                                                 >复制卡号</el-button
                                             >
                                         </div>

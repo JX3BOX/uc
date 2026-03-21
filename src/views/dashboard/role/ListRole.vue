@@ -36,8 +36,8 @@
         <div class="m-team-rolelist" v-if="data && data.length">
             <ul class="u-list">
                 <li class="u-item" v-for="item in data" :key="item.ID" :class="{ auth: !item.custom }">
-                    <router-link :to="'/role/' + item.ID" class="u-pic u-avatar">
-                        <img :src="showAvatar(item.mount, item.body_type)" alt />
+                    <router-link :to="'/role/' + item.ID" class="u-avatar">
+                        <img class="u-pic" :src="showAvatar(item.mount, item.body_type)" alt />
                         <i class="u-status" v-if="!item.custom" title="已认证">
                             <img svg-inline src="@/assets/img/dashboard/verify.svg" />
                         </i>

@@ -15,24 +15,21 @@
         margin-bottom: 20px;
 
         &.auth .u-avatar {
-            border: 1px solid #0deb84;
+            border: 1px solid @v4primary;
             box-sizing: border-box;
         }
 
-        .u-pic {
+        .u-avatar {
             .db;
             .size(68px);
             border: 1px solid #eee;
             .pa;
-            .lt(0);
+            .lt(0,10px);
             background-color: #f5f7fa;
-            .r(2px);
         }
         .u-avatar {
-            // 带link
-            &:hover {
-                border-color: #ddd;
-            }
+            .r(50%);
+            overflow: hidden;
         }
         .u-status {
             .fz(12px);
@@ -47,7 +44,9 @@
                 .size(100%);
             }
             .pa;
-            .rt(3px);
+            .rt(5px);
+            .z(5);
+            .none;
         }
 
         .u-title {

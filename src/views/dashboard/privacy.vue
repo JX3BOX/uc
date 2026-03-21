@@ -54,23 +54,25 @@
                         </a>
                         <a class="u-item-name" :href="userLink(item)" target="_blank">{{ getName(item) }}</a>
                         <template v-if="active === 'whitelist'">
-                            <span class="u-item-remark" v-if="item.status">备注：{{ item.remark || "无" }}</span>
+                            <span class="u-item-remark" v-if="item.status">
+                                备注：{{ item.remark || "无" }}
+                                <i class="el-icon-edit-outline u-btn-edit" @click="edit(item.kith_id, item)"></i>
+                            </span>
                             <span class="u-item-remark" v-else> <i class="el-icon-loading"></i> 等待确认中... </span>
                         </template>
                         <div class="u-item-btns">
                             <template v-if="active === 'whitelist'">
                                 <el-popconfirm title="确认删除亲友关系吗？" @confirm="remove(item.kith_id, i)">
                                     <template #reference>
-                                        <el-button type="warning" icon="Delete">删除</el-button>
+                                        <el-button icon="Delete" size="small">移除</el-button>
                                     </template>
                                 </el-popconfirm>
-
-                                <el-button @click="edit(item.kith_id, item)" icon="Edit" class="u-btn-edit"
+                                <!-- <el-button @click="edit(item.kith_id, item)" icon="Edit" class="u-btn-edit" size="small" type="warning" 
                                     >编辑</el-button
-                                >
+                                > -->
                             </template>
                             <template v-else>
-                                <el-button @click="removeOther(item)" icon="Delete" class="u-btn-delete"
+                                <el-button @click="removeOther(item)" icon="Delete" class="u-btn-delete" size="small"
                                     >移除</el-button
                                 >
                             </template>
@@ -490,16 +492,18 @@ export default {
             this.$prompt("请输入备注", "设置", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
-            }).then(({ value }) => {
-                editKith(kith_id, { remark: value }).then(() => {
-                    this.$notify({
-                        title: "成功",
-                        message: "编辑成功",
-                        type: "success",
+            })
+                .then(({ value }) => {
+                    editKith(kith_id, { remark: value }).then(() => {
+                        this.$notify({
+                            title: "成功",
+                            message: "编辑成功",
+                            type: "success",
+                        });
+                        item.remark = value;
                     });
-                    item.remark = value;
-                });
-            }).catch(() => {});
+                })
+                .catch(() => {});
         },
         // 移除
         removeOther(item) {
