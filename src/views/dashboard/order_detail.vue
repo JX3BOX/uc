@@ -98,7 +98,7 @@
                 v-model="dialogVisible"
                 width="30%"
                 :before-close="close"
-                custom-class="m-edit-dialog"
+                class="m-edit-dialog"
             >
                 <template v-if="mode == 'address'">
                     <el-form ref="address_form" :model="address_form" :rules="address_rules" class="demo-form-inline">

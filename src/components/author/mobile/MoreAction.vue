@@ -3,7 +3,7 @@
         v-model="showValue"
         :show-close="false"
         :with-header="false"
-        custom-class="simple-more-action-drawer"
+        class="simple-more-action-drawer"
         size="400"
         style="width: 100%"
         direction="btt"

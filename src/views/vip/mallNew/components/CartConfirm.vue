@@ -3,7 +3,7 @@
         v-model="$store.state.mallNew.cartConfirmIsShow"
         width="412px"
         :show-close="false"
-        custom-class="m-cart-confirm"
+        class="m-cart-confirm"
     >
         <div class="content">
             <div class="title">购物车结算</div>
@@ -51,8 +51,8 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
- :deep(.m-cart-confirm) {
+<style lang="less">
+.m-cart-confirm {
     .el-dialog__header {
         padding: 0;
     }

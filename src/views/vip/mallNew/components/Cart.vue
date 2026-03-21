@@ -40,11 +40,11 @@
                                 :min="1"
                                 v-if="item.goods.category === 'virtual' && item.goods.sub_category === 'palu'"
                             ></el-input-number>
-                            <span v-if="item.goods.price_points" style="color: rgba(116, 120, 237, 1)">
+                            <span class="u-price" v-if="item.goods.price_points" >
                                 <img src="@/assets/img/vip/vip2/points.svg" alt="" class="icon" svg-inline />
                                 {{ item.goods.price_points }}
                             </span>
-                            <span v-if="item.goods.price_boxcoin" style="color: rgba(42, 130, 228, 1)">
+                            <span class="u-price" v-if="item.goods.price_boxcoin" >
                                 <img src="@/assets/img/vip/vip2/box_icon.svg" alt="" class="icon" svg-inline />
                                 {{ item.goods.price_boxcoin }}
                             </span>
@@ -323,6 +323,9 @@ export default {
                                 }
                             }
                         }
+                    }
+                    .u-price {
+                    color: rgba(116, 120, 237, 1);display: inline-flex;align-items: center;gap: 4px;
                     }
                 }
                 .delete {

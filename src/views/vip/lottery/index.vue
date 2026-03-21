@@ -62,7 +62,7 @@
                                     width="80%"
                                     :before-close="() => (preview = false)"
                                     :append-to-body="true"
-                                    custom-class="m-preview-dialog"
+                                    class="m-preview-dialog"
                                 >
                                     <div class="m-preview">
                                         <a

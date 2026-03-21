@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="isShow" :show-close="false" custom-class="m-cart-confirm">
+    <el-dialog v-model="isShow" :show-close="false" class="m-cart-confirm">
         <div class="content">
             <div class="title">购物车结算</div>
             <div class="text">

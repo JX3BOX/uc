@@ -23,7 +23,7 @@
             title="绑定微信公众号"
             v-model="visible"
             :width="isPhone ? '95%' : '400px'"
-            custom-class="m-notice-wechat__dialog"
+            class="m-notice-wechat__dialog"
             :before-close="handleClose"
         >
             <div class="m-wechat-content" v-loading="loading">

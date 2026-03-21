@@ -1,11 +1,10 @@
 <template>
     <el-dialog
-        class="c-large-dialog"
+        class="c-large-dialog m-skill-dialog"
         v-model="dialogVisible"
         @close="close"
         title="技能库"
         append-to-body
-        custom-class="m-skill-dialog"
     >
         <el-tabs v-model="activeName" type="card" class="m-skill-tabs">
             <el-tab-pane label="门派武学" name="special">

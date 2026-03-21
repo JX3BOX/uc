@@ -35,7 +35,7 @@
             v-model="showMiniProgram"
             title="绑定微信小程序"
             :width="isPhone ? '95%' : '400px'"
-            custom-class="m-qrcode-dialog"
+            class="m-qrcode-dialog"
             :show-close="false"
         >
             <div class="m-qr-content">

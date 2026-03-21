@@ -41,7 +41,7 @@
                 </el-table>
             </div>
             <!-- 地址表单 -->
-            <el-dialog custom-class="m-address-dialog" v-model="visible" title="我的地址" width="750px">
+            <el-dialog class="m-address-dialog" v-model="visible" title="我的地址" width="750px">
                 <el-form :model="form" :rules="rules" ref="ruleForm" label-position="top">
                     <el-form-item label="联系人" prop="contact_name">
                         <el-input placeholder="请输入名称" v-model="form.contact_name"></el-input>

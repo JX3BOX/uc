@@ -5,7 +5,7 @@
         @close="onClose"
         title="添加技能"
         append-to-body
-        custom-class="m-publish-wujie-skill"
+        class="m-publish-wujie-skill"
     >
         <pvp-martial :subtype="subtype" :platform="platform" @selectSkill="selectSkill"></pvp-martial>
         <el-divider content-position="left">已选技能</el-divider>

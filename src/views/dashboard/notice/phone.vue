@@ -13,7 +13,7 @@
             title="绑定手机"
             v-model="visible"
             :width="isPhone ? '95%' : '400px'"
-            custom-class="m-notice-phone__dialog"
+            class="m-notice-phone__dialog"
             :before-close="handleClose"
             :close-on-click-modal="false"
         >

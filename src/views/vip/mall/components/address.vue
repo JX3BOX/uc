@@ -3,7 +3,7 @@
         title="切换地址"
         v-model="show"
         width="60%"
-        custom-class="m-goods-address"
+        class="m-goods-address"
         :before-close="close"
         append-to-body
     >
