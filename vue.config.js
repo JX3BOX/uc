@@ -80,6 +80,7 @@ const webpack = require("webpack");
 const commonDomains = require("@jx3box/jx3box-common/data/jx3box.json");
 
 module.exports = {
+    productionSourceMap: false,
     //❤️ define path for static files ~
     publicPath: process.env.NODE_ENV === "development" ? "/" : process.env.STATIC_PATH + "/" + process.env.APP_NAME,
 
