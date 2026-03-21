@@ -36,7 +36,6 @@ export default {
         box-sizing: border-box;
         padding: 5px;
         position: relative;
-        top: -2px;
         .mr(3px);
     }
     .u-desc {
