@@ -11,7 +11,7 @@
                     action="upload/avatar"
                     :auto-upload="false"
                 >
-                    <i class="el-icon-upload"></i>
+                    <el-icon class="el-icon--upload"><upload-filled /></el-icon>
                     <div class="el-upload__text">
                         将文件拖到此处，或
                         <em>点击上传</em>
