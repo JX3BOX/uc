@@ -21,6 +21,14 @@
         "11": "已关闭",
         "12": "已结单"
     },
+    "statusTypes": {
+        "0": "danger",
+        "1": "warning",
+        "2": "primary",
+        "10": "success",
+        "11": "info",
+        "12": "info"
+    },
     "statusColors": {
         "0": "#F56C6C",
         "1": "#E6A23C",

@@ -3,9 +3,7 @@
         <el-table :data="data" highlight-current-row row-class-name="u-row" @row-click="viewFeedback" size="large">
             <el-table-column label="状态" prop="status" width="100">
                 <template #default="{ row }">
-                    <span class="u-status" :style="{ backgroundColor: statusColors[row.status] }">{{
-                        statusMap[row.status]
-                    }}</span>
+                    <el-tag :type="statusTypes[row.status]" size="small">{{ statusMap[row.status] }}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="客户端" prop="client" width="100">
@@ -46,7 +44,7 @@
 <script>
 import { getFeedbackList } from "@/service/dashboard/feedback";
 import feedbackData from "@/assets/data/dashboard/feedback.json";
-const { types, subtypes, statusMap, statusColors } = feedbackData;
+const { types, subtypes, statusMap, statusColors, statusTypes } = feedbackData;
 import { __clients } from "@/utils/config";
 import moment from "moment";
 export default {
@@ -63,6 +61,7 @@ export default {
             subtypes,
             statusMap,
             statusColors,
+            statusTypes,
         };
     },
     mounted() {

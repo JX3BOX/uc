@@ -50,9 +50,10 @@
                     :filter-multiple="false"
                 >
                     <template #default="{ row }">
-                        <span class="u-status" :style="{ backgroundColor: statusColors[row.status] }">{{
+                        <el-tag :type="statusTypes[row.status]" size="small">{{ statusMap[row.status] }}</el-tag>
+                        <!-- <span class="u-status" :style="{ backgroundColor: statusColors[row.status] }">{{
                             statusMap[row.status]
-                        }}</span>
+                        }}</span> -->
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -150,7 +151,7 @@
 <script>
 import { getMiscfeedback, getTeammates, updateFeedback } from "@/service/dashboard/feedback";
 import feedbackData from "@/assets/data/dashboard/feedback.json";
-const { types, subtypes, statusMap, statusColors, filterOptions } = feedbackData;
+const { types, subtypes, statusMap, statusColors, statusTypes, filterOptions } = feedbackData;
 import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
 import moment from "moment";
@@ -181,6 +182,7 @@ export default {
             subtypes,
             statusMap,
             statusColors,
+            statusTypes,
 
             isEditor: false,
             onlyMe: true,
