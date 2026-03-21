@@ -40,6 +40,7 @@
                 row-class-name="u-row"
                 @filter-change="filterChange"
                 stripe
+                size="large"
             >
                 <el-table-column
                     label="状态"
@@ -123,7 +124,7 @@
                         {{ formatTime(row.created_at) }}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="100">
+                <el-table-column label="操作" width="120">
                     <template #default="{ row }">
                         <el-tooltip :content="row.content" placement="top" popper-class="m-content-popover">
                             <el-button type="primary" link size="small">查看</el-button>
@@ -381,10 +382,10 @@ export default {
         padding: 2px 5px;
         .r(2px);
     }
-    .u-client {
-        padding: 2px 5px;
-        .r(2px);
-    }
+    // .u-client {
+    //     padding: 2px 5px;
+    //     .r(2px);
+    // }
 
     .m-assign {
         display: flex;
@@ -394,7 +395,6 @@ export default {
         .u-assign {
             display: flex;
             align-items: center;
-            color: var(--el-color-primary);
             .u-assign-avatar {
                 .size(24px);
                 .r(100%);

@@ -1,6 +1,6 @@
 <template>
     <div class="m-feedback-list" v-loading="loading">
-        <el-table :data="data" highlight-current-row row-class-name="u-row" @row-click="viewFeedback">
+        <el-table :data="data" highlight-current-row row-class-name="u-row" @row-click="viewFeedback" size="large">
             <el-table-column label="状态" prop="status" width="100">
                 <template #default="{ row }">
                     <span class="u-status" :style="{ backgroundColor: statusColors[row.status] }">{{
@@ -13,7 +13,7 @@
                     <span class="u-client" :class="'i-client-' + row.client">{{ formatClient(row.client) }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="来源" prop="type" width="200">
+            <el-table-column label="来源/类型" prop="type" width="200">
                 <template #default="{ row }">
                     {{ `${types[row.type]} - ${subtypes[row.subtype]}` }}
                 </template>
@@ -26,7 +26,7 @@
             </el-table-column>
             <el-table-column label="操作" width="100">
                 <template #default>
-                    <el-button link>查看</el-button>
+                    <el-button size="small" plain icon="View">查看</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -115,7 +115,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .m-feedback-list {
     display: flex;
     flex-direction: column;
@@ -132,8 +132,8 @@ export default {
         .r(2px);
     }
     .u-client {
-        padding: 2px 5px;
-        .r(2px);
+        padding: 3px 8px;
+        .r(3px);
     }
 }
 </style>

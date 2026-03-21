@@ -95,6 +95,7 @@ export default {
 <style lang="less" scoped>
 .m-feedback-erase {
     padding-bottom: 20px;
+    
     .m-feedback-article {
         padding: 20px;
         font-size: 14px;
@@ -105,6 +106,7 @@ export default {
         .x;
         font-size: 28px;
         font-weight: bold;
+        color:@color;
     }
 
     .u-tips {

@@ -58,7 +58,7 @@ export default {
 
             &:hover {
                 .u-home-icon {
-                    fill: @primary;
+                    fill: @v4primary;
                 }
             }
         }
