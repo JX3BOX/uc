@@ -242,6 +242,7 @@
                                                 v-if="scope.row.key"
                                                 link
                                                 icon="DocumentCopy"
+                                                size="small"
                                                 @click="copyToClipboard(scope.row.key)"
                                                 >复制卡号</el-button
                                             >
@@ -488,7 +489,7 @@ export default {
                     row.key = key;
                     this.list[index] = row;
                 });
-            });
+            }).catch(() => {});
         },
         //  获取单个激活码
         getSn(index, row) {
@@ -501,7 +502,7 @@ export default {
                     row.code = res.data.data.sn;
                     this.list[index] = row;
                 });
-            });
+            }).catch(() => {});
         },
         // 获取虚拟卡密
         getVirtualCode(index, row) {
@@ -521,7 +522,7 @@ export default {
                         return item;
                     });
                 });
-            });
+            }).catch(() => {});
         },
         // 判断过期时间
         compareTime(date, type) {
@@ -558,6 +559,7 @@ export default {
                 .catch(() => {});
         },
         onSnUsedClick(row) {
+            if (row.used_by_self) return;
             this.$confirm("确认标记为已使用吗？", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
@@ -575,6 +577,7 @@ export default {
                 .catch(() => {});
         },
         onVirtualUsedClick(row) {
+            if (row.owner.used_by_self) return;
             this.$confirm("确认标记为已使用吗？", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",

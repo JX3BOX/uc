@@ -499,7 +499,7 @@ export default {
                     });
                     item.remark = value;
                 });
-            });
+            }).catch(() => {});
         },
         // 移除
         removeOther(item) {

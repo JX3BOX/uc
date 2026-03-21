@@ -100,7 +100,7 @@ export default {
                         type: "success",
                     });
                 });
-            });
+            }).catch(() => {});
         },
         remove: function (item, i) {
             removeUnionAuthor(this.id, item.post_author_info.ID).then((res) => {
