@@ -21,7 +21,7 @@
                     <a
                         href="/vip/namespace?from=dashboard_namespace_create"
                         target="_blank"
-                        class="u-btn-buy el-button el-button--primary el-button--mini"
+                        class="u-btn-buy el-button el-button--primary el-button--small"
                     >
                         <span class="el-icon-shopping-cart-2"></span>购买铭牌
                     </a>

@@ -62,6 +62,7 @@
                     :disabled="!canSubmit"
                     @click="submit"
                     :loading="loading"
+                    size="large"
                     >提交</el-button
                 >
             </div>
@@ -259,6 +260,11 @@ export default {
             margin-left: 10px;
         }
     }
+}
+.m-feedback-visible{
+    .fz(13px);
+    .flex(y);
+    justify-content: flex-end;
 }
 .m-feedback-visible,
 .m-feedback-btn {

@@ -2,7 +2,7 @@
     <div class="m-publish-collection-relation">
         <h5 class="u-schema">
             <!-- <span class="u-label">关联小册</span> -->
-            <a class="u-add el-button el-button--primary el-button--mini" href="/publish/#/collection" target="_blank"
+            <a class="u-add el-button el-button--primary el-button--small" href="/publish/#/collection" target="_blank"
                 >+ 创建小册</a
             >
             <slot></slot>

@@ -22,6 +22,12 @@
 
         border: 1px solid #a6a6a6;
         .x;
+        .fz(14px,2);
+        color:@color;
+    }
+
+    .u-demo{
+        margin-top:20px;
     }
 
     .u-step-img {
@@ -85,7 +91,9 @@
     .u-avatar {
         .size(100px);
         border-radius: 50%;
-        border: 4px solid @v4primary;
+        border: 1px solid @v4primary;
+        outline: 1px dashed @v4primary;
+        outline-offset: 4px;
     }
 
     .u-subtitle {
@@ -127,9 +135,10 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 6px 8px 6px 8px;
+            padding: 4px 10px;
             color: #fff;
-            font-size: 16px;
+            font-size: 12px;
+            line-height: 16px;
             .pa;
             top: 2px;
             right: -10px;
@@ -137,9 +146,10 @@
     }
 
     .u-name {
-        color: #383838;
         .pointer;
         margin-top: 12px;
+        .bold;
+        // color:@v4primary;
     }
 
     .u-sync-header {

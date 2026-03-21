@@ -3,7 +3,7 @@
         <h2 class="u-title">
             <i class="el-icon-connection"></i> 绑定角色
             <!-- <div class="u-op">
-                <router-link to="/role/add" class="el-button el-button--primary el-button--mini">
+                <router-link to="/role/add" class="el-button el-button--primary el-button--small">
                     <i class="el-icon-plus"></i> 自定义角色
                 </router-link>
             </div> -->
@@ -38,7 +38,7 @@
                         <span class="u-link-text"
                             ><img src="@/assets/img/dashboard/link.svg" alt="" />当前魔盒账号已绑定角色：</span
                         >
-                        <el-button @click="toMoreRoles">更多角色</el-button>
+                        <el-button @click="toMoreRoles" icon="ArrowRight">更多角色</el-button>
                     </div>
                     <ul class="u-roles">
                         <router-link

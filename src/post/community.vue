@@ -28,7 +28,7 @@
                         <i class="el-icon-question"></i>
                     </el-tooltip>
                     <a
-                        class="u-buy el-button el-button--primary el-button--mini is-round"
+                        class="u-buy el-button el-button--primary el-button--small is-round"
                         href="/vip/mall/list?category=virtual&sub_category=palu"
                         target="_blank"
                         ><i class="el-icon-shopping-cart-full"></i> 兑换魔卡</a

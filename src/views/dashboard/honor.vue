@@ -3,7 +3,7 @@
     <uc class="m-dashboard-honor m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tab-list="tabList">
         <template #header>
             <a
-                class="u-link el-button el-button--default el-button--mini is-round is-plain"
+                class="u-link el-button el-button--default el-button--small is-round is-plain"
                 href="/vip/mall?category=virtual"
                 target="_blank"
                 ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a

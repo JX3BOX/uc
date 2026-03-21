@@ -5,7 +5,7 @@
             <!-- <div class="u-op" v-if="data && isCustom && hasRight">
                 <router-link
                     :to="'/role/edit/' + id"
-                    class="el-button el-button--primary el-button--mini"
+                    class="el-button el-button--primary el-button--small"
                 >
                     <i class="el-icon-edit-outline"></i> 编辑角色
                 </router-link>
@@ -25,8 +25,29 @@
                 <RoleAvatar class="u-avatar" :mount="data.mount" :body_type="data.body_type" />
                 <div class="u-meta u-name">
                     <!-- <em>角色名</em> -->
-                    <img v-if="!~~data.custom" class="u-verify" svg-inline src="@/assets/img/dashboard/verify.svg" />
+                    <!-- <img v-if="!~~data.custom" class="u-verify" svg-inline src="@/assets/img/dashboard/verify.svg" /> -->
                     {{ data.name }}
+                </div>
+                <div class="u-meta">
+                    <span class="u-remark">
+                        <!-- <em>备注</em> -->
+                        {{ data.note || "-" }}
+                    </span>
+                </div>
+                <div class="u-meta">
+                    <span class="u-server">
+                        <em>服务器</em>
+                        {{ data.server }}
+                    </span>
+                    <span class="u-school">
+                        <em>门派</em>
+                        <img class="u-icon" :src="showSchoolIcon(data.mount)" />
+                        {{ showSchoolName(data.mount) }}
+                    </span>
+                    <span class="u-body">
+                        <em>体型</em>
+                        {{ showBodyType(data.body_type) }}
+                    </span>
                 </div>
                 <div class="u-meta">
                     <span class="u-author">
@@ -40,25 +61,6 @@
                         <a class="u-author-name" :href="authorLink(data.uid)" target="_blank">
                             {{ data.display_name }}
                         </a>
-                    </span>
-                    <span class="u-server">
-                        <em>服务器</em>
-                        {{ data.server }}
-                    </span>
-                    <span class="u-school">
-                        <em>门派</em>
-                        {{ showSchoolName(data.mount) }}
-                        <img class="u-icon" :src="showSchoolIcon(data.mount)" />
-                    </span>
-                    <span class="u-body">
-                        <em>体型</em>
-                        {{ showBodyType(data.body_type) }}
-                    </span>
-                </div>
-                <div class="u-meta">
-                    <span class="u-remark">
-                        <em>备注</em>
-                        {{ data.note || "-" }}
                     </span>
                     <span class="u-remark">
                         <em>绑定于</em>

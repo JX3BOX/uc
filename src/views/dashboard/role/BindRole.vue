@@ -3,7 +3,7 @@
         <h2 class="u-title">
             <i class="el-icon-connection"></i> 绑定角色
             <!-- <div class="u-op">
-                <router-link to="/role/add" class="el-button el-button--primary el-button--mini">
+                <router-link to="/role/add" class="el-button el-button--primary el-button--small">
                     <i class="el-icon-plus"></i> 自定义角色
                 </router-link>
             </div> -->

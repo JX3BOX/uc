@@ -2,7 +2,7 @@
     <uc class="m-dashboard-frame m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tab-list="tabList">
         <template #header>
             <a
-                class="u-link el-button el-button--default el-button--mini is-round is-plain"
+                class="u-link el-button el-button--default el-button--small is-round is-plain"
                 href="/vip/mall?category=virtual"
                 target="_blank"
                 ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
@@ -12,7 +12,7 @@
             <!-- 左右两侧 -->
             <div class="m-frame-left">
                 <a
-                    class="u-btn el-button el-button--default el-button--mini is-plain"
+                    class="u-btn el-button el-button--default el-button--small is-plain"
                     href="/dashboard/avatar"
                     target="_blank"
                     ><i class="el-icon-picture-outline-round"></i> 修改头像</a

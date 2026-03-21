@@ -9,7 +9,7 @@
         <el-button
             v-if="isWechatVerified"
             class="u-bind-button"
-            type="danger"
+            type="info"
             icon="Connection"
             @click="unbind"
             :circle="isPhone"

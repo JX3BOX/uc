@@ -19,7 +19,7 @@
                         type="primary"
                         @click.stop="onDeal"
                     >
-                        <i class="el-icon-s-tools"></i>
+                        <i class="el-icon-s-tools"></i> 
                         {{ statusText(data.status) }}
                         <template #dropdown>
                             <el-dropdown-menu>
@@ -145,7 +145,7 @@
                 <div class="m-feedback-thx">
                     <el-divider content-position="left"
                         ><i class="el-icon-coin"></i> 反馈回馈
-                        <el-button v-if="isAdmin" class="u-thx-trigger" type="success" @click="onThx"
+                        <el-button v-if="isAdmin" class="u-thx-trigger" type="success" @click="onThx" size="small"
                             >品鉴</el-button
                         ></el-divider
                     >

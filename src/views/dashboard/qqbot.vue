@@ -5,7 +5,7 @@
             <span class="u-status"> QQ机器人 </span>
         </span>
         <el-button type="primary" @click="bind" size="large" v-if="!checkStatus"> 立即绑定 </el-button>
-        <el-button v-else @click="unbind" size="large" type="danger">解除绑定
+        <el-button v-else @click="unbind" size="large" type="info">解除绑定
         </el-button>
 
         <el-dialog

@@ -15,8 +15,8 @@
                     >双端：<b>{{ total_all }}</b></span
                 >
             </span>
-            <!-- <a class="el-button u-btn el-button--primary el-button--mini" href="/vip/boxcoin" target="_blank">充值</a> -->
-            <el-button class="u-btn" type="primary" @click="togglePullBox" :disabled="!money">兑换</el-button>
+            <!-- <a class="el-button u-btn el-button--primary el-button--small" href="/vip/boxcoin" target="_blank">充值</a> -->
+            <el-button class="u-btn" type="primary" size="small" @click="togglePullBox" :disabled="!money">兑换</el-button>
         </div>
         <div class="m-credit-pull" v-if="showPullBox">
             <el-alert class="m-boxcoin-ac" type="error" show-icon :closable="false" v-if="breadcrumb">

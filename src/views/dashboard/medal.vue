@@ -2,7 +2,7 @@
     <uc class="m-dashboard-medal m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tab-list="tabList">
         <template #header>
             <a
-                class="u-link el-button el-button--default el-button--mini is-round is-plain"
+                class="u-link el-button el-button--default el-button--small is-round is-plain"
                 href="/vip/mall?category=virtual"
                 target="_blank"
                 ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
@@ -19,9 +19,10 @@
                         @click="onIsWearChange(item)"
                         :type="item.is_wear ? 'info' : 'primary'"
                         :plain="!!item.is_wear"
+                        size="small"
                     >
-                        <i :class="item.is_wear ? 'el-icon-help' : 'el-icon-s-help'"></i>
-                        {{ item.is_wear ? " 卸下" : " 佩戴" }}
+                        <!-- <i :class="item.is_wear ? 'el-icon-help' : 'el-icon-s-help'"></i> -->
+                        {{ item.is_wear ? "卸下" : "佩戴" }}
                     </el-button>
                 </div>
             </div>

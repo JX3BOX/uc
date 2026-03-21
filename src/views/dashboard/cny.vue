@@ -5,7 +5,7 @@
         <div class="m-credit-total m-packet-total">
             余额 :
             <b :class="{ hasLeft: hasLeft }">{{ money }}</b>
-            <!-- <a class="el-button u-btn el-button--primary el-button--mini" href="/vip/cny" target="_blank">充值</a> -->
+            <!-- <a class="el-button u-btn el-button--primary el-button--small" href="/vip/cny" target="_blank">充值</a> -->
             <!-- <el-button class="u-btn" type="primary" @click="togglePullBox"  :disabled="!money"
                 >提现</el-button
             > -->
