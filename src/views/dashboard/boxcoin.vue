@@ -139,7 +139,9 @@
                                 <td>{{ item.account }}</td>
                                 <td>{{ item.email }}</td>
                                 <td :class="statusClass(item)">
-                                    {{ formatHistoryStatus(item) }}
+                                    <el-tag :type="tagColor(item)" size="small">
+                                        {{ formatHistoryStatus(item) }}
+                                    </el-tag>
                                 </td>
                                 <td>{{ item.remark }}</td>
                                 <td>{{ formatDate(item.created_at) }}</td>
@@ -456,6 +458,15 @@ export default {
             if (status == 1) {
                 if (received_in_game == 1) return "isFinished";
                 return "isProcessing";
+            }
+        },
+        tagColor(item) {
+            const { status, received_in_game } = item;
+            if (status == 0) return "warning";
+            if (status == 2) return "danger";
+            if (status == 1) {
+                if (received_in_game == 1) return "success";
+                return "warning";
             }
         },
         toPositiveNumber: function (val) {
