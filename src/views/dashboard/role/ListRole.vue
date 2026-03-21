@@ -5,7 +5,7 @@
             <!-- <goback /> -->
             <div class="u-op">
                 <router-link to="/role/bind" class="el-button el-button--primary el-button--default">
-                    <i class="el-icon-connection"></i> 绑定角色
+                    <i class="el-icon-connection"></i>&nbsp;绑定角色
                 </router-link>
                 <!-- <router-link to="/role/sync" class="el-button el-button--primary el-button--mini">
                     <i class="el-icon-refresh"></i> 同步数据

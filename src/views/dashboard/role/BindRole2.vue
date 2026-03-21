@@ -1,5 +1,14 @@
 <template>
     <div class="v-bind-role2">
+        <h2 class="u-title">
+            <i class="el-icon-connection"></i> 绑定角色
+            <!-- <div class="u-op">
+                <router-link to="/role/add" class="el-button el-button--primary el-button--mini">
+                    <i class="el-icon-plus"></i> 自定义角色
+                </router-link>
+            </div> -->
+            <el-button class="u-back" icon="ArrowLeft" @click="goBack">返回</el-button>
+        </h2>
         <div class="m-steps">
             <!-- STEP 1 -->
             <div class="m-step is-1">
@@ -146,6 +155,9 @@ export default {
         toMoreRoles() {
             const path = this.$router.resolve({ path: "/role" });
             window.open(path.href, "_blank");
+        },
+        goBack: function () {
+            this.$router.push("/role");
         },
     },
 };
