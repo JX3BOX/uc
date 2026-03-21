@@ -209,17 +209,18 @@ export default {
         .pr;
 
         &.is-select {
-            background-color: rgba(64, 128, 255, 1);
+            background-color: lighten(@v4primary, 30%);
+            border-color:@v4primary;
 
-            .u-name {
-                color: white;
-            }
+            // .u-name {
+            //     color: white;
+            // }
         }
         &:hover {
-            border-color: rgba(64, 128, 255, 1);
+            border-color: @v4primary;
 
             &.is-not-owned .u-go-buy {
-                background-color: rgba(64, 128, 255, 1);
+                background-color: @v4primary;
             }
         }
         .u-check {

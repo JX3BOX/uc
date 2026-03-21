@@ -189,7 +189,7 @@ export default {
             box-sizing: border-box;
             &:hover,
             &.active {
-                border: 1px solid #4080ff;
+                border: 1px solid @v4primary;
                 background: linear-gradient(180deg, #e0ebff 0%, #ffffff 50%);
             }
             &.year:hover,
@@ -311,10 +311,10 @@ export default {
         .r(4px);
         .fz(18px,80px);
         color: #fff;
-        background: linear-gradient(360deg, #4080ff 0%, #4080ff 100%);
+        background: linear-gradient(360deg, @v4primary 0%, @v4primary 100%);
         transition: 0.2s ease-in-out;
         &:hover {
-            background: linear-gradient(360deg, #7accff 0%, #4080ff 100%);
+            background: linear-gradient(360deg, #7accff 0%, @v4primary 100%);
         }
     }
 }

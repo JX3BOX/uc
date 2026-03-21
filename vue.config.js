@@ -1,22 +1,42 @@
 const pages = {
+    // root 入口：避免直接访问 `/` 时命中 public/index.html（未经过 HtmlWebpackPlugin 渲染）
+    // 从而出现 `<%= BASE_URL %>` 这类占位符导致的 400 Bad Request
+    index: {
+        title: "个人中心 - JX3BOX",
+        entry: "src/pages/index/index.js",
+        template: "public/index.html",
+        filename: "index.html",
+    },
     dashboard: {
         title: "个人中心 - JX3BOX",
         entry: "src/pages/dashboard/index.js",
         template: "public/index.html",
         filename: "dashboard/index.html",
     },
+
+    
     publish: {
         title: "发布中心 - JX3BOX",
         entry: "src/pages/publish/index.js",
         template: "public/index.html",
         filename: "publish/index.html",
     },
+
+
     author: {
         title: "作者 - JX3BOX",
         entry: "src/pages/author/index.js",
         template: "public/index.html",
         filename: "author/index.html",
     },
+    card: {
+        title: "贺卡 - JX3BOX",
+        entry: "src/pages/card/index.js",
+        template: "public/app.html",
+        filename: "card/index.html",
+    },
+
+
     vip: {
         title: "会员中心 - JX3BOX",
         entry: "src/pages/vip/index.js",
@@ -24,7 +44,7 @@ const pages = {
         filename: "vip/index.html",
     },
 
-    // // account
+    // account
     login: {
         title: "登录 - JX3BOX",
         entry: "src/pages/account/login/login.js",
@@ -67,17 +87,18 @@ const pages = {
         template: "public/app.html",
         filename: "register_callback/index.html",
     },
-    card: {
-        title: "贺卡 - JX3BOX",
-        entry: "src/pages/card/index.js",
-        template: "public/app.html",
-        filename: "card/index.html",
-    },
 };
 
 const path = require("path");
+const events = require("events");
 const webpack = require("webpack");
 const commonDomains = require("@jx3box/jx3box-common/data/jx3box.json");
+
+// devServer proxy 会给 Server 挂多个 upgrade listener；条目多时会触发 Node 的 MaxListeners 告警
+// 这里只提高开发环境的默认上限，避免误报（不影响功能）
+if (String(process.env.NODE_ENV).toLowerCase() === "development") {
+    events.defaultMaxListeners = Math.max(events.defaultMaxListeners || 10, 50);
+}
 
 module.exports = {
     productionSourceMap: false,

@@ -5,7 +5,7 @@
                 <div class="u-value">
                     {{ nickname }}
                     <a
-                        class="u-edit el-button el-button--primary el-button--mini"
+                        class="u-edit el-button el-button--primary el-button--small"
                         href="/vip/rename?from=dashboard_profile"
                         target="_blank"
                     >
@@ -120,7 +120,7 @@
             </el-form-item>
 
             <el-form-item class="u-btns" label>
-                <el-button type="primary" class="u-submit" @click="submit">提交</el-button>
+                <el-button type="primary" class="u-submit" @click="submit" size="large">提交</el-button>
             </el-form-item>
         </el-form>
     </uc>

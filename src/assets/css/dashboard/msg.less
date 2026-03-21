@@ -33,15 +33,17 @@
         display: inline-flex;
         gap: 3px;
         align-items: center;
-        color:@color-link;
+        color:@v4primary;
         &:hover {
             color: @pink;
         }
     }
     .u-msg-link {
         .ml(10px);
+        color:@v4primary;
         &:hover {
-            color: @pink;
+            // color: @pink;
+            .underline(@v4primary);
         }
     }
 

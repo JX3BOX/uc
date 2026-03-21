@@ -15,10 +15,11 @@
         .u-name {
             margin: 0;
             padding: 20px 0 0 0;
-            .fz(2em, 48px);
+            .fz(32px, 32px);
             font-weight: 300;
             .flex;
             align-items: center;
+            margin-bottom: 6px;
         }
         .u-name-txt {
             .mr(2px);
@@ -53,7 +54,7 @@
             align-items: center;
             gap: 3px;
             a {
-                color: @color-link;
+                color: @v4primary;
                 &:hover {
                     text-decoration: underline;
                 }
@@ -108,9 +109,11 @@
         }
         .u-name-meta {
             .pr;
-            top: -5px;
+            // top: -5px;
             .flex;
-            align-items: center;
+            align-items: flex-end;
+            padding-bottom: 5px;
+            box-sizing: border-box;
         }
         .u-superauth {
             // margin-left: 5px;
@@ -118,7 +121,7 @@
             // align-items: center;
             img {
                 width: 16px;
-                vertical-align: -2px;
+                // vertical-align: -2px;
             }
         }
 
@@ -285,7 +288,7 @@
     .mt(20px);
 
     .u-title {
-        font-size: 14px;
+        font-size: 14px !important;
         padding: 8px 10px;
         background-color: @bg-light;
         border-radius: 4px;
@@ -331,7 +334,7 @@
         }
     }
     .u-link {
-        .underline(@color-link);
+        .underline(@v4primary);
         .ml(5px);
     }
 
@@ -364,7 +367,7 @@
         }
         i {
             font-size: 16px;
-            .y;
+            // .y;
         }
     }
 

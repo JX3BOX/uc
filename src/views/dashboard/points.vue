@@ -6,7 +6,7 @@
             <b :class="money > 0 ? 'u-have' : ''" class="u-num">{{ money }}</b>
             <a class="el-button u-btn el-button--primary el-button--mini" href="/vip/mall" target="_blank">兑换</a>
         </div>
-        <el-tabs class="m-tabs" type="border-card" v-model="tab_value" @tab-change="changeTab">
+        <el-tabs class="m-tabs" type="border-card" v-model="tab_value" @tab-change="changeTab" >
             <!-- 积分记录 -->
             <el-tab-pane label="积分记录" name="point">
                 <el-table
@@ -15,6 +15,7 @@
                     show-header
                     cell-class-name="u-table-cell"
                     header-cell-class-name="u-header-cell"
+                    size="large"
                 >
                     <el-table-column label="类型">
                         <template #default="scope">{{ formatType(scope.row.action_type) }}</template>
@@ -65,6 +66,7 @@
                     show-header
                     cell-class-name="u-table-cell"
                     header-cell-class-name="u-header-cell"
+                    size="large"
                 >
                     <el-table-column label="类型">
                         <template #default="scope">{{ formatType(scope.row.action_type) }}</template>

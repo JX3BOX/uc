@@ -114,10 +114,10 @@
                             <b>{{ asset.box_coin }}</b>
                         </div>
                         <div class="u-credit-op">
-                            <!-- <a class="el-button el-button--primary el-button--mini" href="/vip/boxcoin" target="_blank"
+                            <!-- <a class="el-button el-button--primary el-button--small" href="/vip/boxcoin" target="_blank"
                                 >充值</a
                             > -->
-                            <router-link class="el-button el-button--primary el-button--mini" to="/boxcoin"
+                            <router-link class="el-button el-button--primary el-button--small" to="/boxcoin"
                                 >兑换</router-link
                             >
                         </div>
@@ -137,10 +137,10 @@
                             <b>{{ asset.points }}</b>
                         </div>
                         <div class="u-credit-op">
-                            <router-link class="el-button el-button--primary el-button--mini" to="/points"
+                            <router-link class="el-button el-button--primary el-button--small" to="/points"
                                 >记录</router-link
                             >
-                            <a class="el-button el-button--primary el-button--mini" href="/vip/mall" target="_blank"
+                            <a class="el-button el-button--primary el-button--small" href="/vip/mall" target="_blank"
                                 >兑换</a
                             >
                         </div>
@@ -153,7 +153,7 @@
                             <b>{{ Number(asset.ext_info.keycode || 0) + Number(asset.ext_info.sn || 0) }}</b>
                         </div>
                         <div class="u-credit-op">
-                            <router-link class="el-button el-button--primary el-button--mini" to="/card"
+                            <router-link class="el-button el-button--primary el-button--small" to="/card"
                                 >查看</router-link
                             >
                         </div>
@@ -171,10 +171,10 @@
                             <b>{{ formatCredit(asset.red_packet)  }}</b>
                         </div>
                         <div class="u-credit-op">
-                            <router-link class="el-button el-button--primary el-button--mini" to="/packet"
+                            <router-link class="el-button el-button--primary el-button--small" to="/packet"
                                 >记录</router-link
                             >
-                            <a class="el-button el-button--primary el-button--mini" href="/vip/mall" target="_blank"
+                            <a class="el-button el-button--primary el-button--small" href="/vip/mall" target="_blank"
                                 >兑换</a
                             >
                         </div>
@@ -194,10 +194,10 @@
                             <b>{{ asset.cny }}</b>
                         </div>
                         <div class="u-credit-op">
-                            <!-- <a class="el-button el-button--primary el-button--mini" href="/vip/cny" target="_blank"
+                            <!-- <a class="el-button el-button--primary el-button--small" href="/vip/cny" target="_blank"
                                 >充值</a
                             > -->
-                            <router-link class="el-button el-button--primary el-button--mini" to="/cny"
+                            <router-link class="el-button el-button--primary el-button--small" to="/cny"
                                 >记录</router-link
                             >
                         </div>

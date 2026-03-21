@@ -18,7 +18,7 @@
                 <el-tab-pane label="激活码(直发)" name="sn" lazy>
                     <template #label>
                         <span class="u-tab--title">激活码</span>
-                        (<span class="u-tab--desc">直发</span>)
+                        <span class="u-tab--desc">直发</span>
                     </template>
                     <el-table
                         class="m-table"
@@ -116,7 +116,7 @@
                 <el-tab-pane label="激活码(积分兑换|抽奖)" name="virtual" lazy>
                     <template #label>
                         <span class="u-tab--title">激活码</span>
-                        (<span class="u-tab--desc">积分兑换|抽奖</span>)
+                        <span class="u-tab--desc">积分兑换|抽奖</span>
                     </template>
                     <el-table
                         class="m-table"
