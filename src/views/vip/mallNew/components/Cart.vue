@@ -296,7 +296,7 @@ export default {
                         display: flex;
                         gap: 8px;
                         align-items: center;
-                        /deep/ .el-input-number {
+                        :deep(.el-input-number) {
                             width: 70px;
                             height: 14px;
                             .el-input-number__decrease,

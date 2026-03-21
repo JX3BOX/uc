@@ -128,7 +128,7 @@ export default {
         font-size: 3.8vw;
         color: rgba(255, 255, 255, 1);
         .select-item {
-            /deep/.el-select {
+            :deep(.el-select) {
                 input {
                     width: 21.3333vw;
                     height: 6.4vw;
@@ -157,7 +157,7 @@ export default {
         }
     }
     .search-input {
-        /deep/.el-input {
+        :deep(.el-input) {
             border: 0.1333vw solid rgba(255, 255, 255, 0.5);
             border-radius: 1.0667vw;
             input {

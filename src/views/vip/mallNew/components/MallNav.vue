@@ -278,7 +278,7 @@ export default {
             display: flex;
             justify-content: center;
             margin-top: 33px;
-            /deep/ .el-pagination {
+            :deep(.el-pagination) {
                 font-weight: 400;
                 background-color: transparent;
                 button,

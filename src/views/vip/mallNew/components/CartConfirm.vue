@@ -52,7 +52,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-/deep/.m-cart-confirm {
+ :deep(.m-cart-confirm) {
     .el-dialog__header {
         padding: 0;
     }

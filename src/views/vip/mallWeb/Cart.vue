@@ -299,7 +299,7 @@ export default {
                         display: flex;
                         gap: 2.1333vw;
                         align-items: center;
-                        /deep/ .el-input-number {
+                        :deep(.el-input-number) {
                             width: 18.6667vw;
                             height: 3.7333vw;
                             .el-input-number__decrease,
