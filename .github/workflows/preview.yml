@@ -28,7 +28,7 @@ jobs:
                   host: ${{ secrets.HOST_NANJING2 }}
                   username: ${{ secrets.DEPLOY_USER }}
                   key: ${{ secrets.DEPLOY_KEY }}
-                  source: uc/*
+                  source: dist/*
                   target: /www/wwwroot/jx3box/test
                   timeout: 600s
                   command_timeout: 600s
