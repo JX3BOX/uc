@@ -22,6 +22,10 @@ export default {
             type: Boolean,
             default: true,
         },
+        modelValue: {
+            type: String,
+            default: undefined,
+        },
         value: {
             type: String,
             default: "",
@@ -31,7 +35,7 @@ export default {
             default: 0,
         },
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     data() {
         return {
             driver: null,
@@ -46,8 +50,11 @@ export default {
         client() {
             return this.isWujie ? "wujie" : "std";
         },
+        currentValue() {
+            return this.modelValue !== undefined ? this.modelValue : this.value;
+        },
         reloadTrigger() {
-            return [this.client, this.subtype, this.value];
+            return [this.client, this.subtype, this.currentValue];
         },
     },
     watch: {
@@ -55,9 +62,9 @@ export default {
             handler(val) {
                 const shouldLength = this.client === "std" ? 10 : 4;
                 let __data;
-                if (this.value) {
+                if (this.currentValue) {
                     try {
-                        __data = JSON.parse(this.value);
+                        __data = JSON.parse(this.currentValue);
                     } catch (error) {
                         console.error(error);
                     }
@@ -97,7 +104,9 @@ export default {
             $(document).on("JX3_QIXUE_Change", function (e, ins) {
                 let __data = ins.code;
 
-                vm.$emit("update", JSON.stringify(__data));
+                const next = JSON.stringify(__data);
+                vm.$emit("update:modelValue", next);
+                vm.$emit("update", next);
             });
         },
         reloadTalent() {

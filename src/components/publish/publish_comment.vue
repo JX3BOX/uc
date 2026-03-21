@@ -11,20 +11,37 @@
 <script>
 export default {
     name: "publish_comment",
-    props: ["data"],
+    props: {
+        modelValue: {
+            type: [String, Number],
+            default: undefined,
+        },
+        data: {
+            type: [String, Number],
+            default: 0,
+        },
+    },
     data: function () {
         return {
-            comment: this.data,
+            comment: this.modelValue !== undefined ? this.modelValue : this.data,
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.comment = newval;
+            }
+        },
         data: function (newval) {
-            this.comment = newval;
+            if (this.modelValue === undefined) {
+                this.comment = newval;
+            }
         },
         comment: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

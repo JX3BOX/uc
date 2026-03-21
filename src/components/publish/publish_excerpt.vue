@@ -7,20 +7,37 @@
 <script>
 export default {
     name: "publish_excerpt",
-    props: ["data"],
+    props: {
+        modelValue: {
+            type: String,
+            default: undefined,
+        },
+        data: {
+            type: String,
+            default: "",
+        },
+    },
     data: function () {
         return {
-            excerpt: this.data,
+            excerpt: this.modelValue !== undefined ? this.modelValue : this.data,
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.excerpt = newval;
+            }
+        },
         data: function (newval) {
-            this.excerpt = newval;
+            if (this.modelValue === undefined) {
+                this.excerpt = newval;
+            }
         },
         excerpt: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

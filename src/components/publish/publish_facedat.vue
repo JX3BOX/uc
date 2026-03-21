@@ -45,29 +45,57 @@ const default_meta = {
 };
 export default {
     name: "publishFacedat",
-    props: ["data", "client"],
+    props: {
+        modelValue: {
+            type: Object,
+            default: undefined,
+        },
+        data: {
+            type: Object,
+            default: () => lodash.cloneDeep(default_meta),
+        },
+        client: {
+            type: String,
+            default: "std",
+        },
+    },
     components: { UploadAlbum },
     data: function () {
         return {
-            facedat: this.data,
+            facedat: this.modelValue !== undefined ? this.modelValue : this.data,
             object: "",
         };
     },
-    emits: ["update", "updateMeta"],
+    emits: ["update", "update:modelValue", "updateMeta"],
     watch: {
+        modelValue: {
+            deep: true,
+            handler: function (newval) {
+                if (newval !== undefined) {
+                    if (!newval || isEmptyMeta(newval)) {
+                        this.facedat = lodash.cloneDeep(default_meta);
+                    } else {
+                        this.facedat = newval;
+                    }
+                }
+            },
+        },
         data: {
             deep: true,
             handler: function (newval) {
-                if (!newval || isEmptyMeta(newval)) {
-                    this.facedat = lodash.cloneDeep(default_meta);
-                } else {
-                    this.facedat = newval;
+                if (this.modelValue === undefined) {
+                    if (!newval || isEmptyMeta(newval)) {
+                        this.facedat = lodash.cloneDeep(default_meta);
+                    } else {
+                        this.facedat = newval;
+                    }
                 }
             },
         },
         facedat: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

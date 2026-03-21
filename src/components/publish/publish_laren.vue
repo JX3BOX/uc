@@ -88,8 +88,25 @@ const default_meta = {
 
 export default {
     name: "publish_lanren",
-    props: ["data", "user", "type"],
-    emits: ["update-lanren"],
+    props: {
+        modelValue: {
+            type: Object,
+            default: undefined,
+        },
+        data: {
+            type: Object,
+            default: () => cloneDeep(default_meta),
+        },
+        user: {
+            type: Object,
+            default: () => ({}),
+        },
+        type: {
+            type: String,
+            default: "",
+        },
+    },
+    emits: ["update-lanren", "update:modelValue"],
     data: () => ({
         activeTab: "1",
         lanrenDat: {},
@@ -97,9 +114,36 @@ export default {
         lanren_types: [],
     }),
     watch: {
+        modelValue: {
+            immediate: true,
+            handler(newval) {
+                if (newval === undefined) return;
+                if (!newval || newval.data.length === 1) {
+                    const [current] = newval.data;
+                    if (current.name === "默认版") {
+                        this.lanrenDat = cloneDeep(default_meta);
+                    }
+                } else {
+                    const [current] = newval.data;
+                    // 判断传进来的数据是否为lanren数据，懒人数据是有key的
+                    if (current.key) {
+                        this.lanrenDat = newval;
+                        this.lanrenDat.data.forEach((item) => {
+                            item.pop = false;
+                            if (item._version === undefined) {
+                                item._version = item.version;
+                            }
+                        });
+                    } else {
+                        this.lanrenDat = cloneDeep(default_meta);
+                    }
+                }
+            },
+        },
         data: {
             immediate: true,
             handler(newval) {
+                if (this.modelValue !== undefined) return;
                 if (!newval || newval.data.length === 1) {
                     const [current] = newval.data;
                     if (current.name === "默认版") {
@@ -128,6 +172,7 @@ export default {
                 val.data.forEach((v) => {
                     v._version = v._version || now;
                 });
+                this.$emit("update:modelValue", val);
                 this.$emit("update-lanren", val);
             },
         },

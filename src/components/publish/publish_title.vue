@@ -16,20 +16,45 @@
 <script>
 export default {
     name: "publish_title",
-    props: ["data", "hideDiv", "placeholder"],
+    props: {
+        modelValue: {
+            type: String,
+            default: undefined,
+        },
+        data: {
+            type: String,
+            default: "",
+        },
+        hideDiv: {
+            type: Boolean,
+            default: false,
+        },
+        placeholder: {
+            type: String,
+            default: "",
+        },
+    },
     data: function () {
         return {
-            title: this.data,
+            title: this.modelValue !== undefined ? this.modelValue : this.data,
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.title = newval;
+            }
+        },
         data: function (newval) {
-            this.title = newval;
+            if (this.modelValue === undefined) {
+                this.title = newval;
+            }
         },
         title: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

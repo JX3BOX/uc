@@ -12,21 +12,42 @@
 import zlps from "@jx3box/jx3box-common/data/jx3_zlp.json";
 export default {
     name: "publish_zlp",
-    props: ["data", "client"],
+    props: {
+        modelValue: {
+            type: String,
+            default: undefined,
+        },
+        data: {
+            type: String,
+            default: "",
+        },
+        client: {
+            type: String,
+            default: "std",
+        },
+    },
     data: function () {
         return {
-            zlp: this.data,
+            zlp: this.modelValue !== undefined ? this.modelValue : this.data,
             zlps: zlps["std"],
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.zlp = newval;
+            }
+        },
         data: function (newval) {
-            this.zlp = newval;
+            if (this.modelValue === undefined) {
+                this.zlp = newval;
+            }
         },
         zlp: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

@@ -12,6 +12,10 @@ export default {
         publishBanner,
     },
     props: {
+        modelValue: {
+            type: String,
+            default: undefined,
+        },
         data: {
             type: String,
             default: "",
@@ -27,15 +31,23 @@ export default {
     },
     data() {
         return {
-            banner: this.data,
+            banner: this.modelValue !== undefined ? this.modelValue : this.data,
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.banner = newval;
+            }
+        },
         data: function (newval) {
-            this.banner = newval;
+            if (this.modelValue === undefined) {
+                this.banner = newval;
+            }
         },
         banner: function (newval) {
+            this.$emit("update:modelValue", newval);
             this.$emit("update", newval);
         },
     },

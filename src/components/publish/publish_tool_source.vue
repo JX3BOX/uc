@@ -92,25 +92,50 @@ const default_meta = {
 export default {
     name: "publish-tool-source",
     props: {
+        modelValue: {
+            type: Object,
+            default: undefined,
+        },
         value: {
             type: Object,
             default: () => {},
         },
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     data() {
         return {
-            data: this.value,
+            data: this.modelValue !== undefined ? this.modelValue : this.value,
             activeIndex: "1",
 
             files: [],
         };
     },
     watch: {
+        modelValue: {
+            immediate: true,
+            deep: true,
+            handler: function (val) {
+                if (val !== undefined) {
+                    if (!val || isEmptyMeta(val)) {
+                        this.data = lodash.cloneDeep(default_meta);
+                    } else {
+                        this.data = val;
+
+                        if (val?.down) {
+                            this.data.data.map((item) => {
+                                item.mode = "1";
+                                item.file = val.down || "";
+                            });
+                        }
+                    }
+                }
+            },
+        },
         value: {
             immediate: true,
             deep: true,
             handler: function (val) {
+                if (this.modelValue !== undefined) return;
                 if (!val || isEmptyMeta(val)) {
                     this.data = lodash.cloneDeep(default_meta);
                 } else {
@@ -128,6 +153,7 @@ export default {
         data: {
             deep: true,
             handler(val) {
+                this.$emit("update:modelValue", val);
                 this.$emit("update", val);
             },
         },

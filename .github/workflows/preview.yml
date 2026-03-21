@@ -19,7 +19,7 @@ jobs:
             - name: Install && Build
               run: |
                   npm install
-                  npm run preview
+                  npm run build
 
             ## TODO:下方修改1处
             - name: GrayEnv

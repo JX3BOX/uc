@@ -9,21 +9,38 @@
 <script>
 export default {
     name: "",
-    props: ["data"],
+    props: {
+        modelValue: {
+            type: [String, Number],
+            default: undefined,
+        },
+        data: {
+            type: [String, Number],
+            default: 0,
+        },
+    },
     components: {},
     data: function () {
         return {
-            visible: 0,
+            visible: this.modelValue !== undefined ? this.modelValue : this.data,
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.visible = newval;
+            }
+        },
         data: function (newval) {
-            this.visible = newval;
+            if (this.modelValue === undefined) {
+                this.visible = newval;
+            }
         },
         visible: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

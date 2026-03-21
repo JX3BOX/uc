@@ -25,21 +25,42 @@ import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
 import { __imgPath } from "@/utils/config";
 export default {
     name: "publish_xf",
-    props: ["data", "client"],
+    props: {
+        modelValue: {
+            type: String,
+            default: undefined,
+        },
+        data: {
+            type: String,
+            default: "",
+        },
+        client: {
+            type: String,
+            default: "std",
+        },
+    },
     data: function () {
         return {
-            xf: this.data,
+            xf: this.modelValue !== undefined ? this.modelValue : this.data,
             exact_client: this.client || "std",
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.xf = newval;
+            }
+        },
         data: function (newval) {
-            this.xf = newval;
+            if (this.modelValue === undefined) {
+                this.xf = newval;
+            }
         },
         xf: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

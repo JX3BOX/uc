@@ -178,36 +178,65 @@ const default_meta = {
 };
 export default {
     name: "wujie_skill_sequence",
-    props: ["data", "subtype"],
+    props: {
+        modelValue: {
+            type: Object,
+            default: undefined,
+        },
+        data: {
+            type: Object,
+            default: () => cloneDeep(default_meta),
+        },
+        subtype: {
+            type: String,
+            default: "",
+        },
+    },
     components: {
         "publish-wujie-skill": publish_wujie_skill,
         draggable,
     },
     data: function () {
         return {
-            macros: this.data,
+            macros: this.modelValue !== undefined ? this.modelValue : this.data,
             activeIndex: "1",
             nickname: User.getInfo().name,
 
             showSkillDialog: false,
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: {
+            immediate: true,
+            deep: true,
+            handler: function (newval) {
+                if (newval !== undefined) {
+                    if (!newval || isEmptyMeta(newval)) {
+                        this.macros = cloneDeep(default_meta);
+                    } else {
+                        this.macros = newval;
+                    }
+                }
+            },
+        },
         data: {
             immediate: true,
             deep: true,
             handler: function (newval) {
-                if (!newval || isEmptyMeta(newval)) {
-                    this.macros = cloneDeep(default_meta);
-                } else {
-                    this.macros = newval;
+                if (this.modelValue === undefined) {
+                    if (!newval || isEmptyMeta(newval)) {
+                        this.macros = cloneDeep(default_meta);
+                    } else {
+                        this.macros = newval;
+                    }
                 }
             },
         },
         macros: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

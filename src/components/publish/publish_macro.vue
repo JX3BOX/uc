@@ -182,13 +182,24 @@ const default_meta = {
 };
 export default {
     name: "publishMacro",
-    props: ["data", "client"],
+    props: {
+        modelValue: {
+            type: Object,
+            default: function () {
+                return {};
+            },
+        },
+        client: {
+            type: String,
+            default: "std",
+        }
+    },
     components: {
         "publish-mark": publish_mark,
     },
     data: function () {
         return {
-            macros: this.data,
+            macros: lodash.cloneDeep(default_meta),
             activeIndex: "1",
             nickname: User.getInfo().name,
             equip_types: {
@@ -198,9 +209,9 @@ export default {
             },
         };
     },
-    emits: ["update"],
+    emits: ["update:modelValue"],
     watch: {
-        data: {
+        modelValue: {
             immediate: true,
             deep: true,
             handler: function (newval) {
@@ -214,7 +225,7 @@ export default {
         macros: {
             deep: true,
             handler: function (newval) {
-                this.$emit("update", newval);
+                this.$emit("update:modelValue", newval);
             },
         },
     },

@@ -48,12 +48,16 @@ export default {
             type: String,
             default: "bbs",
         },
+        modelValue: {
+            type: Array,
+            default: undefined,
+        },
         value: {
             type: Array,
             default: () => [],
         },
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     data() {
         return {
             search: "",
@@ -75,7 +79,16 @@ export default {
             deep: true,
             handler(val, oVal) {
                 if (!isEqual(val, oVal)) {
+                    this.$emit("update:modelValue", this.selected);
                     this.$emit("update", this.selected);
+                }
+            },
+        },
+        modelValue: {
+            deep: true,
+            handler() {
+                if (this.modelValue !== undefined) {
+                    this.selected = cloneDeep(this.modelValue);
                 }
             },
         },
@@ -83,7 +96,9 @@ export default {
             deep: true,
             // immediate: true,
             handler() {
-                this.selected = cloneDeep(this.value);
+                if (this.modelValue === undefined) {
+                    this.selected = cloneDeep(this.value);
+                }
             },
         },
     },

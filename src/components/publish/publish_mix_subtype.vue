@@ -30,25 +30,49 @@ import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
 import { __imgPath } from "@/utils/config";
 export default {
     name: "publish_mix_subtype",
-    props: ["data", "client"],
+    props: {
+        modelValue: {
+            type: Array,
+            default: undefined,
+        },
+        data: {
+            type: Array,
+            default: () => [],
+        },
+        client: {
+            type: String,
+            default: "std",
+        },
+    },
     data: function () {
         return {
-            mix_subtype: this.data,
+            mix_subtype: this.modelValue !== undefined ? this.modelValue : this.data,
 
             exact_client: this.client || "std",
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: {
+            deep: true,
+            handler: function (newval) {
+                if (newval !== undefined) {
+                    this.mix_subtype = newval;
+                }
+            },
+        },
         data: {
             deep: true,
             handler: function (newval) {
-                this.mix_subtype = newval;
+                if (this.modelValue === undefined) {
+                    this.mix_subtype = newval;
+                }
             },
         },
         mix_subtype: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

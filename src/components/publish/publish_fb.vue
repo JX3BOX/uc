@@ -83,6 +83,10 @@ const default_meta = {
 export default {
     name: "publishFb",
     props: {
+        modelValue: {
+            type: Object,
+            default: undefined,
+        },
         data: {
             type: Object,
             default: () => lodash.cloneDeep(default_meta),
@@ -97,25 +101,45 @@ export default {
         return {
             isIndeterminate: false,
             checkAll: false,
-            fbdata: this.data && !isEmptyMeta(this.data) ? this.data : lodash.cloneDeep(default_meta),
+            fbdata:
+                this.modelValue !== undefined
+                    ? this.modelValue
+                    : this.data && !isEmptyMeta(this.data)
+                    ? this.data
+                    : lodash.cloneDeep(default_meta),
             // fbmap,
         };
     },
-    emits: ["update", "updateMeta"],
+    emits: ["update", "update:modelValue", "updateMeta"],
     watch: {
+        modelValue: {
+            deep: true,
+            handler: function (newval) {
+                if (newval !== undefined) {
+                    if (!newval || isEmptyMeta(newval)) {
+                        this.fbdata = lodash.cloneDeep(default_meta);
+                    } else {
+                        this.fbdata = newval;
+                    }
+                }
+            },
+        },
         data: {
             deep: true,
             handler: function (newval) {
-                if (!newval || isEmptyMeta(newval)) {
-                    this.fbdata = lodash.cloneDeep(default_meta);
-                } else {
-                    this.fbdata = newval;
+                if (this.modelValue === undefined) {
+                    if (!newval || isEmptyMeta(newval)) {
+                        this.fbdata = lodash.cloneDeep(default_meta);
+                    } else {
+                        this.fbdata = newval;
+                    }
                 }
             },
         },
         fbdata: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

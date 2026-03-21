@@ -10,6 +10,10 @@
 export default {
     name: "publish_extend",
     props: {
+        modelValue: {
+            type: Object,
+            default: undefined,
+        },
         post: {
             type: Object,
             default: () => {
@@ -17,19 +21,28 @@ export default {
             },
         },
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     data() {
         return {
-            localPost: this.post,
+            localPost: this.modelValue !== undefined ? this.modelValue : this.post,
         };
     },
     watch: {
-        post: {
+        modelValue: {
             immediate: true,
             deep: true,
             handler(val) {
                 if (!val) return;
                 this.localPost = val;
+            },
+        },
+        post: {
+            immediate: true,
+            deep: true,
+            handler(val) {
+                if (this.modelValue === undefined && val) {
+                    this.localPost = val;
+                }
             },
         },
     },
@@ -41,6 +54,7 @@ export default {
             set(val) {
                 const next = { ...(this.localPost || {}), include_video: val };
                 this.localPost = next;
+                this.$emit("update:modelValue", next);
                 this.$emit("update", next);
             },
         },

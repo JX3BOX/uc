@@ -183,7 +183,28 @@ const default_meta = {
 };
 export default {
     name: "publishPvp",
-    props: ["data", "client", "subtype", "isWujie"],
+    props: {
+        modelValue: {
+            type: Object,
+            default: undefined,
+        },
+        data: {
+            type: Object,
+            default: () => cloneDeep(default_meta),
+        },
+        client: {
+            type: String,
+            default: "std",
+        },
+        subtype: {
+            type: String,
+            default: "",
+        },
+        isWujie: {
+            type: Number,
+            default: 0,
+        },
+    },
     components: {
         SkillDialog,
         "publish-qixue": publish_qixue,
@@ -191,7 +212,7 @@ export default {
     data: function () {
         return {
             maxlength: 20,
-            pvpData: this.data,
+            pvpData: this.modelValue !== undefined ? this.modelValue : this.data,
             activeIndex: "1",
             nickname: User.getInfo().name,
 
@@ -199,22 +220,38 @@ export default {
             showSkillDialog: false,
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: {
+            immediate: true,
+            deep: true,
+            handler: function (newval) {
+                if (newval !== undefined) {
+                    if (!newval || isEmptyMeta(newval)) {
+                        this.pvpData = cloneDeep(default_meta);
+                    } else {
+                        this.pvpData = newval;
+                    }
+                }
+            },
+        },
         data: {
             immediate: true,
             deep: true,
             handler: function (newval) {
-                if (!newval || isEmptyMeta(newval)) {
-                    this.pvpData = cloneDeep(default_meta);
-                } else {
-                    this.pvpData = newval;
+                if (this.modelValue === undefined) {
+                    if (!newval || isEmptyMeta(newval)) {
+                        this.pvpData = cloneDeep(default_meta);
+                    } else {
+                        this.pvpData = newval;
+                    }
                 }
             },
         },
         pvpData: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

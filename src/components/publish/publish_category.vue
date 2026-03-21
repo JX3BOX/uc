@@ -16,6 +16,10 @@ export default {
             type: Array,
             required: true,
         },
+        modelValue: {
+            type: [String, Number],
+            default: undefined,
+        },
         value: {
             type: [String, Number],
             default: "",
@@ -23,13 +27,20 @@ export default {
     },
     data() {
         return {
-            category: this.value,
+            category: this.modelValue !== undefined ? this.modelValue : this.value,
         };
     },
     watch: {
         // 监听外部传递的 value 属性的变化
+        modelValue(newVal) {
+            if (newVal !== undefined) {
+                this.category = newVal;
+            }
+        },
         value(newVal) {
-            this.category = newVal;
+            if (this.modelValue === undefined) {
+                this.category = newVal;
+            }
         },
         options: {
             deep: true,
@@ -37,15 +48,17 @@ export default {
             handler() {
                 if (!this.value) {
                     this.category = this.options?.[0]?.name;
+                    this.$emit("update:modelValue", this.category);
                     this.$emit("update", this.category);
                 }
             },
         },
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     methods: {
         // 当 radio-group 内部的 category 变化时，更新到外部的 value 上
         updateCategory(newVal) {
+            this.$emit("update:modelValue", newVal);
             this.$emit("update", newVal);
         },
     },

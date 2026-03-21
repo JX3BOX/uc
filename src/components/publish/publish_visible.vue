@@ -16,21 +16,43 @@
 <script>
 export default {
     name: "",
-    props: ["data", "disabled"],
+    props: {
+        modelValue: {
+            type: [String, Number],
+            default: undefined,
+        },
+        data: {
+            type: [String, Number],
+            default: "0",
+        },
+        disabled: {
+            type: Boolean,
+            default: false,
+        },
+    },
     components: {},
     data: function () {
         return {
-            visible: "0",
+            visible:
+                this.modelValue !== undefined ? String(this.modelValue) : String(this.data ?? "0"),
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.visible = String(newval);
+            }
+        },
         data: function (newval) {
-            this.visible = String(newval);
+            if (this.modelValue === undefined) {
+                this.visible = String(newval);
+            }
         },
         visible: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

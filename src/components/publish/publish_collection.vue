@@ -48,7 +48,16 @@ import { get_my_collections } from "@/service/publish/collection";
 import cloneDeep from "lodash/cloneDeep";
 export default {
     name: "publish_collection",
-    props: ["data"],
+    props: {
+        modelValue: {
+            type: [String, Number],
+            default: undefined,
+        },
+        data: {
+            type: [String, Number],
+            default: "",
+        },
+    },
     data: function () {
         return {
             post_collection: "",
@@ -61,21 +70,32 @@ export default {
             search: "",
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     computed: {
         isEmpty: function () {
             return !this.search && !this.collections.length;
         },
     },
     watch: {
+        modelValue: {
+            immediate: true,
+            handler(newval) {
+                if (newval !== undefined) {
+                    this.post_collection = Number(newval) || "";
+                }
+            },
+        },
         data: {
             immediate: true,
             handler(newval) {
-                this.post_collection = Number(newval) || "";
+                if (this.modelValue === undefined) {
+                    this.post_collection = Number(newval) || "";
+                }
             },
         },
         post_collection: {
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

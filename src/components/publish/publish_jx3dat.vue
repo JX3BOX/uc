@@ -227,13 +227,26 @@ const default_meta = {
 };
 export default {
     name: "publish_jx3dat",
-    props: ["data", "type"],
+    props: {
+        modelValue: {
+            type: Object,
+            default: undefined,
+        },
+        data: {
+            type: Object,
+            default: () => lodash.cloneDeep(default_meta),
+        },
+        type: {
+            type: String,
+            default: "",
+        },
+    },
     components: {
         "publish-lanren": publish_lanren,
     },
     data: function () {
         return {
-            jx3dats: this.data,
+            jx3dats: this.modelValue !== undefined ? this.modelValue : this.data,
 
             user: User.getInfo(),
             activeIndex: "1",
@@ -245,28 +258,50 @@ export default {
             reload: true,
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: {
+            immediate: true,
+            // deep: true,
+            handler: function (newval) {
+                if (newval !== undefined) {
+                    if (!newval || isEmptyMeta(newval)) {
+                        this.jx3dats = lodash.cloneDeep(default_meta);
+                    } else {
+                        this.jx3dats = newval;
+                        this.jx3dats.data.forEach((item) => {
+                            item.pop = false;
+                            if (item._version === undefined) {
+                                item._version = item.version;
+                            }
+                        });
+                    }
+                }
+            },
+        },
         data: {
             immediate: true,
             // deep: true,
             handler: function (newval) {
-                if (!newval || isEmptyMeta(newval)) {
-                    this.jx3dats = lodash.cloneDeep(default_meta);
-                } else {
-                    this.jx3dats = newval;
-                    this.jx3dats.data.forEach((item) => {
-                        item.pop = false;
-                        if (item._version === undefined) {
-                            item._version = item.version;
-                        }
-                    });
+                if (this.modelValue === undefined) {
+                    if (!newval || isEmptyMeta(newval)) {
+                        this.jx3dats = lodash.cloneDeep(default_meta);
+                    } else {
+                        this.jx3dats = newval;
+                        this.jx3dats.data.forEach((item) => {
+                            item.pop = false;
+                            if (item._version === undefined) {
+                                item._version = item.version;
+                            }
+                        });
+                    }
                 }
             },
         },
         jx3dats: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

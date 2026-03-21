@@ -9,20 +9,37 @@
 <script>
 export default {
     name: "publish_gift",
-    props: ["data"],
+    props: {
+        modelValue: {
+            type: [String, Number],
+            default: undefined,
+        },
+        data: {
+            type: [String, Number],
+            default: 0,
+        },
+    },
     data: function () {
         return {
-            allow_gift: this.data,
+            allow_gift: this.modelValue !== undefined ? this.modelValue : this.data,
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.allow_gift = newval;
+            }
+        },
         data: function (newval) {
-            this.allow_gift = newval;
+            if (this.modelValue === undefined) {
+                this.allow_gift = newval;
+            }
         },
         allow_gift: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

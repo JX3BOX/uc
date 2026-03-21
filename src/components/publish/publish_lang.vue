@@ -12,20 +12,37 @@
 <script>
 export default {
     name: "publish_lang",
-    props: ["data"],
+    props: {
+        modelValue: {
+            type: String,
+            default: undefined,
+        },
+        data: {
+            type: String,
+            default: "cn",
+        },
+    },
     data: function () {
         return {
-            lang: this.data,
+            lang: this.modelValue !== undefined ? this.modelValue : this.data,
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.lang = newval;
+            }
+        },
         data: function (newval) {
-            this.lang = newval;
+            if (this.modelValue === undefined) {
+                this.lang = newval;
+            }
         },
         lang: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

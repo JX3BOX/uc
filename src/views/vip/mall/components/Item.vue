@@ -75,7 +75,6 @@ import { getThumbnail, showAvatar, resolveImagePath } from "@jx3box/jx3box-commo
 import { __userLevel, __cdn, __imgPath } from "@/utils/config";
 import { forEach, throttle } from "lodash";
 import User from "@jx3box/jx3box-common/js/user";
-import { addGoodsToCart } from "@/service/vip/cart";
 export default {
     name: "GoodsIndexItem",
     props: ["data", "isPro", "myVirtualItems", "skinJson"],

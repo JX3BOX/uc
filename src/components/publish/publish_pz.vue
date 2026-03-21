@@ -92,6 +92,10 @@ import { cloneDeep, unionBy } from "lodash";
 export default {
     name: "PublishPz",
     props: {
+        modelValue: {
+            type: Array,
+            default: undefined,
+        },
         data: {
             type: Array,
             default: function () {
@@ -124,23 +128,40 @@ export default {
             selectedOptions: [],
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: {
+            immediate: true,
+            deep: true,
+            handler: function (newval) {
+                if (newval !== undefined) {
+                    if (!newval || !newval.length) {
+                        this.list = [{ id: "", name: "" }];
+                    } else {
+                        this.list = newval;
+                    }
+                    this.getSelectedOptions();
+                }
+            },
+        },
         data: {
             immediate: true,
             deep: true,
             handler: function (newval) {
-                if (!newval || !newval.length) {
-                    this.list = [{ id: "", name: "" }];
-                } else {
-                    this.list = newval;
+                if (this.modelValue === undefined) {
+                    if (!newval || !newval.length) {
+                        this.list = [{ id: "", name: "" }];
+                    } else {
+                        this.list = newval;
+                    }
+                    this.getSelectedOptions();
                 }
-                this.getSelectedOptions();
             },
         },
         list: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

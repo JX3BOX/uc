@@ -78,7 +78,6 @@
 
 <script>
 import { getMyPostsCount } from "@/service/publish/cms.js";
-import { get_my_post_total } from "@/service/publish/post.js";
 import { getNextStat } from "@/service/publish/next.js";
 import Bus from "@jx3box/jx3box-ui/utils/bus.js";
 import User from "@jx3box/jx3box-common/js/user";
@@ -209,31 +208,6 @@ export default {
                 }
             });
         },
-        loadHelperCount() {
-            get_my_post_total().then((res) => {
-                res = res.data;
-                if (res.code === 200) {
-                    let count = res.data;
-
-                    for (let key in this.wiki) {
-                        let tmp = count[`${key}_post`];
-                        if (tmp) this.wiki[key]["count"] = tmp;
-                    }
-
-                    for (let key in this.app) {
-                        let tmp = count[key];
-                        if (tmp) this.app[key]["count"] = tmp;
-                    }
-
-                    for (let key in this.comment) {
-                        let k = key;
-                        if (k === "comment_wiki") k = "wiki_comment";
-                        let tmp = count[k];
-                        if (tmp) this.comment[key]["count"] = tmp;
-                    }
-                }
-            });
-        },
         loadNextCount() {
             getNextStat().then((res) => {
                 let { comment, question, paper, face, pvxbody, community_topic, community_topic_reply } = res.data.data;
@@ -248,7 +222,6 @@ export default {
         },
         init: function () {
             this.loadMyCount();
-            // this.loadHelperCount();
             this.loadNextCount();
         },
     },

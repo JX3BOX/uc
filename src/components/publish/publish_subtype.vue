@@ -18,21 +18,46 @@
 <script>
 export default {
     name: "publish_subtype",
-    props: ["data", "options", "lock"],
+    props: {
+        modelValue: {
+            type: [String, Number],
+            default: undefined,
+        },
+        data: {
+            type: [String, Number],
+            default: "",
+        },
+        options: {
+            type: [Array, Object],
+            default: () => [],
+        },
+        lock: {
+            type: Boolean,
+            default: false,
+        },
+    },
     data: function () {
         return {
-            subtype: this.data,
+            subtype: this.modelValue !== undefined ? this.modelValue : this.data,
             subtypes: this.options || [],
         };
     },
-    emits: ["update"],
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.subtype = newval;
+            }
+        },
         data: function (newval) {
-            this.subtype = newval;
+            if (this.modelValue === undefined) {
+                this.subtype = newval;
+            }
         },
         subtype: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },
