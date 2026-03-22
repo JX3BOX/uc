@@ -1,7 +1,7 @@
 <template>
     <div class="m-add-feedback">
         <div class="type-box">
-            <el-form inline>
+            <el-form inline class="m-type-form">
                 <el-form-item label="来源">
                     <el-select v-model="form.type" placeholder="请选择问题来源" style="width:200px">
                         <el-option v-for="(value, key) in types" :key="key" :value="key" :label="value"></el-option>
@@ -274,5 +274,15 @@ export default {
 .m-feedback-btn .el-button {
     padding-left: 40px;
     padding-right: 40px;
+}
+
+@media screen and (max-width: @phone) {
+    .m-add-feedback {
+    .type-box {
+        .el-form-item {
+            margin-bottom: 10px;
+        }
+    }
+}
 }
 </style>

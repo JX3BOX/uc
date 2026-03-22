@@ -275,4 +275,20 @@ export default {
 </script>
 <style lang="less" scoped>
 @import "~@/assets/css/dashboard/record.less";
+
+@media screen and (max-width: @phone) {
+    .m-mall-list {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+
+        table {
+            min-width: 980px;
+        }
+
+        th,
+        td {
+            white-space: nowrap;
+        }
+    }
+}
 </style>

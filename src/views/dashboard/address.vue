@@ -22,7 +22,7 @@
                         <template #default="scope">
                             <div>
                                 <!--编辑-->
-                                <el-button circle @click="edit(scope.row)" icon="el-icon-edit-outline"></el-button>
+                                <el-button circle @click="edit(scope.row)" icon="Edit"></el-button>
                                 <!--删除-->
                                 <el-popconfirm
                                     confirm-button-text="确定"

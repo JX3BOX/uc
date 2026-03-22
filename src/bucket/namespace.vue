@@ -9,7 +9,7 @@
 
         <div class="m-namespace-box" v-loading="loading">
             <el-row class="m-namespace-list" :gutter="20" v-if="list && list.length">
-                <el-col :span="6" v-for="(item, i) in list" :key="i">
+                <el-col :span="6" :xs="24" v-for="(item, i) in list" :key="i">
                     <div class="u-namespace-item">
                         <div class="u-item">
                             <div class="u-box">
@@ -22,7 +22,7 @@
                                         状态:
                                         <el-tag :type="item.status == 1 ? 'success' : item.status == 2 ? 'danger' : 'info'" size="small">{{ statusmap[item.status] }}</el-tag>
                                     </span>
-                                    <time class="u-time u-desc-subitem">创建于 : {{ dateFormat(item.created) }}</time>
+                                    <time class="u-time u-desc-subitem">创建于: {{ dateFormat(item.created) }}</time>
                                 </div>
                             </div>
                             <el-button-group class="u-action">

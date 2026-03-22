@@ -183,7 +183,7 @@ export default {
     methods: {
         closeSidebar: function () {
             if (window.innerWidth < 1280) {
-                Bus.$emit("toggleLeftSide", false);
+                Bus.emit("toggleLeftSide", false);
             }
         },
         loadMyCount: function () {
