@@ -116,7 +116,7 @@ export default {
                 per: this.per,
                 title: this.search,
                 order: this.order,
-                client: this.client,
+                client: this.client == 'all' ? '' : this.client,
             };
         },
         publishLink: function () {
