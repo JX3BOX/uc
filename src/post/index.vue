@@ -2,13 +2,13 @@
     <div class="m-publish m-index">
         <h1 class="m-title">
             <i class="el-icon-edit-outline"></i> 创作台<span class="u-desc">丹青著华年，墨香漫天下</span>
-            <el-tooltip content="成为签约作者，获取更多福利与权益" placement="top">
+            <el-tooltip content="成为签约作者，获取更多福利与权益" placement="top" v-if="!isSuperAuthor">
                 <a
                     href="/dashboard/cooperation"
                     type="primary"
                     class="el-button el-tooltip el-button--primary el-button--small u-btn"
                     target="_blank"
-                    ><el-icon><Stamp /></el-icon>申请签约作者</a
+                    ><el-icon><Stamp /></el-icon> 申请签约作者</a
                 >
             </el-tooltip>
         </h1>
@@ -172,12 +172,15 @@
 <script>
 import User from "@jx3box/jx3box-common/js/user";
 import { getAppIcon } from "@jx3box/jx3box-common/js/utils.js";
+import {getSuperAuthorState} from "@/service/dashboard/cooperation";
 export default {
     name: "index",
     props: [],
     data: function () {
         return {
             isAdmin: User.isAdmin(),
+
+            isSuperAuthor: false, // 是否为签约作者
         };
     },
     computed: {
@@ -188,8 +191,22 @@ export default {
             return this.profile.user_group >= 16;
         },
     },
+    watch: {
+        profile: {
+            handler(newVal) {
+                this.checkSuperUser();
+            },
+            immediate: true,
+        }
+    },
     methods: {
         getAppIcon,
+        // 是否为签约作者
+        checkSuperUser: function () {
+            this.profile?.ID && getSuperAuthorState(this.profile?.ID).then((res) => {
+                this.isSuperAuthor = res.data.data;
+            });
+        },
     },
 };
 </script>

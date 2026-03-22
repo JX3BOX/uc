@@ -69,7 +69,7 @@ export default {
     computed: {
         prevPost: {
             get() {
-                return this.data?.prev_post;
+                return this.data?.prev_post || "";
             },
             set(val) {
                 this.updateData({ prev_post: val });
@@ -77,7 +77,7 @@ export default {
         },
         nextPost: {
             get() {
-                return this.data?.next_post;
+                return this.data?.next_post || "";
             },
             set(val) {
                 this.updateData({ next_post: val });
