@@ -106,7 +106,7 @@
                                         v-else
                                         v-model.trim="item.url"
                                     ></el-input>
-                                    <div class="w-select">
+                                    <div class="w-select is-small">
                                         <div class="u-select-label">图标</div>
                                         <el-select
                                             v-model="item.icon"
@@ -127,7 +127,7 @@
                                             </el-option>
                                         </el-select>
                                     </div>
-                                    <el-input v-model="item.custom_title">
+                                    <el-input v-model="item.custom_title" size="small">
                                         <template #prepend>自定义标题</template>
                                     </el-input>
                                 </el-col>

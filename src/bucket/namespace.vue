@@ -20,7 +20,7 @@
                                 <div class="u-desc">
                                     <span class="u-status u-desc-subitem">
                                         状态:
-                                        <b :class="`status${item.status}`">{{ statusmap[item.status] }}</b>
+                                        <el-tag :type="item.status == 1 ? 'success' : item.status == 2 ? 'danger' : 'info'" size="small">{{ statusmap[item.status] }}</el-tag>
                                     </span>
                                     <time class="u-time u-desc-subitem">创建于 : {{ dateFormat(item.created) }}</time>
                                 </div>
@@ -60,7 +60,6 @@
 
 <script>
 import { getNamespace } from "@/service/publish/namespace";
-import { getLink } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
 const statusmap = {
     0: "待审核",
