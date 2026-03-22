@@ -150,14 +150,12 @@
 
             <!-- 按钮 -->
             <div class="m-publish-buttons">
-                <template>
-                    <el-button
-                        type="primary"
-                        @click="publish('publish', true)"
-                        :disabled="is_illegal || processing || !hasRead"
-                        >发 &nbsp;&nbsp; 布</el-button
-                    >
-                </template>
+                <el-button
+                    type="primary"
+                    @click="publish('publish', true)"
+                    :disabled="is_illegal || processing || !hasRead"
+                    >发 &nbsp;&nbsp; 布</el-button
+                >
             </div>
         </el-form>
     </div>

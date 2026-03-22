@@ -17,7 +17,7 @@
         </el-input>
 
         <div class="m-dashboard-work-filter">
-            <clientBy class="u-client" @filter="filter" :showWujie="showWujie" />
+            <clientBy class="u-client" @filter="filter" :showWujie="false" />
             <orderBy class="u-order" @filter="filter" />
         </div>
 

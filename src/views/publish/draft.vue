@@ -35,7 +35,7 @@
                             <span class="u-item-key"
                                 >{{ itemName(item) }}
                                 <em class="u-item-time" v-if="item.data.cache_time"
-                                    >( {{ formatDate(item.data.cache_time) }} )</em
+                                    >( {{ formatDate(item) }} )</em
                                 ></span
                             >
                             <div class="u-op">
