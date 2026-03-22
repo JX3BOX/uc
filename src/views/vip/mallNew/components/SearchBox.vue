@@ -2,22 +2,22 @@
     <div class="m-search-bar">
         <div class="m-select-box">
             <div class="select-item">
-                <el-select :value="c_level" @change="handleChange($event, 'level')" placeholder="等级限制" style="width:120px">
+                <el-select v-model="c_level" placeholder="等级限制" style="width:120px">
                     <el-option v-for="item in level_options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </div>
             <div class="select-item">
-                <el-select :value="query.vip_limit" @change="handleChange($event, 'vip_limit')" placeholder="会员限制" style="width:120px">
+                <el-select v-model="query.vip_limit" placeholder="会员限制" style="width:120px">
                     <el-option v-for="item in member_options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </div>
         </div>
         <div class="search-input">
-            <el-input :value="query.title" placeholder="搜索商品关键词" @input="handleChange($event, 'title')">
+            <el-input v-model="query.title" placeholder="搜索商品关键词" @keyup.enter="handleChange(query.title, 'title')">
                 <template #append>
-                    <el-button icon="Search"></el-button>
+                    <el-button icon="Search" @click="handleChange(query.title, 'title')"></el-button>
                 </template>
             </el-input>
         </div>
