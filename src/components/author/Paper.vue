@@ -13,12 +13,12 @@
                     </h2>
                     <!-- 字段 -->
                     <div class="u-desc">
-                        <el-tag
+                        <span
                             type="primary"
                             v-for="(tag, index) in JSON.parse(item.tags || [])"
                             :key="'t' + index"
                             class="u-tag"
-                            >{{ tag }}</el-tag
+                            >{{ tag }}</span
                         >
                     </div>
 

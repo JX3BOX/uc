@@ -83,7 +83,7 @@
                             </el-popover>
                         </div>
                     </div>
-                    <!--        加入时间-->
+                    <!--  加入时间-->
                     <div class="m-common-box m-join-box">
                         <div class="u-join">
                             <i class="u-icon u-icon-join">
@@ -91,14 +91,14 @@
                             </i>
                             <span>加入于 {{ time(data.user_registered) }}</span>
                         </div>
-                        <div
+                        <!-- <div
                             class="u-fans"
                             :class="isSelf ? 'self' : ''"
                             :style="userDefinedStyle.fans"
                             v-if="diffYearText"
                         >
                             <el-tag type="primary">{{ diffYearText }}</el-tag>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -150,7 +150,7 @@
                         </template>
                     </el-popover>
                 </div>
-                <!--        加入时间-->
+                <!-- 加入时间-->
                 <div class="m-common-box m-join-box u-in-phone">
                     <div class="u-join">
                         <i class="u-icon u-icon-join">
@@ -158,14 +158,14 @@
                         </i>
                         <span>加入于 {{ time(data.user_registered) }}</span>
                     </div>
-                    <div
+                    <!-- <div
                         v-if="diffYearText"
                         class="u-fans"
                         :class="isSelf ? 'self' : ''"
                         :style="userDefinedStyle.fans"
                     >
                         <el-tag type="primary">{{ diffYearText }}</el-tag>
-                    </div>
+                    </div> -->
                 </div>
 
                 <Primary @authorInfo="getAuthorInfo"></Primary>
