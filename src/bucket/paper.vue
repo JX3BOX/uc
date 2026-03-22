@@ -1,12 +1,12 @@
 <template>
-    <ul>
+    <ul class="m-publish__paper-list">
         <li v-for="(item, i) in list" :key="i">
-            <i class="u-icon">
-                <img v-if="item.status != 0" svg-inline src="@/assets/img/publish/works/repo.svg" />
-                <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" />
-            </i>
             <a class="u-title" target="_blank" :href="postLink(item.id)">
                 <!-- [{{ item.type | typeFormat }}]  -->
+                <i class="u-icon">
+                    <img v-if="item.status != 0" svg-inline src="@/assets/img/publish/works/repo.svg" />
+                    <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" />
+                </i>
                 {{ item.title || "无标题" }}
             </a>
             <div class="u-desc">
@@ -106,6 +106,11 @@ export default {
     }
     .fail {
         color: #fc3c3c;
+    }
+}
+.m-publish__paper-list{
+    .u-title{
+        padding:4px 0;
     }
 }
 </style>

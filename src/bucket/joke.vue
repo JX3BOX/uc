@@ -3,11 +3,11 @@
         <div class="m-dashboard-work-header">
             <h2 class="u-title">剑三骚话</h2>
             <a :href="publishLink" class="u-publish el-button el-button--primary">
-                <i class="el-icon-document"></i> 说句骚话
+                <i class="el-icon-document"></i> 发布骚话
             </a>
         </div>
 
-        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search">
+        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search" size="large">
             <template #prepend>
                 <span>关键词</span>
             </template>

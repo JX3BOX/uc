@@ -151,7 +151,7 @@
 
             <!-- 按钮 -->
             <div class="m-publish-buttons">
-                <el-button type="primary" @click="publish" :disabled="processing">发 &nbsp;&nbsp; 布</el-button>
+                <el-button type="primary" @click="publish" :disabled="processing" size="large">发 &nbsp;&nbsp; 布</el-button>
             </div>
         </el-form>
     </div>

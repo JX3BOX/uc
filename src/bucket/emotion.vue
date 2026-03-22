@@ -7,7 +7,7 @@
             </a>
         </div>
 
-        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search">
+        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search" size="large">
             <template #prepend>
                 <span>关键词</span>
             </template>

@@ -1,12 +1,11 @@
 <template>
-    <ul>
+    <ul class="m-publish__question-list">
         <li v-for="(item, i) in list" :key="i">
-            <i class="u-icon">
-                <img v-if="item.status > 0" svg-inline src="@/assets/img/publish/works/repo.svg" />
-                <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" />
-            </i>
             <a class="u-title" target="_blank" :href="postLink(item.id)"
-                >[{{ typeFormat(item.type) }}] {{ item.title || "无标题" }}</a
+                ><i class="u-icon">
+                    <img v-if="item.status > 0" svg-inline src="@/assets/img/publish/works/repo.svg" />
+                    <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" /> </i
+                >{{ item.title || "无标题" }}</a
             >
             <div class="u-desc">
                 <span class="u-desc-subitem">
@@ -14,7 +13,7 @@
                     <b>{{ item.id }}</b>
                 </span>
                 <span class="u-status u-desc-subitem">
-                    状态:
+                    状态 :
                     <b
                         :class="{
                             pass: item.status > 0,
@@ -23,6 +22,9 @@
                         }"
                         >{{ statusmap[item.status] }}</b
                     >
+                </span>
+                <span class="u-type u-desc-subitem">
+                    题型 : {{ typeFormat(item.type) }}
                 </span>
                 <time class="u-time u-desc-subitem">提交于: {{ dateFormat(item.createTime) }}</time>
             </div>
@@ -104,6 +106,11 @@ export default {
     }
     .fail {
         color: #fc3c3c;
+    }
+}
+.m-publish__question-list{
+    .u-title{
+        padding:4px 0;
     }
 }
 </style>

@@ -16,6 +16,7 @@
                     remote
                     :remote-method="search_handle"
                     :loading="options.loading"
+                    size="large"
                 >
                     <el-option
                         v-for="(item, index) in options.sources"
@@ -40,6 +41,7 @@
                     show-word-limit
                     required
                     placeholder="请简单描述一下本次修订的说明"
+                    size="large"
                 ></el-input>
             </div>
 

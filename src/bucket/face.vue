@@ -7,7 +7,7 @@
             </a>
         </div>
 
-        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model.lazy="search">
+        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model.lazy="search" size="large">
             <template #prepend>
                 <span>关键词</span>
             </template>
@@ -19,25 +19,27 @@
         <div class="m-dashboard-box">
             <ul class="m-dashboard-box-list" v-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
-                    <div class="u-header">
-                        <i
-                            class="u-item-icon u-success-icon el-icon-success"
-                            v-if="item.status == 1"
-                            title="上架中"
-                        ></i>
-                        <i class="u-item-icon u-remove-icon el-icon-remove" v-else title="已下架"></i>
-                        <a class="u-title" target="_blank" :href="postLink(item.id)">{{ item.title || "未命名" }}</a>
-                    </div>
+                    <a class="u-title" target="_blank" :href="postLink(item.id)">
+                        <i class="u-icon">
+                            <img src="@/assets/img/publish/works/repo.svg" v-if="item.status == 1" />
+                            <img
+                                v-else
+                                src="@/assets/img/publish/works/draft.svg"
+                                title="已下架"
+                            />
+                        </i>
+                        {{ item.title || "未命名" }}</a
+                    >
                     <div class="u-desc">
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ item.created_at }}
+                            <span class="u-time">{{ item.created_at }}</span>
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
                             更新 :
-                            {{ item.updated_at }}
+                            <span class="u-time">{{ item.updated_at }}</span>
                         </time>
                     </div>
 
