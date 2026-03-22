@@ -26,9 +26,9 @@
                         <a class="u-title" target="_blank" :href="'cj/view/' + comment.source_id">{{
                             comment.title || "无标题"
                         }}</a>
-                        <span v-if="comment.checked == 0" class="u-mark pending">⌛ 等待审核</span>
-                        <span v-if="comment.checked == 1" class="u-mark">✔ 审核通过</span>
-                        <span v-if="comment.checked == 2" class="u-mark reject">❌ 审核驳回</span>
+                        <el-tag type="warning" size="small" v-if="comment.checked == 0">等待审核</el-tag>
+                        <el-tag type="success" size="small" v-if="comment.checked == 1">审核通过</el-tag>
+                        <el-tag type="danger" size="small" v-if="comment.checked == 2">审核驳回</el-tag>
                     </div>
                     <div class="u-desc">
                         <span class="u-content">

@@ -30,10 +30,10 @@
                         <a class="u-title" target="_blank" :href="getLink(post)">
                             {{ post.title || "无标题" }}
                         </a>
-                        <span v-if="post.checked == 0" class="u-mark pending">⌛ 等待审核</span>
-                        <span v-if="post.checked == 1" class="u-mark">✔ 审核通过</span>
-                        <span v-if="post.checked == 2" class="u-mark reject">❌ 审核驳回</span>
-                        <span v-if="post.checked == 3" class="u-mark hold">🔐 等待验证</span>
+                        <el-tag type="warning" size="small" v-if="post.checked == 0">等待审核</el-tag>
+                        <el-tag type="success" size="small" v-if="post.checked == 1">审核通过</el-tag>
+                        <el-tag type="danger" size="small" v-if="post.checked == 2">审核驳回</el-tag>
+                        <el-tag type="warning" size="small" v-if="post.checked == 3">等待验证</el-tag>
                     </div>
                     <div class="u-desc">
                         <span
