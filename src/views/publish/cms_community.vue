@@ -31,7 +31,12 @@
                 <li v-for="(item, i) in data" :key="i">
                     <a class="u-title" target="_blank" :href="postLink(item)">
                         <i class="u-icon">
-                            <img src="@/assets/img/publish/works/repo.svg" />
+                            <img src="@/assets/img/publish/works/repo.svg" v-if="item.visible == 0" />
+                            <el-tooltip v-else :content="visibleFormat(item.is_self_visit || item.visible)" placement="top">
+                                <img
+                                    src="@/assets/img/publish/works/draft.svg"
+                                />
+                            </el-tooltip>
                         </i>
                         <span v-if="activeTab == 'topic'">{{ item.title || item.content || "无标题" }}</span>
                         <span class="u-title_content" v-else v-html="getContent(item)"></span>
@@ -42,10 +47,10 @@
                         </div> -->
                     </a>
                     <div class="u-desc">
-                        <span class="u-desc-subitem">
+                        <!-- <span class="u-desc-subitem">
                             <i class="el-icon-view"></i>
                             {{ visibleFormat(item.is_self_visit || item.visible) }}
-                        </span>
+                        </span> -->
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :

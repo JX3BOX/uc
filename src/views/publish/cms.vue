@@ -26,20 +26,21 @@
                 <li v-for="(item, i) in data" :key="i">
                     <a class="u-title" target="_blank" :href="postLink(item.post_type, item.ID)">
                         <i class="u-icon">
-                            <img src="@/assets/img/publish/works/repo.svg" v-if="item.post_status == 'publish'" />
-                            <img
-                                v-else
-                                src="@/assets/img/publish/works/draft.svg"
-                                :title="statusFormat(item.post_status)"
-                            />
+                            <img src="@/assets/img/publish/works/repo.svg" v-if="item.visible == 0" />
+                            <el-tooltip v-else :content="visibleFormat(item.visible)" placement="top">
+                                <img
+                                    src="@/assets/img/publish/works/draft.svg"
+                                    :title="statusFormat(item.post_status)"
+                                />
+                            </el-tooltip>
                         </i>
                         {{ item.post_title || "无标题" }}</a
                     >
                     <div class="u-desc">
-                        <span class="u-desc-subitem">
+                        <!-- <span class="u-desc-subitem">
                             <i class="el-icon-view"></i>
                             {{ visibleFormat(item.visible) }}
-                        </span>
+                        </span> -->
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :

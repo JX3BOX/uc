@@ -21,19 +21,24 @@
                         >
                             <i class="u-icon">
                                 <img
-                                    v-if="item.union_post_raw.post_status == 'publish'"
+                                    v-if="item.union_post_raw.visible == 0"
                                     svg-inline
                                     src="@/assets/img/publish/works/repo.svg"
                                 />
-                                <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" />
+                                <el-tooltip v-else :content="visibleFormat(item.union_post_raw.visible)" placement="top">
+                                <img
+                                    src="@/assets/img/publish/works/draft.svg"
+                                    :title="statusFormat(item.union_post_raw.post_status)"
+                                />
+                            </el-tooltip>
                             </i>
                             {{ item.union_post_raw.post_title || "无标题" }}
                         </a>
                         <div class="u-desc">
-                            <span class="u-desc-subitem">
+                            <!-- <span class="u-desc-subitem">
                                 <i class="el-icon-view"></i>
                                 {{ visibleFormat(item.union_post_raw.visible) }}
-                            </span>
+                            </span> -->
                             <time class="u-desc-subitem">
                                 <i class="el-icon-finished"></i>
                                 发布 :
