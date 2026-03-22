@@ -334,7 +334,11 @@
         }
     }
     .u-link {
-        .underline(@v4primary);
+        color:@v4tip;
+        &:hover{
+            .underline(@v4primary);
+            color: @v4primary;
+        }
         .ml(5px);
     }
 
