@@ -61,7 +61,7 @@ export default {
                     component: Wiki,
                 },
                 {
-                    label: "论坛",
+                    label: "帖子",
                     value: "Other",
                     component: Other,
                 },

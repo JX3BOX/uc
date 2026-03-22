@@ -13,7 +13,7 @@
                     <h2 class="u-post">
                         <!-- 标题文字 -->
                         <a :href="postLink(item.id)" class="u-title" target="_blank"
-                            >【{{ item.category }}】{{ item.title || "无标题" }}</a
+                            >{{ item.title || "无标题" }}</a
                         >
                     </h2>
 
