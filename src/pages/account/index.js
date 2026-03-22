@@ -1,10 +1,10 @@
 // 1.Create APP
 import { createApp } from "vue";
-import App from "./Login_Callback.vue";
+import App from "./account.vue";
 const app = createApp(App);
 
 // 2.Router
-import router from "@/router";
+import router from "./router";
 app.use(router);
 
 // 3.Store
@@ -19,7 +19,7 @@ app.use(head);
 // 5.i18n
 import { createJx3boxUiI18n, getJx3boxUiAvailableLocales } from "@jx3box/jx3box-ui";
 import { mergeAppLocaleMessages } from "@/locale";
-import { initPageI18nHead } from "@/router/i18n-head";
+import { initRouterI18nHead } from "@/router/i18n-head";
 const __langKey = (localStorage.getItem("lang") || "zh-cn").toLowerCase();
 const __langMap = {
     "zh-cn": "zh-CN",
@@ -40,11 +40,7 @@ __i18n.global.fallbackWarn = false;
 app.use(__i18n);
 
 // 根据路由 meta 自动更新 title/keywords/description（同时支持语言切换）
-initPageI18nHead(__i18n, head, {
-    title: "pages.account.login_callback_wesite.title",
-    keywords: "pages.account.login_callback_wesite.keywords",
-    description: "pages.account.login_callback_wesite.description",
-});
+initRouterI18nHead(router, __i18n, head);
 
 // 6.UI
 
