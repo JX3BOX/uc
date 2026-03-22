@@ -13,16 +13,12 @@ const pages = {
         template: "public/index.html",
         filename: "dashboard/index.html",
     },
-
-    
     publish: {
         title: "发布中心 - JX3BOX",
         entry: "src/pages/publish/index.js",
         template: "public/index.html",
         filename: "publish/index.html",
     },
-
-
     author: {
         title: "作者 - JX3BOX",
         entry: "src/pages/author/index.js",
@@ -35,16 +31,12 @@ const pages = {
         template: "public/app.html",
         filename: "card/index.html",
     },
-
-
     vip: {
         title: "会员中心 - JX3BOX",
         entry: "src/pages/vip/index.js",
         template: "public/index.html",
         filename: "vip/index.html",
     },
-
-    // account
     login: {
         title: "登录 - JX3BOX",
         entry: "src/pages/account/login/login.js",
@@ -56,12 +48,6 @@ const pages = {
         entry: "src/pages/account/register/register.js",
         template: "public/app.html",
         filename: "register/index.html",
-    },
-    email_verify: {
-        title: "邮箱验证 - JX3BOX",
-        entry: "src/pages/account/email_verify/email_verify.js",
-        template: "public/app.html",
-        filename: "email_verify/index.html",
     },
     password_reset: {
         title: "密码重设 - JX3BOX",
@@ -75,17 +61,23 @@ const pages = {
         template: "public/app.html",
         filename: "login_callback/index.html",
     },
+    register_callback: {
+        title: "注册成功 - JX3BOX",
+        entry: "src/pages/account/register_callback/register_callback.js",
+        template: "public/app.html",
+        filename: "register_callback/index.html",
+    },
     login_callback_wesite: {
         title: "登录成功 - JX3BOX",
         entry: "src/pages/account/login_callback_wesite/login_callback.js",
         template: "public/app.html",
         filename: "login_callback_wesite/index.html",
     },
-    register_callback: {
-        title: "注册成功 - JX3BOX",
-        entry: "src/pages/account/register_callback/register_callback.js",
+    email_verify: {
+        title: "邮箱验证 - JX3BOX",
+        entry: "src/pages/account/email_verify/email_verify.js",
         template: "public/app.html",
-        filename: "register_callback/index.html",
+        filename: "email_verify/index.html",
     },
 };
 
