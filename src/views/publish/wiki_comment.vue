@@ -9,6 +9,7 @@
             placeholder="请输入搜索内容"
             v-model="achievement_comment.keyword"
             @change="search_comment"
+            size="large"
         >
             <template #prepend>
                 <span>关键词</span>
@@ -32,19 +33,19 @@
                     </div>
                     <div class="u-desc">
                         <span class="u-content">
-                            <i class="el-icon-s-comment"></i>
+                            <!-- <i class="el-icon-s-comment"></i> -->
                             {{ comment.content }}
                         </span>
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ dateFormat(new Date(comment.created * 1000)) }}
+                            <span class="u-time">{{ dateFormat(new Date(comment.created * 1000)) }}</span>
                         </time>
-                        <time class="u-desc-subitem">
+                        <!-- <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
                             更新 :
                             {{ dateFormat(new Date(comment.updated * 1000)) }}
-                        </time>
+                        </time> -->
                     </div>
 
                     <el-button-group class="u-action">

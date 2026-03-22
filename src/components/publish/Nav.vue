@@ -160,14 +160,14 @@ export default {
                     name: "通用评论",
                     count: 0,
                 },
-                wiki_comment: {
-                    path: "/comment/wiki",
-                    name: "百科评论",
-                    count: 0,
-                },
                 my_comment: {
                     path: "/comment/community",
                     name: "帖子评论",
+                    count: 0,
+                },
+                wiki_comment: {
+                    path: "/comment/wiki",
+                    name: "百科评论",
                     count: 0,
                 },
                 // feedback: {
