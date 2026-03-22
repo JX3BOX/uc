@@ -29,12 +29,7 @@
                 :key="index"
                 @click="toggleEmotionSelected(emotion)"
             >
-                <img
-                    class="u-check"
-                    v-if="selectedKeys.includes(emotion.group_name)"
-                    src="@/assets/img/dashboard/check.svg"
-                    alt=""
-                />
+                <i class="el-icon-success u-check" v-if="selectedKeys.includes(emotion.group_name)"></i>
                 <img class="u-img" :src="emotion.cover" alt="" />
                 <span class="u-name">{{ emotion.group_name }}</span>
             </div>
@@ -225,7 +220,8 @@ export default {
         }
         .u-check {
             .pa;
-            .rt(13px);
+            .rt(12px);
+            color: @v4primary;
         }
         .u-img {
             .size(30px);

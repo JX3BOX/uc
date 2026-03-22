@@ -4,9 +4,10 @@
             <main class="m-single-content" v-loading="loading">
                 <div class="m-type">
                     <div class="u-title">
-                        <span class="u-status" :style="{ backgroundColor: statusColors[data.status] }">{{
+                        <!-- <span class="u-status" :style="{ backgroundColor: statusColors[data.status] }">{{
                             statusMap[data.status]
-                        }}</span>
+                        }}</span> -->
+                        <el-tag :type="statusTypes[data.status]" size="small">{{ statusMap[data.status] }}</el-tag>
                         <div class="u-type">
                             <span class="u-value">{{ types[data.type] }}</span>
                             <span class="u-value">{{ subtypes[data.subtype] }}</span>
@@ -19,7 +20,7 @@
                         type="primary"
                         @click.stop="onDeal"
                     >
-                        <i class="el-icon-s-tools"></i> 
+                        <i class="el-icon-s-tools u-dropdown-icon"></i>
                         {{ statusText(data.status) }}
                         <template #dropdown>
                             <el-dropdown-menu>
@@ -285,7 +286,7 @@ import DOMPurify from "dompurify";
 import { getFeedback, getFeedbackLog } from "@/service/dashboard/feedback";
 import { getTeammates } from "@/service/dashboard/index";
 import feedbackData from "@/assets/data/dashboard/feedback.json";
-const { types, subtypes, statusMap, statusColors } = feedbackData;
+const { types, subtypes, statusMap, statusColors, statusTypes } = feedbackData;
 import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import moment from "moment";
 import CommonComment from "@jx3box/jx3box-ui/src/single/Comment.vue";
@@ -318,6 +319,7 @@ export default {
             subtypes,
             statusMap,
             statusColors,
+            statusTypes,
 
             done: false,
 

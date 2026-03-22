@@ -12,7 +12,7 @@
         <div class="m-honor">
             <div class="m-honor-left">
                 <div class="u-header-info">
-                    <Avatar
+                    <CommonAvatar
                         class="u-author-avatar"
                         :uid="uid"
                         :url="avatar"
@@ -93,6 +93,7 @@ import { getMyInfo } from "@/service/dashboard/index.js";
 import { __userLevelColor, __imgPath, __cdn } from "@/utils/config";
 import { getHonor, getUserHonors, setHonor, cancelHonor } from "@/service/dashboard/decoration";
 import { cloneDeep, inRange } from "lodash";
+import CommonAvatar from "@jx3box/jx3box-ui/src/author/Avatar.vue";
 export default {
     name: "honor",
     props: [],
@@ -305,6 +306,7 @@ export default {
     },
     components: {
         uc,
+        CommonAvatar,
     },
 };
 </script>
