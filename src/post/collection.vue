@@ -22,10 +22,10 @@
                 <div class="m-publish-primary-block">
                     <el-divider content-position="left">可见性</el-divider>
                     <el-radio v-model.number="collection.public" :label="this.public.PUBLIC">公开</el-radio>
-                    <el-radio v-model.number="collection.public" :label="this.public.PRIVATE">私有</el-radio>
-                    <el-tooltip content="私有仅使该小册不出现在公开小册大厅中" placement="top">
+                    <el-radio v-model.number="collection.public" :label="this.public.PRIVATE">私有<el-tooltip content="私有仅使该小册不出现在公开小册大厅中" placement="top">
                         <i class="el-icon-info"></i>
-                    </el-tooltip>
+                    </el-tooltip></el-radio>
+                    
                 </div>
                 <div class="m-publish-primary-block m-publish-collection-posts">
                     <el-divider content-position="left"
@@ -40,8 +40,10 @@
                         v-if="collection.posts && collection.posts.length"
                         :list="collection.posts"
                         handle=".u-move"
+                        item-key="id"
                     >
-                        <li v-for="(item, key) in collection.posts" :key="key" class="c-posts-item">
+                        <template #item="{ element: item, index: key }">
+                        <li class="c-posts-item">
                             <i class="u-move el-icon-more"></i>
                             <i class="u-delete el-icon-close" @click="collection.posts.splice(key, 1)"></i>
                             <el-row class="m-posts-item" :gutter="10">
@@ -134,6 +136,7 @@
                                 </el-col> -->
                             </el-row>
                         </li>
+                        </template>
                     </draggable>
                     <div v-else class="u-posts-items-empty">暂无作品信息，请进行作品添加</div>
                     <div class="u-posts-add" @click="add_posts_item">
