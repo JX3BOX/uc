@@ -3,7 +3,7 @@
         <!-- 标题 -->
         <div class="m-dashboard-work-header">
             <h2 class="u-title">{{ title }}</h2>
-            <a :href="publishLink" class="u-publish el-button el-button--primary" v-if="type == 'item_plan'">
+            <a :href="publishLink" class="u-publish el-button el-button--primary">
                 <i class="el-icon-document"></i> 发布作品
             </a>
         </div>
