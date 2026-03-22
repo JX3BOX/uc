@@ -36,16 +36,16 @@ export default {
                     icon: "el-icon-sugar",
                 },
                 {
-                    label: "战斗",
-                    value: "Battle",
-                    component: Battle,
-                    icon: "el-icon-ice-cream",
-                },
-                {
                     label: "插件",
                     value: "DBM",
                     component: DBM,
                     icon: "el-icon-cold-drink",
+                },
+                {
+                    label: "战斗",
+                    value: "Battle",
+                    component: Battle,
+                    icon: "el-icon-ice-cream",
                 },
             ],
         };

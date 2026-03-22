@@ -1,7 +1,6 @@
 <template>
     <sub-tab-content :list="list" @change-tab="changeTab">
         <div class="m-post" v-loading="loading">
-            <!--        </el-timeline>-->
             <div v-if="posts && posts.length" class="m-archive-list">
                 <div class="u-list">
                     <a
@@ -173,7 +172,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .m-post {
     width: 100%;
     .m-archive-list {
