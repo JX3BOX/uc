@@ -17,21 +17,22 @@
                 :filters="postTypeFilters"
                 :filter-multiple="false"
                 column-key="post_type"
+                min-width="120"
             >
                 <template #default="{ row }">
                     <div>{{ postType(row.post_type) }}</div>
                 </template>
             </el-table-column>
-            <el-table-column label="货币类型">
+            <el-table-column label="货币类型" min-width="100">
                 <template #default="{ row }">
                     {{ priceType(row.price_type) }}
                 </template>
             </el-table-column>
-            <el-table-column label="货币数量" prop="price_count" />
-            <el-table-column label="购买时间" prop="created_at" />
-            <el-table-column>
+            <el-table-column label="货币数量" prop="price_count" min-width="90" />
+            <el-table-column label="购买时间" prop="created_at" min-width="160" />
+            <el-table-column label="操作" min-width="100">
                 <template #default="{ row }">
-                    <el-button plain @click="toDetails(row)" icon="View">查看</el-button>
+                    <el-button class="u-detail-btn" plain @click="toDetails(row)" icon="View">查看</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -137,6 +138,7 @@ export default {
 <style lang="less">
 .m-dashboard-purchases {
     .m-table {
+        width: 100%;
         .u-header-cell {
             .fz(12px);
             color: @color;
@@ -144,6 +146,28 @@ export default {
         .u-table-cell {
             .fz(12px);
             cursor: pointer;
+        }
+    }
+    @media screen and (max-width: @phone) {
+        .m-table {
+            .u-header-cell,
+            .u-table-cell {
+                white-space: nowrap;
+            }
+            .el-table__header,
+            .el-table__body,
+            .el-table__footer {
+                min-width: 630px;
+            }
+            .el-table__header-wrapper,
+            .el-table__body-wrapper,
+            .el-table__footer-wrapper {
+                overflow-x: auto;
+            }
+        }
+        .u-detail-btn {
+            .pl(10px);
+            .pr(10px);
         }
     }
     .m-pagination {

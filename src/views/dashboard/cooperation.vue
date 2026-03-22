@@ -4,11 +4,11 @@
             <span class="u-title-text">
                 <i class="el-icon-reading"></i>
                 签约中心
-                <el-tag class="u-sign" type="success" v-if="isSuperAuthor"
+                <el-tag class="u-sign" type="success" size="small" v-if="isSuperAuthor"
                     >签约时长：{{ signDuration }}{{ signDurationType }}</el-tag
                 >
             </span>
-            <el-button type="primary" @click="openPage" v-if="isSuperAuthor" icon="Unlock"> 敏感词测试 </el-button>
+            <el-button class="u-unlock-btn" type="primary" @click="openPage" v-if="isSuperAuthor" icon="Unlock"> 敏感词测试 </el-button>
         </h2>
         <div class="m-cooperation-ac m-block" v-html="data"></div>
         <div class="m-cooperation-form m-block">
@@ -318,6 +318,11 @@ export default {
 @media screen and (max-width: @phone) {
     .m-block {
         margin: 10px 0;
+    }
+
+    .u-unlock-btn {
+        .pa;
+        right: -10px;
     }
 }
 </style>

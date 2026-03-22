@@ -112,4 +112,20 @@ export default {
 </script>
 <style scoped lang="less">
 @import "~@/assets/css/dashboard/orders.less";
+
+@media screen and (max-width: @phone) {
+    .m-order-list {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+
+        table {
+            min-width: 860px;
+        }
+
+        th,
+        td {
+            white-space: nowrap;
+        }
+    }
+}
 </style>
