@@ -44,12 +44,12 @@
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ dateFormat(item.post_date) }}
+                            <span class="u-time">{{ dateFormat(item.post_date) }}</span>
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
                             更新 :
-                            {{ dateFormat(item.post_modified) }}
+                            <span class="u-time">{{ dateFormat(item.post_modified) }}</span>
                         </time>
                     </div>
 

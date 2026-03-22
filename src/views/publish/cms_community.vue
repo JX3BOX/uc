@@ -54,18 +54,18 @@
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ dateFormat(item.created_at) }}
+                            <span class="u-time">{{ dateFormat(item.created_at) }}</span>
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
                             更新 :
-                            {{ dateFormat(item.updated_at) }}
+                            <span class="u-time">{{ dateFormat(item.updated_at) }}</span>
                         </time>
-                        <time class="u-desc-subitem">
+                        <!-- <time class="u-desc-subitem">
                             <i class="el-icon-receiving"></i>
                             状态 :
                             {{ getStatusCn(item.status) }}
-                        </time>
+                        </time> -->
                     </div>
 
                     <el-button-group class="u-action">

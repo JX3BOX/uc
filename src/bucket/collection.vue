@@ -7,7 +7,7 @@
             </a>
         </div>
 
-        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search">
+        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search" size="large">
             <template #prepend>
                 <span>关键词</span>
             </template>
@@ -20,12 +20,11 @@
             <template v-if="data && data.length">
                 <ul class="m-dashboard-box-list">
                     <li v-for="(item, i) in data" :key="i">
-                        <i class="u-icon">
-                            <img v-if="item.public" svg-inline src="@/assets/img/publish/works/repo.svg" />
-                            <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" />
-                        </i>
                         <a class="u-title" target="_blank" :href="getCollectionLink(item.id)">
-                            {{ item.title || "无标题" }}
+                            <i class="u-icon">
+                                <img v-if="item.public" svg-inline src="@/assets/img/publish/works/repo.svg" />
+                                <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" /> </i
+                            >{{ item.title || "无标题" }}
                         </a>
                         <div class="u-desc">
                             <time class="u-desc-subitem">

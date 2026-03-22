@@ -25,7 +25,7 @@
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ dateFormat(item.commentDate) }}
+                            <span class="u-time">{{ dateFormat(item.commentDate) }}</span>
                         </time>
                     </div>
 

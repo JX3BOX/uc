@@ -23,7 +23,7 @@
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ showTime(item.created_at) }}
+                            <span class="u-time">{{ showTime(item.created_at) }}</span>
                         </time>
                     </div>
 
