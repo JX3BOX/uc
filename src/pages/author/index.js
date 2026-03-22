@@ -80,5 +80,9 @@ import "@/assets/css/tailwind.css";
 
 // 7. 其它扩展
 
+// 7.1 复制功能
+import { copyText } from "@/utils";
+app.config.globalProperties.$copyText = copyText;
+
 // Final.Mount DOM
 app.mount("#app");
