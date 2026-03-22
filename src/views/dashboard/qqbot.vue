@@ -19,9 +19,7 @@
                 <span
                     class="u-token"
                     title="点击复制"
-                    v-clipboard:copy="bindText"
-                    v-clipboard:success="onCopy"
-                    v-clipboard:error="onError"
+                    @click="copyBindText"
                 >
                     <i class="el-icon-document-copy"></i>
                     {{ bindText }}
@@ -38,6 +36,7 @@
 <script>
 import { __cdn } from "@/utils/config";
 import { getQQbotToken, unbindQQbot } from "@/service/dashboard/profile";
+import { copyText } from "@/utils/index";
 export default {
     name: "qqbot",
     props: {
@@ -91,18 +90,21 @@ export default {
                 })
                 .catch(() => {});
         },
-        onCopy: function (val) {
-            this.$notify({
-                title: "复制成功",
-                message: val.text,
-                type: "success",
-            });
-        },
-        onError: function () {
-            this.$notify.error({
-                title: "复制失败",
-                message: "请手动复制",
-            });
+        copyBindText: function () {
+            copyText(this.bindText)
+                .then(() => {
+                    this.$notify({
+                        title: "复制成功",
+                        message: this.bindText,
+                        type: "success",
+                    });
+                })
+                .catch(() => {
+                    this.$notify.error({
+                        title: "复制失败",
+                        message: "请手动复制",
+                    });
+                });
         },
     },
 };

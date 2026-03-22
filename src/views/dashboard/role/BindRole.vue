@@ -23,9 +23,7 @@
                         <span
                             class="u-token"
                             title="点击复制"
-                            v-clipboard:copy="token"
-                            v-clipboard:success="onCopy"
-                            v-clipboard:error="onError"
+                            @click="copyToken"
                         >
                             <i class="el-icon-document-copy"></i>
                             {{ token }}
@@ -50,6 +48,7 @@
 <script>
 import { getToken, createRole } from "@/service/dashboard/role.js";
 import { __imgPath, __ossMirror } from "@/utils/config";
+import { copyText } from "@/utils/index";
 import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 // import roleform from "@/components/dashboard/role/roleform.vue";
 export default {
@@ -77,18 +76,21 @@ export default {
     },
     computed: {},
     methods: {
-        onCopy: function (val) {
-            this.$notify({
-                title: "复制成功",
-                message: val.text,
-                type: "success",
-            });
-        },
-        onError: function () {
-            this.$notify.error({
-                title: "复制失败",
-                message: "请手动复制",
-            });
+        copyToken: function () {
+            copyText(this.token)
+                .then(() => {
+                    this.$notify({
+                        title: "复制成功",
+                        message: this.token,
+                        type: "success",
+                    });
+                })
+                .catch(() => {
+                    this.$notify.error({
+                        title: "复制失败",
+                        message: "请手动复制",
+                    });
+                });
         },
         submit: function () {
             this.processing = true;
