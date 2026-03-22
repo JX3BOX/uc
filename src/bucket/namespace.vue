@@ -19,7 +19,7 @@
                                 </div>
                                 <div class="u-desc">
                                     <span class="u-status u-desc-subitem">
-                                        状态:
+                                        状态 : 
                                         <b :class="`status${item.status}`">{{ statusmap[item.status] }}</b>
                                     </span>
                                     <time class="u-time u-desc-subitem">创建于 : {{ dateFormat(item.created) }}</time>
@@ -30,6 +30,8 @@
                                     icon="Edit"
                                     @click="edit(item.ID, item.source_type, item.source_id)"
                                     title="编辑"
+                                    circle
+                                    plain
                                 ></el-button>
                             </el-button-group>
                         </div>

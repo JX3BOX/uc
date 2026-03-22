@@ -30,12 +30,12 @@
                             <time class="u-desc-subitem">
                                 <i class="el-icon-finished"></i>
                                 发布 :
-                                {{ dateFormat(item.created) }}
+                                <span class="u-time">{{ dateFormat(item.created) }}</span>
                             </time>
                             <time class="u-desc-subitem">
                                 <i class="el-icon-refresh"></i>
                                 更新 :
-                                {{ dateFormat(item.updated) }}
+                                <span class="u-time">{{ dateFormat(item.updated) }}</span>
                             </time>
                         </div>
                         <el-button-group class="u-action">
