@@ -11,6 +11,7 @@
                 :remote-method="remoteMethodPrev"
                 v-model="prevPost"
                 clearable
+                size="small"
             >
                 <el-option v-for="item in prev" :key="item.ID" :value="item.ID" :label="item.post_title">
                     <div class="u-post-select__item">
@@ -31,6 +32,7 @@
                 :remote-method="remoteMethodNext"
                 v-model="nextPost"
                 clearable
+                size="small"
             >
                 <el-option v-for="item in next" :key="item.ID" :value="item.ID" :label="item.post_title">
                     <div class="u-post-select__item">
@@ -173,7 +175,7 @@ export default {
         width: 80px;
     }
     .u-condition {
-        height: 40px;
+        height: 32x;
         width: auto;
         .flex;
         align-items: center;
@@ -186,9 +188,9 @@ export default {
             border-radius: 4px 0 0 4px;
             padding: 0 15px;
             min-width: 80px;
-            height: 40px !important;
+            height: 32px !important;
             box-sizing: border-box;
-            .fz(14px);
+            .fz(12px);
             .flex;
             align-items: center;
             justify-content: center;
@@ -203,7 +205,7 @@ export default {
                 border-top-left-radius: 0;
                 border-bottom-left-radius: 0;
                 box-shadow: 0 0 0 1px #dcdfe6 inset;
-                height: 40px;
+                height: 32px;
                 box-sizing: border-box;
 
                 &.is-focus {
@@ -212,7 +214,7 @@ export default {
             }
 
             .el-input__inner {
-                height: 40px;
+                height: 32px;
             }
         }
     }

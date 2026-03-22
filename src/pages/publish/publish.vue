@@ -15,3 +15,7 @@ export default {
     methods: {},
 };
 </script>
+
+<style lang="less">
+@import "../../assets/css/common/element-override.less";
+</style>

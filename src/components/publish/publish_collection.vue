@@ -1,11 +1,15 @@
 <template>
     <div class="m-publish-collection-relation">
         <h5 class="u-schema">
-            <!-- <span class="u-label">关联小册</span> -->
-            <a class="u-add el-button el-button--primary el-button--small" href="/publish/#/collection" target="_blank"
-                >+ 创建小册</a
-            >
-            <slot></slot>
+            <div>
+                <a
+                    class="u-add el-button el-button--primary el-button--small"
+                    href="/publish/#/collection"
+                    target="_blank"
+                    >+ 创建小册</a
+                >
+                <slot></slot>
+            </div>
             <a class="u-help u-icon-links" href="/tool/20891" target="_blank">
                 <i class="el-icon-question"></i> 小册帮助指南
             </a>
@@ -159,12 +163,19 @@ export default {
         line-height: 18px;
         font-weight: normal;
     }
+    .u-schema {
+        .flex(y);
+        justify-content: space-between;
+
+        div{
+            .flex(y);
+        }
+    }
 
     .u-icon-links {
         margin-left: 10px;
         font-size: 13px;
-        color: #0366d6;
-        box-shadow: 0 1px 0 #0366d6;
+        color: @v4text;
 
         &:hover {
             color: @pink;

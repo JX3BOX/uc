@@ -7,7 +7,7 @@
             </a>
         </div>
 
-        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search">
+        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search" size="large">
             <template #prepend>
                 <span>关键词</span>
             </template>
@@ -24,17 +24,17 @@
         <div class="m-dashboard-box">
             <ul class="m-dashboard-box-list" v-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
-                    <i class="u-icon">
-                        <img src="@/assets/img/publish/works/repo.svg" v-if="item.post_status == 'publish'" />
-                        <img
-                            v-else
-                            src="@/assets/img/publish/works/draft.svg"
-                            :title="statusFormat(item.post_status)"
-                        />
-                    </i>
-                    <a class="u-title" target="_blank" :href="postLink(item.post_type, item.ID)">{{
-                        item.post_title || "无标题"
-                    }}</a>
+                    <a class="u-title" target="_blank" :href="postLink(item.post_type, item.ID)">
+                        <i class="u-icon">
+                            <img src="@/assets/img/publish/works/repo.svg" v-if="item.post_status == 'publish'" />
+                            <img
+                                v-else
+                                src="@/assets/img/publish/works/draft.svg"
+                                :title="statusFormat(item.post_status)"
+                            />
+                        </i>
+                        {{ item.post_title || "无标题" }}</a
+                    >
                     <div class="u-desc">
                         <span class="u-desc-subitem">
                             <i class="el-icon-view"></i>
