@@ -8,7 +8,7 @@
                     type="primary"
                     class="el-button el-tooltip el-button--primary el-button--small u-btn"
                     target="_blank"
-                    >申请签约作者</a
+                    ><el-icon><Stamp /></el-icon>申请签约作者</a
                 >
             </el-tooltip>
         </h1>

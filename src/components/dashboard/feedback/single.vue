@@ -7,7 +7,7 @@
                         <!-- <span class="u-status" :style="{ backgroundColor: statusColors[data.status] }">{{
                             statusMap[data.status]
                         }}</span> -->
-                        <el-tag :type="statusTypes[data.status]" size="small">{{ statusMap[data.status] }}</el-tag>
+                        <el-tag :type="statusTypes[data.status]">{{ statusMap[data.status] }}</el-tag>
                         <div class="u-type">
                             <span class="u-value">{{ types[data.type] }}</span>
                             <span class="u-value">{{ subtypes[data.subtype] }}</span>
@@ -25,7 +25,7 @@
                         <template #dropdown>
                             <el-dropdown-menu>
                                 <el-dropdown-item @click="handleEdit">
-                                    <el-button class="u-btn" type="primary" icon="EditOutline">编辑</el-button>
+                                    <el-button class="u-btn" type="primary" icon="Edit">编辑</el-button>
                                 </el-dropdown-item>
                                 <el-dropdown-item v-if="data.status === 1" @click="handleTransfer">
                                     <el-button class="u-btn" type="warning" icon="Right">转交</el-button>
