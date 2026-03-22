@@ -1,13 +1,18 @@
 <template>
     <div class="m-exam">
-        <el-tabs class="m-tabs" v-model="active" type="card">
-            <el-tab-pane v-for="item in types" :key="item.value" :label="item.label" :name="item.value" :lazy="true">
-                <template #label>
-                    <i :class="item.icon"></i>
-                    {{ item.label }}
+        <div class="m-segmented">
+            <el-segmented
+                v-model="active"
+                :options="types.map((item) => ({ label: item.label, value: item.value, icon: item.icon }))"
+            >
+                <template #default="scope">
+                    <div class="flex items-center gap-1 p-2">
+                        <i :class="scope.item.icon"></i>
+                        <div>{{ scope.item.label }}</div>
+                    </div>
                 </template>
-            </el-tab-pane>
-        </el-tabs>
+            </el-segmented>
+        </div>
         <div class="m-primary">
             <component :is="currentComponent" v-if="activeType === active" />
         </div>
@@ -60,3 +65,11 @@ export default {
     },
 };
 </script>
+
+<style lang="less">
+.m-exam {
+    .m-segmented, .el-segmented {
+        .x;
+    }
+}
+</style>
