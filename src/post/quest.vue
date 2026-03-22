@@ -85,9 +85,9 @@
                 </Tinymce>
             </div>
 
+            <el-divider content-position="left"></el-divider>
             <div class="m-publish-commit">
-                <el-divider content-position="left"></el-divider>
-                <el-button class="u-publish" icon="Promotion" type="primary" @click="toPublish" :disabled="processing"
+                <el-button class="u-publish" size="large" icon="Promotion" type="primary" @click="toPublish" :disabled="processing"
                     >提交攻略</el-button
                 >
             </div>

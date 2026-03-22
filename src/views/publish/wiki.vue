@@ -12,6 +12,7 @@
             placeholder="请输入搜索内容"
             v-model="achievement_post.keyword"
             @change="search_post"
+            size="large"
         >
             <template #prepend>
                 <span>关键词</span>

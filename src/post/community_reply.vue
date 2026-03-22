@@ -11,7 +11,7 @@
 
             <!-- 按钮 -->
             <div class="m-publish-buttons">
-                <el-button type="primary" @click="onSubmit" :disabled="processing"
+                <el-button type="primary" @click="onSubmit" :disabled="processing" size="large"
                     >更 &nbsp;&nbsp; 新</el-button
                 >
             </div>

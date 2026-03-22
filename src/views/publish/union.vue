@@ -14,20 +14,21 @@
             <ul class="m-dashboard-box-list" v-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
                     <template v-if="item.union_post_raw">
-                        <i class="u-icon">
-                            <img
-                                v-if="item.union_post_raw.post_status == 'publish'"
-                                svg-inline
-                                src="@/assets/img/publish/works/repo.svg"
-                            />
-                            <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" />
-                        </i>
                         <a
                             class="u-title"
                             target="_blank"
                             :href="postLink(item.union_post_raw.post_type, item.union_post_raw.ID)"
-                            >{{ item.union_post_raw.post_title || "无标题" }}</a
                         >
+                            <i class="u-icon">
+                                <img
+                                    v-if="item.union_post_raw.post_status == 'publish'"
+                                    svg-inline
+                                    src="@/assets/img/publish/works/repo.svg"
+                                />
+                                <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" />
+                            </i>
+                            {{ item.union_post_raw.post_title || "无标题" }}
+                        </a>
                         <div class="u-desc">
                             <span class="u-desc-subitem">
                                 <i class="el-icon-view"></i>
@@ -199,10 +200,13 @@ export default {
     .u-subtype {
         .fz(12px);
         color: #999;
-        .ml(10px);
+        // .ml(10px);
         font-weight: normal;
         span {
             color: #fba524;
+        }
+        i {
+            padding-right: 10px;
         }
     }
 }

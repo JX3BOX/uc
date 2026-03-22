@@ -151,6 +151,7 @@
             <!-- 按钮 -->
             <div class="m-publish-buttons">
                 <el-button
+                    size="large"
                     type="primary"
                     @click="publish('publish', true)"
                     :disabled="is_illegal || processing || !hasRead"

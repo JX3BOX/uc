@@ -152,10 +152,11 @@
                 <el-button v-else class="button-new-tag" @click="showInput">+ 添加标签 </el-button>
             </div>
 
+            <el-divider content-position="left"></el-divider>
             <div class="m-publish-commit">
-                <el-divider content-position="left"></el-divider>
                 <el-button
                     class="u-publish"
+                    size="large"
                     icon="Promotion"
                     type="primary"
                     @click="handleSubmit"
