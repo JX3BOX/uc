@@ -11,14 +11,14 @@
                 </el-tooltip>
             </h1>
             <div class="u-op">
-                <el-button plain icon="Delete" @click="clean" :disabled="!isNotNull">清空</el-button>
+                <el-button plain icon="Delete" @click="clean" :disabled="!isNotNull" size="small">清空</el-button>
                 <el-dropdown class="u-dropdown" trigger="click" @command="handleCommand">
-                    <el-button type="primary" :disabled="!canBatchOperate">
+                    <el-button type="primary" :disabled="!canBatchOperate" size="small">
                         批量操作<i class="el-icon-arrow-down el-icon--right"></i>
                     </el-button>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <el-dropdown-item command="batchDel">批量删除</el-dropdown-item>
+                            <el-dropdown-item command="batchDel" size="small">批量删除</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
@@ -39,12 +39,12 @@
                                 ></span
                             >
                             <div class="u-op">
-                                <el-button type="primary" plain icon="View" class="u-delete" @click.stop="preview(item)"
+                                <el-button type="primary" plain icon="View" class="u-delete" @click.stop="preview(item)" size="small"
                                     >预览</el-button
                                 >
                                 <el-popconfirm title="确定删除吗？" @confirm="del(item, i)">
                                     <template #reference>
-                                        <el-button plain icon="Delete" class="u-delete" @click.stop>删除</el-button>
+                                        <el-button plain icon="Delete" class="u-delete" @click.stop size="small">删除</el-button>
                                     </template>
                                 </el-popconfirm>
                             </div>

@@ -514,10 +514,10 @@ export default {
         transition: 0.35s;
         background-color: @bg-light;
         &:hover {
-            border-color: #0366d6;
+            border-color: @v4primary;
         }
         &.active {
-            border-color: #0366d6;
+            border-color: @v4primary;
             .u-mark {
                 display: block;
             }
@@ -530,9 +530,9 @@ export default {
             position: absolute;
             top: 2px;
             right: 2px;
-            padding: 4px 8px;
-            font-size: 12px;
-            background-color: #0366d6;
+            padding: 2px 8px;
+            font-size: 10px;
+            background-color: @v4primary;
             color: white;
             border-radius: 4px;
         }

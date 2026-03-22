@@ -12,7 +12,7 @@
             <el-tab-pane label="回帖" name="reply"></el-tab-pane>
         </el-tabs>
 
-        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search">
+        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search" size="large">
             <template #prepend>
                 <span>关键词</span>
             </template>
@@ -29,10 +29,10 @@
         <div class="m-dashboard-box">
             <ul class="m-dashboard-box-list" v-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
-                    <i class="u-icon">
-                        <img src="@/assets/img/publish/works/repo.svg" />
-                    </i>
                     <a class="u-title" target="_blank" :href="postLink(item)">
+                        <i class="u-icon">
+                            <img src="@/assets/img/publish/works/repo.svg" />
+                        </i>
                         <span v-if="activeTab == 'topic'">{{ item.title || item.content || "无标题" }}</span>
                         <span class="u-title_content" v-else v-html="getContent(item)"></span>
                         <!-- <div class="u-tags">
@@ -285,9 +285,6 @@ export default {
 
 .p-cms-community {
     .u-title {
-        display: flex;
-        align-items: center;
-        gap: 12px;
         .u-tags {
             display: flex;
             gap: 4px;
