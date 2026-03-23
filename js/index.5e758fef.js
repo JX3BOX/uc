@@ -1,0 +1,1 @@
+(function(){const a="/dashboard/";location.pathname!==a&&location.replace(a)})();
