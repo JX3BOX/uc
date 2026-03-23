@@ -214,8 +214,14 @@ export default {
 </script>
 
 <style lang="less">
+.m-whitelist-primary{
+    .el-tabs__content{
+        overflow-x: auto;
+    }
+}
 .m-privacy-lover {
     min-width: 800px;
+    
     .m-members {
         .flex;
         justify-content: center;
