@@ -207,4 +207,26 @@ export default {
 <style lang="less">
 @import "~@/assets/css/dashboard/packet.less";
 @import "~@/assets/css/dashboard/points.less";
+
+@media screen and (max-width: @phone) {
+    .m-points {
+        .m-table {
+            .el-table__header-wrapper,
+            .el-table__body-wrapper {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .el-table__header,
+            .el-table__body {
+                min-width: 760px;
+                table-layout: auto;
+            }
+            .cell {
+                white-space: nowrap;
+                overflow: visible;
+                text-overflow: clip;
+            }
+        }
+    }
+}
 </style>

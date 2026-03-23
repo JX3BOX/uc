@@ -58,7 +58,7 @@
                                 备注：{{ item.remark || "无" }}
                                 <i class="el-icon-edit-outline u-btn-edit" @click="edit(item.kith_id, item)"></i>
                             </span>
-                            <span class="u-item-remark" v-else> <i class="el-icon-loading"></i> 等待确认中... </span>
+                            <span class="u-item-remark u-pending" v-else> <i class="el-icon-loading"></i> 等待确认中... </span>
                         </template>
                         <div class="u-item-btns">
                             <template v-if="active === 'whitelist'">

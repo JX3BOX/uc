@@ -13,11 +13,11 @@
             </div>
             <div class="u-btn">
                 <el-button
-                    :type="data.hasFinish ? 'success' : 'warning'"
+                    :type="data.hasFinish ? 'success' : 'default'"
                     :disabled="data.hasFinish"
-                    :icon="(data.hasFinish && 'Check') || ''"
-                    @click="checkFinish(data.task.id)"
-                    >{{ data.hasFinish ? "已完成" : "领取奖励" }}</el-button
+                    :icon="(data.hasFinish && 'Check') || 'Right'"
+                    @click="checkFinish(data)"
+                    >{{ data.hasFinish ? "已完成" : "去完成" }}</el-button
                 >
             </div>
         </div>
@@ -42,8 +42,12 @@ export default {
         },
     },
     methods: {
-        checkFinish(id) {
-            this.$emit("update", id);
+        checkFinish({ hasFinish, task }) {
+            if (hasFinish) {
+                this.$emit("update", task.id);
+            } else {
+                window.open(task.task_url, "_blank");
+            }
         },
     },
 };
