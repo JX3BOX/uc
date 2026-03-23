@@ -1,7 +1,7 @@
 <template>
     <div class="m-category-list">
         <span class="u-category">类别</span>
-        <el-radio-group v-model="category" @input="updateCategory">
+        <el-radio-group v-model="category" @change="updateCategory">
             <!-- <el-tooltip v-for="item in options" :key="item.name" effect="dark" :content="item.remark" placement="top-start"> -->
             <el-radio v-for="item in options" :key="item.name" border :value="item.name">{{ item.label }}</el-radio>
             <!-- </el-tooltip> -->
@@ -46,8 +46,9 @@ export default {
             deep: true,
             immediate: true,
             handler() {
-                if (!this.value) {
-                    this.category = this.options?.[0]?.name;
+                // 如果没有设置值，使用第一个选项作为默认值
+                if (this.modelValue === undefined && !this.value && this.options?.length > 0) {
+                    this.category = this.options[0].name;
                     this.$emit("update:modelValue", this.category);
                     this.$emit("update", this.category);
                 }
