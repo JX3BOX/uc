@@ -351,6 +351,14 @@ export default {
         // 发布
         publish: function () {
             this.loading = true;
+            if (!this.post.title || !this.post.content) {
+                this.$message({
+                    message: "请完善标题和内容",
+                    type: "warning",
+                });
+                this.loading = false;
+                return;
+            }
             if (this.data.id) {
                 const fn = this.from === "admin" ? updateAdmin : update;
                 const data = {
