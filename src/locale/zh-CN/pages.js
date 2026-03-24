@@ -581,7 +581,7 @@ export default {
             description: "剑网3魔盒（JX3BOX）反馈中心。",
         },
         feedback_index: {
-            title: "提交反馈",
+            title: "反馈中心",
             keywords: "剑网3,魔盒,JX3BOX,个人中心,账号,管理",
             description: "剑网3魔盒（JX3BOX）提交反馈与查看反馈。",
         },

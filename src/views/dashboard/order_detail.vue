@@ -1,9 +1,12 @@
 <template>
-    <uc icon="el-icon-shopping-bag-1" title="订单中心" :tabList="tabList">
+    <uc class="m-order-detail" icon="el-icon-shopping-bag-1" title="订单中心" :tabList="tabList">
+        <template #header>
+             <el-button @click="goBack" class="u-back"><i class="el-icon-arrow-left"></i> 返回</el-button>
+        </template>
         <div class="m-mall-detail">
-            <div class="m-breadcrumb">
+            <!-- <div class="m-breadcrumb">
                 <span @click="goBack" class="u-back"><i class="el-icon-arrow-left"></i> 返回</span>
-            </div>
+            </div> -->
 
             <div class="m-content" v-if="goods">
                 <div class="m-address el-card" v-if="!goods.is_virtual">
