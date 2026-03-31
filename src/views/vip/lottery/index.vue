@@ -1,6 +1,6 @@
 <template>
-    <div  :class="theme" v-loading="loading">
-        <CommonHeader></CommonHeader>
+    <div :class="theme" v-loading="loading">
+        <!-- <CommonHeader></CommonHeader> -->
         <div class="p-event-blindbox">
             <!-- 模糊背景 -->
             <div class="m-video" v-if="isVideo">
@@ -17,12 +17,14 @@
                     <div class="m-left">
                         <div class="logo">
                             <img :src="`${themeImg}logo.svg?123`" alt="魔盒盲盒" />
-                            <el-tooltip effect="light" placement="right-start">
+                            <el-tooltip effect="light" placement="bottom-start">
+                                <template #content>
+                                    <div class="m-blindbox-info">
+                                        {{ info }}
+                                    </div>
+                                </template>
                                 <img class="u-info" :src="`${__imgRoot}desc.svg`" alt="活动说明" />
-                                <div class="m-blindbox-info">
-                                    {{ info }}
-                                </div>
-                            </el-tooltip>
+                            </el-tooltip> 
                         </div>
                         <!-- 抽奖盒子 -->
                         <div class="m-box" :class="{ active: allActive }">
@@ -407,6 +409,7 @@ export default {
 
                 Promise.all(promises)
                     .then((res) => {
+                        console.log(res);
                         this.info = res[0];
                         this.odds = res[1];
                         this.gift_off = res[2];
