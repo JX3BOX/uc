@@ -1,6 +1,6 @@
 <template>
     <div :class="theme" v-loading="loading">
-        <!-- <CommonHeader></CommonHeader> -->
+        <CommonHeader></CommonHeader>
         <div class="p-event-blindbox">
             <!-- 模糊背景 -->
             <div class="m-video" v-if="isVideo">
