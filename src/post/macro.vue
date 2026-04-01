@@ -50,7 +50,7 @@
             <!-- 正文 -->
             <div class="m-publish-content">
                 <el-divider content-position="left">正文</el-divider>
-                <el-radio-group class="m-publish-editormode" disabled size="large" :class="`is-${post.post_mode}`" v-model="post.post_mode">
+                <el-radio-group class="m-publish-editormode" size="large" :class="`is-${post.post_mode}`" v-model="post.post_mode">
                     <el-radio-button value="tinymce">可视化编辑器</el-radio-button>
                     <el-radio-button value="markdown">Markdown</el-radio-button>
                 </el-radio-group>
