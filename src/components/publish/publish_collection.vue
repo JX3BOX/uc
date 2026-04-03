@@ -131,11 +131,17 @@ export default {
                 });
             } else {
                 this.collections = cloneDeep(this.copyCollections);
+                this.loading = false;
             }
         },
         visibleChange: function (val) {
             if (val) {
-                this.collections = cloneDeep(this.copyCollections);
+                // 下拉框打开时，如果还没有初始化数据，则加载
+                if (this.copyCollections.length === 0) {
+                    this.loadCollections();
+                } else {
+                    this.collections = cloneDeep(this.copyCollections);
+                }
             }
         },
     },
