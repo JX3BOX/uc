@@ -74,14 +74,25 @@
                     :inactive-value="0"
                 ></el-switch>
             </el-form-item>
-            <el-form-item label="日历链接">
+            <el-form-item label="关注限制">
                 <template #label>
-                    <span>日历链接</span>
-                    <el-tooltip class="item" effect="dark" content="网站首页日历模块点击的快捷跳转地址" placement="top"
+                    <span>关注限制</span>
+                    <el-tooltip
+                        class="item"
+                        effect="dark"
+                        content="当用户关注自己成为粉丝时，要求的等级限制"
+                        placement="top"
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
                 </template>
-                <el-input v-model="conf.fav_link" size="large" placeholder="输入日历链接"></el-input>
+                <el-select v-model="conf.rss_need_level" size="large">
+                    <el-option
+                        v-for="item in levelMap"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                    ></el-option>
+                </el-select>
             </el-form-item>
             <el-form-item label="语言偏好">
                 <template #label>
@@ -111,26 +122,16 @@
                     <el-option label="怀旧服（缘起）" value="origin"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="关注限制">
+            <el-form-item label="日历链接">
                 <template #label>
-                    <span>关注限制</span>
-                    <el-tooltip
-                        class="item"
-                        effect="dark"
-                        content="当用户关注自己成为粉丝时，要求的等级限制"
-                        placement="top"
+                    <span>日历链接</span>
+                    <el-tooltip class="item" effect="dark" content="网站首页日历模块点击的快捷跳转地址" placement="top"
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
                 </template>
-                <el-select v-model="conf.rss_need_level" size="large">
-                    <el-option
-                        v-for="item in levelMap"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                    ></el-option>
-                </el-select>
+                <el-input v-model="conf.fav_link" size="large" placeholder="输入日历链接"></el-input>
             </el-form-item>
+            
 
             <!-- <el-form-item label="评论邮件通知">
                 <el-switch v-model="conf.cmt_email" active-color="#13ce66" active-text="开启" :active-value="1" :inactive-value="0" disabled></el-switch>
