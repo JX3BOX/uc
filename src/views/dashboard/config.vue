@@ -2,6 +2,18 @@
     <div class="m-dashboard m-dashboard-config">
         <h2 class="u-title"><i class="el-icon-setting"></i> 全局设置</h2>
         <el-form class="m-config-form" label-position="left" label-width="160px">
+            <el-form-item label="主题颜色">
+                <template #label>
+                    <span>主题颜色</span>
+                    <el-tooltip class="item" effect="dark" content="仅App有效" placement="top"
+                        ><i class="el-icon-info"></i
+                    ></el-tooltip>
+                </template>
+                <el-radio-group v-model="conf.theme" size="small">
+                    <el-radio-button value="light">浅色</el-radio-button>
+                    <el-radio-button value="dark">深色</el-radio-button>
+                </el-radio-group>
+            </el-form-item>
             <el-form-item label="编辑器模式">
                 <el-radio-group v-model="conf.editor_mode" size="small">
                     <el-radio-button value="tinymce">可视化</el-radio-button>
@@ -169,6 +181,7 @@ export default {
     data: function () {
         return {
             conf: {
+                theme: "light",
                 cmt_email: 0,
                 cmt_order: "DESC",
                 editor_mode: "tinymce",
@@ -207,7 +220,10 @@ export default {
     methods: {
         loadData: function () {
             getUserConf().then((res) => {
-                this.conf = res?.data?.data;
+                this.conf = {
+                    ...(res?.data?.data || {}),
+                    theme: res?.data?.data?.theme || "light",
+                };
 
                 this.oldLang = this.conf.default_lang;
             });
