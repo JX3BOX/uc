@@ -44,7 +44,7 @@ export default {
                 wujie: "",
             },
             sq: "1,1,1,1,1,1,1,1,2,3",
-            eventNamespace: "",
+            changeHandler: null,
             lastReloadSignature: "",
         };
     },
@@ -63,10 +63,7 @@ export default {
         reloadTrigger: {
             handler() {
                 const __data = this.parseTalentValue(this.currentValue);
-                const nextSq =
-                    __data && typeof __data.sq === "string"
-                        ? __data.sq
-                        : this.getDefaultSq();
+                const nextSq = __data && typeof __data.sq === "string" ? __data.sq : this.getDefaultSq();
                 const nextSignature = this.buildReloadSignature(nextSq);
 
                 if (this.driver && this.lastReloadSignature === nextSignature) {
@@ -83,8 +80,8 @@ export default {
         this.installTalent();
     },
     beforeUnmount() {
-        if (this.eventNamespace) {
-            $(document).off(this.eventNamespace);
+        if (this.changeHandler) {
+            $(document).off("JX3_QIXUE_Change", this.changeHandler);
         }
     },
     methods: {
@@ -98,17 +95,10 @@ export default {
             }
         },
         getDefaultSq() {
-            return this.client === "std"
-                ? "1,1,1,1,1,1,1,1,2,3"
-                : "1,1,1,1";
+            return this.client === "std" ? "1,1,1,1,1,1,1,1,2,3" : "1,1,1,1";
         },
         buildReloadSignature(sq) {
-            return [
-                this.client,
-                this.subtype,
-                this.version[this.client] || "",
-                sq,
-            ].join("|");
+            return [this.client, this.subtype, this.version[this.client] || "", sq].join("|");
         },
         async installTalent() {
             await getBreadCrumb("pvp_talent_version").then((res) => {
@@ -127,31 +117,33 @@ export default {
             this.reloadTalent(this.buildReloadSignature(this.sq));
 
             const vm = this;
-            this.eventNamespace = `.publish_qixue_${this._uid}`;
-            $(document)
-                .off(`JX3_QIXUE_Change${this.eventNamespace}`)
-                .on(`JX3_QIXUE_Change${this.eventNamespace}`, function (e, ins) {
-                    if (!ins || ins.xf !== vm.subtype || ins.client !== vm.client) {
-                        return;
-                    }
+            if (this.changeHandler) {
+                $(document).off("JX3_QIXUE_Change", this.changeHandler);
+            }
 
-                    let __data = ins.code;
-                    const next = JSON.stringify(__data);
-                    vm.sq = __data.sq;
+            this.changeHandler = function (e, ins) {
+                if (!ins || ins.xf !== vm.subtype) {
+                    return;
+                }
 
-                    if (next === vm.currentValue) return;
+                let __data = ins.code;
+                const next = JSON.stringify(__data);
+                vm.sq = __data.sq;
 
-                    vm.$emit("update:modelValue", next);
-                    vm.$emit("update", next);
-                });
+                if (next === vm.currentValue) return;
+
+                vm.$emit("update:modelValue", next);
+                vm.$emit("update", next);
+            };
+
+            $(document).off("JX3_QIXUE_Change", this.changeHandler).on("JX3_QIXUE_Change", this.changeHandler);
         },
         reloadTalent(signature) {
             if (!this.subtype || this.subtype == "通用") return;
             this.$nextTick(() => {
                 if (!this.driver) return;
                 this.driver?.then((talent) => {
-                    this.lastReloadSignature =
-                        signature || this.buildReloadSignature(this.sq);
+                    this.lastReloadSignature = signature || this.buildReloadSignature(this.sq);
                     talent.load({
                         xf: this.subtype,
                         client: this.client,
