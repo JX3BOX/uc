@@ -44,6 +44,8 @@ export default {
                 wujie: "",
             },
             sq: "1,1,1,1,1,1,1,1,2,3",
+            eventNamespace: "",
+            lastReloadSignature: "",
         };
     },
     computed: {
@@ -59,23 +61,20 @@ export default {
     },
     watch: {
         reloadTrigger: {
-            handler(val) {
-                const shouldLength = this.client === "std" ? 10 : 4;
-                let __data;
-                if (this.currentValue) {
-                    try {
-                        __data = JSON.parse(this.currentValue);
-                    } catch (error) {
-                        console.error(error);
-                    }
+            handler() {
+                const __data = this.parseTalentValue(this.currentValue);
+                const nextSq =
+                    __data && typeof __data.sq === "string"
+                        ? __data.sq
+                        : this.getDefaultSq();
+                const nextSignature = this.buildReloadSignature(nextSq);
+
+                if (this.driver && this.lastReloadSignature === nextSignature) {
+                    return;
                 }
-                if (!__data || __data.sq.split(",").length !== shouldLength) {
-                    // 未传入数据，或者传入的value格式不对
-                    this.sq = Array.from({ length: shouldLength }, (_, i) => (i < 7 ? 1 : i - 6)).join(",");
-                } else {
-                    this.sq = __data.sq;
-                }
-                this.reloadTalent();
+
+                this.sq = nextSq;
+                this.reloadTalent(nextSignature);
             },
             immediate: true,
         },
@@ -83,7 +82,34 @@ export default {
     mounted() {
         this.installTalent();
     },
+    beforeUnmount() {
+        if (this.eventNamespace) {
+            $(document).off(this.eventNamespace);
+        }
+    },
     methods: {
+        parseTalentValue(value) {
+            if (!value) return null;
+            try {
+                return JSON.parse(value);
+            } catch (error) {
+                console.error(error);
+                return null;
+            }
+        },
+        getDefaultSq() {
+            return this.client === "std"
+                ? "1,1,1,1,1,1,1,1,2,3"
+                : "1,1,1,1";
+        },
+        buildReloadSignature(sq) {
+            return [
+                this.client,
+                this.subtype,
+                this.version[this.client] || "",
+                sq,
+            ].join("|");
+        },
         async installTalent() {
             await getBreadCrumb("pvp_talent_version").then((res) => {
                 this.version.std = res.data?.data?.html;
@@ -98,22 +124,34 @@ export default {
                 client: this.client,
             });
 
-            this.reloadTalent();
+            this.reloadTalent(this.buildReloadSignature(this.sq));
 
             const vm = this;
-            $(document).on("JX3_QIXUE_Change", function (e, ins) {
-                let __data = ins.code;
+            this.eventNamespace = `.publish_qixue_${this._uid}`;
+            $(document)
+                .off(`JX3_QIXUE_Change${this.eventNamespace}`)
+                .on(`JX3_QIXUE_Change${this.eventNamespace}`, function (e, ins) {
+                    if (!ins || ins.xf !== vm.subtype || ins.client !== vm.client) {
+                        return;
+                    }
 
-                const next = JSON.stringify(__data);
-                vm.$emit("update:modelValue", next);
-                vm.$emit("update", next);
-            });
+                    let __data = ins.code;
+                    const next = JSON.stringify(__data);
+                    vm.sq = __data.sq;
+
+                    if (next === vm.currentValue) return;
+
+                    vm.$emit("update:modelValue", next);
+                    vm.$emit("update", next);
+                });
         },
-        reloadTalent() {
+        reloadTalent(signature) {
             if (!this.subtype || this.subtype == "通用") return;
             this.$nextTick(() => {
                 if (!this.driver) return;
                 this.driver?.then((talent) => {
+                    this.lastReloadSignature =
+                        signature || this.buildReloadSignature(this.sq);
                     talent.load({
                         xf: this.subtype,
                         client: this.client,
