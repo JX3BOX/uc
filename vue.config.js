@@ -58,6 +58,7 @@ if (String(process.env.NODE_ENV).toLowerCase() === "development") {
 
 module.exports = {
     productionSourceMap: false,
+    transpileDependencies: true,
     //❤️ define path for static files ~
     publicPath: process.env.BUILD_PREVIEW
         ? "/" + process.env.APP_NAME

@@ -310,7 +310,7 @@ export default {
     }
 
     .u-sign {
-        font-size: 14px;
+        font-size: 12px;
         font-weight: normal;
         margin-left: 10px;
     }
