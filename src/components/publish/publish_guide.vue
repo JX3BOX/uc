@@ -15,7 +15,7 @@
             >
                 <el-option v-for="item in prev" :key="item.ID" :value="item.ID" :label="item.post_title">
                     <div class="u-post-select__item">
-                        <el-tag v-if="item.post_type" :type="item.visible != 0 ? 'warning' : ''">{{
+                        <el-tag v-if="item.post_type" v-bind="item.visible != 0 ? { type: 'warning' } : {}">{{
                             showPostType(item.post_type)
                         }}</el-tag>
                         {{ item.post_title }}
@@ -36,7 +36,7 @@
             >
                 <el-option v-for="item in next" :key="item.ID" :value="item.ID" :label="item.post_title">
                     <div class="u-post-select__item">
-                        <el-tag v-if="item.post_type" :type="item.visible != 0 ? 'warning' : ''">{{
+                        <el-tag v-if="item.post_type" v-bind="item.visible != 0 ? { type: 'warning' } : {}">{{
                             showPostType(item.post_type)
                         }}</el-tag>
                         {{ item.post_title }}

@@ -118,7 +118,9 @@
                                     </span>
                                 </template>
                             </div>
-                            <el-button type="primary" size="medium" @click="addSkill" icon="Plus">新增技能</el-button>
+                            <el-button type="primary" class="u-add-skill" size="medium" @click="addSkill" icon="Plus"
+                                >新增技能</el-button
+                            >
                         </el-form-item>
                         <el-form-item label="连招说明" class="m-macro-desc">
                             <el-input
@@ -165,6 +167,8 @@ import SkillDialog from "@/components/publish/skill_dialog.vue";
 import { iconLink } from "@jx3box/jx3box-common/js/utils";
 
 import Sortable from "sortablejs";
+import ContextMenu from "@imengyu/vue3-context-menu";
+import "@imengyu/vue3-context-menu/lib/vue3-context-menu.css";
 import publish_qixue from "./publish_qixue.vue";
 // META空模板
 const default_meta = {
@@ -218,6 +222,8 @@ export default {
 
             zhNum: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"],
             showSkillDialog: false,
+            tabsSortable: null,
+            skillSortable: null,
         };
     },
     emits: ["update", "update:modelValue"],
@@ -263,6 +269,19 @@ export default {
                 });
             },
         },
+        "pvpData.has_sq": {
+            immediate: true,
+            handler(val) {
+                this.$nextTick(() => {
+                    if (!val) {
+                        this.destroySortables();
+                        return;
+                    }
+                    this.initTabsSort();
+                    this.initSkillSort();
+                });
+            },
+        },
     },
     methods: {
         // 添加连招
@@ -281,6 +300,10 @@ export default {
                 desc: "",
             });
             this.activeIndex = index;
+            this.$nextTick(() => {
+                this.initTabsSort();
+                this.initSkillSort();
+            });
         },
         // 删除宏
         removeCombo: function (name) {
@@ -300,6 +323,10 @@ export default {
                         this.pvpData.data.splice(i, 1);
                         // 调整focus位置
                         this.activeIndex = "1";
+                        this.$nextTick(() => {
+                            this.initTabsSort();
+                            this.initSkillSort();
+                        });
                     }
                 },
             });
@@ -347,12 +374,19 @@ export default {
             const sq = this.pvpData.data[this.activeIndex - 1].sq?.push(..._skill) || _skill;
         },
         iconLink,
+        destroySortables() {
+            this.tabsSortable?.destroy();
+            this.skillSortable?.destroy();
+            this.tabsSortable = null;
+            this.skillSortable = null;
+        },
         // 初始化技能排序
         initSkillSort() {
             const el = document.querySelector(`.tabs-sort .tab-content${this.activeIndex} .u-skills`);
             if (!el) return;
+            this.skillSortable?.destroy();
             const _this = this;
-            const sortSkills = Sortable.create(el, {
+            this.skillSortable = Sortable.create(el, {
                 animation: 200,
                 onEnd({ newIndex, oldIndex }) {
                     const data = cloneDeep(_this.pvpData.data[_this.activeIndex - 1].sq);
@@ -365,19 +399,42 @@ export default {
                 },
             });
         },
+        initTabsSort() {
+            const el = document.querySelector(".tabs-sort .el-tabs__nav");
+            if (!el) return;
+            this.tabsSortable?.destroy();
+            const _this = this;
+            this.tabsSortable = Sortable.create(el, {
+                animation: 200,
+                filter: ".el-icon-close",
+                onEnd({ newIndex, oldIndex }) {
+                    const data = cloneDeep(_this.pvpData.data);
+                    const currRow = cloneDeep(data.splice(oldIndex, 1)[0]);
+                    data.splice(newIndex, 0, currRow);
+                    _this.pvpData.data = [];
+                    _this.$nextTick(function () {
+                        _this.pvpData.data = data;
+                        _this.$nextTick(() => {
+                            _this.initTabsSort();
+                            _this.initSkillSort();
+                        });
+                    });
+                },
+            });
+        },
         onContextmenu(event, skill) {
-            // console.log(skill)
-            this.$contextmenu({
+            event.preventDefault();
+            ContextMenu.showContextMenu({
+                x: event.x ?? event.clientX,
+                y: event.y ?? event.clientY,
                 items: [
                     {
                         label: !skill?.WithoutGcd ? "设置为无GCD技能" : "设置为有GCD技能",
                         onClick: () => {
                             skill.WithoutGcd = !skill.WithoutGcd;
                         },
-                        icon: !skill?.WithoutGcd ? "el-icon-check" : "el-icon-close",
                     },
                 ],
-                event,
                 customClass: "custom-class",
                 zIndex: 3,
                 minWidth: 230,
@@ -386,22 +443,13 @@ export default {
         },
     },
     mounted: function () {
-        let el = document.querySelector(".tabs-sort .el-tabs__nav");
-        if (!el) return;
-        const _this = this;
-        let sortTabs = Sortable.create(el, {
-            animation: 200,
-            filter: ".el-icon-close",
-            onEnd({ newIndex, oldIndex }) {
-                const data = cloneDeep(_this.pvpData.data);
-                const currRow = cloneDeep(data.splice(oldIndex, 1)[0]);
-                data.splice(newIndex, 0, currRow);
-                _this.pvpData.data = [];
-                _this.$nextTick(function () {
-                    _this.pvpData.data = data;
-                });
-            },
+        this.$nextTick(() => {
+            this.initTabsSort();
+            this.initSkillSort();
         });
+    },
+    beforeUnmount() {
+        this.destroySortables();
     },
 };
 </script>
@@ -410,6 +458,9 @@ export default {
 .m-publish-pvp .m-macro-box {
     .u-skill .u-skill-icon {
         .size(48px);
+    }
+    .u-add-skill {
+        margin-left: 10px;
     }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="m-pvp-martial">
+    <div class="m-pvp-martial__container">
         <div class="m-martial-skill" v-for="(kungfu, index) in kungfu_skills" :key="index">
             <div class="u-title">
                 <span class="u-title-name">{{ kungfu[0].kungfu_name }}</span>
