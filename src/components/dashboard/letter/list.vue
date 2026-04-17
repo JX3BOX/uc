@@ -28,6 +28,8 @@
                             <el-image
                                 :src="resolveImagePath(item.content)"
                                 :preview-src-list="[item.content]"
+                                :preview-teleported="true"
+                                :hide-on-click-modal="true"
                             ></el-image>
                         </div>
                     </div>
