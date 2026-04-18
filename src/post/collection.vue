@@ -350,6 +350,9 @@ export default {
                 if (collection) {
                     for (let i in collection.posts) {
                         let item = collection.posts[i];
+                        if (item.type === "custom") {
+                            collection.posts[i].custom_title = item.custom_title || item.title || "";
+                        }
                         collection.posts[i].posts =
                             item.type === "custom"
                                 ? null
@@ -384,6 +387,7 @@ export default {
                     break;
                 }
                 if (item.type === "custom") {
+                    item.title = item.custom_title ? item.custom_title.trim() : "";
                     if (!item.url) {
                         message = "请填写正确的小册文章链接（http或https开头）";
                         break;
