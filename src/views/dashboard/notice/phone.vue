@@ -331,14 +331,17 @@ export default {
 }
 
 .m-notice-phone__dialog {
+    .el-dialog__headerbtn{
+        .flex(o);
+    }
     .el-dialog {
         border-radius: 24px;
         overflow: hidden;
     }
 
-    .el-dialog__header {
-        padding: 22px 24px 0;
-    }
+    // .el-dialog__header {
+    //     padding: 22px 24px 0;
+    // }
 
     .el-dialog__body {
         padding: 18px 24px 24px;
