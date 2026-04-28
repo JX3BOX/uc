@@ -308,6 +308,10 @@ const routes = [
                     },
                 },
             },
+            {
+                path: "/cj/:achievement_id(\\d+)?",
+                redirect: "/achievement",
+            },
             // 成就攻略发布
             {
                 path: "/achievement/:achievement_id(\\d+)?",
