@@ -11,7 +11,7 @@
             <div class="m-header">
                 <div class="m-name-avatar">
                     <div class="m-avatar-box" :class="{ 'no-frame': !avatar_frame }">
-                        <Avatar :uid="uid" :url="avatar" :size="80" />
+                        <CommonAvatar :uid="uid" :url="avatar" :size="80" />
                         <img class="u-frame" :src="frameUrl" />
                     </div>
                     <div class="u-name-uid">
@@ -73,11 +73,13 @@ import ReplyList from "@/components/author/mobile/Pannel/ReplyList.vue";
 import FaceList from "@/components/author/mobile/Pannel/FaceList.vue";
 import BodyList from "@/components/author/mobile/Pannel/BodyList.vue";
 import SimpleMoreAction from "@/components/author/mobile/MoreAction.vue";
+import CommonAvatar from "@jx3box/jx3box-ui/src/author/Avatar.vue";
 import wx from "weixin-js-sdk";
 
 export default {
     name: "MobileMe",
     components: {
+        CommonAvatar,
         SimpleMoreAction,
         ContentTabList,
     },
