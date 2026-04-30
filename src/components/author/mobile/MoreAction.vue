@@ -4,7 +4,7 @@
         :show-close="false"
         :with-header="false"
         class="simple-more-action-drawer"
-        size="400"
+        :size="drawerSize"
         style="width: 100%"
         direction="btt"
         append-to-body
@@ -102,6 +102,15 @@ export default {
                 this.$emit("update:show", value);
             },
         },
+        actionCount() {
+            return this.actions.reduce((total, group) => total + (group?.list?.length || 0), 0);
+        },
+        drawerSize() {
+            // Keep the action sheet compact on mobile while allowing enough space for all actions.
+            const groupCount = this.actions.length || 1;
+            const height = 52 + this.actionCount * 44 + (groupCount - 1) * 12;
+            return `${Math.min(320, Math.max(170, height))}px`;
+        },
     },
     data() {
         return {
@@ -152,15 +161,22 @@ export default {
 <style lang="less">
 .simple-more-action-drawer {
     border-radius: 20px 20px 0 0;
+
+    .el-drawer {
+        background: transparent;
+    }
+
     .el-drawer__body {
         padding: 0;
+        background: #f2f3f5;
     }
 
     .m-simple {
         max-width: 100%;
-        padding: 20px 20px 30px;
+        min-height: 100%;
+        padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
         box-sizing: border-box;
-        background: var(--primary-brand-4, #282828);
+        background: #f2f3f5;
 
         .m-icon-tools {
             display: flex;
@@ -205,13 +221,13 @@ export default {
                     padding: 12px 20px;
                     gap: 8px;
                     width: 100%;
-                    background: var(--black-5, rgba(28, 28, 28, 0.05));
+                    background: #ffffff;
                     align-items: center;
                     .u-icon {
                         width: 20px;
                         height: 20px;
                     }
-                    color: var(--black-40, rgba(28, 28, 28, 0.4));
+                    color: rgba(28, 28, 28, 0.8);
 
                     .u-name {
                         /* 14 Regular */
@@ -226,8 +242,12 @@ export default {
     }
 
     @media (prefers-color-scheme: dark) {
+        .el-drawer__body {
+            background: #1c1c1c;
+        }
+
         .m-simple {
-            background-color: #303133;
+            background-color: #1c1c1c;
 
             .m-icon-tools {
                 .m-item {
@@ -245,13 +265,16 @@ export default {
 
             .m-group {
                 .m-list {
-                    border-top: 1px solid #3a3a3a;
+                    .m-item {
+                        background: #3a3a3c;
+                        color: rgba(255, 255, 255, 0.86);
+                    }
                 }
             }
 
             .m-cancel {
-                color: #e0e0e0;
-                border-top: 8px solid #222;
+                color: rgba(255, 255, 255, 0.86);
+                border-top: 8px solid #1c1c1c;
             }
         }
     }

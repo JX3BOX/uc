@@ -19,7 +19,7 @@ export default {
     components: {},
     data: function () {
         return {
-            active: "UserInfo",
+            active: "BoxMoment",
             navBarFixed: false,
         };
     },
@@ -44,9 +44,29 @@ export default {
         },
     },
     methods: {
+        ensureActiveTab() {
+            if (!Array.isArray(this.list) || !this.list.length) {
+                this.active = "";
+                return;
+            }
+            const hasActive = this.list.some((item) => item.value === this.active);
+            if (hasActive) return;
+
+            const defaultTab = this.list.find((item) => item.value === "BoxMoment");
+            this.active = defaultTab?.value || this.list[0].value;
+        },
         watchScroll() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             this.navBarFixed = scrollTop >= this.tabListOffsetTop;
+        },
+    },
+    watch: {
+        list: {
+            immediate: true,
+            deep: true,
+            handler() {
+                this.ensureActiveTab();
+            },
         },
     },
     mounted() {
