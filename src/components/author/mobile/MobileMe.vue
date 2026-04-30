@@ -11,7 +11,7 @@
             <div class="m-header">
                 <div class="m-name-avatar">
                     <div class="m-avatar-box" :class="{ 'no-frame': !avatar_frame }">
-                        <Avatar :uid="uid" :url="avatar" :size="80" />
+                        <CommonAvatar :uid="uid" :url="avatar" :size="80" />
                         <img class="u-frame" :src="frameUrl" />
                     </div>
                     <div class="u-name-uid">
@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { markRaw } from "vue";
 import { getAuthorRss, subscribeAuthor, unsubscribeAuthor } from "@jx3box/jx3box-common/js/rss";
 import { __userLevelColor, __imgPath, __cdn } from "@/utils/config";
 import medalData from "@jx3box/jx3box-common/data/medals.json";
@@ -72,11 +73,13 @@ import ReplyList from "@/components/author/mobile/Pannel/ReplyList.vue";
 import FaceList from "@/components/author/mobile/Pannel/FaceList.vue";
 import BodyList from "@/components/author/mobile/Pannel/BodyList.vue";
 import SimpleMoreAction from "@/components/author/mobile/MoreAction.vue";
+import CommonAvatar from "@jx3box/jx3box-ui/src/author/Avatar.vue";
 import wx from "weixin-js-sdk";
 
 export default {
     name: "MobileMe",
     components: {
+        CommonAvatar,
         SimpleMoreAction,
         ContentTabList,
     },
@@ -154,19 +157,19 @@ export default {
                 {
                     label: "角色",
                     value: "UserInfo",
-                    component: RoleInfo,
+                    component: markRaw(RoleInfo),
                     key: "role_is_public",
                 },
                 {
                     label: "动态",
                     value: "BoxMoment",
-                    component: BoxMoment,
+                    component: markRaw(BoxMoment),
                     key: "personal_activities_is_public",
                 },
                 {
                     label: "文章",
                     value: "Works",
-                    component: CmsPosts,
+                    component: markRaw(CmsPosts),
                     key: "article_is_public",
 
                     children: [
@@ -196,17 +199,17 @@ export default {
                     label: "帖子",
                     value: "Other",
                     key: "community_topic_is_public",
-                    component: SubTabContent,
+                    component: markRaw(SubTabContent),
                     children: [
                         {
                             label: "发帖",
                             value: "Topic",
-                            component: TopicList,
+                            component: markRaw(TopicList),
                         },
                         {
                             label: "回帖",
                             value: "Reply",
-                            component: ReplyList,
+                            component: markRaw(ReplyList),
                         },
                     ],
                 },
@@ -214,18 +217,18 @@ export default {
                     label: "捏脸",
                     value: "Data",
                     key: "make_face_is_public",
-                    component: SubTabContent,
+                    component: markRaw(SubTabContent),
                     children: [
                         {
                             label: "捏脸",
                             value: "face",
-                            component: FaceList,
+                            component: markRaw(FaceList),
                             icon: "el-icon-grape",
                         },
                         {
                             label: "体型",
                             value: "body",
-                            component: BodyList,
+                            component: markRaw(BodyList),
                             icon: "el-icon-watermelon",
                         },
                     ],
@@ -353,18 +356,21 @@ export default {
 
             return res;
         },
-        time: (val) => {
-            return dateFormat(new Date(val));
-        },
-        formatBoxcoin(val) {
-            if (val > 10000) {
-                return `${(val / 10000).toFixed(2)}w`;
-            }
-            return val;
-        },
     },
     methods: {
         showAvatar,
+        time(val) {
+            return dateFormat(new Date(val));
+        },
+        formatBoxcoin(val) {
+            const num = Number(val) || 0;
+
+            if (num > 10000) {
+                return `${(num / 10000).toFixed(2)}w`;
+            }
+
+            return num;
+        },
         onSelect(item) {
             if (item.method === "black") {
                 this.joinBlacklist();
