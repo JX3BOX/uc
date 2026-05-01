@@ -13,12 +13,12 @@
                     <h2 class="u-post">
                         <!-- 标题文字 -->
                         <a :href="postLink(item.id)" class="u-title" target="_blank"
-                            >【{{ item.category }}】{{ item.title || "无标题" }}</a
+                            >{{ item.title || "无标题" }}</a
                         >
                     </h2>
 
                     <!-- 字段 -->
-                    <div class="u-content u-desc">
+                    <div class="u-desc">
                         {{ item.introduction || "" }}
                     </div>
 
@@ -42,7 +42,7 @@
             background
             layout="prev, pager, next"
             :total="total"
-            :current-page.sync="page"
+            v-model:current-page="page"
             :page-size="per"
         >
         </el-pagination>
@@ -52,7 +52,7 @@
 <script>
 import { getLink, showBanner } from "@jx3box/jx3box-common/js/utils";
 import dayjs from "dayjs";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 import { random } from "lodash";
 import { getTopicList } from "@/service/author/author.js";
 export default {

@@ -2,56 +2,60 @@
     <div class="m-dashboard-work m-dashboard-cms" v-loading="loading">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">{{ typeLabel }}</h2>
-            <a :href="publishLink" class="u-publish el-button el-button--primary el-button--small">
+            <a :href="publishLink" class="u-publish el-button el-button--primary el-button">
                 <i class="el-icon-document"></i> 发布作品
             </a>
         </div>
 
-        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search">
-            <span slot="prepend">关键词</span>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search" size="large">
+            <template #prepend>
+                <span>关键词</span>
+            </template>
+            <template #append>
+                <el-button icon="Search"></el-button>
+            </template>
         </el-input>
 
         <div class="m-dashboard-work-filter">
-            <clientBy class="u-client" @filter="filter" :showWujie="showWujie" />
+            <clientBy class="u-client" @filter="filter" :showWujie="false" />
             <orderBy class="u-order" @filter="filter" />
         </div>
 
         <div class="m-dashboard-box">
             <ul class="m-dashboard-box-list" v-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
-                    <i class="u-icon">
-                        <img src="@/assets/img/publish/works/repo.svg" v-if="item.post_status == 'publish'" />
-                        <img v-else src="@/assets/img/publish/works/draft.svg" :title="item.post_status | statusFormat" />
-                    </i>
-                    <a class="u-title" target="_blank" :href="postLink(item.post_type, item.ID)">{{
-                        item.post_title || "无标题"
-                    }}</a>
+                    <a class="u-title" target="_blank" :href="postLink(item.post_type, item.ID)">
+                        <i class="u-icon">
+                            <img src="@/assets/img/publish/works/repo.svg" v-if="item.visible == 0" />
+                            <el-tooltip v-else :content="visibleFormat(item.visible)" placement="top">
+                                <img
+                                    src="@/assets/img/publish/works/draft.svg"
+                                    :title="statusFormat(item.post_status)"
+                                />
+                            </el-tooltip>
+                        </i>
+                        {{ item.post_title || "无标题" }}</a
+                    >
                     <div class="u-desc">
-                        <span class="u-desc-subitem">
+                        <!-- <span class="u-desc-subitem">
                             <i class="el-icon-view"></i>
-                            {{ item.visible | visibleFormat }}
-                        </span>
+                            {{ visibleFormat(item.visible) }}
+                        </span> -->
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ item.post_date | dateFormat }}
+                            <span class="u-time">{{ dateFormat(item.post_date) }}</span>
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
                             更新 :
-                            {{ item.post_modified | dateFormat }}
+                            <span class="u-time">{{ dateFormat(item.post_modified) }}</span>
                         </time>
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-button
-                            size="mini"
-                            icon="el-icon-edit"
-                            title="编辑"
-                            @click="edit(item.post_type, item.ID)"
-                        ></el-button>
-                        <el-button size="mini" icon="el-icon-delete" title="删除" @click="del(item.ID)"></el-button>
+                        <el-button icon="Edit" title="编辑" @click="edit(item.post_type, item.ID)"></el-button>
+                        <el-button icon="Delete" title="删除" @click="del(item.ID)"></el-button>
                     </el-button-group>
                 </li>
             </ul>
@@ -68,7 +72,7 @@
                 background
                 :page-size="per"
                 :hide-on-single-page="true"
-                :current-page.sync="page"
+                v-model:current-page="page"
                 layout="total, prev, pager, next, jumper"
                 :total="total"
             ></el-pagination>
@@ -79,7 +83,7 @@
 <script>
 import { getMyPosts, push, del } from "@/service/publish/cms.js";
 import { editLink, getLink } from "@jx3box/jx3box-common/js/utils.js";
-import { __postType, __visibleMap } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __postType, __visibleMap } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 import statusMap from "@/assets/data/publish/status.json";
 export default {
@@ -113,7 +117,7 @@ export default {
                 per: this.per,
                 title: this.search,
                 order: this.order,
-                client: this.client,
+                client: this.client == 'all' ? '' : this.client,
             };
         },
         publishLink: function () {
@@ -202,8 +206,6 @@ export default {
         isSimpleType: function (val) {
             return simpleTypes.includes(val);
         },
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(val));
         },

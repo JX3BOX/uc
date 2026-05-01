@@ -1,26 +1,33 @@
 <template>
-    <div id="app">
-        <div style="height: 9.6vw">
-            <!-- 这个放这里干啥的？ -->
-            <Header :key="currentKey" style="display: none"></Header>
+    <div >
+        <div class="m-mall-web-header">
+            <CommonHeader :key="currentKey"></CommonHeader>
             <Breadcrumb></Breadcrumb>
         </div>
-        <div v-if="isSky" class="sky"></div>
+        <div
+            v-if="isSky"
+            class="u-mark u-sky"
+            @click="$store.commit('mallNew/toState', { assetIsShow: !$store.state.mallNew.assetIsShow })"
+        ></div>
+        <div v-if="isNavShow" class="u-mark" @click="$store.commit('mallNew/toState', { navIsShow: false })"></div>
+
         <keep-alive include="Index"><router-view></router-view> </keep-alive>
+
         <div class="cart" @click="$router.push('/mallWeb/cart')" v-if="$route.path !== '/mallWeb/cart'">
-            <img :src="imgUrl + '购物车.svg'" alt="" id="cartBtn" />
+            <img :src="imgUrl + 'cart.svg'" alt="" id="cartBtn" />
         </div>
     </div>
 </template>
 
 <script>
 import Breadcrumb from "@/views/vip/mallWeb/components/Breadcrumb.vue";
+import { __cdn } from "@/utils/config";
 export default {
     name: "mallWeb",
     data() {
         return {
             currentKey: 0,
-            imgUrl: "https://cdn.jx3box.com/design/mall/",
+            imgUrl: __cdn + "design/mall/",
         };
     },
     components: {
@@ -28,7 +35,10 @@ export default {
     },
     computed: {
         isSky() {
-            return this.$store.state.mallNew.assetIsShow || this.$store.state.mallNew.navIsShow;
+            return this.$store.state.mallNew.assetIsShow;
+        },
+        isNavShow() {
+            return this.$store.state.mallNew.navIsShow;
         },
     },
     created() {
@@ -43,14 +53,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.sky {
+.m-mall-web-header {
+    height: calc(64px + 9.6vw);
+}
+.u-mark {
     width: 100%;
-    height: calc(100vh - 9.6vw);
-    background: #808080;
+    height: calc(100vh - 64px - 9.6vw);
     position: fixed;
-    top: 9.6vw;
+    top: calc(64px + 9.6vw);
     left: 0;
-    z-index: 1000;
+    z-index: 50;
+    &.u-sky {
+        background: #808080;
+    }
 }
 .cart {
     width: 17.0667vw;
@@ -67,5 +82,8 @@ export default {
         width: 8vw;
         height: 8vw;
     }
+}
+.no-click {
+    .size(100%);
 }
 </style>

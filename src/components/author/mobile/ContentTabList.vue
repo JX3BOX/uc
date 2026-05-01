@@ -1,14 +1,14 @@
 <template>
     <div class="m-content-tab-list">
-        <el-tabs ref="tabList" class="m-tabs" :class="{fixed:navBarFixed}" v-model="active" stretch>
-            <el-tab-pane v-for="item in list" :key="item.value" :label="item.label" :name="item.value" >
-                <span slot="label">
+        <el-tabs ref="tabList" class="m-tabs" :class="{ fixed: navBarFixed }" v-model="active" stretch>
+            <el-tab-pane v-for="item in list" :key="item.value" :label="item.label" :name="item.value">
+                <template #label>
                     {{ item.label }}
-                </span>
+                </template>
             </el-tab-pane>
         </el-tabs>
         <div class="m-primary">
-            <component v-bind:is="currentComponent" v-if="activeType === active" :list="currentChildren"/>
+            <component v-bind:is="currentComponent" v-if="activeType === active" :list="currentChildren" />
         </div>
     </div>
 </template>
@@ -19,18 +19,18 @@ export default {
     components: {},
     data: function () {
         return {
-            active: "UserInfo",
+            active: "BoxMoment",
             navBarFixed: false,
         };
     },
-    props:{
-        list:{
+    props: {
+        list: {
             type: Array,
-            default: () => []
-        }
+            default: () => [],
+        },
     },
     computed: {
-        current(){
+        current() {
             return this.list.find((item) => item.value === this.active);
         },
         currentComponent: function () {
@@ -41,13 +41,33 @@ export default {
         },
         currentChildren: function () {
             return this.current?.children || [];
-        }
+        },
     },
-    methods:{
+    methods: {
+        ensureActiveTab() {
+            if (!Array.isArray(this.list) || !this.list.length) {
+                this.active = "";
+                return;
+            }
+            const hasActive = this.list.some((item) => item.value === this.active);
+            if (hasActive) return;
+
+            const defaultTab = this.list.find((item) => item.value === "BoxMoment");
+            this.active = defaultTab?.value || this.list[0].value;
+        },
         watchScroll() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             this.navBarFixed = scrollTop >= this.tabListOffsetTop;
-        }
+        },
+    },
+    watch: {
+        list: {
+            immediate: true,
+            deep: true,
+            handler() {
+                this.ensureActiveTab();
+            },
+        },
     },
     mounted() {
         this.$nextTick(() => {
@@ -55,15 +75,14 @@ export default {
             window.addEventListener("scroll", this.watchScroll);
         });
     },
-    destroyed() {
+    unmounted() {
         window.removeEventListener("scroll", this.watchScroll);
-    }
-
-}
+    },
+};
 </script>
 
 <style lang="less">
-.m-empty{
+.m-empty {
     text-align: center;
 }
 </style>

@@ -1,7 +1,5 @@
 <template>
-    <div id="app">
-        <router-view></router-view>
-    </div>
+    <router-view></router-view>
 </template>
 
 <script>
@@ -17,3 +15,7 @@ export default {
     methods: {},
 };
 </script>
+
+<style lang="less">
+@import "../../assets/css/common/element-override.less";
+</style>

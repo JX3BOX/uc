@@ -1,9 +1,11 @@
 <template>
     <div class="m-revision">
-        <el-button type="primary" @click="view" size="small" icon="el-icon-folder">历史版本</el-button>
+        <el-button type="primary" @click="view" icon="Folder">历史版本</el-button>
 
-        <el-drawer title="历史版本" :visible.sync="show" z-index="2100" class="m-revision-drawer" append-to-body>
-            <h3 class="u-revision-title" slot="title">历史版本</h3>
+        <el-drawer title="历史版本" v-model="show" :z-index="2100" class="m-revision-drawer" append-to-body>
+            <template #header>
+                <h3 class="u-revision-title">历史版本</h3>
+            </template>
             <main class="m-revision-container" v-loading="loading">
                 <div class="m-revision-list">
                     <ul class="u-list" v-if="list.length">
@@ -11,9 +13,7 @@
                             <div class="u-version">
                                 <span>{{ item.version }}</span> - <span>{{ item.created_at }}</span>
                             </div>
-                            <el-button class="u-compare" size="small" type="text"
-                                ><i class="el-icon-sort u-icon"></i>使用</el-button
-                            >
+                            <el-button class="u-compare" link><i class="el-icon-sort u-icon"></i>使用</el-button>
                         </li>
                     </ul>
                     <el-alert class="u-null" v-else title="当前没有任何历史版本" type="info" show-icon></el-alert>
@@ -21,7 +21,7 @@
                         small
                         layout="prev, pager, next"
                         :total="total"
-                        :current-page.sync="index"
+                        v-model:current-page="index"
                         hide-on-single-page
                     >
                     </el-pagination>

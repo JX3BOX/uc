@@ -5,7 +5,7 @@
             <!-- <div class="u-op" v-if="data && isCustom && hasRight">
                 <router-link
                     :to="'/role/edit/' + id"
-                    class="el-button el-button--primary el-button--mini"
+                    class="el-button el-button--primary el-button--small"
                 >
                     <i class="el-icon-edit-outline"></i> 编辑角色
                 </router-link>
@@ -13,60 +13,58 @@
                     class="u-btn u-delete"
                     type="info"
                     plain
-                    size="mini"
+                    
                     @click="delRole"
-                    icon="el-icon-delete"
+                    icon="Delete"
                 >删除</el-button>
             </div>-->
-            <el-button
-                slot="reference"
-                class="u-back"
-                size="mini"
-                plain
-                icon="el-icon-arrow-left"
-                @click="goBack"
-            >返回</el-button>
+            <el-button class="u-back" plain icon="ArrowLeft" @click="goBack">返回</el-button>
         </h2>
         <div class="m-role-detail" v-if="data">
             <div class="m-role-info">
                 <RoleAvatar class="u-avatar" :mount="data.mount" :body_type="data.body_type" />
                 <div class="u-meta u-name">
                     <!-- <em>角色名</em> -->
-                    <img
-                        v-if="!~~data.custom"
-                        class="u-verify"
-                        svg-inline
-                        src="@/assets/img/dashboard/verify.svg"
-                    />
+                    <!-- <img v-if="!~~data.custom" class="u-verify" svg-inline src="@/assets/img/dashboard/verify.svg" /> -->
                     {{ data.name }}
                 </div>
                 <div class="u-meta">
-                    <span class="u-author">
-                        <img class="u-author-avatar" width="24" height="24" :src="data.user_avatar | showAvatar" alt="">
-                        <a
-                            class="u-author-name"
-                            :href="data.uid | authorLink"
-                            target="_blank"
-                        >
-                            {{ data.display_name }}
-                        </a>
+                    <span class="u-remark">
+                        <!-- <em>备注</em> -->
+                        {{ data.note || "-" }}
                     </span>
+                </div>
+                <div class="u-meta">
                     <span class="u-server">
                         <em>服务器</em>
                         {{ data.server }}
                     </span>
                     <span class="u-school">
-                        <em>门 派</em>
-                        {{ data.mount | showSchoolName
-                        }}
-                        <img
-                            class="u-icon"
-                            :src="data.mount | showSchoolIcon"
-                        />
+                        <em>门派</em>
+                        <img class="u-icon" :src="showSchoolIcon(data.mount)" />
+                        {{ showSchoolName(data.mount) }}
                     </span>
                     <span class="u-body">
-                        <em>体 型</em>
-                        {{ data.body_type | showBodyType }}
+                        <em>体型</em>
+                        {{ showBodyType(data.body_type) }}
+                    </span>
+                </div>
+                <div class="u-meta">
+                    <span class="u-author">
+                        <img
+                            class="u-author-avatar"
+                            width="24"
+                            height="24"
+                            :src="showAvatar(data.user_avatar)"
+                            alt=""
+                        />
+                        <a class="u-author-name" :href="authorLink(data.uid)" target="_blank">
+                            {{ data.display_name }}
+                        </a>
+                    </span>
+                    <span class="u-remark">
+                        <em>绑定于</em>
+                        {{ showTime(data.created_at) }}
                     </span>
                 </div>
             </div>
@@ -96,29 +94,16 @@
                 </el-divider>
                 <template v-if="teams && teams.length">
                     <div class="u-teams">
-                        <router-link
-                            class="u-team"
-                            :to="'/org/' + item.team_id"
-                            v-for="(item,i) in teams"
-                            :key="i"
-                        >
-                            <img
-                                class="u-team-logo"
-                                v-if="item.team_logo"
-                                :src="item.team_logo | showTeamLogo"
-                            />
+                        <router-link class="u-team" :to="'/org/' + item.team_id" v-for="(item, i) in teams" :key="i">
+                            <img class="u-team-logo" v-if="item.team_logo" :src="showTeamLogo(item.team_logo)" />
                             <img class="u-team-logo" v-else src="@/assets/img/dashboard/null.png" />
-                            <span class="u-team-name">{{item.team_name}}</span>
+                            <span class="u-team-name">{{ item.team_name }}</span>
                         </router-link>
                     </div>
-                    <div class="u-lock">
-                        <i class="el-icon-lock"></i>加入的团队仅自己可见
-                    </div>
+                    <div class="u-lock"><i class="el-icon-lock"></i>加入的团队仅自己可见</div>
                 </template>
                 <template v-else>
-                    <div class="u-lock">
-                        <i class="el-icon-warning-outline"></i>当前角色没有加入任何团队
-                    </div>
+                    <div class="u-lock"><i class="el-icon-warning-outline"></i>当前角色没有加入任何团队</div>
                 </template>
             </div>
         </div>
@@ -126,7 +111,8 @@
             <p class="u-title">
                 <img class="u-icon" svg-inline src="@/assets/img/dashboard/warning.svg" />
                 Not Found
-            </p>角色不存在或没有权限
+            </p>
+            角色不存在或没有权限
         </div>
     </div>
 </template>
@@ -135,7 +121,15 @@
 import User from "@jx3box/jx3box-common/js/user";
 import { getRole, deleteRole, getRoleBelongTeams } from "@/service/dashboard/role.js";
 import RoleAvatar from "@/components/dashboard/role/RoleAvatar.vue";
-import { showBodyType, getThumbnail, authorLink, showAvatar, showSchoolIcon, showSchoolName } from "@/utils/filters"
+import {
+    showBodyType,
+    getThumbnail,
+    authorLink,
+    showAvatar,
+    showSchoolIcon,
+    showSchoolName,
+    showTime,
+} from "@/utils/filters";
 export default {
     name: "ViewRole",
     props: [],
@@ -195,8 +189,6 @@ export default {
         goBack: function () {
             this.$router.push("/role");
         },
-    },
-    filters: {
         showTeamLogo: function (val) {
             return getThumbnail(val, 256);
         },
@@ -204,7 +196,8 @@ export default {
         showAvatar,
         showBodyType,
         showSchoolIcon,
-        showSchoolName
+        showSchoolName,
+        showTime,
     },
     mounted: function () {
         this.loadData();

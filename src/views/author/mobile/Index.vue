@@ -13,7 +13,7 @@
 import AppLayout from "@/layouts/author/AppLayout.vue";
 import { getUserInfo, getDecoration, getDecorationJson } from "@/service/author/cms";
 import User from "@jx3box/jx3box-common/js/user";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 import MobileMe from "@/components/author/mobile/MobileMe.vue";
 import { getPrivateConf } from "@/service/author/author";
 
@@ -106,7 +106,7 @@ export default {
             });
         },
         showDecoration: function(val, type) {
-            return __cdn + `design/decoration/images/${val}/${type}.png?${new Date().getTime()}`;
+            return __cdn + `design/decoration/images/${val}/${type}.png`;
         },
         setDecoration(theme) {
             this.decorationMe = theme;

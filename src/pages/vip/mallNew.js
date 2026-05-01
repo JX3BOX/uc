@@ -14,6 +14,7 @@ const store = {
         boundCart: {},
         assetIsShow: false,
         navIsShow: false,
+        cartConfirmIsShow: false,
     },
     mutations: {
         toState(state, data) {
@@ -109,6 +110,9 @@ const store = {
         },
         setBoundCart({ commit }, boundCart) {
             commit("toState", { boundCart });
+        },
+        changeCartConfirmIsShow({ commit }, isShow) {
+            commit("toState", { cartConfirmIsShow: isShow });
         },
     },
     modules: {},

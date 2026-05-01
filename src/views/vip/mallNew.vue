@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <Header :key="currentKey"></Header>
+    <div >
+        <CommonHeader :key="currentKey"></CommonHeader>
         <div class="m-mall-breadcrumb-container">
             <MallBreadcrumb></MallBreadcrumb>
         </div>
@@ -27,29 +27,24 @@ export default {
     },
     methods: {},
     created: function () {
-        if (!User.isLogin()) {
-            this.$message.error("请先登录");
-            setTimeout(() => {
-                User.toLogin();
-            }, 1000);
-            return;
+        if (User.isLogin()) {
+            this.$store.dispatch("mallNew/getAsset").catch((err) => {
+                this.$message.error("获取资产失败");
+            });
+            this.$store.dispatch("mallNew/getCart").catch((err) => {
+                this.$message.error("获取购物车失败");
+            });
         }
-        this.$store.dispatch("mallNew/getAsset").catch((err) => {
-            this.$message.error("获取资产失败");
-        });
-        this.$store.dispatch("mallNew/getCart").catch((err) => {
-            this.$message.error("获取购物车失败");
-        });
     },
 };
 </script>
 <style lang="less" scoped>
 .m-mall-breadcrumb-container {
     background: black;
-    margin-top: 64px;
+    margin-top: 60px;
     height: 36px;
     position: sticky;
-    top: 64px;
+    top: 60px;
     z-index: 100;
 }
 </style>

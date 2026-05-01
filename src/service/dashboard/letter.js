@@ -1,8 +1,8 @@
-import { $next,$cms } from "@jx3box/jx3box-common/js/https";
+import { $next, $cms } from "@jx3box/jx3box-common/js/api";
 
 export function getConfig(params) {
-    return $cms({ mute: true }).get("/api/cms/config",{
-        params
+    return $cms({ mute: true }).get("/api/cms/config", {
+        params,
     });
 }
 

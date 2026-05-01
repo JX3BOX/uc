@@ -11,7 +11,8 @@
 
 <script>
 import tabs from "@/components/dashboard/tabs.vue";
-import { profileTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { profileTab } = tabsData;
 export default {
     name: "uc",
     props: {

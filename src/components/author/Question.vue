@@ -3,29 +3,37 @@
         <!-- 列表 -->
         <div v-if="list && list.length" class="m-archive-list">
             <ul class="u-list">
-                <li v-for="(item, i) in list"  :key="i + item" class="u-item">
+                <li v-for="(item, i) in list" :key="i + item" class="u-item">
                     <!-- 标题 -->
                     <h2 class="u-post">
                         <!-- 标题文字 -->
-                        <a :href="postLink(item.id,item.client)" class="u-title" target="_blank">{{ item.title || "无标题" }}</a>
+                        <a :href="postLink(item.id, item.client)" class="u-title" target="_blank">{{
+                            item.title || "无标题"
+                        }}</a>
                     </h2>
                     <!-- 字段 -->
-                    <div class="u-content u-desc">
-                        <el-tag type="primary" size="mini" v-for="(tag,index) in JSON.parse(item.tags||[])" :key="'tag'+index" class="u-tag">{{ tag }}</el-tag>
+                    <div class="u-desc">
+                        <span
+                            type="primary"
+                            v-for="(tag, index) in JSON.parse(item.tags || [])"
+                            :key="'tag' + index"
+                            class="u-tag"
+                            >{{ tag }}</span
+                        >
                     </div>
 
                     <!-- 作者 -->
                     <div class="u-misc">
                         <span class="u-date">
                             Created on
-                            <time >{{ item.createTime || dateFormat }}</time>
+                            <time>{{ item.createTime || dateFormat }}</time>
                         </span>
                     </div>
                 </li>
             </ul>
         </div>
         <div class="m-empty" v-else>
-            <img src='@/assets/img/author/null.png' width="80%">
+            <img src="@/assets/img/author/null.png" width="80%" />
         </div>
         <el-pagination
             class="m-author-pages"
@@ -33,7 +41,7 @@
             :hide-on-single-page="true"
             layout="prev, pager, next"
             :total="total"
-            :current-page.sync="page"
+            v-model:current-page="page"
             :page-size="per"
         >
         </el-pagination>
@@ -44,11 +52,11 @@
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
 import { getQuestions } from "@/service/author/next.js";
-import {  __clients , __Root, __OriginRoot} from "@jx3box/jx3box-common/data/jx3box.json";
+import { __clients, __Root, __OriginRoot } from "@/utils/config";
 export default {
     name: "Question",
     props: [],
-    data: function() {
+    data: function () {
         return {
             loading: false,
             list: [],
@@ -56,29 +64,29 @@ export default {
             per: 8,
             page: 1,
             root: {
-                std: __Root.slice(0,-1),
-                origin: __OriginRoot.slice(0,-1),
-                all : ''
+                std: __Root.slice(0, -1),
+                origin: __OriginRoot.slice(0, -1),
+                all: "",
             },
         };
     },
     computed: {
-        params: function() {
+        params: function () {
             return {
                 uid: this.uid,
                 pageIndex: this.page,
                 pageSize: this.per,
             };
         },
-        uid : function (){
-            return ~~this.$store.state.uid
+        uid: function () {
+            return ~~this.$store.state.uid;
         },
-        userdata: function() {
+        userdata: function () {
             return this.$store.state.userdata;
         },
     },
     methods: {
-        loadData: function() {
+        loadData: function () {
             if (!this.uid) return;
             this.loading = true;
             getQuestions(this.params)
@@ -90,16 +98,13 @@ export default {
                     this.loading = false;
                 });
         },
-        postLink: function(id,client) {
-            return this.root[client] + getLink('question', id);
+        postLink: function (id, client) {
+            return this.root[client] + getLink("question", id);
         },
-    },
-    filters: {
-
-        dateFormat: function(val) {
+        dateFormat: function (val) {
             return dateFormat(new Date(~~val * 1000));
         },
-        clientLabel: function(val) {
+        clientLabel: function (val) {
             val = val || "std";
             return __clients[val];
         },
@@ -108,12 +113,12 @@ export default {
         params: {
             deep: true,
             immediate: true,
-            handler: function() {
+            handler: function () {
                 this.loadData();
             },
         },
     },
-    mounted: function() {},
+    mounted: function () {},
 };
 </script>
 

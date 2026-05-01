@@ -1,9 +1,14 @@
-import { $cms, $next } from "@jx3box/jx3box-common/js/https.js";
+import { $cms, $next } from "@jx3box/jx3box-common/js/api.js";
 import axios from "axios";
-import { __imgPath, __dataPath, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath, __dataPath, __cdn } from "@/utils/config";
 
 function getDecoration(params) {
     return $cms().get(`/api/cms/user/decoration`, {
+        params,
+    });
+}
+function medalCheck(params) {
+    return $cms().get("/api/cms/user/medal/check", {
         params,
     });
 }
@@ -13,12 +18,18 @@ function setDecoration(data) {
 }
 
 function getDecorationJson() {
-    let url = __cdn + `design/decoration/index.json?${Date.now()}`;
+    let url = __cdn + `design/decoration/index.json`;
     return axios.get(url);
 }
 
 function getEmotion() {
-    return axios.get(`${__dataPath}emotion/output/catalog.json?${Date.now()}`);
+    return axios.get(`${__dataPath}emotion/output/catalog.json`);
+}
+
+function getUserDecoration(params) {
+    return $cms().get("/api/cms/user/decoration/check", {
+        params,
+    });
 }
 
 function receive(user_id, val) {
@@ -29,9 +40,8 @@ function updateAvatarFrame(data) {
     return $cms().put("/api/cms/user/my/avatar-frame", data);
 }
 
-function getHonor() {
-    // return axios.get(`${__imgPath}decoration/honor.json?${Date.now()}`);
-    return $cms().get("/api/cms/user/config/honor");
+function getHonor(params) {
+    return $cms().get("/api/cms/user/config/honor", { params });
 }
 
 function getUserHonors(uid) {
@@ -54,10 +64,14 @@ function getUserMedals(uid, params) {
         params,
     });
 }
+// 用户领取勋章
+function medalReceive(data) {
+    return $cms().post("/api/cms/user/medal/receive", data);
+}
 
 // 获取所有勋章
 function getMedals(params) {
-    return $cms().get("/api/cms/config/medal", {params});
+    return $cms().get("/api/cms/config/medal", { params });
 }
 
 // 用户佩戴或者取消佩戴勋章
@@ -65,10 +79,16 @@ function setMedal(uid, medal_id, is_wear) {
     return $next().put(`/api/next2/user/${uid}/medals/${medal_id}/wear/${is_wear}`);
 }
 
+// 发放活动装扮
+function decorationReceive(data) {
+    return $cms().post("/api/cms/user/decoration/receive", data);
+}
+
 export {
     getDecoration,
     setDecoration,
     getDecorationJson,
+    getUserDecoration,
     getEmotion,
     receive,
     updateAvatarFrame,
@@ -78,5 +98,8 @@ export {
     cancelHonor,
     getUserMedals,
     getMedals,
-    setMedal
+    setMedal,
+    medalCheck,
+    medalReceive,
+    decorationReceive,
 };

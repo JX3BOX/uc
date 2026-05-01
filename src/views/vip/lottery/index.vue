@@ -1,6 +1,6 @@
 <template>
-    <div id="app" :class="theme" v-loading="loading">
-        <Header></Header>
+    <div :class="theme" v-loading="loading">
+        <CommonHeader></CommonHeader>
         <div class="p-event-blindbox">
             <!-- 模糊背景 -->
             <div class="m-video" v-if="isVideo">
@@ -17,12 +17,14 @@
                     <div class="m-left">
                         <div class="logo">
                             <img :src="`${themeImg}logo.svg?123`" alt="魔盒盲盒" />
-                            <el-tooltip effect="light" placement="right-start">
+                            <el-tooltip effect="light" placement="bottom-start">
+                                <template #content>
+                                    <div class="m-blindbox-info">
+                                        {{ info }}
+                                    </div>
+                                </template>
                                 <img class="u-info" :src="`${__imgRoot}desc.svg`" alt="活动说明" />
-                                <div class="m-blindbox-info" slot="content">
-                                    {{ info }}
-                                </div>
-                            </el-tooltip>
+                            </el-tooltip> 
                         </div>
                         <!-- 抽奖盒子 -->
                         <div class="m-box" :class="{ active: allActive }">
@@ -58,11 +60,11 @@
                                 </div>
                                 <el-dialog
                                     title="奖品速览"
-                                    :visible.sync="preview"
+                                    v-model="preview"
                                     width="80%"
                                     :before-close="() => (preview = false)"
                                     :append-to-body="true"
-                                    custom-class="m-preview-dialog"
+                                    class="m-preview-dialog"
                                 >
                                     <div class="m-preview">
                                         <a
@@ -97,9 +99,11 @@
                                 </el-dialog>
                                 <el-tooltip effect="light" placement="right-start">
                                     <span class="u-odds" v-show="odds">+ 概率公式</span>
-                                    <div class="m-blindbox-info" slot="content">
-                                        {{ odds }}
-                                    </div>
+                                    <template #content>
+                                        <div class="m-blindbox-info">
+                                            {{ odds }}
+                                        </div>
+                                    </template>
                                 </el-tooltip>
                             </div>
                             <!-- 展示奖品 -->
@@ -240,7 +244,7 @@ import { getBreadcrumb, getConfig } from "@/service/vip/cms";
 import { getBlindBox, goodLucky, getMyLucky, getLuckyConfig, getMyInfo } from "@/service/vip/lottery";
 import { cloneDeep, throttle, zip } from "lodash";
 import { resolveImagePath } from "@jx3box/jx3box-common/js/utils";
-import { __Root, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, __cdn } from "@/utils/config";
 import "@/assets/css/vip/lottery/hacker.less";
 import "@/assets/css/vip/lottery/dragon.less";
 import "@/assets/css/vip/lottery/normal.less";
@@ -373,7 +377,7 @@ export default {
     },
     methods: {
         loadUser() {
-            if(this.isLogin){
+            if (this.isLogin) {
                 getMyInfo().then((res) => {
                     this.user = res.data.data;
                 });
@@ -405,6 +409,7 @@ export default {
 
                 Promise.all(promises)
                     .then((res) => {
+                        console.log(res);
                         this.info = res[0];
                         this.odds = res[1];
                         this.gift_off = res[2];
@@ -624,7 +629,7 @@ export default {
             this.history = false;
         },
     },
-    destroyed() {
+    beforeUnmount() {
         clearInterval(this.scrollInterval);
     },
 };

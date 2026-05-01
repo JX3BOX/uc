@@ -1,7 +1,7 @@
 <template>
     <div class="m-publish-wujie">
         <el-form-item label="适用">
-            <el-checkbox :true-label="1" :false-label="0" v-model="visible">无界</el-checkbox>
+            <el-checkbox :true-value="1" :fasle-value="0" v-model="visible">无界</el-checkbox>
         </el-form-item>
     </div>
 </template>
@@ -9,40 +9,49 @@
 <script>
 export default {
     name: "",
-    props: ["data"],
+    props: {
+        modelValue: {
+            type: [String, Number],
+            default: undefined,
+        },
+        data: {
+            type: [String, Number],
+            default: 0,
+        },
+    },
     components: {},
     data: function () {
         return {
-            visible: 0,
+            visible: this.modelValue !== undefined ? this.modelValue : this.data,
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.visible = newval;
+            }
+        },
         data: function (newval) {
-            this.visible = newval;
+            if (this.modelValue === undefined) {
+                this.visible = newval;
+            }
         },
         visible: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },
     },
-    computed: {},
-    methods: {},
-    filters: {},
-    created: function () {},
-    mounted: function () {},
 };
 </script>
 
 <style scoped lang="less">
-    .m-publish-visible{
-        .el-radio{
-            .mb(0);
-        }
+.m-publish-visible {
+    .el-radio {
+        .mb(0);
     }
+}
 </style>

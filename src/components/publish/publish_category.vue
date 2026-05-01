@@ -1,10 +1,10 @@
 <template>
     <div class="m-category-list">
         <span class="u-category">类别</span>
-        <el-radio-group v-model="category" @input="updateCategory">
-            <el-tooltip v-for="item in options" :key="item.name" effect="dark" :content="item.remark" placement="top-start">
-                <el-radio border :label="item.name">{{ item.name }}</el-radio>
-            </el-tooltip>
+        <el-radio-group v-model="category" @change="updateCategory">
+            <!-- <el-tooltip v-for="item in options" :key="item.name" effect="dark" :content="item.remark" placement="top-start"> -->
+            <el-radio v-for="item in options" :key="item.name" border :value="item.name">{{ item.label }}</el-radio>
+            <!-- </el-tooltip> -->
         </el-radio-group>
     </div>
 </template>
@@ -16,6 +16,10 @@ export default {
             type: Array,
             required: true,
         },
+        modelValue: {
+            type: [String, Number],
+            default: undefined,
+        },
         value: {
             type: [String, Number],
             default: "",
@@ -23,32 +27,39 @@ export default {
     },
     data() {
         return {
-            category: this.value,
+            category: this.modelValue !== undefined ? this.modelValue : this.value,
         };
     },
     watch: {
         // 监听外部传递的 value 属性的变化
+        modelValue(newVal) {
+            if (newVal !== undefined) {
+                this.category = newVal;
+            }
+        },
         value(newVal) {
-            this.category = newVal;
+            if (this.modelValue === undefined) {
+                this.category = newVal;
+            }
         },
         options: {
             deep: true,
             immediate: true,
             handler() {
-                if (!this.value) {
-                    this.category = this.options?.[0]?.name;
+                // 如果没有设置值，使用第一个选项作为默认值
+                if (this.modelValue === undefined && !this.value && this.options?.length > 0) {
+                    this.category = this.options[0].name;
+                    this.$emit("update:modelValue", this.category);
                     this.$emit("update", this.category);
                 }
-            }
-        }
+            },
+        },
     },
-    model: {
-        prop: "value",
-        event: "update",
-    },
+    emits: ["update", "update:modelValue"],
     methods: {
         // 当 radio-group 内部的 category 变化时，更新到外部的 value 上
         updateCategory(newVal) {
+            this.$emit("update:modelValue", newVal);
             this.$emit("update", newVal);
         },
     },

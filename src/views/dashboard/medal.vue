@@ -2,7 +2,7 @@
     <uc class="m-dashboard-medal m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tab-list="tabList">
         <template #header>
             <a
-                class="u-link el-button el-button--default el-button--mini is-round is-plain"
+                class="u-link el-button el-button--default el-button--small is-round is-plain"
                 href="/vip/mall?category=virtual"
                 target="_blank"
                 ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
@@ -15,10 +15,13 @@
                     <img class="u-img" :src="imgSrc(item.medal)" :alt="item.medal" />
                     <span class="u-model-name">{{ item.medal_desc }}</span>
                     <time :datetime="item.created_at" class="u-medal-time">{{ dateFormat(item.created_at) }}</time>
-                    <el-button size="small" @click="onIsWearChange(item)"
-                        :type="item.is_wear ? 'info' : 'primary'" :plain="!!item.is_wear"
+                    <el-button
+                        @click="onIsWearChange(item)"
+                        :type="item.is_wear ? 'info' : 'primary'"
+                        :plain="!!item.is_wear"
+                        size="small"
                     >
-                        <i :class="item.is_wear ? 'el-icon-help' : 'el-icon-s-help'"></i>
+                        <!-- <i :class="item.is_wear ? 'el-icon-help' : 'el-icon-s-help'"></i> -->
                         {{ item.is_wear ? "卸下" : "佩戴" }}
                     </el-button>
                 </div>
@@ -36,10 +39,11 @@
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { themeTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { themeTab } = tabsData;
 import User from "@jx3box/jx3box-common/js/user";
 import { getUserMedals, getMedals, setMedal } from "@/service/dashboard/decoration";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 import moment from "moment";
 export default {
     name: "medal",

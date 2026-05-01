@@ -73,9 +73,17 @@
                 color: #f00;
             }
         }
+
+        .u-used-icon {
+            cursor: pointer;
+            &.is-used {
+                cursor: default;
+            }
+        }
     }
     .m-credit-pages {
         .pt(20px);
+        justify-content: center;
     }
     .u-title{
         .flex;
@@ -103,8 +111,9 @@
         line-height:1.8;
     }
 
-    .m-boxcoin-tip__content{
+    .el-alert__title,.m-boxcoin-tip__content{
         white-space: pre-wrap;
+        .fz(12px);
     }
 }
 
@@ -117,7 +126,15 @@
     }
 
     .u-tab--desc {
-        color: #c00;
+        // color: #c00;
+        // background-color:@v4primary;
+        .fz(10px);
+        color:@v4primary;
+        border:1px solid @v4primary;
+        background-color:#fff;
+        padding:2px 8px;
+        .r(3px);
+        margin-left: 5px;
     }
 }
 

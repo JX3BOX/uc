@@ -1,5 +1,5 @@
 import { axios, $, $cms } from "./axios";
-import { __cms } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cms } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import { encryptPassword } from "@/utils/pwd_encrypt";
 
@@ -31,11 +31,11 @@ function loginByEmail(data) {
     }).post("api/cms/user/account/email/login", {
         email: data.email,
         password: encryptPassword(data.pass),
-    }, { 
-        params: { 
+    }, {
+        params: {
             app: 'jx3box' ,
             encrypt : 1
-        } 
+        }
     });
     // 必须以携带模式请求
 }

@@ -10,7 +10,7 @@
     .mt(20px);
     .flex;
     .flex(x);
-    gap:20px;
+    gap: 20px;
 }
 .m-frame-left {
     .pr;
@@ -55,7 +55,7 @@
         .u-avatar-pic {
             .size(100%);
             .db;
-            .full;
+            .size(100%);
             .r(100%);
         }
         .u-avatar-frame {
@@ -68,9 +68,9 @@
                 .lt(0);
             }
             .size(@frame);
-            .lt(@pic / 2);
-            margin-left: -@frame / 2;
-            margin-top: -@frame / 2;
+            .lt((@pic / 2));
+            margin-left: -(@frame / 2);
+            margin-top: -(@frame / 2);
         }
     }
 }
@@ -98,7 +98,7 @@
             }
             .u-buy {
                 .fz(12px);
-                color: @color-link;
+                color: @v4primary;
                 font-weight: normal;
                 &:hover {
                     text-frame: underline;

@@ -1,4 +1,4 @@
-import { $next } from "@jx3box/jx3box-common/js/https";
+import { $next } from "@jx3box/jx3box-common/js/api";
 
 const API_PREFIX = `/api/next2`;
 // 发布
@@ -60,6 +60,17 @@ function updateMyReply(id, data) {
     return $next().put(`${API_PREFIX}/community/discussion/my/reply/item/${id}`, data);
 }
 
+// ============= 管理员管理回帖 =============
+// 获取回帖
+function getAdminReply(id) {
+    return $next().get(`${API_PREFIX}/community/discussion/manage/reply/item/${id}`);
+}
+
+// 更新回帖
+function updateAdminReply(id, data) {
+    return $next().put(`${API_PREFIX}/community/discussion/manage/reply/item/${id}/update`, data);
+}
+
 // =============  我的评论 =============
 
 // 获取评论列表
@@ -95,4 +106,6 @@ export {
     pullAdmin,
     updateAdmin,
     getReadingHistory,
+    getAdminReply,
+    updateAdminReply,
 };

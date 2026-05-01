@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <Header></Header>
+    <div>
+        <CommonHeader></CommonHeader>
         <!-- <Breadcrumb name="充值盒币" slug="vip" root="/vip/boxcoin" :publishEnable="false" :adminEnable="false" :feedbackEnable="true">
             <img slot="logo" svg-inline src="@/assets/img/vip/logo.svg" />
         </Breadcrumb> -->
@@ -20,18 +20,18 @@
                                 </div>
                             </el-form-item>
                             <el-form-item label="购买数量">
-                                <el-radio-group v-model="count" size="small">
-                                    <el-radio label="15" border>1500盒币</el-radio>
-                                    <el-radio label="30" border>3000盒币</el-radio>
-                                    <el-radio label="50" border>5000盒币</el-radio>
-                                    <el-radio label="100" border>10000盒币</el-radio>
-                                    <el-radio label="500" border>50000盒币</el-radio>
+                                <el-radio-group v-model="count">
+                                    <el-radio :value="15" border>1500盒币</el-radio>
+                                    <el-radio :value="30" border>3000盒币</el-radio>
+                                    <el-radio :value="50" border>5000盒币</el-radio>
+                                    <el-radio :value="100" border>10000盒币</el-radio>
+                                    <el-radio :value="500" border>50000盒币</el-radio>
                                 </el-radio-group>
                             </el-form-item>
                             <el-form-item label="支付金额">
                                 <div>
                                     <span>¥</span>
-                                    <b class="u-price">{{ count | formatPrice }}</b>
+                                    <b class="u-price">{{ formatPrice(count) }}</b>
                                     <span>元</span>
                                 </div>
                             </el-form-item>
@@ -42,14 +42,18 @@
                     </div>
                 </div>
                 <result class="m-boxcoin-result" v-else>
-                    <div slot="title" class="m-boxcoin-result-title">充值成功</div>
-                    <div slot="desc" class="m-boxcoin-result-desc">
-                        <p>
-                            当前剩余盒币：
-                            <b>{{ total }}</b>
-                        </p>
-                        <el-button class="u-back" @click="goBack" plain icon="el-icon-refresh-left">返回</el-button>
-                    </div>
+                    <template #title>
+                        <div class="m-boxcoin-result-title">充值成功</div>
+                    </template>
+                    <template #desc>
+                        <div class="m-boxcoin-result-desc">
+                            <p>
+                                当前剩余盒币：
+                                <b>{{ total }}</b>
+                            </p>
+                            <el-button class="u-back" @click="goBack" plain icon="RefreshLeft">返回</el-button>
+                        </div>
+                    </template>
                 </result>
             </div>
         </Main>
@@ -62,7 +66,7 @@
             :returnUrl="returnUrl"
             @done="finish"
         />
-        <Footer></Footer>
+        <CommonFooter></CommonFooter>
     </div>
 </template>
 
@@ -126,17 +130,15 @@ export default {
         goBack: function () {
             this.done = false;
         },
+        formatPrice: function (val) {
+            return val && (~~val).toFixed(2);
+        },
     },
     created: function () {
         this.isLogin && this.loadAsset();
 
         let params = new URLSearchParams(location.search);
         this.refer = params.get("redirect") || "";
-    },
-    filters: {
-        formatPrice: function (val) {
-            return val && (~~val).toFixed(2);
-        },
     },
     components: {
         paypop,

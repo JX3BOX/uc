@@ -1,8 +1,6 @@
 <template>
-    <div>
-        <Header></Header>
-        <slot></slot>
-    </div>
+    <CommonHeader></CommonHeader>
+    <slot></slot>
 </template>
 
 <script>

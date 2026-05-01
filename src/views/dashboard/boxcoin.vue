@@ -15,13 +15,11 @@
                     >双端：<b>{{ total_all }}</b></span
                 >
             </span>
-            <!-- <a class="el-button u-btn el-button--primary el-button--mini" href="/vip/boxcoin" target="_blank">充值</a> -->
-            <el-button class="u-btn" type="primary" @click="togglePullBox" size="mini" :disabled="!money"
-                >兑换</el-button
-            >
+            <!-- <a class="el-button u-btn el-button--primary el-button--small" href="/vip/boxcoin" target="_blank">充值</a> -->
+            <el-button class="u-btn" type="primary" size="small" @click="togglePullBox" :disabled="!money">兑换</el-button>
         </div>
         <div class="m-credit-pull" v-if="showPullBox">
-            <el-alert class="m-boxcoin-ac" type="error" show-icon :closable="false" v-if="breadcrumb" size="mini">
+            <el-alert class="m-boxcoin-ac" type="error" show-icon :closable="false" v-if="breadcrumb">
                 <slot name="title"><div v-html="breadcrumb"></div></slot>
             </el-alert>
             <el-alert class="m-boxcoin-tip" title="1盒币可兑换1通宝，不可折现" type="warning" show-icon>
@@ -41,16 +39,16 @@
                 </el-form-item>
                 <el-form-item label="兑换数目">
                     <el-radio-group v-model="pull.cash">
-                        <el-radio :label="1500" border :disabled="!canSelect(1500)" v-if="client == 'std'"
+                        <el-radio :value="1500" border :disabled="!canSelect(1500)" v-if="client == 'std'"
                             >1500通宝</el-radio
                         >
-                        <el-radio :label="2000" border :disabled="!canSelect(2000)">2000通宝</el-radio>
-                        <el-radio :label="3000" border :disabled="!canSelect(3000)">3000通宝</el-radio>
-                        <el-radio :label="5000" border :disabled="!canSelect(5000)">5000通宝</el-radio>
-                        <el-radio :label="10000" border :disabled="!canSelect(10000)">10000通宝</el-radio>
-                        <el-radio :label="50000" border :disabled="!canSelect(50000)">50000通宝</el-radio>
-                        <el-radio :label="100000" border :disabled="!canSelect(100000)">100000通宝</el-radio>
-                        <el-radio :label="200000" border :disabled="!canSelect(200000)">200000通宝</el-radio>
+                        <el-radio :value="2000" border :disabled="!canSelect(2000)" v-if="isAdmin">2000通宝</el-radio>
+                        <el-radio :value="3000" border :disabled="!canSelect(3000)">3000通宝</el-radio>
+                        <el-radio :value="5000" border :disabled="!canSelect(5000)">5000通宝</el-radio>
+                        <el-radio :value="10000" border :disabled="!canSelect(10000)">10000通宝</el-radio>
+                        <el-radio :value="50000" border :disabled="!canSelect(50000)">50000通宝</el-radio>
+                        <el-radio :value="100000" border :disabled="!canSelect(100000)">100000通宝</el-radio>
+                        <el-radio :value="200000" border :disabled="!canSelect(200000)">200000通宝</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="邮箱地址">
@@ -69,17 +67,19 @@
             </el-form>
         </div>
         <div class="m-credit-table m-packet-table" v-loading="loading">
-            <el-tabs v-model="tab" @tab-click="changeType" type="border-card">
+            <el-tabs v-model="tab" @tab-change="changeType" type="border-card">
                 <el-tab-pane label="盒币记录" name="in" lazy>
                     <div class="m-packet-table" v-if="list && list.length">
                         <table class="m-boxcoin-in-list m-packet-in-list">
-                            <tr>
-                                <th>类型</th>
-                                <th>数量</th>
-                                <th>源于作品</th>
-                                <th>备注</th>
-                                <th>时间</th>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>类型</th>
+                                    <th>数量</th>
+                                    <th>源于作品</th>
+                                    <th>备注</th>
+                                    <th>时间</th>
+                                </tr>
+                            </thead>
                             <tr v-for="(item, i) in list" :key="i">
                                 <td>{{ formatType(item.action_type) }}</td>
                                 <td class="u-count" :class="showBoxcoinCls(item)">
@@ -112,7 +112,7 @@
                         background
                         :page-size="per"
                         :hide-on-single-page="true"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         layout="total, prev, pager, next, jumper"
                         :total="total"
                     ></el-pagination>
@@ -120,15 +120,17 @@
                 <el-tab-pane label="兑换记录" name="out" lazy>
                     <div class="m-packet-table" v-if="list && list.length">
                         <table class="m-boxcoin-out-list m-packet-in-list">
-                            <tr>
-                                <th>数量</th>
-                                <th>大区</th>
-                                <th>账号</th>
-                                <th>邮箱</th>
-                                <th>处理状态</th>
-                                <th>备注</th>
-                                <th>申请时间</th>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>数量</th>
+                                    <th>大区</th>
+                                    <th>账号</th>
+                                    <th>邮箱</th>
+                                    <th>处理状态</th>
+                                    <th>备注</th>
+                                    <th>申请时间</th>
+                                </tr>
+                            </thead>
                             <tr v-for="(item, i) in list" :key="i">
                                 <td>
                                     <b>{{ item.cash }}通宝</b>
@@ -137,7 +139,9 @@
                                 <td>{{ item.account }}</td>
                                 <td>{{ item.email }}</td>
                                 <td :class="statusClass(item)">
-                                    {{ formatHistoryStatus(item) }}
+                                    <el-tag :type="tagColor(item)" size="small">
+                                        {{ formatHistoryStatus(item) }}
+                                    </el-tag>
                                 </td>
                                 <td>{{ item.remark }}</td>
                                 <td>{{ formatDate(item.created_at) }}</td>
@@ -158,7 +162,7 @@
                         background
                         :page-size="per"
                         :hide-on-single-page="true"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         layout="total, prev, pager, next, jumper"
                         :total="total"
                     ></el-pagination>
@@ -174,7 +178,6 @@ import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { showTime } from "@jx3box/jx3box-common/js/moment";
 import types from "@/assets/data/dashboard/boxcoin_types.json";
 import zones from "@jx3box/jx3box-data/data/server/server_zones.json";
-import statusMap from "@/assets/data/dashboard/boxcoin_status.json";
 import {
     getBoxcoinCashHistory,
     getBoxcoinGotHistory,
@@ -182,7 +185,7 @@ import {
     getBoxcoinConfig,
     getBoxcoinOverview,
 } from "@/service/dashboard/boxcoin.js";
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 import { omit } from "lodash";
 export default {
     name: "Boxcoin",
@@ -244,6 +247,9 @@ export default {
         },
         client: function () {
             return this.$store.state.client;
+        },
+        isAdmin: function () {
+            return User.isAdmin();
         },
 
         // 额度
@@ -371,7 +377,8 @@ export default {
             this.formStatus = true;
         },
         openConfirmBox: function () {
-            if (this.pull.account !== this.pull.accounts) return this.$alert(`请确认游戏账号是否填写正确`);
+            if (/[\u4e00-\u9fa5]/.test(this.pull.account)) return this.$alert("请填写剑三登录账号，而不是角色名");
+            if (this.pull.account !== this.pull.accounts) return this.$alert(`请确认账号是否填写正确`);
 
             this.$alert(
                 `<div class="m-boxcoin-msg">大区：<b>${this.pull.zone}</b> <br/> 账号：<b>${this.pull.account}</b> <br/> 邮箱：<b>${this.pull.email}</b> <br/> 兑换：<b>${this.pull.cash}通宝</b></div>`,
@@ -451,6 +458,15 @@ export default {
             if (status == 1) {
                 if (received_in_game == 1) return "isFinished";
                 return "isProcessing";
+            }
+        },
+        tagColor(item) {
+            const { status, received_in_game } = item;
+            if (status == 0) return "warning";
+            if (status == 2) return "danger";
+            if (status == 1) {
+                if (received_in_game == 1) return "success";
+                return "warning";
             }
         },
         toPositiveNumber: function (val) {

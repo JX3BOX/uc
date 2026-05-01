@@ -1,4 +1,4 @@
-import { $cms } from "@jx3box/jx3box-common/js/https";
+import { $cms } from "@jx3box/jx3box-common/js/api";
 
 function getFreePro() {
     return $cms({ popType: "notify" }).put("/api/cms/admin/get-free-pro");

@@ -17,6 +17,7 @@
                     placeholder="输入成就名称/成就描述/称号/奖励物品并按『回车』进行搜索"
                     :remote-method="search_handle"
                     :loading="options.loading"
+                    size="large"
                 >
                     <el-option v-for="item in options.sources" :key="item.ID" :label="item.Name" :value="item.ID">
                         <div class="m-selector-item">
@@ -41,30 +42,47 @@
                     show-word-limit
                     required
                     placeholder="请简单描述一下本次修订的说明"
+                    size="large"
                 ></el-input>
             </div>
 
             <div class="m-publish-content">
                 <el-divider content-position="left">攻略正文 *</el-divider>
                 <Tinymce v-model="post.content" :attachmentEnable="true" :resourceEnable="true" :height="400">
-                    <el-alert type="warning" class="m-latest-check" show-icon v-if="!isLatest && latest.post && current.post">
+                    <el-alert
+                        type="warning"
+                        class="m-latest-check"
+                        show-icon
+                        v-if="!isLatest && latest.post && current.post"
+                    >
                         <template #title>
-                            <span class="u-alert-title">当前百科已经有更新的版本，你的攻略可能已经失效，请先进行比对。</span>
-                            <el-link type="primary" icon="el-icon-link" :href="getLink(post.source_id)" target="_blank" class="u-view-latest">查看最新攻略</el-link>
-                            <el-link @click="getLatest" icon="el-icon-download" class="u-get-latest" type="primary" v-if="latest.post">获取最新攻略</el-link>
+                            <span class="u-alert-title"
+                                >当前百科已经有更新的版本，你的攻略可能已经失效，请先进行比对。</span
+                            >
+                            <el-link
+                                type="primary"
+                                icon="Link"
+                                :href="getLink(post.source_id)"
+                                target="_blank"
+                                class="u-view-latest"
+                                >查看最新攻略</el-link
+                            >
+                            <el-link
+                                @click="getLatest"
+                                icon="Download"
+                                class="u-get-latest"
+                                type="primary"
+                                v-if="latest.post"
+                                >获取最新攻略</el-link
+                            >
                         </template>
                     </el-alert>
                 </Tinymce>
             </div>
 
+            <el-divider content-position="left"></el-divider>
             <div class="m-publish-commit">
-                <el-divider content-position="left"></el-divider>
-                <el-button
-                    class="u-publish"
-                    icon="el-icon-s-promotion"
-                    type="primary"
-                    @click="toPublish"
-                    :disabled="processing"
+                <el-button class="u-publish" size="large" icon="Promotion" type="primary" @click="toPublish" :disabled="processing"
                     >提交攻略
                 </el-button>
             </div>
@@ -77,7 +95,7 @@ import header from "@/components/publish/publish_header.vue";
 import Tinymce from "@jx3box/jx3box-editor/src/Tinymce";
 
 // 本地依赖
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 import User from "@jx3box/jx3box-common/js/user";
 import { search_achievements } from "@/service/publish/achievement";
 import { iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
@@ -105,7 +123,7 @@ export default {
             processing: false,
 
             latest: {},
-            current: {}
+            current: {},
         };
     },
     computed: {
@@ -116,10 +134,10 @@ export default {
             return this.$route.query?.post_id;
         },
         // 当前比最新的攻略是否更新
-        isLatest : function (){
-            if(!this.current?.post?.id || !this.latest?.post?.id) return false
-            return this.current.post.id == this.latest.post.id
-        }
+        isLatest: function () {
+            if (!this.current?.post?.id || !this.latest?.post?.id) return false;
+            return this.current.post.id == this.latest.post.id;
+        },
     },
     methods: {
         toPublish: function () {
@@ -213,7 +231,7 @@ export default {
             if (!this.post.source_id) return;
             this.loading = true;
             return wiki
-                .get({ type: "achievement", id: this.post.source_id,}, { client: client })
+                .get({ type: "achievement", id: this.post.source_id }, { client: client })
                 .then((res) => {
                     let data = res.data;
                     // 数据填充
@@ -258,9 +276,9 @@ export default {
         loadDataByPostId: function () {
             this.loading = true;
             return wiki
-            .getById(this.id)
-            .then((res) => {
-                    this.current = res.data.data
+                .getById(this.id)
+                .then((res) => {
+                    this.current = res.data.data;
                     let data = res.data;
                     // 数据填充
                     let post = data.data.post;
@@ -304,16 +322,16 @@ export default {
         // 获取最新的攻略
         loadLatest() {
             if (!this.post.source_id) return;
-            wiki.get({ type: "achievement", id: this.post.source_id }).then(res => {
-                this.latest = res.data.data
-            })
+            wiki.get({ type: "achievement", id: this.post.source_id }).then((res) => {
+                this.latest = res.data.data;
+            });
         },
         getLink(id) {
             return getLink("achievement", id);
         },
         getLatest() {
-            this.post.content = this.latest.post?.content || ''
-        }
+            this.post.content = this.latest.post?.content || "";
+        },
     },
     created() {
         // 初始化搜索列表
@@ -324,25 +342,25 @@ export default {
         this.post.source_id = id ? parseInt(id) : null;
 
         // 获取最新的攻略
-        this.loadLatest()
+        this.loadLatest();
     },
     watch: {
         "post.source_id": {
-            handler: function(val) {
+            handler: function (val) {
                 if (this.id) {
                     this.loadDataByPostId();
                     return;
                 }
 
-                if(this.client == 'std'){
-                    this.loadData('std')
-                }else{
-                    this.loadData('origin').then((post) => {
-                        console.log('兼容获取')
-                        if(!post){
-                            this.loadData('std')
+                if (this.client == "std") {
+                    this.loadData("std");
+                } else {
+                    this.loadData("origin").then((post) => {
+                        console.log("兼容获取");
+                        if (!post) {
+                            this.loadData("std");
                         }
-                    })
+                    });
                 }
             },
         },

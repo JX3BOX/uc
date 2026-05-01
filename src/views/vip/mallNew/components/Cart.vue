@@ -17,7 +17,7 @@
                     全选&nbsp;({{ $store.getters["mallNew/checked_num"] }}/{{ $store.getters["mallNew/num"] }})
                 </div>
             </div>
-            <el-button type="info" plain size="mini" @click="handleClear">清空</el-button>
+            <el-button type="info" plain @click="handleClear">清空</el-button>
         </div>
         <div class="m-cart-items">
             <div class="m-cart-item" v-for="item in list" :key="item.id" :class="{ cannotBuy: item.can_buy === 0 }">
@@ -37,12 +37,14 @@
                                 v-model="item.amount"
                                 :max="item.goods.stock"
                                 @change="itemChange(item, $event)"
+                                :min="1"
+                                v-if="item.goods.category === 'virtual' && item.goods.sub_category === 'palu'"
                             ></el-input-number>
-                            <span v-if="item.goods.price_points" style="color: rgba(116, 120, 237, 1)">
+                            <span class="u-price" v-if="item.goods.price_points" >
                                 <img src="@/assets/img/vip/vip2/points.svg" alt="" class="icon" svg-inline />
                                 {{ item.goods.price_points }}
                             </span>
-                            <span v-if="item.goods.price_boxcoin" style="color: rgba(42, 130, 228, 1)">
+                            <span class="u-price" v-if="item.goods.price_boxcoin" >
                                 <img src="@/assets/img/vip/vip2/box_icon.svg" alt="" class="icon" svg-inline />
                                 {{ item.goods.price_boxcoin }}
                             </span>
@@ -61,7 +63,7 @@
             >
                 {{ name }}&emsp;{{ time }}
             </div>
-            <img :src="`${imgurl}条形码.svg`" alt="" class="icon" svg-inline />
+            <img :src="`${imgUrl}bar-code.svg`" alt="" class="icon" svg-inline />
         </div>
         <div class="dashed"></div>
         <div class="total-price">
@@ -92,19 +94,19 @@
                     <div class="left">{{ $store.getters["mallNew/all_price_points"] }}</div>
                 </div>
             </div>
-            <div class="total-btn" @click="$router.push({ name: 'mall_batch_order_new' })">结算</div>
+            <div class="total-btn" @click="$store.dispatch('mallNew/changeCartConfirmIsShow', true)">结算</div>
         </div>
     </div>
 </template>
-
 <script>
+import { __cdn } from "@/utils/config";
 import { debounce } from "lodash";
 import moment from "moment";
 export default {
     name: "Cart",
     data() {
         return {
-            imgurl: "https://cdn.jx3box.com/design/mall/",
+            imgUrl: __cdn + "design/mall/",
             list: [],
             name: localStorage.getItem("name"),
             time: moment().format("YYYY/MM/DD HH:mm"),
@@ -294,7 +296,7 @@ export default {
                         display: flex;
                         gap: 8px;
                         align-items: center;
-                        /deep/ .el-input-number {
+                        :deep(.el-input-number) {
                             width: 70px;
                             height: 14px;
                             .el-input-number__decrease,
@@ -321,6 +323,9 @@ export default {
                                 }
                             }
                         }
+                    }
+                    .u-price {
+                    color: rgba(116, 120, 237, 1);display: inline-flex;align-items: center;gap: 4px;
                     }
                 }
                 .delete {
@@ -377,6 +382,7 @@ export default {
             }
         }
         .total-btn {
+            cursor: pointer;
             width: 161px;
             height: 50px;
             border-radius: 50px;
@@ -387,6 +393,9 @@ export default {
             font-size: 18px;
             font-weight: 700;
             color: rgba(255, 255, 255, 1);
+            &:hover {
+                box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+            }
         }
     }
 }

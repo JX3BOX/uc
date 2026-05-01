@@ -1,10 +1,9 @@
 <template>
     <div class="m-publish-facedat">
-
         <el-divider content-position="left">① 数据</el-divider>
         <el-form-item label="数据">
-            <input class="u-data-input" type="file" id="face_file" @change="processFile" accept=".jx3dat, .dat, .ini"/>
-            <el-button type="primary" @click="selectData" icon="el-icon-upload2">上传脸型数据</el-button>
+            <input class="u-data-input" type="file" id="face_file" @change="processFile" accept=".jx3dat, .dat, .ini" />
+            <el-button type="primary" @click="selectData" icon="Upload">上传脸型数据</el-button>
             <span class="u-data-ready" v-show="facedat.file">
                 <i class="el-icon-success"></i>
                 已上传
@@ -35,7 +34,8 @@ import isEmptyMeta from "@/utils/isEmptyMeta.js";
 import UploadAlbum from "@jx3box/jx3box-editor/src/UploadAlbum.vue";
 import { load as parseFace } from "@jx3box/jx3box-facedat/src/DataRouter.js";
 import { uploadFacedata } from "@/service/publish/share.js";
-import {bodyMap} from '@jx3box/jx3box-facedat/assets/data/index.json'
+import faceData from "@jx3box/jx3box-facedat/assets/data/index.json";
+const { bodyMap } = faceData;
 // META空模板
 const default_meta = {
     author: "", //原作者
@@ -45,43 +45,67 @@ const default_meta = {
 };
 export default {
     name: "publishFacedat",
-    props: ["data", "client"],
+    props: {
+        modelValue: {
+            type: Object,
+            default: undefined,
+        },
+        data: {
+            type: Object,
+            default: () => lodash.cloneDeep(default_meta),
+        },
+        client: {
+            type: String,
+            default: "std",
+        },
+    },
     components: { UploadAlbum },
     data: function () {
         return {
-            facedat: this.data,
-            object : ''
+            facedat: this.modelValue !== undefined ? this.modelValue : this.data,
+            object: "",
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update", "update:modelValue", "updateMeta"],
     watch: {
-        data: {
-            immediate: true,
+        modelValue: {
             deep: true,
             handler: function (newval) {
-                if (!newval || isEmptyMeta(newval)) {
-                    this.facedat = lodash.cloneDeep(default_meta);
-                } else {
-                    this.facedat = newval;
+                if (newval !== undefined) {
+                    if (!newval || isEmptyMeta(newval)) {
+                        this.facedat = lodash.cloneDeep(default_meta);
+                    } else {
+                        this.facedat = newval;
+                    }
+                }
+            },
+        },
+        data: {
+            deep: true,
+            handler: function (newval) {
+                if (this.modelValue === undefined) {
+                    if (!newval || isEmptyMeta(newval)) {
+                        this.facedat = lodash.cloneDeep(default_meta);
+                    } else {
+                        this.facedat = newval;
+                    }
                 }
             },
         },
         facedat: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },
         "facedat.author": function (val) {
             this.$emit("updateMeta", { key: "meta_1", val: val });
         },
-        "facedat.data" : function (val){
-            let body_type = this.object.nRoleType
+        "facedat.data": function (val) {
+            let body_type = this.object.nRoleType;
             this.$emit("updateMeta", { key: "post_subtype", val: bodyMap[body_type] });
-        }
+        },
     },
     computed: {},
     methods: {
@@ -104,7 +128,7 @@ export default {
         },
         processFile: function (e) {
             let file = e.target.files[0];
-            if(file && file.size > 16384) {
+            if (file && file.size > 16384) {
                 this.$message({
                     message: "文件过大，限 16KB 以内",
                     type: "error",
@@ -127,8 +151,7 @@ export default {
                 try {
                     vm.object = parseFace(e.target.result)?.data;
                     vm.json = JSON.stringify(vm.object);
-                }
-                catch(ex) {
+                } catch (ex) {
                     console.log(ex);
                     vm.$notify.error({
                         title: "错误",
@@ -142,11 +165,15 @@ export default {
 
                 // 解析成功开始上传
                 if (vm.object && vm.json) {
-                    setTimeout(() => vm.$notify({
-                            title: "成功",
-                            message: "数据读取成功，开始上传",
-                            type: "success",
-                        }), 0);
+                    setTimeout(
+                        () =>
+                            vm.$notify({
+                                title: "成功",
+                                message: "数据读取成功，开始上传",
+                                type: "success",
+                            }),
+                        0
+                    );
                     vm.uploadData(file);
                     vm.done = true;
                     vm.$emit("success", {
@@ -165,9 +192,5 @@ export default {
             fr.readAsArrayBuffer(file);
         },
     },
-    filters: {},
-    created: function () {},
-    mounted: function () {},
 };
 </script>
-

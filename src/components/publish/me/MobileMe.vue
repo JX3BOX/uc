@@ -1,11 +1,10 @@
 <template>
     <div class="m-mobile-me">
-        <ContentTabList :list="filterTabs"/>
+        <ContentTabList :list="filterTabs" />
     </div>
 </template>
 
 <script>
-
 import ContentTabList from "@/components/publish/me/ContentTabList.vue";
 import CmsPosts from "@/components/publish/me/Pannel/CmsPosts.vue";
 import SubTabContent from "@/components/publish/me/Pannel/SubTabContent.vue";
@@ -14,7 +13,6 @@ import ReplyList from "@/components/publish/me/Pannel/ReplyList.vue";
 import FaceList from "@/components/publish/me/Pannel/FaceList.vue";
 import BodyList from "@/components/publish/me/Pannel/BodyList.vue";
 import WikiPosts from "@/components/publish/me/Pannel/WikiPosts.vue";
-
 
 export default {
     name: "MobileMe",
@@ -28,26 +26,23 @@ export default {
                 return {};
             },
         },
-        privateConf:{
+        privateConf: {
             type: Object,
             default: function () {
                 return {};
             },
-        }
+        },
     },
-    watch: {
-
-    },
+    watch: {},
     data: function () {
         return {
             tabs: [
-
                 {
                     label: "文章",
                     value: "gl",
                     component: CmsPosts,
-                    key:'article_is_public',
-                    children:[
+                    key: "article_is_public",
+                    children: [
                         {
                             label: "宏库",
                             value: "macro",
@@ -72,14 +67,14 @@ export default {
                             label: "其他",
                             value: "other",
                         },
-                    ]
+                    ],
                 },
                 {
                     label: "百科",
                     value: "wiki",
                     component: WikiPosts,
-                    key:'article_is_public',
-                    children:[
+                    key: "article_is_public",
+                    children: [
                         {
                             label: "成就",
                             value: "achievement",
@@ -96,35 +91,35 @@ export default {
                             label: "通识",
                             value: "knowledge",
                         },
-                    ]
+                    ],
                 },
 
                 {
                     label: "休闲",
                     value: "Data",
-                    key: 'make_face_is_public',
+                    key: "make_face_is_public",
                     component: SubTabContent,
-                    children:[
+                    children: [
                         {
                             label: "捏脸",
                             value: "face",
                             component: FaceList,
-                            icon:'el-icon-grape'
+                            icon: "el-icon-grape",
                         },
                         {
                             label: "体型",
                             value: "body",
                             component: BodyList,
-                            icon:'el-icon-watermelon'
+                            icon: "el-icon-watermelon",
                         },
-                    ]
+                    ],
                 },
                 {
                     label: "魔吧",
                     value: "Other",
-                    key: 'community_topic_is_public',
+                    key: "community_topic_is_public",
                     component: SubTabContent,
-                    children:[
+                    children: [
                         {
                             label: "发帖",
                             value: "Topic",
@@ -135,25 +130,20 @@ export default {
                             value: "Reply",
                             component: ReplyList,
                         },
-                    ]
+                    ],
                 },
-
             ],
-
         };
     },
     computed: {
-        filterTabs(){
-            return this.tabs.filter(i=>{
-                return this.privateConf[i.key]!==0
-            })
+        filterTabs() {
+            return this.tabs.filter((i) => {
+                return this.privateConf[i.key] !== 0;
+            });
         },
     },
-    filters: {
-
-    },
     methods: {
-        onSelect(item){
+        onSelect(item) {
             if (item.method === "black") {
                 this.joinBlacklist();
             } else if (item.method === "report") {
@@ -163,22 +153,19 @@ export default {
                 this.closeMore();
             }
         },
-        closeMore(){
+        closeMore() {
             this.actionShow = false;
         },
 
-        openMore(){
-            this.actionShow = true
+        openMore() {
+            this.actionShow = true;
         },
     },
-    created() {
-    },
-    mounted: function () {
-
-    },
+    created() {},
+    mounted: function () {},
 };
 </script>
 
-<style  lang="less">
+<style lang="less">
 @import "~@/assets/css/publish/mobile/mobile_me";
 </style>

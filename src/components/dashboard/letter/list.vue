@@ -28,6 +28,8 @@
                             <el-image
                                 :src="resolveImagePath(item.content)"
                                 :preview-src-list="[item.content]"
+                                :preview-teleported="true"
+                                :hide-on-click-modal="true"
                             ></el-image>
                         </div>
                     </div>
@@ -126,7 +128,7 @@ export default {
             },
         },
     },
-    beforeDestroy() {
+    beforeUnmount() {
         clearInterval(this.timer);
     },
     methods: {
@@ -134,7 +136,7 @@ export default {
         formatContent(content) {
             content = DOMPurify.sanitize(content);
             formatContent(this.nl2br(content)).then((res) => {
-                this.$set(this.lettersTrans, content, res);
+                this.lettersTrans[content] = res;
             });
         },
         nl2br(str) {

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 import AppLayout from "@/layouts/author/AppLayout.vue";
 import tianTuanCertificateCode from "@/assets/data/author/tianTuan_certificate_code.json";
 import { getCertification } from "@/service/author/cms";
@@ -129,7 +129,7 @@ export default {
         loadDrawImage(src) {
             const newImg = new Image();
             newImg.setAttribute("crossOrigin", "anonymous");
-            newImg.src = require(src);
+            newImg.src = src;
             return new Promise((resolve, reject) => {
                 newImg.onload = () => {
                     resolve(newImg);

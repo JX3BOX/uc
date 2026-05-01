@@ -2,9 +2,7 @@
     <div class="m-post" v-loading="loading">
         <!-- 列表 -->
         <div v-if="list && list.length" class="m-topic-list">
-            <topic-item v-for="(item, i) in list" :item="item" :key="i + item" class="u-item">
-
-            </topic-item>
+            <topic-item v-for="(item, i) in list" :item="item" :key="i + item" class="u-item"> </topic-item>
         </div>
         <div class="m-empty" v-else>
             <img src="https://cdn.jx3box.com/design/miniprogram/empty.png" width="80%" />
@@ -15,7 +13,7 @@
 <script>
 import { getLink, showBanner } from "@jx3box/jx3box-common/js/utils";
 import dayjs from "dayjs";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 import { random } from "lodash";
 import { getTopicList } from "@/service/author/author.js";
 import TopicItem from "@/components/author/mobile/Pannel/TopicItem.vue";
@@ -72,14 +70,17 @@ export default {
                 return __cdn + `design/random_cover/${randomNum}.jpg`;
             }
         },
-        loadMore(){
+        loadMore() {
             if (this.loading) return;
-            if (document.documentElement.scrollTop + window.innerHeight + 100 >= document.documentElement.scrollHeight) {
+            if (
+                document.documentElement.scrollTop + window.innerHeight + 100 >=
+                document.documentElement.scrollHeight
+            ) {
                 if (this.list.length < this.total) {
                     this.page++;
                 }
             }
-        }
+        },
     },
     watch: {
         params: {
@@ -93,17 +94,22 @@ export default {
     mounted() {
         window.addEventListener("scroll", this.loadMore);
     },
-    destroyed() {
+    unmounted() {
         window.removeEventListener("scroll", this.loadMore);
-    }
+    },
 };
 </script>
 
 <style lang="less">
-.m-topic-list{
+.m-post {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px 20px 20px;
+}
+
+.m-topic-list {
     display: flex;
     gap: 20px;
     flex-direction: column;
-
 }
 </style>

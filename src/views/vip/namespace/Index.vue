@@ -47,10 +47,14 @@
             </div>
         </div>
         <result class="m-vip-result" v-else>
-            <div slot="title" class="m-premium-result-title">
-                购买成功
-            </div>
-            <div slot="desc" class="m-rename-result-desc">购买成功，<a :href="register_namespace_url">前往注册铭牌</a></div>
+            <template title>
+                <div class="m-premium-result-title">
+                    购买成功
+                </div>
+            </template>
+            <template #desc>
+                    <div class="m-rename-result-desc">购买成功，<a :href="register_namespace_url">前往注册铭牌</a></div>
+            </template>
         </result>
         <paypop v-if="will" v-model="dialog_visible" :productDesc="productDesc" :productId="productId" :returnUrl="returnUrl" @done="finish" />
     </div>
@@ -63,7 +67,7 @@ import callback from "@/utils/callback.js";
 import result from "@/components/vip/result.vue";
 import simple_header from "@/components/vip/simple_header.vue";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 export default {
     data: function() {
         return {

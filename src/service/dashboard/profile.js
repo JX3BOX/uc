@@ -1,7 +1,7 @@
-import { $cms, $_https, $next } from "@jx3box/jx3box-common/js/https.js";
+import { $cms, $_https, $next } from "@jx3box/jx3box-common/js/api.js";
 
 import axios from "axios";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 
 // 1.资料
 // -------------------------------
@@ -51,8 +51,8 @@ function updatePassword(data) {
 function checkEmailAvailable(email) {
     return $cms().get("/api/cms/user/account/email/valid", {
         params: {
-            email
-        }
+            email,
+        },
     });
 }
 
@@ -61,9 +61,13 @@ function sendBindEmail(data) {
 }
 
 function sendVerifyEmail(code) {
-    return $cms().put("/api/cms/user/account/email/verify", {
-        code,
-    }, { app: 'jx3box' });
+    return $cms().put(
+        "/api/cms/user/account/email/verify",
+        {
+            code,
+        },
+        { app: "jx3box" }
+    );
 }
 
 // 5.互联
@@ -132,7 +136,6 @@ export {
     getWechatQrcode,
     unbindWechat,
     sendVerifyCode,
-
     sendPhoneCode,
     verifyPhone,
     checkPhone,

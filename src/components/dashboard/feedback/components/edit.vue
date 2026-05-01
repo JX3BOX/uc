@@ -1,5 +1,5 @@
 <template>
-    <el-dialog class="w-dialog m-feedback-assign" :visible.sync="show" title="编辑" @close="close">
+    <el-dialog class="w-dialog m-feedback-assign" v-model="show" title="编辑" @close="close">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
             <el-form-item label="客户端" prop="client">
                 <el-select v-model="form.client" placeholder="请选择客户端" style="width: 100%">

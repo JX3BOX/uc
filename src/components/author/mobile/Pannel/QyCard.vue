@@ -1,15 +1,10 @@
-
-
 <template>
     <div v-if="uid" v-loading="loading" class="m-qy-card">
         <div class="m-overview">
             <div class="m-left">
                 <div class="u-name">
-                    {{name}}
-                    <img
-                        :src="require(`@/assets/img/author/mobile/mounts/${icon}.svg`)"
-                        class="u-mount-icon"
-                    />
+                    {{ name }}
+                    <img :src="require(`@/assets/img/author/mobile/mounts/${icon}.svg`)" class="u-mount-icon" />
                 </div>
 
                 <div class="u-progress">
@@ -17,13 +12,11 @@
                     <div class="u-text">奇遇总进度：{{ userAchievement.progress }}%</div>
                 </div>
 
-                <div class="u-time">
-                    记录时间：{{ userAchievement.updated_at }}
-                </div>
+                <div class="u-time">记录时间：{{ userAchievement.updated_at }}</div>
             </div>
 
             <div class="m-right">
-                <img  :src="require(`@/assets/img/author/mobile/juan${isDark?'-dark':''}.png`)" />
+                <img :src="require(`@/assets/img/author/mobile/juan${isDark ? '-dark' : ''}.png`)" />
             </div>
         </div>
 
@@ -35,15 +28,27 @@
                 </div>
             </div>
 
-            <div class="u-trans-display" @click="()=>showCard = !showCard">
+            <div class="u-trans-display" @click="() => (showCard = !showCard)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="9" height="10" viewBox="0 0 9 10" fill="none">
-                    <path d="M6.75 8.54999L8.25 7.04999M8.25 7.04999L6.75 5.54999M8.25 7.04999H0.75" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M2.25 4.04999L0.75 2.54999M0.75 2.54999L2.25 1.04999M0.75 2.54999L8.25 2.54999" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path
+                        d="M6.75 8.54999L8.25 7.04999M8.25 7.04999L6.75 5.54999M8.25 7.04999H0.75"
+                        stroke="#1C1C1C"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                    <path
+                        d="M2.25 4.04999L0.75 2.54999M0.75 2.54999L2.25 1.04999M0.75 2.54999L8.25 2.54999"
+                        stroke="#1C1C1C"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
                 </svg>
-                {{showCard ? "展示立绘" : "展示名牌"}}
+                {{ showCard ? "展示立绘" : "展示名牌" }}
             </div>
 
-            <div v-if="!showCard" class="m-world"  :style="{zoom: contentZoom,}">
+            <div v-if="!showCard" class="m-world" :style="{ zoom: contentZoom }">
                 <img class="u-world__bg" :src="getCdnImgUrl('world/world_bg.svg')" />
 
                 <div
@@ -51,35 +56,26 @@
                     v-for="(item, index) in userAchievement.perfect"
                     :key="index"
                     :class="item.hasClass"
-                    :style="{zIndex: item.zIndex,}"
+                    :style="{ zIndex: item.zIndex }"
                 >
-                    <img
-                        class="u-item__img"
-                        :src="getCdnImgUrl(`world/${item.dwID}${item.isAct ? '_act' : ''}.png`)"
-                    />
+                    <img class="u-item__img" :src="getCdnImgUrl(`world/${item.dwID}${item.isAct ? '_act' : ''}.png`)" />
                     <div class="m-item__text">
-                        <img
-                            class="u-item__bg"
-                            :src="getCdnImgUrl(`world/text_bg${item.isAct ? '_act' : ''}.png`)"
-                        />
+                        <img class="u-item__bg" :src="getCdnImgUrl(`world/text_bg${item.isAct ? '_act' : ''}.png`)" />
                         <span class="u-item__text">{{ item.szName }}</span>
                     </div>
                 </div>
             </div>
             <div v-else class="m-qy m-world-qy">
-                <div class="m-qy-list" v-if="userAchievement.perfect?.filter(i=>i.isAct)?.length">
+                <div class="m-qy-list" v-if="userAchievement.perfect?.filter((i) => i.isAct)?.length">
                     <div
                         class="m-qy__item"
-                        v-for="(item, index) in userAchievement.perfect.filter(i=>i.isAct)"
+                        v-for="(item, index) in userAchievement.perfect.filter((i) => i.isAct)"
                         :key="item.dwID || index"
                     >
-                        <el-image  class="u-qy__img"  :src="getCdnImgUrl(`world/${item.dwID}_act.png`)">
-                            <el-image
-                                slot="error"
-                                class="u-qy__img"
-                                :src="getCdnImgUrl(`pt/default.png`)"
-                            >
-                            </el-image>
+                        <el-image class="u-qy__img" :src="getCdnImgUrl(`world/${item.dwID}_act.png`)">
+                            <template #error>
+                                <el-image class="u-qy__img" :src="getCdnImgUrl(`pt/default.png`)" />
+                            </template>
                         </el-image>
                         <div class="u-bg"></div>
                         <div class="m-qy__text">
@@ -92,7 +88,6 @@
                     <img :src="getCdnImgUrl('portrait/no_qy.png')" />
                 </div>
             </div>
-
         </div>
 
         <div class="m-qy-box">
@@ -104,11 +99,7 @@
             </div>
             <div class="m-qy m-ordinary">
                 <div class="m-qy-list" v-if="userAchievement?.normal?.length">
-                    <div
-                        class="m-qy__item"
-                        v-for="(item, index) in userAchievement.normal"
-                        :key="index"
-                    >
+                    <div class="m-qy__item" v-for="(item, index) in userAchievement.normal" :key="index">
                         <div class="u-black"></div>
                         <template v-if="[4, 118].indexOf(item.dwID) > -1">
                             <img
@@ -122,17 +113,19 @@
                                 :src="getCdnImgUrl(`pt/${item.dwID}_er.png`)"
                             />
                         </template>
-                        <el-image v-else class="u-qy__img" style="object-fit: cover" :src="getCdnImgUrl(`pt/${item.dwID}.png`)">
-                            <el-image
-                                slot="error"
-                                class="u-qy__img"
-                                :src="getCdnImgUrl(`pt/default.png`)"
-                            >
-                            </el-image>
+                        <el-image
+                            v-else
+                            class="u-qy__img"
+                            style="object-fit: cover"
+                            :src="getCdnImgUrl(`pt/${item.dwID}.png`)"
+                        >
+                            <template #error>
+                                <el-image class="u-qy__img" :src="getCdnImgUrl(`pt/default.png`)"> </el-image>
+                            </template>
                         </el-image>
                         <div class="u-bg"></div>
                         <div class="m-qy__text">
-<!--                            <img class="u-qy__bg" :src="getCdnImgUrl('pt/text_bg.png')" />-->
+                            <!--                            <img class="u-qy__bg" :src="getCdnImgUrl('pt/text_bg.png')" />-->
                             <span class="u-qy__text">{{ item.szName }}</span>
                         </div>
                     </div>
@@ -167,9 +160,9 @@
 </template>
 
 <script lang="js">
-import { __cdn, __imgPath } from "@jx3box/jx3box-common/data/jx3box";
+import { __cdn, __imgPath } from "@/utils/config";
 import getData from "@/assets/js/treasure";
-import { __Links } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Links } from "@/utils/config";
 
 export default {
     name:"QyCard",
@@ -285,11 +278,8 @@ export default {
 }
 </script>
 
-
-<style  lang="less">
-
-
-.m-qy-card{
+<style lang="less">
+.m-qy-card {
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -300,17 +290,17 @@ export default {
     @img_path: "https://img.jx3box.com/";
     @design_url: "https://cdn.jx3box.com/design/";
 
-
     .m-overview {
         display: flex;
         padding: 12px;
         align-items: center;
         gap: 20px;
         border-radius: 12px;
-        background: linear-gradient(0deg, #FAF5ED 0%, #FAF5ED 100%), linear-gradient(180deg, #F9F1E4 0%, rgba(249, 246, 242, 0.00) 100%);
+        background: linear-gradient(0deg, #faf5ed 0%, #faf5ed 100%),
+            linear-gradient(180deg, #f9f1e4 0%, rgba(249, 246, 242, 0) 100%);
 
         @media (prefers-color-scheme: dark) {
-            background: var(--black-5, rgba(255, 255, 255, 0.10));
+            background: var(--black-5, rgba(255, 255, 255, 0.1));
         }
 
         .m-left {
@@ -322,8 +312,8 @@ export default {
             .u-name {
                 display: flex;
                 align-items: center;
-                gap:4px;
-                color: var(--black-80, rgba(0, 0, 0, 0.80));
+                gap: 4px;
+                color: var(--black-80, rgba(0, 0, 0, 0.8));
 
                 /* 16 Bold */
                 font-size: 16px;
@@ -343,7 +333,6 @@ export default {
                     @media (prefers-color-scheme: dark) {
                         // filter 出颜色 rgba(#ffffff, 0.8)
                         filter: invert(0.8) hue-rotate(180deg);
-
                     }
                 }
             }
@@ -359,14 +348,14 @@ export default {
                 background: black;
                 overflow: hidden;
                 position: relative;
-                .u-text{
+                .u-text {
                     position: absolute;
                     width: 100%;
                     top: 0;
                     left: 0;
                     text-align: center;
 
-                    color: #FFF;
+                    color: #fff;
 
                     /* 12 Regular */
                     font-size: 12px;
@@ -376,7 +365,7 @@ export default {
                     z-index: 2;
                 }
 
-                .u-line{
+                .u-line {
                     position: absolute;
                     width: 100%;
                     top: 0;
@@ -387,12 +376,12 @@ export default {
                     align-items: center;
                     height: 18px;
                     border-radius: 9px;
-                    background: linear-gradient(90deg, #000 0%, #B23030 100%);
+                    background: linear-gradient(90deg, #000 0%, #b23030 100%);
                 }
             }
 
             .u-time {
-                color: var(--black-40, rgba(28, 28, 28, 0.40));
+                color: var(--black-40, rgba(28, 28, 28, 0.4));
 
                 /* 12 Regular */
                 font-size: 12px;
@@ -412,7 +401,6 @@ export default {
         }
     }
 
-
     .m-qy-box {
         box-sizing: border-box;
         display: flex;
@@ -424,12 +412,13 @@ export default {
         position: relative;
 
         border-radius: 12px;
-        background: linear-gradient(0deg, #FAF5ED 0%, #FAF5ED 100%), linear-gradient(180deg, #F9F1E4 0.01%, rgba(255, 255, 255, 0.00) 100%);
+        background: linear-gradient(0deg, #faf5ed 0%, #faf5ed 100%),
+            linear-gradient(180deg, #f9f1e4 0.01%, rgba(255, 255, 255, 0) 100%);
         @media (prefers-color-scheme: dark) {
-            background: var(--black-20, rgba(255, 255, 255, 0.20));
+            background: var(--black-20, rgba(255, 255, 255, 0.2));
         }
-        .u-trans-display{
-            color: var(--black-100, #1C1C1C);
+        .u-trans-display {
+            color: var(--black-100, #1c1c1c);
 
             /* 14 Bold */
             font-size: 14px;
@@ -438,15 +427,15 @@ export default {
             line-height: 20px; /* 142.857% */
         }
 
-        .m-counter{
+        .m-counter {
             display: flex;
             padding: 0px 12px;
             align-items: center;
             gap: 4px;
 
             border-radius: 0px 0px 12px 12px;
-            background: #D9A256;
-            color: #FFF;
+            background: #d9a256;
+            color: #fff;
 
             /* 14 Regular */
             font-size: 14px;
@@ -454,14 +443,14 @@ export default {
             font-weight: 400;
             line-height: 20px; /* 142.857% */
 
-            &.m-qy-count{
+            &.m-qy-count {
                 border-radius: 0px 0px 12px 12px;
-                background: #A91515;
+                background: #a91515;
             }
 
-            &.m-normal-count{
+            &.m-normal-count {
                 border-radius: 0px 0px 12px 12px;
-                background: #A91515;
+                background: #a91515;
             }
         }
 
@@ -487,7 +476,7 @@ export default {
                     overflow: hidden;
                     border: 1px solid #000;
                     background: black;
-                    .u-qy__img{
+                    .u-qy__img {
                         opacity: 0.5;
                     }
                     .u-qy__border {
@@ -497,14 +486,14 @@ export default {
                         right: 0;
                         bottom: 0;
                     }
-                    .u-bg{
+                    .u-bg {
                         position: absolute;
                         left: 0;
                         right: 0;
                         top: 0;
                         width: 100%;
                         height: 100%;
-                        background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 33%, #A91515 100%);
+                        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 33%, #a91515 100%);
                         background-size: 50%;
                     }
                     .m-qy__text {
@@ -518,7 +507,7 @@ export default {
                         width: 100%;
                         .u-qy__text {
                             width: 12px;
-                            color: var(--primary-white, #FFF);
+                            color: var(--primary-white, #fff);
                             font-size: 10px;
                             font-style: normal;
                             font-weight: 400;
@@ -532,7 +521,7 @@ export default {
                 margin: 8px 0;
             }
 
-            &.m-world-qy{
+            &.m-world-qy {
                 .m-qy-list {
                     display: flex;
                     gap: 5.6px;
@@ -541,16 +530,16 @@ export default {
                     align-content: flex-start;
 
                     .m-qy__item {
-                        width: calc(100%/10);
+                        width: calc(100% / 10);
                         margin-left: 0;
                         min-height: 74px;
                         max-width: 24px;
                         border-radius: 8px;
                         overflow: hidden;
-                        .u-bg{
-                            background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 33%,#C28A3A 100%);
+                        .u-bg {
+                            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 33%, #c28a3a 100%);
                         }
-                        .u-qy__img{
+                        .u-qy__img {
                             width: 130%;
                             height: 110%;
                             object-fit: cover;
@@ -571,9 +560,8 @@ export default {
                     align-items: flex-start;
                     align-content: flex-start;
 
-
                     .m-qy__item {
-                        width: calc(100%/10);
+                        width: calc(100% / 10);
                         margin-left: 0;
                         min-height: 74px;
                         max-width: 24px;
@@ -582,8 +570,7 @@ export default {
 
                         background: black;
 
-
-                        .u-qy__img{
+                        .u-qy__img {
                             width: 130%;
                             height: 110%;
                             object-fit: cover;
@@ -594,8 +581,6 @@ export default {
                             border-radius: inherit;
                         }
                     }
-
-
                 }
             }
             &.m-pet {
@@ -606,21 +591,21 @@ export default {
                     align-items: flex-start;
                     align-content: flex-start;
                     .m-qy__item {
-                        width: calc(100%/9 - 5px);
+                        width: calc(100% / 9 - 5px);
                         margin-left: 0;
                         max-width: 26px;
                         max-height: 26px;
                         min-height: 26px;
                         border-radius: 50%;
                         overflow: hidden;
-                        .u-qy__img{
+                        .u-qy__img {
                             opacity: 1;
                         }
-                        .u-bg{
-                            background: linear-gradient(180deg, rgba(0, 0, 0, 0.00) 33%, #A91515 100%);
+                        .u-bg {
+                            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 33%, #a91515 100%);
                             background-size: 50%;
                         }
-                        .u-qy__img{
+                        .u-qy__img {
                             width: 150%;
                             height: 150%;
                             object-fit: cover;
@@ -871,8 +856,6 @@ export default {
                 }
             }
         }
-
     }
 }
-
 </style>

@@ -56,7 +56,6 @@
                     icon="el-icon-shopping-cart-1"
                     circle
                     :id="`btnCart_${item.id}`"
-                    size="small"
                     @click.prevent="handleAddCart"
                 ></el-button>
                 <!-- 购物车轨迹 -->
@@ -65,7 +64,7 @@
                 </div>
             </template>
             <span v-else class="is-had">
-                <el-button disabled icon="el-icon-shopping-cart-1" circle size="small"></el-button>
+                <el-button disabled icon="el-icon-shopping-cart-1" circle></el-button>
             </span>
         </div>
     </router-link>
@@ -73,10 +72,9 @@
 
 <script>
 import { getThumbnail, showAvatar, resolveImagePath } from "@jx3box/jx3box-common/js/utils";
-import { __userLevel, __cdn, __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userLevel, __cdn, __imgPath } from "@/utils/config";
 import { forEach, throttle } from "lodash";
 import User from "@jx3box/jx3box-common/js/user";
-import { addGoodsToCart } from "@/service/vip/cart";
 export default {
     name: "GoodsIndexItem",
     props: ["data", "isPro", "myVirtualItems", "skinJson"],
@@ -298,7 +296,7 @@ export default {
         // },
         showCover(item) {
             const img = item?.goods_images[0];
-            return getThumbnail(img, 360);
+            return img && getThumbnail(img, 360);
         },
         showDetailLevel(num) {
             return User.getLevel(num);

@@ -43,20 +43,20 @@
                 </div>
                 <div class="buttons">
                     <button class="button add-cart" :disabled="!good?.canBuy?.canBuy" @click="addCart">
-                        <img :src="imgUrl + '购物车fill.svg'" alt="" />
+                        <img :src="imgUrl + 'cart-fill.svg'" alt="" />
                         加购
                     </button>
                     <button class="button buy" @click="buyGoods" :disabled="!good?.canBuy?.canBuy">
                         <template v-if="good.price_boxcoin">
-                            <img :src="imgUrl + '盒币fill.svg'" alt="" />{{ good.price_boxcoin }}盒币
+                            <img :src="imgUrl + 'box_coin_fill.svg'" alt="" />{{ good.price_boxcoin }}盒币
                         </template>
                         <template v-if="good.price_boxcoin && good.price_points"> + </template>
                         <template v-if="good.price_points">
-                            <img :src="imgUrl + '积分.svg'" alt="" />{{ good.price_points }}积分
+                            <img :src="imgUrl + 'point.svg'" alt="" />{{ good.price_points }}积分
                         </template>
                     </button>
                     <!-- <button class="button like">
-                        <img :src="imgUrl + '点赞fill.svg'" alt="" />
+                        <img :src="imgUrl + 'like.svg'" alt="" />
                         点赞
                     </button> -->
                     <Like class="like" :postId="id" postType="mall"></Like>
@@ -68,23 +68,19 @@
 </template>
 
 <script>
-import { getItem } from "@/service/vip/mall";
-import Like from "@jx3box/jx3box-common-ui/src/interact/Like2.vue";
+import User from "@jx3box/jx3box-common/js/user";
+import Like from "@jx3box/jx3box-ui/src/interact/Like.vue";
 import Skeleton from "@/views/vip/mallNew/components/skeleton/index.vue";
 import { throttle } from "lodash";
-import User from "@jx3box/jx3box-common/js/user";
+// import { getItem } from "@/service/vip/mall";
+import { __cdn, __root } from "@/utils/config";
 export default {
-    name: "GoodDetail",
+    name: "GoodWebDetail",
     components: {
         Skeleton,
         Like,
     },
     props: {
-        // 移动端也是有直接从url中进来的可能的，所以还是需要直接在详情页请求数据
-        // good: {
-        //     type: Object,
-        //     required: true,
-        // },
         isShowNav: {
             type: Boolean,
             required: true,
@@ -92,7 +88,7 @@ export default {
     },
     data() {
         return {
-            imgUrl: "https://cdn.jx3box.com/design/mall/",
+            imgUrl: __cdn + "design/mall/",
             apply: {
                 palu: "魔盒论坛列表页",
                 avatar: "头像框",
@@ -108,20 +104,23 @@ export default {
     },
     computed: {
         id() {
-            return ~~this.$route.params.id;
+            return this.$route.params.id;
         },
+
         goodInfo() {
             if (this.good && this.good.category === "virtual") {
-                if (this.good.sub_category === "skin") {
+                if (this.good.sub_category === "skin" && this.good.virtual_stock_item_details) {
                     return {
                         category: this.good.virtual_stock_item_details.category,
-                        img: `https://cdn.jx3box.com/design/decoration/images/${this.good.remark}/${this.good.virtual_stock_item_details.category}.png`,
+                        img:
+                            __cdn +
+                            `design/decoration/images/${this.good.remark}/${this.good.virtual_stock_item_details.category}.png`,
                     };
                 }
                 if (this.good.sub_category === "palu") {
                     return {
                         category: "palu",
-                        img: `https://cdn.jx3box.com/design/decoration/palu/${this.good.remark}.png`,
+                        img: __cdn + `design/decoration/palu/${this.good.remark}.png`,
                     };
                 }
             }
@@ -130,13 +129,7 @@ export default {
             };
         },
     },
-    created() {
-        if (!this.id) return;
-        getItem(this.id).then((res) => {
-            res.data.data.canBuy = this.checkCanBuy(res.data.data);
-            this.good = res.data.data || {};
-        });
-    },
+
     methods: {
         checkCanBuy(item) {
             const obj = {
@@ -194,7 +187,7 @@ export default {
                             type: "warning",
                         })
                             .then(() => {
-                                const url = `${this.root}dashboard/mall`;
+                                const url = `${__root}dashboard/mall`;
                                 window.open(url);
                             })
                             .catch(() => {});
@@ -269,7 +262,7 @@ export default {
     box-sizing: border-box;
     min-width: 600px;
     min-height: calc(100vh - 100px);
-    padding: 24px 0;
+    padding: 24px 292px 24px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -389,6 +382,10 @@ export default {
                     line-height: 36px;
                     color: rgba(255, 255, 255, 1);
                     text-align: center;
+                    border: none;
+                    &:disabled {
+                        cursor: not-allowed;
+                    }
                     img {
                         margin-right: 4px;
                     }

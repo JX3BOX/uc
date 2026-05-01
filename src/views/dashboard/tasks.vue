@@ -16,7 +16,6 @@
                         <div class="u-box">
                             <a class="u-title" :href="groupInfo[key].url" target="_blank">{{ groupInfo[key].name }}</a>
                             <el-button
-                                size="small"
                                 :type="groupInfo[key].open ? 'primary' : ''"
                                 @click="groupInfo[key].open = !groupInfo[key].open"
                                 >{{ groupInfo[key].open ? "折叠" : "展开"
@@ -32,9 +31,9 @@
 </template>
 <script>
 import { getTasks, getCheckTasks } from "@/service/dashboard/tasks.js";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 import taskItem from "@/components/dashboard/task/item.vue";
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 export default {
     name: "tasks",
     components: {

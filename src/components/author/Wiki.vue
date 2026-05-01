@@ -9,32 +9,35 @@
         <!-- 列表 -->
         <div v-if="list && list.length" class="m-archive-list">
             <ul class="u-list">
-                <li v-for="(item, i) in list"  :key="i + item" class="u-item">
+                <li v-for="(item, i) in list" :key="i + item" class="u-item">
                     <!-- 标题 -->
                     <h2 class="u-post">
                         <!-- 标题文字 -->
-                        <a :href="postLink(item.type, item.source_id, item.client)" class="u-title" target="_blank">{{ item.title || "无标题" }}</a>
+                        <a :href="postLink(item.type, item.source_id, item.client)" class="u-title" target="_blank">{{
+                            item.title || "无标题"
+                        }}</a>
                     </h2>
                     <!-- 字段 -->
-                    <div class="u-content u-desc">
-                        <i :class="item.client" class="u-client">{{ item.client | clientLabel }}</i>{{ item.type | showType }}百科
+                    <div class="u-desc">
+                        <i :class="item.client" class="u-client">{{ clientLabel(item.client) }}</i
+                        >{{ showType(item.type) }}百科
                     </div>
 
                     <!-- 作者 -->
                     <div class="u-misc">
                         <span class="u-date">
                             Updated on
-                            <time >{{ item.updated | dateFormat }}</time>
+                            <time>{{ dateFormat(item.updated) }}</time>
                         </span>
                     </div>
                 </li>
             </ul>
         </div>
         <div class="m-empty" v-else>
-            <img src='@/assets/img/author/null.png' width="80%">
+            <img src="@/assets/img/author/null.png" width="80%" />
         </div>
         <el-pagination
-            :current-page.sync="page"
+            v-model:current-page="page"
             :hide-on-single-page="true"
             :page-size="per"
             :total="total"
@@ -50,7 +53,7 @@
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
 import { getWikis } from "@/service/author/helper.js";
-import { __wikiType, __clients, __Root, __OriginRoot } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __wikiType, __clients, __Root, __OriginRoot } from "@/utils/config";
 export default {
     name: "Cj",
     props: [],
@@ -62,9 +65,9 @@ export default {
             per: 8,
             page: 1,
             root: {
-                std: __Root.slice(0,-1),
-                all: __Root.slice(0,-1),
-                origin: __OriginRoot.slice(0,-1),
+                std: __Root.slice(0, -1),
+                all: __Root.slice(0, -1),
+                origin: __OriginRoot.slice(0, -1),
             },
         };
     },
@@ -99,8 +102,6 @@ export default {
         postLink: function (type, id, client) {
             return this.root[client] + getLink(type, id);
         },
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(~~val * 1000));
         },

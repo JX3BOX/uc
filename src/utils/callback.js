@@ -1,6 +1,6 @@
 import {
     __Root
-} from '@jx3box/jx3box-common/data/jx3box.json'
+} from '@/utils/config'
 
 function callback(product_name) {
     if (product_name.includes('https')) {

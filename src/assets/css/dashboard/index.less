@@ -15,10 +15,11 @@
         .u-name {
             margin: 0;
             padding: 20px 0 0 0;
-            .fz(2em, 48px);
+            .fz(32px, 32px);
             font-weight: 300;
             .flex;
             align-items: center;
+            margin-bottom: 6px;
         }
         .u-name-txt {
             .mr(2px);
@@ -47,20 +48,20 @@
             }
         }
 
-        .u-auth{
-            margin-left:5px;
+        .u-auth {
+            margin-left: 5px;
             display: inline-flex;
             align-items: center;
-            gap:3px;
-            a{
-                color:@color-link;
-                &:hover{
-                    text-decoration: underline
+            gap: 3px;
+            a {
+                color: @v4primary;
+                &:hover {
+                    text-decoration: underline;
                 }
             }
             i {
                 .fz(14px);
-                color: #F56C6C;
+                color: #f56c6c;
             }
         }
 
@@ -108,9 +109,11 @@
         }
         .u-name-meta {
             .pr;
-            top: -5px;
+            // top: -5px;
             .flex;
-            align-items: center;
+            align-items: flex-end;
+            padding-bottom: 5px;
+            box-sizing: border-box;
         }
         .u-superauth {
             // margin-left: 5px;
@@ -118,7 +121,7 @@
             // align-items: center;
             img {
                 width: 16px;
-                vertical-align: -2px;
+                // vertical-align: -2px;
             }
         }
 
@@ -148,6 +151,9 @@
         }
 
         .u-medals {
+            .u-label {
+                .none;
+            }
             .mt(5px);
             img {
                 .size(20px);
@@ -181,8 +187,8 @@
         }
 
         .u-credit-value {
-            .fz(30px, 40px);
-            .bold;
+            .fz(20px, 40px);
+            font-weight: 500;
         }
 
         .u-credit-op {
@@ -222,11 +228,12 @@
                 .pr;
                 white-space: nowrap;
             }
-            .u-expire{
+            .u-expire {
                 .none;
             }
-            .u-name-meta{
-                top:0;
+            .u-name-meta {
+                top: 0;
+                align-items: center;
             }
             .u-identity {
                 span {
@@ -282,7 +289,7 @@
     .mt(20px);
 
     .u-title {
-        font-size: 14px;
+        font-size: 14px !important;
         padding: 8px 10px;
         background-color: @bg-light;
         border-radius: 4px;
@@ -328,7 +335,11 @@
         }
     }
     .u-link {
-        .underline(@color-link);
+        color:@v4tip;
+        &:hover{
+            .underline(@v4primary);
+            color: @v4primary;
+        }
         .ml(5px);
     }
 
@@ -361,7 +372,7 @@
         }
         i {
             font-size: 16px;
-            .y;
+            // .y;
         }
     }
 

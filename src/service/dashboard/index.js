@@ -1,4 +1,4 @@
-import { $pay, $cms } from "@jx3box/jx3box-common/js/https";
+import { $pay, $cms } from "@jx3box/jx3box-common/js/api";
 import moment from "moment";
 function getMyAsset() {
     return $pay().get("/api/vip/i");

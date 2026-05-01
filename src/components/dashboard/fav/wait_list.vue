@@ -5,12 +5,16 @@
                 class="m-dashboard-work-search"
                 placeholder="请输入搜索内容"
                 v-model="currentSearch"
-                @keyup.enter.native="handleChange"
+                @keyup.enter="handleChange"
                 clearable
                 @clear="handleChange"
             >
-                <template slot="prepend">关键词</template>
-                <el-button slot="append" icon="el-icon-search" @click="handleChange"></el-button>
+                <template #prepend>
+                    <span>关键词</span>
+                </template>
+                <template #append>
+                    <el-button icon="Search" @click="handleChange"></el-button>
+                </template>
             </el-input>
         </div>
         <ul class="m-dashboard-box-list" v-if="data.length">
@@ -18,15 +22,20 @@
                 <i class="u-icon">
                     <img svg-inline src="@/assets/img/dashboard/works/repo.svg" />
                 </i>
-                <a class="u-title" target="_blank" :href="getLink(item.category, item.content_meta && item.content_meta.content_id || item.source_id)">{{
-                    item.content_meta && item.content_meta.title || item.title || "无标题"
-                }}</a>
+                <a
+                    class="u-title"
+                    target="_blank"
+                    :href="
+                        getLink(item.category, (item.content_meta && item.content_meta.content_id) || item.source_id)
+                    "
+                    >{{ (item.content_meta && item.content_meta.title) || item.title || "无标题" }}</a
+                >
                 <div class="u-desc">
                     <span class="u-category"><i class="el-icon-folder"></i> {{ getTypeLabel(item.category) }} </span>
                     <span><i class="el-icon-date"></i> 于 {{ dateFormat(item.created_at) }} 添加 </span>
                 </div>
                 <el-button-group class="u-action">
-                    <el-button size="mini" icon="el-icon-delete" title="删除" @click="del(item.id)"></el-button>
+                    <el-button icon="Delete" title="删除" @click="del(item.id)"></el-button>
                 </el-button-group>
             </li>
         </ul>
@@ -36,7 +45,7 @@
             background
             :hide-on-single-page="true"
             :page-size="per"
-            :current-page.sync="page"
+            v-model:current-page="page"
             layout="total, prev, pager, next, jumper"
             :total="total"
             @current-change="currentChange"

@@ -2,7 +2,7 @@
     <div class="m-dashboard-work m-dashboard-cms p-cms-community" v-loading="loading">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">论坛</h2>
-            <a :href="publishLink" class="u-publish el-button el-button--primary el-button--small">
+            <a :href="publishLink" class="u-publish el-button el-button--primary">
                 <i class="el-icon-document"></i> 发布作品
             </a>
         </div>
@@ -12,9 +12,13 @@
             <el-tab-pane label="回帖" name="reply"></el-tab-pane>
         </el-tabs>
 
-        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search">
-            <span slot="prepend">关键词</span>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search" size="large">
+            <template #prepend>
+                <span>关键词</span>
+            </template>
+            <template #append>
+                <el-button icon="Search"></el-button>
+            </template>
         </el-input>
 
         <div class="m-dashboard-work-filter" v-if="activeTab == 'topic'">
@@ -25,43 +29,48 @@
         <div class="m-dashboard-box">
             <ul class="m-dashboard-box-list" v-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
-                    <i class="u-icon">
-                        <img src="@/assets/img/publish/works/repo.svg" />
-                    </i>
                     <a class="u-title" target="_blank" :href="postLink(item)">
+                        <i class="u-icon">
+                            <img src="@/assets/img/publish/works/repo.svg" v-if="item.visible == 0" />
+                            <el-tooltip v-else :content="visibleFormat(item.is_self_visit || item.visible)" placement="top">
+                                <img
+                                    src="@/assets/img/publish/works/draft.svg"
+                                />
+                            </el-tooltip>
+                        </i>
                         <span v-if="activeTab == 'topic'">{{ item.title || item.content || "无标题" }}</span>
                         <span class="u-title_content" v-else v-html="getContent(item)"></span>
                         <!-- <div class="u-tags">
-                            <el-tag type="danger" size="mini" v-if="item.is_top == 1">置顶</el-tag>
-                            <el-tag type="danger" size="mini" v-if="item.is_star == 1">加精</el-tag>
-                            <el-tag type="danger" size="mini" v-if="item.is_hight == 1">高亮</el-tag>
+                            <el-tag type="danger"  v-if="item.is_top == 1">置顶</el-tag>
+                            <el-tag type="danger"  v-if="item.is_star == 1">加精</el-tag>
+                            <el-tag type="danger"  v-if="item.is_hight == 1">高亮</el-tag>
                         </div> -->
                     </a>
                     <div class="u-desc">
-                        <span class="u-desc-subitem">
+                        <!-- <span class="u-desc-subitem">
                             <i class="el-icon-view"></i>
-                            {{ (item.is_self_visit || item.visible) | visibleFormat }}
-                        </span>
+                            {{ visibleFormat(item.is_self_visit || item.visible) }}
+                        </span> -->
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ item.created_at | dateFormat }}
+                            <span class="u-time">{{ dateFormat(item.created_at) }}</span>
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
                             更新 :
-                            {{ item.updated_at | dateFormat }}
+                            <span class="u-time">{{ dateFormat(item.updated_at) }}</span>
                         </time>
-                        <time class="u-desc-subitem">
+                        <!-- <time class="u-desc-subitem">
                             <i class="el-icon-receiving"></i>
                             状态 :
                             {{ getStatusCn(item.status) }}
-                        </time>
+                        </time> -->
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-button size="mini" icon="el-icon-edit" title="编辑" @click="edit(item)"></el-button>
-                        <el-button size="mini" icon="el-icon-delete" title="删除" @click="del(item)"></el-button>
+                        <el-button icon="Edit" title="编辑" @click="edit(item)"></el-button>
+                        <el-button icon="Delete" title="删除" @click="del(item)"></el-button>
                     </el-button-group>
                 </li>
             </ul>
@@ -78,7 +87,7 @@
                 background
                 :page-size="per"
                 :hide-on-single-page="true"
-                :current-page.sync="page"
+                v-model:current-page="page"
                 layout="total, prev, pager, next, jumper"
                 :total="total"
             ></el-pagination>
@@ -91,7 +100,7 @@ import { getMyList, del, getMyReplyList, deleteMyReply } from "@/service/publish
 import dateFormat from "@/utils/dateFormat";
 import statusMap from "@/assets/data/publish/status.json";
 import { pick } from "lodash";
-import { __postType, __visibleMap } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __postType, __visibleMap } from "@/utils/config";
 export default {
     name: "work",
     props: [],
@@ -263,8 +272,6 @@ export default {
             }
             return "";
         },
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(val));
         },
@@ -283,9 +290,6 @@ export default {
 
 .p-cms-community {
     .u-title {
-        display: flex;
-        align-items: center;
-        gap: 12px;
         .u-tags {
             display: flex;
             gap: 4px;

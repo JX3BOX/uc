@@ -67,11 +67,11 @@
                         <el-divider content-position="left"><i class="el-icon-unlock"></i> 兑换需求</el-divider>
                         <span class="u-line" v-if="item.end_sell_time">
                             <i class="el-icon-time"></i> 可兑换时间：
-                            <el-tag :type="isExpire(item.end_sell_time) ? 'success' : 'warning'" size="mini">{{
+                            <el-tag :type="isExpire(item.end_sell_time) ? 'success' : 'warning'">{{
                                 item.start_sell_time
                             }}</el-tag>
                             -
-                            <el-tag :type="isExpire(item.end_sell_time) ? 'success' : 'warning'" size="mini">{{
+                            <el-tag :type="isExpire(item.end_sell_time) ? 'success' : 'warning'">{{
                                 item.end_sell_time
                             }}</el-tag>
                         </span>
@@ -102,7 +102,7 @@
                     <el-divider content-position="left"><i class="el-icon-shopping-bag-1"></i> 兑换详情</el-divider>
                     <div class="u-count">
                         <span class="u-number" v-if="item.stock">
-                            数量：<el-input-number v-model="number" :min="1" :max="maxNumber" size="small" />
+                            数量：<el-input-number v-model="number" :min="1" :max="maxNumber" />
                         </span>
                         <span class="u-stock"
                             >库存：<b>{{ item.stock }}</b></span
@@ -178,27 +178,6 @@
             <!-- 赠送 -->
             <UserPop title="赠送" :show="visible" @switchUserPop="presented" @confirm="presentedConfirm"></UserPop>
             <!-- 装扮步骤条 -->
-            <!-- <div class="m-step" v-if="showStep">
-                <div class="u-title">虚拟装扮使用步骤</div>
-                <el-steps align-center :active="3">
-                    <el-step>
-                        <template slot="description">
-                            <a :href="getLink()" target="_blank">
-                                <span class="u-step-desc">打开主题风格</span>
-                                <img src="../../assets/img/common/step1.png" />
-                            </a>
-                        </template>
-                    </el-step>
-                    <el-step>
-                        <template slot="description">
-                            <a :href="getLink()" target="_blank">
-                                <span class="u-step-desc">在主题装扮内找到对应菜单 </span>
-                                <img src="../../assets/img/common/step2.png" />
-                            </a>
-                        </template>
-                    </el-step>
-                </el-steps>
-            </div> -->
             <!-- 内容 -->
             <div class="m-extend">
                 <div class="m-tabs">
@@ -236,14 +215,14 @@
 <script>
 import Article from "@jx3box/jx3box-editor/src/Article.vue";
 import Comment from "./components/comment.vue";
-import UserPop from "@jx3box/jx3box-common-ui/src/author/UserPop.vue";
+import UserPop from "@jx3box/jx3box-ui/src/author/UserPop.vue";
 import Picture from "./components/Picture.vue";
 import Order from "./components/Order.vue";
-import Skeleton from './components/skeleton/index.vue'
+import Skeleton from "./components/skeleton/index.vue";
 
 import types from "@/assets/data/vip/goods_types.json";
 import User from "@jx3box/jx3box-common/js/user";
-import { __Root, __OriginRoot } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, __OriginRoot } from "@/utils/config";
 import { throttle } from "lodash";
 import { resolveImagePath, showAvatar } from "@jx3box/jx3box-common/js/utils";
 import { checkOwnedStatus, getItem, toPay, toPayOrder, giveAway, getDecoration } from "@/service/vip/mall";
@@ -286,17 +265,17 @@ export default {
     computed: {
         skeletonInfo() {
             if (this.item && this.item.category === "virtual") {
-                if (this.item.sub_category === 'skin'){
+                if (this.item.sub_category === "skin") {
                     return {
                         category: this.item.virtual_stock_item_details.category,
-                        img:`https://cdn.jx3box.com/design/decoration/images/${this.item.remark}/${this.item.virtual_stock_item_details.category}.png`
-                    }
+                        img: `https://cdn.jx3box.com/design/decoration/images/${this.item.remark}/${this.item.virtual_stock_item_details.category}.png`,
+                    };
                 }
-                if (this.item.sub_category === 'palu'){
+                if (this.item.sub_category === "palu") {
                     return {
-                        category: 'palu',
-                        img: `https://cdn.jx3box.com/design/decoration/palu/${this.item.remark}.png`
-                    }
+                        category: "palu",
+                        img: `https://cdn.jx3box.com/design/decoration/palu/${this.item.remark}.png`,
+                    };
                 }
             }
             return {};
@@ -304,9 +283,7 @@ export default {
         id() {
             return this.$route.params.id;
         },
-        root() {
-            return __Root;
-        },
+
         asset() {
             return this.$store.state.mall.asset || {};
         },
@@ -491,7 +468,7 @@ export default {
                         type: "warning",
                     })
                         .then(() => {
-                            const url = `${this.root}dashboard/mall`;
+                            const url = `${__Root}dashboard/mall`;
                             window.open(url);
                         })
                         .catch(() => {});

@@ -1,12 +1,12 @@
 <template>
-    <ul>
+    <ul class="m-publish__paper-list">
         <li v-for="(item, i) in list" :key="i">
-            <i class="u-icon">
-                <img v-if="item.status != 0" svg-inline src="@/assets/img/publish/works/repo.svg" />
-                <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" />
-            </i>
             <a class="u-title" target="_blank" :href="postLink(item.id)">
                 <!-- [{{ item.type | typeFormat }}]  -->
+                <i class="u-icon">
+                    <img v-if="item.status != 0" svg-inline src="@/assets/img/publish/works/repo.svg" />
+                    <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" />
+                </i>
                 {{ item.title || "无标题" }}
             </a>
             <div class="u-desc">
@@ -22,29 +22,31 @@
                             pending: item.status == 0,
                             fail: item.status < 0 || item.status > 1,
                         }"
-                    >{{ statusmap[item.status] }}</b>
+                        >{{ statusmap[item.status] }}</b
+                    >
                 </span>
-                <time class="u-time u-desc-subitem">提交于: {{ item.createTime | dateFormat }}</time>
+                <time class="u-time u-desc-subitem">提交于: {{ dateFormat(item.createTime) }}</time>
             </div>
             <el-button-group class="u-action">
-                <el-button size="mini" icon="el-icon-edit" title="编辑" @click="edit(item.id)"></el-button>
-                <el-button size="mini" icon="el-icon-delete" title="删除" @click="del(item.id,i)"></el-button>
+                <el-button icon="Edit" title="编辑" @click="edit(item.id)"></el-button>
+                <el-button icon="Delete" title="删除" @click="del(item.id, i)"></el-button>
             </el-button-group>
         </li>
     </ul>
 </template>
 
 <script>
-import { types } from "@/assets/data/publish/exam.json";
+import examData from "@/assets/data/publish/exam.json";
+const { types } = examData;
 import dateFormat from "@/utils/dateFormat";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { deletePaper } from "@/service/publish/exam.js";
 const statusmap = {
     "-2": "已删除",
     "-1": "未通过审核",
-    "0": "待审核",
-    "1": "已入库",
-    "2": "私有",
+    0: "待审核",
+    1: "已入库",
+    2: "私有",
 };
 export default {
     name: "paper",
@@ -52,13 +54,13 @@ export default {
     data: function () {
         return {
             statusmap,
-            list : this.data || []
+            list: this.data || [],
         };
     },
-    watch : {
-        data : function (val){
-            this.list = val || []
-        }
+    watch: {
+        data: function (val) {
+            this.list = val || [];
+        },
     },
     methods: {
         edit: function (id) {
@@ -67,7 +69,7 @@ export default {
         postLink: function (id) {
             return getLink("paper", id);
         },
-        del: function (id,i) {
+        del: function (id, i) {
             this.$alert("确定删除吗？", "消息", {
                 confirmButtonText: "确定",
                 callback: (action) => {
@@ -77,14 +79,12 @@ export default {
                                 message: "删除成功",
                                 type: "success",
                             });
-                            this.list.splice(i,1);
+                            this.list.splice(i, 1);
                         });
                     }
                 },
             });
         },
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(val * 1000));
         },
@@ -92,8 +92,6 @@ export default {
             return types[type];
         },
     },
-    mounted: function () {},
-    components: {},
 };
 </script>
 
@@ -108,6 +106,11 @@ export default {
     }
     .fail {
         color: #fc3c3c;
+    }
+}
+.m-publish__paper-list{
+    .u-title{
+        padding:4px 0;
     }
 }
 </style>

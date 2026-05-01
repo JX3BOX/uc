@@ -1,4 +1,5 @@
 <script>
+import { h } from "vue";
 import Calender from "./Calendar";
 import Palu from "./Palu";
 import Sidebar from "./Sidebar";
@@ -29,12 +30,10 @@ export default {
             default: "",
         },
     },
-    render(h) {
+    render() {
         if (this.component[this.category]) {
             return h(this.component[this.category], {
-                props: {
-                    img: this.img,
-                },
+                img: this.img,
             });
         }
         return null

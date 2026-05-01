@@ -1,7 +1,13 @@
 <template>
     <div class="m-publish-xf m-publish-mix-subtype">
         <el-form-item label="跨心法">
-            <el-select v-model="mix_subtype" multiple popper-class="m-mix-subtype__pop" style="width: 100%;">
+            <el-select
+                v-model="mix_subtype"
+                size="large"
+                multiple
+                popper-class="m-mix-subtype__pop"
+                style="width: 100%"
+            >
                 <el-option
                     v-for="(item, i) in xfmap"
                     :label="item.name"
@@ -21,28 +27,52 @@
 </template>
 <script>
 import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 export default {
     name: "publish_mix_subtype",
-    props: ["data", "client"],
+    props: {
+        modelValue: {
+            type: Array,
+            default: undefined,
+        },
+        data: {
+            type: Array,
+            default: () => [],
+        },
+        client: {
+            type: String,
+            default: "std",
+        },
+    },
     data: function () {
         return {
-            mix_subtype: this.data,
+            mix_subtype: this.modelValue !== undefined ? this.modelValue : this.data,
 
             exact_client: this.client || "std",
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update", "update:modelValue"],
     watch: {
-        data: function (newval) {
-            this.mix_subtype = newval;
+        modelValue: {
+            deep: true,
+            handler: function (newval) {
+                if (newval !== undefined) {
+                    this.mix_subtype = newval;
+                }
+            },
+        },
+        data: {
+            deep: true,
+            handler: function (newval) {
+                if (this.modelValue === undefined) {
+                    this.mix_subtype = newval;
+                }
+            },
         },
         mix_subtype: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },
@@ -72,7 +102,6 @@ export default {
     }
 }
 .m-mix-subtype__pop {
-
     .m-xf-item {
         .flex;
         align-items: center;

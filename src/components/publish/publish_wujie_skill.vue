@@ -1,11 +1,11 @@
 <!-- 无界技能弹窗 -->
 <template>
     <el-dialog
-        :visible="modelValue"
+        v-model="dialogVisible"
         @close="onClose"
         title="添加技能"
         append-to-body
-        custom-class="m-publish-wujie-skill"
+        class="m-publish-wujie-skill"
     >
         <pvp-martial :subtype="subtype" :platform="platform" @selectSkill="selectSkill"></pvp-martial>
         <el-divider content-position="left">已选技能</el-divider>
@@ -57,10 +57,7 @@ export default {
             default: "wujie",
         },
     },
-    model: {
-        prop: "modelValue",
-        event: "change",
-    },
+    emits: ["update:modelValue", "change", "selected"],
     data() {
         return {
             wujie_data: {
@@ -81,10 +78,21 @@ export default {
             }
         },
     },
+    computed: {
+        dialogVisible: {
+            get() {
+                return this.modelValue;
+            },
+            set(val) {
+                this.$emit("update:modelValue", val);
+                this.$emit("change", val);
+            },
+        },
+    },
     methods: {
         iconLink,
         onClose() {
-            this.$emit("change", false);
+            this.dialogVisible = false;
             this.selectedSkills = [];
         },
         onConfirm() {

@@ -6,36 +6,37 @@
                 <div class="m-order-list" v-if="list && list.length">
                     <table>
                         <thead>
-                            <th>产品</th>
-                            <th>订单编号</th>
-                            <th>金额</th>
-                            <th>支付方式</th>
-                            <th>交易号</th>
-                            <th>交易状态</th>
-                            <th>订单创建时间</th>
+                            <tr>
+                                <th>产品</th>
+                                <th>订单编号</th>
+                                <th>金额</th>
+                                <th>支付方式</th>
+                                <th>交易号</th>
+                                <th>交易状态</th>
+                                <th>订单创建时间</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(item, i) in list" :key="i">
-                                <td>{{ item.product_id | showProduct }}</td>
+                                <td>{{ showProduct(item.product_id) }}</td>
                                 <td>{{ item.id }}</td>
-                                <td>¥{{ item.total_fee | showPrice }}</td>
-                                <td>{{ item.pay_type | showPayType }}</td>
+                                <td>¥{{ showPrice(item.total_fee) }}</td>
+                                <td>{{ showPayType(item.pay_type) }}</td>
                                 <td>{{ item.transaction_id }}</td>
-                                <td>{{ item.pay_status | showPayStatus }}</td>
-                                <td>{{ item.created_time | showTime }}</td>
+                                <td>{{ showPayStatus(item.pay_status) }}</td>
+                                <td>{{ showTime(item.created_time) }}</td>
                             </tr>
                         </tbody>
                     </table>
                     <!-- 分页 -->
-                    <div class="m-order-pages">
-                        <el-pagination
-                            background
-                            layout="total, prev, pager, next,jumper"
-                            :page-size="per"
-                            :total="total"
-                            :current-page.sync="page"
-                        ></el-pagination>
-                    </div>
+                    <el-pagination
+                        class="m-order-pages"
+                        background
+                        layout="total, prev, pager, next,jumper"
+                        :page-size="per"
+                        :total="total"
+                        v-model:current-page="page"
+                    ></el-pagination>
                 </div>
                 <div class="m-order-null" v-else>
                     <el-alert title="还有任何订单记录" type="info" show-icon></el-alert>
@@ -46,9 +47,11 @@
 </template>
 <script>
 import { getOrderList } from "@/service/dashboard/order.js";
-import { products, pay_status, pay_types } from "@/assets/data/dashboard/pay_order.json";
+import orderData from "@/assets/data/dashboard/pay_order.json";
+const { products, pay_status, pay_types } = orderData;
 import { showTime } from "@jx3box/jx3box-common/js/moment";
-import { mallTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { mallTab } = tabsData;
 import uc from "@/components/dashboard/uc.vue";
 export default {
     name: "orders",
@@ -81,17 +84,6 @@ export default {
                 this.total = res.data.data.page.total;
             });
         },
-    },
-    watch: {
-        params: {
-            deep: true,
-            immediate: true,
-            handler: function () {
-                this.loadData();
-            },
-        },
-    },
-    filters: {
         showProduct: function (val) {
             return products[val];
         },
@@ -106,9 +98,34 @@ export default {
         },
         showTime,
     },
+    watch: {
+        params: {
+            deep: true,
+            immediate: true,
+            handler: function () {
+                this.loadData();
+            },
+        },
+    },
     mounted: function () {},
 };
 </script>
 <style scoped lang="less">
 @import "~@/assets/css/dashboard/orders.less";
+
+@media screen and (max-width: @phone) {
+    .m-order-list {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+
+        table {
+            min-width: 860px;
+        }
+
+        th,
+        td {
+            white-space: nowrap;
+        }
+    }
+}
 </style>

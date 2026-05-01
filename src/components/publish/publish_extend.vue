@@ -1,7 +1,7 @@
 <template>
     <div class="m-publish-extend">
         <el-form-item label="其它">
-            <el-checkbox v-model="post.include_video" :true-label="1" :false-label="0">内含视频</el-checkbox>
+            <el-checkbox v-model="includeVideo" :true-value="1" :fasle-value="0">内含视频</el-checkbox>
         </el-form-item>
     </div>
 </template>
@@ -10,6 +10,10 @@
 export default {
     name: "publish_extend",
     props: {
+        modelValue: {
+            type: Object,
+            default: undefined,
+        },
         post: {
             type: Object,
             default: () => {
@@ -17,21 +21,43 @@ export default {
             },
         },
     },
-    model: {
-        prop: "post",
-        event: "update",
-    },
+    emits: ["update", "update:modelValue"],
     data() {
-        return {};
+        return {
+            localPost: this.modelValue !== undefined ? this.modelValue : this.post,
+        };
     },
     watch: {
-        post: {
+        modelValue: {
             immediate: true,
             deep: true,
             handler(val) {
                 if (!val) return;
+                this.localPost = val;
+            },
+        },
+        post: {
+            immediate: true,
+            deep: true,
+            handler(val) {
+                if (this.modelValue === undefined && val) {
+                    this.localPost = val;
+                }
             },
         },
     },
-}
+    computed: {
+        includeVideo: {
+            get() {
+                return this.localPost?.include_video;
+            },
+            set(val) {
+                const next = { ...(this.localPost || {}), include_video: val };
+                this.localPost = next;
+                this.$emit("update:modelValue", next);
+                this.$emit("update", next);
+            },
+        },
+    },
+};
 </script>

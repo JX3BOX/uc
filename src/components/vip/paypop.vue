@@ -2,7 +2,7 @@
     <el-dialog
         class="c-pay-pop"
         :title="title"
-        :visible.sync="visible"
+        v-model="visible"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
         :width="width"
@@ -10,20 +10,24 @@
         <div class="c-pay-pop-box">
             <el-tabs class="c-pay-pop-tab" v-model="pay_type" type="card">
                 <el-tab-pane label="支付宝" name="alipay">
-                    <span slot="label" class="u-tab"
-                        ><img src="@/assets/img/vip/paypop/alipay.png" />支付宝支付<em>支持花呗分期</em></span
-                    >
+                    <template #label>
+                        <span class="u-tab"
+                            ><img src="@/assets/img/vip/paypop/alipay.png" />支付宝支付<em>支持花呗分期</em></span
+                        >
+                    </template>
                 </el-tab-pane>
                 <el-tab-pane label="微信" name="wepay">
-                    <span slot="label" class="u-tab"
-                        ><img src="@/assets/img/vip/paypop/wepay.png" />微信支付<em>支持信用卡</em></span
-                    >
+                    <template #label>
+                        <span class="u-tab"
+                            ><img src="@/assets/img/vip/paypop/wepay.png" />微信支付<em>支持信用卡</em></span
+                        >
+                    </template>
                 </el-tab-pane>
             </el-tabs>
             <div class="c-pay-pop-content">
                 <h2 class="u-title">{{ productDesc }}</h2>
                 <div class="u-price" v-if="price">
-                    <b>{{ price | formatPrice }}</b
+                    <b>{{ formatPrice(price) }}</b
                     ><em>元</em>
                 </div>
                 <div class="u-paybox">
@@ -48,16 +52,17 @@
                 </div>
             </div>
         </div>
-        <div slot="footer" class="u-btns">
-            <el-button @click="cancel">取 消</el-button>
-            <el-button type="primary" @click="check">已完成支付</el-button>
-        </div>
+        <template #footer>
+            <div class="u-btns">
+                <el-button size="large" @click="cancel">取 消</el-button>
+                <el-button size="large" type="primary" @click="check">已完成支付</el-button>
+            </div>
+        </template>
     </el-dialog>
 </template>
 
 <script>
 import QrcodeVue from "qrcode.vue";
-import User from "@jx3box/jx3box-common/js/user";
 import { checkOrder, createOrder } from "@/service/vip/order.js";
 import { postStat } from "@jx3box/jx3box-common/js/stat";
 import { getQuery } from "@jx3box/jx3box-common/js/utils";
@@ -178,8 +183,6 @@ export default {
                 }
             });
         },
-    },
-    filters: {
         formatPrice: function (val) {
             return (val && (val / 100).toFixed(2)) || "-";
         },

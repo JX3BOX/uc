@@ -1,11 +1,9 @@
 <template>
     <div class="m-feedback-list" v-loading="loading">
-        <el-table :data="data" highlight-current-row size="small" row-class-name="u-row" @row-click="viewFeedback">
+        <el-table :data="data" highlight-current-row row-class-name="u-row" @row-click="viewFeedback" size="large">
             <el-table-column label="状态" prop="status" width="100">
                 <template #default="{ row }">
-                    <span class="u-status" :style="{ backgroundColor: statusColors[row.status] }">{{
-                        statusMap[row.status]
-                    }}</span>
+                    <el-tag :type="statusTypes[row.status]" size="small">{{ statusMap[row.status] }}</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="客户端" prop="client" width="100">
@@ -13,7 +11,7 @@
                     <span class="u-client" :class="'i-client-' + row.client">{{ formatClient(row.client) }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="来源" prop="type" width="200">
+            <el-table-column label="来源/类型" prop="type" width="200">
                 <template #default="{ row }">
                     {{ `${types[row.type]} - ${subtypes[row.subtype]}` }}
                 </template>
@@ -26,7 +24,7 @@
             </el-table-column>
             <el-table-column label="操作" width="100">
                 <template #default>
-                    <el-button type="text" size="small">查看</el-button>
+                    <el-button size="small" plain icon="View">查看</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -35,7 +33,7 @@
             background
             :page-size="per"
             :hide-on-single-page="true"
-            :current-page.sync="page"
+            v-model:current-page="page"
             @current-change="currentChange"
             layout="total, prev, pager, next, jumper"
             :total="total"
@@ -45,8 +43,9 @@
 
 <script>
 import { getFeedbackList } from "@/service/dashboard/feedback";
-import { types, subtypes, statusMap, statusColors } from "@/assets/data/dashboard/feedback.json";
-import { __clients } from "@jx3box/jx3box-common/data/jx3box.json";
+import feedbackData from "@/assets/data/dashboard/feedback.json";
+const { types, subtypes, statusMap, statusColors, statusTypes } = feedbackData;
+import { __clients } from "@/utils/config";
 import moment from "moment";
 export default {
     name: "FeedbackList",
@@ -62,6 +61,7 @@ export default {
             subtypes,
             statusMap,
             statusColors,
+            statusTypes,
         };
     },
     mounted() {
@@ -114,11 +114,12 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .m-feedback-list {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    font-size: 12px;
 
     .u-row * {
         .pointer !important;
@@ -130,8 +131,8 @@ export default {
         .r(2px);
     }
     .u-client {
-        padding: 2px 5px;
-        .r(2px);
+        padding: 3px 8px;
+        .r(3px);
     }
 }
 </style>

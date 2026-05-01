@@ -1,9 +1,15 @@
 <template>
     <div class="m-publish-collection-relation">
         <h5 class="u-schema">
-            <!-- <span class="u-label">关联小册</span> -->
-            <a class="u-add el-button el-button--primary el-button--mini" href="/publish/#/collection" target="_blank">+ 创建小册</a>
-            <slot></slot>
+            <div>
+                <a
+                    class="u-add el-button el-button--primary el-button--small"
+                    href="/publish/#/collection"
+                    target="_blank"
+                    >+ 创建小册</a
+                >
+                <slot></slot>
+            </div>
             <a class="u-help u-icon-links" href="/tool/20891" target="_blank">
                 <i class="el-icon-question"></i> 小册帮助指南
             </a>
@@ -18,6 +24,7 @@
             clearable
             placeholder="请选择一个小册（可选，非必填，可搜索）"
             @visible-change="visibleChange"
+            size="large"
         >
             <el-option
                 v-for="(item, index) in collections"
@@ -25,12 +32,14 @@
                 :label="item.title"
                 :value="item.id"
             ></el-option>
-            <div slot="empty" class="u-collection-null">
-                <div>
-                    没有找到匹配结果，
-                    <a href="/publish/#/collection" target="_blank">创建小册</a>
+            <template #empty>
+                <div class="u-collection-null">
+                    <div>
+                        没有找到匹配结果，
+                        <a href="/publish/#/collection" target="_blank">创建小册</a>
+                    </div>
                 </div>
-            </div>
+            </template>
         </el-select>
         <div class="u-tip" v-if="isEmpty">
             <i class="el-icon-info"></i> 当前没有任何小册，
@@ -43,7 +52,16 @@ import { get_my_collections } from "@/service/publish/collection";
 import cloneDeep from "lodash/cloneDeep";
 export default {
     name: "publish_collection",
-    props: ["data"],
+    props: {
+        modelValue: {
+            type: [String, Number],
+            default: undefined,
+        },
+        data: {
+            type: [String, Number],
+            default: "",
+        },
+    },
     data: function () {
         return {
             post_collection: "",
@@ -56,24 +74,32 @@ export default {
             search: "",
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update", "update:modelValue"],
     computed: {
         isEmpty: function () {
             return !this.search && !this.collections.length;
         },
     },
     watch: {
+        modelValue: {
+            immediate: true,
+            handler(newval) {
+                if (newval !== undefined) {
+                    this.post_collection = Number(newval) || "";
+                }
+            },
+        },
         data: {
             immediate: true,
             handler(newval) {
-                this.post_collection = Number(newval) || "";
+                if (this.modelValue === undefined) {
+                    this.post_collection = Number(newval) || "";
+                }
             },
         },
         post_collection: {
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },
@@ -105,11 +131,17 @@ export default {
                 });
             } else {
                 this.collections = cloneDeep(this.copyCollections);
+                this.loading = false;
             }
         },
         visibleChange: function (val) {
             if (val) {
-                this.collections = cloneDeep(this.copyCollections);
+                // 下拉框打开时，如果还没有初始化数据，则加载
+                if (this.copyCollections.length === 0) {
+                    this.loadCollections();
+                } else {
+                    this.collections = cloneDeep(this.copyCollections);
+                }
             }
         },
     },
@@ -119,7 +151,6 @@ export default {
     components: {},
 };
 </script>
-
 
 <style lang="less">
 .u-collection-null {
@@ -138,12 +169,19 @@ export default {
         line-height: 18px;
         font-weight: normal;
     }
+    .u-schema {
+        .flex(y);
+        justify-content: space-between;
+
+        div{
+            .flex(y);
+        }
+    }
 
     .u-icon-links {
         margin-left: 10px;
         font-size: 13px;
-        color: #0366d6;
-        box-shadow: 0 1px 0 #0366d6;
+        color: @v4text;
 
         &:hover {
             color: @pink;

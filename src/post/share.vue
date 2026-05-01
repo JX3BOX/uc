@@ -4,7 +4,6 @@
         <publish-header name="捏脸分享"></publish-header>
 
         <el-form label-position="left" label-width="80px">
-
             <!-- 信息 -->
             <div class="m-publish-info">
                 <!-- 原创 -->
@@ -46,12 +45,12 @@
 
             <!-- 按钮 -->
             <div class="m-publish-buttons">
-                <el-button
-                    type="primary"
-                    @click="publish('publish',true)"
-                    :disabled="processing"
-                >发 &nbsp;&nbsp; 布</el-button>
-                <el-button type="plain" @click="publish('draft',false)" :disabled="processing">保存为草稿</el-button>
+                <el-button size="large" type="primary" @click="publish('publish', true)" :disabled="processing"
+                    >发 &nbsp;&nbsp; 布</el-button
+                >
+                <el-button size="large" plain @click="publish('draft', false)" :disabled="processing"
+                    >保存为草稿</el-button
+                >
             </div>
         </el-form>
     </div>
@@ -153,7 +152,7 @@ export default {
             // 选项
             share_types,
 
-            setting : false,
+            setting: false,
         };
     },
     computed: {
@@ -238,9 +237,9 @@ export default {
             this.post[meta.key] = meta.val;
         },
         // 设置
-        toggleSetting : function (){
-            this.setting = !this.setting
-        }
+        toggleSetting: function () {
+            this.setting = !this.setting;
+        },
     },
     created: function () {
         this.post.client = this.$store.state.client;

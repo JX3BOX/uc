@@ -2,7 +2,7 @@
     <uc class="m-dashboard-emotion m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tabList="tabList">
         <template #header>
             <a
-                class="u-link el-button el-button--default el-button--mini is-round is-plain"
+                class="u-link el-button el-button--default el-button--small is-round is-plain"
                 href="/vip/mall?category=virtual"
                 target="_blank"
                 ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
@@ -29,18 +29,13 @@
                 :key="index"
                 @click="toggleEmotionSelected(emotion)"
             >
-                <img
-                    class="u-check"
-                    v-if="selectedKeys.includes(emotion.group_name)"
-                    src="@/assets/img/dashboard/check.svg"
-                    alt=""
-                />
+                <i class="el-icon-success u-check" v-if="selectedKeys.includes(emotion.group_name)"></i>
                 <img class="u-img" :src="emotion.cover" alt="" />
                 <span class="u-name">{{ emotion.group_name }}</span>
             </div>
         </div>
         <div class="m-actions">
-            <el-button icon="el-icon-circle-check" type="primary" @click="onSave" :loading="loading"
+            <el-button icon="CircleCheck" type="primary" @click="onSave" :loading="loading" size="large"
                 >确定激活({{ selectedKeys.length }}/5)</el-button
             >
             <div class="u-tip">自定义表情包最多只能同时激活五个。挑选完毕后，需点击按钮方可实装。</div>
@@ -64,8 +59,9 @@
 <script>
 import uc from "@/components/dashboard/uc.vue";
 import { getDecoration, getEmotion, setDecoration } from "@/service/dashboard/decoration";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
-import { themeTab } from "@/assets/data/dashboard/tabs.json";
+import { __imgPath } from "@/utils/config";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { themeTab } = tabsData;
 export default {
     name: "emotion",
     props: [],
@@ -208,22 +204,24 @@ export default {
         .pr;
 
         &.is-select {
-            background-color: rgba(64, 128, 255, 1);
+            background-color: lighten(@v4primary, 30%);
+            border-color:@v4primary;
 
-            .u-name {
-                color: white;
-            }
+            // .u-name {
+            //     color: white;
+            // }
         }
         &:hover {
-            border-color: rgba(64, 128, 255, 1);
+            border-color: @v4primary;
 
             &.is-not-owned .u-go-buy {
-                background-color: rgba(64, 128, 255, 1);
+                background-color: @v4primary;
             }
         }
         .u-check {
             .pa;
-            .rt(13px);
+            .rt(12px);
+            color: @v4primary;
         }
         .u-img {
             .size(30px);

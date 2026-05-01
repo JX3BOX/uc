@@ -6,7 +6,7 @@
 
         <!-- <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search">
             <span slot="prepend">关键词</span>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+            <el-button slot="append" icon="Search"></el-button>
         </el-input>-->
 
         <div class="m-dashboard-work-filter">
@@ -25,35 +25,19 @@
                         />
                         <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" />
                     </i>
-                    <a
-                        class="u-title"
-                        target="_blank"
-                        :href="postLink(item.post_type, item.ID)"
-                    >{{ item.post_excerpt || "无标题" }}</a>
+                    <a class="u-title" target="_blank" :href="postLink(item.post_type, item.ID)">{{
+                        item.post_excerpt || "无标题"
+                    }}</a>
                     <div class="u-desc">
-                        <!-- <span class="u-desc-subitem">
-                            <i class="el-icon-view"></i>
-                            {{ item.visible | visibleFormat }}
-                        </span>-->
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             留言时间 :
-                            {{ item.post_date | dateFormat }}
+                            {{ dateFormat(item.post_date) }}
                         </time>
-                        <!-- <time class="u-desc-subitem">
-                            <i class="el-icon-refresh"></i>
-                            更新 :
-                            {{ item.post_modified | dateFormat }}
-                        </time>-->
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-button
-                            size="mini"
-                            icon="el-icon-delete"
-                            title="删除"
-                            @click="del(item.ID,i)"
-                        ></el-button>
+                        <el-button icon="Delete" title="删除" @click="del(item.ID, i)"></el-button>
                     </el-button-group>
                 </li>
             </ul>
@@ -70,7 +54,7 @@
                 background
                 :page-size="per"
                 :hide-on-single-page="true"
-                :current-page.sync="page"
+                v-model:current-page="page"
                 layout="total, prev, pager, next, jumper"
                 :total="total"
             ></el-pagination>
@@ -81,10 +65,7 @@
 <script>
 import { getMyPosts, push, del } from "@/service/publish/cms.js";
 import { editLink, getLink } from "@jx3box/jx3box-common/js/utils.js";
-import {
-    __postType,
-    __visibleMap,
-} from "@jx3box/jx3box-common/data/jx3box.json";
+import { __postType, __visibleMap } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 export default {
     name: "work",
@@ -143,7 +124,7 @@ export default {
         edit: function (type, id) {
             location.href = "/publish/#/" + type + "/" + id;
         },
-        del: function (id,i) {
+        del: function (id, i) {
             this.$alert("确定要删除吗？", "确认信息", {
                 confirmButtonText: "确定",
                 callback: (action) => {
@@ -154,7 +135,7 @@ export default {
                                 message: "删除成功",
                                 type: "success",
                             });
-                            this.data.splice(i,1)
+                            this.data.splice(i, 1);
                             // location.reload();
                         });
                     }
@@ -190,8 +171,6 @@ export default {
             this.page = 1;
             this[o.type] = o.val;
         },
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(val));
         },

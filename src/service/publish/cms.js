@@ -1,4 +1,4 @@
-import { $cms } from "@jx3box/jx3box-common/js/https";
+import { $cms } from "@jx3box/jx3box-common/js/api";
 
 // 加载
 function pull(id) {
@@ -37,9 +37,9 @@ function getMyPosts(params) {
 }
 
 // 获取全部列表
-function getAllPosts(params){
+function getAllPosts(params) {
     return $cms().get(`/api/cms/posts`, {
-        params
+        params,
     });
 }
 
@@ -54,26 +54,26 @@ function getBreadCrumb(key) {
 }
 
 // 获取post_meta
-function getPostMeta(id, key){
+function getPostMeta(id, key) {
     return $cms().get(`/api/cms/post/${id}/meta/${key}`);
 }
 
 // 设置post_meta
-function setPostMeta(id, key, value){
+function setPostMeta(id, key, value) {
     return $cms().post(`/api/cms/post/${id}/meta/${key}`, { val: value });
 }
 
 // 获取技改历史
-function getChangelog(params){
-    return $cms().get(`/api/cms/pve/skill/changelog`, {params});
+function getChangelog(params) {
+    return $cms().get(`/api/cms/pve/skill/changelog`, { params });
 }
 
-function getHasteRecommend(mount, client = 'std'){
+function getHasteRecommend(mount, client = "std") {
     return $cms().get(`/api/cms/app/pz/haste/${mount}`, {
         params: {
-            client
-        }
-    })
+            client,
+        },
+    });
 }
 
 // 获取自定义主题
@@ -82,17 +82,34 @@ function getTopicBucket(params) {
 }
 
 // 获取config
-function getConfig(key){
+function getConfig(key) {
     return $cms().get(`/api/cms/config`, {
         params: {
-            key
-        }
+            key,
+        },
     });
 }
 
 // 获取design_task
-function getDesignTask(params){
-    return $cms().get(`/api/cms/design/task/log`, {params});
+function getDesignTask(params) {
+    return $cms().get(`/api/cms/design/task/log`, { params });
 }
 
-export { pull, push, del, getMyPostsCount, getMyPosts, getAllPosts, upload, getBreadCrumb, getPostMeta, setPostMeta, getChangelog, getHasteRecommend, getTopicBucket, getConfig, getDesignTask, pushAdmin };
+export {
+    pull,
+    push,
+    del,
+    getMyPostsCount,
+    getMyPosts,
+    getAllPosts,
+    upload,
+    getBreadCrumb,
+    getPostMeta,
+    setPostMeta,
+    getChangelog,
+    getHasteRecommend,
+    getTopicBucket,
+    getConfig,
+    getDesignTask,
+    pushAdmin,
+};

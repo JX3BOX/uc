@@ -53,8 +53,12 @@
         }
     }
 }
-.u-wait-tip {
-    cursor: pointer;
+.m-fun-open {
+    .flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 .m-whitelist-list {
     &.isDraggable {
@@ -128,6 +132,10 @@
                     color: @primary;
                 }
             }
+
+            &.u-pending {
+                color: #fba524;
+            }
         }
         .u-item-btns {
             .x;
@@ -137,6 +145,10 @@
 
     .u-btn-edit {
         .ml(10px);
+        .pointer;
+        &:hover {
+            color: @v4primary;
+        }
     }
 }
 

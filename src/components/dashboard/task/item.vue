@@ -13,19 +13,18 @@
             </div>
             <div class="u-btn">
                 <el-button
-                    size="small"
-                    :type="data.hasFinish ? 'success' : 'warning'"
+                    :type="data.hasFinish ? 'success' : 'default'"
                     :disabled="data.hasFinish"
-                    :icon="(data.hasFinish && 'el-icon-check') || ''"
-                    @click="checkFinish(data.task.id)"
-                    >{{ data.hasFinish ? "已完成" : "领取奖励" }}</el-button
+                    :icon="(data.hasFinish && 'Check') || 'Right'"
+                    @click="checkFinish(data)"
+                    >{{ data.hasFinish ? "已完成" : "去完成" }}</el-button
                 >
             </div>
         </div>
     </div>
 </template>
 <script>
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 export default {
     name: "tasks",
     props: ["data"],
@@ -43,8 +42,12 @@ export default {
         },
     },
     methods: {
-        checkFinish(id) {
-            this.$emit("update", id);
+        checkFinish({ hasFinish, task }) {
+            if (hasFinish) {
+                this.$emit("update", task.id);
+            } else {
+                window.open(task.task_url, "_blank");
+            }
         },
     },
 };

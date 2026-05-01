@@ -4,11 +4,16 @@
             <el-radio
                 v-for="(item, i) in xfmap"
                 v-model="xf"
-                :label="item.name"
+                :value="item.name"
                 :key="i"
                 v-show="item.client.includes(exact_client)"
             >
-                <img class="u-pic" :src="item.id | xficon" :alt="item.name" onerror="this.src='https://img.jx3box.com/image/xf/0.png'"/>
+                <img
+                    class="u-pic"
+                    :src="xficon(item.id)"
+                    :alt="item.name"
+                    onerror="this.src='https://img.jx3box.com/image/xf/0.png'"
+                />
                 <span class="u-txt">{{ item.name }}</span>
             </el-radio>
         </el-form-item>
@@ -17,27 +22,45 @@
 </template>
 <script>
 import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 export default {
     name: "publish_xf",
-    props: ["data", "client"],
+    props: {
+        modelValue: {
+            type: String,
+            default: undefined,
+        },
+        data: {
+            type: String,
+            default: "",
+        },
+        client: {
+            type: String,
+            default: "std",
+        },
+    },
     data: function () {
         return {
-            xf: this.data,
+            xf: this.modelValue !== undefined ? this.modelValue : this.data,
             exact_client: this.client || "std",
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.xf = newval;
+            }
+        },
         data: function (newval) {
-            this.xf = newval;
+            if (this.modelValue === undefined) {
+                this.xf = newval;
+            }
         },
         xf: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },
@@ -48,17 +71,20 @@ export default {
     },
     computed: {
         xfmap() {
-            delete xfmap["山居剑意"];
-            return xfmap;
+            const _xfmap = {};
+            for (let key in xfmap) {
+                const item = xfmap[key];
+                if (key !== "山居剑意" && item.client.includes(this.exact_client)) {
+                    _xfmap[key] = item;
+                }
+            }
+            return _xfmap;
         },
     },
-    methods: {},
-    filters: {
+    methods: {
         xficon: function (id) {
             return __imgPath + "image/xf/" + id + ".png";
         },
     },
-    mounted: function () {},
-    components: {},
 };
 </script>

@@ -9,23 +9,37 @@
 <script>
 export default {
     name: "publish_original",
-    props: ["data"],
+    props: {
+        modelValue: {
+            type: [String, Number],
+            default: undefined,
+        },
+        data: {
+            type: [String, Number],
+            default: 0,
+        },
+    },
     data: function () {
         return {
-            original: ~~this.data,
+            original: ~~(this.modelValue !== undefined ? this.modelValue : this.data),
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.original = ~~newval;
+            }
+        },
         data: function (newval) {
-            this.original = ~~newval;
+            if (this.modelValue === undefined) {
+                this.original = ~~newval;
+            }
         },
         original: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", ~~newval);
                 this.$emit("update", ~~newval);
             },
         },

@@ -27,13 +27,8 @@
                 <el-divider content-position="left">2. 选择地址</el-divider>
                 <div class="m-address">
                     <div class="m-button">
-                        <el-button type="primary" icon="el-icon-sort" @click="visible = true" size="small"
-                            >切换地址</el-button
-                        >
-                        <a
-                            class="el-button el-button--warning el-button--small"
-                            href="/dashboard/address"
-                            target="_blank"
+                        <el-button type="primary" icon="Sort" @click="visible = true">切换地址</el-button>
+                        <a class="el-button el-button--warning" href="/dashboard/address" target="_blank"
                             ><i class="el-icon-setting"></i> 管理地址</a
                         >
                     </div>
@@ -46,7 +41,7 @@
                             </span>
                         </div>
                     </template>
-                    <div v-else><el-button type="success" icon="el-icon-plus">添加地址</el-button></div>
+                    <div v-else><el-button type="success" icon="Plus">添加地址</el-button></div>
                 </div>
 
                 <el-divider content-position="left">3. 备注</el-divider>
@@ -59,7 +54,7 @@
     </div>
 </template>
 <script>
-import { __userLevel, __Root } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userLevel, __Root } from "@/utils/config";
 import Address from "./components/address.vue";
 import { forEach } from "lodash";
 import { getItem, toPayOrder } from "@/service/vip/mall";

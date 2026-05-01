@@ -2,20 +2,32 @@
     <div class="m-publish-topic-bucket">
         <el-form-item :label="label">
             <el-popover popper-class="m-topic-bucket__pop" placement="bottom-start">
-                <el-button icon="el-icon-plus" size="small" trigger="click" slot="reference"></el-button>
+                <template #reference>
+                    <el-button icon="Plus" trigger="click"></el-button>
+                </template>
                 <div class="m-topic_bucket__content">
-                    <el-input v-model="search" placeholder="输入关键词" prefix-icon="el-icon-search" size="small" @keypress.enter.native="onSearch">
+                    <el-input v-model="search" placeholder="输入关键词" prefix-icon="Search" @keypress.enter="onSearch">
                     </el-input>
                     <div class="m-topic-bucket__list" v-if="list && list.length">
                         <el-checkbox-group v-model="selected">
                             <el-checkbox v-for="item in list" :label="item" :key="item"></el-checkbox>
                         </el-checkbox-group>
                     </div>
-                    <el-alert v-else class="u-alert" type="info" show-icon :title="search ? '未找到相关条目' : '请输入关键词进行查询'" :closable="false" center></el-alert>
+                    <el-alert
+                        v-else
+                        class="u-alert"
+                        type="info"
+                        show-icon
+                        :title="search ? '未找到相关条目' : '请输入关键词进行查询'"
+                        :closable="false"
+                        center
+                    ></el-alert>
                 </div>
             </el-popover>
             <div class="m-topic-bucket__selected">
-                <el-tag class="m-selected-item" v-for="item in selected" :key="item" closable @close="onClose(item)">{{item}}</el-tag>
+                <el-tag class="m-selected-item" v-for="item in selected" :key="item" closable @close="onClose(item)">{{
+                    item
+                }}</el-tag>
             </div>
         </el-form-item>
     </div>
@@ -34,17 +46,18 @@ export default {
         },
         type: {
             type: String,
-            default: "bbs"
+            default: "bbs",
+        },
+        modelValue: {
+            type: Array,
+            default: undefined,
         },
         value: {
             type: Array,
             default: () => [],
-        }
+        },
     },
-    model: {
-        prop: "value",
-        event: "update",
-    },
+    emits: ["update", "update:modelValue"],
     data() {
         return {
             search: "",
@@ -66,17 +79,28 @@ export default {
             deep: true,
             handler(val, oVal) {
                 if (!isEqual(val, oVal)) {
-                    this.$emit('update', this.selected)
+                    this.$emit("update:modelValue", this.selected);
+                    this.$emit("update", this.selected);
                 }
-            }
+            },
+        },
+        modelValue: {
+            deep: true,
+            handler() {
+                if (this.modelValue !== undefined) {
+                    this.selected = cloneDeep(this.modelValue);
+                }
+            },
         },
         value: {
             deep: true,
             // immediate: true,
             handler() {
-                this.selected = cloneDeep(this.value);
-            }
-        }
+                if (this.modelValue === undefined) {
+                    this.selected = cloneDeep(this.value);
+                }
+            },
+        },
     },
     mounted() {
         this.loadTopicBucket();
@@ -84,7 +108,7 @@ export default {
     methods: {
         loadTopicBucket() {
             get_topic_bucket(this.params).then((res) => {
-                this.list = res.data.data?.map(item => item.name) || [];
+                this.list = res.data.data?.map((item) => item.name) || [];
             });
         },
         onSearch() {

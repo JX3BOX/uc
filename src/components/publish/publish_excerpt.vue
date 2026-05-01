@@ -1,35 +1,43 @@
 <template>
     <div class="m-publish-excerpt">
-        <el-input
-            v-model="excerpt"
-            :maxlength="200"
-            show-word-limit
-            type="textarea"
-            placeholder="摘要信息"
-        ></el-input>
+        <el-input v-model="excerpt" :maxlength="200" show-word-limit type="textarea" placeholder="摘要信息"></el-input>
         <slot></slot>
     </div>
 </template>
 <script>
 export default {
     name: "publish_excerpt",
-    props: ["data"],
+    props: {
+        modelValue: {
+            type: String,
+            default: undefined,
+        },
+        data: {
+            type: String,
+            default: "",
+        },
+    },
     data: function () {
         return {
-            excerpt: this.data,
+            excerpt: this.modelValue !== undefined ? this.modelValue : this.data,
         };
     },
-    model: {
-        prop: "data",   //向上同步数据
-        event: "update",
-    },
+    emits: ["update", "update:modelValue"],
     watch: {
-        data: function(newval) {
-            this.excerpt = newval;
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.excerpt = newval;
+            }
+        },
+        data: function (newval) {
+            if (this.modelValue === undefined) {
+                this.excerpt = newval;
+            }
         },
         excerpt: {
             deep: true,
-            handler: function(newval) {
+            handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },
@@ -42,7 +50,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-    .m-publish-excerpt{
-        .mb(10px);
-    }
+.m-publish-excerpt {
+    .mb(10px);
+}
 </style>

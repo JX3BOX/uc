@@ -8,10 +8,10 @@
     <div class="m-author-body">
         <el-tabs class="m-tabs" v-model="active">
             <el-tab-pane v-for="item in types" :key="item.value" :label="item.label" :name="item.value" :lazy="true">
-                <span slot="label">
+                <template #label>
                     <i class="u-icon" :class="item.icon"></i>
                     {{ item.label }}
-                </span>
+                </template>
                 <div class="m-primary">
                     <component :is="currentComponent" v-if="item.value === active" />
                 </div>

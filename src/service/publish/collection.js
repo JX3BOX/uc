@@ -1,4 +1,4 @@
-import { $cms } from "@jx3box/jx3box-common/js/https.js";
+import { $cms } from "@jx3box/jx3box-common/js/api.js";
 
 function get_my_collections(params) {
     return $cms()({
@@ -8,12 +8,11 @@ function get_my_collections(params) {
     });
 }
 
-
-function createCollection(data){
+function createCollection(data) {
     return $cms().post(`/api/cms/post/collection`, data);
 }
 
-function updateCollection(id, data){
+function updateCollection(id, data) {
     return $cms().put(`/api/cms/post/collection/${id}`, data);
 }
 
@@ -34,4 +33,11 @@ function getCollectionRaw(collection_id) {
     });
 }
 
-export { get_my_collections, remove_collection, appendToCollection, createCollection, updateCollection, getCollectionRaw };
+export {
+    get_my_collections,
+    remove_collection,
+    appendToCollection,
+    createCollection,
+    updateCollection,
+    getCollectionRaw,
+};

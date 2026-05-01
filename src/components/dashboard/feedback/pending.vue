@@ -3,14 +3,7 @@
         <!-- tool -->
         <div class="m-feedback-tool">
             <div class="m-feedback-tool__item">
-                <el-select
-                    v-model="select"
-                    class="u-select"
-                    slot="prepend"
-                    size="small"
-                    placeholder="请选择处理人"
-                    filterable
-                >
+                <el-select v-model="select" class="u-select" placeholder="请选择处理人" filterable style="width:200px">
                     <el-option
                         :label="item.teammate_info.display_name"
                         v-for="(item, i) in assigns"
@@ -32,7 +25,7 @@
                 </el-select>
             </div>
             <div class="m-feedback-tool__item">
-                <el-date-picker v-model="time" type="month" placeholder="选择月份" size="small" format="yyyy年MM月">
+                <el-date-picker v-model="time" type="month" placeholder="选择月份" format="yyyy年MM月">
                 </el-date-picker>
             </div>
             <el-checkbox class="u-only-check" v-model="onlyMe"> 指派给我的 </el-checkbox>
@@ -43,11 +36,11 @@
             <el-table
                 :data="data"
                 highlight-current-row
-                size="small"
                 @row-click="viewFeedback"
                 row-class-name="u-row"
                 @filter-change="filterChange"
                 stripe
+                size="large"
             >
                 <el-table-column
                     label="状态"
@@ -57,9 +50,10 @@
                     :filter-multiple="false"
                 >
                     <template #default="{ row }">
-                        <span class="u-status" :style="{ backgroundColor: statusColors[row.status] }">{{
+                        <el-tag :type="statusTypes[row.status]" size="small">{{ statusMap[row.status] }}</el-tag>
+                        <!-- <span class="u-status" :style="{ backgroundColor: statusColors[row.status] }">{{
                             statusMap[row.status]
-                        }}</span>
+                        }}</span> -->
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -131,12 +125,12 @@
                         {{ formatTime(row.created_at) }}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="100">
+                <el-table-column label="操作" width="120">
                     <template #default="{ row }">
                         <el-tooltip :content="row.content" placement="top" popper-class="m-content-popover">
-                            <el-button type="text" size="small">查看</el-button>
+                            <el-button type="primary" link size="small">查看</el-button>
                         </el-tooltip>
-                        <el-button type="text" size="small" @click.stop="onRemarkClick(row)">备注</el-button>
+                        <el-button link type="primary" @click.stop="onRemarkClick(row)" size="small">备注</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -145,7 +139,7 @@
                 background
                 :page-size="per"
                 :hide-on-single-page="true"
-                :current-page.sync="page"
+                v-model:current-page="page"
                 @current-change="currentChange"
                 layout="total, prev, pager, next, jumper"
                 :total="total"
@@ -156,12 +150,13 @@
 
 <script>
 import { getMiscfeedback, getTeammates, updateFeedback } from "@/service/dashboard/feedback";
-import { types, subtypes, statusMap, statusColors, filterOptions } from "@/assets/data/dashboard/feedback.json";
+import feedbackData from "@/assets/data/dashboard/feedback.json";
+const { types, subtypes, statusMap, statusColors, statusTypes, filterOptions } = feedbackData;
 import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
 import moment from "moment";
 import { concat, isEqual } from "lodash";
-import { __clients } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __clients } from "@/utils/config";
 export default {
     name: "pendingList",
     props: {
@@ -187,6 +182,7 @@ export default {
             subtypes,
             statusMap,
             statusColors,
+            statusTypes,
 
             isEditor: false,
             onlyMe: true,
@@ -360,7 +356,7 @@ export default {
                         done();
                     }
                 },
-            });
+            }).catch(() => {});
         },
     },
     mounted() {
@@ -375,6 +371,9 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    .el-table {
+        font-size: 12px;
+    }
 
     .u-row * {
         .pointer !important;
@@ -385,10 +384,10 @@ export default {
         padding: 2px 5px;
         .r(2px);
     }
-    .u-client {
-        padding: 2px 5px;
-        .r(2px);
-    }
+    // .u-client {
+    //     padding: 2px 5px;
+    //     .r(2px);
+    // }
 
     .m-assign {
         display: flex;

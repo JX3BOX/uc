@@ -1,5 +1,5 @@
-import { $pay } from "@jx3box/jx3box-common/js/https";
-import { $ipay } from '@/service/vip/api'
+import { $pay } from "@jx3box/jx3box-common/js/api";
+import { $ipay } from "@/service/vip/api";
 
 function checkOrder(id) {
     return $pay().get("/api/order", {

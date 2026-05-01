@@ -13,7 +13,7 @@
     font-size: 14px;
     line-height: 2;
     a {
-        .color(#0366d6);
+        .color(@v4primary);
     }
     b {
         .color(#fba524);
@@ -72,9 +72,9 @@
                     }
                     .fz(14px,2);
                 }
-                .u-name{
-                    .color(@color-link);
-                }
+                // .u-name{
+                //     .color(@v4primary);
+                // }
                 .u-desc {
                     .fz(12px,2);
                     color:#999;
@@ -116,6 +116,9 @@
 }
 
 .m-publish-namespace-form {
+    .el-form-item{
+        .flex(y);
+    }
     .el-alert {
         padding: 0 10px;
     }

@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <Header></Header>
+    <div >
+        <CommonHeader></CommonHeader>
         <!-- <Breadcrumb name="魔盒活动" slug="event" root="/vip/event" :publishEnable="false" :adminEnable="false" :feedbackEnable="true">
             <img slot="logo" svg-inline src="@/assets/img/vip/logo.svg" />
         </Breadcrumb> -->
@@ -10,7 +10,7 @@
                 <router-view />
             </div>
         </Main>
-        <Footer></Footer>
+        <CommonFooter></CommonFooter>
     </div>
 </template>
 

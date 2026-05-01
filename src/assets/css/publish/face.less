@@ -1,5 +1,11 @@
-.m-publish-box-face{
-    .u-price{
+.m-publish-box-face {
+    .el-form-item__label{
+        .flex(y);
+    }
+    .c-upload-album,.c-upload-album-list{
+        .w(100%);
+    }
+    .u-price {
         .ml(20px);
     }
     .u-close-icon {
@@ -15,30 +21,30 @@
         margin-bottom: 10px;
     }
 
-
-    .u-warning{
+    .u-warning {
         display: inline-flex;
         padding: 5px 0;
         // background: #fba524;
         border-radius: 4px;
         line-height: 20px !important;
 
-        .el-checkbox__label{
+        .el-checkbox__label {
             color: #c00 !important;
             font-size: 12px !important;
         }
     }
-    .u-attachment{
-        margin-top: 10px;
+    .u-attachment {
+        // margin-top: 10px;
         display: flex;
         align-items: center;
         gap: 10px;
         .pr;
+        margin-left: 10px;
 
-        b{
-            color:@color-link;
+        b {
+            color: @v4primary;
         }
-        .u-attachment-text{
+        .u-attachment-text {
             min-width: 200px;
         }
         .u-attachment-key {
@@ -58,6 +64,11 @@
         }
 
         .u-main {
+        }
+    }
+    .c-upload-album {
+        .el-button {
+            margin-top: 0;
         }
     }
 }

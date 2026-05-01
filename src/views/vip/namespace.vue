@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <Header></Header>
+    <div>
+        <CommonHeader></CommonHeader>
         <Main class="m-vip-container" :withoutRight="true" :withoutLeft="true">
             <div class="m-namespace m-boxcoin">
                 <div class="m-namespace-box m-boxcoin-box" v-if="!done">
@@ -10,15 +10,15 @@
                             <i class="el-icon-question"></i>
                             铭牌可通过关键词快速在浏览器中输入<b>剑网3.com/您的关键词</b>访问您所指定的链接地址。
                         </div>
-                        <el-form ref="form" label-width="80px" :label-position="position">
+                        <el-form ref="form" label-width="80px" :label-position="position" size="large">
                             <el-form-item label="当前拥有">
                                 <div class="u-current">
                                     <b>{{ (asset && asset.namespace_card_count) || 0 }}</b>
                                 </div>
                             </el-form-item>
-                            <el-form-item label="购买数量">
-                                <el-radio-group v-model="count" size="small">
-                                    <el-radio :label="20" border>20个铭牌</el-radio>
+                            <!-- <el-form-item label="购买数量">
+                                <el-radio-group v-model="count" >
+                                    <el-radio :label="1" border>1个铭牌</el-radio>
                                 </el-radio-group>
                             </el-form-item>
                             <el-form-item label="支付金额">
@@ -27,19 +27,23 @@
                                     <b class="u-price">10.00</b>
                                     <span>元</span>
                                 </div>
-                            </el-form-item>
+                            </el-form-item> -->
                             <el-form-item>
-                                <el-button class="u-btn" type="primary" @click="buy">购买</el-button>
+                                <el-button class="u-btn" type="primary" @click="buy">前往兑换</el-button>
                             </el-form-item>
                         </el-form>
                     </div>
                 </div>
                 <result class="m-boxcoin-result" v-else>
-                    <div slot="title" class="m-boxcoin-result-title">购买成功</div>
-                    <div slot="desc" class="m-boxcoin-result-desc">
-                        <p>购买成功，<a :href="register_namespace_url" target="_blank">前往注册铭牌</a></p>
-                        <el-button class="u-back" @click="goBack" plain icon="el-icon-refresh-left">返回</el-button>
-                    </div>
+                    <template #title>
+                        <div class="m-boxcoin-result-title">购买成功</div>
+                    </template>
+                    <template #desc>
+                        <div class="m-boxcoin-result-desc">
+                            <p>购买成功，<a :href="register_namespace_url" target="_blank">前往注册铭牌</a></p>
+                            <el-button class="u-back" @click="goBack" plain icon="RefreshLeft">返回</el-button>
+                        </div>
+                    </template>
                 </result>
             </div>
         </Main>
@@ -51,7 +55,7 @@
             :returnUrl="returnUrl"
             @done="finish"
         />
-        <Footer></Footer>
+        <CommonFooter></CommonFooter>
     </div>
 </template>
 
@@ -62,7 +66,7 @@ import callback from "@/utils/callback.js";
 import result from "@/components/vip/result.vue";
 import simple_header from "@/components/vip/simple_header.vue";
 import { publishLink } from "@jx3box/jx3box-common/js/utils";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 export default {
     name: "namespace",
     data: function () {
@@ -96,12 +100,14 @@ export default {
     },
     methods: {
         buy: function (type) {
-            if (!this.isLogin) {
-                User.toLogin();
-            } else {
-                this.will = true;
-                this.dialog_visible = true;
-            }
+            // if (!this.isLogin) {
+            //     User.toLogin();
+            // } else {
+            //     this.will = true;
+            //     this.dialog_visible = true;
+            // }
+            const url = "/vip/mall/39";
+            window.open(url, "_blank");
         },
         loadAsset: function () {
             return User.getAsset().then((data) => {
@@ -123,17 +129,15 @@ export default {
         goBack: function () {
             this.done = false;
         },
+        formatPrice: function (val) {
+            return val && (~~val).toFixed(2);
+        },
     },
     created: function () {
         this.isLogin && this.loadAsset();
 
         let params = new URLSearchParams(location.search);
         this.refer = params.get("redirect") || "";
-    },
-    filters: {
-        formatPrice: function (val) {
-            return val && (~~val).toFixed(2);
-        },
     },
     components: {
         paypop,

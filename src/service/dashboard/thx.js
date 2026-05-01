@@ -1,4 +1,4 @@
-import { $pay, $cms } from "@jx3box/jx3box-common/js/https";
+import { $pay, $cms } from "@jx3box/jx3box-common/js/api";
 
 function getPostBoxcoinRecords(postType, postId, params) {
     return $pay().get(`/api/inspire/article/${postType}/${postId}/history`, {

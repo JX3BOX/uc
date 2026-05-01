@@ -4,30 +4,28 @@
 
         <div class="m-macro-box m-tool-source-box">
             <div class="m-tool-source-header">
-                <el-button
-                    class="m-macro-addbutton"
-                    icon="el-icon-circle-plus-outline"
-                    type="primary"
-                    @click="addSource"
+                <el-button class="m-macro-addbutton" icon="CirclePlus" type="primary" @click="addSource"
                     >添加资源</el-button
                 >
             </div>
 
             <el-tabs class="tabs-sort" v-model="activeIndex" type="card" closable @tab-remove="removeSource">
                 <el-tab-pane v-for="(item, i) in data.data" :key="i" :name="i + 1 + ''">
-                    <span slot="label" class="u-tab-box">
-                        <i class="el-icon-tickets u-tab-icon"></i>
-                        <span class="u-tab-name" :title="item.name">{{ i + 1 + "号位-" + item.name }}</span>
-                    </span>
+                    <template #label>
+                        <span class="u-tab-box">
+                            <i class="el-icon-tickets u-tab-icon"></i>
+                            <span class="u-tab-name" :title="item.name">{{ i + 1 + "号位-" + item.name }}</span>
+                        </span>
+                    </template>
                     <div class="m-source-name m-macro-item">
                         <h5 class="u-title">名称</h5>
-                        <el-input v-model="item.name" placeholder="输入资源名称"></el-input>
+                        <el-input v-model="item.name" size="large" placeholder="输入资源名称"></el-input>
                     </div>
                     <div class="m-source-mode m-macro-item">
                         <h5 class="u-title">模式</h5>
                         <el-radio-group v-model="item.mode" size="large">
-                            <el-radio label="0" border>远程</el-radio>
-                            <el-radio label="1" border>本地</el-radio>
+                            <el-radio value="0" border>远程</el-radio>
+                            <el-radio value="1" border>本地</el-radio>
                         </el-radio-group>
                     </div>
                     <div class="m-source-file m-macro-item" v-if="item.mode == 1">
@@ -44,9 +42,7 @@
                                 :id="'tool_' + i"
                                 @change="(e) => uploadSource(e, i)"
                             />
-                            <el-button type="primary" icon="el-icon-s-promotion" @click="selectSource(i)"
-                                >上传文件</el-button
-                            >
+                            <el-button type="primary" icon="Promotion" @click="selectSource(i)">上传文件</el-button>
                             <span class="u-data-remark">{{ files[i] && files[i].name }}</span>
                             <div class="u-file" v-if="item.file">
                                 <span class="u-file__label">当前文件下载：</span>
@@ -61,7 +57,7 @@
                     </div>
                     <div class="m-source-file m-macro-item" v-if="item.mode == 0">
                         <h5 class="u-title">文件</h5>
-                        <el-input v-model="item.file" placeholder="输入文件地址（例如网盘地址）"></el-input>
+                        <el-input v-model="item.file" size="large" placeholder="输入文件地址（例如网盘地址）"></el-input>
                     </div>
                     <div class="m-source-remark m-macro-item">
                         <h5 class="u-title">备注</h5>
@@ -96,38 +92,60 @@ const default_meta = {
 export default {
     name: "publish-tool-source",
     props: {
+        modelValue: {
+            type: Object,
+            default: undefined,
+        },
         value: {
             type: Object,
             default: () => {},
         },
     },
-    model: {
-        prop: "value",
-        event: "update",
-    },
+    emits: ["update", "update:modelValue"],
     data() {
         return {
-            data: this.value,
+            data: this.modelValue !== undefined ? this.modelValue : this.value,
             activeIndex: "1",
 
             files: [],
         };
     },
     watch: {
+        modelValue: {
+            immediate: true,
+            deep: true,
+            handler: function (val) {
+                if (val !== undefined) {
+                    if (!val || isEmptyMeta(val)) {
+                        this.data = lodash.cloneDeep(default_meta);
+                    } else {
+                        this.data = val;
+
+                        if (val?.down) {
+                            this.data.data.map((item) => {
+                                item.mode = "1";
+                                item.file = val.down || "";
+                            });
+                        }
+                    }
+                }
+            },
+        },
         value: {
             immediate: true,
             deep: true,
             handler: function (val) {
+                if (this.modelValue !== undefined) return;
                 if (!val || isEmptyMeta(val)) {
                     this.data = lodash.cloneDeep(default_meta);
                 } else {
                     this.data = val;
 
                     if (val?.down) {
-                        this.data.data.map(item => {
-                            item.mode = '1';
-                            item.file = val.down || '';
-                        })
+                        this.data.data.map((item) => {
+                            item.mode = "1";
+                            item.file = val.down || "";
+                        });
                     }
                 }
             },
@@ -135,6 +153,7 @@ export default {
         data: {
             deep: true,
             handler(val) {
+                this.$emit("update:modelValue", val);
                 this.$emit("update", val);
             },
         },
@@ -210,7 +229,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-/deep/.el-tabs__item {
+::v-deep(.el-tabs__item) {
     display: inline-flex;
     align-items: center;
 }

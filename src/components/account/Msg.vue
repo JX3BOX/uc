@@ -3,21 +3,21 @@
 </template>
 
 <script>
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system";
 export default {
-    data: function() {
+    data: function () {
         return {
             data: "",
         };
     },
-    mounted: function() {
+    mounted: function () {
         getBreadcrumb("account").then((res) => {
-            this.data = res
+            this.data = res;
         });
     },
 };
 </script>
 
 <style lang="less">
-    @import '~@/assets/css/account/msg.less';
+@import "~@/assets/css/account/msg.less";
 </style>

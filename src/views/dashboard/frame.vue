@@ -2,7 +2,7 @@
     <uc class="m-dashboard-frame m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tab-list="tabList">
         <template #header>
             <a
-                class="u-link el-button el-button--default el-button--mini is-round is-plain"
+                class="u-link el-button el-button--default el-button--small is-round is-plain"
                 href="/vip/mall?category=virtual"
                 target="_blank"
                 ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
@@ -12,7 +12,7 @@
             <!-- 左右两侧 -->
             <div class="m-frame-left">
                 <a
-                    class="u-btn el-button el-button--default el-button--mini is-plain"
+                    class="u-btn el-button el-button--default el-button--small is-plain"
                     href="/dashboard/avatar"
                     target="_blank"
                     ><i class="el-icon-picture-outline-round"></i> 修改头像</a
@@ -40,7 +40,9 @@
                         <div class="u-frame-item">
                             <div class="u-picbox" v-for="(item, i) in frameList" :key="i">
                                 <el-tooltip effect="dark" placement="top" :open-delay="200">
-                                    <div slot="content">{{ item.desc }}<br />{{ item.postscript }}</div>
+                                    <template #content>
+                                        <div>{{ item.desc }}<br />{{ item.postscript }}</div>
+                                    </template>
                                     <div class="u-pic" :class="setClass(item)" @click="setAvatar(item)">
                                         <el-image :src="frameUrl(item.name)" fit="contain" v-if="item.name" />
                                         <div v-else class="u-noFrame"></div>
@@ -53,18 +55,19 @@
             </div>
         </div>
         <div class="m-btn">
-            <el-button type="primary" @click="updateAvatarFrame">确认</el-button>
-            <el-button @click="reset">清除所有装扮</el-button>
+            <el-button type="primary" @click="updateAvatarFrame" size="large">确认</el-button>
+            <el-button @click="reset" size="large">清除所有装扮</el-button>
         </div>
     </uc>
 </template>
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { themeTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { themeTab } = tabsData;
 import User from "@jx3box/jx3box-common/js/user";
 import { showAvatar } from "@jx3box/jx3box-common/js/utils";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 import { getFrames, getUserOverview } from "@/service/dashboard/profile";
 import { updateAvatarFrame, getDecoration, receive, setDecoration } from "@/service/dashboard/decoration";
 export default {

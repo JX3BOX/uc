@@ -3,9 +3,9 @@
         <div class="m-theme" :style="themeStyle">
             <div class="m-author" :class="isAdmin ? 'm-author-admin' : ''">
                 <Me :decorationMe="decorationMe" :honor="honor" />
-                <Footer></Footer>
             </div>
         </div>
+        <CommonFooter></CommonFooter>
     </AppLayout>
 </template>
 
@@ -14,7 +14,7 @@ import AppLayout from "@/layouts/author/AppLayout.vue";
 import Me from "@/components/author/newComponents/Me.vue";
 import { getUserInfo, getDecoration, getDecorationJson } from "@/service/author/cms";
 import User from "@jx3box/jx3box-common/js/user";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 const DECORATION_JSON = "decoration_json";
 const DECORATION_KEY = "decoration_me";
 export default {
@@ -99,7 +99,7 @@ export default {
             });
         },
         showDecoration: function (val, type) {
-            return __cdn + `design/decoration/images/${val}/${type}.png?${new Date().getTime()}`;
+            return __cdn + `design/decoration/images/${val}/${type}.png`;
         },
         setDecoration(theme) {
             this.decorationMe = theme;
@@ -133,7 +133,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 @import "~@/assets/css/author/app.less";
 @import "~@/assets/css/author/post.less";
 .m-theme {

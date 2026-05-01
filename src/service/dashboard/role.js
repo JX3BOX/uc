@@ -1,4 +1,4 @@
-import { $team } from "@jx3box/jx3box-common/js/https";
+import { $team } from "@jx3box/jx3box-common/js/api";
 
 function getRoles(params) {
     return $team().get("/api/team/my-game-roles", {

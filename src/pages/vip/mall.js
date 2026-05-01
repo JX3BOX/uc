@@ -28,6 +28,7 @@ const store = {
         cart: [],
         cartVisible: false,
         boundCart: {},
+        backId: null,
     },
     getters: {
         cartNum: (state) => {
@@ -75,6 +76,7 @@ const store = {
         async addCart({ dispatch }, { id, amount }) {
             return addGoodsToCart(id, amount)
                 .then(() => {
+                    console.log(id);
                     dispatch("getCart");
                     return true;
                 })

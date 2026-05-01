@@ -24,8 +24,8 @@
 import { getLink, showBanner } from "@jx3box/jx3box-common/js/utils";
 import dayjs from 'dayjs'
 import { getTopicReplyList } from "@/service/author/author.js";
-import { __appType, __gameType, __postType, __wikiType } from "@jx3box/jx3box-common/data/jx3box.json";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box";
+import { __appType, __gameType, __postType, __wikiType } from "@/utils/config";
+import { __imgPath } from "@/utils/config";
 import fb from "@/post/fb.vue";
 import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
 export default {

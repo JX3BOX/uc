@@ -9,12 +9,7 @@
                 <p class="u-misc">
                     <em>需在赞助时有提供网站UID,如需补录请提供支付凭证</em>
                 </p>
-                <el-button
-                    class="u-btn"
-                    type="warning"
-                    @click="getGift"
-                    :disabled="done"
-                    icon="el-icon-present"
+                <el-button class="u-btn" type="warning" @click="getGift" :disabled="done" icon="Present"
                     >点击领取</el-button
                 >
             </div>
@@ -25,13 +20,13 @@
 import { getFreeVip } from "@/service/vip/event";
 export default {
     props: [],
-    data: function() {
+    data: function () {
         return { done: false };
     },
     computed: {},
     methods: {
-        getGift: function() {
-            getFreeVip('rank_1_sponsors').then((res) => {
+        getGift: function () {
+            getFreeVip("rank_1_sponsors").then((res) => {
                 this.done = true;
                 this.$message({
                     message: "领取成功",

@@ -1,4 +1,18 @@
-{
-    "讨论": "讨论",
-    "文章": "文章"
-}
+[
+    {
+        "name": "guide",
+        "label": "攻略心得"
+    },
+    {
+        "name": "story",
+        "label": "江湖故事"
+    },
+    {
+        "name": "discuz",
+        "label": "交流分享"
+    },
+    {
+        "name": "help",
+        "label": "求助寻觅"
+    }
+]

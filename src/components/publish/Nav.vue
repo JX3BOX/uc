@@ -1,26 +1,26 @@
 <template>
     <nav class="m-nav">
-        <router-link class="m-nav-publish el-button el-button--primary" to="/">
+        <router-link class="el-button el-button--large el-button--primary m-nav-publish" to="/">
             <i class="el-icon-edit-outline"></i>
             <span>创作台</span>
         </router-link>
-        <router-link class="m-nav-bucket el-button el-button--primary is-plain" to="/draft">
+        <router-link class="el-button el-button--large el-button--primary is-plain m-nav-bucket" to="/draft">
             <i class="el-icon-receiving"></i>
             <span>草稿箱</span>
         </router-link>
 
-        <el-collapse v-model="group" class="m-nav-group" @click.native.stop>
+        <el-collapse v-model="group" class="m-nav-group" @click.stop>
             <el-collapse-item title="独立创作" name="cms">
-                <template slot="title">
+                <template #title>
                     <span class="u-title">独立创作</span>
                 </template>
-                <router-link :to="item.path" v-for="(item, key) in cms" :key="key" @click.native="closeSidebar">
+                <router-link :to="item.path" v-for="(item, key) in cms" :key="key" @click="closeSidebar">
                     <i class="el-icon-collection"></i>
                     <span>{{ item.name }}</span>
                     <span class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
                 </router-link>
                 <template v-if="isAdmin">
-                    <router-link :to="item.path" v-for="(item, key) in ads" :key="key" @click.native="closeSidebar">
+                    <router-link :to="item.path" v-for="(item, key) in ads" :key="key" @click="closeSidebar">
                         <i class="el-icon-collection"></i>
                         <span>{{ item.name }}</span>
                         <span class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
@@ -28,7 +28,7 @@
                 </template>
             </el-collapse-item>
             <el-collapse-item title="联合创作" name="union">
-                <template slot="title">
+                <template #title>
                     <span class="u-title">联合创作</span>
                 </template>
                 <router-link to="/union/active">
@@ -43,30 +43,30 @@
                 </router-link>
             </el-collapse-item>
             <el-collapse-item title="多人创作" name="wiki">
-                <template slot="title">
+                <template #title>
                     <span class="u-title">多人百科</span>
                 </template>
-                <router-link :to="item.path" v-for="(item, key) in wiki" :key="key" @click.native="closeSidebar">
+                <router-link :to="item.path" v-for="(item, key) in wiki" :key="key" @click="closeSidebar">
                     <i class="el-icon-collection"></i>
                     <span>{{ item.name }}</span>
                     <span class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
                 </router-link>
             </el-collapse-item>
             <el-collapse-item title="其它创作" name="app">
-                <template slot="title">
+                <template #title>
                     <span class="u-title">其它创作</span>
                 </template>
-                <router-link :to="item.path" v-for="(item, key) in app" :key="key" @click.native="closeSidebar">
+                <router-link :to="item.path" v-for="(item, key) in app" :key="key" @click="closeSidebar">
                     <i class="el-icon-collection"></i>
                     <span>{{ item.name }}</span>
                     <span class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
                 </router-link>
             </el-collapse-item>
             <el-collapse-item title="评论留言" name="comment">
-                <template slot="title">
+                <template #title>
                     <span class="u-title">评论留言</span>
                 </template>
-                <router-link :to="item.path" v-for="(item, key) in comment" :key="key" @click.native="closeSidebar">
+                <router-link :to="item.path" v-for="(item, key) in comment" :key="key" @click="closeSidebar">
                     <i class="el-icon-collection"></i>
                     <span>{{ item.name }}</span>
                     <span class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
@@ -78,9 +78,8 @@
 
 <script>
 import { getMyPostsCount } from "@/service/publish/cms.js";
-import { get_my_post_total } from "@/service/publish/post.js";
 import { getNextStat } from "@/service/publish/next.js";
-import Bus from "@jx3box/jx3box-common-ui/service/bus";
+import Bus from "@jx3box/jx3box-ui/utils/bus.js";
 import User from "@jx3box/jx3box-common/js/user";
 export default {
     name: "Nav",
@@ -161,14 +160,14 @@ export default {
                     name: "通用评论",
                     count: 0,
                 },
-                wiki_comment: {
-                    path: "/comment/wiki",
-                    name: "百科评论",
-                    count: 0,
-                },
                 my_comment: {
                     path: "/comment/community",
                     name: "帖子评论",
+                    count: 0,
+                },
+                wiki_comment: {
+                    path: "/comment/wiki",
+                    name: "百科评论",
                     count: 0,
                 },
                 // feedback: {
@@ -184,7 +183,7 @@ export default {
     methods: {
         closeSidebar: function () {
             if (window.innerWidth < 1280) {
-                Bus.$emit("toggleLeftSide", false);
+                Bus.emit("toggleLeftSide", false);
             }
         },
         loadMyCount: function () {
@@ -209,31 +208,6 @@ export default {
                 }
             });
         },
-        loadHelperCount() {
-            get_my_post_total().then((res) => {
-                res = res.data;
-                if (res.code === 200) {
-                    let count = res.data;
-
-                    for (let key in this.wiki) {
-                        let tmp = count[`${key}_post`];
-                        if (tmp) this.wiki[key]["count"] = tmp;
-                    }
-
-                    for (let key in this.app) {
-                        let tmp = count[key];
-                        if (tmp) this.app[key]["count"] = tmp;
-                    }
-
-                    for (let key in this.comment) {
-                        let k = key;
-                        if (k === "comment_wiki") k = "wiki_comment";
-                        let tmp = count[k];
-                        if (tmp) this.comment[key]["count"] = tmp;
-                    }
-                }
-            });
-        },
         loadNextCount() {
             getNextStat().then((res) => {
                 let { comment, question, paper, face, pvxbody, community_topic, community_topic_reply } = res.data.data;
@@ -248,7 +222,6 @@ export default {
         },
         init: function () {
             this.loadMyCount();
-            // this.loadHelperCount();
             this.loadNextCount();
         },
     },

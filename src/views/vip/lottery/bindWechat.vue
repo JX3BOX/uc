@@ -16,9 +16,9 @@
 
 <script>
 import { getWechatQrcode, getMyInfo } from "@/service/vip/lottery";
-const { SSE } = require("@jx3box/jx3box-common/js/https");
+const { SSE } = require("@jx3box/jx3box-common/js/api");
 import User from "@jx3box/jx3box-common/js/user";
-import { __cms } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cms } from "@/utils/config";
 const base = `https://mp.weixin.qq.com/cgi-bin/showqrcode`;
 export default {
     name: "wechat",
@@ -118,7 +118,7 @@ export default {
         justify-content: center;
         .size(180px);
         .el-image__inner {
-            .full;
+            .size(100%);
         }
     }
     .u-tips {

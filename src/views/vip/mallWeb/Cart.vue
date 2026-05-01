@@ -33,6 +33,7 @@
                                 v-model="item.amount"
                                 :max="item.goods.stock"
                                 @change="itemChange(item, $event)"
+                                :min="1"
                             ></el-input-number>
                             <span v-if="item.goods.price_points" style="color: rgba(116, 120, 237, 1)">
                                 <img src="@/assets/img/vip/vip2/points.svg" alt="" class="icon" svg-inline />
@@ -63,7 +64,7 @@
             >
                 {{ name }}&emsp;{{ time }}
             </div>
-            <img :src="`${imgurl}条形码.svg`" alt="" class="icon" svg-inline />
+            <img :src="`${imgUrl}bar-code.svg`" alt="" class="icon" svg-inline />
         </div>
         <div class="dashed"></div>
         <div class="total-price">
@@ -94,19 +95,25 @@
                     <div class="left">{{ $store.getters["mallNew/all_price_points"] }}</div>
                 </div>
             </div>
-            <div class="total-btn" @click="$router.push({ name: 'mall_batch_order_web' })">结算</div>
+            <div class="total-btn" @click="$refs.cartConfirm.isShow = true">结算</div>
         </div>
+        <CartConfirm ref="cartConfirm"></CartConfirm>
     </div>
 </template>
 
 <script>
 import { debounce } from "lodash";
+import { __cdn } from "@/utils/config";
 import moment from "moment";
+import CartConfirm from "./components/CartConfirm.vue";
 export default {
     name: "Cart",
+    components: {
+        CartConfirm,
+    },
     data() {
         return {
-            imgurl: "https://cdn.jx3box.com/design/mall/",
+            imgUrl: __cdn + "design/mall/",
             list: [],
             name: localStorage.getItem("name"),
             time: moment().format("YYYY/MM/DD HH:mm"),
@@ -292,7 +299,7 @@ export default {
                         display: flex;
                         gap: 2.1333vw;
                         align-items: center;
-                        /deep/ .el-input-number {
+                        :deep(.el-input-number) {
                             width: 18.6667vw;
                             height: 3.7333vw;
                             .el-input-number__decrease,
@@ -398,6 +405,9 @@ export default {
             font-size: 4.8vw;
             font-weight: 700;
             color: rgba(255, 255, 255, 1);
+            &:hover {
+                box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+            }
         }
     }
 }

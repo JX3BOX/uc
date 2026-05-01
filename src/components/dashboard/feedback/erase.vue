@@ -8,24 +8,28 @@
     <div class="m-feedback-erase" v-loading="loading">
         <div class="m-feedback-article">
             <h1 class="u-title">账号注销</h1>
-            <div v-html="sanitizedHTML(article)"></div>
+            <common-article :content="article"></common-article>
         </div>
         <div class="u-tips">
             <div class="u-checkbox"><el-checkbox v-model="agree">我已知晓并同意上述规则</el-checkbox></div>
             <div class="u-confirm">
-                <el-button size="small" type="danger" :disabled="!agree" @click="handleConfirm">确认注销</el-button>
+                <el-button type="danger" :disabled="!agree" @click="handleConfirm">确认注销</el-button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import DOMPurify from 'dompurify';
+import DOMPurify from "dompurify";
 import User from "@jx3box/jx3box-common/js/user";
-import { getArticle } from "@jx3box/jx3box-common/js/api_misc";
+import { getArticle } from "@jx3box/jx3box-common/js/system";
 import { leave } from "@/service/dashboard/feedback";
+import CommonArticle from "@jx3box/jx3box-editor/src/Article.vue";
 export default {
     name: "FeedbackErase",
+    components: {
+        CommonArticle,
+    },
     data() {
         return {
             agree: false,
@@ -68,7 +72,7 @@ export default {
                                 message: res.data.msg || "注销失败",
                             });
                         });
-                });
+                }).catch(() => {})
             });
         },
         loadAlertInfo() {
@@ -81,9 +85,9 @@ export default {
                     this.loading = false;
                 });
         },
-        sanitizedHTML(html){
+        sanitizedHTML(html) {
             return DOMPurify.sanitize(html);
-        }
+        },
     },
 };
 </script>
@@ -91,6 +95,7 @@ export default {
 <style lang="less" scoped>
 .m-feedback-erase {
     padding-bottom: 20px;
+    
     .m-feedback-article {
         padding: 20px;
         font-size: 14px;
@@ -99,6 +104,9 @@ export default {
     }
     .u-title {
         .x;
+        font-size: 28px;
+        font-weight: bold;
+        color:@color;
     }
 
     .u-tips {

@@ -4,11 +4,12 @@
         <div class="m-publish-pz-header">
             <el-button
                 class="u-add u-btn"
-                icon="el-icon-circle-plus-outline"
+                icon="CirclePlus"
                 type="primary"
                 @click="addItem"
                 :disabled="list.length >= limit"
-            >添加配装</el-button>
+                >添加配装</el-button
+            >
             <slot name="prepend" class="m-publish-pz-prepend"></slot>
         </div>
         <div class="m-publish-pz-list">
@@ -16,70 +17,66 @@
                 class="u-list"
                 :list="list"
                 draggable=".u-item"
+                item-key="id"
                 v-bind="{ animation: 150, scrollSensitivity: 200 }"
             >
-                <div class="u-item" v-for="(item,i) in list" :key="i">
-                    <span class="u-item-order">{{ i + 1}}.</span>
-                    <i class="u-item-drag el-icon-rank"></i>
-                    <div class="u-item-select">
-                        <el-select
-                            v-model="item.id"
-                            placeholder="请选择配装方案"
-                            clearable
-                            filterable
-                            remote
-                            :loading="search_loading"
-                            @visible-change="listOptions"
-                            :remote-method="searchOptions"
-                            size="small"
-                        >
-                            <el-option
-                                v-for="option in computedOptions"
-                                :key="option.id"
-                                :label="option.title"
-                                :value="option.id"
-                                class="m-publish-pz-select-option"
+                <template #item="{ element, index }">
+                    <div class="u-item">
+                        <span class="u-item-order">{{ index + 1 }}.</span>
+                        <i class="u-item-drag el-icon-rank"></i>
+                        <div class="u-item-select">
+                            <el-select
+                                v-model="element.id"
+                                placeholder="请选择配装方案"
+                                clearable
+                                filterable
+                                remote
+                                :loading="search_loading"
+                                @visible-change="listOptions"
+                                :remote-method="searchOptions"
+                                size="large"
                             >
-                                <i
-                                    class="u-client i-client"
-                                    :class="option.client || 'std'"
-                                >{{option.client == 'origin' ? '缘起' : '剑三'}}</i>
-                                <i
-                                    class="u-level i-client"
-                                    :class="option.client || 'std'"
-                                >Lv.{{ option.global_level || '-' }}</i>
-                                <span>{{ option.title }}</span>
-                            </el-option>
-                        </el-select>
+                                <el-option
+                                    v-for="option in computedOptions"
+                                    :key="option.id"
+                                    :label="option.title"
+                                    :value="option.id"
+                                    class="m-publish-pz-select-option"
+                                >
+                                    <i class="u-client i-client" :class="option.client || 'std'">{{
+                                        option.client == "origin" ? "缘起" : "剑三"
+                                    }}</i>
+                                    <i class="u-level i-client" :class="option.client || 'std'"
+                                        >Lv.{{ option.global_level || "-" }}</i
+                                    >
+                                    <span>{{ option.title }}</span>
+                                </el-option>
+                            </el-select>
+                        </div>
+                        <div class="u-item-name">
+                            <el-input
+                                v-model="element.name"
+                                placeholder="请输入配装简称"
+                                clearable
+                                :maxlength="12"
+                                :minlength="1"
+                                :show-word-limit="true"
+                                size="large"
+                            ></el-input>
+                        </div>
+                        <div class="u-item-op">
+                            <a
+                                class="preview el-button delete el-button--text"
+                                :href="getLink(element.id)"
+                                v-if="element.id"
+                                target="_blank"
+                            >
+                                <i class="el-icon-view"></i>预览
+                            </a>
+                            <el-button class="delete" link icon="Delete" @click="removeItem(index)">删除</el-button>
+                        </div>
                     </div>
-                    <div class="u-item-name">
-                        <el-input
-                            v-model="item.name"
-                            placeholder="请输入配装简称"
-                            clearable
-                            :maxlength="12"
-                            :minlength="1"
-                            :show-word-limit="true"
-                            size="small"
-                        ></el-input>
-                    </div>
-                    <div class="u-item-op">
-                        <a
-                            class="preview el-button delete el-button--text"
-                            :href="item.id | getLink"
-                            v-if="item.id"
-                            target="_blank"
-                        >
-                            <i class="el-icon-view"></i>预览
-                        </a>
-                        <el-button
-                            class="delete"
-                            type="text"
-                            icon="el-icon-delete"
-                            @click="removeItem(i)"
-                        >删除</el-button>
-                    </div>
-                </div>
+                </template>
             </draggable>
         </div>
         <slot name="append" class="m-publish-pz-append"></slot>
@@ -91,10 +88,14 @@
 import draggable from "vuedraggable";
 import { getMyPzList } from "@/service/publish/app.js";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
-import {cloneDeep, unionBy} from "lodash";
+import { cloneDeep, unionBy } from "lodash";
 export default {
     name: "PublishPz",
     props: {
+        modelValue: {
+            type: Array,
+            default: undefined,
+        },
         data: {
             type: Array,
             default: function () {
@@ -124,29 +125,43 @@ export default {
             options: [],
             search_loading: false,
 
-            selectedOptions: []
+            selectedOptions: [],
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update", "update:modelValue"],
     watch: {
+        modelValue: {
+            immediate: true,
+            deep: true,
+            handler: function (newval) {
+                if (newval !== undefined) {
+                    if (!newval || !newval.length) {
+                        this.list = [{ id: "", name: "" }];
+                    } else {
+                        this.list = newval;
+                    }
+                    this.getSelectedOptions();
+                }
+            },
+        },
         data: {
             immediate: true,
             deep: true,
             handler: function (newval) {
-                if (!newval || !newval.length) {
-                    this.list = [{ id: "", name: "" }];
-                } else {
-                    this.list = newval;
+                if (this.modelValue === undefined) {
+                    if (!newval || !newval.length) {
+                        this.list = [{ id: "", name: "" }];
+                    } else {
+                        this.list = newval;
+                    }
+                    this.getSelectedOptions();
                 }
-                this.getSelectedOptions();
             },
         },
         list: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },
@@ -158,7 +173,9 @@ export default {
             return _params;
         },
         computedOptions: function () {
-            return this.selectedOptions?.length ? unionBy([...this.options, ...this.selectedOptions], 'id') : [...this.options];
+            return this.selectedOptions?.length
+                ? unionBy([...this.options, ...this.selectedOptions], "id")
+                : [...this.options];
         },
     },
     methods: {
@@ -194,8 +211,6 @@ export default {
         removeItem: function (i) {
             this.list.splice(i, 1);
         },
-    },
-    filters: {
         getLink: function (val) {
             return getLink("pz", val);
         },
@@ -208,7 +223,7 @@ export default {
     .mt(10px);
     .u-item {
         display: flex;
-        line-height: 40px;
+        // line-height: 40px;
     }
     .u-item-order {
         .fz(12px);
@@ -247,6 +262,8 @@ export default {
         .ml(10px);
     }
     .u-item-op {
+    .flex;
+    align-items: center;
         .ml(20px);
         .preview {
             .mr(10px);

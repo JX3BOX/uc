@@ -24,19 +24,22 @@
                     >
                         立即绑定
                     </el-button>
-                    <el-button v-else @click="unbind(types[type].uuid)" size="large" type="danger">
-                        <span class="u-status">
-                            解除绑定
-                        </span>
+                    <el-button v-else @click="unbind(types[type].uuid)" size="large" type="info">解除绑定
                     </el-button>
                 </div>
                 <qqbot :data="data" @refresh="loadAuth"></qqbot>
             </div>
         </div>
 
-        <el-dialog :visible.sync="showMiniProgram" title="绑定微信小程序" :width="isPhone ? '95%' : '400px'" custom-class="m-qrcode-dialog" :show-close="false">
+        <el-dialog
+            v-model="showMiniProgram"
+            title="绑定微信小程序"
+            :width="isPhone ? '95%' : '400px'"
+            class="m-qrcode-dialog"
+            :show-close="false"
+        >
             <div class="m-qr-content">
-                <img class="u-login-qrcode" src="@/assets/img/dashboard/connect/loginqrcode.jpg" alt="">
+                <img class="u-login-qrcode" src="@/assets/img/dashboard/connect/loginqrcode.jpg" alt="" />
                 <i class="u-tip">打开微信扫一扫，绑定小程序</i>
                 <small class="u-tip-small">绑定之后需要重新登陆方可生效</small>
             </div>
@@ -50,13 +53,13 @@
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { __imgPath, __cdn, __cms } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath, __cdn, __cms } from "@/utils/config";
 import { unbindOAuth, checkOAuth } from "@/service/dashboard/profile";
 const client = location.href.includes("origin") ? "origin" : "std";
 import { unbindApp } from "@/service/dashboard/union";
 import qqbot from "./qqbot.vue";
 
-const BASE_URL = __cms
+const BASE_URL = __cms;
 
 const types = {
     // github: {
@@ -75,19 +78,19 @@ const types = {
         icon: "weibo",
         name: "微博",
         uuid: "weibosite",
-        idKey: "weibo_id"
+        idKey: "weibo_id",
     },
     wechat: {
         icon: "wechat",
         name: "微信",
         uuid: "wesite",
-        idKey: "wechat_openid"
+        idKey: "wechat_openid",
     },
     wechat_miniprogram: {
         icon: "app",
         name: "微信小程序",
         uuid: "wechat_miniprogram",
-        idKey: "wechat_miniprogram_openid"
+        idKey: "wechat_miniprogram_openid",
     },
 };
 
@@ -135,7 +138,7 @@ export default {
                 this.showMiniProgram = true;
                 return;
             }
-            location.href = this.getAuthUrl(type)
+            location.href = this.getAuthUrl(type);
         },
         unbind: function (type) {
             if (!this.data.user_email) {
@@ -168,15 +171,17 @@ export default {
                 .catch(() => {});
         },
         icon: function (type) {
-            return __cdn + "design/user/" + types[type]['icon'] + ".png";
+            return __cdn + "design/user/" + types[type]["icon"] + ".png";
         },
         loadAuth() {
             this.loading = true;
-            checkOAuth().then((res) => {
-                this.data = res.data.data;
-            }).finally(() => {
-                this.loading = false;
-            });
+            checkOAuth()
+                .then((res) => {
+                    this.data = res.data.data;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         ihadBind() {
             this.showMiniProgram = false;
@@ -206,7 +211,7 @@ export default {
                     });
                 })
                 .catch(() => {});
-        }
+        },
     },
     mounted: function () {
         this.loadAuth();

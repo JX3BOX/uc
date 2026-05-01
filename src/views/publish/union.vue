@@ -5,7 +5,7 @@
                 联合创作
                 <span class="u-subtype">
                     <i class="el-icon-arrow-right"></i>
-                    <span>{{subtype}}</span>
+                    <span>{{ subtype }}</span>
                 </span>
             </h2>
         </div>
@@ -14,62 +14,63 @@
             <ul class="m-dashboard-box-list" v-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
                     <template v-if="item.union_post_raw">
-                        <i class="u-icon">
-                            <img
-                                v-if="item.union_post_raw.post_status == 'publish'"
-                                svg-inline
-                                src="@/assets/img/publish/works/repo.svg"
-                            />
-                            <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" />
-                        </i>
                         <a
                             class="u-title"
                             target="_blank"
                             :href="postLink(item.union_post_raw.post_type, item.union_post_raw.ID)"
-                        >{{ item.union_post_raw.post_title || "无标题" }}</a>
+                        >
+                            <i class="u-icon">
+                                <img
+                                    v-if="item.union_post_raw.visible == 0"
+                                    svg-inline
+                                    src="@/assets/img/publish/works/repo.svg"
+                                />
+                                <el-tooltip v-else :content="visibleFormat(item.union_post_raw.visible)" placement="top">
+                                <img
+                                    src="@/assets/img/publish/works/draft.svg"
+                                    :title="statusFormat(item.union_post_raw.post_status)"
+                                />
+                            </el-tooltip>
+                            </i>
+                            {{ item.union_post_raw.post_title || "无标题" }}
+                        </a>
                         <div class="u-desc">
-                            <span class="u-desc-subitem">
+                            <!-- <span class="u-desc-subitem">
                                 <i class="el-icon-view"></i>
-                                {{ item.union_post_raw.visible | visibleFormat }}
-                            </span>
+                                {{ visibleFormat(item.union_post_raw.visible) }}
+                            </span> -->
                             <time class="u-desc-subitem">
                                 <i class="el-icon-finished"></i>
                                 发布 :
-                                {{ item.union_post_raw.post_date | dateFormat }}
+                                {{ dateFormat(item.union_post_raw.post_date) }}
                             </time>
                             <time class="u-desc-subitem">
                                 <i class="el-icon-refresh"></i>
                                 更新 :
-                                {{ item.union_post_raw.post_modified | dateFormat }}
+                                {{ dateFormat(item.union_post_raw.post_modified) }}
                             </time>
                         </div>
 
                         <el-button-group class="u-action">
                             <el-button
-                                size="mini"
-                                icon="el-icon-edit"
+                                icon="Edit"
                                 title="编辑"
                                 @click="edit(item.union_post_raw.post_type, item.union_post_raw.ID)"
                             ></el-button>
                             <el-button
                                 v-if="isActive"
-                                size="mini"
-                                icon="el-icon-delete"
+                                icon="Delete"
                                 title="删除"
-                                @click="del(item.union_post_raw.ID,i)"
+                                @click="del(item.union_post_raw.ID, i)"
                             ></el-button>
                             <el-popconfirm
                                 v-else
                                 title="确认退出该作品的联合创作者身份吗？"
-                                @confirm="quit(item.union_post_raw.ID,i)"
+                                @confirm="quit(item.union_post_raw.ID, i)"
                             >
-                                <el-button
-                                    slot="reference"
-                                    class="u-quit"
-                                    size="mini"
-                                    icon="el-icon-download"
-                                    title="退出联合身份"
-                                ></el-button>
+                                <template #reference>
+                                    <el-button class="u-quit" icon="Download" title="退出联合身份"></el-button>
+                                </template>
                             </el-popconfirm>
                         </el-button-group>
                     </template>
@@ -88,7 +89,7 @@
                 background
                 :page-size="per"
                 :hide-on-single-page="true"
-                :current-page.sync="page"
+                v-model:current-page="page"
                 layout="total, prev, pager, next, jumper"
                 :total="total"
             ></el-pagination>
@@ -100,10 +101,7 @@
 import { del } from "@/service/publish/cms.js";
 import { getUnionPosts, quitUnionPost } from "@/service/publish/union.js";
 import { editLink, getLink } from "@jx3box/jx3box-common/js/utils.js";
-import {
-    __postType,
-    __visibleMap,
-} from "@jx3box/jx3box-common/data/jx3box.json";
+import { __postType, __visibleMap } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 export default {
     name: "work",
@@ -122,7 +120,7 @@ export default {
             return {
                 page: this.page,
                 per: this.per,
-                is_active : ~~this.isActive,
+                is_active: ~~this.isActive,
             };
         },
         subtype: function () {
@@ -186,8 +184,6 @@ export default {
                 },
             });
         },
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(val));
         },
@@ -209,10 +205,13 @@ export default {
     .u-subtype {
         .fz(12px);
         color: #999;
-        .ml(10px);
+        // .ml(10px);
         font-weight: normal;
         span {
             color: #fba524;
+        }
+        i {
+            padding-right: 10px;
         }
     }
 }

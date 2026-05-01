@@ -1,4 +1,4 @@
-import { $cms, $next } from "@jx3box/jx3box-common/js/https";
+import { $cms, $next } from "@jx3box/jx3box-common/js/api";
 
 // 表情栏目接口
 function postEmotions(data) {
@@ -45,4 +45,16 @@ function deleteJoke(id) {
     return $cms().delete(`/api/cms/post/joke/${id}`);
 }
 
-export { postEmotions, getEmotion, updateEmotion, getMyEmotions, deleteEmotion, uploadEmotion, postJoke, updateJoke, getJoke, getMyJokes, deleteJoke };
+export {
+    postEmotions,
+    getEmotion,
+    updateEmotion,
+    getMyEmotions,
+    deleteEmotion,
+    uploadEmotion,
+    postJoke,
+    updateJoke,
+    getJoke,
+    getMyJokes,
+    deleteJoke,
+};

@@ -1,4 +1,4 @@
-import { $pay } from "@jx3box/jx3box-common/js/https";
+import { $pay } from "@jx3box/jx3box-common/js/api";
 
 function getMyPacket() {
     return $pay().get("/api/vip/i");

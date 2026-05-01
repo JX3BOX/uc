@@ -1,12 +1,8 @@
 <template>
     <div class="m-mall-box">
         <MallNav :list="list" @changeNav="isShowNav = !isShowNav" :isShowNav="isShowNav"></MallNav>
-        <GoodDetail
-            v-if="selectItem || paramsItem"
-            :good="selectItem || paramsItem"
-            :isShowNav="isShowNav"
-        ></GoodDetail>
-        <div class="right">
+        <GoodDetail v-if="selectItem" :good="selectItem || {}" :isShowNav="isShowNav"></GoodDetail>
+        <div class="box-right">
             <div class="cart">
                 <div class="cart-container">
                     <div class="cart-content">
@@ -15,13 +11,13 @@
                                 >放入购物车</span
                             >一并结算！
                         </div>
-                        <div class="cart-btn" @click="$store.dispatch('mallNew/changeCartIsShow', true)">
+                        <div class="cart-btn">
                             <div class="text">
                                 <div>当前购物车</div>
                                 <div>合计：{{ $store.getters["mallNew/checked_num"] }}件</div>
                             </div>
-                            <div class="btn" id="cartBtn">
-                                <img :src="imgurl + '购物车.svg'" alt="" class="cart-icon" />
+                            <div class="btn" id="cartBtn" @click="$store.dispatch('mallNew/changeCartIsShow', true)">
+                                <img :src="imgUrl + 'cart.svg'" alt="" class="cart-icon" />
                                 查看购物车
                             </div>
                         </div>
@@ -53,30 +49,33 @@
                                 <div class="left">{{ $store.getters["mallNew/all_price_points"] }}</div>
                             </div>
                         </div>
-                        <div class="total-btn" @click="$router.push({ name: 'mall_batch_order_new' })">结算</div>
+                        <div class="total-btn" @click="$store.dispatch('mallNew/changeCartIsShow', true)">结算</div>
                     </div>
                     <div class="arrow"></div>
                 </div>
             </div>
             <Cart></Cart>
-            <img :src="imgurl + '商城盒子娘.png'" alt="" class="girl" />
+            <img :src="imgUrl + 'girl.png'" alt="" class="girl" />
         </div>
+        <CartConfirm></CartConfirm>
     </div>
 </template>
 <script>
 import { getItemList, getItem } from "@/service/vip/mall";
-import { __userLevel } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userLevel } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import MallNav from "@/views/vip/mallNew/components/MallNav.vue";
 import GoodDetail from "@/views/vip/mallNew/components/GoodDetail.vue";
 import Cart from "@/views/vip/mallNew/components/Cart.vue";
 import { debounce } from "lodash";
 import { getDecoration } from "@/service/vip/decoration";
+import CartConfirm from "@/views/vip/mallNew/components/CartConfirm.vue";
+import { __cdn } from "@/utils/config";
 export default {
     name: "MallList",
     data: function () {
         return {
-            imgurl: "https://cdn.jx3box.com/design/mall/",
+            imgUrl: __cdn + "design/mall/",
             goodsList: [],
             selectItem: null,
 
@@ -94,7 +93,20 @@ export default {
             myVirtualItems: [],
         };
     },
+    watch: {
+        id: {
+            immediate: true,
+            handler(val) {
+                if (val) {
+                    this.getData({ id: val });
+                }
+            },
+        },
+    },
     computed: {
+        id() {
+            return this.$route.params.id;
+        },
         asset() {
             return this.$store.state.mallNew.asset;
         },
@@ -106,12 +118,6 @@ export default {
                     isHave: this.isHaveGood(item),
                 };
             });
-        },
-        paramsItem() {
-            if (this.$route.params.id) {
-                return this.list.find((item) => item.id == this.$route.params.id);
-            }
-            return null;
         },
     },
     provide() {
@@ -137,7 +143,7 @@ export default {
         });
         this.loadData();
     },
-    beforeDestroy() {
+    beforeUnmount() {
         window.removeEventListener("resize", this.handleResize);
         window.removeEventListener("resize", this.getBoundCart);
     },
@@ -208,6 +214,7 @@ export default {
                 user_level: User.getLevel(item.exp_limit),
                 buy_time: true,
             };
+            const time = new Date().getTime();
             if (item.vip_limit === 1 && !User._isPRO(this.asset)) {
                 obj.canBuy = false;
                 obj.vip_limit = false;
@@ -224,7 +231,7 @@ export default {
                 obj.canBuy = false;
                 obj.level = false;
             }
-            if (item.on_selling === 0) {
+            if (time < new Date(item.start_sell_time).getTime() || time > new Date(item.end_sell_time).getTime()) {
                 obj.canBuy = false;
                 obj.buy_time = false;
             }
@@ -235,11 +242,12 @@ export default {
                 res.data.data.canBuy = this.checkCanBuy(res.data.data);
                 res.data.data.isHave = this.isHaveGood(res.data.data);
                 this.selectItem = res.data.data || {};
+                console.log(this.selectItem);
             });
         },
         changeSelectItem(item) {
             if (item.id === this.selectItem?.id) return;
-            this.getData(item);
+            this.$router.push({ name: "mall_list_new_id", params: { id: item.id } });
         },
         handleResize() {
             const width = window.innerWidth < 1550 ? 5 : 10;
@@ -257,6 +265,7 @@ export default {
         MallNav,
         GoodDetail,
         Cart,
+        CartConfirm,
     },
 };
 </script>
@@ -264,27 +273,24 @@ export default {
 <style lang="less">
 .m-mall-box {
     width: 100%;
-    min-height: calc(100vh - 100px);
-    background: url("https://cdn.jx3box.com/design/mall/商城底图.png") no-repeat center center;
+    min-height: calc(100vh - 96px);
+    background: url("@{design}mall/bg.png") no-repeat center center;
     background-size: 100% 100%;
     display: flex;
     flex-wrap: nowrap;
     overflow-x: scroll;
     scrollbar-width: none;
-    .right {
+    .box-right {
         width: 292px;
+        position: fixed;
+        right: 0;
+        bottom: 0;
         .girl {
-            position: fixed;
-            bottom: 0;
-            right: 12px;
             width: 220px;
             height: 265px;
         }
         .cart {
             .cart-container {
-                position: fixed;
-                right: 12px;
-                bottom: 279px;
                 .cart-content {
                     width: 280px;
                     height: 267px;
@@ -311,7 +317,6 @@ export default {
                         }
                     }
                     .cart-btn {
-                        cursor: pointer;
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
@@ -319,6 +324,7 @@ export default {
                             font-size: 12px;
                         }
                         .btn {
+                            cursor: pointer;
                             width: 115px;
                             height: 28px;
                             border-radius: 8px;
@@ -361,16 +367,18 @@ export default {
                         }
                     }
                     .total-btn {
-                        width: 161px;
-                        height: 50px;
-                        border-radius: 50px;
+                        .size(160px,50px);
+                        .pointer;
+                        .fz(18px,50px);
+                        .r(25px);
+                        .bold;
+                        .x;
                         background: rgba(255, 163, 43, 1);
                         align-self: center;
-                        text-align: center;
-                        line-height: 50px;
-                        font-size: 18px;
-                        font-weight: 700;
                         color: rgba(255, 255, 255, 1);
+                        &:hover {
+                            box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
+                        }
                     }
                 }
                 .arrow {

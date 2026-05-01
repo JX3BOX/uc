@@ -1,9 +1,12 @@
 <template>
-    <uc icon="el-icon-shopping-bag-1" title="订单中心" :tabList="tabList">
+    <uc class="m-order-detail" icon="el-icon-shopping-bag-1" title="订单中心" :tabList="tabList">
+        <template #header>
+             <el-button @click="goBack" class="u-back"><i class="el-icon-arrow-left"></i> 返回</el-button>
+        </template>
         <div class="m-mall-detail">
-            <div class="m-breadcrumb">
+            <!-- <div class="m-breadcrumb">
                 <span @click="goBack" class="u-back"><i class="el-icon-arrow-left"></i> 返回</span>
-            </div>
+            </div> -->
 
             <div class="m-content" v-if="goods">
                 <div class="m-address el-card" v-if="!goods.is_virtual">
@@ -59,17 +62,19 @@
                                         >追加评价：{{ rate.add_comment }}</span
                                     >
                                     <el-input v-if="append" class="u-textarea" v-model="content">
-                                        <template slot="append">
+                                        <template #append>
                                             <span style="cursor: pointer" @click="appendComment">确定</span>
                                         </template>
                                     </el-input>
                                 </div>
                                 <div class="u-button">
-                                    <el-button @click="append = !append" type="text" v-if="order.order_status == 5">
+                                    <el-button @click="append = !append" link v-if="order.order_status == 5">
                                         追加评论
                                     </el-button>
                                     <el-popconfirm title="确认删除评价吗？" :width="200" @confirm="delComment(rate.id)">
-                                        <el-button slot="reference" type="text">删除</el-button>
+                                        <template #reference>
+                                            <el-button link>删除</el-button>
+                                        </template>
                                     </el-popconfirm>
                                 </div>
                             </div>
@@ -93,10 +98,10 @@
             <!-- 弹窗 -->
             <el-dialog
                 :title="title"
-                :visible.sync="dialogVisible"
+                v-model="dialogVisible"
                 width="30%"
                 :before-close="close"
-                custom-class="m-edit-dialog"
+                class="m-edit-dialog"
             >
                 <template v-if="mode == 'address'">
                     <el-form ref="address_form" :model="address_form" :rules="address_rules" class="demo-form-inline">
@@ -147,12 +152,14 @@ import {
     toConfirm,
     appendGoodsRate,
     delGoodsRate,
-    getOrderId
+    getOrderId,
 } from "@/service/dashboard/goods";
-import { orderStatus, payStatus } from "@/assets/data/dashboard/mall.json";
+import mallData from "@/assets/data/dashboard/mall.json";
+const { orderStatus, payStatus } = mallData;
 import uc from "@/components/dashboard/uc";
-import { mallTab } from "@/assets/data/dashboard/tabs.json";
-import { append } from "domutils/lib/manipulation";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { mallTab } = tabsData;
+import { append } from "domutils";
 export default {
     name: "orderDetail",
     components: { uc },

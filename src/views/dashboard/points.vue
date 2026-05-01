@@ -4,60 +4,111 @@
         <div class="m-balance">
             <span class="u-label">余额 : </span>
             <b :class="money > 0 ? 'u-have' : ''" class="u-num">{{ money }}</b>
-            <a class="el-button u-btn el-button--primary el-button--mini" href="/vip/mall" target="_blank">兑换</a>
+            <a class="el-button u-btn el-button--primary el-button--small" href="/vip/mall" target="_blank">兑换</a>
         </div>
-        <el-tabs class="m-tabs" type="border-card" v-model="tab_value" @tab-click="changeTab">
+        <el-tabs class="m-tabs" type="border-card" v-model="tab_value" @tab-change="changeTab" >
             <!-- 积分记录 -->
-            <el-tab-pane label="积分记录" name="point">
-                <el-table class="m-table" :data="list" show-header cell-class-name="u-table-cell" header-cell-class-name="u-header-cell">
+            <el-tab-pane label="积分记录" name="point" lazy>
+                <el-table
+                    class="m-table"
+                    :data="list"
+                    show-header
+                    cell-class-name="u-table-cell"
+                    header-cell-class-name="u-header-cell"
+                    size="large"
+                >
                     <el-table-column label="类型">
-                        <template slot-scope="scope">{{ formatType(scope.row.action_type) }}</template>
+                        <template #default="scope">{{ formatType(scope.row.action_type) }}</template>
                     </el-table-column>
                     <el-table-column label="数量">
-                        <div class="u-count" :class="{ isNegative: Number(scope.row.count) < 0 }" slot-scope="scope">
-                            <span>{{ Number(scope.row.count) > 0 ? "+" : "" }}</span> <b>{{ scope.row.count }}</b>
-                        </div>
+                        <template #default="scope">
+                            <div class="u-count" :class="{ isNegative: Number(scope.row.count) < 0 }">
+                                <span>{{ Number(scope.row.count) > 0 ? "+" : "" }}</span> <b>{{ scope.row.count }}</b>
+                            </div>
+                        </template>
                     </el-table-column>
                     <el-table-column prop="count" label="源于作品">
-                        <a class="u-link" :href="getPostLink(scope.row)" target="_blank" v-if="getPostLink(scope.row)" slot-scope="scope"><i class="el-icon-link"></i> 点击查看 </a>
-                        <span v-else> - </span>
+                        <template #default="scope">
+                            <a
+                                class="u-link"
+                                :href="getPostLink(scope.row)"
+                                target="_blank"
+                                v-if="getPostLink(scope.row)"
+                                ><i class="el-icon-link"></i> 点击查看
+                            </a>
+                            <span v-else> - </span>
+                        </template>
                     </el-table-column>
                     <el-table-column label="备注">
-                        <template slot-scope="scope">{{ formatRemark(scope.row.remark) }}</template>
+                        <template #default="scope">{{ formatRemark(scope.row.remark) }}</template>
                     </el-table-column>
                     <el-table-column label="时间">
-                        <template slot-scope="scope">
+                        <template #default="scope">
                             <span>{{ showTime(scope.row.created_at) }}</span>
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination class="m-packet-pages" background :page-size="per" :hide-on-single-page="true" :current-page.sync="page" layout="total, prev, pager, next, jumper" :total="total"></el-pagination>
+                <el-pagination
+                    class="m-packet-pages"
+                    background
+                    :page-size="per"
+                    :hide-on-single-page="true"
+                    v-model:current-page="page"
+                    @current-change="handlePageChange"
+                    layout="total, prev, pager, next, jumper"
+                    :total="total"
+                ></el-pagination>
             </el-tab-pane>
-            <el-tab-pane label="经验记录" name="ex">
-                <el-table class="m-table" :data="list" show-header cell-class-name="u-table-cell" header-cell-class-name="u-header-cell">
+            <el-tab-pane label="经验记录" name="ex" lazy>
+                <el-table
+                    class="m-table"
+                    :data="list"
+                    show-header
+                    cell-class-name="u-table-cell"
+                    header-cell-class-name="u-header-cell"
+                    size="large"
+                >
                     <el-table-column label="类型">
-                        <template slot-scope="scope">{{ formatType(scope.row.action_type) }}</template>
+                        <template #default="scope">{{ formatType(scope.row.action_type) }}</template>
                     </el-table-column>
                     <el-table-column label="数量">
-                        <div class="u-count" :class="{ isNegative: Number(scope.row.count) < 0 }" slot-scope="scope">
-                            <span>{{ Number(scope.row.count) > 0 ? "+" : "" }}</span> <b>{{ scope.row.count }}</b>
-                        </div>
+                        <template #default="scope">
+                            <div class="u-count" :class="{ isNegative: Number(scope.row.count) < 0 }">
+                                <span>{{ Number(scope.row.count) > 0 ? "+" : "" }}</span> <b>{{ scope.row.count }}</b>
+                            </div>
+                        </template>
                     </el-table-column>
                     <el-table-column prop="count" label="源于作品">
-                        <a class="u-link" :href="getPostLink(scope.row)" target="_blank" v-if="getPostLink(scope.row)" slot-scope="scope"><i class="el-icon-link"></i> 点击查看 </a>
-                        <span v-else> - </span>
+                        <template #default="scope">
+                            <a
+                                class="u-link"
+                                :href="getPostLink(scope.row)"
+                                target="_blank"
+                                v-if="getPostLink(scope.row)"
+                                ><i class="el-icon-link"></i> 点击查看
+                            </a>
+                            <span v-else> - </span>
+                        </template>
                     </el-table-column>
                     <el-table-column label="备注">
-                        <template slot-scope="scope">{{ formatRemark(scope.row.remark) }}</template>
+                        <template #default="scope">{{ formatRemark(scope.row.remark) }}</template>
                     </el-table-column>
                     <el-table-column label="时间">
-                        <template slot-scope="scope">
+                        <template #default="scope">
                             <span>{{ showTime(scope.row.created_at) }}</span>
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination class="m-packet-pages" background :page-size="per" :hide-on-single-page="true" :current-page.sync="page" layout="total, prev, pager, next, jumper" :total="total"></el-pagination>
-
+                <el-pagination
+                    class="m-packet-pages"
+                    background
+                    :page-size="per"
+                    :hide-on-single-page="true"
+                    v-model:current-page="page"
+                    @current-change="handlePageChange"
+                    layout="total, prev, pager, next, jumper"
+                    :total="total"
+                ></el-pagination>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -102,12 +153,12 @@ export default {
         loadData() {
             this.loading = true;
             this.$router.push({
-                name: 'points',
+                name: "points",
                 query: {
                     tab: this.tab_value,
                     page: this.page,
-                }
-            })
+                },
+            });
             const fn = this.tab_value === "point" ? getPointsHistory : getExperienceHistory;
             fn(this.params)
                 .then((res) => {
@@ -127,7 +178,7 @@ export default {
         formatRemark: function (str) {
             if (str) {
                 if (str.length > 18) {
-                    return str.slice(0,18) + "...";
+                    return str.slice(0, 18) + "...";
                 } else {
                     return str;
                 }
@@ -137,17 +188,13 @@ export default {
         },
         changeTab() {
             this.page = 1;
-            this.loadData()
+            this.loadData();
+        },
+        handlePageChange(val) {
+            this.page = val;
+            this.loadData();
         },
         showTime,
-    },
-    watch: {
-        params: {
-            deep: true,
-            handler: function () {
-                this.loadData();
-            },
-        },
     },
     created: function () {
         this.tab_value = this.$route.query.tab || "point";
@@ -160,4 +207,26 @@ export default {
 <style lang="less">
 @import "~@/assets/css/dashboard/packet.less";
 @import "~@/assets/css/dashboard/points.less";
+
+@media screen and (max-width: @phone) {
+    .m-points {
+        .m-table {
+            .el-table__header-wrapper,
+            .el-table__body-wrapper {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .el-table__header,
+            .el-table__body {
+                min-width: 760px;
+                table-layout: auto;
+            }
+            .cell {
+                white-space: nowrap;
+                overflow: visible;
+                text-overflow: clip;
+            }
+        }
+    }
+}
 </style>

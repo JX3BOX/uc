@@ -6,12 +6,7 @@
                 <h3>【领取条件】</h3>
                 <p>魔盒KOL/作者群专属提前批</p>
                 <p>获赠10个铭牌</p>
-                <el-button
-                    class="u-btn"
-                    type="warning"
-                    @click="getGift"
-                    :disabled="done"
-                    icon="el-icon-present"
+                <el-button class="u-btn" type="warning" @click="getGift" :disabled="done" icon="Present"
                     >点击领取</el-button
                 >
             </div>
@@ -22,12 +17,12 @@
 import { getFreeNamespace } from "@/service/vip/event";
 export default {
     props: [],
-    data: function() {
+    data: function () {
         return { done: false };
     },
     computed: {},
     methods: {
-        getGift: function() {
+        getGift: function () {
             getFreeNamespace("kol-1").then((res) => {
                 this.done = true;
                 this.$message({

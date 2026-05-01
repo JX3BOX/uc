@@ -1,4 +1,4 @@
-import { $pay } from "@jx3box/jx3box-common/js/https";
+import { $pay } from "@jx3box/jx3box-common/js/api";
 
 function getMyPacket() {
     return $pay().get("/api/vip/i");
@@ -50,4 +50,14 @@ function recyclePacket(params) {
     });
 }
 
-export { getMyPacket, getMyPacketList, getMyPacketHistory, getAllPacket, pullMyPacket, getAllHistory, checkPacket, pushPacket, recyclePacket };
+export {
+    getMyPacket,
+    getMyPacketList,
+    getMyPacketHistory,
+    getAllPacket,
+    pullMyPacket,
+    getAllHistory,
+    checkPacket,
+    pushPacket,
+    recyclePacket,
+};

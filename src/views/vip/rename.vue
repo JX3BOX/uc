@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <Header></Header>
+    <div>
+        <CommonHeader></CommonHeader>
         <div class="m-vip-container" v-if="isLogin">
             <div class="m-vip-rename">
                 <simple-header class="m-vip-rename-title" title="修改您的昵称" desc="Rename your nickname" />
@@ -8,6 +8,13 @@
                     <div v-if="!had_renamed"><i class="el-icon-s-opportunity"></i> 每个账号拥有一次免费更名机会</div>
                     <div v-else>
                         当前剩余可改名次数 <b>{{ count }}</b>
+                        <el-button
+                            @click="toPurchaseRenameCard"
+                            type="primary"
+                            icon="ShoppingCart"
+                            style="margin-left: 10px"
+                            >购买改名卡</el-button
+                        >
                     </div>
                 </div>
                 <el-form
@@ -17,6 +24,7 @@
                     label-position="left"
                     v-if="!done"
                     :class="{ isNormal: count }"
+                    size="large"
                 >
                     <el-form-item class="u-old-name" label="当前昵称">
                         <b>{{ old_name }}</b>
@@ -31,7 +39,9 @@
                             @input="checkName"
                             :disabled="!count"
                         >
-                            <i slot="append" class="u-status" :class="checkicon"></i>
+                            <template #append>
+                                <i class="u-status" :class="checkicon"></i>
+                            </template>
                         </el-input>
                         <el-alert v-if="!isEmpty" :title="checktips" :type="status ? 'success' : 'error'" show-icon>
                         </el-alert>
@@ -41,29 +51,28 @@
                             @click="submit"
                             type="primary"
                             class="u-submit u-submit-rename"
-                            icon="el-icon-check"
+                            icon="Check"
                             v-if="count"
                             :disabled="!status"
                             >提交</el-button
                         >
-                        <el-button
-                            @click="buy"
-                            type="primary"
-                            class="u-submit u-submit-buy"
-                            v-else
-                            icon="el-icon-shopping-cart-2"
+                        <el-button @click="buy" type="primary" class="u-submit u-submit-buy" v-else icon="ShoppingCart"
                             >购买改名次数</el-button
                         >
                     </el-form-item>
                 </el-form>
                 <result v-else>
-                    <div slot="title" class="m-rename-result-title">
-                        修改成功，新昵称<b>{{ new_name || "未知" }}</b>
-                    </div>
-                    <div slot="desc" class="m-rename-result-desc">
-                        <i class="el-icon-info"></i>
-                        修改昵称后部分应用需要自行重新更新作品方可生效，<a href="/account/login">重新登录</a>
-                    </div>
+                    <template #title>
+                        <div class="m-rename-result-title">
+                            修改成功，新昵称<b>{{ new_name || "未知" }}</b>
+                        </div>
+                    </template>
+                    <template #desc>
+                        <div class="m-rename-result-desc">
+                            <i class="el-icon-info"></i>
+                            修改昵称后部分应用需要自行重新更新作品方可生效，<a href="/account/login">重新登录</a>
+                        </div>
+                    </template>
                 </result>
             </div>
         </div>
@@ -78,7 +87,7 @@
             :returnUrl="returnUrl"
             @done="finish"
         />
-        <Footer></Footer>
+        <CommonFooter></CommonFooter>
     </div>
 </template>
 
@@ -87,7 +96,7 @@ import User from "@jx3box/jx3box-common/js/user";
 import { sterilizer } from "sterilizer/index.js";
 import { checkNickname, doRename } from "@/service/vip/rename.js";
 import result from "@/components/vip/result.vue";
-import { __Root } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root } from "@/utils/config";
 import paypop from "@/components/vip/paypop.vue";
 import callback from "@/utils/callback.js";
 import simple_header from "@/components/vip/simple_header.vue";
@@ -187,6 +196,7 @@ export default {
             User.getAsset().then((data) => {
                 this.asset = data;
                 this.count = ~~data.rename_card_count;
+                console.log("当前改名次数", this.count);
             });
         },
         submit: function () {
@@ -205,6 +215,10 @@ export default {
         },
         finish: function () {
             location.reload();
+        },
+        toPurchaseRenameCard() {
+            const url = "/vip/mall/38";
+            window.open(url, "_blank");
         },
     },
     mounted: function () {

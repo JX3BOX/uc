@@ -2,34 +2,37 @@
     <div class="m-notice-wechat u-notice-box">
         <div class="u-notice-value">
             <span class="u-value" v-if="isWechatVerified">******</span>
-            <el-tag class="u-notice-status" :type="isWechatVerified ? 'success' : 'info'" size="small">{{
+            <el-tag class="u-notice-status" :type="isWechatVerified ? 'success' : 'info'">{{
                 isWechatVerified ? "已绑定" : "未绑定"
             }}</el-tag>
         </div>
         <el-button
             v-if="isWechatVerified"
             class="u-bind-button"
-            type="danger"
-            icon="el-icon-connection"
+            type="info"
+            icon="Connection"
             @click="unbind"
             :circle="isPhone"
+            size="large"
             >解除绑定
         </el-button>
-        <el-button type="primary" :circle="isPhone" class="u-bind-button" icon="el-icon-connection" @click="open" v-else
+        <el-button type="primary" size="large" :circle="isPhone" class="u-bind-button" icon="Connection" @click="open" v-else
             >绑定公众号
         </el-button>
         <el-dialog
             title="绑定微信公众号"
-            :visible.sync="visible"
+            v-model="visible"
             :width="isPhone ? '95%' : '400px'"
-            custom-class="m-notice-wechat__dialog"
+            class="m-notice-wechat__dialog"
             :before-close="handleClose"
         >
             <div class="m-wechat-content" v-loading="loading">
                 <el-image class="u-qr" v-if="ticket" :src="qrcodeValue" lazy>
-                    <div slot="error" class="u-error">
-                        <i class="el-icon-picture-outline"></i>
-                    </div>
+                    <template #error>
+                        <div class="u-error">
+                            <i class="el-icon-picture-outline"></i>
+                        </div>
+                    </template>
                 </el-image>
                 <i class="u-tip">打开微信扫一扫，关注公众号接收通知告警</i>
                 <small class="u-tip-small">关注之后需要重新登陆方可生效</small>
@@ -45,9 +48,9 @@
 <script>
 import { getWechatQrcode, unbindWechat } from "@/service/dashboard/profile";
 import { getMyInfo } from "@/service/dashboard/index";
-import { SSE } from "@jx3box/jx3box-common/js/https";
+import { SSE } from "@jx3box/jx3box-common/js/api";
 import User from "@jx3box/jx3box-common/js/user";
-import { __cms } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cms } from "@/utils/config";
 const base = `https://mp.weixin.qq.com/cgi-bin/showqrcode`;
 export default {
     name: "wechat",
@@ -145,7 +148,7 @@ export default {
                     });
                     this.loadUser();
                 });
-            });
+            }).catch(() => {});
         },
     },
 };
@@ -156,7 +159,6 @@ export default {
     justify-content: center;
     align-items: center;
     gap: 10px;
-
 }
 .m-notice-wechat__dialog {
     .m-wechat-content {
@@ -171,7 +173,7 @@ export default {
             justify-content: center;
             .size(180px);
             .el-image__inner {
-                .full;
+                .size(100%);
             }
         }
         .u-error {
@@ -181,7 +183,7 @@ export default {
 
     .u-tip-small {
         font-size: 13px;
-        color: #F56C6C;
+        color: #f56c6c;
         font-weight: 600;
     }
 }

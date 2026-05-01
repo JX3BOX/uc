@@ -5,7 +5,23 @@
         border: 1px solid rgba(63, 68, 72, 0.2);
         border-radius: 5px;
         background: #ffffff;
-        padding: 10px 30px;
+
+        .u-label{
+            color:@color;
+            font-weight: 500;
+            padding-top:15px;
+
+            .u-icon{
+                .size(16px);
+            }
+        }
+    }
+
+    .c-author-fans{
+        .f-bottom{
+            color:@v4tip;
+            margin-top: 10px;
+        }
     }
     //铭牌
     .m-namespace {
@@ -27,6 +43,10 @@
         .w(730px);
         .u-content {
             padding: 20px;
+        }
+
+        .el-tabs__item  {
+            gap: 4px;
         }
     }
     .m-right {
@@ -57,7 +77,9 @@
                 }
                 .u-already-attention {
                     .flex;
-                    .flex(x, space-between);
+                    //.flex(x, space-between);
+                    justify-content: space-between;
+
                     .u-btn {
                         .w(145px);
                         .h(40px);
@@ -93,6 +115,9 @@
                 transform: rotate(-90deg);
                 .size(40px);
                 border-radius: 6px;
+                .flex;
+                align-items: center;
+                justify-content: center;
                 .u-more-img {
                     fill: #b4b2b3;
                 }
@@ -100,25 +125,29 @@
         }
         .m-join-box {
             .flex;
-            .grid(x, space-between);
             align-items: center;
+            justify-content: space-between;
             padding: 10px 20px;
+        }
+        .u-join{
+            .flex(y);
+            color:@color;
         }
         .u-join,
         .u-fans {
             //.dbi;
-            .fz(14px, 22px);
+            .fz(12px, 22px);
             //color: #666;
             .u-icon-join,
             .u-icon-fans {
-                .dbi;
-                .y(top);
-                .mr(5px);
+                margin-right: 5px;
                 .h(20px);
-                .mt(2px);
                 .u-svg {
                     fill: #ff7cab;
                 }
+            }
+            .u-icon-join{
+                .flex(o);
             }
         }
         .u-fans {
@@ -139,7 +168,9 @@
         }
         .m-user-bio {
             .u-userBio {
-                .fz(14px);
+                .fz(12px,1.8);
+                white-space: pre-wrap;
+                color:@color;
             }
         }
     }

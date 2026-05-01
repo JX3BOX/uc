@@ -54,9 +54,14 @@
             <!-- 正文 -->
             <div class="m-publish-content">
                 <el-divider content-position="left">正文</el-divider>
-                <el-radio-group class="m-publish-editormode" size="small" v-model="post.post_mode">
-                    <el-radio-button label="tinymce">可视化编辑器</el-radio-button>
-                    <el-radio-button label="markdown">Markdown</el-radio-button>
+                <el-radio-group
+                    class="m-publish-editormode"
+                    size="large"
+                    :class="`is-${post.post_mode}`"
+                    v-model="post.post_mode"
+                >
+                    <el-radio-button value="tinymce">可视化编辑器</el-radio-button>
+                    <el-radio-button value="markdown">Markdown</el-radio-button>
                 </el-radio-group>
                 <Markdown
                     v-model="post.post_content"
@@ -68,6 +73,7 @@
                     v-model="post.post_content"
                     :attachmentEnable="true"
                     :resourceEnable="true"
+                    :subtype="post.post_subtype"
                     v-show="!post.post_mode || post.post_mode == 'tinymce'"
                 />
             </div>
@@ -76,11 +82,20 @@
             <div class="m-publish-extend">
                 <el-divider content-position="left">设置</el-divider>
                 <publish-comment v-model="post.comment">
-                    <el-checkbox v-model="visible_for_self" :true-label="1" :false-label="0">仅自己可见</el-checkbox>
-                    <el-checkbox v-model="open_white_list" :true-label="1" :false-label="0">开启评论过滤</el-checkbox>
+                    <el-checkbox v-model="visible_for_self" :true-value="1" :fasle-value="0">仅自己可见</el-checkbox>
+                    <el-checkbox v-model="open_white_list" :true-value="1" :fasle-value="0">开启评论过滤</el-checkbox>
                 </publish-comment>
-                <publish-visible v-model="post.visible"></publish-visible>
-                <publish-guide :data="post"></publish-guide>
+                <el-form-item label="匿名开关">
+                    <el-switch
+                        v-model="post.anonymous"
+                        active-color="#13ce66"
+                        :active-value="1"
+                        :inactive-value="0"
+                        @change="onAnonymousChange"
+                    ></el-switch>
+                </el-form-item>
+                <publish-visible v-model="post.visible" :disabled="!!post.anonymous"></publish-visible>
+                <publish-guide v-model:data="post"></publish-guide>
                 <publish-authors :id="id" :uid="post.post_author"></publish-authors>
             </div>
 
@@ -99,7 +114,7 @@
                     type="error"
                     title="检测到您的内容存在不合规，将无法发布成功，并有禁言风险。"
                 ></el-alert>
-                <el-checkbox v-model="hasRead" :true-label="1" :false-label="0"
+                <el-checkbox v-model="hasRead" :true-value="1" :fasle-value="0"
                     >我已阅读并了解<a href="/notice/119" @click.stop target="_blank">《创作发布规范》</a></el-checkbox
                 >
             </div>
@@ -111,12 +126,13 @@
                 </template>
                 <template v-else>
                     <el-button
+                        size="large"
                         type="primary"
                         @click="publish('publish', true)"
                         :disabled="is_illegal || processing || !hasRead"
                         >发 &nbsp;&nbsp; 布</el-button
                     >
-                    <el-button type="plain" @click="publish('draft', false)" :disabled="processing || !hasRead"
+                    <el-button size="large" plain @click="publish('draft', false)" :disabled="processing || !hasRead"
                         >保存为草稿</el-button
                     >
                 </template>
@@ -208,6 +224,8 @@ export default {
                     talent: "",
                     talent_desc: "", // 奇穴讲解
                     content: "",
+                    has_talent: 0, // 是否有奇穴
+                    has_sq: 0, // 是否有连招
                     data: [
                         {
                             name: "",
@@ -251,6 +269,8 @@ export default {
 
                 // 阅读权限（0公开，1仅自己，2亲友，3密码，4付费，5粉丝）
                 visible: 0,
+                // 匿名开关（0关闭|默认，1开启）
+                anonymous: 0,
 
                 // 是否包含视频
                 include_video: 0,
@@ -307,6 +327,7 @@ export default {
         // 发布
         publish: function (status, skip) {
             if (!this.post.tags?.length) return this.$message.error("类型必选");
+            if (!this.post.post_meta.content.trim()) return this.$message.error("技巧概述不能为空");
             this.post.post_status = status;
             this.processing = true;
 

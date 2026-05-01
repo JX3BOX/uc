@@ -6,14 +6,16 @@
                 <div class="m-mall-list" v-if="list && list.length">
                     <table>
                         <thead>
-                            <th>兑换时间</th>
-                            <th>兑换商品</th>
-                            <th>订单号</th>
-                            <th>数量</th>
-                            <th>订单状态</th>
-                            <th>付款状态</th>
-                            <th>是否为赠送</th>
-                            <th>操作</th>
+                            <tr>
+                                <th>兑换时间</th>
+                                <th>兑换商品</th>
+                                <th>订单号</th>
+                                <th>数量</th>
+                                <th>订单状态</th>
+                                <th>付款状态</th>
+                                <th>是否为赠送</th>
+                                <th>操作</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(item, i) in list" :key="i">
@@ -31,10 +33,14 @@
                                 <td>
                                     <div class="u-op">
                                         <!-- 未支付 -->
-                                        <el-tooltip effect="dark" content="点击支付" placement="top" v-if="showPay(item.order)">
+                                        <el-tooltip
+                                            effect="dark"
+                                            content="点击支付"
+                                            placement="top"
+                                            v-if="showPay(item.order)"
+                                        >
                                             <el-button
                                                 link
-                                                size="mini"
                                                 type="success"
                                                 plain
                                                 icon="el-icon-wallet"
@@ -48,7 +54,6 @@
                                             <el-tooltip effect="dark" content="确认收货" placement="top">
                                                 <el-button
                                                     link
-                                                    size="mini"
                                                     plain
                                                     icon="el-icon-circle-check"
                                                     @click="isReceipt(item.order.id)"
@@ -58,22 +63,27 @@
                                         </template>
 
                                         <!-- 未发货允许操作： 取消订单 -->
-                                        <el-tooltip effect="dark" content="取消订单" placement="top" v-if="item.order.order_status == 0">
+                                        <el-tooltip
+                                            effect="dark"
+                                            content="取消订单"
+                                            placement="top"
+                                            v-if="item.order.order_status == 0"
+                                        >
                                             <el-popconfirm
                                                 confirm-button-text="确定"
                                                 cancel-button-text="取消"
-                                                icon="el-icon-info"
+                                                icon="InfoFilled"
                                                 title="确定取消吗？"
                                                 @confirm="cancel(item.order.id)"
                                             >
-                                                <el-button
-                                                    size="mini"
-                                                    slot="reference"
-                                                    type="info"
-                                                    plain
-                                                    icon="el-icon-circle-close"
-                                                    circle
-                                                ></el-button>
+                                                <template #reference>
+                                                    <el-button
+                                                        type="info"
+                                                        plain
+                                                        icon="el-icon-circle-close"
+                                                        circle
+                                                    ></el-button>
+                                                </template>
                                             </el-popconfirm>
                                         </el-tooltip>
 
@@ -83,7 +93,6 @@
                                                 <el-button
                                                     icon="el-icon-chat-dot-square"
                                                     @click="handleShow('comment', item.order.id)"
-                                                    size="mini"
                                                     plain
                                                     circle
                                                 ></el-button>
@@ -95,22 +104,21 @@
                         </tbody>
                     </table>
                     <!-- 分页 -->
-                    <div class="m-mall-pages">
                         <el-pagination
+                         class="m-mall-pages"
                             background
                             layout="total, prev, pager, next,jumper"
                             :page-size="pageSize"
                             :total="total"
-                            :current-page.sync="pageIndex"
+                            v-model:current-page="pageIndex"
                         ></el-pagination>
-                    </div>
                 </div>
                 <div class="m-mall-null" v-else>
                     <el-alert title="还有任何订单记录" type="info" show-icon></el-alert>
                 </div>
             </div>
         </div>
-        <el-dialog :title="title" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+        <el-dialog :title="title" v-model="dialogVisible" width="30%" :before-close="handleClose">
             <GoodComment :order_id="order_id" :type="type" @close="handleClose" />
         </el-dialog>
     </uc>
@@ -120,8 +128,10 @@
 import uc from "@/components/dashboard/uc.vue";
 import GoodComment from "@/components/dashboard/form/comment.vue";
 import { getOrder, closeOrder, toPay, toConfirm } from "@/service/dashboard/goods";
-import { payStatus, orderStatus } from "@/assets/data/dashboard/mall.json";
-import { mallTab } from "@/assets/data/dashboard/tabs.json";
+import mallData from "@/assets/data/dashboard/mall.json";
+const { payStatus, orderStatus } = mallData;
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { mallTab } = tabsData;
 export default {
     name: "mall",
     components: {
@@ -265,4 +275,20 @@ export default {
 </script>
 <style lang="less" scoped>
 @import "~@/assets/css/dashboard/record.less";
+
+@media screen and (max-width: @phone) {
+    .m-mall-list {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+
+        table {
+            min-width: 980px;
+        }
+
+        th,
+        td {
+            white-space: nowrap;
+        }
+    }
+}
 </style>

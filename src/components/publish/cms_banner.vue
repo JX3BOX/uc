@@ -12,13 +12,17 @@ export default {
         publishBanner,
     },
     props: {
+        modelValue: {
+            type: String,
+            default: undefined,
+        },
         data: {
             type: String,
             default: "",
         },
         size: {
             type: [Array, Number],
-            default: () =>  [300, 100],
+            default: () => [300, 100],
         },
         info: {
             type: String,
@@ -27,22 +31,27 @@ export default {
     },
     data() {
         return {
-            banner: this.data,
+            banner: this.modelValue !== undefined ? this.modelValue : this.data,
         };
     },
-    model: {
-        prop: "data",
-        event: "update",
-    },
+    emits: ["update", "update:modelValue"],
     watch: {
-        data : function (newval){
-            this.banner = newval
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.banner = newval;
+            }
         },
-        banner: function(newval) {
+        data: function (newval) {
+            if (this.modelValue === undefined) {
+                this.banner = newval;
+            }
+        },
+        banner: function (newval) {
+            this.$emit("update:modelValue", newval);
             this.$emit("update", newval);
         },
     },
-}
+};
 </script>
 
 <style lang="less">

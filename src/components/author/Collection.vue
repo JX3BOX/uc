@@ -10,8 +10,7 @@
                         <a :href="postLink(item.id)" class="u-title" target="_blank">{{ item.title || "无标题" }}</a>
                     </h2>
                     <!-- 字段 -->
-                    <div class="u-content u-desc" v-html="item.description || item.title">
-                    </div>
+                    <div class="u-desc" v-html="item.description || item.title"></div>
 
                     <!-- 作者 -->
                     <div class="u-misc">
@@ -33,7 +32,7 @@
             :hide-on-single-page="true"
             layout="prev, pager, next"
             :total="total"
-            :current-page.sync="page"
+            v-model:current-page="page"
             :page-size="per"
         >
         </el-pagination>

@@ -4,9 +4,10 @@
             <main class="m-single-content" v-loading="loading">
                 <div class="m-type">
                     <div class="u-title">
-                        <span class="u-status" :style="{ backgroundColor: statusColors[data.status] }">{{
+                        <!-- <span class="u-status" :style="{ backgroundColor: statusColors[data.status] }">{{
                             statusMap[data.status]
-                        }}</span>
+                        }}</span> -->
+                        <el-tag :type="statusTypes[data.status]">{{ statusMap[data.status] }}</el-tag>
                         <div class="u-type">
                             <span class="u-value">{{ types[data.type] }}</span>
                             <span class="u-value">{{ subtypes[data.subtype] }}</span>
@@ -14,37 +15,28 @@
                     </div>
                     <el-dropdown
                         v-if="isTeammate && data.status < 12"
-                        size="small"
                         split-button
                         trigger="click"
                         type="primary"
                         @click.stop="onDeal"
                     >
-                        <i class="el-icon-s-tools"></i>
+                        <i class="el-icon-s-tools u-dropdown-icon"></i>
                         {{ statusText(data.status) }}
                         <template #dropdown>
                             <el-dropdown-menu>
-                                <el-dropdown-item @click.native="handleEdit">
-                                    <el-button class="u-btn" type="primary" size="small" icon="el-icon-edit-outline"
-                                        >编辑</el-button
-                                    >
+                                <el-dropdown-item @click="handleEdit">
+                                    <el-button class="u-btn" type="primary" icon="Edit">编辑</el-button>
                                 </el-dropdown-item>
-                                <el-dropdown-item v-if="data.status === 1" @click.native="handleTransfer">
-                                    <el-button class="u-btn" type="warning" size="small" icon="el-icon-right"
-                                        >转交</el-button
-                                    >
+                                <el-dropdown-item v-if="data.status === 1" @click="handleTransfer">
+                                    <el-button class="u-btn" type="warning" icon="Right">转交</el-button>
                                 </el-dropdown-item>
                                 <template v-if="data.status === 2">
-                                    <el-dropdown-item @click.native="handleCoordination">
-                                        <el-button class="u-btn" type="success" size="small" icon="el-icon-help"
-                                            >协同</el-button
-                                        >
+                                    <el-dropdown-item @click="handleCoordination">
+                                        <el-button class="u-btn" type="success" icon="Help">协同</el-button>
                                     </el-dropdown-item>
 
-                                    <el-dropdown-item @click.native="handleClose">
-                                        <el-button class="u-btn" type="info" size="small" icon="el-icon-circle-close"
-                                            >关闭
-                                        </el-button>
+                                    <el-dropdown-item @click="handleClose">
+                                        <el-button class="u-btn" type="info" icon="CircleClose">关闭 </el-button>
                                     </el-dropdown-item>
                                 </template>
                             </el-dropdown-menu>
@@ -59,7 +51,14 @@
                             <span class="u-user-name">{{ data.user.display_name }}</span>
                         </a>
                     </div>
+                    <div class="u-subblock">
+                        <span class="u-label">客户端：</span>
+                        <i class="u-client" :class="[data.client, `u-${data.client}`]">{{ client }}</i>
+                    </div>
                     <span class="u-time u-subblock">提交时间：{{ formateTime(data.created_at) }}</span>
+                    <span class="u-time u-subblock" v-if="data.refer"
+                        >来源：<a :href="data.refer" target="_blank">{{ data.refer }}</a></span
+                    >
                 </div>
                 <div class="m-block m-dev">
                     <div class="u-subblock">
@@ -147,12 +146,12 @@
                 <div class="m-feedback-thx">
                     <el-divider content-position="left"
                         ><i class="el-icon-coin"></i> 反馈回馈
-                        <el-button v-if="isAdmin" size="mini" class="u-thx-trigger" type="success" @click="onThx"
+                        <el-button v-if="isAdmin" class="u-thx-trigger" type="success" @click="onThx" size="small"
                             >品鉴</el-button
                         ></el-divider
                     >
                     <div class="u-thx-table">
-                        <el-table size="mini" stripe border :data="thxData">
+                        <el-table stripe border :data="thxData">
                             <el-table-column label="参与打赏" prop="ext_operate_user_info">
                                 <template #default="{ row }">
                                     <div class="m-user">
@@ -193,7 +192,7 @@
                 </div>
                 <div class="m-reply" v-if="done">
                     <el-divider content-position="left"><i class="el-icon-chat-line-square"></i> 回复处理</el-divider>
-                    <Comment :id="id" category="feedback" order="desc" />
+                    <CommonComment :id="id" category="feedback" order="desc" />
                 </div>
             </main>
 
@@ -284,24 +283,27 @@
 
 <script>
 import DOMPurify from "dompurify";
-import { getFeedback, updateFeedback, getFeedbackLog } from "@/service/dashboard/feedback";
+import { getFeedback, getFeedbackLog } from "@/service/dashboard/feedback";
 import { getTeammates } from "@/service/dashboard/index";
-import { types, subtypes, statusMap, statusColors } from "@/assets/data/dashboard/feedback.json";
+import feedbackData from "@/assets/data/dashboard/feedback.json";
+const { types, subtypes, statusMap, statusColors, statusTypes } = feedbackData;
 import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import moment from "moment";
-import Comment from "@jx3box/jx3box-comment-ui/src/Comment.vue";
+import CommonComment from "@jx3box/jx3box-ui/src/single/Comment.vue";
 // 打赏相关
 import { getPostBoxcoinRecords, recoveryBoxcoin } from "@/service/dashboard/thx.js";
-import Homework from "@jx3box/jx3box-common-ui/src/interact/Homework.vue";
+import Homework from "@jx3box/jx3box-ui/src/interact/Homework.vue";
 import User from "@jx3box/jx3box-common/js/user";
-import AdminGift from "@jx3box/jx3box-common-ui/assets/img/widget/admin_gift.svg";
+import AdminGift from "@jx3box/jx3box-ui/assets/img/widget/admin_gift.svg";
 import assign from "./components/assign.vue";
 import edit from "./components/edit.vue";
 import status from "./components/status.vue";
+import jx3boxData from "@jx3box/jx3box-common/data/jx3box.json";
+const { __clients } = jx3boxData;
 export default {
     name: "FeedbackSingle",
     components: {
-        Comment,
+        CommonComment,
         Homework,
         assign,
         edit,
@@ -317,6 +319,7 @@ export default {
             subtypes,
             statusMap,
             statusColors,
+            statusTypes,
 
             done: false,
 
@@ -365,6 +368,9 @@ export default {
         currentStep() {
             const index = this.statusList.findIndex((item) => item.value === this.data.status) + 1;
             return index;
+        },
+        client() {
+            return __clients[this.data.client];
         },
     },
     watch: {
@@ -479,8 +485,9 @@ export default {
         async loadTeammates() {
             try {
                 let res = await getTeammates();
+                // this.teammates = res.data.data
                 this.teammates = res.data.data.filter(
-                    (item) => item.group && ["mp", "developer", "designer"].includes(item.group)
+                    (item) => item.group && ["mp", "developer", "editor", "designer"].includes(item.group)
                 );
             } catch (e) {
                 console.log(e);

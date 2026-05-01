@@ -1,17 +1,29 @@
 <template>
     <div class="m-dashboard m-dashboard-config">
         <h2 class="u-title"><i class="el-icon-setting"></i> 全局设置</h2>
-        <el-form class="m-config-form" label-position="left" label-width="120px">
+        <el-form class="m-config-form" label-position="left" label-width="160px">
+            <el-form-item label="主题颜色">
+                <template #label>
+                    <span>主题颜色</span>
+                    <el-tooltip class="item" effect="dark" content="仅App有效" placement="top"
+                        ><i class="el-icon-info"></i
+                    ></el-tooltip>
+                </template>
+                <el-radio-group v-model="conf.theme" size="small">
+                    <el-radio-button value="light">浅色</el-radio-button>
+                    <el-radio-button value="dark">深色</el-radio-button>
+                </el-radio-group>
+            </el-form-item>
             <el-form-item label="编辑器模式">
                 <el-radio-group v-model="conf.editor_mode" size="small">
-                    <el-radio-button label="tinymce">可视化</el-radio-button>
-                    <el-radio-button label="markdown">Markdown</el-radio-button>
+                    <el-radio-button value="tinymce">可视化</el-radio-button>
+                    <el-radio-button value="markdown">Markdown</el-radio-button>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="评论默认排序">
                 <el-radio-group v-model="conf.cmt_order" size="small">
-                    <el-radio-button label="DESC">最新靠前</el-radio-button>
-                    <el-radio-button label="ASC">最早靠前</el-radio-button>
+                    <el-radio-button value="DESC">最新靠前</el-radio-button>
+                    <el-radio-button value="ASC">最早靠前</el-radio-button>
                 </el-radio-group>
             </el-form-item>
             <!-- <el-form-item label="接受赠礼">
@@ -74,27 +86,6 @@
                     :inactive-value="0"
                 ></el-switch>
             </el-form-item>
-            <el-form-item label="日历链接">
-                <template #label>
-                    <span>日历链接</span>
-                    <el-tooltip class="item" effect="dark" content="网站首页日历模块点击的快捷跳转地址" placement="top"
-                        ><i class="el-icon-info"></i
-                    ></el-tooltip>
-                </template>
-                <el-input v-model="conf.fav_link" placeholder="输入日历链接"></el-input>
-            </el-form-item>
-            <el-form-item label="客户端偏好">
-                <template #label>
-                    <span>客户端偏好</span>
-                    <el-tooltip class="item" effect="dark" content="在小程序端默认的游戏客户端" placement="top"
-                        ><i class="el-icon-info"></i
-                    ></el-tooltip>
-                </template>
-                <el-select v-model="conf.default_client">
-                    <el-option label="正式服（旗舰版/无界）" value="std"></el-option>
-                    <el-option label="怀旧服（缘起）" value="origin"></el-option>
-                </el-select>
-            </el-form-item>
             <el-form-item label="关注限制">
                 <template #label>
                     <span>关注限制</span>
@@ -106,7 +97,7 @@
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
                 </template>
-                <el-select v-model="conf.rss_need_level">
+                <el-select v-model="conf.rss_need_level" size="large">
                     <el-option
                         v-for="item in levelMap"
                         :key="item.value"
@@ -115,6 +106,44 @@
                     ></el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item label="语言偏好">
+                <template #label>
+                    <span>语言偏好</span>
+                    <el-tooltip class="item" effect="dark" content="在小程序端默认的界面语言" placement="top"
+                        ><i class="el-icon-info"></i
+                    ></el-tooltip>
+                </template>
+                <el-select v-model="conf.default_lang" size="large">
+                    <el-option
+                        v-for="(item, key) in lang"
+                        :key="key"
+                        :label="item.name"
+                        :value="item.locale"
+                    ></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="客户端偏好">
+                <template #label>
+                    <span>客户端偏好</span>
+                    <el-tooltip class="item" effect="dark" content="在小程序端默认的游戏客户端" placement="top"
+                        ><i class="el-icon-info"></i
+                    ></el-tooltip>
+                </template>
+                <el-select v-model="conf.default_client" size="large">
+                    <el-option label="正式服（旗舰版/无界）" value="std"></el-option>
+                    <el-option label="怀旧服（缘起）" value="origin"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="日历链接">
+                <template #label>
+                    <span>日历链接</span>
+                    <el-tooltip class="item" effect="dark" content="网站首页日历模块点击的快捷跳转地址" placement="top"
+                        ><i class="el-icon-info"></i
+                    ></el-tooltip>
+                </template>
+                <el-input v-model="conf.fav_link" size="large" placeholder="输入日历链接"></el-input>
+            </el-form-item>
+            
 
             <!-- <el-form-item label="评论邮件通知">
                 <el-switch v-model="conf.cmt_email" active-color="#13ce66" active-text="开启" :active-value="1" :inactive-value="0" disabled></el-switch>
@@ -136,7 +165,7 @@
                 <el-switch v-model="conf.achievement_process" active-color="#13ce66" active-text="同步" :active-value="1" :inactive-value="0" disabled></el-switch>
             </el-form-item> -->
             <el-form-item label="" class="u-btns">
-                <el-button class="u-publish" type="primary" @click="submit">保存</el-button>
+                <el-button class="u-publish" type="primary" @click="submit" size="large">保存</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -144,12 +173,15 @@
 
 <script>
 import { getUserConf, setUserConf } from "@/service/dashboard/conf";
+import lang from "@/assets/data/dashboard/lang.json";
+
 export default {
     name: "config",
     props: [],
     data: function () {
         return {
             conf: {
+                theme: "light",
                 cmt_email: 0,
                 cmt_order: "DESC",
                 editor_mode: "tinymce",
@@ -169,6 +201,7 @@ export default {
                 fav_link: "",
                 default_client: "",
                 rss_need_level: 1,
+                default_lang: "zh-cn",
             },
 
             levelMap: new Array(8).fill(0).map((_, i) => {
@@ -177,13 +210,22 @@ export default {
                     value: i + 1,
                 };
             }),
+
+            lang,
+
+            oldLang: "",
         };
     },
     computed: {},
     methods: {
         loadData: function () {
             getUserConf().then((res) => {
-                this.conf = res?.data?.data;
+                this.conf = {
+                    ...(res?.data?.data || {}),
+                    theme: res?.data?.data?.theme || "light",
+                };
+
+                this.oldLang = this.conf.default_lang;
             });
         },
         submit: function () {
@@ -192,6 +234,11 @@ export default {
                     message: "设置更新成功",
                     type: "success",
                 });
+
+                // 如果修改了语言设置，提示用户刷新页面以应用新的语言
+                if (this.oldLang !== this.conf.default_lang) {
+                    location.reload();
+                }
             });
         },
     },

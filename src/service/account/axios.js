@@ -1,6 +1,6 @@
 import axios from "axios";
 import User from "@jx3box/jx3box-common/js/user";
-import { __cms } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cms } from "@/utils/config";
 
 const $ = axios.create({
     withCredentials : true,
@@ -11,11 +11,6 @@ const $ = axios.create({
 setTimeout(() => {
     $.defaults.headers.common['user-device-fingerprint'] = User.getDeviceFingerprint();
 }, 1500);
-
-import Vue from "vue";
-import { Message, Notification } from "element-ui";
-Vue.prototype.$message = Message;
-Vue.prototype.$notify = Notification;
 
 function installInterceptors(target){
     target['interceptors']['response'].use(

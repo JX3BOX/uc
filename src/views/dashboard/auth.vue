@@ -19,6 +19,7 @@
                         :type="!checkStatus(type) ? 'primary' : 'danger'"
                         @click="toBind(type)"
                         v-if="!checkStatus(type)"
+                        size="large"
                     >
                         前往绑定
                     </el-button>
@@ -30,11 +31,11 @@
 </template>
 
 <script>
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system";
 import { checkOAuth } from "@/service/dashboard/profile";
 import { getMyInfo } from "@/service/dashboard/index.js";
 import uc from "@/components/dashboard/uc.vue";
-import { __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath, __cdn } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 
 const types = {
@@ -123,9 +124,10 @@ export default {
 
 <style lang="less">
 .m-auth {
+    color:@color;
     .m-block {
         background-color: #fafbfc;
-        border: 1px solid @color-link;
+        border: 1px solid @v4primary;
         margin: 15px 15px 5px 15px;
         padding: 10px 10px 10px 30px;
         border-radius: 6px;

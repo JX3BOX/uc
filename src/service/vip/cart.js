@@ -1,4 +1,4 @@
-import { $pay } from "@jx3box/jx3box-common/js/https";
+import { $pay } from "@jx3box/jx3box-common/js/api";
 
 // 获取购物车内容
 export function getCart() {

@@ -1,8 +1,10 @@
 <template>
-    <div id="main">
-        <Header></Header>
+    <div id="main" class="p-publish">
+        <CommonHeader></CommonHeader>
         <Breadcrumb name="创作中心" slug="publish" root="/publish" :crumbEnable="true">
-            <img slot="logo" svg-inline src="@/assets/img/publish/publish.svg" />
+            <template #logo>
+                <img svg-inline src="@/assets/img/publish/publish.svg" />
+            </template>
         </Breadcrumb>
         <LeftSidebar>
             <Nav />
@@ -21,18 +23,16 @@ import { getUserConf, getUserInfo } from "@/service/publish/user.js";
 export default {
     name: "publish",
     props: [],
-    data: function() {
-        return {
-        };
+    data: function () {
+        return {};
     },
     methods: {
-        loadUserConf : function (){
+        loadUserConf: function () {
             getUserConf().then((res) => {
-                this.$store.commit('setUserConf',res?.data?.data)
-            })
+                this.$store.commit("setUserConf", res?.data?.data);
+            });
         },
-        init : function (){
-
+        init: function () {
             // 草稿箱
             const localDraft = new LocalDraft();
             this.$store.commit("SET_DB", localDraft);
@@ -46,16 +46,13 @@ export default {
             });
         },
     },
-    created: function() {
+    created: function () {
         if (location.hostname != "localhost") {
             if (!User.isLogin()) {
                 User.toLogin();
             }
         }
         this.init();
-    },
-    mounted() {
-        console.log(this.$route);
     },
     components: {
         Nav,

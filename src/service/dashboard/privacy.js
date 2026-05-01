@@ -1,4 +1,4 @@
-import { $cms, $next } from "@jx3box/jx3box-common/js/https";
+import { $cms, $next } from "@jx3box/jx3box-common/js/api";
 
 function getKithList() {
     return $cms().get("/api/cms/user/kith/my");
@@ -32,7 +32,7 @@ function editKith(id, data) {
  */
 function getBlackList(params) {
     return $next().get("/api/my-userlist/deny", {
-        params
+        params,
     });
 }
 
@@ -44,10 +44,10 @@ function getBlackList(params) {
  * @param {*} param.user_id 用户id
  * @param {*} param.display_name 用户昵称
  */
- function getMyFollowList(params) {
+function getMyFollowList(params) {
     return $next().get(`/api/my-userlist/follow`, {
-        params
-    })
+        params,
+    });
 }
 
 /**
@@ -60,16 +60,16 @@ function getBlackList(params) {
  */
 function getMyFansList(params) {
     return $next().get(`/api/my-userlist/follow-me`, {
-        params
-    })
+        params,
+    });
 }
 
 /**
  * 关注用户
  * @param {*} userId 用户id
  */
- function follow(userId) {
-    return $next().post(`/api/my-userlist/follow/${userId}`)
+function follow(userId) {
+    return $next().post(`/api/my-userlist/follow/${userId}`);
 }
 
 /**
@@ -77,7 +77,7 @@ function getMyFansList(params) {
  * @param {*} userId 用户id
  */
 function unfollow(userId) {
-    return $next().delete(`/api/my-userlist/follow/${userId}`)
+    return $next().delete(`/api/my-userlist/follow/${userId}`);
 }
 
 /**
@@ -85,7 +85,7 @@ function unfollow(userId) {
  * @param {*} userId 用户id
  */
 function deny(userId) {
-    return $next().post(`/api/my-userlist/deny/${userId}`)
+    return $next().post(`/api/my-userlist/deny/${userId}`);
 }
 
 /**
@@ -93,7 +93,7 @@ function deny(userId) {
  * @param {*} userId 用户id
  */
 function undeny(userId) {
-    return $next().delete(`/api/my-userlist/deny/${userId}`)
+    return $next().delete(`/api/my-userlist/deny/${userId}`);
 }
 
 /**
@@ -101,9 +101,8 @@ function undeny(userId) {
  * @param {*} userId 用户id
  */
 function removeFans(userId) {
-    return $next().delete(`/api/my-userlist/follow-me/${userId}`)
+    return $next().delete(`/api/my-userlist/follow-me/${userId}`);
 }
-
 
 export {
     getKithList,
@@ -112,7 +111,6 @@ export {
     addKith,
     searchUserById,
     sortKith,
-
     getBlackList,
     getMyFollowList,
     getMyFansList,
@@ -120,5 +118,5 @@ export {
     unfollow,
     deny,
     undeny,
-    removeFans
+    removeFans,
 };

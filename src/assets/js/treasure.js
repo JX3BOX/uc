@@ -1,4 +1,4 @@
-import { $cms, $team, $next, $node } from "@jx3box/jx3box-common/js/https";
+import { $cms, $team, $next, $node } from "@jx3box/jx3box-common/js/api";
 
 const client = location.href.includes("origin") ? "origin" : "std";
 
@@ -68,7 +68,7 @@ let formatDateTime = (dateTimeString) => {
     return formattedDateTime;
 };
 
-let getData = (id,useUid) => {
+let getData = (id, useUid) => {
     return new Promise((resolve, reject) => {
         var returnData = {
             pet: [],
@@ -76,73 +76,75 @@ let getData = (id,useUid) => {
             perfect: [],
         };
 
-        Promise.all([getRoleGameAchievements(useUid? {uid: id}: {jx3id:id}), getAchievements()]).then(([res, mapRule]) => {
-            const achievements = res.data?.data?.achievements || "";
-            let list = achievements.split(",");
-            let newList = [];
-            mapRule.data.map((item) => {
-                if (list.includes(String(item.achievement_id))) {
-                    newList.push(item.adventure_id);
+        Promise.all([getRoleGameAchievements(useUid ? { uid: id } : { jx3id: id }), getAchievements()]).then(
+            ([res, mapRule]) => {
+                const achievements = res.data?.data?.achievements || "";
+                let list = achievements.split(",");
+                let newList = [];
+                mapRule.data.map((item) => {
+                    if (list.includes(String(item.achievement_id))) {
+                        newList.push(item.adventure_id);
+                    }
+                });
+                list = newList;
+                if (res.data?.data?.updated_at) {
+                    returnData.updated_at = formatDateTime(res.data?.data?.updated_at);
+                } else {
+                    returnData.updated_at = "暂无记录";
                 }
-            });
-            list = newList;
-            if (res.data?.data?.updated_at) {
-                returnData.updated_at = formatDateTime(res.data?.data?.updated_at);
-            } else {
-                returnData.updated_at = "暂无记录";
-            }
-            // 定义奇遇类型数组
-            const adventureTypes = ["pet", "normal", "perfect"];
-            // 创建 Promise 数组来存储所有奇遇数据的 Promise
-            const adventurePromises = adventureTypes.map((type) => {
-                return getAdventures({
-                    type,
-                    _no_page: 1,
-                }).then((res) => {
-                    const achievementsList = [];
-                    let actNum = 0;
-                    let unNum = 0;
-                    res?.data?.list?.forEach((item) => {
-                        if (type == "perfect") {
-                            try {
-                                item.isAct = false;
+                // 定义奇遇类型数组
+                const adventureTypes = ["pet", "normal", "perfect"];
+                // 创建 Promise 数组来存储所有奇遇数据的 Promise
+                const adventurePromises = adventureTypes.map((type) => {
+                    return getAdventures({
+                        type,
+                        _no_page: 1,
+                    }).then((res) => {
+                        const achievementsList = [];
+                        let actNum = 0;
+                        let unNum = 0;
+                        res?.data?.list?.forEach((item) => {
+                            if (type == "perfect") {
+                                try {
+                                    item.isAct = false;
+                                    if (list.includes(item.dwID)) {
+                                        item.isAct = true;
+                                        actNum++;
+                                    }
+                                    achievementsList.push({
+                                        ...item,
+                                        ...perfectAchievement[item.dwID],
+                                    });
+                                } catch (error) {
+                                    unNum++;
+                                }
+                            } else {
                                 if (list.includes(item.dwID)) {
-                                    item.isAct = true;
+                                    achievementsList.push(item);
                                     actNum++;
                                 }
-                                achievementsList.push({
-                                    ...item,
-                                    ...perfectAchievement[item.dwID],
-                                });
-                            } catch (error) {
-                                unNum++;
                             }
-                        } else {
-                            if (list.includes(item.dwID)) {
-                                achievementsList.push(item);
-                                actNum++;
-                            }
-                        }
+                        });
+                        returnData[`${type}AllNum`] = (res?.data?.list?.length || 0) - unNum;
+                        returnData[`${type}NowNum`] = actNum;
+                        returnData[type] = achievementsList;
                     });
-                    returnData[`${type}AllNum`] = (res?.data?.list?.length || 0) - unNum;
-                    returnData[`${type}NowNum`] = actNum;
-                    returnData[type] = achievementsList;
                 });
-            });
 
-            // 所有奇遇数据的 Promise 执行完成后，调用 inspectionResult
-            Promise.all(adventurePromises)
-                .then(() => {
-                    returnData.progress =
-                        (returnData.petNowNum + returnData.normalNowNum + returnData.perfectNowNum) /
-                        (returnData.petAllNum + returnData.normalAllNum + returnData.perfectAllNum);
-                    returnData.progress = (returnData.progress * 100).toFixed(2);
-                    resolve(returnData);
-                })
-                .catch((error) => {
-                    reject(error); // 处理错误
-                });
-        });
+                // 所有奇遇数据的 Promise 执行完成后，调用 inspectionResult
+                Promise.all(adventurePromises)
+                    .then(() => {
+                        returnData.progress =
+                            (returnData.petNowNum + returnData.normalNowNum + returnData.perfectNowNum) /
+                            (returnData.petAllNum + returnData.normalAllNum + returnData.perfectAllNum);
+                        returnData.progress = (returnData.progress * 100).toFixed(2);
+                        resolve(returnData);
+                    })
+                    .catch((error) => {
+                        reject(error); // 处理错误
+                    });
+            }
+        );
     });
 };
 

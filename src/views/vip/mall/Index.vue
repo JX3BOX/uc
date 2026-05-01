@@ -4,7 +4,7 @@
             <div class="m-search">
                 <el-input placeholder="请输入搜索内容" v-model.trim.lazy="search" class="input-with-select" clearable>
                     <span slot="prepend">关键词</span>
-                    <el-button slot="append" icon="el-icon-search"></el-button>
+                    <el-button slot="append" icon="Search"></el-button>
                 </el-input>
                 <!-- <el-badge
                     class="u-cart"
@@ -41,7 +41,14 @@
         </div>
 
         <div class="m-mall-list" v-loading="loading" v-if="list && list.length">
-            <Item v-for="item in list" :key="item.id" :isPro="isPro" :data="item" :skinJson="skinJson" :myVirtualItems="myVirtualItems" />
+            <Item
+                v-for="item in list"
+                :key="item.id"
+                :isPro="isPro"
+                :data="item"
+                :skinJson="skinJson"
+                :myVirtualItems="myVirtualItems"
+            />
         </div>
         <div class="m-mall-null" v-else><el-empty description="当前条件下没有找的符合的记录"></el-empty></div>
 
@@ -50,7 +57,7 @@
             background
             :hide-on-single-page="true"
             @current-change="changePage"
-            :current-page.sync="pageIndex"
+            v-model:current-page="pageIndex"
             :page-size="pageSize"
             layout="total, prev, pager, next"
             :total="total"
@@ -62,7 +69,7 @@
 import { getItemList, getDecoration, getSkinJson } from "@/service/vip/mall";
 import Item from "./components/Item.vue";
 import { debounce } from "lodash";
-import { __userLevel } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userLevel } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 export default {
     name: "MallList",

@@ -1,4 +1,4 @@
-import { $cms } from "@jx3box/jx3box-common/js/https";
+import { $cms } from "@jx3box/jx3box-common/js/api";
 
 function getFreeVip(event) {
     return $cms({ popType: "alert" }).put(`/api/cms/event/vip/${event}`);

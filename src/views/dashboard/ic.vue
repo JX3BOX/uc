@@ -13,22 +13,23 @@
 
                     <div class="m-packet-table" v-if="list && list.length">
                         <table class="m-ic-in-list m-packet-in-list">
-                            <tr>
-                                <th>邀请码</th>
-                                <th>状态</th>
-                                <th>生成时间</th>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>邀请码</th>
+                                    <th>状态</th>
+                                    <th>生成时间</th>
+                                </tr>
+                            </thead>
                             <tr v-for="(item, i) in list" :key="i">
                                 <td>
                                     {{ item.code }}
                                     <i
                                         class="u-copy el-icon-document-copy"
-                                        v-clipboard:copy="item.code"
-                                        v-clipboard:success="onCopy"
+                                        @click.stop="onCopy(item.code)"
                                     ></i>
                                 </td>
                                 <td>
-                                    <el-tag :type="item.status ? 'success' : 'info'" size="small">{{
+                                    <el-tag :type="item.status ? 'success' : 'info'">{{
                                         item.status ? "未使用" : "已使用"
                                     }}</el-tag>
                                 </td>
@@ -53,7 +54,7 @@
 <script>
 import { showTime } from "@jx3box/jx3box-common/js/moment";
 import { genInvitation, getMyInvitation } from "@/service/dashboard/ic.js";
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 export default {
     name: "Ic",
     props: [],
@@ -103,8 +104,10 @@ export default {
             return showTime(val);
         },
         // 复制成功
-        onCopy: function () {
-            this.$message.success("复制成功");
+        onCopy: function (code) {
+            navigator.clipboard.writeText(code).then(() => {
+                this.$message.success("复制成功");
+            });
         },
     },
     created: function () {

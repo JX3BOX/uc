@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <Header></Header>
+    <div >
+        <CommonHeader></CommonHeader>
         <div class="m-vip-container">
             <div class="m-vip-index">
                 <!-- <el-alert title="Nothing yet" type="warning" show-icon> </el-alert> -->
@@ -18,7 +18,7 @@
                 </el-row>
             </div>
         </div>
-        <Footer></Footer>
+        <CommonFooter></CommonFooter>
     </div>
 </template>
 
@@ -44,7 +44,8 @@ export default {
                 },
                 {
                     name: "高级会员",
-                    slug: "premium",
+                    // slug: "premium",
+                    slug: "mall/160",
                     icon: "el-icon-star-off",
                     desc: "高级会员",
                 },

@@ -2,7 +2,7 @@
     <uc class="m-dashboard-theme m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tab-list="tabList">
         <template #header>
             <a
-                class="u-link el-button el-button--default el-button--mini is-round is-plain"
+                class="u-link el-button el-button--default el-button--small is-round is-plain"
                 href="/vip/mall?category=virtual"
                 target="_blank"
                 ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
@@ -59,7 +59,7 @@
                                     :class="item2.isHave ? (item2.using ? 'select' : '') : 'noHave'"
                                     @click="setStatus(i, i2, item2)"
                                 >
-                                    <el-image :src="item2 | showDecoration" fit="contain" />
+                                    <el-image :src="showDecoration(item2)" fit="contain" />
                                 </div>
                                 <div class="u-decoration-name">{{ item2.text }}</div>
                             </div>
@@ -69,8 +69,8 @@
             </div>
         </div>
         <div class="u-btn">
-            <el-button type="primary" @click="decorationSubmit">确认</el-button>
-            <el-button @click="reset">重置</el-button>
+            <el-button type="primary" @click="decorationSubmit" size="large">确认</el-button>
+            <el-button @click="reset" size="large">重置</el-button>
         </div>
     </uc>
 </template>
@@ -79,9 +79,10 @@
 import uc from "@/components/dashboard/uc.vue";
 import { getDecoration, setDecoration, getDecorationJson } from "@/service/dashboard/decoration";
 import User from "@jx3box/jx3box-common/js/user";
-import { __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath, __cdn } from "@/utils/config";
 import { cloneDeep, flatten } from "lodash";
-import { themeTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { themeTab } = tabsData;
 
 const sortBy = function (sort) {
     return (x, y) => {
@@ -292,14 +293,12 @@ export default {
                 });
             });
         },
-    },
-    mounted: function () {
-        this.loadDecoration();
-    },
-    filters: {
         showDecoration: function (item) {
             return __cdn + `design/decoration/images/${item.val}/${item.type}_preview.png`;
         },
+    },
+    mounted: function () {
+        this.loadDecoration();
     },
     components: {
         uc,

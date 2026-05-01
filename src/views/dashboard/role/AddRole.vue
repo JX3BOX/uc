@@ -2,13 +2,7 @@
     <div class="v-role-add">
         <h2 class="u-title">
             <i class="el-icon-circle-plus-outline"></i> 创建角色
-            <el-button
-                slot="reference"
-                class="u-back"
-                size="mini"
-                icon="el-icon-arrow-left"
-                @click="goBack"
-            >返回列表</el-button>
+            <el-button class="u-back" icon="ArrowLeft" @click="goBack">返回列表</el-button>
         </h2>
         <roleform :data="form" @submit="submit" btn_txt="创建" :processing="processing" />
     </div>
@@ -24,10 +18,7 @@ export default {
         return {
             form: {
                 name: "",
-                server:
-                    (localStorage &&
-                        localStorage.getItem("team_role_default_server")) ||
-                    "",
+                server: (localStorage && localStorage.getItem("team_role_default_server")) || "",
                 mount: "0",
                 body_type: "1",
                 note: "",
@@ -52,9 +43,9 @@ export default {
                     this.processing = false;
                 });
         },
-        goBack : function (){
-            this.$router.push('/role')
-        }
+        goBack: function () {
+            this.$router.push("/role");
+        },
     },
     mounted: function () {},
     components: {

@@ -1,4 +1,5 @@
-/dashboard<template>
+/dashboard
+<template>
     <uc
         class="m-dashboard-frame m-dashboard-skin"
         icon="el-icon-bell"
@@ -12,12 +13,15 @@
                     class="m-dashboard-work-search"
                     placeholder="请输入搜索内容"
                     v-model="keyword"
-                    @keyup.enter.native="changePage(1)"
+                    @keyup.enter="changePage(1)"
+                    size="large"
                 >
-                    <template slot="prepend">关键词</template>
-                    <el-button slot="append" icon="el-icon-search" @click="changePage(1)"></el-button>
+                    <template #prepend>关键词</template>
+                    <template #append>
+                        <el-button icon="Search" @click="changePage(1)"></el-button>
+                    </template>
                 </el-input>
-                <el-button class="u-read-all" type="primary" @click="read(null)">
+                <el-button class="u-read-all" size="large" type="primary" @click="read(null)">
                     <i class="el-icon el-icon-check"></i>
                     <span v-text="'全部设为已读'"></span>
                 </el-button>
@@ -54,13 +58,12 @@
                     </div>
                     <el-button-group class="u-action">
                         <el-button
-                            size="mini"
-                            icon="el-icon-check"
+                            icon="Check"
                             title="设为已读"
                             @click="read(item)"
                             :disabled="item.read == 1"
                         ></el-button>
-                        <el-button size="mini" icon="el-icon-delete" title="删除" @click="del(item)"></el-button>
+                        <el-button icon="Delete" title="删除" @click="del(item)"></el-button>
                     </el-button-group>
                 </li>
             </ul>
@@ -78,8 +81,8 @@
                 background
                 :hide-on-single-page="true"
                 @current-change="changePage"
-                :current-page.sync="page"
-                :page-size.sync="limit"
+                v-model:current-page="page"
+                v-model:page-size="limit"
                 layout="total, prev, pager, next, jumper"
                 :total="total"
             ></el-pagination>
@@ -90,7 +93,8 @@
 </template>
 
 <script>
-import { msgTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { msgTab } = tabsData;
 import { getMsgs, readMsg, removeMsg, readAll, getCommentMsgDetail } from "@/service/dashboard/msg.js";
 import { showTime } from "@jx3box/jx3box-common/js/moment.js";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
@@ -104,7 +108,7 @@ import CommentDetail from "@/components/dashboard/msg/CommentDetail.vue";
 
 const redirectMap = {
     team_member_list: "/team/my/org/{id}?tab=manage-member",
-}
+};
 
 export default {
     name: "msg",

@@ -30,7 +30,14 @@
                             :key="key"
                             @click="childLinkClick(item.key, child.key)"
                         >
-                            <i class="u-arrow el-icon-caret-right"></i>
+                            <img
+                                svg-inline
+                                :src="
+                                    require(`@/assets/img/vip/mall/icon_0${
+                                        query.sub_category !== child.key ? '1' : '2'
+                                    }.svg`)
+                                "
+                            />
                             {{ child.name }}
                         </div>
                     </div>
@@ -49,7 +56,15 @@
                                     : ''
                             "
                         >
-                            <i class="u-arrow el-icon-caret-right"></i> {{ child.name }}
+                            <img
+                                svg-inline
+                                :src="
+                                    require(`@/assets/img/vip/mall/icon_0${
+                                        query.sub_category !== child.key ? '1' : '2'
+                                    }.svg`)
+                                "
+                            />
+                            {{ child.name }}
                         </a>
                     </div>
                 </div>
@@ -58,16 +73,22 @@
         <div class="right">
             <SearchBox></SearchBox>
             <div class="goods-list">
-                <GoodItem v-for="(item, index) in list" :key="index" :good="item"></GoodItem>
+                <template v-if="list && list.length">
+                    <GoodItem v-for="(item, index) in list" :key="index" :good="item"></GoodItem>
+                </template>
+                <template v-else>
+                    <div class="u-null"><i class="el-icon-warning-outline"></i> 暂无数据</div>
+                </template>
             </div>
             <div class="pagination">
                 <el-pagination
                     :layout="query.pageSize == 10 ? 'total,prev, pager, next' : 'prev, pager, next'"
                     :pager-count="5"
                     :total="query.total"
-                    :page-size.sync="query.pageSize"
-                    :current-page.sync="query.pageIndex"
+                    v-model:page-size="query.pageSize"
+                    v-model:current-page="query.pageIndex"
                     @current-change="handleCurrentChange"
+                    hide-on-single-page
                 >
                 </el-pagination>
             </div>
@@ -84,7 +105,7 @@
 <script>
 import { getConfig } from "@/service/vip/cms";
 import { getDecoration } from "@/service/author/cms";
-import { __Root, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, __cdn } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import types from "@/assets/data/vip/goods_types.json";
 import SearchBox from "./SearchBox.vue";
@@ -180,7 +201,7 @@ export default {
                 .color(rgba(194, 194, 194, 1));
                 &.active,
                 &:not(.active):hover {
-                    .color(#0366d6);
+                    .color(rgba(255, 195, 0, 1));
                 }
                 &.active {
                     .color(rgba(255, 195, 0, 1));
@@ -214,6 +235,7 @@ export default {
                 .flex;
                 align-items: center;
                 padding: 8px 0;
+                gap: 4px;
                 .color(rgba(163, 163, 163, 1));
                 &.active {
                     .color(rgba(255, 195, 0, 1));
@@ -222,7 +244,7 @@ export default {
                     }
                 }
                 &:not(.active):hover {
-                    .color(@pink);
+                    .color(rgba(255, 195, 0, 1));
                 }
                 &.active {
                     .bold;
@@ -242,12 +264,22 @@ export default {
             flex-wrap: wrap;
             gap: 16px;
             align-content: flex-start;
+
+            .u-null {
+                .x;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .w(100%);
+                padding: 200px 0;
+            }
         }
         .pagination {
             display: flex;
             justify-content: center;
             margin-top: 33px;
-            /deep/ .el-pagination {
+            :deep(.el-pagination) {
+                font-weight: 400;
                 background-color: transparent;
                 button,
                 .el-pagination__total,
@@ -258,21 +290,22 @@ export default {
                 button,
                 .el-pager li {
                     color: white;
+                    margin: 0 12px;
                     &:hover {
                         color: #5cb6ff;
                     }
                 }
                 .el-pager li {
                     &.active {
-                        width: 24px;
-                        height: 24px;
+                        .size(24px);
+                        .bold;
+                        .fz(18px,24px);
                         border-radius: 12px;
                         background: rgba(255, 255, 255, 0.75);
                         color: #000;
                         padding: 0;
-                        margin: 2px 4px;
+                        margin: 2px 12px;
                         min-width: 24px;
-                        line-height: 24px;
                     }
                 }
             }

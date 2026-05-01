@@ -11,7 +11,7 @@
                     action="upload/avatar"
                     :auto-upload="false"
                 >
-                    <i class="el-icon-upload"></i>
+                    <el-icon class="el-icon--upload"><upload-filled /></el-icon>
                     <div class="el-upload__text">
                         将文件拖到此处，或
                         <em>点击上传</em>
@@ -35,20 +35,20 @@
             </div>
         </div>
         <div class="u-profile-btn">
-            <el-button type="primary" @click="submit">确认</el-button>
-            <el-button @click="reset">重置</el-button>
+            <el-button type="primary" @click="submit" size="large">确认</el-button>
+            <el-button @click="reset" size="large">重置</el-button>
         </div>
     </uc>
 </template>
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 import { updateAvatar, uploadAvatar, getUserOverview } from "@/service/dashboard/profile";
 import User from "@jx3box/jx3box-common/js/user";
 import { showAvatar } from "@jx3box/jx3box-common/js/utils";
 import frames from "@jx3box/jx3box-common/data/user_avatar_frame.json";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 export default {
     name: "avatar",
     props: [],

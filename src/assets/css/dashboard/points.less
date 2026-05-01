@@ -1,5 +1,7 @@
 .m-points {
 	h2 {
+		font-size: 24px;
+		font-weight: bold;
 		margin: 0;
 		border-bottom: 1px solid #e4e7ed;
 		padding-bottom: 10px;
@@ -19,7 +21,7 @@
 			.mr(15px);
 		}
 		.u-have {
-			.color(@color-link);
+			.color(@v4primary);
 		}
 	}
 	.m-tabs {
@@ -45,9 +47,16 @@
         box-shadow: none !important;
     }
 
+	.u-link{
+		&:hover {
+			color: @v4primary;
+		}
+	}
+
 	.m-packet-pages {
 		.pt(20px);
 		overflow-x: auto;
         .x;
+		justify-content: center;
 	}
 }

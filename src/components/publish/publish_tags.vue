@@ -14,24 +14,52 @@
 <script>
 export default {
     name: "publish_tags",
-    props: ["data", "options", "label"],
+    props: {
+        modelValue: {
+            type: Array,
+            default: undefined,
+        },
+        data: {
+            type: Array,
+            default: () => [],
+        },
+        options: {
+            type: Array,
+            default: () => [],
+        },
+        label: {
+            type: String,
+            default: "",
+        },
+    },
     data: function () {
         return {
-            tag: this.data || [],
+            tag: (this.modelValue !== undefined ? this.modelValue : this.data) || [],
             tags: this.options || [],
         };
     },
-    model: {
-        prop: "data", //向上同步数据
-        event: "update",
-    },
+    emits: ["update", "update:modelValue"],
     watch: {
-        data: function (newval) {
-            this.tag = newval || [];
+        modelValue: {
+            deep: true,
+            handler: function (newval) {
+                if (newval !== undefined) {
+                    this.tag = newval || [];
+                }
+            },
+        },
+        data: {
+            deep: true,
+            handler: function (newval) {
+                if (this.modelValue === undefined) {
+                    this.tag = newval || [];
+                }
+            },
         },
         tag: {
             deep: true,
             handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

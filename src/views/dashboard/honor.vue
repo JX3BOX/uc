@@ -1,8 +1,9 @@
-/dashboard<template>
+/dashboard
+<template>
     <uc class="m-dashboard-honor m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tab-list="tabList">
         <template #header>
             <a
-                class="u-link el-button el-button--default el-button--mini is-round is-plain"
+                class="u-link el-button el-button--default el-button--small is-round is-plain"
                 href="/vip/mall?category=virtual"
                 target="_blank"
                 ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
@@ -11,7 +12,7 @@
         <div class="m-honor">
             <div class="m-honor-left">
                 <div class="u-header-info">
-                    <Avatar
+                    <CommonAvatar
                         class="u-author-avatar"
                         :uid="uid"
                         :url="avatar"
@@ -65,7 +66,7 @@
                     <div class="u-honor-item">
                         <div class="u-picbox" v-for="(item, i) in honorList" :key="i">
                             <el-tooltip effect="dark" placement="top" :open-delay="200">
-                                <div slot="content">{{ item.name }}</div>
+                                <template #content>{{ item.name }}</template>
                                 <div class="u-pic" :class="setClass(item)" @click="selectChange(item)">
                                     <div v-if="item.isCustomize" class="u-noHonor"></div>
                                     <el-image :src="imgUrl(item)" fit="contain" v-else />
@@ -77,20 +78,22 @@
             </div>
         </div>
         <div class="m-btn">
-            <el-button type="primary" @click="submit">确认</el-button>
-            <el-button @click="reset">重置</el-button>
+            <el-button type="primary" @click="submit" size="large">确认</el-button>
+            <el-button @click="reset" size="large">重置</el-button>
         </div>
     </uc>
 </template>
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { themeTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { themeTab } = tabsData;
 import User from "@jx3box/jx3box-common/js/user";
 import { getMyInfo } from "@/service/dashboard/index.js";
-import { __userLevelColor, __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box";
+import { __userLevelColor, __imgPath, __cdn } from "@/utils/config";
 import { getHonor, getUserHonors, setHonor, cancelHonor } from "@/service/dashboard/decoration";
 import { cloneDeep, inRange } from "lodash";
+import CommonAvatar from "@jx3box/jx3box-ui/src/author/Avatar.vue";
 export default {
     name: "honor",
     props: [],
@@ -211,7 +214,7 @@ export default {
             return honorStr + honorConfig.suffix;
         },
         loadHonor() {
-            getHonor().then((res) => {
+            getHonor({ per: 40 }).then((res) => {
                 this.honorList = res.data.data.list;
                 this.loadDecoration();
             });
@@ -265,8 +268,8 @@ export default {
             this.isSelect = item;
         },
         reset() {
-            this.$set(this, "honorList", cloneDeep(this.list));
-            this.$set(this, "isSelect", cloneDeep(this.isSelectBak));
+            this.honorList = cloneDeep(this.list);
+            this.isSelect = cloneDeep(this.isSelectBak);
         },
         sortData(arr) {
             // 已有的称号
@@ -303,6 +306,7 @@ export default {
     },
     components: {
         uc,
+        CommonAvatar,
     },
 };
 </script>

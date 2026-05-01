@@ -1,13 +1,18 @@
 <template>
     <div class="m-exam">
-        <el-tabs class="m-tabs" v-model="active" type="card">
-            <el-tab-pane v-for="item in types" :key="item.value" :label="item.label" :name="item.value" :lazy="true">
-                <span slot="label">
-                    <i :class="item.icon"></i>
-                    {{ item.label }}
-                </span>
-            </el-tab-pane>
-        </el-tabs>
+        <div class="m-segmented">
+            <el-segmented
+                v-model="active"
+                :options="types.map((item) => ({ label: item.label, value: item.value, icon: item.icon }))"
+            >
+                <template #default="scope">
+                    <div class="flex items-center gap-1 p-2">
+                        <i :class="scope.item.icon"></i>
+                        <div>{{ scope.item.label }}</div>
+                    </div>
+                </template>
+            </el-segmented>
+        </div>
         <div class="m-primary">
             <component :is="currentComponent" v-if="activeType === active" />
         </div>
@@ -36,16 +41,16 @@ export default {
                     icon: "el-icon-sugar",
                 },
                 {
-                    label: "战斗",
-                    value: "Battle",
-                    component: Battle,
-                    icon: "el-icon-ice-cream",
-                },
-                {
                     label: "插件",
                     value: "DBM",
                     component: DBM,
                     icon: "el-icon-cold-drink",
+                },
+                {
+                    label: "战斗",
+                    value: "Battle",
+                    component: Battle,
+                    icon: "el-icon-ice-cream",
                 },
             ],
         };
@@ -60,3 +65,11 @@ export default {
     },
 };
 </script>
+
+<style lang="less">
+.m-exam {
+    .m-segmented, .el-segmented {
+        .x;
+    }
+}
+</style>

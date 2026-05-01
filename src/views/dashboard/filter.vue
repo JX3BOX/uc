@@ -3,7 +3,7 @@
         <h2 class="u-title"><i class="el-icon-odometer"></i> 敏感词测试</h2>
         <div class="m-content" v-loading="loading">
             <el-input type="textarea" :rows="6" placeholder="请输入敏感词 / 粘贴段落" v-model="textarea"> </el-input>
-            <el-button type="primary" @click="filter">提交</el-button>
+            <el-button type="primary" @click="filter" size="large">提交</el-button>
             <template v-if="content">
                 <el-card shadow="never">
                     <el-divider content-position="left"><i class="el-icon-chat-line-round"></i> 显示内容</el-divider

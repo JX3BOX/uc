@@ -76,6 +76,11 @@ export const cmsMetaMixin = {
 
             // 如果外链数量大于5，标记为违规
             this.is_illegal = count >= 5;
+        },
+        onAnonymousChange: function() {
+            if (this.post.anonymous) {
+                this.post.visible = 0;
+            }
         }
     },
     created: function() {

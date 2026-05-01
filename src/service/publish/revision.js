@@ -1,4 +1,4 @@
-import { $cms } from "@jx3box/jx3box-common/js/https.js";
+import { $cms } from "@jx3box/jx3box-common/js/api.js";
 
 const addRevision = (postId, data) => {
     return $cms().post(`/api/cms/post/${postId}/revision`, data);

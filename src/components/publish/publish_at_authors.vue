@@ -2,13 +2,13 @@
     <div class="m-publish-authors">
         <el-form-item label="@圈一下">
             <div class="u-list">
-                <div class="u-item" v-for="(item,i) in list" :key="i">
-                    <img class="u-avatar" :src="item.user_avatar | showAvatar" />
+                <div class="u-item" v-for="(item, i) in list" :key="i">
+                    <img class="u-avatar" :src="showAvatar(item.user_avatar)" />
                     <span class="u-name">
-                        {{item.display_name}}
+                        {{ item.display_name }}
                     </span>
                     <el-tooltip class="item" effect="dark" content="移除" placement="top">
-                        <i class="u-delete el-icon-delete" @click="remove(item,i)"></i>
+                        <i class="u-delete el-icon-delete" @click="remove(item, i)"></i>
                     </el-tooltip>
                 </div>
             </div>
@@ -20,18 +20,18 @@
 import { getUserInfoByIds } from "@/service/publish/user.js";
 import { showAvatar } from "@jx3box/jx3box-common/js/utils";
 export default {
-    name: 'publish_at_authors',
+    name: "publish_at_authors",
     data() {
         return {
             authorIds: [],
             list: [],
-        }
+        };
     },
     mounted() {
-        window.addEventListener('setItemEvent', this.handleSession)
+        window.addEventListener("setItemEvent", this.handleSession);
     },
-    beforeDestroy() {
-        window.removeEventListener('setItemEvent', this.handleSession)
+    beforeUnmount() {
+        window.removeEventListener("setItemEvent", this.handleSession);
     },
     watch: {
         authorIds: {
@@ -40,38 +40,38 @@ export default {
                 if (val.length > oVal.length) {
                     this.loadUsers();
                 }
-            }
-        }
+            },
+        },
     },
     methods: {
-        handleSession (e) {
-            if (e.key !== 'atAuthor') return
+        handleSession(e) {
+            if (e.key !== "atAuthor") return;
             try {
                 const newVal = JSON.parse(e.newVal);
                 this.authorIds = newVal;
-            } catch(e) {
-                console.log(e)
+            } catch (e) {
+                console.log(e);
                 this.authorIds = [];
             }
         },
         loadUsers() {
-            getUserInfoByIds(this.authorIds).then(res => {
+            getUserInfoByIds(this.authorIds).then((res) => {
                 this.list = res.data.data;
-            })
+            });
         },
         remove(item, i) {
-            const _ids = this.authorIds.split(',')
+            const _ids = this.authorIds.split(",");
             _ids.splice(i, 1);
             this.list.splice(i, 1);
-            _ids.length ? sessionStorage.setItem('atAuthor', JSON.stringify(_ids.join(','))) : sessionStorage.removeItem('atAuthor');
-        }
-    },
-    filters: {
+            _ids.length
+                ? sessionStorage.setItem("atAuthor", JSON.stringify(_ids.join(",")))
+                : sessionStorage.removeItem("atAuthor");
+        },
         showAvatar: function (val) {
             return showAvatar(val);
         },
     },
-}
+};
 </script>
 
 <style lang="less" scoped>
@@ -84,7 +84,8 @@ export default {
         padding: 6px 0;
         // display: flex;
         .clearfix;
-        .el-button,.u-item{
+        .el-button,
+        .u-item {
             .fl;
         }
         .u-item {

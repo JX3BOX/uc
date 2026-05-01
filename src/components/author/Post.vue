@@ -1,51 +1,52 @@
 <template>
-    <div class="m-post" v-loading="loading">
-        <!--        </el-timeline>-->
-        <div v-if="list && list.length" class="m-archive-list">
-            <ul class="u-list">
-                <li class="u-item" v-for="(item, i) in list" :key="i + item">
-                    <!-- Banner -->
-                    <a class="u-banner" :href="postLink(item.post_type, item.ID, item.client)" target="_blank">
-                        <img :src="getBanner(item, item.post_subtype, item.post_type)" :key="item.ID" />
-                    </a>
+    <div class="p-author__post">
+        <div class="m-post" v-loading="loading">
+            <div v-if="list && list.length" class="m-archive-list">
+                <ul class="u-list">
+                    <li class="u-item" v-for="(item, i) in list" :key="i + item">
+                        <!-- Banner -->
+                        <a class="u-banner" :href="postLink(item.post_type, item.ID, item.client)" target="_blank">
+                            <img :src="getBanner(item, item.post_subtype, item.post_type)" :key="item.ID" />
+                        </a>
 
-                    <!-- 标题 -->
-                    <h2 class="u-post">
-                        <!-- 标题文字 -->
-                        <a class="u-title" :href="postLink(item.post_type, item.ID, item.client)" target="_blank">{{
-                            item.post_title || "无标题"
-                        }}</a>
-                    </h2>
+                        <!-- 标题 -->
+                        <h2 class="u-post">
+                            <!-- 标题文字 -->
+                            <a class="u-title" :href="postLink(item.post_type, item.ID, item.client)" target="_blank">{{
+                                item.post_title || "无标题"
+                            }}</a>
+                        </h2>
 
-                    <!-- 字段 -->
-                    <div class="u-content u-desc">
-                        {{ item.post_excerpt || item.post_title || "这个作者很懒,什么都没有留下" }}
-                    </div>
+                        <!-- 字段 -->
+                        <div class="u-desc">
+                            {{ item.post_excerpt || item.post_title || "这个作者很懒,什么都没有留下" }}
+                        </div>
 
-                    <!-- 作者 -->
-                    <div class="u-misc">
-                        <span class="u-date">
-                            Updated on
-                            <time>{{ item.post_modified | dateFormat }}</time>
-                        </span>
-                    </div>
-                </li>
-            </ul>
+                        <!-- 作者 -->
+                        <div class="u-misc">
+                            <span class="u-date">
+                                Updated on
+                                <time>{{ dateFormat(item.post_modified) }}</time>
+                            </span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <!-- <el-alert v-else title="没有找到相关条目" type="info" show-icon> </el-alert> -->
+            <div class="m-empty" v-else>
+                <img src="@/assets/img/author/null.png" width="80%" />
+            </div>
+            <el-pagination
+                class="m-author-pages"
+                background
+                :hide-on-single-page="true"
+                layout="prev, pager, next"
+                :total="total"
+                v-model:current-page="page"
+                :page-size="per"
+            >
+            </el-pagination>
         </div>
-        <!-- <el-alert v-else title="没有找到相关条目" type="info" show-icon> </el-alert> -->
-        <div class="m-empty" v-else>
-            <img src="@/assets/img/author/null.png" width="80%" />
-        </div>
-        <el-pagination
-            class="m-author-pages"
-            background
-            :hide-on-single-page="true"
-            layout="prev, pager, next"
-            :total="total"
-            :current-page.sync="page"
-            :page-size="per"
-        >
-        </el-pagination>
     </div>
 </template>
 
@@ -53,7 +54,7 @@
 import { getLink, showBanner } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
 import { getPosts } from "@/service/author/cms.js";
-import { __postType, __clients, __Root, __OriginRoot, __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __postType, __clients, __Root, __OriginRoot, __imgPath } from "@/utils/config";
 import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
 export default {
     props: [],
@@ -68,7 +69,7 @@ export default {
                 std: __Root.slice(0, -1),
                 origin: __OriginRoot.slice(0, -1),
                 all: "",
-                "wujie": ""
+                wujie: "",
             },
         };
     },
@@ -131,8 +132,6 @@ export default {
                 return __imgPath + `image/banner/` + post_type + subtype + ".png";
             }
         },
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(val));
         },
@@ -158,26 +157,23 @@ export default {
 </script>
 
 <style lang="less">
-.m-post {
-    padding: 20px;
-    .el-tabs__item {
-        .bold;
-    }
-    .u-type {
-        margin: 0;
-    }
-    .u-title {
-        &:hover {
-            color: @pink;
+.p-author__post {
+    .m-post {
+        padding: 20px;
+        .el-tabs__item {
+            .bold;
+        }
+        .u-type {
+            margin: 0;
         }
     }
-}
-.m-post-list {
-    padding-left: 20px;
-}
-.m-author-pages {
-    .x;
-    max-width: 100%;
-    overflow-x: auto;
+    .m-post-list {
+        padding-left: 20px;
+    }
+    .m-author-pages {
+        .x;
+        max-width: 100%;
+        overflow-x: auto;
+    }
 }
 </style>

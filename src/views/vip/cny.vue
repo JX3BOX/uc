@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <Header></Header>
+    <div>
+        <CommonHeader></CommonHeader>
         <!-- <Breadcrumb name="充值金箔" slug="vip" root="/vip/cny" :publishEnable="false" :adminEnable="false" :feedbackEnable="true">
             <img slot="logo" svg-inline src="@/assets/img/vip/logo.svg" />
         </Breadcrumb> -->
@@ -20,18 +20,18 @@
                                 </div>
                             </el-form-item>
                             <el-form-item label="购买数量">
-                                <el-radio-group v-model="count" size="small">
-                                    <el-radio :label="1688" border>1688金箔</el-radio>
-                                    <el-radio :label="8888" border>8888金箔</el-radio>
-                                    <el-radio :label="12888" border>12888金箔</el-radio>
-                                    <el-radio :label="36888" border>36888金箔</el-radio>
-                                    <el-radio :label="68888" border>68888金箔</el-radio>
+                                <el-radio-group v-model="count">
+                                    <el-radio :value="1688" border>1688金箔</el-radio>
+                                    <el-radio :value="8888" border>8888金箔</el-radio>
+                                    <el-radio :value="12888" border>12888金箔</el-radio>
+                                    <el-radio :value="36888" border>36888金箔</el-radio>
+                                    <el-radio :value="68888" border>68888金箔</el-radio>
                                 </el-radio-group>
                             </el-form-item>
                             <el-form-item label="支付金额">
                                 <div>
                                     <span>¥</span>
-                                    <b class="u-price">{{ count | formatPrice }}</b>
+                                    <b class="u-price">{{ formatPrice(count) }}</b>
                                     <span>元</span>
                                 </div>
                             </el-form-item>
@@ -44,14 +44,18 @@
                     </div>
                 </div>
                 <result class="m-boxcoin-result" v-else>
-                    <div slot="title" class="m-boxcoin-result-title">充值成功</div>
-                    <div slot="desc" class="m-boxcoin-result-desc">
-                        <p>
-                            当前剩余金箔：
-                            <b>{{ total }}</b>
-                        </p>
-                        <el-button class="u-back" @click="goBack" plain icon="el-icon-refresh-left">返回</el-button>
-                    </div>
+                    <template #title>
+                        <div class="m-boxcoin-result-title">充值成功</div>
+                    </template>
+                    <template #desc>
+                        <div class="m-boxcoin-result-desc">
+                            <p>
+                                当前剩余金箔：
+                                <b>{{ total }}</b>
+                            </p>
+                        </div>
+                        <el-button class="u-back" @click="goBack" plain icon="RefreshLeft">返回</el-button>
+                    </template>
                 </result>
             </div>
         </Main>
@@ -64,7 +68,7 @@
             :returnUrl="returnUrl"
             @done="finish"
         />
-        <Footer></Footer>
+        <CommonFooter></CommonFooter>
     </div>
 </template>
 
@@ -136,6 +140,9 @@ export default {
                 this.cny_enable = Number(res.val);
             });
         },
+        formatPrice: function (val) {
+            return val && (~~val / 100).toFixed(2);
+        },
     },
     created: function () {
         if (this.isLogin) {
@@ -146,11 +153,6 @@ export default {
 
         let params = new URLSearchParams(location.search);
         this.refer = params.get("redirect") || "";
-    },
-    filters: {
-        formatPrice: function (val) {
-            return val && (~~val / 100).toFixed(2);
-        },
     },
     components: {
         paypop,

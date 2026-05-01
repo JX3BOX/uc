@@ -3,7 +3,7 @@
         <div class="m-mall-breadcrumb">
             <div class="left">
                 <i class="el-icon-arrow-left" v-if="$route.path !== '/mallWeb/list'" @click="$router.back()"></i
-                ><img class="icon" :src="imgurl + 'mall.svg'" alt="" />积分商城
+                ><img class="icon" :src="imgUrl + 'mall.svg'" alt="" />积分商城
             </div>
             <div
                 class="right"
@@ -20,12 +20,12 @@
                     </div>
                 </div>
                 <div class="item">
-                    <img src="@/assets/img/vip/vip2/box_icon.svg" alt="" class="icon" svg-inline />
-                    <div class="text">盒币<span>（=通宝）</span>：{{ asset.box_coin }}</div>
+                    <img src="@/assets/img/vip/vip2/points.svg" alt="" class="icon" svg-inline />
+                    <div class="text">积分<span>（=银铛）</span>：{{ asset.points }}</div>
                 </div>
                 <div class="item">
-                    <img src="@/assets/img/vip/vip2/points.svg" alt="" class="icon" svg-inline />
-                    <div class="text">积分<span>（=积分）</span>：{{ asset.points }}</div>
+                    <img src="@/assets/img/vip/vip2/box_icon.svg" alt="" class="icon" svg-inline />
+                    <div class="text">盒币<span>（=通宝）</span>：{{ asset.box_coin }}</div>
                 </div>
             </div>
         </div>
@@ -34,11 +34,12 @@
 
 <script>
 import User from "@jx3box/jx3box-common/js/user";
+import { __cdn } from "@/utils/config";
 export default {
     name: "MallBreadcrumb",
     data() {
         return {
-            imgurl: "https://cdn.jx3box.com/design/mall/",
+            imgUrl: __cdn + "design/mall/",
             isShowAsset: false,
         };
     },
@@ -67,7 +68,7 @@ export default {
     height: 9.6vw;
     background-color: black;
     position: fixed;
-    top: 0;
+    top: 64px;
     left: 0;
     z-index: 602;
     .m-mall-breadcrumb {
@@ -82,48 +83,45 @@ export default {
             rgba(196, 98, 0, 0.39) 52.36%,
             rgba(56, 43, 0, 0) 100%
         );
-        border-bottom: 0.2667vw solid rgba(255, 255, 255, 0.5);
+        border-bottom: 0.2vw solid rgba(255, 255, 255, 0.5);
         box-sizing: border-box;
         .left {
-            padding-left: 3.2vw;
+            padding-left: 3vw;
             display: flex;
             align-items: center;
-            font-size: 5.3333vw;
+            font-size: 5vw;
             font-weight: 700;
             color: rgba(255, 255, 255, 1);
             text-align: center;
-            line-height: 9.6vw;
+            line-height: 9vw;
             .icon {
-                width: 7.4667vw;
-                height: 7.4667vw;
-                margin-right: 1.0667vw;
+                width: 7vw;
+                height: 7vw;
+                margin-right: 1vw;
             }
         }
         .right {
-            width: 14.9333vw;
-            height: 5.8667vw;
+            padding: 0 2vw;
             border-radius: 0.5333vw;
-            border: 0.2667vw solid rgba(255, 255, 255, 0.25);
+            border: 0.2vw solid rgba(255, 255, 255, 0.25);
             text-align: center;
-            line-height: 5.8667vw;
-            font-size: 3.2vw;
+            line-height: 5.8vw;
+            font-size: 3vw;
             color: rgba(255, 255, 255, 1);
-            margin-right: 3.2vw;
+            margin-right: 3vw;
         }
         .asset-container {
             position: absolute;
-            top: 12.8vw;
-            left: 43.7333vw;
-            width: 53.0667vw;
-            height: 28.2667vw;
-            border-radius: 0.5333vw;
+            top: 12vw;
+            left: 43.5vw;
+            border-radius: 0.5vw;
             background: rgba(0, 0, 0, 1);
-            border: 0.2667vw solid rgba(255, 255, 255, 0.2);
-            padding: 3.2vw;
+            border: 0.2vw solid rgba(255, 255, 255, 0.2);
+            padding: 3vw;
             box-sizing: border-box;
             transition: transform 0.3s ease-in-out;
             transform: translateX(56.8vw);
-            z-index: 100000;
+            z-index: 100;
             &.is-show {
                 transform: translateX(0);
             }
@@ -131,27 +129,27 @@ export default {
             flex-direction: column;
             align-items: stretch;
             justify-content: center;
-            gap: 3.2vw;
+            gap: 3vw;
             .item {
-                width: 46.6667vw;
-                height: 5.3333vw;
-                border-radius: 1.0667vw;
+                min-width: 46vw;
+                height: 5vw;
+                border-radius: 1vw;
                 background: rgba(255, 255, 255, 0.1);
                 display: flex;
                 align-items: center;
-                padding-left: 3.2vw;
+                padding-left: 3vw;
                 box-sizing: border-box;
                 .icon {
-                    width: 3.2vw;
-                    height: 3.2vw;
-                    margin-right: 1.0667vw;
+                    width: 3vw;
+                    height: 3vw;
+                    margin-right: 1vw;
                 }
                 .text {
-                    font-size: 3.2vw;
-                    line-height: 5.3333vw;
+                    font-size: 3vw;
+                    line-height: 5vw;
                     color: rgba(255, 255, 255, 1);
                     span {
-                        color: #656463;
+                        color: rgba(255, 255, 255, 0.6);
                     }
                 }
             }
@@ -163,17 +161,16 @@ export default {
                 line-height: 4.8vw;
                 font-size: 3.2vw;
                 font-weight: 700;
-                line-height: 4.8vw;
                 color: rgba(255, 255, 255, 1);
                 .button-container {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 3.2vw;
+                    gap: 3vw;
                     .button {
-                        width: 8.5333vw;
-                        height: 4.8vw;
-                        border-radius: 0.5333vw;
+                        width: 8vw;
+                        height: 5vw;
+                        border-radius: 0.5vw;
                     }
                     .lv {
                         background: rgba(255, 167, 57, 1);

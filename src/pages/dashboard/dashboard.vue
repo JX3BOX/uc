@@ -1,17 +1,17 @@
 <template>
-    <div id="app">
-        <Header :key="headerKey" ></Header>
-        <Breadcrumb name="个人中心" slug="dashboard" root="/dashboard" :crumbEnable="true">
-            <img slot="logo" svg-inline src="@/assets/img/dashboard/logo.svg" />
-            <Info />
-        </Breadcrumb>
-        <LeftSidebar>
-            <Nav />
-        </LeftSidebar>
-        <Main :withoutRight="true" class="m-dashboard-container">
-            <router-view />
-        </Main>
-    </div>
+    <CommonHeader :key="headerKey"></CommonHeader>
+    <Breadcrumb name="个人中心" slug="dashboard" root="/dashboard" :crumbEnable="true">
+        <template #logo>
+            <img svg-inline src="@/assets/img/dashboard/logo.svg" />
+        </template>
+        <Info />
+    </Breadcrumb>
+    <LeftSidebar class="m-dashboard-left">
+        <Nav />
+    </LeftSidebar>
+    <Main :withoutRight="true" class="m-dashboard-container p-dashboard">
+        <router-view />
+    </Main>
 </template>
 
 <script>
@@ -44,6 +44,7 @@ export default {
 </script>
 
 <style lang="less">
+@import "~@/assets/css/dashboard/app.less";
 @import "~@/assets/css/dashboard/dashboard.less";
 @import "~@/assets/css/miniprogram.less";
 </style>

@@ -8,7 +8,7 @@
                         <div class="u-img u-card"></div>
                         <div class="m-info">
                             <div class="u-title">{{ getYear(item.created_at) }}生日贺卡</div>
-                            <div class="u-tip">{{item.age}}周岁生日快乐</div>
+                            <div class="u-tip">{{ item.age }}周岁生日快乐</div>
                             <div class="u-tip">获得时间：{{ formatTime(item.created_at) }}</div>
                         </div>
                         <img class="u-icon" src="@/assets/img/dashboard/holidayCard/bday_icon.svg" />
@@ -22,7 +22,7 @@
             background
             :hide-on-single-page="true"
             :page-size="pageSize"
-            :current-page.sync="pageIndex"
+            v-model:current-page="pageIndex"
             layout="total, prev, pager, next"
             :total="total"
             @current-change="currentChange"
@@ -32,7 +32,8 @@
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { antiqueTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { antiqueTab } = tabsData;
 import { getBirthdayCard } from "@/service/dashboard/treasure";
 
 export default {
@@ -74,7 +75,7 @@ export default {
             return `${year}-${month < 10 ? "0" + month : month}-${day < 10 ? "0" + day : day}`;
         },
         getCertLink(item) {
-            return `/author/${item.user_id}/birthday-card/${item.skin || 'default2025'}?id=${item.id}`;
+            return `/card?type=birthday&uid=${item.user_id}&id=${item.id}&skin=${item.skin || "default2025"}`;
         },
         currentChange(val) {
             this.pageIndex = val;

@@ -67,17 +67,17 @@
                 cursor: pointer;
                 // .none;
 
-                background-color:#c00;
+                background-color: #c00;
                 .size(12px);
                 .r(50%);
                 .db;
-                i{
-                    color:#fff;
+                i {
+                    color: #fff;
                     .fz(12px);
                     .db;
                 }
                 &:hover {
-                    background-color:#f00;
+                    background-color: #f00;
                 }
             }
 
@@ -87,18 +87,22 @@
                 left: -4px;
                 top: -4px;
                 // background-color: #fcf003;
-                background-color: #0366d6;
+                background-color: @v4primary;
                 .size(12px);
                 .r(50%);
                 .db;
 
-                i{
-                    color:#fff;
+                i {
+                    color: #fff;
                     .fz(12px);
                     .db;
                 }
             }
         }
+    }
+
+    .u-talent {
+        margin-bottom: 10px;
     }
 }
 
@@ -303,6 +307,7 @@
     // 已选数据
     .m-selected-skills {
         height: 70px;
+        box-sizing: content-box;
         border: 1px solid #ddd;
         padding: 10px;
         .scrollbar();
@@ -389,7 +394,7 @@
     }
 }
 
-.m-pvp-martial {
+.m-pvp-martial__container {
     display: flex;
     background: #1a2b22;
     padding: 20px;
@@ -460,5 +465,4 @@
             }
         }
     }
-
 }

@@ -1,5 +1,5 @@
 import { $next, $team } from "./axios";
-import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath } from "@/utils/config";
 import axios from "axios";
 
 function getDouyu(ids) {
@@ -15,7 +15,7 @@ function getUserMedals(uid) {
 }
 
 function getFrames() {
-    return axios.get(__imgPath + `data/user_avatar_frame.json?${Date.now()}}`);
+    return axios.get(__imgPath + `data/user_avatar_frame.json`);
 }
 
 function getUserPublicTeams(uid) {

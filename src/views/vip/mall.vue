@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <Header :key="currentKey"></Header>
+    <div >
+        <CommonHeader :key="currentKey"></CommonHeader>
         <Breadcrumb
             name="积分商城"
             slug="mall"
@@ -34,7 +34,7 @@
                 </template>
                 <router-view v-else></router-view>
             </div>
-            <Footer></Footer>
+            <CommonFooter></CommonFooter>
         </Main>
         <Cart v-if="cartVisible"></Cart>
     </div>

@@ -1,9 +1,20 @@
 <template>
     <div class="m-dashboard-box" v-loading="loading">
         <div class="m-dashboard-msg-header">
-            <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search" @keyup.enter.native="loadData" clearable @clear="loadData">
-                <template slot="prepend">关键词</template>
-                <el-button slot="append" icon="el-icon-search"></el-button>
+            <el-input
+                class="m-dashboard-work-search"
+                placeholder="请输入搜索内容"
+                v-model="search"
+                @keyup.enter="loadData"
+                clearable
+                @clear="loadData"
+            >
+                <template #prepend>
+                    <span>关键词</span>
+                </template>
+                <template #append>
+                    <el-button icon="Search"></el-button>
+                </template>
             </el-input>
         </div>
         <ul class="m-dashboard-box-list" v-if="data.length">
@@ -11,18 +22,15 @@
                 <i class="u-icon">
                     <img svg-inline src="@/assets/img/dashboard/works/repo.svg" />
                 </i>
-                <a class="u-title" target="_blank" :href="getLink(item)">{{
-                    item.overview.title || "无标题"
-                }}</a>
+                <a class="u-title" target="_blank" :href="getLink(item)">{{ item.overview.title || "无标题" }}</a>
                 <div class="u-desc">
                     <span class="u-category"><i class="el-icon-folder"></i> {{ getTypeLabel(item) }} </span>
                     <span><i class="el-icon-date"></i> {{ dateFormat(item.created_at) }} </span>
                 </div>
                 <el-button-group class="u-action">
-                    <el-button size="mini" icon="el-icon-delete" title="删除记录" @click="del(item.id)"></el-button>
+                    <el-button icon="Delete" title="删除记录" @click="del(item.id)"></el-button>
                 </el-button-group>
             </li>
-
         </ul>
         <el-alert v-else class="m-dashboard-box-null" title="没有找到相关条目" type="info" center show-icon> </el-alert>
         <el-pagination
@@ -30,7 +38,7 @@
             background
             :hide-on-single-page="true"
             :page-size="pageSize"
-            :current-page.sync="index"
+            v-model:current-page="index"
             layout="total, prev, pager, next, jumper"
             :total="total"
             @current-change="currentChange"
@@ -46,12 +54,12 @@ import { getRssList, deleteRss } from "@/service/dashboard/fav";
 const categoryMap = {
     2: "作者", // author
     3: "论坛", // community
-}
+};
 
 const categories = {
     2: "author",
     3: "community",
-}
+};
 
 export default {
     name: "RssList",
@@ -73,7 +81,7 @@ export default {
             if (categoryMap[type]) {
                 return categoryMap[type];
             }
-            type = item.post_type
+            type = item.post_type;
             return getTypeLabel(type);
         },
         getLink(item) {
@@ -81,7 +89,7 @@ export default {
             if (categories[type]) {
                 return `/${categories[type]}/${~~item.post_id || ~~item.author_id}`;
             }
-            type = item.post_type
+            type = item.post_type;
             return getLink(type, item.post_id);
         },
         del(id) {
@@ -111,8 +119,8 @@ export default {
                 index: this.index,
                 pageSize: this.pageSize,
                 q: this.search,
-                category: -2
-            }
+                category: -2,
+            };
             this.loading = true;
             getRssList(params)
                 .then(({ data }) => {
@@ -129,4 +137,3 @@ export default {
     },
 };
 </script>
-

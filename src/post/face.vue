@@ -23,11 +23,10 @@
                         <el-button
                             class="u-main"
                             :type="item.file === faceData.file ? 'warning' : ''"
-                            icon="el-icon-star-off"
+                            icon="Star"
                             circle
                             :plain="item.file === faceData.file ? false : true"
                             @click="setMain(item)"
-                            size="mini"
                             title="设为主数据"
                         />
                         <span class="u-attachment-text">
@@ -35,16 +34,15 @@
                         </span>
                         <!-- <span class="u-attachment-key">唯一标识符：<b>{{ item.file }}</b></span> -->
                         <span class="u-attachment-remark">
-                            <el-input v-model="item.describe" placeholder="备注" size="mini"></el-input>
+                            <el-input v-model="item.describe" placeholder="备注"></el-input>
                         </span>
                         <el-button
                             class="u-btn"
                             type="info"
-                            icon="el-icon-delete"
+                            icon="Delete"
                             circle
                             plain
                             @click="removeFile(item.id)"
-                            size="mini"
                             title="移除"
                         />
                     </div>
@@ -85,8 +83,8 @@
                 <!-- 画风 -->
                 <el-form-item label="画风" v-if="(faceData || post.code_mode) && post.client === 'std'">
                     <el-radio-group v-model="post.is_new_face">
-                        <el-radio :label="1">写实</el-radio>
-                        <el-radio :label="0">写意</el-radio>
+                        <el-radio :value="1">写实</el-radio>
+                        <el-radio :value="0">写意</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <!-- 可新建 -->
@@ -121,15 +119,14 @@
                         </el-tooltip>
                     </template>
                     <el-radio-group v-model="post.price_type" :disabled="!isSuperAuthor" @change="changePriceType">
-                        <el-radio label="0">免费</el-radio>
-                        <!-- <el-radio label="1">盒币</el-radio> -->
-                        <el-radio v-if="isSuperAuthor && cny_enable" label="2">收费(金箔)</el-radio>
+                        <el-radio value="0">免费</el-radio>
+                        <!-- <el-radio value="1">盒币</el-radio> -->
+                        <el-radio v-if="isSuperAuthor && cny_enable" value="2">收费(金箔)</el-radio>
                     </el-radio-group>
                     <el-input-number
                         class="u-price"
                         v-model="post.price_count"
                         v-if="post.price_type != '0'"
-                        size="small"
                         :max="3000"
                         :min="0"
                     ></el-input-number>
@@ -154,7 +151,7 @@
 
             <!-- 按钮 -->
             <div class="m-publish-buttons">
-                <el-button type="primary" @click="publish" :disabled="processing">发 &nbsp;&nbsp; 布</el-button>
+                <el-button type="primary" @click="publish" :disabled="processing" size="large">发 &nbsp;&nbsp; 布</el-button>
             </div>
         </el-form>
     </div>
@@ -173,8 +170,9 @@ import publishBanner from "@/components/publish/publish_banner.vue";
 import { DecalDatabase } from "@jx3box/jx3box-facedat/src/DecalDatabase";
 import User from "@jx3box/jx3box-common/js/user.js";
 import cloneDeep from "lodash/cloneDeep";
-import { __clients } from "@jx3box/jx3box-common/data/jx3box.json";
-import { bodyMap, majorMap, faceSubtype } from "@jx3box/jx3box-facedat/assets/data/index.json";
+import { __clients } from "@/utils/config";
+import faceData from "@jx3box/jx3box-facedat/assets/data/index.json";
+const { bodyMap, majorMap, faceSubtype } = faceData;
 import { getConfig } from "@/service/publish/cms";
 export default {
     name: "face",

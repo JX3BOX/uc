@@ -2,7 +2,7 @@
     <div class="m-publish-authors" v-if="id && isSuper">
         <el-form-item label="联合创作">
             <div class="u-list">
-                <div class="u-item" v-for="(item,i) in list" :key="i">
+                <div class="u-item" v-for="(item, i) in list" :key="i">
                     <el-tooltip
                         class="item"
                         effect="dark"
@@ -12,21 +12,19 @@
                     >
                         <i class="u-status el-icon-loading"></i>
                     </el-tooltip>
-                    <img class="u-avatar" :src="item.post_author_info.user_avatar | showAvatar" />
+                    <img class="u-avatar" :src="showAvatar(item.post_author_info.user_avatar)" />
                     <span class="u-name">
-                        {{item.post_author_info.display_name}}
-                        <span
-                            class="u-label"
-                        >({{item.label || '撰稿'}})</span>
+                        {{ item.post_author_info.display_name }}
+                        <span class="u-label">({{ item.label || "撰稿" }})</span>
                     </span>
                     <el-tooltip class="item" effect="dark" content="修改备注" placement="top">
                         <i class="u-edit el-icon-edit" @click="update(item)"></i>
                     </el-tooltip>
                     <el-tooltip class="item" effect="dark" content="移除" placement="top">
-                        <i class="u-delete el-icon-delete" @click="remove(item,i)"></i>
+                        <i class="u-delete el-icon-delete" @click="remove(item, i)"></i>
                     </el-tooltip>
                 </div>
-                <el-button plain size="small" @click="openPop" type="primary">+ 添加联合创作者</el-button>
+                <el-button plain @click="openPop" type="primary" size="small">+ 添加联合创作者</el-button>
             </div>
             <UserPop title="添加用户" v-model="visible" @confirm="addAuthor" />
         </el-form-item>
@@ -34,13 +32,8 @@
 </template>
 
 <script>
-import UserPop from "@jx3box/jx3box-common-ui/src/author/UserPop.vue";
-import {
-    addUnionAuthor,
-    getUnionAuthors,
-    updateUnionAuthor,
-    removeUnionAuthor,
-} from "@/service/publish/union.js";
+import UserPop from "@jx3box/jx3box-ui/src/author/UserPop.vue";
+import { addUnionAuthor, getUnionAuthors, updateUnionAuthor, removeUnionAuthor } from "@/service/publish/union.js";
 import { showAvatar } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
 export default {
@@ -107,7 +100,7 @@ export default {
                         type: "success",
                     });
                 });
-            });
+            }).catch(() => {});
         },
         remove: function (item, i) {
             removeUnionAuthor(this.id, item.post_author_info.ID).then((res) => {
@@ -119,8 +112,6 @@ export default {
                 this.list.splice(i, 1);
             });
         },
-    },
-    filters: {
         showAvatar: function (val) {
             return showAvatar(val);
         },
@@ -140,7 +131,8 @@ export default {
         padding: 6px 0;
         // display: flex;
         .clearfix;
-        .el-button,.u-item{
+        .el-button,
+        .u-item {
             .fl;
         }
         .u-item {
@@ -183,9 +175,9 @@ export default {
             color: #f00;
         }
 
-        .u-status{
+        .u-status {
             .mr(5px);
-            color:@primary;
+            color: @primary;
         }
     }
 }

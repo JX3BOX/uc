@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <Header></Header>
+    <div >
+        <CommonHeader></CommonHeader>
         <Breadcrumb name="订购会员" slug="vip" root="/vip/premium" :publishEnable="false" :adminEnable="false" :feedbackEnable="true">
             <img slot="logo" svg-inline src="@/assets/img/vip/logo.svg" />
         </Breadcrumb>
@@ -19,7 +19,7 @@
             </result>
         </Main>
         <paypop v-if="will" v-model="dialog_visible" :productDesc="productDesc" :productId="productId" :returnUrl="returnUrl" @done="finish" />
-        <Footer></Footer>
+        <CommonFooter></CommonFooter>
     </div>
 </template>
 

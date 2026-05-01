@@ -1,5 +1,5 @@
-import { $node, axios } from "@jx3box/jx3box-common/js/https";
-import JX3BOX from "@jx3box/jx3box-common/data/jx3box.json";
+import { $node, axios } from "@jx3box/jx3box-common/js/api";
+import JX3BOX from "@/utils/config";
 
 const $oss = axios.create({
     baseURL: JX3BOX.__dataPath,
@@ -21,8 +21,4 @@ async function getTalents2() {
     return res.data;
 }
 
-export {
-    getSkills,
-    getTalents,
-    getTalents2,
-};
+export { getSkills, getTalents, getTalents2 };

@@ -1,5 +1,5 @@
 <template>
-    <el-dialog class="m-comment-detail-dialog" :visible.sync="show" :title="title" :before-close="close">
+    <el-dialog class="m-comment-detail-dialog" v-model="show" :title="title" :before-close="close">
         <el-descriptions class="m-msg-comment-detail" direction="vertical" :column="2" border v-loading="loading">
             <el-descriptions-item label="评论内容" :span="2">
                 <div v-html="renderContent || '-'"></div>

@@ -8,7 +8,7 @@
                 class="u-btn"
                 type="primary"
                 @click="togglePullBox"
-                size="mini"
+                
                 :disabled="!money"
                 >提现</el-button
             > -->
@@ -35,24 +35,26 @@
             </el-form>
         </div>
         <div class="m-credit-table m-packet-table" v-loading="loading">
-            <el-tabs v-model="activeName" @tab-click="changeType" type="border-card">
+            <el-tabs v-model="activeName" @tab-change="changeType" type="border-card">
                 <el-tab-pane label="红包记录" name="my_packet_list">
                     <div class="m-packet-table" v-if="my_packet_list && my_packet_list.length">
                         <table class="m-packet-in-list">
-                            <tr>
-                                <th>红包金额</th>
-                                <th>红包类型</th>
-                                <th>红包状态</th>
-                                <th>备注</th>
-                                <th>收入时间</th>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>红包金额</th>
+                                    <th>红包类型</th>
+                                    <th>红包状态</th>
+                                    <th>备注</th>
+                                    <th>收入时间</th>
+                                </tr>
+                            </thead>
                             <tr v-for="(item, i) in my_packet_list" :key="i">
                                 <td>
                                     <b>{{ formatMoney(item.money) }}</b>
                                 </td>
                                 <td>{{ formatType(item.action_type) }}</td>
                                 <td>{{ item.is_success ? "已处理" : "未处理" }}</td>
-                                <td>{{ item.description || item.remark || '-' }}</td>
+                                <td>{{ item.description || item.remark || "-" }}</td>
                                 <td>{{ formatDate(item.created_at) }}</td>
                             </tr>
                         </table>
@@ -72,7 +74,7 @@
                         background
                         :page-size="per"
                         :hide-on-single-page="true"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         layout="total, prev, pager, next, jumper"
                         :total="total"
                     >
@@ -94,11 +96,11 @@
                             </tr>
                             <tr v-for="(item, i) in my_packet_history" :key="i">
                                 <td>
-                                    <b>{{ item.money | formatMoney }}</b>
+                                    <b>{{ formatMoney(item.money) }}</b>
                                 </td>
-                                <td>{{ item.pay_type | formatPaytype }}</td>
+                                <td>{{ formatPaytype(item.pay_type) }}</td>
                                 <td>
-                                    {{ item.accept_account | encryptAccount }}
+                                    {{ encryptAccount(item.accept_account) }}
                                 </td>
                                 <td
                                     :class="{
@@ -107,7 +109,7 @@
                                         isPending: item.status > 1,
                                     }"
                                 >
-                                    {{ item.status | formatHistoryStatus }}
+                                    {{ formatHistoryStatus(item.status) }}
                                 </td>
                                 <td>
                                     {{
@@ -116,7 +118,7 @@
                                             : item.why
                                     }}
                                 </td>
-                                <td>{{ item.created_at | formatDate }}</td>
+                                <td>{{ formatDate(item.created_at) }}</td>
                             </tr>
                         </table>
                     </div>
@@ -135,7 +137,7 @@
                         background
                         :page-size="per"
                         :hide-on-single-page="true"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         layout="total, prev, pager, next, jumper"
                         :total="total"
                     >

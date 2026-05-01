@@ -4,29 +4,38 @@
             <h2 class="u-title">帖子评论</h2>
         </div>
 
-        <el-input class="m-dashboard-work-search u-source-search" placeholder="请输入搜索内容" v-model="search">
-            <template slot="prepend">关键词</template>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+        <el-input
+            class="m-dashboard-work-search u-source-search"
+            placeholder="请输入搜索内容"
+            v-model="search"
+            size="large"
+        >
+            <template #prepend>
+                <span>关键词</span>
+            </template>
+            <template #append>
+                <el-button icon="Search"></el-button>
+            </template>
         </el-input>
 
         <div class="m-dashboard-box">
             <ul class="m-dashboard-box-list" v-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
-                    <i class="u-icon el-icon-chat-line-square">
-                    </i>
-                    <a class="u-title" target="_blank" :href="postLink(item.topic_id)">{{ item.content || "未知" }}</a>
+                    <a class="u-title" target="_blank" :href="postLink(item.topic_id)"
+                        ><i class="u-icon el-icon-chat-line-square"> </i>{{ item.content || "未知" }}</a
+                    >
                     <!-- <span class="u-desc">{{item.content || '未知'}}</span> -->
                     <div class="u-desc">
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ showTime(item.created_at) }}
+                            <span class="u-time">{{ showTime(item.created_at) }}</span>
                         </time>
                     </div>
 
                     <el-button-group class="u-action">
                         <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-                            <el-button size="mini" icon="el-icon-delete" @click="del(item.id, i)"></el-button>
+                            <el-button icon="Delete" @click="del(item.id, i)"></el-button>
                         </el-tooltip>
                     </el-button-group>
                 </li>
@@ -44,7 +53,7 @@
                 background
                 :page-size="per"
                 :hide-on-single-page="true"
-                :current-page.sync="page"
+                v-model:current-page="page"
                 layout="total, prev, pager, next, jumper"
                 :total="total"
             ></el-pagination>

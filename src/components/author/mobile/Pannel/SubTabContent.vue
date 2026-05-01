@@ -1,12 +1,14 @@
 <template>
     <div class="m-sub-tab-content">
-        <el-tabs ref="tabList" class="m-sub-tabs"
-                 :class="{fixed: navBarFixed}"
-                 v-model="active"
-                 @change="onChangeTab"
-                 stretch>
-            <el-tab-pane v-for="item in list" :key="item.value" :label="item.label" :name="item.value">
-            </el-tab-pane>
+        <el-tabs
+            ref="tabList"
+            class="m-sub-tabs"
+            :class="{ fixed: navBarFixed }"
+            v-model="active"
+            @change="onChangeTab"
+            stretch
+        >
+            <el-tab-pane v-for="item in list" :key="item.value" :label="item.label" :name="item.value"> </el-tab-pane>
         </el-tabs>
         <div class="m-content">
             <slot>
@@ -17,21 +19,20 @@
 </template>
 
 <script>
-
 export default {
     name: "SubTabContent",
-    emits:["change-tab"],
-    props:{
+    emits: ["change-tab"],
+    props: {
         list: {
             type: Array,
-            default: () => []
+            default: () => [],
         },
-        defaultActive:{
+        defaultActive: {
             type: String,
-            default: null
-        }
+            default: null,
+        },
     },
-    data: function() {
+    data: function () {
         return {
             active: "",
             navBarFixed: false,
@@ -42,19 +43,19 @@ export default {
         currentComponent() {
             return this.current?.component || null;
         },
-        current(){
+        current() {
             const tab = this.active;
             return this.list.find((item) => item.value === tab);
-        }
+        },
     },
-    methods:{
+    methods: {
         watchScroll() {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
             this.navBarFixed = scrollTop >= this.tabListOffsetTop;
         },
-        onChangeTab(v){
+        onChangeTab(v) {
             console.log(v);
-        }
+        },
     },
     mounted() {
         this.$nextTick(() => {
@@ -62,44 +63,40 @@ export default {
             window.addEventListener("scroll", this.watchScroll);
         });
     },
-    destroyed() {
+    unmounted() {
         window.removeEventListener("scroll", this.watchScroll);
     },
-    watch:{
-        list:{
-            handler(){
-                if (!this.active || this.list.find(i=>i.value===this.active) == null){
-                    this.active = this.defaultActive || this.list[0]?.value || '';
+    watch: {
+        list: {
+            handler() {
+                if (!this.active || this.list.find((i) => i.value === this.active) == null) {
+                    this.active = this.defaultActive || this.list[0]?.value || "";
                 }
             },
-            deep:true,
-            immediate: true
-        },
-        active:{
+            deep: true,
             immediate: true,
-            handler(){
-                this.$emit("change-tab",this.active);
-            }
-        }
+        },
+        active: {
+            immediate: true,
+            handler() {
+                this.$emit("change-tab", this.active);
+            },
+        },
     },
-    components: {
-
-    },
+    components: {},
 };
 </script>
 
 <style lang="less" scoped>
-.m-sub-tab-content{
+.m-sub-tab-content {
     display: flex;
     padding: 16px 20px;
     flex-direction: column;
     align-items: flex-start;
     gap: var(--20, 20px);
     align-self: stretch;
-    .m-content{
+    .m-content {
         width: 100%;
     }
 }
-
-
 </style>

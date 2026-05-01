@@ -5,8 +5,7 @@
             <span class="u-status"> QQ机器人 </span>
         </span>
         <el-button type="primary" @click="bind" size="large" v-if="!checkStatus"> 立即绑定 </el-button>
-        <el-button v-else @click="unbind" size="large" type="danger">
-            <span class="u-status"> 解除绑定 </span>
+        <el-button v-else @click="unbind" size="large" type="info">解除绑定
         </el-button>
 
         <el-dialog
@@ -14,22 +13,20 @@
             :width="isPhone ? '95%' : ''"
             align="center"
             title="绑定魔盒QQ机器人"
-            :visible.sync="showDialog"
+            v-model="showDialog"
         >
             <div class="m-qqbot-content">
                 <span
                     class="u-token"
                     title="点击复制"
-                    v-clipboard:copy="bindText"
-                    v-clipboard:success="onCopy"
-                    v-clipboard:error="onError"
+                    @click="copyBindText"
                 >
                     <i class="el-icon-document-copy"></i>
                     {{ bindText }}
                 </span>
             </div>
             <div class="m-custom-tip">
-                请复制以上内容，私聊发送给魔盒QQ机器人<br>
+                请复制以上内容，私聊发送给魔盒QQ机器人<br />
                 QQ: <b>{{ qq }}</b>
             </div>
         </el-dialog>
@@ -37,8 +34,9 @@
 </template>
 
 <script>
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __cdn } from "@/utils/config";
 import { getQQbotToken, unbindQQbot } from "@/service/dashboard/profile";
+import { copyText } from "@/utils/index";
 export default {
     name: "qqbot",
     props: {
@@ -92,18 +90,21 @@ export default {
                 })
                 .catch(() => {});
         },
-        onCopy: function (val) {
-            this.$notify({
-                title: "复制成功",
-                message: val.text,
-                type: "success",
-            });
-        },
-        onError: function () {
-            this.$notify.error({
-                title: "复制失败",
-                message: "请手动复制",
-            });
+        copyBindText: function () {
+            copyText(this.bindText)
+                .then(() => {
+                    this.$notify({
+                        title: "复制成功",
+                        message: this.bindText,
+                        type: "success",
+                    });
+                })
+                .catch(() => {
+                    this.$notify.error({
+                        title: "复制失败",
+                        message: "请手动复制",
+                    });
+                });
         },
     },
 };
@@ -139,8 +140,8 @@ export default {
         max-width: 680px;
         .auto(x);
         .fz(14px,2);
-        b{
-            color:orange;
+        b {
+            color: orange;
         }
     }
 

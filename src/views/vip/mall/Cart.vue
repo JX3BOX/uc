@@ -3,9 +3,7 @@
         <div class="m-carts">
             <div class="m-cart-item">
                 <el-checkbox v-model="isAll" class="u-check-all" @change="allChange">全选</el-checkbox>
-                <el-button v-if="number" type="info" plain size="mini" icon="el-icon-delete" @click="handleClear"
-                    >清空</el-button
-                >
+                <el-button v-if="number" type="info" plain icon="Delete" @click="handleClear">清空</el-button>
             </div>
             <div class="m-cart-item" v-for="item in list" :key="item.id">
                 <div class="m-left">
@@ -34,17 +32,10 @@
                 <div class="u-amount">
                     <el-input-number
                         v-model="item.amount"
-                        size="small"
                         :max="item.goods.stock"
                         @change="itemChange(item, $event)"
                     ></el-input-number>
-                    <el-button
-                        class="u-delete"
-                        circle
-                        size="small"
-                        icon="el-icon-delete"
-                        @click.stop="deleteGoods(item)"
-                    ></el-button>
+                    <el-button class="u-delete" circle icon="Delete" @click.stop="deleteGoods(item)"></el-button>
                 </div>
             </div>
         </div>
@@ -80,7 +71,7 @@
 
 <script>
 import { getThumbnail } from "@jx3box/jx3box-common/js/utils";
-import { __userLevel, __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userLevel, __imgPath } from "@/utils/config";
 import { forEach, cloneDeep, throttle, debounce } from "lodash";
 import User from "@jx3box/jx3box-common/js/user";
 export default {
@@ -170,7 +161,7 @@ export default {
         },
         showCover(item) {
             const img = item?.goods_images[0];
-            return getThumbnail(img, 48 * 2);
+            return img && getThumbnail(img, 48 * 2);
         },
         showLevel(num) {
             let _key = 1;

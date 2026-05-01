@@ -7,6 +7,7 @@
             :minlength="2"
             show-word-limit
             required
+            size="large"
             :placeholder="placeholder || '请填写标题'"
         ></el-input>
         <slot></slot>
@@ -15,23 +16,45 @@
 <script>
 export default {
     name: "publish_title",
-    props: ["data","hideDiv","placeholder"],
+    props: {
+        modelValue: {
+            type: String,
+            default: undefined,
+        },
+        data: {
+            type: String,
+            default: "",
+        },
+        hideDiv: {
+            type: Boolean,
+            default: false,
+        },
+        placeholder: {
+            type: String,
+            default: "",
+        },
+    },
     data: function () {
         return {
-            title: this.data,
+            title: this.modelValue !== undefined ? this.modelValue : this.data,
         };
     },
-    model: {
-        prop: "data",   //向上同步数据
-        event: "update",
-    },
+    emits: ["update", "update:modelValue"],
     watch: {
-        data: function(newval) {
-            this.title = newval;
+        modelValue: function (newval) {
+            if (newval !== undefined) {
+                this.title = newval;
+            }
+        },
+        data: function (newval) {
+            if (this.modelValue === undefined) {
+                this.title = newval;
+            }
         },
         title: {
             deep: true,
-            handler: function(newval) {
+            handler: function (newval) {
+                this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
         },

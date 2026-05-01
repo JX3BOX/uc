@@ -14,11 +14,11 @@
             <div class="m-boxcoin-tip__content" v-html="bread"></div>
         </el-alert>
         <div class="m-keycode-tab">
-            <el-tabs type="border-card" v-model="tab" @tab-click="tabClick">
-                <el-tab-pane label="激活码(直发)" name="sn">
+            <el-tabs type="border-card" v-model="tab" @tab-change="tabClick">
+                <el-tab-pane label="激活码(直发)" name="sn" lazy>
                     <template #label>
                         <span class="u-tab--title">激活码</span>
-                        (<span class="u-tab--desc">直发</span>)
+                        <span class="u-tab--desc">直发</span>
                     </template>
                     <el-table
                         class="m-table"
@@ -30,45 +30,41 @@
                         v-loading="loading"
                     >
                         <el-table-column prop="type" label="类型" width="120px">
-                            <template slot-scope="scope">{{
+                            <template #default="scope">{{
                                 snOptions.types[scope.row.type] || scope.row.type || "其他"
                             }}</template>
                         </el-table-column>
                         <el-table-column prop="subtype" label="渠道" width="100px">
-                            <template slot-scope="scope">{{
-                                snOptions.subtypes[scope.row.subtype] || "其他"
-                            }}</template>
+                            <template #default="scope">{{ snOptions.subtypes[scope.row.subtype] || "其他" }}</template>
                         </el-table-column>
                         <el-table-column prop="describe" label="描述" width="160px"></el-table-column>
                         <el-table-column label="激活码" width="280">
-                            <template slot-scope="scope">
+                            <template #default="scope">
                                 <div class="u-code">
                                     <span class="u-txt">{{ scope.row.code || "****************" }}</span>
                                     <el-button
                                         v-if="!scope.row.code"
                                         type="primary"
-                                        icon="el-icon-view"
+                                        icon="View"
                                         @click="getSn(scope.$index, scope.row)"
-                                        size="mini"
                                         plain
+                                        size="small"
                                         >点击查看</el-button
                                     >
                                     <el-button
                                         class="u-btn"
                                         v-else
-                                        type="txt"
-                                        size="mini"
-                                        icon="el-icon-document-copy"
-                                        v-clipboard:copy="'' + scope.row.code"
-                                        v-clipboard:success="onCopy"
-                                        v-clipboard:error="onError"
+                                        link
+                                        icon="DocumentCopy"
+                                        size="small"
+                                        @click="copyToClipboard(scope.row.code)"
                                         >复制</el-button
                                     >
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column label="过期时间" width="200">
-                            <template slot-scope="scope">
+                        <el-table-column label="过期时间" width="250">
+                            <template #default="scope">
                                 <div class="u-time" v-if="scope.row.expire_at">
                                     <span class="u-tag" :class="compareTime(scope.row.expire_at, 'tag')">{{
                                         compareTime(scope.row.expire_at, "time")
@@ -81,18 +77,15 @@
                         <el-table-column label="发放时间" width="200" prop="grant_at"></el-table-column>
                         <el-table-column prop="remark" label="备注" width="200"> </el-table-column>
                         <el-table-column prop="used_by_self" label="是否使用">
-                            <template slot-scope="scope">
-                                <span class="u-used" :class="{ 'is-used': scope.row.used_by_self }">{{
-                                    scope.row.used_by_self ? "是" : "否"
-                                }}</span>
-
-                                <el-button
-                                    v-show="!scope.row.used_by_self"
-                                    type="text"
-                                    size="mini"
+                            <template #default="scope">
+                                <el-icon
+                                    class="u-used-icon"
+                                    :class="{ 'is-used': scope.row.used_by_self }"
                                     @click="onSnUsedClick(scope.row)"
-                                    >（标记使用）</el-button
-                                >
+                                    size="20"
+                                    :color="scope.row.used_by_self ? '#67C23A' : ''"
+                                    ><CircleCheckFilled></CircleCheckFilled
+                                ></el-icon>
                             </template>
                         </el-table-column>
                         <el-table-column prop="activate_url" label="激活地址">
@@ -118,15 +111,15 @@
                         background
                         :page-size="per"
                         :hide-on-single-page="true"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         layout="total, prev, pager, next, jumper"
                         :total="total"
                     ></el-pagination>
                 </el-tab-pane>
-                <el-tab-pane label="激活码(积分兑换|抽奖)" name="virtual">
+                <el-tab-pane label="激活码(积分兑换|抽奖)" name="virtual" lazy>
                     <template #label>
                         <span class="u-tab--title">激活码</span>
-                        (<span class="u-tab--desc">积分兑换|抽奖</span>)
+                        <span class="u-tab--desc">积分兑换|抽奖</span>
                     </template>
                     <el-table
                         class="m-table"
@@ -136,37 +129,35 @@
                         v-loading="loading"
                     >
                         <el-table-column label="名称" width="120px">
-                            <template slot-scope="scope">{{ scope.row.goods.title || "-" }}</template>
+                            <template #default="scope">{{ scope.row.goods.title || "-" }}</template>
                         </el-table-column>
                         <el-table-column label="激活码" width="330">
-                            <template slot-scope="scope">
+                            <template #default="scope">
                                 <div class="u-code">
                                     <span class="u-txt">{{ scope.row.code || "****************" }}</span>
                                     <el-button
                                         v-if="!scope.row.code"
                                         type="primary"
-                                        icon="el-icon-view"
+                                        icon="View"
                                         @click="getVirtualCode(scope.$index, scope.row)"
-                                        size="mini"
                                         plain
+                                        size="small"
                                         >点击查看</el-button
                                     >
                                     <el-button
                                         class="u-btn"
                                         v-else
-                                        type="txt"
-                                        size="mini"
-                                        icon="el-icon-document-copy"
-                                        v-clipboard:copy="'' + scope.row.code"
-                                        v-clipboard:success="onCopy"
-                                        v-clipboard:error="onError"
+                                        link
+                                        icon="DocumentCopy"
+                                        size="small"
+                                        @click="copyToClipboard(scope.row.code)"
                                         >复制</el-button
                                     >
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column label="过期时间" width="200">
-                            <template slot-scope="scope">
+                        <el-table-column label="过期时间" width="250">
+                            <template #default="scope">
                                 <div class="u-time" v-if="scope.row.goods.expire_at">
                                     <span class="u-tag" :class="compareTime(scope.row.goods.expire_at, 'tag')">{{
                                         compareTime(scope.row.goods.expire_at, "time")
@@ -177,23 +168,20 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="备注" min-width="200">
-                            <template slot-scope="scope">
+                            <template #default="scope">
                                 {{ scope.row.goods.mark || scope.row.goods.subtitle }}
                             </template>
                         </el-table-column>
                         <el-table-column prop="used_by_self" label="是否使用">
-                            <template slot-scope="scope">
-                                <span class="u-used" :class="{ 'is-used': scope.row.owner.used_by_self }">{{
-                                    scope.row.owner.used_by_self ? "是" : "否"
-                                }}</span>
-
-                                <el-button
-                                    v-show="!scope.row.owner.used_by_self"
-                                    type="text"
-                                    size="mini"
+                            <template #default="scope">
+                                <el-icon
+                                    class="u-used-icon"
+                                    :class="{ 'is-used': scope.row.owner.used_by_self }"
                                     @click="onVirtualUsedClick(scope.row)"
-                                    >（标记使用）</el-button
-                                >
+                                    size="20"
+                                    :color="scope.row.owner.used_by_self ? '#67C23A' : ''"
+                                    ><CircleCheckFilled></CircleCheckFilled
+                                ></el-icon>
                             </template>
                         </el-table-column>
                         <el-table-column prop="activate_url" label="激活地址">
@@ -219,12 +207,12 @@
                         background
                         :page-size="per"
                         :hide-on-single-page="true"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         layout="total, prev, pager, next, jumper"
                         :total="total"
                     ></el-pagination>
                 </el-tab-pane>
-                <el-tab-pane label="一卡通" name="keycode">
+                <el-tab-pane label="一卡通" name="keycode" lazy>
                     <el-table
                         class="m-table"
                         v-if="keycodeList.length"
@@ -233,18 +221,18 @@
                         v-loading="loading"
                     >
                         <el-table-column prop="type" label="类型" width="120">
-                            <template slot-scope="scope">{{ keycodeOptions.types[scope.row.type] || "其他" }}</template>
+                            <template #default="scope">{{ keycodeOptions.types[scope.row.type] || "其他" }}</template>
                         </el-table-column>
                         <el-table-column prop="subtype" label="渠道" width="120">
-                            <template slot-scope="scope">{{
+                            <template #default="scope">{{
                                 keycodeOptions.subtypes[scope.row.subtype] || "其他"
                             }}</template>
                         </el-table-column>
                         <el-table-column label="面额" width="120">
-                            <template slot-scope="scope">{{ scope.row.count }}</template>
+                            <template #default="scope">{{ scope.row.count }}</template>
                         </el-table-column>
                         <el-table-column label="卡密" width="360">
-                            <template slot-scope="scope">
+                            <template #default="scope">
                                 <div class="u-card">
                                     <div class="u-count">
                                         <div class="u-line">
@@ -252,12 +240,10 @@
                                             <el-button
                                                 class="u-btn"
                                                 v-if="scope.row.key"
-                                                type="txt"
-                                                size="mini"
-                                                icon="el-icon-document-copy"
-                                                v-clipboard:copy="'' + scope.row.key"
-                                                v-clipboard:success="onCopy"
-                                                v-clipboard:error="onError"
+                                                link
+                                                icon="DocumentCopy"
+                                                size="small"
+                                                @click="copyToClipboard(scope.row.key)"
                                                 >复制卡号</el-button
                                             >
                                         </div>
@@ -266,21 +252,19 @@
                                             <el-button
                                                 v-if="!scope.row.code"
                                                 type="primary"
-                                                icon="el-icon-view"
+                                                icon="View"
                                                 @click="getKeycode(scope.$index, scope.row)"
-                                                size="mini"
                                                 plain
+                                                size="small"
                                                 >点击查看</el-button
                                             >
                                             <el-button
                                                 class="u-btn"
                                                 v-if="scope.row.code"
-                                                type="txt"
-                                                size="mini"
-                                                icon="el-icon-document-copy"
-                                                v-clipboard:copy="'' + scope.row.code"
-                                                v-clipboard:success="onCopy"
-                                                v-clipboard:error="onError"
+                                                link
+                                                icon="DocumentCopy"
+                                                size="small"
+                                                @click="copyToClipboard(scope.row.code)"
                                                 >复制卡密</el-button
                                             >
                                         </div>
@@ -288,8 +272,8 @@
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column label="过期时间" width="200">
-                            <template slot-scope="scope">
+                        <el-table-column label="过期时间" width="250">
+                            <template #default="scope">
                                 <div class="u-time" v-if="scope.row.expire_at">
                                     <span class="u-tag" :class="compareTime(scope.row.expire_at, 'tag')">{{
                                         compareTime(scope.row.expire_at, "time")
@@ -302,18 +286,15 @@
                         <el-table-column label="发放时间" width="200" prop="grant_at"></el-table-column>
                         <el-table-column prop="remark" label="备注" width="200"> </el-table-column>
                         <el-table-column prop="used_by_self" label="是否使用">
-                            <template slot-scope="scope">
-                                <span class="u-used" :class="{ 'is-used': scope.row.used_by_self }">{{
-                                    scope.row.used_by_self ? "是" : "否"
-                                }}</span>
-
-                                <el-button
-                                    v-show="!scope.row.used_by_self"
-                                    type="text"
-                                    size="mini"
+                            <template #default="scope">
+                                <el-icon
+                                    class="u-used-icon"
+                                    :class="{ 'is-used': scope.row.used_by_self }"
                                     @click="onKeyCodeUsedClick(scope.row)"
-                                    >（标记使用）</el-button
-                                >
+                                    size="20"
+                                    :color="scope.row.used_by_self ? '#67C23A' : ''"
+                                    ><CircleCheckFilled></CircleCheckFilled
+                                ></el-icon>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -332,7 +313,7 @@
                         background
                         :page-size="per"
                         :hide-on-single-page="true"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         layout="total, prev, pager, next, jumper"
                         :total="total"
                     ></el-pagination>
@@ -355,7 +336,7 @@ import {
 import { getVirtual } from "@/service/dashboard/goods";
 import keycodeOptions from "@/assets/data/dashboard/card_keycode.json";
 import snOptions from "@/assets/data/dashboard/card_sn.json";
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system";
 import { cloneDeep } from "lodash";
 
 // import _ from "lodash";
@@ -506,9 +487,9 @@ export default {
                     let { code, key } = res.data.data;
                     row.code = code;
                     row.key = key;
-                    this.$set(this.list, index, row);
+                    this.list[index] = row;
                 });
-            });
+            }).catch(() => {});
         },
         //  获取单个激活码
         getSn(index, row) {
@@ -519,9 +500,9 @@ export default {
             }).then(({ value }) => {
                 activationSn(row.id, { password: value }).then((res) => {
                     row.code = res.data.data.sn;
-                    this.$set(this.list, index, row);
+                    this.list[index] = row;
                 });
-            });
+            }).catch(() => {});
         },
         // 获取虚拟卡密
         getVirtualCode(index, row) {
@@ -541,7 +522,7 @@ export default {
                         return item;
                     });
                 });
-            });
+            }).catch(() => {});
         },
         // 判断过期时间
         compareTime(date, type) {
@@ -560,6 +541,7 @@ export default {
 
         // 标记使用
         onKeyCodeUsedClick(row) {
+            if (row.used_by_self) return;
             this.$confirm("确认标记为已使用吗？", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
@@ -577,6 +559,7 @@ export default {
                 .catch(() => {});
         },
         onSnUsedClick(row) {
+            if (row.used_by_self) return;
             this.$confirm("确认标记为已使用吗？", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
@@ -594,6 +577,7 @@ export default {
                 .catch(() => {});
         },
         onVirtualUsedClick(row) {
+            if (row.owner.used_by_self) return;
             this.$confirm("确认标记为已使用吗？", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
@@ -611,18 +595,20 @@ export default {
                 .catch(() => {});
         },
 
-        onCopy: function (val) {
-            this.$notify({
-                title: "复制成功",
-                message: "复制内容 : " + val.text,
-                type: "success",
-            });
-        },
-        onError: function () {
-            this.$notify.error({
-                title: "复制失败",
-                message: "请手动复制",
-            });
+        async copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(String(text));
+                this.$notify({
+                    title: "复制成功",
+                    message: "复制内容 : " + text,
+                    type: "success",
+                });
+            } catch (err) {
+                this.$notify.error({
+                    title: "复制失败",
+                    message: "请手动复制",
+                });
+            }
         },
         currentChange(val) {
             this.page = val;
@@ -630,7 +616,7 @@ export default {
         },
         tabClick(tab) {
             this.page = 1;
-            this.tab = tab.name;
+            this.tab = tab;
             this[this.loadName]();
         },
     },

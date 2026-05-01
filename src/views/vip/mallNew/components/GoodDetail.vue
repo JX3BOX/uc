@@ -21,9 +21,9 @@
                         <i class="el-icon-circle-check" v-if="good.canBuy.level"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
-                    <div class="condition-item" :class="{ canBuy: good.canBuy.vip_limit }">
+                    <div class="condition-item" :class="{ canBuy: good.vip_limit }" v-if="good.vip_limit !== 0">
                         会员专属
-                        <i class="el-icon-circle-check" v-if="good.canBuy.vip_limit"></i>
+                        <i class="el-icon-circle-check" v-if="good.vip_limit"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
                     <div class="condition-item" :class="{ canBuy: good.canBuy.box_coin }" v-if="good.price_boxcoin">
@@ -42,41 +42,43 @@
                     }}{{ good.canBuy.buy_time ? "" : "(不在兑换期内)" }}
                 </div>
                 <div class="buttons">
-                    <button class="button add-cart" :disabled="!good.canBuy.canBuy" @click="addCart">
-                        <img :src="imgUrl + '购物车fill.svg'" alt="" />
+                    <button class="button add-cart" @click="addCart" :disabled="!good.canBuy.canBuy">
+                        <img :src="imgUrl + 'cart-fill.svg'" alt="" />
                         加购
                     </button>
                     <button class="button buy" @click="buyGoods" :disabled="!good.canBuy.canBuy">
                         <template v-if="good.price_boxcoin">
-                            <img :src="imgUrl + '盒币fill.svg'" alt="" />{{ good.price_boxcoin }}盒币
+                            <img :src="imgUrl + 'box_coin_fill.svg'" alt="" />{{ good.price_boxcoin }}盒币
                         </template>
                         <template v-if="good.price_boxcoin && good.price_points"> + </template>
                         <template v-if="good.price_points">
-                            <img :src="imgUrl + '积分.svg'" alt="" />{{ good.price_points }}积分
+                            <img :src="imgUrl + 'point.svg'" alt="" />{{ good.price_points }}积分
                         </template>
                     </button>
-                    <!-- <button class="button like">
-                        <img :src="imgUrl + '点赞fill.svg'" alt="" />
-                        点赞
-                    </button> -->
-                    <Like class="like" :postId="id" postType="mall"></Like>
+                    <button class="button like" @click="$refs.like.addLike()">
+                        <img :src="imgUrl + 'like.svg'" alt="" />
+                        <Like class="like" :postId="id" postType="mall" ref="like"></Like>
+                    </button>
                 </div>
             </div>
             <div v-if="good.describe" class="good-comment" v-html="good.describe"></div>
         </div>
+        <BuyConfirm ref="buyConfirm" :item="good"></BuyConfirm>
     </div>
 </template>
 
 <script>
-import Like from "@jx3box/jx3box-common-ui/src/interact/Like2.vue";
+import Like from "./Like.vue";
+import BuyConfirm from "./BuyConfirm.vue";
 import Skeleton from "@/views/vip/mallNew/components/skeleton/index.vue";
 import { throttle } from "lodash";
-import User from "@jx3box/jx3box-common/js/user";
+import { __cdn } from "@/utils/config";
 export default {
-    name: "GoodDetail",
+    name: "GoodMallDetail",
     components: {
         Skeleton,
         Like,
+        BuyConfirm,
     },
     props: {
         good: {
@@ -90,7 +92,7 @@ export default {
     },
     data() {
         return {
-            imgUrl: "https://cdn.jx3box.com/design/mall/",
+            imgUrl: __cdn + "design/mall/",
             apply: {
                 palu: "魔盒论坛列表页",
                 avatar: "头像框",
@@ -109,16 +111,18 @@ export default {
         },
         goodInfo() {
             if (this.good && this.good.category === "virtual") {
-                if (this.good.sub_category === "skin") {
+                if (this.good.sub_category === "skin" && this.good.virtual_stock_item_details) {
                     return {
                         category: this.good.virtual_stock_item_details.category,
-                        img: `https://cdn.jx3box.com/design/decoration/images/${this.good.remark}/${this.good.virtual_stock_item_details.category}.png`,
+                        img:
+                            __cdn +
+                            `design/decoration/images/${this.good.remark}/${this.good.virtual_stock_item_details.category}.png`,
                     };
                 }
                 if (this.good.sub_category === "palu") {
                     return {
                         category: "palu",
-                        img: `https://cdn.jx3box.com/design/decoration/palu/${this.good.remark}.png`,
+                        img: __cdn + `design/decoration/palu/${this.good.remark}.png`,
                     };
                 }
             }
@@ -129,40 +133,7 @@ export default {
     },
     methods: {
         buyGoods: throttle(function () {
-            if (!User.isLogin()) {
-                this.$message.error("请先登录");
-                setTimeout(() => {
-                    User.toLogin();
-                }, 1000);
-                return;
-            }
-            const { category, is_virtual, id } = this.good;
-            if (is_virtual && category == "virtual") {
-                return this.$store
-                    .dispatch("mallNew/buyGoods", {
-                        id,
-                        count: 1,
-                        addressId: 0,
-                        remark: "虚拟商品购买",
-                    })
-                    .then((res) => {
-                        this.$confirm("购买成功，是否跳转至订单界面?", "提示", {
-                            confirmButtonText: "确定",
-                            cancelButtonText: "取消",
-                            type: "warning",
-                        })
-                            .then(() => {
-                                const url = `${this.root}dashboard/mall`;
-                                window.open(url);
-                            })
-                            .catch(() => {});
-                    });
-            }
-
-            this.$router.push({
-                name: "mall_order_new",
-                params: { id },
-            });
+            this.$refs.buyConfirm.isShow = true;
         }, 2000),
         addCart: throttle(function (e) {
             const num = this.$store.state.mall.cart?.find((item) => item.goods_id === this.good.id)?.amount || 0;
@@ -227,7 +198,7 @@ export default {
     box-sizing: border-box;
     min-width: 600px;
     min-height: calc(100vh - 100px);
-    padding: 24px 0;
+    padding: 24px 292px 24px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -272,10 +243,13 @@ export default {
     }
     .card {
         width: 500px;
-        height: 500px;
+        height: 480px;
         display: flex;
         justify-content: center;
         align-items: center;
+        img{
+            object-fit: cover;
+        }
         .skeleton-container {
             background-color: #fff;
             padding: 10px;
@@ -284,7 +258,7 @@ export default {
     }
     .buy-detail {
         width: 500px;
-        height: 180px;
+        height: 200px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -347,6 +321,10 @@ export default {
                     line-height: 36px;
                     color: rgba(255, 255, 255, 1);
                     text-align: center;
+                    border: none;
+                    &:disabled {
+                        cursor: not-allowed;
+                    }
                     img {
                         margin-right: 4px;
                     }
@@ -377,9 +355,9 @@ export default {
 
         .good-comment {
             width: 500px;
-            height: 77px;
+            height: 100px;
             box-sizing: border-box;
-            padding: 6px 43px;
+            padding: 0 43px;
             overflow: scroll;
             scrollbar-width: none;
             color: rgba(#fff, 0.75);

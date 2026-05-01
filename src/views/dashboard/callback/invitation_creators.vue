@@ -1,30 +1,27 @@
 <template>
     <div class="m-callback m-invitation-creators">
-        <h1 class="u-title">
-            <i class="el-icon-message"></i> 邀请
-        </h1>
+        <h1 class="u-title"><i class="el-icon-message"></i> 邀请</h1>
         <p class="u-desc">你收到了一条联合创作邀请。</p>
         <div class="u-post">
             <div class="u-post-avatar">
-                <img :src="userdata.user_avatar | showAvatar" />
+                <img :src="showAvatar(userdata.user_avatar)" />
             </div>
             <div class="u-post-info">
-                <a class="u-post-title" :href="data | postLink" target="_blank">{{data.post_title}}</a>
-                <a class="u-post-desc" :href="uid | authorLink" target="_blank">
+                <a class="u-post-title" :href="postLink(data)" target="_blank">{{ data.post_title }}</a>
+                <a class="u-post-desc" :href="authorLink(uid)" target="_blank">
                     @
-                    <b>{{userdata.display_name}}</b>
-                    <time class="u-post-time">{{info.updated | dateFormat}}</time>
+                    <b>{{ userdata.display_name }}</b>
+                    <time class="u-post-time">{{ dateFormat(info.updated) }}</time>
                 </a>
             </div>
         </div>
         <div class="u-btns">
-            <el-button
-                type="primary"
-                icon="el-icon-check"
-                :disabled="isNotExist || alreadyAccept"
-                @click="accept"
-            >{{ alreadyAccept ? "已接受" : "接受" }}</el-button>
-            <el-button type="info" icon="el-icon-close" @click="confirmQuit" :disabled="isNotExist">{{ alreadyAccept ? "退出联合创作" : "拒绝" }}</el-button>
+            <el-button type="primary" icon="el-icon-check" :disabled="isNotExist || alreadyAccept" @click="accept">{{
+                alreadyAccept ? "已接受" : "接受"
+            }}</el-button>
+            <el-button type="info" icon="el-icon-close" @click="confirmQuit" :disabled="isNotExist">{{
+                alreadyAccept ? "退出联合创作" : "拒绝"
+            }}</el-button>
         </div>
     </div>
 </template>
@@ -38,11 +35,7 @@ import {
     isExistPostInvitation,
     acceptPostInvitation,
 } from "@/service/dashboard/callback.js";
-import {
-    getLink,
-    showAvatar,
-    authorLink,
-} from "@jx3box/jx3box-common/js/utils";
+import { getLink, showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
 export default {
     name: "CallbackCreators",
@@ -57,9 +50,7 @@ export default {
     },
     computed: {
         info: function () {
-            return JSON.parse(
-                Base64.decode(decodeURIComponent(this.$route.query.info))
-            );
+            return JSON.parse(Base64.decode(decodeURIComponent(this.$route.query.info)));
         },
         id: function () {
             return ~~this.info.source_id;
@@ -100,16 +91,16 @@ export default {
                     });
                 });
         },
-        confirmQuit: function() {
+        confirmQuit: function () {
             this.$confirm("确定退出联合创作吗？", "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 type: "warning",
             })
-            .then(() => {
-                this.quit();
-            })
-            .catch(() => {});
+                .then(() => {
+                    this.quit();
+                })
+                .catch(() => {});
         },
         quit: function () {
             quitUnionPost(this.id).then(() => {
@@ -134,8 +125,6 @@ export default {
                 location.href = this.post_link;
             });
         },
-    },
-    filters: {
         postLink: function (post) {
             return getLink(post.post_type, post.ID);
         },

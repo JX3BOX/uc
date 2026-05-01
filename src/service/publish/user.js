@@ -1,4 +1,4 @@
-import { $cms } from "@jx3box/jx3box-common/js/https";
+import { $cms } from "@jx3box/jx3box-common/js/api";
 
 function getUserConf() {
     return $cms().get(`/api/cms/user/conf`);
@@ -8,8 +8,8 @@ function getUserConf() {
 function getUserInfoByIds(ids) {
     return $cms().get(`/api/cms/user/list/info`, {
         params: {
-            list: ids
-        }
+            list: ids,
+        },
     });
 }
 
@@ -17,5 +17,4 @@ function getUserInfo() {
     return $cms().get(`/api/cms/user/my/info`);
 }
 
-
-export { getUserConf, getUserInfoByIds,getUserInfo };
+export { getUserConf, getUserInfoByIds, getUserInfo };

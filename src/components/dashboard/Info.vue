@@ -2,12 +2,8 @@
     <div class="m-info">
         <div class="u-stat"></div>
         <div class="u-home">
-            <a class="el-button el-button--default is-plain" :href="home"
-                ><img
-                    class="u-home-icon"
-                    svg-inline
-                    src="@/assets/img/dashboard/home.svg"
-                />个人主页</a
+            <a class="u-home-btn el-button el-button--small is-plain" :href="home"
+                ><img class="u-home-icon" svg-inline src="@/assets/img/dashboard/home.svg" />个人主页</a
             >
         </div>
     </div>
@@ -19,18 +15,18 @@ import User from "@jx3box/jx3box-common/js/user";
 export default {
     name: "Info",
     props: [],
-    data: function() {
+    data: function () {
         return {
             uid: User.getInfo().uid,
         };
     },
     computed: {
-        home: function() {
+        home: function () {
             return authorLink(this.uid);
         },
     },
     methods: {},
-    mounted: function() {},
+    mounted: function () {},
 };
 </script>
 
@@ -40,7 +36,6 @@ export default {
         box-sizing: border-box;
         padding: 5px;
         position: relative;
-        top: -2px;
         .mr(3px);
     }
     .u-desc {
@@ -57,11 +52,13 @@ export default {
             .r(3px);
             padding: 5px 10px;
             .fz(14px);
-            .db;
+            .flex;
+            align-items: center;
+            line-height: 1;
 
             &:hover {
                 .u-home-icon {
-                    fill: @primary;
+                    fill: @v4primary;
                 }
             }
         }

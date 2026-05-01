@@ -1,4 +1,4 @@
-import { $cms } from "@jx3box/jx3box-common/js/https.js";
+import { $cms } from "@jx3box/jx3box-common/js/api.js";
 
 function get_comments(params) {
     return $cms().get("/api/cms/wiki/comment/mine", { params });
@@ -9,9 +9,9 @@ function remove_comment(comment_id) {
 }
 
 function getMineWiki(params) {
-   return $cms().get(`/api/cms/wiki/post/mine`, {
-       params
-   })
+    return $cms().get(`/api/cms/wiki/post/mine`, {
+        params,
+    });
 }
 
-export { get_comments, remove_comment,getMineWiki };
+export { get_comments, remove_comment, getMineWiki };

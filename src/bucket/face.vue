@@ -2,58 +2,56 @@
     <div class="m-dashboard-work m-dashboard-cms" v-loading="loading">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">捏脸数据</h2>
-            <a :href="publishLink" class="u-publish el-button el-button--primary el-button--small">
+            <a :href="publishLink" class="u-publish el-button el-button--primary">
                 <i class="el-icon-document"></i> 发布数据
             </a>
         </div>
 
-        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model.lazy="search">
-            <span slot="prepend">关键词</span>
-            <el-button slot="append" icon="el-icon-search"></el-button>
+        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model.lazy="search" size="large">
+            <template #prepend>
+                <span>关键词</span>
+            </template>
+            <template #append>
+                <el-button icon="Search"></el-button>
+            </template>
         </el-input>
 
         <div class="m-dashboard-box">
             <ul class="m-dashboard-box-list" v-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
-                    <div class="u-header">
-                        <i
-                            class="u-item-icon u-success-icon el-icon-success"
-                            v-if="item.status == 1"
-                            title="上架中"
-                        ></i>
-                        <i class="u-item-icon u-remove-icon el-icon-remove" v-else title="已下架"></i>
-                        <a class="u-title" target="_blank" :href="postLink(item.id)">{{ item.title || "未命名" }}</a>
-                    </div>
+                    <a class="u-title" target="_blank" :href="postLink(item.id)">
+                        <i class="u-icon">
+                            <img src="@/assets/img/publish/works/repo.svg" v-if="item.status == 1" />
+                            <img
+                                v-else
+                                src="@/assets/img/publish/works/draft.svg"
+                                title="已下架"
+                            />
+                        </i>
+                        {{ item.title || "未命名" }}</a
+                    >
                     <div class="u-desc">
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ item.created_at }}
+                            <span class="u-time">{{ item.created_at }}</span>
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
                             更新 :
-                            {{ item.updated_at }}
+                            <span class="u-time">{{ item.updated_at }}</span>
                         </time>
                     </div>
 
                     <el-button-group class="u-action">
-                        <!-- <el-button size="mini" icon="el-icon-delete" @click="del(item.id)" :disabled="item.price_type != 0" title="删除"></el-button> -->
-                        <el-button size="mini" icon="el-icon-edit" @click="edit(item.id)" title="编辑"></el-button>
+                        <el-button icon="Edit" @click="edit(item.id)" title="编辑"></el-button>
                         <el-button
                             v-if="item.status == 1"
-                            size="mini"
-                            icon="el-icon-download"
+                            icon="Download"
                             @click="handleOffline(item.id)"
                             title="下架"
                         ></el-button>
-                        <el-button
-                            v-else
-                            size="mini"
-                            icon="el-icon-upload2"
-                            @click="handleOnline(item.id)"
-                            title="上架"
-                        ></el-button>
+                        <el-button v-else icon="Upload" @click="handleOnline(item.id)" title="上架"></el-button>
                     </el-button-group>
                 </li>
             </ul>
@@ -70,7 +68,7 @@
                 background
                 :page-size="per"
                 :hide-on-single-page="true"
-                :current-page.sync="page"
+                v-model:current-page="page"
                 layout="total, prev, pager, next, jumper"
                 :total="total"
             ></el-pagination>

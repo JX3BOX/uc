@@ -1,6 +1,4 @@
-import Vue from "vue";
-import Vuex from "vuex";
-Vue.use(Vuex);
+import { createStore } from "vuex"
 
 // 默认仓储
 let store = {
@@ -33,4 +31,4 @@ let store = {
     modules: {},
 };
 
-export default new Vuex.Store(store);
+export default createStore(store);

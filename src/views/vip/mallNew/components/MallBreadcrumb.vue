@@ -1,18 +1,18 @@
 <template>
     <div class="m-mall-breadcrumb">
-        <div class="left"><img class="icon" :src="imgurl + 'mall.svg'" alt="" />积分商城</div>
+        <div class="left"><img class="icon" :src="imgUrl + 'mall.svg'" alt="" /><a href="/vip/mall">积分商城</a></div>
         <div class="right">
             我的资产
             <div class="lv button">Lv.{{ level }}</div>
             <div class="pro button" v-if="isPro">PRO</div>
             <div class="asset-continer">
                 <div class="item">
-                    <img src="@/assets/img/vip/vip2/box_icon.svg" alt="" class="icon" svg-inline />
-                    <div class="text">盒币<span>（=通宝）</span>：{{ asset.box_coin }}</div>
+                    <img src="@/assets/img/vip/vip2/points.svg" alt="" class="icon" svg-inline />
+                    <div class="text">积分<span>（=银铛）</span>：{{ asset.points }}</div>
                 </div>
                 <div class="item">
-                    <img src="@/assets/img/vip/vip2/points.svg" alt="" class="icon" svg-inline />
-                    <div class="text">积分<span>（=积分）</span>：{{ asset.points }}</div>
+                    <img src="@/assets/img/vip/vip2/box_icon.svg" alt="" class="icon" svg-inline />
+                    <div class="text">盒币<span>（=通宝）</span>：{{ asset.box_coin }}</div>
                 </div>
             </div>
         </div>
@@ -21,11 +21,12 @@
 
 <script>
 import User from "@jx3box/jx3box-common/js/user";
+import { __cdn } from "@/utils/config";
 export default {
     name: "MallBreadcrumb",
     data() {
         return {
-            imgurl: "https://cdn.jx3box.com/design/mall/",
+            imgUrl: __cdn + "design/mall/",
         };
     },
     methods: {
@@ -58,7 +59,6 @@ export default {
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     box-sizing: border-box;
     .left {
-        width: calc(100% - 510px);
         display: flex;
         align-items: center;
         font-size: 20px;
@@ -73,9 +73,11 @@ export default {
             height: 28px;
             margin: 0 4px 0 12px;
         }
+        a{
+            color:#fff;
+        }
     }
     .right {
-        width: 510px;
         height: 20px;
         opacity: 1;
         display: flex;
@@ -102,19 +104,16 @@ export default {
             margin-right: 12px;
         }
         .asset-continer {
-            width: 362px;
-            height: 20px;
             display: flex;
-            justify-content: space-between;
+            gap: 12px;
             align-items: center;
             .item {
-                width: 175px;
-                height: 20px;
+                min-width: 175px;
                 border-radius: 4px;
                 background: rgba(255, 255, 255, 0.1);
                 display: flex;
                 align-items: center;
-                padding-left: 12px;
+                padding: 0 12px;
                 box-sizing: border-box;
                 .icon {
                     width: 12px;
@@ -126,7 +125,7 @@ export default {
                     line-height: 20px;
                     color: rgba(255, 255, 255, 1);
                     span {
-                        color: #656463;
+                        color: rgba(255, 255, 255, 0.6);
                     }
                 }
             }

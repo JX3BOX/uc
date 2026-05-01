@@ -1,15 +1,16 @@
 <template>
     <div class="m-dashboard m-dashboard-index">
         <div class="m-basicinfo">
-            <Avatar class="u-avatar" :uid="uid" :url="info.user_avatar" size="l" :frame="info.user_avatar_frame" />
+            <CommonAvatar
+                class="u-avatar"
+                :uid="uid"
+                :url="info.user_avatar"
+                size="l"
+                :frame="info.user_avatar_frame"
+            />
             <div class="u-info">
                 <h1 class="u-name">
                     <span class="u-name-txt">{{ info.display_name }}</span>
-                    <!-- <el-tooltip class="item" effect="dark" content="修改昵称" placement="top">
-                        <a class="u-edit-name" href="/vip/rename?from=dashboard_index">
-                            <i class="el-icon-edit-outline"></i>
-                        </a>
-                    </el-tooltip> -->
                     <div class="u-name-meta">
                         <span
                             class="u-superauth"
@@ -92,8 +93,8 @@
                         ></el-progress>
                     </a>
                 </div>
-                <div class="u-medals" v-if="medals && medals.length">
-                    <medal :medals="medals" :showIcon="showMedalIcon"></medal>
+                <div class="u-medals">
+                    <medal :uid="uid"></medal>
                 </div>
             </div>
         </div>
@@ -113,10 +114,10 @@
                             <b>{{ asset.box_coin }}</b>
                         </div>
                         <div class="u-credit-op">
-                            <!-- <a class="el-button el-button--primary el-button--mini" href="/vip/boxcoin" target="_blank"
+                            <!-- <a class="el-button el-button--primary el-button--small" href="/vip/boxcoin" target="_blank"
                                 >充值</a
                             > -->
-                            <router-link class="el-button el-button--primary el-button--mini" to="/boxcoin"
+                            <router-link class="el-button el-button--primary el-button--small" to="/boxcoin"
                                 >兑换</router-link
                             >
                         </div>
@@ -136,10 +137,10 @@
                             <b>{{ asset.points }}</b>
                         </div>
                         <div class="u-credit-op">
-                            <router-link class="el-button el-button--primary el-button--mini" to="/points"
+                            <router-link class="el-button el-button--primary el-button--small" to="/points"
                                 >记录</router-link
                             >
-                            <a class="el-button el-button--primary el-button--mini" href="/vip/mall" target="_blank"
+                            <a class="el-button el-button--primary el-button--small" href="/vip/mall" target="_blank"
                                 >兑换</a
                             >
                         </div>
@@ -152,7 +153,7 @@
                             <b>{{ Number(asset.ext_info.keycode || 0) + Number(asset.ext_info.sn || 0) }}</b>
                         </div>
                         <div class="u-credit-op">
-                            <router-link class="el-button el-button--primary el-button--mini" to="/card"
+                            <router-link class="el-button el-button--primary el-button--small" to="/card"
                                 >查看</router-link
                             >
                         </div>
@@ -170,10 +171,10 @@
                             <b>{{ formatCredit(asset.red_packet)  }}</b>
                         </div>
                         <div class="u-credit-op">
-                            <router-link class="el-button el-button--primary el-button--mini" to="/packet"
+                            <router-link class="el-button el-button--primary el-button--small" to="/packet"
                                 >记录</router-link
                             >
-                            <a class="el-button el-button--primary el-button--mini" href="/vip/mall" target="_blank"
+                            <a class="el-button el-button--primary el-button--small" href="/vip/mall" target="_blank"
                                 >兑换</a
                             >
                         </div>
@@ -193,10 +194,10 @@
                             <b>{{ asset.cny }}</b>
                         </div>
                         <div class="u-credit-op">
-                            <!-- <a class="el-button el-button--primary el-button--mini" href="/vip/cny" target="_blank"
+                            <!-- <a class="el-button el-button--primary el-button--small" href="/vip/cny" target="_blank"
                                 >充值</a
                             > -->
-                            <router-link class="el-button el-button--primary el-button--mini" to="/cny"
+                            <router-link class="el-button el-button--primary el-button--small" to="/cny"
                                 >记录</router-link
                             >
                         </div>
@@ -210,7 +211,7 @@
                 <div class="u-dates">
                     <i class="el-icon-date"></i>
                     <el-radio-group v-model="date">
-                        <el-radio v-for="(item, i) in dates" :key="i" :label="item.value">{{ item.label }}</el-radio>
+                        <el-radio v-for="(item, i) in dates" :key="i" :value="item.value">{{ item.label }}</el-radio>
                     </el-radio-group>
                 </div>
             </h2>
@@ -291,20 +292,21 @@
 </template>
 
 <script>
-import { __userGroup, __imgPath, __userLevelColor, __userLevel } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userGroup, __imgPath, __userLevelColor, __userLevel, __cdn } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
-import { getUserMedals, getMyAssetLogs, getMyInfo } from "@/service/dashboard/index.js";
+import { getMyAssetLogs, getMyInfo } from "@/service/dashboard/index.js";
 import { showDate } from "@jx3box/jx3box-common/js/moment";
 import asset_types from "@/assets/data/dashboard/asset_log_types.json";
 import boxcoin_types from "@/assets/data/dashboard/boxcoin_types.json";
 import cny_types from "@/assets/data/dashboard/cny_types.json";
-import { products, pay_status, pay_types } from "@/assets/data/dashboard/pay_order.json";
+import orderData from "@/assets/data/dashboard/pay_order.json";
+const { products, pay_status, pay_types } = orderData;
 import moment from "moment";
-import avatar from "./avatar.vue";
-import medal from "@jx3box/jx3box-common-ui/src/medal/medal.vue";
+import medal from "@jx3box/jx3box-ui/src/author/AuthorMedals.vue";
+import CommonAvatar from "@jx3box/jx3box-ui/src/author/Avatar.vue";
 export default {
-    components: { avatar, medal },
+    components: { medal, CommonAvatar },
     name: "index",
     props: [],
     data: function () {
@@ -421,12 +423,6 @@ export default {
                 this.asset = data;
             });
         },
-        loadMedals: function () {
-            if (!this.uid) return;
-            getUserMedals(this.uid).then((res) => {
-                this.medals = res.data.data || [];
-            });
-        },
         loadFrames: function () {
             getFrames().then((res) => {
                 if (res.data) {
@@ -442,14 +438,13 @@ export default {
         init: function () {
             this.loadUserInfo();
             this.loadAsset();
-            this.loadMedals();
             this.loadAssetLogs();
         },
         getPostLink: function (post_type, post_id) {
             return post_type == "mall_order" ? `/vip/mall/${post_id}` : getLink(post_type, post_id);
         },
         showMedalIcon: function (val) {
-            return __imgPath + "image/medals/user/" + val + ".gif";
+            return __cdn + "design/medals/user/" + val + ".gif";
         },
         showBoxcoinType: function (item) {
             if (item.action_type == 9) {

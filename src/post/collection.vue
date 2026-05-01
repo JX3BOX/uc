@@ -14,6 +14,7 @@
                     placeholder="请输入小册标题"
                     maxlength="30"
                     show-word-limit
+                    size="large"
                 ></el-input>
             </div>
 
@@ -21,10 +22,10 @@
                 <div class="m-publish-primary-block">
                     <el-divider content-position="left">可见性</el-divider>
                     <el-radio v-model.number="collection.public" :label="this.public.PUBLIC">公开</el-radio>
-                    <el-radio v-model.number="collection.public" :label="this.public.PRIVATE">私有</el-radio>
-                    <el-tooltip content="私有仅使该小册不出现在公开小册大厅中" placement="top">
+                    <el-radio v-model.number="collection.public" :label="this.public.PRIVATE">私有<el-tooltip content="私有仅使该小册不出现在公开小册大厅中" placement="top">
                         <i class="el-icon-info"></i>
-                    </el-tooltip>
+                    </el-tooltip></el-radio>
+                    
                 </div>
                 <div class="m-publish-primary-block m-publish-collection-posts">
                     <el-divider content-position="left"
@@ -39,8 +40,10 @@
                         v-if="collection.posts && collection.posts.length"
                         :list="collection.posts"
                         handle=".u-move"
+                        item-key="id"
                     >
-                        <li v-for="(item, key) in collection.posts" :key="key" class="c-posts-item">
+                        <template #item="{ element: item, index: key }">
+                        <li class="c-posts-item">
                             <i class="u-move el-icon-more"></i>
                             <i class="u-delete el-icon-close" @click="collection.posts.splice(key, 1)"></i>
                             <el-row class="m-posts-item" :gutter="10">
@@ -89,7 +92,7 @@
                                                 :label="post.title"
                                             >
                                                 <div>
-                                                    <el-tag size="small" v-if="post.post_type">{{
+                                                    <el-tag v-if="post.post_type">{{
                                                         showPostType(post.post_type)
                                                     }}</el-tag>
                                                     {{ post.title }}
@@ -103,18 +106,28 @@
                                         v-else
                                         v-model.trim="item.url"
                                     ></el-input>
-                                    <div class="w-select">
+                                    <div class="w-select is-small">
                                         <div class="u-select-label">图标</div>
-                                        <el-select v-model="item.icon" filterable clearable popper-class="m-collection-icon__select">
-                                            <el-option v-for="_icon in icons" :key="_icon.value" :value="_icon.value" :label="_icon.label">
+                                        <el-select
+                                            v-model="item.icon"
+                                            filterable
+                                            clearable
+                                            popper-class="m-collection-icon__select"
+                                        >
+                                            <el-option
+                                                v-for="_icon in icons"
+                                                :key="_icon.value"
+                                                :value="_icon.value"
+                                                :label="_icon.label"
+                                            >
                                                 <div class="u-collection-icon">
-                                                    <img class="u-icon" :src="iconUrl(_icon.value)" alt="">
+                                                    <img class="u-icon" :src="iconUrl(_icon.value)" alt="" />
                                                     {{ _icon.label }}
                                                 </div>
                                             </el-option>
                                         </el-select>
                                     </div>
-                                    <el-input v-model="item.custom_title">
+                                    <el-input v-model="item.custom_title" size="small">
                                         <template #prepend>自定义标题</template>
                                     </el-input>
                                 </el-col>
@@ -123,6 +136,7 @@
                                 </el-col> -->
                             </el-row>
                         </li>
+                        </template>
                     </draggable>
                     <div v-else class="u-posts-items-empty">暂无作品信息，请进行作品添加</div>
                     <div class="u-posts-add" @click="add_posts_item">
@@ -156,7 +170,13 @@
                 </div>
             </div>
             <div class="m-publish-collection-publish">
-                <el-button class="u-button" type="primary" @click="submit" :loading="processing" :disabled="processing"
+                <el-button
+                    class="u-button"
+                    size="large"
+                    type="primary"
+                    @click="submit"
+                    :loading="processing"
+                    :disabled="processing"
                     >发 &nbsp;&nbsp; 布</el-button
                 >
             </div>
@@ -165,9 +185,9 @@
 </template>
 
 <script>
-import { __Root, __postType, __wikiType, __appType, __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root, __postType, __wikiType, __appType, __imgPath } from "@/utils/config";
 import Tinymce from "@jx3box/jx3box-editor/src/Tinymce";
-import CollectionPublic from "@jx3box/jx3box-editor/service/enum/CollectionPublic";
+import CollectionPublic from "@jx3box/jx3box-editor/src/service/enum/CollectionPublic";
 import header from "@/components/publish/publish_header.vue";
 import publish_banner from "@/components/publish/publish_banner.vue";
 import draggable from "vuedraggable";
@@ -215,13 +235,12 @@ export default {
         id: function () {
             return this.$route.params.collection_id;
         },
-        icons: function() {
+        icons: function () {
             const icons = [];
             for (let key in xfid) {
                 icons.push({
                     value: `xf_${key}`,
                     label: xfid[key],
-
                 });
             }
             for (let key in schoolid) {
@@ -231,7 +250,7 @@ export default {
                 });
             }
             return icons;
-        }
+        },
     },
     methods: {
         tags_filters(query) {
@@ -331,6 +350,9 @@ export default {
                 if (collection) {
                     for (let i in collection.posts) {
                         let item = collection.posts[i];
+                        if (item.type === "custom") {
+                            collection.posts[i].custom_title = item.custom_title || item.title || "";
+                        }
                         collection.posts[i].posts =
                             item.type === "custom"
                                 ? null
@@ -365,6 +387,7 @@ export default {
                     break;
                 }
                 if (item.type === "custom") {
+                    item.title = item.custom_title ? item.custom_title.trim() : "";
                     if (!item.url) {
                         message = "请填写正确的小册文章链接（http或https开头）";
                         break;
@@ -423,7 +446,7 @@ export default {
             return this.source_types[type];
         },
         iconUrl: function (icon) {
-            const key = icon.replace("_", '/')
+            const key = icon.replace("_", "/");
             return `${__imgPath}image/${key}.png`;
         },
     },

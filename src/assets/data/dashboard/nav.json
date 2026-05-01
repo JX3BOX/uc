@@ -48,7 +48,7 @@
                 "icon": "el-icon-bank-card"
             },
             {
-                "path": "ic",
+                "path": "/ic",
                 "name": "我的盒码",
                 "icon": "el-icon-present"
             }

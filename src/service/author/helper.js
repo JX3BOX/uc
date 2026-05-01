@@ -1,5 +1,4 @@
-import { $helper } from './axios'
-import { $cms } from "@jx3box/jx3box-common/js/https.js"
+import { $cms } from "@jx3box/jx3box-common/js/api.js";
 
 function getCollections(params) {
     return $cms().get(`/api/cms/post/collection`, { params });
@@ -13,8 +12,4 @@ function getWikis(params) {
     return $cms().get(`/api/cms/wiki/post`, { params });
 }
 
-function muteUser(uid, params) {
-    return $helper().put(`/api/user/${uid}/mute`, params);
-}
-
-export { $helper, getCollections, getNamespaces, getWikis, muteUser };
+export {  getCollections, getNamespaces, getWikis };

@@ -5,16 +5,12 @@
 
         <!-- 内容 -->
         <el-form label-position="left" label-width="80px">
-
             <!-- 标题 -->
             <publish-title v-model="form.title"></publish-title>
 
             <!-- 其它 -->
             <el-divider content-position="left">块标题</el-divider>
-            <div>
-                ...
-            </div>
-
+            <div>...</div>
         </el-form>
     </div>
 </template>
@@ -31,15 +27,15 @@ export default {
     },
     data: function () {
         return {
-            name : 'Demo',
-            form : {
-                title : ''
-            }
+            name: "Demo",
+            form: {
+                title: "",
+            },
         };
     },
     computed: {},
     methods: {},
-    filters: {},
+
     created: function () {},
     mounted: function () {},
 };

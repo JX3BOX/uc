@@ -1,5 +1,5 @@
-import { $pay, $cms } from "@jx3box/jx3box-common/js/https";
-import { __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { $pay, $cms } from "@jx3box/jx3box-common/js/api";
+import { __cdn } from "@/utils/config";
 import axios from "axios";
 function getItem(id) {
     return $pay().get(`/api/mall/items/${id}`);
@@ -54,7 +54,7 @@ function checkOwnedStatus(id) {
 }
 // 获取魔卡皮肤json
 function getSkinJson() {
-    let url = __cdn + `design/decoration/community_skin.json?${new Date().getTime()}`;
+    let url = __cdn + `design/decoration/community_skin.json`;
     return axios.get(url);
 }
 

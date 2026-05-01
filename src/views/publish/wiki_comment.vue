@@ -9,9 +9,14 @@
             placeholder="请输入搜索内容"
             v-model="achievement_comment.keyword"
             @change="search_comment"
+            size="large"
         >
-            <template slot="prepend">关键词</template>
-            <el-button slot="append" icon="el-icon-search" @click="search_comment"></el-button>
+            <template #prepend>
+                <span>关键词</span>
+            </template>
+            <template #append>
+                <el-button icon="Search" @click="search_comment"></el-button>
+            </template>
         </el-input>
 
         <div class="m-dashboard-box">
@@ -19,38 +24,33 @@
                 <li class="u-wiki" v-for="(comment, key) in achievement_comment.data" :key="key">
                     <span class="u-tab" v-text="getTypeLabel(comment.type)"></span>
                     <div class="u-header">
-                        <a class="u-title" target="_blank" :href="comment.type + comment.link">{{
+                        <a class="u-title" target="_blank" :href="'cj/view/' + comment.source_id">{{
                             comment.title || "无标题"
                         }}</a>
-                        <span v-if="comment.checked == 0" class="u-mark pending">⌛ 等待审核</span>
-                        <span v-if="comment.checked == 1" class="u-mark">✔ 审核通过</span>
-                        <span v-if="comment.checked == 2" class="u-mark reject">❌ 审核驳回</span>
+                        <el-tag type="warning" size="small" v-if="comment.checked == 0">等待审核</el-tag>
+                        <el-tag type="success" size="small" v-if="comment.checked == 1">审核通过</el-tag>
+                        <el-tag type="danger" size="small" v-if="comment.checked == 2">审核驳回</el-tag>
                     </div>
                     <div class="u-desc">
                         <span class="u-content">
-                            <i class="el-icon-s-comment"></i>
+                            <!-- <i class="el-icon-s-comment"></i> -->
                             {{ comment.content }}
                         </span>
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ new Date(comment.created * 1000) | dateFormat }}
+                            <span class="u-time">{{ dateFormat(new Date(comment.created * 1000)) }}</span>
                         </time>
-                        <time class="u-desc-subitem">
+                        <!-- <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
                             更新 :
-                            {{ new Date(comment.updated * 1000) | dateFormat }}
-                        </time>
+                            {{ dateFormat(new Date(comment.updated * 1000)) }}
+                        </time> -->
                     </div>
 
                     <el-button-group class="u-action">
                         <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-                            <el-button
-                                size="mini"
-                                icon="el-icon-delete"
-                                title="删除"
-                                @click="comment_del(comment)"
-                            ></el-button>
+                            <el-button icon="Delete" title="删除" @click="comment_del(comment)"></el-button>
                         </el-tooltip>
                     </el-button-group>
                 </li>
@@ -79,7 +79,7 @@
 
 <script>
 import { getTypeLabel } from "@jx3box/jx3box-common/js/utils";
-import { __wikiType } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __wikiType } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 import { get_comments, remove_comment } from "@/service/publish/wiki";
 export default {
@@ -152,8 +152,6 @@ export default {
                 },
             });
         },
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(val));
         },

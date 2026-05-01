@@ -1,4 +1,4 @@
-import { $cms } from "@jx3box/jx3box-common/js/https";
+import { $cms } from "@jx3box/jx3box-common/js/api";
 
 function getUnionPosts(params) {
     return $cms().get(`/api/cms/posts/user/my/union`, {

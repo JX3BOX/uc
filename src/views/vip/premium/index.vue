@@ -1,6 +1,5 @@
 <template>
-    <div id="app">
-        <Header :key="currentKey"></Header>
+        <CommonHeader :key="currentKey"></CommonHeader>
         <Main :withoutRight="true" :withoutLeft="true">
             <div class="m-premium-container">
                 <img class="u-vip-title" src="@/assets/img/vip/vip2/title.png" alt="" srcset="" />
@@ -14,8 +13,7 @@
                 </div>
             </div>
         </Main>
-        <Footer></Footer>
-    </div>
+        <CommonFooter></CommonFooter>
 </template>
 
 <script>
@@ -83,6 +81,11 @@ export default {
                 });
             }
         },
+    },
+    beforeRouteEnter(to, from, next) {
+        // 跳转走
+        window.location.href = "/vip/mall/160";
+        next();
     },
     mounted: async function () {
         this.isLogin && this.loadAsset();

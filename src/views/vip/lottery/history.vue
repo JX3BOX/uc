@@ -1,10 +1,10 @@
 <template>
     <div class="m-history-content">
         <div class="m-toolbar">
-            <el-radio-group v-model="status" size="mini" fill="#000">
-                <el-radio-button label="0">全部记录</el-radio-button>
-                <el-radio-button label="2">中奖</el-radio-button>
-                <el-radio-button label="3">未中奖</el-radio-button>
+            <el-radio-group v-model="status" fill="#000">
+                <el-radio-button value="0">全部记录</el-radio-button>
+                <el-radio-button value="2">中奖</el-radio-button>
+                <el-radio-button value="3">未中奖</el-radio-button>
             </el-radio-group>
         </div>
         <el-table class="m-table-box" :data="list" align="left" v-loading="loading">
@@ -16,18 +16,16 @@
             ></el-table-column>
             <el-table-column prop="win_count" width="90px" label="中奖数量" v-if="status == '2'"></el-table-column>
             <el-table-column label="状态" v-if="status !== '2'">
-                <template slot-scope="scope">
-                    <el-tag :type="scope.row.status == 2 ? 'success' : 'info'" size="small">
+                <template #default="scope">
+                    <el-tag :type="scope.row.status == 2 ? 'success' : 'info'">
                         {{ scope.row.status == 2 ? "中奖" : "未中奖" }}
                     </el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="操作" v-if="status !== '3'">
-                <template slot-scope="scope">
-                    <el-button size="mini" v-if="scope.row.status == 2" @click="look(scope.row.id)">
-                        查看详情
-                    </el-button>
-                    <el-button size="mini" v-if="scope.row.address" @click="editAddress"> 填写地址 </el-button>
+                <template #default="scope">
+                    <el-button v-if="scope.row.status == 2" @click="look(scope.row.id)"> 查看详情 </el-button>
+                    <el-button v-if="scope.row.address" @click="editAddress"> 填写地址 </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -38,14 +36,14 @@
             :hide-on-single-page="true"
             :page-size="pageSize"
             :total="total"
-            :current-page.sync="index"
+            v-model:current-page="index"
             @current-change="change"
         ></el-pagination>
     </div>
 </template>
 
 <script>
-import { __Root } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __Root } from "@/utils/config";
 import { getMyHistory } from "@/service/vip/lottery";
 import { some } from "lodash";
 export default {

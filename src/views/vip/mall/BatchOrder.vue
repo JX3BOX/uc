@@ -26,10 +26,8 @@
                     <!-- v-if="show_address" -->
                     <div class="m-address">
                         <div class="m-button">
-                            <el-button plain type="primary" icon="el-icon-sort" @click="visible = true" size="small"
-                                >选择地址</el-button
-                            >
-                            <a class="el-button el-button--small is-plain" href="/dashboard/address" target="_blank"
+                            <el-button plain type="primary" icon="Sort" @click="visible = true">选择地址</el-button>
+                            <a class="el-button is-plain" href="/dashboard/address" target="_blank"
                                 ><i class="el-icon-setting"></i> 管理地址</a
                             >
                         </div>
@@ -47,7 +45,7 @@
                                 </div>
                             </div>
                         </template>
-                        <div v-else><el-button type="success" icon="el-icon-plus">添加地址</el-button></div>
+                        <div v-else><el-button type="success" icon="Plus">添加地址</el-button></div>
                     </div>
                     <!-- <div class="u-no-address" v-else>虚拟物品无需地址</div> -->
                 </div>
@@ -68,7 +66,7 @@
     </div>
 </template>
 <script>
-import { __userLevel, __Root } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __userLevel, __Root } from "@/utils/config";
 import Address from "./components/address.vue";
 import { batchMakeOrder, batchPayOrder } from "@/service/vip/mall";
 export default {

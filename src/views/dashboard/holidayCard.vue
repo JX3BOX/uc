@@ -22,7 +22,7 @@
             background
             :hide-on-single-page="true"
             :page-size="pageSize"
-            :current-page.sync="pageIndex"
+            v-model:current-page="pageIndex"
             layout="total, prev, pager, next"
             :total="total"
             @current-change="currentChange"
@@ -32,7 +32,8 @@
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { antiqueTab } from "@/assets/data/dashboard/tabs.json";
+import tabsData from "@/assets/data/dashboard/tabs.json";
+const { antiqueTab } = tabsData;
 import { getHolidayCard } from "@/service/dashboard/treasure";
 
 export default {
@@ -74,7 +75,7 @@ export default {
             return `${year}-${month < 10 ? "0" + month : month}-${day < 10 ? "0" + day : day}`;
         },
         getCertLink(item) {
-            return `/author/${item.user_id}/holiday-card/${item.event_id}?id=${item.id}`;
+            return `/card?type=holiday&uid=${item.user_id}&id=${item.id}&event_id=${item.event_id}`;
         },
         currentChange(val) {
             this.pageIndex = val;

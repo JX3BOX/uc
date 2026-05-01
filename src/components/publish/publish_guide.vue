@@ -3,19 +3,19 @@
     <div class="m-publish-guide">
         <label class="el-form-item__label">前后引导 </label>
         <div class="u-condition u-prev" key="prev">
-            <span class="u-prepend el-input-group__prepend">上一篇</span>
+            <span class="u-prepend">上一篇</span>
             <el-select
-                size="small"
                 filterable
                 remote
                 placeholder="输入关键词进行搜索"
                 :remote-method="remoteMethodPrev"
-                v-model="data.prev_post"
+                v-model="prevPost"
                 clearable
+                size="small"
             >
                 <el-option v-for="item in prev" :key="item.ID" :value="item.ID" :label="item.post_title">
                     <div class="u-post-select__item">
-                        <el-tag size="mini" v-if="item.post_type" :type="item.visible != 0 ? 'warning' : ''">{{
+                        <el-tag v-if="item.post_type" v-bind="item.visible != 0 ? { type: 'warning' } : {}">{{
                             showPostType(item.post_type)
                         }}</el-tag>
                         {{ item.post_title }}
@@ -24,19 +24,19 @@
             </el-select>
         </div>
         <div class="u-condition u-next" key="next">
-            <span class="u-prepend el-input-group__prepend">下一篇</span>
+            <span class="u-prepend">下一篇</span>
             <el-select
-                size="small"
                 filterable
                 remote
                 placeholder="输入关键词进行搜索"
                 :remote-method="remoteMethodNext"
-                v-model="data.next_post"
+                v-model="nextPost"
                 clearable
+                size="small"
             >
                 <el-option v-for="item in next" :key="item.ID" :value="item.ID" :label="item.post_title">
                     <div class="u-post-select__item">
-                        <el-tag size="mini" v-if="item.post_type" :type="item.visible != 0 ? 'warning' : ''">{{
+                        <el-tag v-if="item.post_type" v-bind="item.visible != 0 ? { type: 'warning' } : {}">{{
                             showPostType(item.post_type)
                         }}</el-tag>
                         {{ item.post_title }}
@@ -44,18 +44,16 @@
                 >
             </el-select>
         </div>
-        <!-- <el-tooltip content="只可选择公开的文章">
-            <i class="el-icon-question" style="margin-left: 10px;"></i>
-        </el-tooltip> -->
     </div>
 </template>
 
 <script>
-import { __postType } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __postType } from "@/utils/config";
 import { getMyPosts } from "@/service/publish/cms";
 import { cloneDeep } from "lodash";
 export default {
     name: "PublishGuide",
+    emits: ["update:data"],
     props: {
         data: {
             type: Object,
@@ -71,6 +69,22 @@ export default {
         };
     },
     computed: {
+        prevPost: {
+            get() {
+                return this.data?.prev_post || "";
+            },
+            set(val) {
+                this.updateData({ prev_post: val });
+            },
+        },
+        nextPost: {
+            get() {
+                return this.data?.next_post || "";
+            },
+            set(val) {
+                this.updateData({ next_post: val });
+            },
+        },
         form() {
             return {
                 prev_post: this.data.prev_post,
@@ -107,6 +121,9 @@ export default {
         this.next = cloneDeep(res);
     },
     methods: {
+        updateData(patch) {
+            this.$emit("update:data", { ...this.data, ...patch });
+        },
         async remoteMethodPrev(keyword) {
             if (keyword) {
                 const params = {
@@ -134,7 +151,11 @@ export default {
             }
         },
         showPostType: function (type) {
-            return __postType[type];
+            const typeMap = {
+                ...__postType,
+                bbs: "茶馆",
+            };
+            return typeMap[type];
         },
         async loadPosts(params) {
             return await getMyPosts(params).then((res) => {
@@ -154,34 +175,47 @@ export default {
         width: 80px;
     }
     .u-condition {
-        height: 32px;
+        height: 32x;
         width: auto;
         .flex;
         align-items: center;
-        .el-input-group__prepend {
-            padding-left: 10px;
-            padding-right: 10px;
-        }
+
         .u-prepend {
-            .fl;
-            width: auto;
-            min-width: 50px;
+            background-color: #f5f7fa;
+            color: #909399;
+            border: 1px solid #dcdfe6;
+            border-right: none;
+            border-radius: 4px 0 0 4px;
+            padding: 0 15px;
+            min-width: 80px;
+            height: 32px !important;
             box-sizing: border-box;
             .fz(12px);
-            height: 100%;
             .flex;
             align-items: center;
+            justify-content: center;
         }
+
         .el-select {
             .db;
-        }
-        .el-input__inner {
-            box-sizing: border-box;
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-        }
-        .el-input {
-            .w(200px);
+            .w(260px);
+            margin-left: -1px;
+
+            .el-select__wrapper {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                box-shadow: 0 0 0 1px #dcdfe6 inset;
+                height: 32px;
+                box-sizing: border-box;
+
+                &.is-focus {
+                    box-shadow: 0 0 0 1px @primary inset !important;
+                }
+            }
+
+            .el-input__inner {
+                height: 32px;
+            }
         }
     }
     .u-prev {

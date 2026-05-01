@@ -2,7 +2,7 @@
     <div class="m-dashboard m-dashboard-work m-dashboard-wiki" v-loading="loading">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">{{ typeLabel }}百科</h2>
-            <a :href="publishLink" class="u-publish el-button el-button--primary el-button--small"
+            <a :href="publishLink" class="u-publish el-button el-button--primary"
                 ><i class="el-icon-document"></i> 发布作品</a
             >
         </div>
@@ -12,9 +12,14 @@
             placeholder="请输入搜索内容"
             v-model="achievement_post.keyword"
             @change="search_post"
+            size="large"
         >
-            <template slot="prepend">关键词</template>
-            <el-button slot="append" icon="el-icon-search" @click="search_post"></el-button>
+            <template #prepend>
+                <span>关键词</span>
+            </template>
+            <template #append>
+                <el-button icon="Search" @click="search_post"></el-button>
+            </template>
         </el-input>
 
         <div class="m-dashboard-box">
@@ -25,10 +30,10 @@
                         <a class="u-title" target="_blank" :href="getLink(post)">
                             {{ post.title || "无标题" }}
                         </a>
-                        <span v-if="post.checked == 0" class="u-mark pending">⌛ 等待审核</span>
-                        <span v-if="post.checked == 1" class="u-mark">✔ 审核通过</span>
-                        <span v-if="post.checked == 2" class="u-mark reject">❌ 审核驳回</span>
-                        <span v-if="post.checked == 3" class="u-mark hold">🔐 等待验证</span>
+                        <el-tag type="warning" size="small" v-if="post.checked == 0">等待审核</el-tag>
+                        <el-tag type="success" size="small" v-if="post.checked == 1">审核通过</el-tag>
+                        <el-tag type="danger" size="small" v-if="post.checked == 2">审核驳回</el-tag>
+                        <el-tag type="warning" size="small" v-if="post.checked == 3">等待验证</el-tag>
                     </div>
                     <div class="u-desc">
                         <span
@@ -39,24 +44,23 @@
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
                             发布 :
-                            {{ new Date(post.created * 1000) | dateFormat }}
+                            {{ dateFormat(new Date(post.created * 1000)) }}
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
                             更新 :
-                            {{ new Date(post.updated * 1000) | dateFormat }}
+                            {{ dateFormat(new Date(post.updated * 1000)) }}
                         </time>
                     </div>
 
                     <el-button-group class="u-action">
                         <el-button
-                            size="mini"
-                            icon="el-icon-edit"
+                            icon="Edit"
                             :disabled="post.checked == 1 || post.checked == 3"
                             title="编辑"
                             @click="post_edit(post)"
                         ></el-button>
-                        <el-button size="mini" icon="el-icon-delete" title="删除" @click="post_del(post)"></el-button>
+                        <el-button icon="Delete" title="删除" @click="post_del(post)"></el-button>
                     </el-button-group>
                 </li>
             </ul>
@@ -84,9 +88,9 @@
 
 <script>
 import { getTypeLabel, getLink } from "@jx3box/jx3box-common/js/utils";
-import { __wikiType } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __wikiType } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
-import { wiki } from "@jx3box/jx3box-common/js/wiki_v2";
+import { wiki } from "@jx3box/jx3box-common/js/wiki";
 const wikiTypes = {
     ...__wikiType,
     skill: "技能",
@@ -169,8 +173,6 @@ export default {
         getLink: function (post) {
             return getLink(post?.type, post?.source_id) + "/" + post?.id;
         },
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(val));
         },

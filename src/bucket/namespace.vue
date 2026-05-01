@@ -2,60 +2,36 @@
     <div class="m-dashboard m-dashboard-work m-dashboard-other">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">剑三铭牌</h2>
-            <a
-                :href="publishLink"
-                class="u-publish el-button el-button--primary el-button--small"
-            >
+            <a :href="publishLink" class="u-publish el-button el-button--primary">
                 <i class="el-icon-document"></i> 创建铭牌
             </a>
         </div>
 
         <div class="m-namespace-box" v-loading="loading">
-            <el-row
-                class="m-namespace-list"
-                :gutter="20"
-                v-if="list && list.length"
-            >
-                <el-col :span="6" v-for="(item, i) in list" :key="i">
+            <el-row class="m-namespace-list" :gutter="20" v-if="list && list.length">
+                <el-col :span="6" :xs="24" v-for="(item, i) in list" :key="i">
                     <div class="u-namespace-item">
                         <div class="u-item">
                             <div class="u-box">
                                 <div class="u-title">
-                                    <span
-                                        class="el-icon-postcard u-icon"
-                                    ></span>
-                                    <a
-                                        class="u-name"
-                                        target="_blank"
-                                        :href="item.link"
-                                        >{{ item.key || "未知" }}</a
-                                    >
+                                    <span class="el-icon-postcard u-icon"></span>
+                                    <a class="u-name" target="_blank" :href="item.link">{{ item.key || "未知" }}</a>
                                 </div>
                                 <div class="u-desc">
                                     <span class="u-status u-desc-subitem">
                                         状态:
-                                        <b :class="`status${item.status}`">{{
-                                            statusmap[item.status]
-                                        }}</b>
+                                        <el-tag :type="item.status == 1 ? 'success' : item.status == 2 ? 'danger' : 'info'" size="small">{{ statusmap[item.status] }}</el-tag>
                                     </span>
-                                    <time class="u-time u-desc-subitem"
-                                        >创建于 :
-                                        {{ item.created | dateFormat }}</time
-                                    >
+                                    <time class="u-time u-desc-subitem">创建于: {{ dateFormat(item.created) }}</time>
                                 </div>
                             </div>
                             <el-button-group class="u-action">
                                 <el-button
-                                    size="mini"
-                                    icon="el-icon-edit"
-                                    @click="
-                                        edit(
-                                            item.ID,
-                                            item.source_type,
-                                            item.source_id
-                                        )
-                                    "
+                                    icon="Edit"
+                                    @click="edit(item.ID, item.source_type, item.source_id)"
                                     title="编辑"
+                                    circle
+                                    plain
                                 ></el-button>
                             </el-button-group>
                         </div>
@@ -76,7 +52,7 @@
                     layout="total, prev, pager, next,jumper"
                     :page-size="per"
                     :total="total"
-                    :current-page.sync="page"
+                    v-model:current-page="page"
                     :hide-on-single-page="true"
                 ></el-pagination>
             </div>
@@ -86,7 +62,6 @@
 
 <script>
 import { getNamespace } from "@/service/publish/namespace";
-import { getLink } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
 const statusmap = {
     0: "待审核",
@@ -136,14 +111,12 @@ export default {
                     this.loading = false;
                 });
         },
-    },
-    mounted: function () {
-        this.loadData();
-    },
-    filters: {
         dateFormat: function (val) {
             return dateFormat(new Date(~~val * 1000));
         },
+    },
+    mounted: function () {
+        this.loadData();
     },
     watch: {
         params: {

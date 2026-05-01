@@ -1,8 +1,6 @@
 <template>
     <div class="m-role-info">
-        <div class="u-join-time">
-            加入魔盒于 {{ data.user_registered | time }}
-        </div>
+        <div class="u-join-time">加入魔盒于 {{ time(data.user_registered) }}</div>
         <div class="m-role-card">
             <role-card />
         </div>
@@ -16,14 +14,14 @@ import RoleCard from "@/components/author/mobile/Pannel/RoleCard.vue";
 export default {
     name: "RoleInfo",
     components: {
-        RoleCard
+        RoleCard,
     },
-    computed:{
+    computed: {
         data: function () {
             return this.$store.state.userdata;
         },
     },
-    filters: {
+    methods: {
         time: (val) => {
             return dateFormat(new Date(val));
         },
@@ -31,30 +29,28 @@ export default {
 };
 </script>
 
-
-
-<style  lang="less">
-    .m-role-info{
+<style lang="less">
+.m-role-info {
+    display: flex;
+    box-sizing: border-box;
+    padding: 16px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    align-self: stretch;
+    width: 100%;
+    .u-join-time {
         display: flex;
-        box-sizing: border-box;
-        padding: 16px 20px;
+        padding: 8px 12px;
         flex-direction: column;
+        justify-content: center;
         align-items: flex-start;
-        gap: 12px;
+        gap: 4px;
         align-self: stretch;
-        width: 100%;
-        .u-join-time{
-            display: flex;
-            padding: 8px 12px;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-            gap:  4px;
-            align-self: stretch;
-            color: var(--black-40, rgba(255, 255, 255, 0.40));
+        color: var(--black-40, rgba(255, 255, 255, 0.4));
 
-            border-radius: 8px;
-            background: var(--primary-brand, #282828);
-        }
+        border-radius: 8px;
+        background: var(--primary-brand, #282828);
     }
+}
 </style>

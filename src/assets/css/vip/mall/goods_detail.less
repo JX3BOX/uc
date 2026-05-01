@@ -30,7 +30,7 @@ body {
                 &:hover {
                     box-shadow: none;
                     text-decoration: none;
-                    .color(@color-link);
+                    .color(@v4primary);
                 }
             }
         }
@@ -57,7 +57,7 @@ body {
         .u-back {
             .pointer;
             &:hover {
-                .color(@color-link);
+                .color(@v4primary);
             }
             color: @color;
         }
@@ -106,7 +106,7 @@ body {
                 border: 1px solid #fff;
                 &:hover {
                     .pointer;
-                    border: 1px solid #0366d6;
+                    border: 1px solid @v4primary;
                 }
                 object-fit: cover;
             }
@@ -225,7 +225,7 @@ body {
             .x;
             .r(5px);
             .pointer;
-            background-color: #0366d6;
+            background-color: @v4primary;
             color: #fff;
 
             &.u-btn-use {
@@ -274,7 +274,7 @@ body {
                     .r(3px);
                     .clip;
                     .ml(-23px);
-                    background-color: #0366d6;
+                    background-color: @v4primary;
                 }
             }
         }

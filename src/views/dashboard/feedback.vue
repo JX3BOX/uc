@@ -8,7 +8,7 @@
     <div class="m-credit m-feedback">
         <h2 class="u-title">
             <i class="el-icon-phone-outline"></i> 反馈中心
-            <el-button class="u-back" size="mini" plain icon="el-icon-arrow-left" @click="goBack">返回</el-button>
+            <el-button class="u-back" plain icon="ArrowLeft" @click="goBack">返回</el-button>
         </h2>
 
         <router-view></router-view>
@@ -30,25 +30,23 @@ export default {
             if (window.history.length > 1) {
                 this.$router.go(-1);
             } else {
-                this.$router.push({ path: '/feedback?tab=pending' });
+                this.$router.push({ path: "/feedback?tab=pending" });
             }
         },
     },
     created: function () {},
     mounted: function () {
-        this.$store.dispatch('getIsTeammate')
+        this.$store.dispatch("getIsTeammate");
     },
 };
-
 </script>
 
-
 <style scoped lang="less">
-.m-feedback{
-    .u-title{
+.m-feedback {
+    .u-title {
         .pr;
     }
-    .u-back{
+    .u-back {
         position: absolute;
         bottom: 10px;
         right: 0;

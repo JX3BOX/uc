@@ -1,10 +1,7 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import { createStore } from "vuex";
 
 import mallStore from "./mall";
 import mallNewStore from "./mallNew";
-
-Vue.use(Vuex);
 
 let store = {
     state: {
@@ -19,4 +16,4 @@ let store = {
     },
 };
 
-export default new Vuex.Store(store);
+export default createStore(store);

@@ -4,16 +4,19 @@
             <i class="el-icon-coordinate"></i> 我的角色
             <!-- <goback /> -->
             <div class="u-op">
-                <router-link to="/role/bind" class="el-button el-button--primary el-button--mini">
-                    <i class="el-icon-connection"></i> 绑定角色
+                <router-link to="/role/bind" class="el-button el-button--primary el-button--default">
+                    <i class="el-icon-connection"></i>&nbsp;绑定角色
                 </router-link>
-                <router-link to="/role/add" class="el-button el-button--primary el-button--mini">
+                <!-- <router-link to="/role/sync" class="el-button el-button--primary el-button--small">
+                    <i class="el-icon-refresh"></i> 同步数据
+                </router-link> -->
+                <!-- <router-link to="/role/add" class="el-button el-button--primary el-button--small">
                     <i class="el-icon-plus"></i> 自定义角色
-                </router-link>
+                </router-link> -->
             </div>
         </h2>
         <div class="m-role-list-filter">
-            <el-select size="small" v-model="mount" popper-class="m-school-pop">
+            <el-select v-model="mount" popper-class="m-school-pop" style="width:200px;" size="large">
                 <el-option label="全部" value=""></el-option>
                 <el-option
                     v-for="(school, school_id) in school_id_map"
@@ -22,26 +25,26 @@
                     :label="school"
                     class="u-school"
                 >
-                    <img width="24" height="24" :src="school_id | showSchoolIcon" />
+                    <img width="24" height="24" :src="showSchoolIcon(school_id)" />
                     {{ school }}
                 </el-option>
             </el-select>
-            <el-input class="u-name" v-model="name" placeholder="请输入角色名称" size="small">
-                <template slot="prepend"> <i class="el-icon-search"></i> 查找 </template>
+            <el-input class="u-name" v-model="name" placeholder="请输入角色名称" size="large">
+                <template #prepend> <i class="el-icon-search"></i> 查找 </template>
             </el-input>
         </div>
         <div class="m-team-rolelist" v-if="data && data.length">
             <ul class="u-list">
-                <li class="u-item" v-for="(item, i) in data" :key="i">
-                    <router-link :to="'/role/' + item.ID" class="u-pic u-avatar">
-                        <img :src="showAvatar(item.mount, item.body_type)" alt />
+                <li class="u-item" v-for="item in data" :key="item.ID" :class="{ auth: !item.custom }">
+                    <router-link :to="'/role/' + item.ID" class="u-avatar">
+                        <img class="u-pic" :src="showAvatar(item.mount, item.body_type)" alt />
                         <i class="u-status" v-if="!item.custom" title="已认证">
                             <img svg-inline src="@/assets/img/dashboard/verify.svg" />
                         </i>
                     </router-link>
                     <span class="u-title">
                         <router-link class="u-rolename" :to="'/role/' + item.ID">{{ item.name }}</router-link>
-                        <el-tag v-if="item.is_default_role" size="mini" type="warning">默认</el-tag>
+                        <el-tag v-if="item.is_default_role" type="warning">默认</el-tag>
                         <span class="u-star" :class="{ on: item.priority }" @click="starRole(item)">
                             <el-tooltip
                                 class="item"
@@ -61,17 +64,17 @@
                         </span>
                         <span class="u-mount">
                             <em>门派</em>
-                            <img class="u-icon" :src="item.mount | showSchoolIcon" />
-                            {{ item.mount | showSchoolName }}
+                            <img class="u-icon" :src="showSchoolIcon(item.mount)" />
+                            {{ showSchoolName(item.mount) }}
                         </span>
-                        <span class="u-team-name" v-if="item.team_relation && item.team_relation.team_id">
+                        <!-- <span class="u-team-name" v-if="item.team_relation && item.team_relation.team_id">
                             <em>团队名</em>
                             {{ item.team_relation.team_name }}
-                        </span>
-                        <span class="u-team-status" v-if="item.team_relation && item.team_relation.team_id">
+                        </span> -->
+                        <!--<span class="u-team-status" v-if="item.team_relation && item.team_relation.team_id">
                             <em>状态</em>
                             <span class="u-team-status" :class="`u-team-status-${item.team_relation.status}`">{{ teamStatus(item.team_relation.status) }}</span>
-                        </span>
+                        </span>-->
                         <span class="u-note">
                             <em>备注</em>
                             {{ item.note }}
@@ -82,7 +85,13 @@
                             </span>
                         </span>
                     </span>
-                    <span class="u-time">绑定时间 : {{ item.created_at | showTime }}</span>
+                    <span class="u-time u-achievement"
+                        >成就数据:
+                        <template v-if="item.sync_achievements"
+                            ><i class="el-icon-success u-success"></i>已同步</template
+                        >
+                        <template v-else><i class="el-icon-warning-outline u-warning"></i>未同步</template>
+                    </span>
                     <div class="u-op">
                         <el-switch
                             v-model="item.is_public_visible"
@@ -94,29 +103,31 @@
                         >
                         </el-switch>
                         <el-dropdown @command="handleCommand" trigger="click">
-                            <el-button type="default" size="small">
+                            <el-button type="default">
                                 更多<i class="el-icon-arrow-down el-icon--right"></i>
                             </el-button>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item :command="{ item, command: 'default' }">
-                                    <i class="el-icon-setting"></i>
-                                    {{ item.is_default_role ? "取消默认" : "设为默认" }}
-                                </el-dropdown-item>
-                                <el-dropdown-item v-if="!item.custom" :command="{ item, command: 'unbind' }">
-                                    <i class="el-icon-remove-outline"></i>
-                                    解绑
-                                </el-dropdown-item>
-                                <template v-else>
-                                    <el-dropdown-item :command="{ item, command: 'edit' }">
-                                        <i class="el-icon-edit-outline"></i>
-                                        编辑
+                            <template #dropdown>
+                                <el-dropdown-menu>
+                                    <el-dropdown-item :command="{ item, command: 'default' }">
+                                        <i class="el-icon-setting"></i>
+                                        {{ item.is_default_role ? "取消默认" : "设为默认" }}
                                     </el-dropdown-item>
-                                    <el-dropdown-item :command="{ item, command: 'delete' }">
-                                        <i class="el-icon-delete"></i>
-                                        删除
+                                    <el-dropdown-item v-if="!item.custom" :command="{ item, command: 'unbind' }">
+                                        <i class="el-icon-remove-outline"></i>
+                                        解绑
                                     </el-dropdown-item>
-                                </template>
-                            </el-dropdown-menu>
+                                    <template v-else>
+                                        <el-dropdown-item :command="{ item, command: 'edit' }">
+                                            <i class="el-icon-edit-outline"></i>
+                                            编辑
+                                        </el-dropdown-item>
+                                        <el-dropdown-item :command="{ item, command: 'delete' }">
+                                            <i class="el-icon-delete"></i>
+                                            删除
+                                        </el-dropdown-item>
+                                    </template>
+                                </el-dropdown-menu>
+                            </template>
                         </el-dropdown>
                     </div>
                 </li>
@@ -125,27 +136,24 @@
         <template v-else>
             <el-alert class="m-archive-null" title="没有找到相关条目" type="info" center show-icon></el-alert>
             <div class="m-role-null">
-                <router-link to="/role/bind" class="el-button el-button--primary el-button--mini">
+                <router-link to="/role/bind" class="el-button el-button--primary el-button--small">
                     <i class="el-icon-connection"></i> 绑定角色
                 </router-link>
-                <router-link to="/role/add" class="el-button el-button--primary el-button--mini">
+                <router-link to="/role/add" class="el-button el-button--primary el-button--small">
                     <i class="el-icon-plus"></i> 自定义角色
                 </router-link>
             </div>
         </template>
-        <el-dialog
-            title="设置备注"
-            :visible.sync="noteVisible"
-            :width="isPhone ? '95%' : '30%'"
-            class="m-team-note-dialog"
-        >
+        <el-dialog title="设置备注" v-model="noteVisible" :width="isPhone ? '95%' : '30%'" class="m-team-note-dialog">
             <div>
                 <el-input v-model="note" placeholder="请输入内容" :maxlength="20" :show-word-limit="true"></el-input>
             </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="noteVisible = false">取 消</el-button>
-                <el-button type="primary" @click="confirmNote">确 定</el-button>
-            </span>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="noteVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="confirmNote">确 定</el-button>
+                </span>
+            </template>
         </el-dialog>
     </div>
 </template>
@@ -162,17 +170,20 @@ import {
     defaultRole,
 } from "@/service/dashboard/role.js";
 import school_id_map from "@jx3box/jx3box-data/data/xf/schoolid.json";
-import { __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath, __cdn } from "@/utils/config";
 import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
 import { showSchoolIcon, showSchoolName, showTime, getThumbnail } from "@/utils/filters";
+
+// 计算排序权重
+const getWeight = (role) => {
+    if (role.is_default_role) return 0; // 默认角色优先级最高
+    if (role.priority) return 1; // 收藏角色第二
+    if (!role.custom) return 2; // 认证角色第三
+    return 3; // 其他角色最后
+};
 export default {
     name: "ListRole",
     props: [],
-    filters: {
-        showSchoolIcon,
-        showSchoolName,
-        showTime,
-    },
     data: function () {
         return {
             data: [],
@@ -197,10 +208,14 @@ export default {
             return {
                 mount: this.mount,
                 name: this.name,
+                _no_page: 1,
             };
         },
     },
     methods: {
+        showSchoolIcon,
+        showSchoolName,
+        showTime,
         unbind: function (id) {
             this.$confirm("在网站进行解绑游戏内需要小退方可生效", "提示", {
                 confirmButtonText: "确定解绑",
@@ -224,6 +239,23 @@ export default {
             getRoles(this.params)
                 .then((res) => {
                     this.data = res.data.data.list || [];
+                    // 进行排序
+                    // 默认角色第一
+                    // 收藏角色第一梯队
+                    // 认证角色第二梯队（即custom=0，就是游戏内绑定的，而不是自定义的）
+                    // 其它角色
+                    this.data.sort((a, b) => {
+                        const weightA = getWeight(a);
+                        const weightB = getWeight(b);
+
+                        // 如果权重不同，按权重排序
+                        if (weightA !== weightB) {
+                            return weightA - weightB;
+                        }
+
+                        // 权重相同时，按名称排序
+                        return a.name.localeCompare(b.name);
+                    });
                 })
                 .finally(() => {
                     this.loading = false;
@@ -322,8 +354,8 @@ export default {
             return {
                 0: "待审核",
                 1: "已通过",
-            }[status]
-        }
+            }[status];
+        },
     },
     created: function () {},
     watch: {

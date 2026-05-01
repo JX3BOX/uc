@@ -5,14 +5,14 @@
         <div class="m-credit-total m-packet-total">
             余额 :
             <b :class="{ hasLeft: hasLeft }">{{ money }}</b>
-            <!-- <a class="el-button u-btn el-button--primary el-button--mini" href="/vip/cny" target="_blank">充值</a> -->
-            <!-- <el-button class="u-btn" type="primary" @click="togglePullBox" size="mini" :disabled="!money"
+            <!-- <a class="el-button u-btn el-button--primary el-button--small" href="/vip/cny" target="_blank">充值</a> -->
+            <!-- <el-button class="u-btn" type="primary" @click="togglePullBox"  :disabled="!money"
                 >提现</el-button
             > -->
         </div>
 
         <div class="m-credit-pull" v-if="showPullBox">
-            <el-alert class="m-boxcoin-ac" type="error" show-icon :closable="false" v-if="breadcrumb" size="mini">
+            <el-alert class="m-boxcoin-ac" type="error" show-icon :closable="false" v-if="breadcrumb">
                 <slot name="title"><div v-html="breadcrumb"></div></slot>
             </el-alert>
             <el-alert
@@ -52,7 +52,7 @@
                         placeholder="请务必填写正确的金额"
                     >
                         <!-- <template slot="prepend"></template> -->
-                        <template slot="append">金箔（分）</template>
+                        <template #append>金箔（分）</template>
                     </el-input-number>
                     <div class="u-tip" v-if="pull.money">
                         手续费{{ formatMoney(fee) }}元，实际到账{{ formatMoney(real) }}元
@@ -93,14 +93,16 @@
                             "created_at": "2022-08-07 00:33:33",
                             "process_success": false //相关业务是否执行成功 -->
 
-                            <tr>
-                                <th>类型</th>
-                                <th>来源</th>
-                                <th>去向</th>
-                                <th>数量</th>
-                                <th>备注</th>
-                                <th>时间</th>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>类型</th>
+                                    <th>来源</th>
+                                    <th>去向</th>
+                                    <th>数量</th>
+                                    <th>备注</th>
+                                    <th>时间</th>
+                                </tr>
+                            </thead>
                             <tr v-for="(item, i) in list" :key="i">
                                 <td>
                                     {{ item.description || formatType(item.action_type) || "未知" }}
@@ -143,7 +145,7 @@
                         background
                         :page-size="per"
                         :hide-on-single-page="true"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         layout="total, prev, pager, next, jumper"
                         :total="total"
                     ></el-pagination>
@@ -157,7 +159,7 @@
 import { showTime } from "@jx3box/jx3box-common/js/moment";
 import types from "@/assets/data/dashboard/cny_types.json";
 import paytypes from "@/assets/data/dashboard/paytypes.json";
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 import { cashOut, getBalance, getHistory } from "@/service/dashboard/cny";
 import { getBoxcoinConfig } from "@/service/dashboard/boxcoin";
 import { getConfig } from "@/service/dashboard/config";

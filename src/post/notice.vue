@@ -56,12 +56,12 @@
 
             <!-- 按钮 -->
             <div class="m-publish-buttons">
-                <el-button
-                    type="primary"
-                    @click="publish('publish',true)"
-                    :disabled="processing"
-                >发 &nbsp;&nbsp; 布</el-button>
-                <el-button type="plain" @click="publish('draft',false)" :disabled="processing">保存为草稿</el-button>
+                <el-button size="large" type="primary" @click="publish('publish', true)" :disabled="processing"
+                    >发 &nbsp;&nbsp; 布</el-button
+                >
+                <el-button size="large" plain @click="publish('draft', false)" :disabled="processing"
+                    >保存为草稿</el-button
+                >
             </div>
         </el-form>
     </div>
@@ -70,7 +70,7 @@
 <script>
 // 公共模块
 import { getLink } from "@jx3box/jx3box-common/js/utils";
-import notice_types from '@/assets/data/publish/notice.json'
+import notice_types from "@/assets/data/publish/notice.json";
 
 // 本地模块
 import Tinymce from "@jx3box/jx3box-editor/src/Tinymce";
@@ -106,7 +106,7 @@ export default {
         "publish-visible": publish_visible,
         "publish-subtype": publish_subtype,
         "publish-authors": publish_authors,
-        "publish-at-authors": publish_at_authors
+        "publish-at-authors": publish_at_authors,
     },
     mixins: [atAuthorMixin],
     data: function () {
@@ -176,12 +176,16 @@ export default {
                 return [this.post];
             }
         },
+        // 历史版本模式
+        isRevision() {
+            return this.$route.query?.mode === "revision";
+        },
     },
     methods: {
         // 加载
         init: function () {
             this.loading = true;
-            sessionStorage.removeItem("atAuthor")
+            sessionStorage.removeItem("atAuthor");
             // 加载文章
             if (this.$route.params.id) {
                 return pull(this.$route.params.id)
@@ -207,7 +211,7 @@ export default {
             push(...this.data)
                 .then((res) => {
                     let result = res.data.data;
-                    this.atUser(result.ID)
+                    this.atUser(result.ID);
                     this.done(skip, result);
                 })
                 .finally(() => {
@@ -247,7 +251,7 @@ export default {
     },
     created: function () {
         this.post.client = this.$store.state.client;
-        this.init()
+        this.init();
     },
     watch: {
         "$route.params.id": function (val) {
@@ -256,4 +260,3 @@ export default {
     },
 };
 </script>
-

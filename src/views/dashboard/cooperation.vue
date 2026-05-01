@@ -4,13 +4,11 @@
             <span class="u-title-text">
                 <i class="el-icon-reading"></i>
                 签约中心
-                <el-tag class="u-sign" size="small" type="success" v-if="isSuperAuthor"
+                <el-tag class="u-sign" type="success" size="small" v-if="isSuperAuthor"
                     >签约时长：{{ signDuration }}{{ signDurationType }}</el-tag
                 >
             </span>
-            <el-button type="primary" @click="openPage" size="small" v-if="isSuperAuthor" icon="el-icon-unlock">
-                敏感词测试
-            </el-button>
+            <el-button class="u-unlock-btn" type="primary" @click="openPage" v-if="isSuperAuthor" icon="Unlock"> 敏感词测试 </el-button>
         </h2>
         <div class="m-cooperation-ac m-block" v-html="data"></div>
         <div class="m-cooperation-form m-block">
@@ -61,19 +59,19 @@
                 :disabled="isSuperAuthor || !checked"
             >
                 <el-form-item class="u-item" label="昵称" prop="nickname">
-                    <el-input v-model="form.nickname" placeholder="请输入昵称"></el-input>
+                    <el-input v-model="form.nickname" placeholder="请输入昵称" size="large"></el-input>
                 </el-form-item>
 
                 <el-form-item class="u-item" label="QQ" prop="qq">
-                    <el-input v-model="form.qq" placeholder="请输入联系QQ"></el-input>
+                    <el-input v-model="form.qq" placeholder="请输入联系QQ" size="large"></el-input>
                 </el-form-item>
 
                 <el-form-item class="u-item" label="电话" prop="phone">
-                    <el-input v-model="form.phone" placeholder="请输入联系电话"></el-input>
+                    <el-input v-model="form.phone" placeholder="请输入联系电话" size="large"></el-input>
                 </el-form-item>
 
                 <el-form-item class="u-item" label="社交平台" prop="weibo">
-                    <el-input v-model="form.weibo" placeholder="请输入微博/B站地址"></el-input>
+                    <el-input v-model="form.weibo" placeholder="请输入微博/B站地址" size="large"></el-input>
                 </el-form-item>
 
                 <el-form-item class="u-item" label="自述" prop="description">
@@ -84,6 +82,7 @@
                         placeholder="详述自己的一些作品"
                         v-model="form.description"
                         show-word-limit
+                        size="large"
                     ></el-input>
                 </el-form-item>
 
@@ -92,7 +91,8 @@
                         type="primary"
                         class="u-submit"
                         @click="submitForm('form')"
-                        icon="el-icon-s-promotion"
+                        icon="Promotion"
+                        size="large"
                         :disabled="isSuperAuthor || processing"
                         >提交签约申请</el-button
                     >
@@ -109,7 +109,7 @@ import {
     getContractAuthorLogs,
     getLastContractAuthorLog,
 } from "@/service/dashboard/cooperation";
-import { getBreadcrumb } from "@jx3box/jx3box-common/js/api_misc.js";
+import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 import { pick } from "lodash";
 import dayjs from "dayjs";
 export default {
@@ -145,6 +145,26 @@ export default {
                     {
                         required: true,
                         message: "请认真填写，否则将申请将不会被通过",
+                        trigger: "blur",
+                    },
+                    {
+                        validator: (rule, value, callback) => {
+                            if (!value) {
+                                callback(new Error("描述内容不能为空"));
+                                return;
+                            }
+                            const urlStart = "https://www.jx3box.com/";
+                            let count = 0;
+
+                            const parts = value.split(urlStart);
+                            count = parts.length - 1;
+
+                            if (count < 3) {
+                                callback(new Error(`请提交至少3个作品链接，当前有 ${count} 个`));
+                            } else {
+                                callback();
+                            }
+                        },
                         trigger: "blur",
                     },
                 ],
@@ -286,11 +306,11 @@ export default {
     .u-title-text {
         .flex;
         align-items: center;
-        gap:10px;
+        gap: 10px;
     }
 
     .u-sign {
-        font-size: 14px;
+        font-size: 12px;
         font-weight: normal;
         margin-left: 10px;
     }
@@ -298,6 +318,11 @@ export default {
 @media screen and (max-width: @phone) {
     .m-block {
         margin: 10px 0;
+    }
+
+    .u-unlock-btn {
+        .pa;
+        right: -10px;
     }
 }
 </style>

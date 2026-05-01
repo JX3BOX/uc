@@ -1,4 +1,4 @@
-import { $pay, $cms } from "@jx3box/jx3box-common/js/https";
+import { $pay, $cms } from "@jx3box/jx3box-common/js/api";
 
 // 获取中奖历史
 function getMyHistory(params) {

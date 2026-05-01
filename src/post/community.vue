@@ -16,7 +16,7 @@
             <div class="m-publish-info">
                 <el-divider content-position="left">信息</el-divider>
                 <!-- 客户端 -->
-                <!-- <publish-client v-model="post.client" :showMobile="true"></publish-client> -->
+                <publish-client v-model="post.client" :showMobile="true"></publish-client>
                 <!-- 类型 -->
                 <publish-category v-model="post.category" :options="tags"></publish-category>
             </div>
@@ -28,7 +28,7 @@
                         <i class="el-icon-question"></i>
                     </el-tooltip>
                     <a
-                        class="u-buy el-button el-button--primary el-button--mini is-round"
+                        class="u-buy el-button el-button--primary el-button--small is-round"
                         href="/vip/mall/list?category=virtual&sub_category=palu"
                         target="_blank"
                         ><i class="el-icon-shopping-cart-full"></i> 兑换魔卡</a
@@ -71,14 +71,40 @@
             <!-- 扩展 -->
             <div class="m-publish-extend">
                 <el-divider content-position="left">设置</el-divider>
+                <el-form-item label="评论开关">
+                    <!-- 默认应该是可以评论，但是是开的 -->
+                    <el-switch
+                        v-model="post.disable_comment"
+                        active-color="#13ce66"
+                        :active-value="0"
+                        :inactive-value="1"
+                    ></el-switch>
+                </el-form-item>
+                <el-form-item label="礼物开关">
+                    <el-switch
+                        v-model="post.disable_inspire_boxcoin"
+                        active-color="#13ce66"
+                        :active-value="0"
+                        :inactive-value="1"
+                    ></el-switch>
+                </el-form-item>
+                <el-form-item label="匿名开关">
+                    <el-switch
+                        v-model="post.anonymous"
+                        active-color="#13ce66"
+                        :active-value="1"
+                        :inactive-value="0"
+                        @change="onAnonymousChange"
+                    ></el-switch>
+                </el-form-item>
                 <el-form-item label="阅读权限">
                     <el-radio-group v-model="post.visible">
-                        <el-radio :label="0">公开</el-radio>
-                        <el-radio :label="1">仅自己可见</el-radio>
-                        <el-radio :label="2">仅亲友可见</el-radio>
-                        <el-radio :label="3">密码可见</el-radio>
-                        <!-- <el-radio label="4" disabled>付费可见</el-radio> -->
-                        <el-radio :label="5">粉丝可见</el-radio>
+                        <el-radio :value="0">公开</el-radio>
+                        <el-radio :value="1" :disabled="!!post.anonymous">仅自己可见</el-radio>
+                        <el-radio :value="2" :disabled="!!post.anonymous">仅亲友可见</el-radio>
+                        <el-radio :value="3" :disabled="!!post.anonymous">密码可见</el-radio>
+                        <!-- <el-radio :value="4" disabled>付费可见</el-radio> -->
+                        <el-radio :value="5" :disabled="!!post.anonymous">粉丝可见</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="密码" v-if="post.visible == 3">
@@ -117,25 +143,27 @@
                     type="error"
                     title="检测到您的内容存在不合规，将无法发布成功，并有禁言风险。"
                 ></el-alert>
-                <el-checkbox v-model="hasRead" :true-label="1" :false-label="0"
+                <el-checkbox v-model="hasRead" :true-value="1" :fasle-value="0"
                     >我已阅读并了解<a href="/notice/119" @click.stop target="_blank">《创作发布规范》</a></el-checkbox
                 >
             </div>
 
             <!-- 按钮 -->
             <div class="m-publish-buttons">
-                <template>
-                    <el-button type="primary" @click="publish('publish', true)" :disabled="is_illegal || processing || !hasRead"
-                        >发 &nbsp;&nbsp; 布</el-button
-                    >
-                </template>
+                <el-button
+                    size="large"
+                    type="primary"
+                    @click="publish('publish', true)"
+                    :disabled="is_illegal || processing || !hasRead"
+                    >发 &nbsp;&nbsp; 布</el-button
+                >
             </div>
         </el-form>
     </div>
 </template>
 
 <script>
-import { __imgPath, __cdn } from "@jx3box/jx3box-common/data/jx3box.json";
+import { __imgPath, __cdn } from "@/utils/config";
 // 公共模块
 import community_types from "@/assets/data/publish/community.json";
 
@@ -151,13 +179,14 @@ import publish_revision from "@/components/publish/publish_revision.vue";
 import publish_category from "@/components/publish/publish_category.vue";
 import publish_at_authors from "@/components/publish/publish_at_authors.vue";
 import publish_reading_history from "@/components/publish/publish_reading_history.vue";
+import publish_client from "@/components/publish/publish_client.vue";
 
 // 数据逻辑
-import { getTopicBucket } from "@/service/publish/cms.js";
 import { cmsMetaMixin } from "@/utils/cmsMetaMixin";
 import { atAuthorMixin } from "@/utils/atAuthorMixin";
-import { getDecoration } from "@jx3box/jx3box-common-ui/service/cms";
+import { getDecoration } from "@jx3box/jx3box-ui/service/cms";
 import { appendToCollection } from "@/service/publish/collection.js";
+import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
 
 export default {
     name: "community",
@@ -169,7 +198,7 @@ export default {
         "publish-collection": publish_collection,
         "publish-revision": publish_revision,
         "publish-category": publish_category,
-        // "publish-client": publish_client,
+        "publish-client": publish_client,
         "publish-at-authors": publish_at_authors,
         "publish-reading-history": publish_reading_history,
     },
@@ -202,6 +231,10 @@ export default {
                 password: "",
 
                 is_from_phone: 0,
+                anonymous: 0,
+
+                disable_inspire_boxcoin: 0,
+                disable_comment: 0,
             },
             currentDecorationId: "",
             // 选项
@@ -318,9 +351,23 @@ export default {
         // 发布
         publish: function () {
             this.loading = true;
+            if (!this.post.title || !this.post.content) {
+                this.$message({
+                    message: "请完善标题和内容",
+                    type: "warning",
+                });
+                this.loading = false;
+                return;
+            }
             if (this.data.id) {
                 const fn = this.from === "admin" ? updateAdmin : update;
-                fn(this.data.id, this.data)
+                const data = {
+                    ...this.data,
+                };
+                if (!isMiniProgram()) {
+                    data.is_wx_audit = 0;
+                }
+                fn(this.data.id, data)
                     .then((res) => {
                         this.$message({
                             message: "更新成功",
@@ -347,7 +394,16 @@ export default {
                         this.loading = false;
                     });
             } else {
-                push(this.data)
+                const data = {
+                    ...this.data,
+                };
+                if (this.category == "求助") {
+                    data.tags = ["未解决"];
+                }
+                if (!isMiniProgram()) {
+                    data.is_wx_audit = 0;
+                }
+                push(data)
                     .then((res) => {
                         const result = res.data.data;
                         this.$message({
@@ -393,10 +449,11 @@ export default {
             return imgSrcs;
         },
         getTopicBucket() {
-            getTopicBucket({ type: "community" }).then((res) => {
-                const data = res.data.data;
-                this.tags = [...data];
-            });
+            // getTopicBucket({ type: "community" }).then((res) => {
+            //     const data = res.data.data;
+            //     this.tags = [...data];
+            // });
+            this.tags = community_types;
         },
         // 跳转前操作
         afterPublish: function (result) {
@@ -464,10 +521,10 @@ export default {
         transition: 0.35s;
         background-color: @bg-light;
         &:hover {
-            border-color: #0366d6;
+            border-color: @v4primary;
         }
         &.active {
-            border-color: #0366d6;
+            border-color: @v4primary;
             .u-mark {
                 display: block;
             }
@@ -480,9 +537,9 @@ export default {
             position: absolute;
             top: 2px;
             right: 2px;
-            padding: 4px 8px;
-            font-size: 12px;
-            background-color: #0366d6;
+            padding: 2px 8px;
+            font-size: 10px;
+            background-color: @v4primary;
             color: white;
             border-radius: 4px;
         }

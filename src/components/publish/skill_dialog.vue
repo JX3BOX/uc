@@ -1,11 +1,10 @@
 <template>
     <el-dialog
-        class="c-large-dialog"
-        :visible="modelValue"
+        class="c-large-dialog m-skill-dialog"
+        v-model="dialogVisible"
         @close="close"
         title="技能库"
         append-to-body
-        custom-class="m-skill-dialog"
     >
         <el-tabs v-model="activeName" type="card" class="m-skill-tabs">
             <el-tab-pane label="门派武学" name="special">
@@ -29,16 +28,11 @@
             <div v-show="activeName === 'all'">
                 <div class="m-database-search">
                     <el-radio-group class="u-client" v-model="client" @change="search">
-                        <el-radio-button label="std">剑三</el-radio-button>
-                        <el-radio-button label="origin">缘起</el-radio-button>
+                        <el-radio-button value="std">剑三</el-radio-button>
+                        <el-radio-button value="origin">缘起</el-radio-button>
                     </el-radio-group>
-                    <el-input
-                        class="u-input"
-                        placeholder="请输入 ID 或 名称"
-                        v-model="query"
-                        @keyup.enter.native="search"
-                    >
-                        <template slot="prepend">ID ／名称</template>
+                    <el-input class="u-input" placeholder="请输入 ID 或 名称" v-model="query" @keyup.enter="search">
+                        <template #prepend>ID ／名称</template>
                     </el-input>
                 </div>
 
@@ -68,7 +62,7 @@
                         class="m-archive-more"
                         :class="{ show: hasNextPage }"
                         type="primary"
-                        icon="el-icon-arrow-down"
+                        icon="ArrowDown"
                         @click="appendPage"
                         >加载更多</el-button
                     >
@@ -80,7 +74,7 @@
                         :hide-on-single-page="true"
                         :page-size="per"
                         :total="total"
-                        :current-page.sync="page"
+                        v-model:current-page="page"
                         @current-change="changePage"
                     ></el-pagination>
                 </template>
@@ -111,12 +105,12 @@
             </ul>
         </div>
         <!-- 插入按钮 -->
-        <span slot="footer" class="dialog-footer">
+        <template #footer>
             <el-button @click="close">取 消</el-button>
             <el-button type="primary" @click="submit">
                 {{ buttonTXT }}
             </el-button>
-        </span>
+        </template>
     </el-dialog>
 </template>
 
@@ -143,10 +137,7 @@ export default {
             default: "std",
         },
     },
-    model: {
-        prop: "modelValue",
-        event: "update:modelValue",
-    },
+    emits: ["update:modelValue", "submit"],
     data() {
         return {
             client: location.href.includes("origin") ? "origin" : "std",
@@ -163,6 +154,14 @@ export default {
         };
     },
     computed: {
+        dialogVisible: {
+            get() {
+                return this.modelValue;
+            },
+            set(val) {
+                this.$emit("update:modelValue", val);
+            },
+        },
         hasNextPage: function () {
             return this.total > 1 && this.page < this.pages;
         },
