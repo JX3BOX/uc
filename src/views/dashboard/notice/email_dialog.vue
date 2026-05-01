@@ -44,16 +44,12 @@
                 </el-alert>
                 <div class="m-action">
                     <!-- 未发送验证邮件 -->
-                    <el-button
-                        v-if="!hasSendBindEmail"
-                        type="primary"
-                        size="large"
-                        :disabled="!!!form.email"
-                        icon="Position"
-                        @click="bind"
-                    >
-                        发送验证邮件</el-button
-                    >
+                    <template v-if="!hasSendBindEmail">
+                        <el-button type="primary" size="large" :disabled="!!!form.email" icon="Position" @click="bind">
+                            发送验证邮件</el-button
+                        >
+                        <div class="u-tips">仅支持常见邮箱后缀<br>部分邮件服务商可能无法收到验证邮件</div>
+                    </template>
                     <!-- 已发送验证邮件 -->
                     <el-button
                         v-if="hasSendBindEmail"
@@ -119,7 +115,7 @@ export default {
             if (!val) {
                 this.close();
             }
-        }
+        },
     },
     computed: {
         btnText() {
@@ -218,6 +214,12 @@ export default {
 
     .m-action {
         .x;
+    }
+
+    .u-tips{
+        .fz(12px,2);
+        color:#999;
+        margin-top:10px;
     }
 
     .el-form-item.is-success {

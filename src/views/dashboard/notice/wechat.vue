@@ -16,7 +16,7 @@
             size="large"
             >解除绑定
         </el-button>
-        <el-button type="primary" :circle="isPhone" class="u-bind-button" icon="Connection" @click="open" v-else
+        <el-button type="primary" size="large" :circle="isPhone" class="u-bind-button" icon="Connection" @click="open" v-else
             >绑定公众号
         </el-button>
         <el-dialog
