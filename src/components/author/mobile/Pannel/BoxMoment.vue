@@ -190,6 +190,7 @@ export default {
                 line-height: 20px; /* 142.857% */
 
                 .u-slider {
+                    .none;
                     height: 2px;
                     width: 60px;
                     background: var(--black-100, #fff);
