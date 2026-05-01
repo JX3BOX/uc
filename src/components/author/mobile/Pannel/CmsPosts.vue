@@ -1,73 +1,47 @@
 <template>
-    <sub-tab-content :list="list" @change-tab="changeTab">
-        <div class="m-post" v-loading="loading">
-            <div v-if="posts && posts.length" class="m-archive-list">
-                <div class="u-list">
-                    <a
-                        class="u-item"
-                        target="_blank"
-                        :href="postLink(item.post_type, item.ID, item.client)"
-                        v-for="(item, i) in posts"
-                        :key="i + item"
-                    >
-                        <!-- Banner -->
+    <div class="m-post" v-loading="loading">
+        <div v-if="posts && posts.length" class="m-archive-list">
+            <div class="u-list">
+                <a
+                    class="u-item"
+                    :href="`/macro/${item.ID}`"
+                    v-for="(item, i) in posts"
+                    :key="i + item"
+                >
+                    <el-image
+                        class="u-banner"
+                        fit="cover"
+                        :src="getBanner(item, item.post_subtype, item.post_type)"
+                        :key="item.ID"
+                    />
 
-                        <el-image
-                            class="u-banner"
-                            fit="cover"
-                            :src="getBanner(item, item.post_subtype, item.post_type)"
-                            :key="item.ID"
-                        />
-
-                        <!-- 标题 -->
-                        <div class="u-post">
-                            <!-- 标题文字 -->
-                            <div class="u-title" target="_blank">{{ item.post_title || "无标题" }}</div>
-                            <!--                        <div class="u-desc">-->
-                            <!--                            {{ item.post_excerpt || item.post_title || "这个作者很懒,什么都没有留下" }}-->
-                            <!--                        </div>-->
-                            <time class="u-time">{{ dateFormat(item.post_modified) }}</time>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <!-- <el-alert v-else title="没有找到相关条目" type="info" show-icon> </el-alert> -->
-            <div class="m-empty" v-else>
-                <img src="https://cdn.jx3box.com/design/miniprogram/empty.png" width="80%" />
+                    <div class="u-post">
+                        <div class="u-title" target="_blank">{{ item.post_title || "无标题" }}</div>
+                        <time class="u-time">{{ dateFormat(item.post_modified) }}</time>
+                    </div>
+                </a>
             </div>
         </div>
-    </sub-tab-content>
+        <div class="m-empty" v-else>
+            <img src="https://cdn.jx3box.com/design/miniprogram/empty.png" width="80%" />
+        </div>
+    </div>
 </template>
 
 <script>
-import { getLink, showBanner } from "@jx3box/jx3box-common/js/utils";
+import { showBanner } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
 import { getPosts } from "@/service/author/cms.js";
-import { __postType, __clients, __Root, __OriginRoot, __imgPath } from "@/utils/config";
+import { __postType, __clients, __imgPath } from "@/utils/config";
 import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
-import SubTabContent from "@/components/author/mobile/Pannel/SubTabContent.vue";
 export default {
-    components: { SubTabContent },
-    props: {
-        list: {
-            type: Array,
-            default: () => [],
-        },
-    },
     data: function () {
         return {
             loading: false,
             posts: [],
             total: 1,
-            per: 6,
+            per: 20,
             page: 1,
-            currentTab: "",
-            root: {
-                std: __Root.slice(0, -1),
-                origin: __OriginRoot.slice(0, -1),
-                all: "",
-                wujie: "",
-            },
         };
     },
     computed: {
@@ -86,17 +60,12 @@ export default {
         },
     },
     methods: {
-        changeTab(e) {
-            this.currentTab = e;
-            this.page = 1;
-            this.loadData(true);
-        },
         loadData: function (init = false) {
-            if (!this.uid || !this.currentTab || (this.posts >= this.total && !init)) {
+            if (!this.uid || (this.posts.length >= this.total && !init)) {
                 return;
             }
             this.loading = true;
-            getPosts({ ...this.params, type: this.currentTab })
+            getPosts(this.params)
                 .then((res) => {
                     if (init) {
                         this.posts = [];
@@ -107,10 +76,6 @@ export default {
                 .finally(() => {
                     this.loading = false;
                 });
-        },
-        postLink: function (type, id, client) {
-            client = client || "all";
-            return this.root[client] + getLink(type, id);
         },
         getBanner: function (item, subtype, post_type) {
             if (item.post_banner) {
@@ -164,6 +129,7 @@ export default {
     },
     watch: {},
     mounted() {
+        this.loadData(true);
         window.addEventListener("scroll", this.loadMore);
     },
     beforeUnmount() {
@@ -175,6 +141,8 @@ export default {
 <style lang="less" scoped>
 .m-post {
     width: 100%;
+    box-sizing: border-box;
+    padding: 16px 20px 20px;
     .m-archive-list {
         .u-list {
             display: flex;
@@ -191,6 +159,7 @@ export default {
                     width: 126px;
                     height: 64.145px;
                     overflow: hidden;
+                    flex-shrink: 0;
                     aspect-ratio: 126/64.15;
                 }
 

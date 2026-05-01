@@ -101,6 +101,12 @@ export default {
 </script>
 
 <style lang="less">
+.m-post {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px 20px 20px;
+}
+
 .m-topic-list {
     display: flex;
     gap: 20px;

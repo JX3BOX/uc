@@ -2,7 +2,7 @@
     <div v-if="item" class="m-topic-item" @click="toDetail" @contextmenu.prevent="openMore">
         <div class="m-ext-info">
             <div class="u-tag">
-                {{ item.category }}
+                {{ categoryLabel }}
             </div>
             <div class="m-ext-list">
                 <div class="m-item">
@@ -66,6 +66,12 @@ import dayjs from 'dayjs'
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { __cdn } from "@/utils/config";
 import wx from "weixin-js-sdk";
+import communityTypes from "@/assets/data/publish/community.json";
+
+const communityTypeMap = communityTypes.reduce((map, item) => {
+    map[item.name] = item.label;
+    return map;
+}, {});
 
 
 export default {
@@ -90,6 +96,9 @@ export default {
         formatCreatedAt() {
             return dayjs(this.item.created_at).format('YYYY-M-DD HH:mm:ss');
         },
+        categoryLabel() {
+            return communityTypeMap[this.item?.category] || this.item?.category || "未分类";
+        },
         bg(){
             return this.getDecorationImage(this.item?.decoration?.type, this.item?.decoration?.val);
         }
@@ -105,9 +114,8 @@ export default {
             this.$emit("openMore", this.item);
         },
         toDetail() {
-            const wx = require('weixin-js-sdk');
-
-            wx.miniProgram?.navigateTo({url: `/pages/publish/detail/detail?id=${this.item.id}`})
+            if (!this.item?.id) return;
+            wx.miniProgram?.navigateTo({ url: `/pages/publish/detail/detail?id=${this.item.id}` });
         },
         getDecorationImage(t, m) {
             if (!t || !m) {

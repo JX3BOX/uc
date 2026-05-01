@@ -64,17 +64,12 @@ import { deny, undeny, hadDenyUser, isFollower } from "@/service/author/author";
 import { getFansList, getSummary } from "@jx3box/jx3box-ui/service/author";
 
 import ContentTabList from "@/components/author/mobile/ContentTabList.vue";
-import RoleInfo from "@/components/author/mobile/Pannel/RoleInfo.vue";
 import BoxMoment from "@/components/author/mobile/Pannel/BoxMoment.vue";
 import CmsPosts from "@/components/author/mobile/Pannel/CmsPosts.vue";
-import SubTabContent from "@/components/author/mobile/Pannel/SubTabContent.vue";
 import TopicList from "@/components/author/mobile/Pannel/TopicList.vue";
-import ReplyList from "@/components/author/mobile/Pannel/ReplyList.vue";
 import FaceList from "@/components/author/mobile/Pannel/FaceList.vue";
-import BodyList from "@/components/author/mobile/Pannel/BodyList.vue";
 import SimpleMoreAction from "@/components/author/mobile/MoreAction.vue";
 import CommonAvatar from "@jx3box/jx3box-ui/src/author/Avatar.vue";
-import wx from "weixin-js-sdk";
 
 export default {
     name: "MobileMe",
@@ -155,12 +150,6 @@ export default {
 
             tabs: [
                 {
-                    label: "角色",
-                    value: "UserInfo",
-                    component: markRaw(RoleInfo),
-                    key: "role_is_public",
-                },
-                {
                     label: "动态",
                     value: "BoxMoment",
                     component: markRaw(BoxMoment),
@@ -171,67 +160,18 @@ export default {
                     value: "Works",
                     component: markRaw(CmsPosts),
                     key: "article_is_public",
-
-                    children: [
-                        {
-                            label: "宏库",
-                            value: "macro",
-                        },
-                        {
-                            label: "职业",
-                            value: "bps",
-                        },
-                        {
-                            label: "副本",
-                            value: "fb",
-                        },
-                        {
-                            label: "竞技",
-                            value: "pvp",
-                        },
-                        {
-                            label: "工具",
-                            value: "tool",
-                        },
-                    ],
                 },
                 {
                     label: "帖子",
                     value: "Other",
                     key: "community_topic_is_public",
-                    component: markRaw(SubTabContent),
-                    children: [
-                        {
-                            label: "发帖",
-                            value: "Topic",
-                            component: markRaw(TopicList),
-                        },
-                        {
-                            label: "回帖",
-                            value: "Reply",
-                            component: markRaw(ReplyList),
-                        },
-                    ],
+                    component: markRaw(TopicList),
                 },
                 {
                     label: "捏脸",
                     value: "Data",
                     key: "make_face_is_public",
-                    component: markRaw(SubTabContent),
-                    children: [
-                        {
-                            label: "捏脸",
-                            value: "face",
-                            component: markRaw(FaceList),
-                            icon: "el-icon-grape",
-                        },
-                        {
-                            label: "体型",
-                            value: "body",
-                            component: markRaw(BodyList),
-                            icon: "el-icon-watermelon",
-                        },
-                    ],
+                    component: markRaw(FaceList),
                 },
                 // {
                 //     label: "配装",
