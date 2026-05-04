@@ -63,9 +63,7 @@
 
 <script>
 import dayjs from 'dayjs'
-import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { __cdn } from "@/utils/config";
-import wx from "weixin-js-sdk";
 import communityTypes from "@/assets/data/publish/community.json";
 
 const communityTypeMap = communityTypes.reduce((map, item) => {
@@ -104,7 +102,6 @@ export default {
         }
     },
     methods: {
-        getLink,
         openImg(index) {
             // In Vue you would use a modal or lightbox component instead
             console.log('Open image at index', index);
@@ -115,7 +112,7 @@ export default {
         },
         toDetail() {
             if (!this.item?.id) return;
-            wx.miniProgram?.navigateTo({ url: `/pages/publish/detail/detail?id=${this.item.id}` });
+            location.href = `/community/${this.item.id}`;
         },
         getDecorationImage(t, m) {
             if (!t || !m) {
