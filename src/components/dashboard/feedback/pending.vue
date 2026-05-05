@@ -3,7 +3,7 @@
         <!-- tool -->
         <div class="m-feedback-tool">
             <div class="m-feedback-tool__item">
-                <el-select v-model="select" class="u-select" placeholder="请选择处理人" filterable style="width:200px">
+                <el-select v-model="select" class="u-select" placeholder="请选择处理人" filterable style="width:200px" clearable>
                     <el-option
                         :label="item.teammate_info.display_name"
                         v-for="(item, i) in assigns"
@@ -193,10 +193,7 @@ export default {
             assigns: [],
         };
     },
-    mounted() {
-        this.loadTeam();
-        this.isEditor = User.isEditor();
-    },
+
     computed: {
         user() {
             return User.getInfo();
@@ -321,7 +318,7 @@ export default {
                 return res.filter((item) => item.status);
             });
             this.assigns = concat(
-                { user_id: 0, teammate_info: { display_name: "全部" } },
+                // { user_id: 0, teammate_info: { display_name: "全部" } },
                 list.filter((item) => item.group && ["mp", "developer", "designer"].includes(item.group))
             );
         },
@@ -360,6 +357,8 @@ export default {
         },
     },
     mounted() {
+        this.loadTeam();
+        this.isEditor = User.isEditor();
         this.initQuery();
         this.getData();
     },
