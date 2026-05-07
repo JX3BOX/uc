@@ -39,7 +39,7 @@
             <div class="m-feedback-faq">
                 <div class="u-title"><i class="el-icon-question"></i> FAQ</div>
                 <div class="u-list" v-for="item in faq" :key="item.link">
-                    <a class="u-item" :href="item.link">{{ item.label }}</a>
+                    <a class="u-item" :href="item.link" target="_blank">{{ item.label }}</a>
                 </div>
             </div>
         </aside>
@@ -164,7 +164,7 @@ export default {
             .mr(5px);
         }
         &:hover {
-            color: #fba524;
+            color: @v4primary;
         }
     }
 }
