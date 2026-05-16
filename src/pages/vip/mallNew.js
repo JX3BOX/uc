@@ -2,6 +2,15 @@ import User from "@jx3box/jx3box-common/js/user";
 import { getCart, addGoodsToCart, deleteCart, deleteCartGoods, updateGoodsNum } from "@/service/vip/cart";
 import { getAddress, toPay, updateAddress, getMyAddress, toPayOrder } from "@/service/vip/mall";
 
+function pickUsableAddress(list) {
+    const addressList = Array.isArray(list) ? list : [];
+    return (
+        addressList.find((item) => item?.is_default === true || item?.is_default === 1 || item?.is_default === "1") ||
+        addressList[0] ||
+        {}
+    );
+}
+
 const store = {
     namespaced: true,
     state: {
@@ -24,12 +33,6 @@ const store = {
         },
     },
     actions: {
-        // 获取我的资产
-        async getAsset({ commit }) {
-            return User.getAsset().then((data) => {
-                commit("toState", { asset: data });
-            });
-        },
         changeCartIsShow({ commit }, isShow) {
             commit("toState", { cartIsShow: isShow });
         },
@@ -69,16 +72,31 @@ const store = {
                 });
         },
         // 获取地址列表
-        async getAddressList({ commit }) {
-            getAddress().then((res) => {
-                commit("toState", { addressList: res.data.data.list });
+        async getAddressList({ commit, state }) {
+            return getAddress().then((res) => {
+                const addressList = res.data?.data?.list || [];
+                const data = { addressList };
+                if (!state.myAddress?.id) {
+                    data.myAddress = pickUsableAddress(addressList);
+                }
+                commit("toState", data);
+                return addressList;
             });
         },
         // 获取默认地址
-        async getMyAddress({ commit }) {
-            getMyAddress().then((res) => {
-                commit("toState", { myAddress: res.data.data });
-            });
+        async getMyAddress({ commit, state }) {
+            return getMyAddress()
+                .then((res) => {
+                    const address = res.data?.data || {};
+                    const myAddress = address?.id ? address : pickUsableAddress(state.addressList);
+                    commit("toState", { myAddress });
+                    return myAddress;
+                })
+                .catch(() => {
+                    const myAddress = pickUsableAddress(state.addressList);
+                    commit("toState", { myAddress });
+                    return myAddress;
+                });
         },
         // 提交订单
         async buyGoods({ dispatch }, { id, count, addressId, remark }) {
@@ -97,15 +115,19 @@ const store = {
         },
         // 获取我的资产
         async getAsset({ commit }) {
-            User.getAsset().then((data) => {
+            return User.getAsset().then((data) => {
                 commit("toState", { asset: data });
             });
         },
         // 切换地址并更新默认地址
-        async changeAddress({ dispatch, state }, addressId) {
-            if (state.myAddress.id == addressId) return;
-            updateAddress(addressId).then(() => {
-                dispatch("getMyAddress");
+        async changeAddress({ commit, dispatch, state }, addressId) {
+            if (!addressId || state.myAddress.id == addressId) return;
+            return updateAddress(addressId).then(() => {
+                const myAddress = state.addressList.find((item) => item.id == addressId);
+                if (myAddress) {
+                    commit("toState", { myAddress });
+                }
+                return dispatch("getMyAddress");
             });
         },
         setBoundCart({ commit }, boundCart) {

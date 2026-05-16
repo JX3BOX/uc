@@ -41,19 +41,44 @@ export default {
         list() {
             return this.$store.state.mallNew.addressList;
         },
+        address() {
+            return this.$store.state.mallNew.myAddress || {};
+        },
     },
     watch: {
         visible(val) {
             this.show = val;
+            if (val) {
+                this.syncSelectedAddress();
+            }
+        },
+        list: {
+            handler() {
+                this.syncSelectedAddress();
+            },
+            immediate: true,
+        },
+        address: {
+            handler() {
+                this.syncSelectedAddress();
+            },
+            immediate: true,
         },
     },
     methods: {
+        syncSelectedAddress() {
+            const firstAddress = this.list?.[0] || {};
+            this.id = this.address.id || firstAddress.id || 0;
+        },
         close() {
             this.show = false;
             this.$emit("close");
         },
         submit() {
-            this.$store.dispatch("mall/changeAddress", this.id);
+            if (!this.id) {
+                return this.close();
+            }
+            this.$store.dispatch("mallNew/changeAddress", this.id);
             this.close();
         },
     },

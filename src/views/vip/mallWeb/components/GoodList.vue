@@ -1,7 +1,12 @@
 <template>
     <div class="m-good-list" ref="goodList">
         <GoodItem v-for="good in list" :key="good.id" :good="good"></GoodItem>
-        <div class="u-no-data" v-if="noData">~ ✿ 已经到底了哦 ✿ ~</div>
+        <el-empty
+            v-if="noData && !list.length"
+            class="u-empty"
+            description="当前条件下没有找到符合的商品"
+        ></el-empty>
+        <div class="u-no-data" v-else-if="noData">~ ✿ 已经到底了哦 ✿ ~</div>
     </div>
 </template>
 
@@ -61,6 +66,19 @@ export default {
         .color(#fff);
         .pb(6vw);
         letter-spacing: 2px;
+    }
+    .u-empty {
+        flex: 1;
+        min-height: 70vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        :deep(.el-empty__description p) {
+            color: rgba(255, 255, 255, 0.72);
+        }
+        :deep(.el-empty__image) {
+            opacity: 0.82;
+        }
     }
 }
 </style>

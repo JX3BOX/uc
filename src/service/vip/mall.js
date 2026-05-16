@@ -1,6 +1,45 @@
 import { $pay, $cms } from "@jx3box/jx3box-common/js/api";
+import domains from "@jx3box/jx3box-common/data/jx3box.json";
 import { __cdn } from "@/utils/config";
 import axios from "axios";
+
+function isLocalLikeHost(hostname) {
+    const host = String(hostname || "").toLowerCase();
+    return host === "localhost" || host === "127.0.0.1" || host === "0.0.0.0" || host.endsWith(".local");
+}
+
+function useLocalProxy() {
+    const raw = String(process.env.VUE_APP_PROXY_ENABLE || "").toLowerCase();
+    if (["1", "true", "yes", "on"].includes(raw)) return true;
+    if (["0", "false", "no", "off"].includes(raw)) return false;
+    return typeof window !== "undefined" && isLocalLikeHost(window.location?.hostname);
+}
+
+function nextStatBase() {
+    if (useLocalProxy()) {
+        return `${process.env.VUE_APP_PROXY_PREFIX || "/__proxy"}/next`;
+    }
+    return process.env.VUE_APP_NEXT_API || domains.__next;
+}
+
+function getMallStat(id) {
+    return axios.get(`/api/summary-any/mall-${id}/stat`, {
+        baseURL: nextStatBase(),
+        withCredentials: true,
+    });
+}
+
+function postMallLike(id) {
+    return axios.get(`/api/summary-any/mall-${id}`, {
+        baseURL: nextStatBase(),
+        withCredentials: true,
+        params: {
+            type: "mall",
+            actions: "likes",
+        },
+    });
+}
+
 function getItem(id) {
     return $pay().get(`/api/mall/items/${id}`);
 }
@@ -92,4 +131,6 @@ export {
     batchMakeOrder,
     batchPayOrder,
     getDecoration,
+    getMallStat,
+    postMallLike,
 };

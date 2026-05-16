@@ -133,6 +133,15 @@ export default {
         }, 500),
     },
     created() {
+        Object.entries(this.$route.query).forEach(([key, value]) => {
+            if (key === "search") {
+                this.query.title = value;
+                return;
+            }
+            if (Object.prototype.hasOwnProperty.call(this.query, key) && value !== undefined && value !== "") {
+                this.query[key] = value;
+            }
+        });
         this.loadData();
     },
     mounted() {

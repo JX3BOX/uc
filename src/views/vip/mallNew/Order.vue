@@ -25,14 +25,14 @@
                 >
 
                 <el-divider content-position="left">2. 选择地址</el-divider>
-                <div class="m-address">
+                <div class="m-address" v-if="show_address">
                     <div class="m-button">
                         <el-button type="primary" icon="Sort" @click="visible = true">切换地址</el-button>
                         <a class="el-button el-button--warning" href="/dashboard/address" target="_blank"
                             ><i class="el-icon-setting"></i> 管理地址</a
                         >
                     </div>
-                    <template v-if="address">
+                    <template v-if="address && address.id">
                         <div class="u-my-address">
                             <span class="u-label"><i class="el-icon-s-home"></i> 收货地址</span>
                             <span class="u-name">{{ address.contact_name }} - {{ address.contact_phone }} </span>
@@ -43,6 +43,7 @@
                     </template>
                     <div v-else><el-button type="success" icon="Plus">添加地址</el-button></div>
                 </div>
+                <div class="u-no-address" v-else>虚拟物品无需地址</div>
 
                 <el-divider content-position="left">3. 备注</el-divider>
                 <el-input v-model="remark" placeholder="请输入备注" type="textarea" :rows="2"></el-input>
@@ -77,10 +78,25 @@ export default {
             return this.$route.params.count || 1;
         },
         pay_status() {
-            return this.$store.state.mall.pay_status;
+            return this.$store.state.mallNew.pay_status;
         },
         address() {
-            return this.$store.state.mall.myAddress;
+            const address = this.$store.state.mallNew.myAddress || {};
+            if (address.id) return address;
+            const addressList = this.$store.state.mallNew.addressList || [];
+            return (
+                addressList.find(
+                    (item) => item?.is_default === true || item?.is_default === 1 || item?.is_default === "1"
+                ) ||
+                addressList[0] ||
+                {}
+            );
+        },
+        needs_address() {
+            return this.item.category !== "virtual";
+        },
+        show_address() {
+            return this.needs_address || !!this.address?.id;
         },
         windowWidth() {
             return window.innerWidth;
@@ -89,7 +105,7 @@ export default {
     watch: {
         pay_status(val) {
             if (val) {
-                this.$store.commit("toState", { pay_status: false });
+                this.$store.commit("mallNew/toState", { pay_status: false });
                 this.$router.go(-1);
                 const url = `${__Root}dashboard/mall`;
                 window.open(url);
@@ -104,7 +120,8 @@ export default {
             // : this.$router.push('/mall');
         },
         load() {
-            this.$store.dispatch("mall/getMyAddress");
+            this.$store.dispatch("mallNew/getAddressList");
+            this.$store.dispatch("mallNew/getMyAddress");
             if (this.id) this.getData();
         },
         showLevel(num) {
@@ -115,10 +132,14 @@ export default {
             return _key;
         },
         toBuy() {
-            this.$store.dispatch("mall/buyGoods", {
+            const addressId = this.address?.id || 0;
+            if (this.needs_address && !addressId) {
+                return this.$message.warning("请选择收货地址");
+            }
+            this.$store.dispatch("mallNew/buyGoods", {
                 id: this.id,
                 count: this.count,
-                addressId: this.address.id,
+                addressId,
                 remark: this.remark,
             });
         },

@@ -73,6 +73,7 @@ import BuyConfirm from "./BuyConfirm.vue";
 import Skeleton from "@/views/vip/mallNew/components/skeleton/index.vue";
 import { throttle } from "lodash";
 import { __cdn } from "@/utils/config";
+import { playAddCartFly } from "@/utils/mallCartFly";
 export default {
     name: "GoodMallDetail",
     components: {
@@ -136,7 +137,7 @@ export default {
             this.$refs.buyConfirm.isShow = true;
         }, 2000),
         addCart: throttle(function (e) {
-            const num = this.$store.state.mall.cart?.find((item) => item.goods_id === this.good.id)?.amount || 0;
+            const num = this.$store.state.mallNew.cart?.find((item) => item.goods_id === this.good.id)?.amount || 0;
             if (1 + num > this.good.stock) {
                 return this.$message({
                     type: "warning",
@@ -155,29 +156,7 @@ export default {
                 });
         }, 1000),
         fly(e) {
-            const eleBtn = e.target.tagName === "IMG" ? e.target.parentElement : e.target;
-            const parent = eleBtn.parentElement;
-            const { left, top } = eleBtn.getBoundingClientRect();
-            const { left: leftCart, top: topCart } = this.$store.state.mallNew.boundCart;
-            const flyele = eleBtn.cloneNode(true);
-            flyele.style.cssText = `
-                position: fixed;
-                left: ${left}px;
-                top: ${top}px;
-                z-index: 1000;
-            `;
-            parent.appendChild(flyele);
-            flyele.animate(
-                [
-                    {
-                        transform: `translate(${leftCart - left}px, ${topCart - top}px) scale(0.3)`,
-                    },
-                ],
-                { duration: 500, easing: "ease-in-out", fill: "forwards" }
-            );
-            setTimeout(() => {
-                parent.removeChild(flyele);
-            }, 500);
+            playAddCartFly(e, this.$store.state.mallNew.boundCart, { image: this.good.goods_images?.[0] });
         },
     },
 };

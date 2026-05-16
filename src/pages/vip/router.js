@@ -256,12 +256,15 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     document.title = to.meta.title || "会员中心";
     if (to.fullPath.includes("/#")) {
-        next(to.fullPath.replace("/#", ""));
+        return next(to.fullPath.replace("/#", ""));
     }
     if ((to.name === "mall_list_new" || to.name === "mall_list_new_id") && window.innerWidth < 750) {
-        next(`/mallWeb${to.params.id ? `/${to.params.id}` : ""}`);
+        return next({
+            path: to.params.id ? `/mallWeb/${to.params.id}` : "/mallWeb/list",
+            query: to.query,
+        });
     }
-    next();
+    return next();
 });
 
 export default router;

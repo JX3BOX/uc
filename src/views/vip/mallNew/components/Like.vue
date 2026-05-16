@@ -6,6 +6,7 @@
 
 <script>
 import { postStat, getStat } from "@jx3box/jx3box-common/js/stat";
+import { getMallStat, postMallLike } from "@/service/vip/mall";
 export default {
     name: "Like2",
     props: ["postType", "postId"],
@@ -25,18 +26,25 @@ export default {
             this.loadStat();
         },
         loadStat: function () {
-            getStat(this.postType, this.postId).then((res) => {
-                this.count = res.data.likes || 0;
-            });
+            const request = this.postType === "mall" ? getMallStat(this.postId) : getStat(this.postType, this.postId);
+            request
+                .then((res) => {
+                    this.count = res.data.likes || 0;
+                })
+                .catch(() => {
+                    this.count = 0;
+                });
         },
         // 点赞
         addLike: function () {
-            if (!this.ready) return;
-            this.count++;
-            if (this.status) {
-                postStat(this.postType, this.postId, "likes");
-            }
+            if (!this.ready || !this.status) return;
             this.status = false;
+            this.count++;
+            const request = this.postType === "mall" ? postMallLike(this.postId) : postStat(this.postType, this.postId, "likes");
+            request.catch(() => {
+                this.count = Math.max(0, this.count - 1);
+                this.status = true;
+            });
         },
     },
     watch: {

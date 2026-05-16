@@ -23,14 +23,14 @@
 
                 <div class="m-order-step">
                     <el-divider content-position="left">2. 选择地址</el-divider>
-                    <div class="m-address">
+                    <div class="m-address" v-if="show_address">
                         <div class="m-button">
                             <el-button plain type="primary" icon="Sort" @click="visible = true">选择地址</el-button>
                             <a class="el-button is-plain" href="/dashboard/address" target="_blank"
                                 ><i class="el-icon-setting"></i> 管理地址</a
                             >
                         </div>
-                        <template v-if="address">
+                        <template v-if="address && address.id">
                             <div class="u-my-address">
                                 <span class="u-label"><i class="el-icon-s-home"></i> 收货地址</span>
                                 <div class="u-addr">
@@ -46,6 +46,7 @@
                         </template>
                         <div v-else><el-button type="success" icon="Plus">添加地址</el-button></div>
                     </div>
+                    <div class="u-no-address" v-else>虚拟物品无需地址</div>
                 </div>
 
                 <div class="m-order-step">
@@ -116,27 +117,34 @@ export default {
                 }, 0);
         },
         show_address() {
-            // 全是虚拟物品则不展示地址，提交时手动设置虚拟物品
-            return !this.checkedList.every((item) => item.goods?.category === "virtual");
+            return this.needs_address || !!this.address?.id;
+        },
+        needs_address() {
+            return this.checkedList.some((item) => item.goods?.category !== "virtual");
         },
         address() {
-            return this.$store.state.mallNew.myAddress;
+            const address = this.$store.state.mallNew.myAddress || {};
+            if (address.id) return address;
+            const addressList = this.$store.state.mallNew.addressList || [];
+            return (
+                addressList.find(
+                    (item) => item?.is_default === true || item?.is_default === 1 || item?.is_default === "1"
+                ) ||
+                addressList[0] ||
+                {}
+            );
         },
         asset() {
             return this.$store.state.mallNew.asset || {};
         },
-        ready({ show_address, address, asset }) {
+        ready() {
+            const hasAddress = !!this.address?.id;
             return (
-                // !show_address ||
-                (address.contact_name ||
-                    address.contact_phone ||
-                    address.province ||
-                    address.city ||
-                    address.area ||
-                    address.address) &&
-                asset.box_coin >= this.all_price_boxcoin &&
-                asset.points >= this.all_price_points &&
-                asset.cny >= this.all_price_cny
+                this.checkedList.length > 0 &&
+                (!this.show_address || hasAddress) &&
+                this.asset.box_coin >= this.all_price_boxcoin &&
+                this.asset.points >= this.all_price_points &&
+                this.asset.cny >= this.all_price_cny
             );
         },
         checkedList() {
@@ -153,6 +161,12 @@ export default {
             this.$router.go(-1);
         },
         toBuy() {
+            if (!this.checkedList.length) {
+                return this.$message.warning("请先选择要结算的商品");
+            }
+            if (this.needs_address && !this.address.id) {
+                return this.$message.warning("请选择收货地址");
+            }
             this.$alert("你确定支付该订单吗？如需取消可前往个人中心-订单中心处理。", "支付确认", {
                 confirmButtonText: "确定",
                 callback: (action) => {
@@ -161,9 +175,9 @@ export default {
                             remark: this.remark,
                             shopping_car_item_ids: this.checkedList.map((item) => item.id),
                         };
-                        // if (this.show_address) {
-                        data.addr_id = this.address.id;
-                        // }
+                        if (this.address?.id) {
+                            data.addr_id = this.address.id;
+                        }
                         this.loading = true;
                         batchMakeOrder(data)
                             .then((res) => {

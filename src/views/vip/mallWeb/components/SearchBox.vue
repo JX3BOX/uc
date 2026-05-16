@@ -20,7 +20,22 @@
             </div>
         </div>
         <div class="search-input">
-            <el-input :value="query.title" placeholder="搜索商品关键词" @input="handleChange($event, 'title')">
+            <el-input
+                :value="query.title"
+                placeholder="搜索商品关键词"
+                @input="handleChange($event, 'title')"
+            >
+                <template #suffix>
+                    <span
+                        v-if="query.title"
+                        class="u-clear"
+                        role="button"
+                        title="清空"
+                        @mousedown.prevent
+                        @click.stop="clearTitle"
+                        >×</span
+                    >
+                </template>
                 <template #append>
                     <el-button icon="Search"></el-button>
                 </template>
@@ -111,6 +126,9 @@ export default {
                     break;
             }
         },
+        clearTitle() {
+            this.changeQuery("title", "");
+        },
     },
 };
 </script>
@@ -179,6 +197,23 @@ export default {
                 background: rgba(255, 255, 255, 0.75);
                 color: rgba(0, 0, 0, 1);
                 text-align: center;
+
+                .el-button {
+                    width: 9.6vw;
+                    min-width: 9.6vw;
+                    max-width: 9.6vw;
+                    height: 6.4vw;
+                    margin: 0;
+                    padding: 0;
+                    border: 0;
+                    box-sizing: border-box;
+                }
+            }
+            .u-clear {
+                cursor: pointer;
+                font-size: 4.2667vw;
+                line-height: 6.4vw;
+                color: rgba(255, 255, 255, 0.65);
             }
         }
     }

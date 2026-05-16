@@ -5,7 +5,11 @@
             <MallBreadcrumb></MallBreadcrumb>
         </div>
         <div class="m-vip-mall">
-            <keep-alive :include="['MallList']"><router-view></router-view> </keep-alive>
+            <router-view v-slot="{ Component }">
+                <keep-alive :include="['MallList']">
+                    <component :is="Component" />
+                </keep-alive>
+            </router-view>
         </div>
     </div>
 </template>

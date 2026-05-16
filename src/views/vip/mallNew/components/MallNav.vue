@@ -77,7 +77,7 @@
                     <GoodItem v-for="(item, index) in list" :key="index" :good="item"></GoodItem>
                 </template>
                 <template v-else>
-                    <div class="u-null"><i class="el-icon-warning-outline"></i> 暂无数据</div>
+                    <el-empty class="u-null" description="当前条件下没有找到符合的商品"></el-empty>
                 </template>
             </div>
             <div class="pagination">
@@ -266,12 +266,18 @@ export default {
             align-content: flex-start;
 
             .u-null {
-                .x;
+                width: 100%;
+                height: 100%;
+                min-height: 360px;
                 display: flex;
-                justify-content: center;
                 align-items: center;
-                .w(100%);
-                padding: 200px 0;
+                justify-content: center;
+                :deep(.el-empty__description p) {
+                    color: rgba(255, 255, 255, 0.72);
+                }
+                :deep(.el-empty__image) {
+                    opacity: 0.82;
+                }
             }
         }
         .pagination {
