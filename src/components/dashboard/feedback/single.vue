@@ -116,14 +116,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="m-block m-refer" v-if="data.refer">
-                    <div class="u-subblock">
-                        <span class="u-label">来源：</span>
-                        <a class="u-item u-user" :href="data.refer" target="_blank">
-                            {{ data.refer }}
-                        </a>
-                    </div>
-                </div>
                 <el-steps class="m-steps" :active="currentStep" align-center finish-status="success">
                     <el-step :title="step.text" v-for="step in statusList" :key="step.value" />
                 </el-steps>

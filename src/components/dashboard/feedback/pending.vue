@@ -3,7 +3,7 @@
         <!-- tool -->
         <div class="m-feedback-tool">
             <div class="m-feedback-tool__item">
-                <el-select v-model="select" class="u-select" placeholder="请选择处理人" filterable style="width:200px">
+                <el-select v-model="select" class="u-select" placeholder="请选择处理人" filterable style="width:200px" clearable>
                     <el-option
                         :label="item.teammate_info.display_name"
                         v-for="(item, i) in assigns"
@@ -28,8 +28,8 @@
                 <el-date-picker v-model="time" type="month" placeholder="选择月份" format="yyyy年MM月">
                 </el-date-picker>
             </div>
-            <el-checkbox class="u-only-check" v-model="onlyMe"> 指派给我的 </el-checkbox>
-            <el-checkbox class="u-only-check" v-model="isSupport"> 我参与协同的 </el-checkbox>
+            <el-checkbox v-if="showUserFilters" class="u-only-check" v-model="onlyMe"> 指派给我的 </el-checkbox>
+            <el-checkbox v-if="showUserFilters" class="u-only-check" v-model="isSupport"> 我参与协同的 </el-checkbox>
         </div>
         <!-- list -->
         <div class="m-feedback-list" v-loading="loading">
@@ -164,6 +164,10 @@ export default {
             type: Number,
             default: 1,
         },
+        showUserFilters: {
+            type: Boolean,
+            default: true,
+        },
     },
     data() {
         return {
@@ -185,18 +189,15 @@ export default {
             statusTypes,
 
             isEditor: false,
-            onlyMe: true,
-            isSupport: true,
+            onlyMe: this.showUserFilters,
+            isSupport: this.showUserFilters,
 
             time: "",
             select: "",
             assigns: [],
         };
     },
-    mounted() {
-        this.loadTeam();
-        this.isEditor = User.isEditor();
-    },
+
     computed: {
         user() {
             return User.getInfo();
@@ -205,15 +206,17 @@ export default {
             const _params = {
                 ...this.filters,
             };
-            if (this.onlyMe) {
-                _params.assign = this.user.uid;
-            } else {
-                _params.assign = this.select;
-            }
-            if (this.isSupport) {
-                _params.coordination = this.user.uid;
-            } else {
-                _params.coordination = "";
+            if (this.showUserFilters) {
+                if (this.onlyMe) {
+                    _params.assign = this.user.uid;
+                } else {
+                    _params.assign = this.select;
+                }
+                if (this.isSupport) {
+                    _params.coordination = this.user.uid;
+                } else {
+                    _params.coordination = "";
+                }
             }
             if (this.time) {
                 // time 是月份
@@ -226,9 +229,11 @@ export default {
         reset_params() {
             return {
                 ...this.filters,
-                assign: this.params.assign,
+                assign: this.params.assign || "",
+                coordination: this.params.coordination || "",
                 time: this.time,
                 onlyMe: this.onlyMe,
+                isSupport: this.isSupport,
             };
         },
         page_params() {
@@ -321,7 +326,7 @@ export default {
                 return res.filter((item) => item.status);
             });
             this.assigns = concat(
-                { user_id: 0, teammate_info: { display_name: "全部" } },
+                // { user_id: 0, teammate_info: { display_name: "全部" } },
                 list.filter((item) => item.group && ["mp", "developer", "designer"].includes(item.group))
             );
         },
@@ -360,6 +365,8 @@ export default {
         },
     },
     mounted() {
+        this.loadTeam();
+        this.isEditor = User.isEditor();
         this.initQuery();
         this.getData();
     },

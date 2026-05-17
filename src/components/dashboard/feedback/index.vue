@@ -20,14 +20,26 @@
                 <el-tab-pane v-if="isTeammate" label="处理中" name="doing" lazy>
                     <pending v-if="active === 'doing'" :status="2"></pending>
                 </el-tab-pane>
+                <el-tab-pane v-if="isTeammate" label="已处理" name="resolved" lazy>
+                    <pending v-if="active === 'resolved'" :status="10"></pending>
+                </el-tab-pane>
+                <el-tab-pane v-if="isTeammate" label="已结单" name="closed" lazy>
+                    <pending v-if="active === 'closed'" :status="12"></pending>
+                </el-tab-pane>
+                <el-tab-pane v-if="isTeammate" label="待指派" name="unassigned" lazy>
+                    <pending v-if="active === 'unassigned'" :status="0" :show-user-filters="false"></pending>
+                </el-tab-pane>
             </el-tabs>
         </section>
         <aside class="m-feedback-aside">
-            <el-button class="u-btn" type="warning" plain @click="handleEraseClick">注销账号</el-button>
+            <div class="m-feedback-extend">
+                <a class="u-btn el-button el-button--warning" href="/tool/108048" target="_blank" type="warning">自助检测</a>
+                <el-button class="u-btn" type="warning" plain @click="handleEraseClick">注销账号</el-button>
+            </div>
             <div class="m-feedback-faq">
                 <div class="u-title"><i class="el-icon-question"></i> FAQ</div>
                 <div class="u-list" v-for="item in faq" :key="item.link">
-                    <a class="u-item" :href="item.link">{{ item.label }}</a>
+                    <a class="u-item" :href="item.link" target="_blank">{{ item.label }}</a>
                 </div>
             </div>
         </aside>
@@ -114,6 +126,15 @@ export default {
     .u-btn {
         width: 100%;
     }
+
+    .m-feedback-extend {
+        .flex;
+        flex-direction: column;
+        gap: 10px;
+        .el-button {
+            margin: 0;
+        }
+    }
 }
 @media screen and (max-width: @phone) {
     .m-feedback-aside {
@@ -143,7 +164,7 @@ export default {
             .mr(5px);
         }
         &:hover {
-            color: #fba524;
+            color: @v4primary;
         }
     }
 }
