@@ -44,6 +44,9 @@ export default {
     },
     methods: {
         buyGoods() {
+            if (!this.$store.getters["mallNew/checked_num"]) {
+                return this.$message.warning("请先选择要结算的商品");
+            }
             this.$store.dispatch("mallNew/changeCartConfirmIsShow", false);
             this.$router.push({ name: "mall_batch_order_new" });
         },

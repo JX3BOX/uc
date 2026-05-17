@@ -1,5 +1,6 @@
 <template>
-    <div class="cart" :class="{ show: show }">
+    <div class="cart-mask" v-if="show" @click="closeCart"></div>
+    <div class="cart" :class="{ show: show }" @click.stop>
         <div class="cart-title">
             购物车清单<i
                 class="el-icon-close"
@@ -94,7 +95,7 @@
                     <div class="left">{{ $store.getters["mallNew/all_price_points"] }}</div>
                 </div>
             </div>
-            <div class="total-btn" @click="$store.dispatch('mallNew/changeCartConfirmIsShow', true)">结算</div>
+            <div class="total-btn" @click="checkout">结算</div>
         </div>
     </div>
 </template>
@@ -141,7 +142,7 @@ export default {
             return this.$store.state.mallNew.cart;
         },
         isAll() {
-            return this.list.every((item) => item.checked);
+            return this.list.length > 0 && this.list.every((item) => item.checked);
         },
     },
     mounted() {
@@ -158,7 +159,17 @@ export default {
         handleClear() {
             this.$store.dispatch("mallNew/clearCart");
         },
+        closeCart() {
+            this.$store.dispatch("mallNew/changeCartIsShow", false);
+        },
+        checkout() {
+            if (!this.$store.getters["mallNew/checked_num"]) {
+                return this.$message.warning("请先选择要结算的商品");
+            }
+            this.$store.dispatch("mallNew/changeCartConfirmIsShow", true);
+        },
         itemChecked(item) {
+            if (item.can_buy === 0) return;
             this.list.forEach((i) => {
                 if (i.id === item.id) {
                     i.checked = !i.checked;
@@ -177,6 +188,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.cart-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: transparent;
+}
 .cart {
     width: 375px;
     height: calc(100vh - 100px);

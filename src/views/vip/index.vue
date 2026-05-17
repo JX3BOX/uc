@@ -44,8 +44,7 @@ export default {
                 },
                 {
                     name: "高级会员",
-                    // slug: "premium",
-                    slug: "mall/160",
+                    slug: "premium",
                     icon: "el-icon-star-off",
                     desc: "高级会员",
                 },

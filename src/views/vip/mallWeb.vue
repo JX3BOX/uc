@@ -11,7 +11,11 @@
         ></div>
         <div v-if="isNavShow" class="u-mark" @click="$store.commit('mallNew/toState', { navIsShow: false })"></div>
 
-        <keep-alive include="Index"><router-view></router-view> </keep-alive>
+        <router-view v-slot="{ Component }">
+            <keep-alive include="Index">
+                <component :is="Component" />
+            </keep-alive>
+        </router-view>
 
         <div class="cart" @click="$router.push('/mallWeb/cart')" v-if="$route.path !== '/mallWeb/cart'">
             <img :src="imgUrl + 'cart.svg'" alt="" id="cartBtn" />
@@ -22,6 +26,7 @@
 <script>
 import Breadcrumb from "@/views/vip/mallWeb/components/Breadcrumb.vue";
 import { __cdn } from "@/utils/config";
+import User from "@jx3box/jx3box-common/js/user";
 export default {
     name: "mallWeb",
     data() {
@@ -42,12 +47,14 @@ export default {
         },
     },
     created() {
-        this.$store.dispatch("mallNew/getAsset").catch((err) => {
-            this.$message.error("获取资产失败");
-        });
-        this.$store.dispatch("mallNew/getCart").catch((err) => {
-            this.$message.error("获取购物车失败");
-        });
+        if (User.isLogin()) {
+            this.$store.dispatch("mallNew/getAsset").catch(() => {
+                this.$message.error("获取资产失败");
+            });
+            this.$store.dispatch("mallNew/getCart").catch(() => {
+                this.$message.error("获取购物车失败");
+            });
+        }
     },
 };
 </script>

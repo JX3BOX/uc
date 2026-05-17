@@ -95,7 +95,7 @@
                     <div class="left">{{ $store.getters["mallNew/all_price_points"] }}</div>
                 </div>
             </div>
-            <div class="total-btn" @click="$refs.cartConfirm.isShow = true">结算</div>
+            <div class="total-btn" @click="checkout">结算</div>
         </div>
         <CartConfirm ref="cartConfirm"></CartConfirm>
     </div>
@@ -138,7 +138,7 @@ export default {
             return this.$store.state.mallNew.cart;
         },
         isAll() {
-            return this.list.every((item) => item.checked);
+            return this.list.length > 0 && this.list.every((item) => item.checked);
         },
     },
     mounted() {
@@ -155,7 +155,14 @@ export default {
         handleClear() {
             this.$store.dispatch("mallNew/clearCart");
         },
+        checkout() {
+            if (!this.$store.getters["mallNew/checked_num"]) {
+                return this.$message.warning("请先选择要结算的商品");
+            }
+            this.$refs.cartConfirm.isShow = true;
+        },
         itemChecked(item) {
+            if (item.can_buy === 0) return;
             this.list.forEach((i) => {
                 if (i.id === item.id) {
                     i.checked = !i.checked;

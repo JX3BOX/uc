@@ -2,20 +2,35 @@
     <div class="m-search-bar">
         <div class="m-select-box">
             <div class="select-item">
-                <el-select v-model="c_level" placeholder="等级限制" style="width:120px">
+                <el-select :model-value="query.level" placeholder="等级限制" style="width: 120px" @change="handleChange($event, 'level')">
                     <el-option v-for="item in level_options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </div>
             <div class="select-item">
-                <el-select v-model="query.vip_limit" placeholder="会员限制" style="width:120px">
+                <el-select :model-value="query.vip_limit" placeholder="会员限制" style="width: 120px" @change="handleChange($event, 'vip_limit')">
                     <el-option v-for="item in member_options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </div>
         </div>
         <div class="search-input">
-            <el-input v-model="query.title" placeholder="搜索商品关键词" @keyup.enter="handleChange(query.title, 'title')">
+            <el-input
+                v-model="query.title"
+                placeholder="搜索商品关键词"
+                @keyup.enter="handleChange(query.title, 'title')"
+            >
+                <template #suffix>
+                    <span
+                        v-if="query.title"
+                        class="u-clear"
+                        role="button"
+                        title="清空"
+                        @mousedown.prevent
+                        @click.stop="clearTitle"
+                        >×</span
+                    >
+                </template>
                 <template #append>
                     <el-button icon="Search" @click="handleChange(query.title, 'title')"></el-button>
                 </template>
@@ -79,23 +94,13 @@ export default {
             ],
         };
     },
-    computed: {
-        c_level: {
-            get() {
-                if (this.query.level === null) {
-                    return "";
-                } else if (this.query.level === 0) {
-                    return "全部";
-                } else {
-                    return "等级：lv." + this.query.level;
-                }
-            },
-        },
-    },
     methods: {
         handleChange(value, key) {
             if (key == "title") value = value.trim();
             this.changeQuery(key, value);
+        },
+        clearTitle() {
+            this.changeQuery("title", "");
         },
     },
 };
@@ -127,6 +132,27 @@ export default {
         background: rgba(255, 255, 255, 0.75);
         color: rgba(0, 0, 0, 1);
         text-align: center;
+
+        .el-button {
+            width: 36px;
+            min-width: 36px;
+            max-width: 36px;
+            height: 32px;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            box-sizing: border-box;
+        }
+    }
+    .u-clear {
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 1;
+        color: rgba(255, 255, 255, 0.65);
+
+        &:hover {
+            color: rgba(255, 255, 255, 0.95);
+        }
     }
     .m-select-box {
         .flex;

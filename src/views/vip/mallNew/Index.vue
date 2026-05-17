@@ -133,14 +133,17 @@ export default {
     },
     created() {
         this.loadDecoration();
-        this.handleResize();
-        window.addEventListener("resize", this.handleResize);
         Object.entries(this.$route.query).forEach(([key, value]) => {
             if (key === "search") {
                 this.query.title = value;
+                return;
             }
-            value && (this.query[key] = value);
+            if (Object.prototype.hasOwnProperty.call(this.query, key) && value !== undefined && value !== "") {
+                this.query[key] = value;
+            }
         });
+        this.handleResize(false);
+        window.addEventListener("resize", this.handleResize);
         this.loadData();
     },
     beforeUnmount() {
@@ -249,11 +252,13 @@ export default {
             if (item.id === this.selectItem?.id) return;
             this.$router.push({ name: "mall_list_new_id", params: { id: item.id } });
         },
-        handleResize() {
+        handleResize(shouldLoad = true) {
             const width = window.innerWidth < 1550 ? 5 : 10;
             if (width !== this.query.pageSize) {
                 this.query.pageSize = width;
-                this.loadData();
+                if (shouldLoad) {
+                    this.loadData();
+                }
             }
         },
         getBoundCart: debounce(function () {
