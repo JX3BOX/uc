@@ -100,11 +100,8 @@ const store = {
         },
         // 提交订单
         async buyGoods({ dispatch }, { id, count, addressId, remark }) {
-            return new Promise((resolve) => {
-                toPayOrder(id, count, addressId, remark).then((res) => {
-                    dispatch("toPay", res.data.data.id);
-                    resolve(res);
-                });
+            return toPayOrder(id, count, addressId, remark).then((res) => {
+                return dispatch("toPay", res.data.data.id).then(() => res);
             });
         },
         // 付款

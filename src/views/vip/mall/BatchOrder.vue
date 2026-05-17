@@ -69,6 +69,7 @@
 import { __userLevel, __Root } from "@/utils/config";
 import Address from "./components/address.vue";
 import { batchMakeOrder, batchPayOrder } from "@/service/vip/mall";
+import { handleMallExchangeError } from "@/utils/mallExchangeError";
 export default {
     name: "BatchOrder",
     data: function () {
@@ -161,7 +162,7 @@ export default {
                             .then((res) => {
                                 const orderList = res.data?.data?.order_list || [];
                                 const order_id = orderList.map((item) => item.id);
-                                batchPayOrder({
+                                return batchPayOrder({
                                     order_id,
                                 }).then(() => {
                                     this.$message({
@@ -183,6 +184,7 @@ export default {
                                     }, 2000);
                                 });
                             })
+                            .catch((error) => handleMallExchangeError(this, error))
                             .finally(() => {
                                 this.loading = false;
                             });

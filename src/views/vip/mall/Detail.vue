@@ -226,6 +226,7 @@ import { __Root, __OriginRoot } from "@/utils/config";
 import { throttle } from "lodash";
 import { resolveImagePath, showAvatar } from "@jx3box/jx3box-common/js/utils";
 import { checkOwnedStatus, getItem, toPay, toPayOrder, giveAway, getDecoration } from "@/service/vip/mall";
+import { handleMallExchangeError } from "@/utils/mallExchangeError";
 
 export default {
     name: "GoodsDetail",
@@ -459,33 +460,29 @@ export default {
                     count: this.number,
                     addressId: 0,
                     remark: "虚拟商品购买",
-                }).then((res) => {
-                    this.item.stock -= 1;
-                    this.isHave = true;
-                    this.$confirm("购买成功，是否跳转至订单界面?", "提示", {
-                        confirmButtonText: "确定",
-                        cancelButtonText: "取消",
-                        type: "warning",
-                    })
-                        .then(() => {
-                            const url = `${__Root}dashboard/mall`;
-                            window.open(url);
+                })
+                    .then((res) => {
+                        this.item.stock -= 1;
+                        this.isHave = true;
+                        this.$confirm("购买成功，是否跳转至订单界面?", "提示", {
+                            confirmButtonText: "确定",
+                            cancelButtonText: "取消",
+                            type: "warning",
                         })
-                        .catch(() => {});
-                });
+                            .then(() => {
+                                const url = `${__Root}dashboard/mall`;
+                                window.open(url);
+                            })
+                            .catch(() => {});
+                    })
+                    .catch((error) => handleMallExchangeError(this, error));
             }
 
             this.showOrder = true;
         }, 2000),
         //虚拟商品
         async payVirtual({ id, count, addressId, remark }) {
-            return new Promise((resolve) => {
-                toPayOrder(id, count, addressId, remark).then((res) => {
-                    toPay(res.data.data.id).then((data) => {
-                        resolve(data);
-                    });
-                });
-            });
+            return toPayOrder(id, count, addressId, remark).then((res) => toPay(res.data.data.id));
         },
         goTop() {
             window.scroll(0, 0);

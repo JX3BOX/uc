@@ -59,6 +59,7 @@ import { __userLevel, __Root } from "@/utils/config";
 import Address from "./components/address.vue";
 import { forEach } from "lodash";
 import { getItem } from "@/service/vip/mall";
+import { handleMallExchangeError } from "@/utils/mallExchangeError";
 export default {
     name: "GoodsOrder",
     data: function () {
@@ -136,12 +137,14 @@ export default {
             if (this.needs_address && !addressId) {
                 return this.$message.warning("请选择收货地址");
             }
-            this.$store.dispatch("mallNew/buyGoods", {
-                id: this.id,
-                count: this.count,
-                addressId,
-                remark: this.remark,
-            });
+            this.$store
+                .dispatch("mallNew/buyGoods", {
+                    id: this.id,
+                    count: this.count,
+                    addressId,
+                    remark: this.remark,
+                })
+                .catch((error) => handleMallExchangeError(this, error));
         },
         change(i) {
             this.active = i;

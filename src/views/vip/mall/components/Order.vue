@@ -73,6 +73,7 @@ import { __userLevel, __Root } from "@/utils/config";
 import Address from "./address.vue";
 import { forEach } from "lodash";
 import { getItem, toPayOrder } from "@/service/vip/mall";
+import { handleMallExchangeError } from "@/utils/mallExchangeError";
 export default {
     name: "Order",
     components: {
@@ -166,6 +167,7 @@ export default {
                                 // 打开新窗口
                                 window.open(location.origin + "/dashboard/mall");
                             })
+                            .catch((error) => handleMallExchangeError(this, error))
                             .finally(() => {
                                 this.loading = false;
                             });

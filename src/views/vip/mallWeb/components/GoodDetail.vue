@@ -75,6 +75,7 @@ import { throttle } from "lodash";
 // import { getItem } from "@/service/vip/mall";
 import { __cdn, __root } from "@/utils/config";
 import { playAddCartFly } from "@/utils/mallCartFly";
+import { handleMallExchangeError } from "@/utils/mallExchangeError";
 export default {
     name: "GoodWebDetail",
     components: {
@@ -192,7 +193,8 @@ export default {
                                 window.open(url);
                             })
                             .catch(() => {});
-                    });
+                    })
+                    .catch((error) => handleMallExchangeError(this, error));
             }
 
             this.$router.push({

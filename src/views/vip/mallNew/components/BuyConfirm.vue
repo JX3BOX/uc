@@ -18,6 +18,7 @@
 <script>
 import User from "@jx3box/jx3box-common/js/user";
 import { __Root } from "@/utils/config";
+import { handleMallExchangeError } from "@/utils/mallExchangeError";
 export default {
     name: "BuyConfirm",
     props: {
@@ -75,7 +76,8 @@ export default {
                                 window.open(url);
                             })
                             .catch(() => {});
-                    });
+                    })
+                    .catch((error) => handleMallExchangeError(this, error));
             }
 
             this.$router.push({

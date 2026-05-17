@@ -58,6 +58,7 @@ import { __userLevel, __Root } from "@/utils/config";
 import Address from "./components/address.vue";
 import { forEach } from "lodash";
 import { getItem, toPayOrder } from "@/service/vip/mall";
+import { handleMallExchangeError } from "@/utils/mallExchangeError";
 export default {
     name: "GoodsOrder",
     data: function () {
@@ -112,12 +113,14 @@ export default {
             return _key;
         },
         toBuy() {
-            this.$store.dispatch("mall/buyGoods", {
-                id: this.id,
-                count: this.count,
-                addressId: this.address.id,
-                remark: this.remark,
-            });
+            this.$store
+                .dispatch("mall/buyGoods", {
+                    id: this.id,
+                    count: this.count,
+                    addressId: this.address.id,
+                    remark: this.remark,
+                })
+                .catch((error) => handleMallExchangeError(this, error));
         },
         change(i) {
             this.active = i;
