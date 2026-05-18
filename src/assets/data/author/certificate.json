@@ -1166,5 +1166,113 @@
                 }
             }
         }
+    },
+    "23": {
+        "key": 23,
+        "element": {
+            "rank": {
+                "type": "rank",
+                "content": "",
+                "style": {
+                    "fontName": "ALIMAMASHUHEITI-BOLD",
+                    "topThreeStyle": {
+                        "textAlign": "center",
+                        "fontSize": 26,
+                        "left": 640,
+                        "top": 685,
+                        "color": "#FFE9C4"
+                    },
+                    "otherStyle": {
+                        "textAlign": "center",
+                        "fontSize": 26,
+                        "left": 640,
+                        "top": 685,
+                        "color": "#FFE9C4",
+                        "content": "百强"
+                    }
+                }
+            },
+            "subRank": {
+                "type": "text",
+                "content": "TOP {{rank}}",
+                "style": {
+                    "fontName": "ALIMAMASHUHEITI-BOLD",
+                    "textAlign": "center",
+                    "fontSize": 18,
+                    "left": 640,
+                    "top": 655,
+                    "color": "#FFE9C4"
+                }
+            },
+            "time": {
+                "type": "text",
+                "content": "通关用时 / hh时mm分ss秒",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 22,
+                    "left": 640,
+                    "top": 800,
+                    "color": "#000000"
+                }
+            },
+            "mapTime": {
+                "type": "text",
+                "content": "通关时间 / yyyy年MM月dd日hh时mm分ss秒",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 22,
+                    "left": 640,
+                    "top": 840,
+                    "color": "#000000"
+                }
+            },
+            "name": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 32,
+                    "left": 640,
+                    "top": 1120,
+                    "color": "#000000"
+                }
+            },
+            "colonel": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 23,
+                    "left": 640,
+                    "top": 1170,
+                    "color": "#666666"
+                }
+            },
+            "team": {
+                "type": "text",
+                "content": "",
+                "style": {
+                    "textAlign": "center",
+                    "fontSize": 15,
+                    "left": 640,
+                    "top": 1200,
+                    "color": "#666666",
+                    "width": 700,
+                    "height": 25
+                }
+            },
+            "signTime": {
+                "type": "text",
+                "content": "签发日期：yyyy.MM.dd",
+                "addUrl": "",
+                "style": {
+                    "textAlign": "left",
+                    "fontSize": 20,
+                    "left": 1000,
+                    "top": 1760,
+                    "color": "#3F5180"
+                }
+            }
+        }
     }
 }

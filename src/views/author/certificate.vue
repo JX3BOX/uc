@@ -151,7 +151,7 @@ export default {
             }
         },
         drawFontText(ctx, data) {
-            let drawText = `第${data.content}名`;
+            let drawText = ``;
             let drawStyle = data.style.otherStyle;
             if (data.content * 1 <= 3) {
                 drawStyle = data.style.topThreeStyle;
@@ -162,6 +162,10 @@ export default {
                 drawText = "亚军";
             } else if (data.content == 3) {
                 drawText = "季军";
+            } else if (drawStyle.content) {
+                drawText = drawStyle.content;
+            } else {
+                drawText = `第${data.content}名`;
             }
 
             const fontUrl = fontMap[data.style.fontName];
