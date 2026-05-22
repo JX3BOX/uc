@@ -444,7 +444,7 @@ export default {
             return post_type == "mall_order" ? `/vip/mall/${post_id}` : getLink(post_type, post_id);
         },
         showMedalIcon: function (val) {
-            return __cdn + "design/medals/user/" + val + ".gif";
+            return __cdn + "design/medals/user/" + val + ".webp";
         },
         showBoxcoinType: function (item) {
             if (item.action_type == 9) {

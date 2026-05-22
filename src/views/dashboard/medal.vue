@@ -93,7 +93,7 @@ export default {
             }
         },
         imgSrc(name) {
-            return __cdn + "design/medals/user/" + name + ".gif";
+            return __cdn + "design/medals/user/" + name + ".webp";
         },
         hasMedal(name) {
             return this.userMedals?.findIndex((item) => item.medal == name) > -1;
