@@ -25,6 +25,7 @@
         </div>
         <div class="m-feedback-actions">
             <div class="m-feedback-attachment">
+                <div class="u-attachment-tip">支持图片和视频，单个文件最大 30MB，最多上传 {{ max }} 个附件</div>
                 <el-upload
                     ref="upload"
                     class="u-upload avatar-uploader"
@@ -36,20 +37,36 @@
                     :on-change="change"
                     :on-exceed="exceed"
                     :limit="max"
-                    title="上传图片"
+                    title="上传图片或视频"
                     with-credentials
-                    accept="image/jpg, image/jpeg, image/gif, image/png, image/bmp"
+                    accept="image/jpg, image/jpeg, image/gif, image/png, image/bmp, video/mp4, video/quicktime, video/webm, video/ogg, video/x-m4v"
                     multiple
                 >
+                    <template #file="{ file }">
+                        <div class="u-upload-item" @click.stop="handlePictureCardPreview(file)">
+                            <img v-if="!isVideoFile(file)" class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                            <div v-else class="u-upload-video">
+                                <video class="u-upload-video__player" :src="file.url" muted preload="metadata"></video>
+                                <i class="el-icon-video-play u-upload-video__icon"></i>
+                            </div>
+                        </div>
+                    </template>
                     <i class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
-                <el-dialog v-model="dialogVisible">
-                    <img width="100%" :src="dialogImageUrl" alt="" />
+                <el-dialog v-model="dialogVisible" class="m-media-preview">
+                    <video
+                        v-if="dialogFileType === 'video'"
+                        class="u-preview-video"
+                        :src="dialogImageUrl"
+                        controls
+                        :autoplay="false"
+                    ></video>
+                    <img v-else width="100%" :src="dialogImageUrl" alt="" />
                 </el-dialog>
             </div>
             <div class="m-feedback-visible">
                 <span class="u-label">是否公开：</span>
-                <el-checkbox class="u-checkbox" :true-value="1" :fasle-value="0" v-model="form.public"></el-checkbox>
+                <el-checkbox class="u-checkbox" :true-value="1" :false-value="0" v-model="form.public"></el-checkbox>
                 <!-- <el-tooltip v-show="!canSubmit" content="必须先填写类型，子类和内容">
                     <i class="el-icon-question"></i>
                 </el-tooltip> -->
@@ -104,6 +121,7 @@ export default {
             uploadedMap: {},
             loading: false,
             dialogImageUrl: "",
+            dialogFileType: "image",
             dialogVisible: false,
         };
     },
@@ -119,7 +137,38 @@ export default {
         },
     },
     methods: {
+        isVideoFile(file) {
+            const type = file?.raw?.type || file?.type || "";
+            if (type.startsWith("video/")) return true;
+            return this.isVideoUrl(file?.url || file?.response?.data?.[0] || "");
+        },
+        isVideoUrl(url) {
+            return /\.(mp4|mov|m4v|webm|ogg)(\?.*)?$/i.test(url || "");
+        },
+        validateFile(file) {
+            const raw = file?.raw || file;
+            const type = raw?.type || "";
+            const size = raw?.size || 0;
+            const isImage = type.startsWith("image/");
+            const isVideo = type.startsWith("video/");
+
+            if (!isImage && !isVideo) {
+                this.$message.warning("仅支持上传图片或视频文件");
+                return false;
+            }
+
+            if (size > 30 * 1024 * 1024) {
+                this.$message.warning("单个附件大小不能超过 30MB");
+                return false;
+            }
+
+            return true;
+        },
         change(file) {
+            if (!this.validateFile(file)) {
+                this.$refs.upload?.handleRemove(file);
+                return;
+            }
             if (file.status === "success" || this.uploadedMap[file.uid]) return;
             const fdata = new FormData();
             fdata.append("file", file.raw);
@@ -147,6 +196,7 @@ export default {
                     this.uploadedMap[file.uid] = imageUrl;
                     this.imgs = [...this.imgs, imageUrl];
                     file.url = imageUrl;
+                    file.name = file.name || imageUrl.split("/").pop();
                     file.status = "success";
                 })
                 .catch((err) => {
@@ -159,15 +209,16 @@ export default {
                     }
                 });
         },
-        // 图片上限
+        // 附件上限
         exceed: function () {
-            this.$message.warning(`上传的图片个数最多为${this.max}个`);
+            this.$message.warning(`上传的附件个数最多为${this.max}个`);
         },
         handlePictureCardPreview: function (file) {
             this.dialogImageUrl = file.url;
+            this.dialogFileType = this.isVideoFile(file) ? "video" : "image";
             this.dialogVisible = true;
         },
-        // 移除图片
+        // 移除附件
         remove: function (file) {
             const imageUrl = this.uploadedMap[file?.uid] || file?.response?.data?.[0] || file?.url;
             this.imgs = this.imgs.filter((img) => img !== imageUrl);
@@ -185,15 +236,23 @@ export default {
                 .then((res) => {
                     this.$message.success("提交成功");
                     this.$refs.upload.clearFiles();
-                    this.form = this.$options.data().form;
-                    this.imgs = [];
-                    this.uploadedMap = {};
+                    this.resetForm();
                 })
                 .finally(() => {
                     this.loading = false;
                 });
         },
+        resetForm() {
+            this.form = this.$options.data().form;
+            this.imgs = [];
+            this.uploadedMap = {};
+        },
         addFile(file) {
+            if (!this.validateFile(file)) return false;
+            if ((this.$refs.upload?.uploadFiles?.length || 0) >= this.max) {
+                this.exceed();
+                return false;
+            }
             this.$refs.upload.handleStart(file);
             return false;
         },
@@ -233,14 +292,50 @@ export default {
         .mt(20px);
         // .mb(10px);
         .u-upload {
+            .el-upload-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
             .el-upload--picture-card,
             .el-upload-list__item {
-                height: 40px;
-                width: 40px;
-                line-height: 40px;
+                height: 72px;
+                width: 72px;
+                line-height: 72px;
             }
             .el-icon-plus {
                 .fz(16px);
+            }
+        }
+        .u-attachment-tip {
+            color: #909399;
+            .fz(12px, 1.6);
+            .mb(8px);
+        }
+        .u-upload-item {
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .u-upload-video {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #111;
+            &__player {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+            &__icon {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                color: #fff;
+                .fz(20px);
+                transform: translate(-50%, -50%);
+                text-shadow: 0 2px 8px rgb(0 0 0 / 35%);
             }
         }
     }
@@ -275,14 +370,31 @@ export default {
     padding-left: 40px;
     padding-right: 40px;
 }
+.m-media-preview {
+    .u-preview-video {
+        width: 100%;
+        max-height: 70vh;
+        background: #000;
+    }
+}
 
 @media screen and (max-width: @phone) {
     .m-add-feedback {
-    .type-box {
-        .el-form-item {
-            margin-bottom: 10px;
+        .type-box {
+            .el-form-item {
+                margin-bottom: 10px;
+            }
+        }
+        .m-feedback-actions {
+            .u-upload {
+                .el-upload--picture-card,
+                .el-upload-list__item {
+                    height: 64px;
+                    width: 64px;
+                    line-height: 64px;
+                }
+            }
         }
     }
-}
 }
 </style>

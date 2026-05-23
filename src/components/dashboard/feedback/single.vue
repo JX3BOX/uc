@@ -126,14 +126,31 @@
                     </div>
                 </div>
                 <div class="m-attachment m-textarea">
-                    <el-divider content-position="left"
-                        ><i class="el-icon-picture-outline-round"></i> 附件截图</el-divider
-                    >
-                    <div class="u-detail">
-                        <div class="u-img" v-for="(img, index) in data.images" :key="index">
-                            <el-image :src="img" lazy :preview-src-list="data.images"></el-image>
+                    <el-divider content-position="left"><i class="el-icon-picture-outline-round"></i> 附件内容</el-divider>
+                    <div v-if="attachments.length" class="u-detail">
+                        <div class="u-attachment-summary">
+                            共 {{ attachments.length }} 个附件
+                            <span v-if="imageAttachments.length || videoAttachments.length">
+                                <span v-if="imageAttachments.length">，图片 {{ imageAttachments.length }} 张</span>
+                                <span v-if="videoAttachments.length">，视频 {{ videoAttachments.length }} 个</span>
+                            </span>
+                        </div>
+                        <div class="u-media-grid">
+                            <div class="u-media-card is-image" v-for="(img, index) in imageAttachments" :key="`img-${index}`">
+                                <el-image :src="img" fit="cover" lazy :preview-src-list="imageAttachments"></el-image>
+                                <div class="u-media-meta">图片 {{ index + 1 }}</div>
+                            </div>
+                            <div
+                                class="u-media-card is-video"
+                                v-for="(video, index) in videoAttachments"
+                                :key="`video-${index}`"
+                            >
+                                <video class="u-media-video" :src="video" controls preload="metadata" :autoplay="false"></video>
+                                <div class="u-media-meta">视频 {{ index + 1 }}</div>
+                            </div>
                         </div>
                     </div>
+                    <el-empty v-else description="暂无附件"></el-empty>
                 </div>
                 <div class="m-feedback-thx">
                     <el-divider content-position="left"
@@ -364,6 +381,15 @@ export default {
         client() {
             return __clients[this.data.client];
         },
+        attachments() {
+            return Array.isArray(this.data?.images) ? this.data.images.filter(Boolean) : [];
+        },
+        imageAttachments() {
+            return this.attachments.filter((item) => !this.isVideoUrl(item));
+        },
+        videoAttachments() {
+            return this.attachments.filter((item) => this.isVideoUrl(item));
+        },
     },
     watch: {
         id: {
@@ -466,6 +492,7 @@ export default {
                 this.loading = true;
                 let res = await getFeedback(this.id);
                 this.data = res.data.data;
+                this.data.images = Array.isArray(this.data.images) ? this.data.images : [];
                 this.data.content = this.data.content.replace(/\n/g, "<br>");
                 this.done = true;
             } catch (e) {
@@ -508,6 +535,9 @@ export default {
 
         sanitizedHTML(html) {
             return DOMPurify.sanitize(html);
+        },
+        isVideoUrl(url) {
+            return /\.(mp4|mov|m4v|webm|ogg)(\?.*)?$/i.test(url || "");
         },
 
         // 打赏相关
