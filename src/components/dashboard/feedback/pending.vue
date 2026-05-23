@@ -351,6 +351,10 @@ export default {
                             done();
                         } else {
                             updateFeedback(row.id, {
+                                client: row.client || "",
+                                type: row.type || "",
+                                subtype: row.subtype || "",
+                                repository: row.repository || "",
                                 remark: instance.inputValue,
                             }).then(() => {
                                 done();
