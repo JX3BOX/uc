@@ -1,6 +1,5 @@
 import { createStore } from "vuex";
 
-import mallStore from "./mall";
 import mallNewStore from "./mallNew";
 
 let store = {
@@ -11,7 +10,6 @@ let store = {
     getters: {},
     actions: {},
     modules: {
-        mall: mallStore,
         mallNew: mallNewStore,
     },
 };

@@ -1,6 +1,9 @@
 <template>
     <div class="good-item" @click="changeSelectItem(good)">
-        <img :src="good.goods_images[0]" alt="" class="good-item-img" />
+        <div class="good-item-image">
+            <img :src="good.goods_images[0]" alt="" class="good-item-img" />
+            <span v-if="good.has_owned" class="u-owned-tag">已拥有</span>
+        </div>
         <div class="right">
             <div class="header">
                 <div class="title">{{ good.title }}</div>
@@ -18,7 +21,9 @@
                     @click.stop="buyGoods(good)"
                     :disabled="!good.canBuy.canBuy"
                 >
-                    <div v-if="!good.canBuy.canBuy" class="button-text">不满足兑换条件</div>
+                    <div v-if="!good.canBuy.canBuy" class="button-text">
+                        {{ good.has_owned ? "已拥有" : "不满足兑换条件" }}
+                    </div>
                     <div v-else class="button-text canBuy">
                         <template v-if="good.price_boxcoin">
                             <img :src="imgUrl + 'box_coin.svg'" alt="" />{{ good.price_boxcoin }}盒币
@@ -114,10 +119,29 @@ export default {
     display: flex;
     overflow: hidden;
     cursor: pointer;
-    .good-item-img {
+    .good-item-image {
+        position: relative;
+        flex: none;
         width: 120px;
         height: 120px;
-        object-fit: cover;
+        .good-item-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .u-owned-tag {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            height: 20px;
+            padding: 0 8px;
+            border-radius: 10px;
+            background: rgba(36, 41, 46, 0.88);
+            color: rgba(255, 195, 0, 1);
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 20px;
+        }
     }
     .right {
         width: 240px;

@@ -36,6 +36,9 @@
                 </template>
             </el-input>
         </div>
+        <el-checkbox class="u-unowned-check" :model-value="query.only_unowned" @change="handleChange($event, 'only_unowned')">
+            只看未拥有
+        </el-checkbox>
     </div>
 </template>
 
@@ -111,8 +114,10 @@ export default {
     width: 100%;
     margin-bottom: 24px;
     display: flex;
+    align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
+    gap: 12px;
 
     .el-select__wrapper {
         background-color: transparent;
@@ -156,6 +161,15 @@ export default {
     }
     .m-select-box {
         .flex;
+    }
+    .u-unowned-check {
+        margin-left: auto;
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 700;
+
+        .el-checkbox__label {
+            color: rgba(255, 255, 255, 0.85);
+        }
     }
 }
 </style>

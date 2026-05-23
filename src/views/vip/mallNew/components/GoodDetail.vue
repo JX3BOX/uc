@@ -1,17 +1,26 @@
 <template>
     <div class="good-detail" :class="{ 'without-nav': !isShowNav }">
         <div :class="{ 'canBuy-text': true, canBuy: good.canBuy.canBuy }">
-            {{ good.canBuy.canBuy ? "—&emsp;当前商品 · 可兑换&emsp;—" : "—&emsp;当前商品 · 不满足兑换条件&emsp;—" }}
+            {{
+                good.has_owned
+                    ? "—&emsp;当前商品 · 已拥有&emsp;—"
+                    : good.canBuy.canBuy
+                    ? "—&emsp;当前商品 · 可兑换&emsp;—"
+                    : "—&emsp;当前商品 · 不满足兑换条件&emsp;—"
+            }}
         </div>
         <div class="title-card">
             <div class="title">{{ good.title }}</div>
             <div class="apply" v-if="apply[goodInfo.category]">应用场景：{{ apply[goodInfo.category] }}</div>
         </div>
         <div class="card">
-            <div v-if="goodInfo.img" class="skeleton-container">
-                <Skeleton :category="goodInfo.category" :img="goodInfo.img"></Skeleton>
+            <div class="m-good-preview">
+                <!-- <span v-if="good.has_owned" class="u-owned-tag">已拥有</span> -->
+                <div v-if="goodInfo.img" class="skeleton-container">
+                    <Skeleton :category="goodInfo.category" :img="goodInfo.img"></Skeleton>
+                </div>
+                <img :src="good.goods_images[0]" v-else class="u-good-image" />
             </div>
-            <img :src="good.goods_images[0]" v-else style="width: 400px; height: 400px" />
         </div>
         <div class="buy-detail">
             <div class="detail-card">
@@ -42,16 +51,17 @@
                     }}{{ good.canBuy.buy_time ? "" : "(不在兑换期内)" }}
                 </div>
                 <div class="buttons">
-                    <button class="button add-cart" @click="addCart" :disabled="!good.canBuy.canBuy">
+                    <button class="button add-cart" @click="addCart" :disabled="good.has_owned || !good.canBuy.canBuy">
                         <img :src="imgUrl + 'cart-fill.svg'" alt="" />
                         加购
                     </button>
-                    <button class="button buy" @click="buyGoods" :disabled="!good.canBuy.canBuy">
-                        <template v-if="good.price_boxcoin">
+                    <button class="button buy" @click="buyGoods" :disabled="good.has_owned || !good.canBuy.canBuy">
+                        <template v-if="good.has_owned">已拥有</template>
+                        <template v-else-if="good.price_boxcoin">
                             <img :src="imgUrl + 'box_coin_fill.svg'" alt="" />{{ good.price_boxcoin }}盒币
                         </template>
-                        <template v-if="good.price_boxcoin && good.price_points"> + </template>
-                        <template v-if="good.price_points">
+                        <template v-if="!good.has_owned && good.price_boxcoin && good.price_points"> + </template>
+                        <template v-if="!good.has_owned && good.price_points">
                             <img :src="imgUrl + 'point.svg'" alt="" />{{ good.price_points }}积分
                         </template>
                     </button>
@@ -134,9 +144,11 @@ export default {
     },
     methods: {
         buyGoods: throttle(function () {
+            if (this.good.has_owned || !this.good.canBuy.canBuy) return;
             this.$refs.buyConfirm.isShow = true;
         }, 2000),
         addCart: throttle(function (e) {
+            if (this.good.has_owned || !this.good.canBuy.canBuy) return;
             const num = this.$store.state.mallNew.cart?.find((item) => item.goods_id === this.good.id)?.amount || 0;
             if (1 + num > this.good.stock) {
                 return this.$message({
@@ -226,8 +238,28 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
-        img{
+        .m-good-preview {
+            position: relative;
+            display: inline-flex;
+        }
+        .u-good-image {
+            width: 400px;
+            height: 400px;
             object-fit: cover;
+        }
+        .u-owned-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1;
+            height: 24px;
+            padding: 0 10px;
+            border-radius: 12px;
+            background: rgba(36, 41, 46, 0.88);
+            color: rgba(255, 195, 0, 1);
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 24px;
         }
         .skeleton-container {
             background-color: #fff;

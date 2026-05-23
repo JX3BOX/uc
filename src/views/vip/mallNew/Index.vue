@@ -68,7 +68,6 @@ import MallNav from "@/views/vip/mallNew/components/MallNav.vue";
 import GoodDetail from "@/views/vip/mallNew/components/GoodDetail.vue";
 import Cart from "@/views/vip/mallNew/components/Cart.vue";
 import { debounce } from "lodash";
-import { getDecoration } from "@/service/vip/decoration";
 import CartConfirm from "@/views/vip/mallNew/components/CartConfirm.vue";
 import { __cdn } from "@/utils/config";
 export default {
@@ -87,10 +86,10 @@ export default {
                 title: "",
                 category: "",
                 sub_category: "",
+                only_unowned: false,
                 total: 0,
             },
             isShowNav: true,
-            myVirtualItems: [],
         };
     },
     watch: {
@@ -115,7 +114,7 @@ export default {
                 return {
                     ...item,
                     canBuy: this.checkCanBuy(item),
-                    isHave: this.isHaveGood(item),
+                    isHave: item.has_owned,
                 };
             });
         },
@@ -132,10 +131,13 @@ export default {
         window.addEventListener("resize", this.getBoundCart);
     },
     created() {
-        this.loadDecoration();
         Object.entries(this.$route.query).forEach(([key, value]) => {
             if (key === "search") {
                 this.query.title = value;
+                return;
+            }
+            if (key === "no_buy" || key === "only_unowned") {
+                this.query.only_unowned = value === "1" || value === "true";
                 return;
             }
             if (Object.prototype.hasOwnProperty.call(this.query, key) && value !== undefined && value !== "") {
@@ -156,7 +158,10 @@ export default {
             const _query = {};
             for (let key in this.query) {
                 if (this.query[key] !== undefined && this.query[key] !== "" && this.query[key] !== null) {
-                    if (key === "level" && this.query.level != 0) {
+                    if (key === "only_unowned") {
+                        const onlyUnowned = this.query.only_unowned;
+                        _query.no_buy = onlyUnowned ? 1 : "";
+                    } else if (key === "level" && this.query.level != 0) {
                         _query.exp_limit = __userLevel[this.query.level]?.[0];
                         _query.exp_limit_max = __userLevel[this.query.level]?.[1] - 1 || "";
                     } else {
@@ -165,28 +170,28 @@ export default {
                 }
             }
             delete _query.total;
+            if (_query.no_buy === "") delete _query.no_buy;
             return _query;
         },
-        isHaveGood(item) {
-            return this.myVirtualItems.some((v) => {
-                return (
-                    item.category === "virtual" &&
-                    item.sub_category !== "palu" &&
-                    v.type === item.sub_category &&
-                    v.val === item.remark
-                );
-            });
+        hasOwnedGood(item = {}) {
+            const raw = item.ext_info?.has_buy;
+
+            if (raw !== undefined && raw !== null) {
+                return raw === true || raw === 1 || raw === "1" || raw === "true";
+            }
+
+            return false;
         },
-        loadDecoration() {
-            getDecoration().then((res) => {
-                let data = res.data.data;
-                this.myVirtualItems = data;
-            });
+        normalizeGood(item = {}) {
+            return {
+                ...item,
+                has_owned: this.hasOwnedGood(item),
+            };
         },
         loadData() {
             const query = this.buildQuery();
             getItemList(query).then((res) => {
-                this.goodsList = res.data.data?.list || [];
+                this.goodsList = (res.data.data?.list || []).map((item) => this.normalizeGood(item));
                 this.query.total = res.data.data.page?.total || 0;
                 if (res.data.data.page) {
                     this.query.pageIndex = res.data.data.page.index;
@@ -216,8 +221,13 @@ export default {
                 level: true,
                 user_level: User.getLevel(item.exp_limit),
                 buy_time: true,
+                owned: true,
             };
             const time = new Date().getTime();
+            if (item.has_owned) {
+                obj.canBuy = false;
+                obj.owned = false;
+            }
             if (item.vip_limit === 1 && !User._isPRO(this.asset)) {
                 obj.canBuy = false;
                 obj.vip_limit = false;
@@ -242,10 +252,10 @@ export default {
         },
         getData(item) {
             getItem(item.id).then((res) => {
-                res.data.data.canBuy = this.checkCanBuy(res.data.data);
-                res.data.data.isHave = this.isHaveGood(res.data.data);
-                this.selectItem = res.data.data || {};
-                console.log(this.selectItem);
+                const good = this.normalizeGood(res.data.data || {});
+                good.canBuy = this.checkCanBuy(good);
+                good.isHave = good.has_owned;
+                this.selectItem = good;
             });
         },
         changeSelectItem(item) {
