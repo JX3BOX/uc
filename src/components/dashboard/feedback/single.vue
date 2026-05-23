@@ -201,7 +201,7 @@
                 </div>
                 <div class="m-reply" v-if="done">
                     <el-divider content-position="left"><i class="el-icon-chat-line-square"></i> 回复处理</el-divider>
-                    <CommonComment :id="id" category="feedback" order="desc" />
+                    <CommonComment :id="id" category="feedback" order="desc" :support-video="true" />
                 </div>
             </main>
 
