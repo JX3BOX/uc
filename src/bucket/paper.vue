@@ -37,17 +37,10 @@
 
 <script>
 import examData from "@/assets/data/publish/exam.json";
-const { types } = examData;
 import dateFormat from "@/utils/dateFormat";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { deletePaper } from "@/service/publish/exam.js";
-const statusmap = {
-    "-2": "已删除",
-    "-1": "未通过审核",
-    0: "待审核",
-    1: "已入库",
-    2: "私有",
-};
+const { types, statusmap } = examData;
 export default {
     name: "paper",
     props: ["data"],

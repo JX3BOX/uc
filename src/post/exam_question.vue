@@ -8,6 +8,12 @@
         <!-- <h1 class="m-publish-exam-header">贡献题目</h1> -->
         <el-form label-position="left" label-width="80px" class="m-publish-exam">
             <publish-client v-model="primary.client"></publish-client>
+            <el-form-item label="状态" class="m-publish-exam-common">
+                <el-radio-group v-model="primary.status">
+                    <el-radio value="">公开</el-radio>
+                    <el-radio :value="PRIVATE_STATUS">私有</el-radio>
+                </el-radio-group>
+            </el-form-item>
             <el-form-item label="题目" class="m-publish-exam-title">
                 <el-input
                     v-model="primary.title"
@@ -83,22 +89,53 @@ import Tinymce from "@jx3box/jx3box-editor/src/Tinymce";
 import User from "@jx3box/jx3box-common/js/user";
 import { getQuestion, createQuestion, updateQuestion } from "@/service/publish/exam";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
+const DEFAULT_CLIENT = "std";
+const PRIVATE_STATUS = 2;
+
+function getDefaultPrimary() {
+    return {
+        client: DEFAULT_CLIENT,
+        status: "",
+        title: "",
+        type: "radio",
+        options: ["", "", "", ""],
+        answer: [],
+        hardStar: 0,
+        tags: [],
+        whyami: "",
+        pool: "common",
+    };
+}
+
+function getFormStatus(status) {
+    return Number(status) === PRIVATE_STATUS ? PRIVATE_STATUS : "";
+}
+
+function hasStatus(status) {
+    return status !== "" && status !== undefined && status !== null;
+}
+
+function getSubmitData(primary, originalStatus) {
+    const data = { ...primary };
+    data.client = data.client || DEFAULT_CLIENT;
+    if (Number(data.status) === PRIVATE_STATUS) {
+        data.status = PRIVATE_STATUS;
+    } else if (hasStatus(originalStatus)) {
+        data.status = originalStatus;
+    } else {
+        delete data.status;
+    }
+    return data;
+}
+
 export default {
     name: "exam_question",
     props: [],
     data: function () {
         return {
-            primary: {
-                client: "std",
-                title: "",
-                type: "radio",
-                options: ["", "", "", ""],
-                answer: [],
-                hardStar: 0,
-                tags: [],
-                whyami: "",
-                pool: "common",
-            },
+            primary: getDefaultPrimary(),
+            PRIVATE_STATUS,
+            originalStatus: "",
             processing: false,
             loading: false,
 
@@ -130,23 +167,16 @@ export default {
     methods: {
         publish: function () {
             this.processing = true;
-            if (this.id) {
-                updateQuestion(this.id, this.primary)
-                    .then((res) => {
-                        this.success(res);
-                    })
-                    .finally(() => {
-                        this.processing = false;
-                    });
-            } else {
-                createQuestion(this.primary)
-                    .then((res) => {
-                        this.success(res);
-                    })
-                    .finally(() => {
-                        this.processing = false;
-                    });
-            }
+            const data = getSubmitData(this.primary, this.id ? this.originalStatus : undefined);
+            const request = this.id ? updateQuestion(this.id, data) : createQuestion(data);
+            request
+                .then((res) => {
+                    this.success(res);
+                })
+                .catch(() => {})
+                .finally(() => {
+                    this.processing = false;
+                });
         },
         success: function (res) {
             this.$message({
@@ -162,9 +192,15 @@ export default {
             getQuestion(this.id)
                 .then((res) => {
                     let data = res.data;
-                    this.primary = data;
-                    this.primary.options = JSON.parse(data.options);
-                    this.primary.tags = JSON.parse(data.tags);
+                    this.originalStatus = data.status;
+                    this.primary = {
+                        ...getDefaultPrimary(),
+                        ...data,
+                        client: data.client || DEFAULT_CLIENT,
+                        status: getFormStatus(data.status),
+                    };
+                    this.primary.options = data.options ? JSON.parse(data.options) : ["", "", "", ""];
+                    this.primary.tags = data.tags ? JSON.parse(data.tags) : [];
                     this.primary.answer = data.answerList || [];
                 })
                 .finally(() => {

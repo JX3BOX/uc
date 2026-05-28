@@ -41,13 +41,7 @@ import examData from "@/assets/data/publish/exam.json";
 import dateFormat from "@/utils/dateFormat";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { deleteQuestion } from "@/service/publish/exam.js";
-const { types } = examData;
-const statusmap = {
-    "-2": "已删除",
-    "-1": "未通过审核",
-    0: "待审核",
-    1: "已入库",
-};
+const { types, statusmap } = examData;
 export default {
     name: "question",
     props: ["data"],

@@ -9,6 +9,12 @@
         <el-form label-position="left" label-width="80px" class="m-publish-exam">
             <!-- 客户端 -->
             <publish-client v-model="primary.client"></publish-client>
+            <el-form-item label="状态" class="m-publish-exam-common">
+                <el-radio-group v-model="primary.status">
+                    <el-radio value="">公开</el-radio>
+                    <el-radio :value="PRIVATE_STATUS">私有</el-radio>
+                </el-radio-group>
+            </el-form-item>
             <el-form-item label="标题" class="m-publish-exam-title">
                 <el-input
                     v-model="primary.title"
@@ -89,30 +95,61 @@ import exam_tags from "@/components/publish/exam_tags.vue";
 import User from "@jx3box/jx3box-common/js/user";
 import { getPaper, createPaper, updatePaper } from "@/service/publish/exam";
 import examData from "@/assets/data/publish/exam.json";
-const { awards, marks, styles } = examData; 
 import { getLink } from "@jx3box/jx3box-common/js/utils";
+const { awards, marks, styles } = examData;
+const DEFAULT_CLIENT = "std";
+const PRIVATE_STATUS = 2;
+
+function getDefaultPrimary() {
+    return {
+        client: DEFAULT_CLIENT,
+        status: "",
+        title: "",
+        desc: "",
+        questionList: [],
+        hardStar: 0,
+        tags: [],
+        corner: "",
+        medalAward: "",
+        style: "default",
+        iframe: "",
+    };
+}
+
+function getFormStatus(status) {
+    return Number(status) === PRIVATE_STATUS ? PRIVATE_STATUS : "";
+}
+
+function hasStatus(status) {
+    return status !== "" && status !== undefined && status !== null;
+}
+
+function getSubmitData(primary, originalStatus) {
+    const data = { ...primary };
+    data.client = data.client || DEFAULT_CLIENT;
+    if (Number(data.status) === PRIVATE_STATUS) {
+        data.status = PRIVATE_STATUS;
+    } else if (hasStatus(originalStatus)) {
+        data.status = originalStatus;
+    } else {
+        delete data.status;
+    }
+    return data;
+}
+
 export default {
     name: "exam_paper",
     props: [],
     data: function () {
         return {
-            primary: {
-                client: "std",
-                title: "",
-                desc: "",
-                questionList: [],
-                hardStar: 0,
-                tags: [],
-                corner: "",
-                medalAward: "",
-                style: "default",
-                iframe: "",
-            },
+            primary: getDefaultPrimary(),
             list: "",
             isSuper: User.isEditor(),
             awards,
             marks,
             styles,
+            PRIVATE_STATUS,
+            originalStatus: "",
             processing: false,
             loading: false,
         };
@@ -126,25 +163,18 @@ export default {
     methods: {
         publish: function () {
             this.processing = true;
-            this.primary.questionList = this.checkList();
-            if (!this.primary.questionList) return;
-            if (this.id) {
-                updatePaper(this.id, this.primary, this)
-                    .then((res) => {
-                        this.success(res);
-                    })
-                    .finally(() => {
-                        this.processing = false;
-                    });
-            } else {
-                createPaper(this.primary, this)
-                    .then((res) => {
-                        this.success(res);
-                    })
-                    .finally(() => {
-                        this.processing = false;
-                    });
-            }
+            const data = getSubmitData(this.primary, this.id ? this.originalStatus : undefined);
+            data.questionList = this.checkList();
+            if (!data.questionList) return;
+            const request = this.id ? updatePaper(this.id, data) : createPaper(data);
+            request
+                .then((res) => {
+                    this.success(res);
+                })
+                .catch(() => {})
+                .finally(() => {
+                    this.processing = false;
+                });
         },
         success: function (res) {
             this.$message({
@@ -160,9 +190,15 @@ export default {
             getPaper(this.id, this)
                 .then((res) => {
                     let data = res.data;
-                    this.primary = data;
-                    this.primary.tags = JSON.parse(data.tags);
-                    this.primary.questionList = JSON.parse(data.questionList);
+                    this.originalStatus = data.status;
+                    this.primary = {
+                        ...getDefaultPrimary(),
+                        ...data,
+                        client: data.client || DEFAULT_CLIENT,
+                        status: getFormStatus(data.status),
+                    };
+                    this.primary.tags = data.tags ? JSON.parse(data.tags) : [];
+                    this.primary.questionList = data.questionList ? JSON.parse(data.questionList) : [];
                     this.list = this.primary.questionList.toString();
                 })
                 .finally(() => {

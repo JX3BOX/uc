@@ -3,6 +3,13 @@
         "radio": "单选题",
         "checkbox": "多选题"
     },
+    "statusmap": {
+        "-2": "已删除",
+        "-1": "未通过审核",
+        "0": "待审核",
+        "1": "已入库",
+        "2": "私有"
+    },
     "styles": [
         { "label": "蓝色", "value": "default" },
         { "label": "绿色", "value": "green" },
