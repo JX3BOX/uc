@@ -3,10 +3,9 @@
         <li v-for="(item, i) in list" :key="i">
             <a class="u-title" target="_blank" :href="postLink(item.id)">
                 <!-- [{{ item.type | typeFormat }}]  -->
-                <i class="u-icon">
-                    <img v-if="item.status != 0" svg-inline src="@/assets/img/publish/works/repo.svg" />
-                    <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" />
-                </i>
+                <el-tag v-if="isPrivate(item)" class="u-private-tag" size="small" effect="plain">
+                    {{ publicmap[0] }}
+                </el-tag>
                 {{ item.title || "无标题" }}
             </a>
             <div class="u-desc">
@@ -22,7 +21,7 @@
                             pending: item.status == 0,
                             fail: item.status < 0 || item.status > 1,
                         }"
-                        >{{ statusmap[item.status] }}</b
+                        >{{ statusFormat(item) }}</b
                     >
                 </span>
                 <time class="u-time u-desc-subitem">提交于: {{ dateFormat(item.createTime) }}</time>
@@ -40,13 +39,14 @@ import examData from "@/assets/data/publish/exam.json";
 import dateFormat from "@/utils/dateFormat";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { deletePaper } from "@/service/publish/exam.js";
-const { types, statusmap } = examData;
+const { types, statusmap, publicmap } = examData;
 export default {
     name: "paper",
     props: ["data"],
     data: function () {
         return {
             statusmap,
+            publicmap,
             list: this.data || [],
         };
     },
@@ -84,6 +84,12 @@ export default {
         typeFormat: function (type) {
             return types[type];
         },
+        isPrivate: function (item) {
+            return item.is_public === 0;
+        },
+        statusFormat: function (item) {
+            return statusmap[item.status];
+        },
     },
 };
 </script>
@@ -104,6 +110,17 @@ export default {
 .m-publish__paper-list{
     .u-title{
         padding:4px 0;
+        gap: 4px;
+    }
+    .u-private-tag {
+        --el-tag-bg-color: fade(@v4primary, 8%);
+        --el-tag-border-color: fade(@v4primary, 35%);
+        --el-tag-text-color: @v4primary;
+        height: 18px;
+        padding: 0 5px;
+        font-size: 11px;
+        line-height: 16px;
+        vertical-align: 1px;
     }
 }
 </style>

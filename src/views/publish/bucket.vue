@@ -99,6 +99,7 @@ export default {
         params() {
             let params = { page: this.page, limit: this.per };
             this.type == "item_plan" ? (params.search = this.search) : (params.title = this.search);
+            if (this.type == "paper" || this.type == "question") params.is_public = -1;
             return params;
         },
     },

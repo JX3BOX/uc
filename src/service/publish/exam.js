@@ -17,7 +17,7 @@ function createPaper(data) {
 }
 
 function updatePaper(id, data) {
-    return $next().put("/api/question/" + "exam-paper/" + id, data);
+    return $next().put("/api/next2/exam-paper/manager/item/" + id, data);
 }
 
 function getPaper(id) {

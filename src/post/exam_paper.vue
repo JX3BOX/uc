@@ -10,9 +10,9 @@
             <!-- 客户端 -->
             <publish-client v-model="primary.client"></publish-client>
             <el-form-item label="状态" class="m-publish-exam-common">
-                <el-radio-group v-model="primary.status">
-                    <el-radio value="">公开</el-radio>
-                    <el-radio :value="PRIVATE_STATUS">私有</el-radio>
+                <el-radio-group v-model="primary.is_public">
+                    <el-radio :value="PUBLIC_VALUE">公开</el-radio>
+                    <el-radio :value="PRIVATE_VALUE">私有</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="标题" class="m-publish-exam-title">
@@ -98,12 +98,13 @@ import examData from "@/assets/data/publish/exam.json";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 const { awards, marks, styles } = examData;
 const DEFAULT_CLIENT = "std";
-const PRIVATE_STATUS = 2;
+const PUBLIC_VALUE = 1;
+const PRIVATE_VALUE = 0;
 
 function getDefaultPrimary() {
     return {
         client: DEFAULT_CLIENT,
-        status: "",
+        is_public: PUBLIC_VALUE,
         title: "",
         desc: "",
         questionList: [],
@@ -116,24 +117,15 @@ function getDefaultPrimary() {
     };
 }
 
-function getFormStatus(status) {
-    return Number(status) === PRIVATE_STATUS ? PRIVATE_STATUS : "";
+function getFormPublic(isPublic) {
+    return Number(isPublic) === PRIVATE_VALUE ? PRIVATE_VALUE : PUBLIC_VALUE;
 }
 
-function hasStatus(status) {
-    return status !== "" && status !== undefined && status !== null;
-}
-
-function getSubmitData(primary, originalStatus) {
+function getSubmitData(primary) {
     const data = { ...primary };
     data.client = data.client || DEFAULT_CLIENT;
-    if (Number(data.status) === PRIVATE_STATUS) {
-        data.status = PRIVATE_STATUS;
-    } else if (hasStatus(originalStatus)) {
-        data.status = originalStatus;
-    } else {
-        delete data.status;
-    }
+    data.is_public = getFormPublic(data.is_public);
+    delete data.status;
     return data;
 }
 
@@ -148,8 +140,8 @@ export default {
             awards,
             marks,
             styles,
-            PRIVATE_STATUS,
-            originalStatus: "",
+            PUBLIC_VALUE,
+            PRIVATE_VALUE,
             processing: false,
             loading: false,
         };
@@ -163,7 +155,7 @@ export default {
     methods: {
         publish: function () {
             this.processing = true;
-            const data = getSubmitData(this.primary, this.id ? this.originalStatus : undefined);
+            const data = getSubmitData(this.primary);
             data.questionList = this.checkList();
             if (!data.questionList) return;
             const request = this.id ? updatePaper(this.id, data) : createPaper(data);
@@ -190,12 +182,11 @@ export default {
             getPaper(this.id, this)
                 .then((res) => {
                     let data = res.data;
-                    this.originalStatus = data.status;
                     this.primary = {
                         ...getDefaultPrimary(),
                         ...data,
                         client: data.client || DEFAULT_CLIENT,
-                        status: getFormStatus(data.status),
+                        is_public: getFormPublic(data.is_public),
                     };
                     this.primary.tags = data.tags ? JSON.parse(data.tags) : [];
                     this.primary.questionList = data.questionList ? JSON.parse(data.questionList) : [];
