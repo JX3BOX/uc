@@ -23,8 +23,8 @@
                 <el-tab-pane v-if="isTeammate" label="已处理" name="resolved" lazy>
                     <pending v-if="active === 'resolved'" :status="10"></pending>
                 </el-tab-pane>
-                <el-tab-pane v-if="isTeammate" label="已结单" name="closed" lazy>
-                    <pending v-if="active === 'closed'" :status="12"></pending>
+                <el-tab-pane v-if="isTeammate" label="已关闭" name="closed" lazy>
+                    <pending v-if="active === 'closed'" :status="11"></pending>
                 </el-tab-pane>
                 <el-tab-pane v-if="isTeammate" label="待指派" name="unassigned" lazy>
                     <pending v-if="active === 'unassigned'" :status="0" :show-user-filters="false"></pending>
