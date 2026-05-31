@@ -27,7 +27,7 @@
                                 <el-dropdown-item @click="handleEdit">
                                     <el-button class="u-btn" type="primary" icon="Edit">编辑</el-button>
                                 </el-dropdown-item>
-                                <el-dropdown-item v-if="data.status === 1" @click="handleTransfer">
+                                <el-dropdown-item @click="handleTransfer">
                                     <el-button class="u-btn" type="warning" icon="Right">转交</el-button>
                                 </el-dropdown-item>
                                 <template v-if="data.status === 2">
