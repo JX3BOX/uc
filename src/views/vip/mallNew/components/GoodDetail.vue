@@ -84,6 +84,7 @@ import Skeleton from "@/views/vip/mallNew/components/skeleton/index.vue";
 import { throttle } from "lodash";
 import { __cdn } from "@/utils/config";
 import { playAddCartFly } from "@/utils/mallCartFly";
+import { resolveMallSkinCategory } from "@/utils/mallDecoration";
 export default {
     name: "GoodMallDetail",
     components: {
@@ -109,7 +110,7 @@ export default {
                 avatar: "头像框",
                 emoticon: "表情包",
                 comment: "评论皮肤",
-                sidebr: "侧边栏主题",
+                sidebar: "侧边栏主题",
                 atcard: "个人名片",
                 calendar: "首页日历",
                 homebg: "主页风格",
@@ -122,12 +123,16 @@ export default {
         },
         goodInfo() {
             if (this.good && this.good.category === "virtual") {
-                if (this.good.sub_category === "skin" && this.good.virtual_stock_item_details) {
+                if (this.good.sub_category === "skin") {
+                    const category = resolveMallSkinCategory(this.good);
+                    if (!category) {
+                        return {
+                            category: this.good.sub_category,
+                        };
+                    }
                     return {
-                        category: this.good.virtual_stock_item_details.category,
-                        img:
-                            __cdn +
-                            `design/decoration/images/${this.good.remark}/${this.good.virtual_stock_item_details.category}.png`,
+                        category,
+                        img: __cdn + `design/decoration/images/${this.good.remark}/${category}.png`,
                     };
                 }
                 if (this.good.sub_category === "palu") {
