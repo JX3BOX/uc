@@ -49,6 +49,34 @@
 
                 <div class="m-whitelist-list u-list" v-if="list && list.length">
                     <div class="u-item" v-for="(item, i) in list" :key="item.kith_id || item.id">
+                        <div class="u-item-actions">
+                            <el-dropdown trigger="click" placement="bottom-end">
+                                <span class="u-item-dropdown" @click.stop>
+                                    <i class="el-icon-more"></i>
+                                </span>
+                                <template #dropdown>
+                                    <el-dropdown-menu>
+                                        <el-dropdown-item v-if="active === 'whitelist'" class="u-item-dropdown-menu">
+                                            <el-popconfirm
+                                                title="确认删除亲友关系吗？"
+                                                @confirm="remove(item.kith_id, i)"
+                                            >
+                                                <template #reference>
+                                                    <span class="u-item-dropdown-action" @click.stop>移除</span>
+                                                </template>
+                                            </el-popconfirm>
+                                        </el-dropdown-item>
+                                        <el-dropdown-item
+                                            v-else
+                                            class="u-item-dropdown-menu"
+                                            @click="removeOther(item)"
+                                        >
+                                            移除
+                                        </el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </template>
+                            </el-dropdown>
+                        </div>
                         <a class="u-item-pic" :href="userLink(item)" target="_blank">
                             <img class="u-item-avatar" :src="showAvatar(getAvatar(item))" />
                         </a>
@@ -60,31 +88,21 @@
                             </span>
                             <span class="u-item-remark u-pending" v-else> <i class="el-icon-loading"></i> 等待确认中... </span>
                         </template>
-                        <div class="u-item-btns">
-                            <template v-if="active === 'whitelist'">
-                                <el-popconfirm title="确认删除亲友关系吗？" @confirm="remove(item.kith_id, i)">
-                                    <template #reference>
-                                        <el-button icon="Delete" size="small">移除</el-button>
-                                    </template>
-                                </el-popconfirm>
-                                <!-- <el-button @click="edit(item.kith_id, item)" icon="Edit" class="u-btn-edit" size="small" type="warning" 
-                                    >编辑</el-button
-                                > -->
-                            </template>
-                            <template v-else>
-                                <el-button @click="removeOther(item)" icon="Delete" class="u-btn-delete" size="small"
-                                    >移除</el-button
-                                >
-                            </template>
+                        <div class="u-item-time" :title="`建立时间：${formatCreatedAt(item)}`">
+                            建立时间：{{ formatCreatedAt(item) }}
                         </div>
                     </div>
                 </div>
                 <el-pagination
+                    class="m-whitelist-pagination"
                     background
                     v-if="active !== 'whitelist'"
-                    hide-on-single-page
-                    :current-page="pagination.pageIndex"
+                    :page-sizes="[10, 20, 50, 100]"
+                    v-model:current-page="pagination.pageIndex"
+                    v-model:page-size="pagination.pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
                     @current-change="currentChange"
+                    @size-change="handleSizeChange"
                     :total="pagination.total"
                 ></el-pagination>
             </template>
@@ -137,6 +155,7 @@ import {
 import { getMyRss, getMySubscribers, removeRssUser, addRssUser, cancelRssUser } from "@/service/dashboard/rss";
 import { getRelationNetTypes, getRelationNetMembersByType, getWaitInvites } from "@/service/dashboard/relation.js";
 import { getUserConf, setUserConf } from "@/service/dashboard/conf";
+import dateFormat from "@/utils/dateFormat";
 import User from "@jx3box/jx3box-common/js/user.js";
 import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import lover from "./lover.vue";
@@ -350,6 +369,11 @@ export default {
         },
         currentChange(val) {
             this.pagination.pageIndex = val;
+            this.loadList();
+        },
+        handleSizeChange(val) {
+            this.pagination.pageSize = val;
+            this.pagination.pageIndex = 1;
             this.loadList();
         },
         // 搜索
@@ -568,6 +592,15 @@ export default {
                 return item.author_info?.display_name;
             }
             return (item.kith_info || item).display_name;
+        },
+        formatCreatedAt(item) {
+            const createdAt = item?.created_at;
+            if (!createdAt) return "--";
+
+            const date = new Date(createdAt);
+            if (isNaN(date.getTime())) return createdAt;
+
+            return dateFormat(date);
         },
         showAvatar: function (val) {
             return showAvatar(val, "m");

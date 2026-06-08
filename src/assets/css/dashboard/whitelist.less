@@ -78,6 +78,7 @@
     }
     .u-item {
         .fl;
+        .pr;
 
         .r(3px);
         background-color: #f9f9f9;
@@ -137,9 +138,41 @@
                 color: #fba524;
             }
         }
-        .u-item-btns {
+        .u-item-actions {
+            .pa;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+        }
+        .u-item-dropdown {
+            .flex;
+            justify-content: center;
+            align-items: center;
+            .size(24px);
+            .r(100%);
+            color: #666;
+            cursor: pointer;
+            transition: 0.2s ease;
+            &:hover {
+                color: @primary;
+                background-color: #f0f0f0;
+            }
+        }
+        .u-item-time {
             .x;
             .mt(10px);
+            min-height: 20px;
+            .fz(12px, 20px);
+            color: #888;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+        }
+        &:hover {
+            .u-item-time {
+                opacity: 1;
+                visibility: visible;
+            }
         }
     }
 
@@ -150,6 +183,19 @@
             color: @v4primary;
         }
     }
+}
+
+:deep(.u-item-dropdown-menu .el-dropdown-menu__item) {
+    padding: 0;
+}
+
+:deep(.u-item-dropdown-action) {
+    display: block;
+    width: 100%;
+    line-height: 36px;
+    padding: 0 16px;
+    cursor: pointer;
+    color: inherit;
 }
 
 .u-list {
@@ -237,6 +283,16 @@
             .w(100%);
             .mr(0);
 
+            .m-whitelist-pagination {
+                display: flex;
+                flex-wrap: nowrap;
+                width: 100%;
+                white-space: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+            }
+
             .u-item {
                 .mr(0);
                 .w(100%);
@@ -256,9 +312,24 @@
                     .x(left);
                 }
 
-                .u-item-btns {
+                .u-item-actions {
+                    top: 8px;
+                    right: 8px;
+                }
+
+                .u-item-time {
+                    opacity: 1;
+                    visibility: visible;
+                    margin-top: 4px;
+                }
+
+                .u-item-time,
+                .u-item-remark {
+                    padding-right: 28px;
+                }
+
+                .u-item-actions {
                     .pa;
-                    .rb(10px);
                 }
             }
         }
