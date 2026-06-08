@@ -97,7 +97,7 @@
                     class="m-whitelist-pagination"
                     background
                     v-if="active !== 'whitelist'"
-                    :page-sizes="[10, 20, 50, 100]"
+                    :page-sizes="[10, 20, 50]"
                     v-model:current-page="pagination.pageIndex"
                     v-model:page-size="pagination.pageSize"
                     layout="total, sizes, prev, pager, next, jumper"
