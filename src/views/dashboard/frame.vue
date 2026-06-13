@@ -114,10 +114,14 @@ export default {
                     message: "头像框更新成功",
                     type: "success",
                 });
-                const params = this.frameList.map((item) => {
-                    return { val: item.name, using: item.using, type: "avatar" };
-                });
-                setDecoration(params);
+                const params = this.frameList
+                    .filter((item) => item.name && item.isHave)
+                    .map((item) => {
+                        return { val: item.name, using: item.using ? 1 : 0, type: "avatar" };
+                    });
+                if (params.length) {
+                    setDecoration(params);
+                }
             });
         },
         receiveFrame(type) {

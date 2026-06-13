@@ -44,11 +44,18 @@ function getHonor(params) {
     return $cms().get("/api/cms/user/config/honor", { params });
 }
 
-function getUserHonors(uid) {
-    return $next({ mute: true })
-        .get("/api/next2/user/" + uid + "/honors")
+function getUserHonors(uid, params = {}) {
+    return $cms()
+        .get("/api/cms/user/honor", {
+            params: {
+                page: 1,
+                per: 1000,
+                ...params,
+            },
+        })
         .then((res) => {
-            return res.data.data;
+            const data = res?.data?.data || {};
+            return Array.isArray(data?.list) ? data.list : Array.isArray(data) ? data : [];
         });
 }
 function setHonor(honor_id) {

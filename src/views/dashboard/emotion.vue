@@ -159,9 +159,13 @@ export default {
                 return {
                     type: "emotion",
                     val: item,
-                    using: this.selectedKeys.includes(item),
+                    using: this.selectedKeys.includes(item) ? 1 : 0,
                 };
             });
+            if (!data.length) {
+                this.loading = false;
+                return;
+            }
             setDecoration(data).then((res) => {
                 this.$message.success("保存成功");
                 this.loading = false;

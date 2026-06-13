@@ -264,14 +264,16 @@ export default {
             let decorationName = "";
             //激活主题
             const _decorations = flatten(this.decoration.map((item) => item.list));
-            const params = _decorations.map((item) => {
-                if (item.using == 1) activateType.push(item.type);
-                return {
-                    val: item.val,
-                    using: item.using,
-                    type: item.type,
-                };
-            });
+            const params = _decorations
+                .filter((item) => item.isHave && item.using == 1)
+                .map((item) => {
+                    activateType.push(item.type);
+                    return {
+                        val: item.val,
+                        using: 1,
+                        type: item.type,
+                    };
+                });
             setDecoration(params).then((data) => {
                 //开始设置主题缓存,设置执行持久缓存，同时设置session,其他库优先获取session,无则获取local,还没数据则请求库所在主题位置接口
                 let decoration_res = {
