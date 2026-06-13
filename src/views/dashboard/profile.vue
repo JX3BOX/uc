@@ -55,7 +55,6 @@
                     size="large"
                     type="date"
                     placeholder="选择日期"
-                    value-format="yyyy-MM-dd"
                     placement="bottom-start"
                     :picker-options="birthday_options"
                 ></el-date-picker>
@@ -174,9 +173,15 @@ export default {
         getProfile() {
             getProfile().then((res) => {
                 let data = res.data.data;
-                let birth = new Date(data.birthday);
-                data.birthday = birth;
-                this.form = data;
+                this.form.jx3_server = data.jx3_server;
+                this.form.user_bio = data.user_bio;
+                this.form.qq_number = data.qq_number;
+                this.form.phone = data.phone;
+                this.form.address = data.address;
+                this.form.tv_id = data.tv_id;
+                this.form.tv_type = data.tv_type;
+                this.form.tuilan_id = data.tuilan_id;
+                this.form.birthday = data.birthday ? new Date(data.birthday) : "";
             });
         },
     },
