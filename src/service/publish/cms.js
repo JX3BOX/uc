@@ -95,6 +95,10 @@ function getDesignTask(params) {
     return $cms().get(`/api/cms/design/task/log`, { params });
 }
 
+function getUpcomingDesignTask(params) {
+    return $cms().get(`/api/cms/design/task/upcoming`, { params });
+}
+
 export {
     pull,
     push,
@@ -111,5 +115,6 @@ export {
     getTopicBucket,
     getConfig,
     getDesignTask,
+    getUpcomingDesignTask,
     pushAdmin,
 };

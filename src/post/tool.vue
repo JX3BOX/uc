@@ -98,6 +98,11 @@
                 <cms-banner v-model="post.post_banner"></cms-banner>
                 <publish-design-task :data="post"></publish-design-task>
             </div>
+            <publish-headline-notice
+                :source-type="post.post_type"
+                :source-id="id"
+                :client="post.client"
+            ></publish-headline-notice>
 
             <div class="m-publish-doc">
                 <el-alert
@@ -163,6 +168,7 @@ import publish_at_authors from "@/components/publish/publish_at_authors.vue";
 import publish_tool_source from "@/components/publish/publish_tool_source.vue";
 import publish_guide from "@/components/publish/publish_guide.vue";
 import publish_reading_history from "@/components/publish/publish_reading_history.vue";
+import publish_headline_notice from "@/components/publish/publish_headline_notice.vue";
 
 // 数据逻辑
 import { push, pushAdmin } from "@/service/publish/cms.js";
@@ -195,6 +201,7 @@ export default {
         "publish-tool-source": publish_tool_source,
         "publish-guide": publish_guide,
         "publish-reading-history": publish_reading_history,
+        "publish-headline-notice": publish_headline_notice,
     },
     data: function () {
         return {

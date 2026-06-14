@@ -133,6 +133,11 @@
                     </div>
                 </div>
             </div>
+            <publish-headline-notice
+                source-type="community"
+                :source-id="id"
+                :client="post.client"
+            ></publish-headline-notice>
 
             <div class="m-publish-doc">
                 <el-alert
@@ -180,6 +185,7 @@ import publish_category from "@/components/publish/publish_category.vue";
 import publish_at_authors from "@/components/publish/publish_at_authors.vue";
 import publish_reading_history from "@/components/publish/publish_reading_history.vue";
 import publish_client from "@/components/publish/publish_client.vue";
+import publish_headline_notice from "@/components/publish/publish_headline_notice.vue";
 
 // 数据逻辑
 import { cmsMetaMixin } from "@/utils/cmsMetaMixin";
@@ -201,6 +207,7 @@ export default {
         "publish-client": publish_client,
         "publish-at-authors": publish_at_authors,
         "publish-reading-history": publish_reading_history,
+        "publish-headline-notice": publish_headline_notice,
     },
     data: function () {
         return {
