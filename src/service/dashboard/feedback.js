@@ -52,6 +52,23 @@ function getFeedbackLog(id) {
 }
 
 /**
+ * 用户取消自己的反馈工单
+ * @param {*} id 反馈id
+ * @param {*} data 取消备注
+ */
+function closeMyFeedback(id, data) {
+    return $next().put(`/api/next2/miscfeedback/my/item/${id}/close`, data);
+}
+
+/**
+ * 用户催促自己的反馈工单
+ * @param {*} id 反馈id
+ */
+function urgeMyFeedback(id) {
+    return $next().post(`/api/next2/miscfeedback/item/${id}/urgent`);
+}
+
+/**
  * 更新反馈
  * @param {*} id 反馈id
  * @param {*} data 更新数据
@@ -97,6 +114,8 @@ export {
     getFeedback,
     getMiscfeedback,
     getFeedbackLog,
+    closeMyFeedback,
+    urgeMyFeedback,
     updateFeedback,
     getTeammates,
     assignMiscFeedback,

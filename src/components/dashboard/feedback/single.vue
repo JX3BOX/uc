@@ -13,35 +13,61 @@
                             <span class="u-value">{{ subtypes[data.subtype] }}</span>
                         </div>
                     </div>
-                    <el-dropdown
-                        v-if="isTeammate && data.status < 12"
-                        split-button
-                        trigger="click"
-                        type="primary"
-                        @click.stop="onDeal"
-                    >
-                        <i class="el-icon-s-tools u-dropdown-icon"></i>
-                        {{ statusText(data.status) }}
-                        <template #dropdown>
-                            <el-dropdown-menu>
-                                <el-dropdown-item @click="handleEdit">
-                                    <el-button class="u-btn" type="primary" icon="Edit">编辑</el-button>
-                                </el-dropdown-item>
-                                <el-dropdown-item @click="handleTransfer">
-                                    <el-button class="u-btn" type="warning" icon="Right">转交</el-button>
-                                </el-dropdown-item>
-                                <template v-if="data.status === 2">
-                                    <el-dropdown-item @click="handleCoordination">
-                                        <el-button class="u-btn" type="success" icon="Help">协同</el-button>
+                    <div class="m-actions" v-if="canCancelTicket || canUrgeTicket || (isTeammate && data.status < 12)">
+                        <el-button
+                            v-if="canCancelTicket"
+                            class="u-action-btn is-cancel"
+                            type="danger"
+                            plain
+                            icon="CircleClose"
+                            :loading="closeTicketLoading"
+                            :disabled="closeTicketLoading"
+                            @click.stop="onCancelTicket"
+                        >
+                            取消工单
+                        </el-button>
+                        <el-button
+                            v-if="canUrgeTicket"
+                            class="u-action-btn is-urgent"
+                            type="warning"
+                            plain
+                            icon="Bell"
+                            :loading="urgeTicketLoading"
+                            :disabled="urgeTicketLoading"
+                            @click.stop="onUrgeTicket"
+                        >
+                            催单
+                        </el-button>
+                        <el-dropdown
+                            v-if="isTeammate && data.status < 12"
+                            split-button
+                            trigger="click"
+                            type="primary"
+                            @click.stop="onDeal"
+                        >
+                            <i class="el-icon-s-tools u-dropdown-icon"></i>
+                            {{ statusText(data.status) }}
+                            <template #dropdown>
+                                <el-dropdown-menu>
+                                    <el-dropdown-item @click="handleEdit">
+                                        <el-button class="u-btn" type="primary" icon="Edit">编辑</el-button>
                                     </el-dropdown-item>
+                                    <el-dropdown-item @click="handleTransfer">
+                                        <el-button class="u-btn" type="warning" icon="Right">转交</el-button>
+                                    </el-dropdown-item>
+                                    <template v-if="data.status === 2">
+                                        <el-dropdown-item @click="handleCoordination">
+                                            <el-button class="u-btn" type="success" icon="Help">协同</el-button>
+                                        </el-dropdown-item>
 
-                                    <el-dropdown-item @click="handleClose">
-                                        <el-button class="u-btn" type="info" icon="CircleClose">关闭 </el-button>
-                                    </el-dropdown-item>
-                                </template>
-                            </el-dropdown-menu>
-                        </template>
-                    </el-dropdown>
+                                        <el-dropdown-item @click="handleClose">
+                                            <el-button class="u-btn" type="info" icon="CircleClose">关闭 </el-button>
+                                        </el-dropdown-item>
+                                    </template>
+                                </el-dropdown-menu>
+                            </template>
+                        </el-dropdown>
+                    </div>
                 </div>
                 <div class="m-block m-user">
                     <div class="u-subblock">
@@ -292,7 +318,7 @@
 
 <script>
 import DOMPurify from "dompurify";
-import { getFeedback, getFeedbackLog } from "@/service/dashboard/feedback";
+import { closeMyFeedback, getFeedback, getFeedbackLog, urgeMyFeedback } from "@/service/dashboard/feedback";
 import { getTeammates } from "@/service/dashboard/index";
 import feedbackData from "@/assets/data/dashboard/feedback.json";
 const { types, subtypes, statusMap, statusColors, statusTypes } = feedbackData;
@@ -348,6 +374,8 @@ export default {
             opType: "assign",
             statusVisible: false,
             isClose: false,
+            closeTicketLoading: false,
+            urgeTicketLoading: false,
         };
     },
     computed: {
@@ -389,6 +417,27 @@ export default {
         },
         videoAttachments() {
             return this.attachments.filter((item) => this.isVideoUrl(item));
+        },
+        isTicketOwner() {
+            const user = User.getInfo();
+            const ownerId = Number(this.data?.user_id || this.data?.user?.id);
+            return User.isLogin() && Number(user?.uid) === ownerId;
+        },
+        isTicketFinalStatus() {
+            return [10, 11, 12].includes(Number(this.data?.status));
+        },
+        hasUrgedTicket() {
+            return Boolean(this.data?.is_urgent);
+        },
+        canCancelTicket() {
+            return this.isTicketOwner && !this.isTicketFinalStatus;
+        },
+        canUrgeTicket() {
+            return (
+                this.isTicketOwner &&
+                ![0, 10, 11, 12].includes(Number(this.data?.status)) &&
+                !this.hasUrgedTicket
+            );
         },
     },
     watch: {
@@ -476,6 +525,52 @@ export default {
         handleClose() {
             this.isClose = true;
             this.statusVisible = true;
+        },
+        async onCancelTicket() {
+            if (!this.canCancelTicket || this.closeTicketLoading) return;
+
+            try {
+                const { value } = await this.$prompt("请输入取消工单的备注", "取消工单", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    inputPlaceholder: "请输入备注",
+                    inputValidator(value) {
+                        return !!String(value || "").trim() || "请输入备注";
+                    },
+                });
+                const remark = String(value || "").trim();
+                this.closeTicketLoading = true;
+                await closeMyFeedback(this.id, { remark });
+                this.$message.success("取消成功");
+                this.load();
+            } catch (error) {
+                if (error !== "cancel" && error !== "close") {
+                    this.$message.error(error?.response?.data?.msg || "取消失败");
+                }
+            } finally {
+                this.closeTicketLoading = false;
+            }
+        },
+        async onUrgeTicket() {
+            if (!this.canUrgeTicket || this.urgeTicketLoading) return;
+
+            try {
+                await this.$confirm("每个工单只有一次催单机会，确定要催单吗？", "催单", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning",
+                });
+                this.urgeTicketLoading = true;
+                await urgeMyFeedback(this.id);
+                this.$message.success("催单成功");
+                this.load();
+            } catch (error) {
+                if (error !== "cancel" && error !== "close") {
+                    this.$message.error(error?.response?.data?.msg || "催单失败");
+                }
+            } finally {
+                this.urgeTicketLoading = false;
+            }
         },
         loadLogs() {
             this.logLoading = true;
