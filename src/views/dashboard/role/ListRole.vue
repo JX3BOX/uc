@@ -30,7 +30,7 @@
                 </el-option>
             </el-select>
             <el-input class="u-name" v-model="name" placeholder="请输入角色名称" size="large">
-                <template #prepend> <i class="el-icon-search"></i> 查找 </template>
+                <template #prepend> <i class="el-icon-search"></i>&nbsp;查找 </template>
             </el-input>
         </div>
         <div class="m-team-rolelist" v-if="data && data.length">
