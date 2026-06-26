@@ -1,8 +1,11 @@
 <template>
     <div class="m-mall-breadcrumb">
-        <div class="left"><img class="icon" :src="imgUrl + 'mall.svg'" alt="" /><a href="/vip/mall">积分商城</a></div>
+        <div class="left">
+            <img class="icon" :src="imgUrl + 'mall.svg'" alt="" />
+            <a href="/vip/mall" class="title">积分商城</a>
+        </div>
         <div class="right">
-            我的资产
+            <span class="asset-title">我的资产</span>
             <div class="lv button">Lv.{{ level }}</div>
             <div class="pro button" v-if="isPro">PRO</div>
             <div class="asset-continer">
@@ -51,6 +54,7 @@ export default {
 <style scoped lang="less">
 .m-mall-breadcrumb {
     width: 100%;
+    min-width: 920px;
     height: 36px;
     display: flex;
     justify-content: space-between;
@@ -61,47 +65,62 @@ export default {
     .left {
         display: flex;
         align-items: center;
-        font-size: 20px;
-        font-weight: 700;
+        flex: none;
+        height: 100%;
+        padding: 0 18px 0 14px;
+        background: linear-gradient(90deg, rgba(255, 143, 26, 0.42), rgba(255, 143, 26, 0));
+        font-size: 18px;
+        font-weight: 800;
         letter-spacing: 0px;
-        line-height: 24px;
         color: rgba(255, 255, 255, 1);
         text-align: center;
         line-height: 36px;
+        white-space: nowrap;
         .icon {
-            width: 28px;
-            height: 28px;
-            margin: 0 4px 0 12px;
+            width: 24px;
+            height: 24px;
+            margin: 0 8px 0 0;
         }
-        a{
-            color:#fff;
+        .title {
+            color: #fff;
+            text-shadow: 0 1px 0 rgba(0, 0, 0, 0.22);
+            &:hover {
+                color: rgba(255, 236, 190, 1);
+            }
         }
     }
     .right {
-        height: 20px;
+        height: 100%;
         opacity: 1;
         display: flex;
         justify-content: flex-end;
         align-items: center;
+        gap: 12px;
+        flex: none;
+        padding-right: 18px;
         font-size: 12px;
-        font-weight: 400;
+        font-weight: 700;
         letter-spacing: 0px;
         line-height: 20px;
         color: rgba(255, 255, 255, 1);
+        white-space: nowrap;
+        .asset-title {
+            color: rgba(255, 255, 255, 0.94);
+        }
         .button {
-            width: 32px;
+            min-width: 40px;
             height: 18px;
             border-radius: 2px;
             text-align: center;
             line-height: 18px;
+            padding: 0 6px;
+            box-sizing: border-box;
         }
         .lv {
             background: rgba(255, 167, 57, 1);
-            margin: 0 12px;
         }
         .pro {
             background: rgba(111, 66, 193, 1);
-            margin-right: 12px;
         }
         .asset-continer {
             display: flex;
@@ -109,6 +128,7 @@ export default {
             align-items: center;
             .item {
                 min-width: 175px;
+                height: 22px;
                 border-radius: 4px;
                 background: rgba(255, 255, 255, 0.1);
                 display: flex;

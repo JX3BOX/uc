@@ -1,7 +1,8 @@
 <template>
     <div class="good-item" @click="changeSelectItem(good)">
         <div class="good-item-image">
-            <img :src="good.goods_images[0]" alt="" class="good-item-img" />
+            <img v-if="previewImage" :src="previewImage" alt="" class="good-item-img" />
+            <div v-else class="good-item-img u-good-image-null">暂无图片</div>
             <span v-if="good.has_owned" class="u-owned-tag">已拥有</span>
         </div>
         <div class="right">
@@ -66,6 +67,11 @@ export default {
             required: true,
         },
     },
+    computed: {
+        previewImage() {
+            return this.good.goods_images?.[0] || "";
+        },
+    },
     methods: {
         getLevel(exp_limit) {
             return User.getLevel(exp_limit);
@@ -96,7 +102,7 @@ export default {
                 });
         }, 1000),
         fly(e) {
-            playAddCartFly(e, this.$store.state.mallNew.boundCart, { image: this.good.goods_images?.[0] });
+            playAddCartFly(e, this.$store.state.mallNew.boundCart, { image: this.previewImage });
         },
     },
 };
@@ -128,6 +134,14 @@ export default {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+        .u-good-image-null {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
         }
         .u-owned-tag {
             position: absolute;

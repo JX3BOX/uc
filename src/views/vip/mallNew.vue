@@ -50,5 +50,13 @@ export default {
     position: sticky;
     top: 60px;
     z-index: 100;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 </style>

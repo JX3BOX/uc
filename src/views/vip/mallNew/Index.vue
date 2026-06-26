@@ -98,6 +98,8 @@ export default {
             handler(val) {
                 if (val) {
                     this.getData({ id: val });
+                } else if (this.goodsList.length) {
+                    this.selectFirstGood();
                 }
             },
         },
@@ -141,7 +143,7 @@ export default {
                 return;
             }
             if (Object.prototype.hasOwnProperty.call(this.query, key) && value !== undefined && value !== "") {
-                this.query[key] = value;
+                this.query[key] = ["pageIndex", "pageSize", "level", "vip_limit"].includes(key) ? Number(value) : value;
             }
         });
         this.handleResize(false);
@@ -185,8 +187,15 @@ export default {
         normalizeGood(item = {}) {
             return {
                 ...item,
+                goods_images: Array.isArray(item.goods_images) ? item.goods_images : [],
                 has_owned: this.hasOwnedGood(item),
             };
+        },
+        decorateGood(item = {}) {
+            const good = this.normalizeGood(item);
+            good.canBuy = this.checkCanBuy(good);
+            good.isHave = good.has_owned;
+            return good;
         },
         loadData() {
             const query = this.buildQuery();
@@ -196,6 +205,9 @@ export default {
                 if (res.data.data.page) {
                     this.query.pageIndex = res.data.data.page.index;
                     this.query.pageSize = res.data.data.page.pageSize;
+                }
+                if (!this.id) {
+                    this.selectFirstGood();
                 }
             });
         },
@@ -210,7 +222,31 @@ export default {
             if (!isChangePage) {
                 this.query.pageIndex = 1;
             }
+            this.syncRouteQuery();
             this.loadData();
+        },
+        buildRouteQuery() {
+            const routeQuery = {};
+            if (this.query.title) routeQuery.search = this.query.title;
+            if (this.query.category) routeQuery.category = this.query.category;
+            if (this.query.sub_category) routeQuery.sub_category = this.query.sub_category;
+            if (this.query.level && this.query.level != 0) routeQuery.level = this.query.level;
+            if (this.query.vip_limit !== null && this.query.vip_limit !== "" && this.query.vip_limit != -1) {
+                routeQuery.vip_limit = this.query.vip_limit;
+            }
+            if (this.query.only_unowned) routeQuery.no_buy = 1;
+            if (this.query.pageIndex > 1) routeQuery.pageIndex = this.query.pageIndex;
+            return routeQuery;
+        },
+        syncRouteQuery() {
+            const query = this.buildRouteQuery();
+            const name = this.id ? "mall_list_new_id" : "mall_list_new";
+            const params = this.id ? { id: this.id } : {};
+            this.$router.replace({ name, params, query }).catch(() => {});
+        },
+        selectFirstGood() {
+            const first = this.goodsList[0];
+            this.selectItem = first ? this.decorateGood(first) : null;
         },
         checkCanBuy(item) {
             const obj = {
@@ -252,15 +288,12 @@ export default {
         },
         getData(item) {
             getItem(item.id).then((res) => {
-                const good = this.normalizeGood(res.data.data || {});
-                good.canBuy = this.checkCanBuy(good);
-                good.isHave = good.has_owned;
-                this.selectItem = good;
+                this.selectItem = this.decorateGood(res.data.data || {});
             });
         },
         changeSelectItem(item) {
             if (item.id === this.selectItem?.id) return;
-            this.$router.push({ name: "mall_list_new_id", params: { id: item.id } });
+            this.$router.push({ name: "mall_list_new_id", params: { id: item.id }, query: this.buildRouteQuery() });
         },
         handleResize(shouldLoad = true) {
             const width = window.innerWidth < 1550 ? 5 : 10;

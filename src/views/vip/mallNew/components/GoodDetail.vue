@@ -19,7 +19,8 @@
                 <div v-if="goodInfo.img" class="skeleton-container">
                     <Skeleton :category="goodInfo.category" :img="goodInfo.img"></Skeleton>
                 </div>
-                <img :src="good.goods_images[0]" v-else class="u-good-image" />
+                <img v-if="previewImage" :src="previewImage" class="u-good-image" />
+                <div v-else class="u-good-image u-good-image-null">暂无图片</div>
             </div>
         </div>
         <div class="buy-detail">
@@ -121,6 +122,9 @@ export default {
         id() {
             return this.good.id;
         },
+        previewImage() {
+            return this.good.goods_images?.[0] || "";
+        },
         goodInfo() {
             if (this.good && this.good.category === "virtual") {
                 if (this.good.sub_category === "skin") {
@@ -173,7 +177,7 @@ export default {
                 });
         }, 1000),
         fly(e) {
-            playAddCartFly(e, this.$store.state.mallNew.boundCart, { image: this.good.goods_images?.[0] });
+            playAddCartFly(e, this.$store.state.mallNew.boundCart, { image: this.previewImage });
         },
     },
 };
@@ -251,6 +255,14 @@ export default {
             width: 400px;
             height: 400px;
             object-fit: cover;
+        }
+        .u-good-image-null {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.68);
+            font-size: 14px;
         }
         .u-owned-tag {
             position: absolute;
