@@ -9,8 +9,8 @@
         "key": "entity",
         "icon": "el-icon-s-goods",
         "sub_category": [
-            { "name": "定制纪念品", "key": "jdt" },
-            { "name": "其它", "key": "other" }
+            { "name": "魔盒纪念品", "key": "jdt" },
+            { "name": "友情赞助", "key": "other" }
         ]
     },
     {
@@ -23,22 +23,6 @@
             { "name": "头像框", "key": "avatar" },
             { "name": "表情包", "key": "emotion" },
             { "name": "激活码", "key": "codesn" }
-        ]
-    },
-    {
-        "name": "系统",
-        "key": "system",
-        "icon": "el-icon-s-finance",
-        "sub_category": [
-            { "name": "专业版", "key": "vip", "link": "/vip/premium", "target": "_blank" },
-            { "name": "改名卡", "key": "rename2", "link": "/vip/rename", "target": "_blank" },
-            { "name": "铭牌", "key": "namespace2", "link": "/vip/namespace", "target": "_blank" },
-            {
-                "name": "点月卡",
-                "key": "dianyueka",
-                "link": "https://charge.xoyo.com/pay?item=jx3&__from=jx3box",
-                "target": "_blank"
-            }
         ]
     }
 ]

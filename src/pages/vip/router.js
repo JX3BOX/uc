@@ -258,12 +258,6 @@ router.beforeEach((to, from, next) => {
     if (to.fullPath.includes("/#")) {
         return next(to.fullPath.replace("/#", ""));
     }
-    if ((to.name === "mall_list_new" || to.name === "mall_list_new_id") && window.innerWidth < 750) {
-        return next({
-            path: to.params.id ? `/mallWeb/${to.params.id}` : "/mallWeb/list",
-            query: to.query,
-        });
-    }
     return next();
 });
 

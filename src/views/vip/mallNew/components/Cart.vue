@@ -416,4 +416,13 @@ export default {
         }
     }
 }
+
+@media screen and (max-width: 750px) {
+    .cart {
+        width: min(100vw, 375px);
+        height: calc(100vh - 104px);
+        right: max(-100vw, -375px);
+        top: 104px;
+    }
+}
 </style>

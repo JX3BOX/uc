@@ -4,20 +4,11 @@
             <i class="el-icon-s-fold"></i>
         </div>
         <div class="u-item" v-for="(item, i) in types" :key="i">
-            <!-- 分组名 -->
-            <div
-                :class="{ 'u-title': true, active: query.category == item.key }"
-                @click="itemLinkClick(item.key)"
-                v-if="item.key != 'system'"
-            >
+            <div :class="{ 'u-title': true, active: query.category == item.key }" @click="itemLinkClick(item.key)">
                 <i class="u-icon" :class="item.icon"></i> {{ item.name }}
             </div>
-            <span v-else class="u-title" :class="query.category == item.key ? 'active' : ''" style="cursor: default"
-                ><i class="u-icon" :class="item.icon"></i> {{ item.name }}</span
-            >
 
-            <!-- 子列表 -->
-            <div class="u-children-list" v-if="item.key != 'system'">
+            <div class="u-children-list" v-if="item.sub_category?.length">
                 <div
                     :class="{ 'u-child': true, active: query.sub_category == child.key }"
                     v-for="(child, key) in item.sub_category"
@@ -32,26 +23,6 @@
                     />
                     {{ child.name }}
                 </div>
-            </div>
-            <div class="u-children-list" v-else>
-                <a
-                    :href="child.link"
-                    :target="child.target"
-                    class="u-child"
-                    v-for="(child, key) in item.sub_category"
-                    :key="key"
-                    :class="
-                        query.sub_category == child.key ? 'active' : query.sub_category == child.key ? 'active' : ''
-                    "
-                >
-                    <img
-                        svg-inline
-                        :src="
-                            require(`@/assets/img/vip/mall/icon_0${query.sub_category !== child.key ? '1' : '2'}.svg`)
-                        "
-                    />
-                    {{ child.name }}
-                </a>
             </div>
         </div>
     </div>

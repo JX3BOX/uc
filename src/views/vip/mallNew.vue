@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div class="p-mall">
         <CommonHeader :key="currentKey"></CommonHeader>
         <div class="m-mall-breadcrumb-container">
             <MallBreadcrumb></MallBreadcrumb>
@@ -42,7 +42,14 @@ export default {
     },
 };
 </script>
-<style lang="less" scoped>
+<style lang="less">
+html {
+    font-size: calc(min(18px, (100vw / 414 * 16)));
+}
+.p-mall {
+    font-size: 1rem;
+}
+
 .m-mall-breadcrumb-container {
     background: black;
     margin-top: 60px;
@@ -57,6 +64,12 @@ export default {
 
     &::-webkit-scrollbar {
         display: none;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .m-mall-breadcrumb-container {
+        height: 2.75rem;
     }
 }
 </style>

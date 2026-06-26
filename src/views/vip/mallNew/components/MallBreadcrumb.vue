@@ -152,4 +152,47 @@ export default {
         }
     }
 }
+
+@media screen and (max-width: 750px) {
+    .m-mall-breadcrumb {
+        min-width: 0;
+        height: 2.75rem;
+        background: linear-gradient(90deg, rgba(255, 141, 26, 1) 0%, rgba(196, 98, 0, 0.42) 58%, rgba(56, 43, 0, 0) 100%);
+
+        .left {
+            height: 2.75rem;
+            padding: 0 0.75rem;
+            font-size: 1.125rem;
+            line-height: 2.75rem;
+            font-weight: 780;
+
+            .icon {
+                width: 1.5rem;
+                height: 1.5rem;
+                margin-right: 0.375rem;
+            }
+        }
+
+        .right {
+            gap: 0.375rem;
+            padding-right: 0.625rem;
+            font-size: 0;
+
+            .asset-title {
+                display: none;
+            }
+
+            .button {
+                min-width: 2.25rem;
+                height: 1.375rem;
+                line-height: 1.375rem;
+                font-size: 0.75rem;
+            }
+
+            .asset-continer {
+                display: none;
+            }
+        }
+    }
+}
 </style>

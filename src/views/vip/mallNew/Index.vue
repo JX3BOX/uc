@@ -1,8 +1,11 @@
 <template>
     <div class="m-mall-box">
-        <MallNav :list="list" @changeNav="isShowNav = !isShowNav" :isShowNav="isShowNav"></MallNav>
+        <MallNav :list="list" :loading="isLoading" @changeNav="isShowNav = !isShowNav" :isShowNav="isShowNav"></MallNav>
         <GoodDetail v-if="selectItem" :good="selectItem || {}" :isShowNav="isShowNav"></GoodDetail>
-        <div class="box-right">
+        <div v-else class="mall-detail-empty">
+            <el-empty description="请选择左侧商品查看详情"></el-empty>
+        </div>
+        <aside class="box-right">
             <div class="cart">
                 <div class="cart-container">
                     <div class="cart-content">
@@ -54,9 +57,12 @@
                     <div class="arrow"></div>
                 </div>
             </div>
-            <Cart></Cart>
             <img :src="imgUrl + 'girl.png'" alt="" class="girl" />
-        </div>
+        </aside>
+        <Cart></Cart>
+        <button class="mobile-cart-button" type="button" @click="$store.dispatch('mallNew/changeCartIsShow', true)">
+            <img :src="imgUrl + 'cart.svg'" alt="" />
+        </button>
         <CartConfirm></CartConfirm>
     </div>
 </template>
@@ -77,19 +83,22 @@ export default {
             imgUrl: __cdn + "design/mall/",
             goodsList: [],
             selectItem: null,
+            isLoading: false,
+            loadSeq: 0,
 
             query: {
                 pageSize: 10,
                 pageIndex: 1,
-                level: null,
-                vip_limit: null,
+                level: 0,
+                vip_limit: -1,
                 title: "",
                 category: "",
                 sub_category: "",
                 only_unowned: false,
                 total: 0,
             },
-            isShowNav: true,
+            isShowNav:
+                typeof window === "undefined" ? true : !window.matchMedia || window.matchMedia("(min-width: 751px)").matches,
         };
     },
     watch: {
@@ -157,25 +166,30 @@ export default {
     methods: {
         // 格式化参数
         buildQuery() {
-            const _query = {};
-            for (let key in this.query) {
-                if (this.query[key] !== undefined && this.query[key] !== "" && this.query[key] !== null) {
-                    if (key === "only_unowned") {
-                        const onlyUnowned = this.query.only_unowned;
-                        _query.no_buy = onlyUnowned ? 1 : "";
-                    } else if (key === "level" && this.query.level != 0) {
-                        _query.exp_limit = __userLevel[this.query.level]?.[0];
-                        _query.exp_limit_max = __userLevel[this.query.level]?.[1] - 1 || "";
-                    } else {
-                        _query[key] = this.query[key];
-                    }
-                }
+            const params = {
+                pageIndex: this.query.pageIndex,
+                pageSize: this.query.pageSize,
+            };
+            const title = String(this.query.title || "").trim();
+
+            if (title) params.title = title;
+            if (this.query.category) params.category = this.query.category;
+            if (this.query.sub_category) params.sub_category = this.query.sub_category;
+            if (this.query.only_unowned) params.no_buy = 1;
+
+            if (this.query.level && this.query.level != 0) {
+                params.exp_limit = __userLevel[this.query.level]?.[0];
+                params.exp_limit_max = __userLevel[this.query.level]?.[1] - 1 || "";
             }
-            delete _query.total;
-            if (_query.no_buy === "") delete _query.no_buy;
-            return _query;
+
+            if (this.query.vip_limit !== null && this.query.vip_limit !== "" && this.query.vip_limit != -1) {
+                params.vip_limit = this.query.vip_limit;
+            }
+
+            return params;
         },
         hasOwnedGood(item = {}) {
+            if (!User.isLogin()) return false;
             const raw = item.ext_info?.has_buy;
 
             if (raw !== undefined && raw !== null) {
@@ -197,19 +211,35 @@ export default {
             good.isHave = good.has_owned;
             return good;
         },
-        loadData() {
+        async loadData() {
+            const seq = ++this.loadSeq;
             const query = this.buildQuery();
-            getItemList(query).then((res) => {
-                this.goodsList = (res.data.data?.list || []).map((item) => this.normalizeGood(item));
-                this.query.total = res.data.data.page?.total || 0;
-                if (res.data.data.page) {
-                    this.query.pageIndex = res.data.data.page.index;
-                    this.query.pageSize = res.data.data.page.pageSize;
+            this.isLoading = true;
+
+            try {
+                const res = await getItemList(query);
+                if (seq !== this.loadSeq) return;
+
+                const data = res.data.data || {};
+                this.goodsList = (data.list || []).map((item) => this.normalizeGood(item));
+                this.query.total = data.page?.total || 0;
+                if (data.page) {
+                    this.query.pageIndex = data.page.index;
+                    this.query.pageSize = data.page.pageSize;
                 }
                 if (!this.id) {
                     this.selectFirstGood();
                 }
-            });
+            } catch (err) {
+                if (seq !== this.loadSeq) return;
+                this.goodsList = [];
+                this.query.total = 0;
+                this.$message.error("商品列表加载失败");
+            } finally {
+                if (seq === this.loadSeq) {
+                    this.isLoading = false;
+                }
+            }
         },
         changeQuery(key, value, isChangePage) {
             if (Array.isArray(key)) {
@@ -257,13 +287,8 @@ export default {
                 level: true,
                 user_level: User.getLevel(item.exp_limit),
                 buy_time: true,
-                owned: true,
             };
             const time = new Date().getTime();
-            if (item.has_owned) {
-                obj.canBuy = false;
-                obj.owned = false;
-            }
             if (item.vip_limit === 1 && !User._isPRO(this.asset)) {
                 obj.canBuy = false;
                 obj.vip_limit = false;
@@ -296,7 +321,7 @@ export default {
             this.$router.push({ name: "mall_list_new_id", params: { id: item.id }, query: this.buildRouteQuery() });
         },
         handleResize(shouldLoad = true) {
-            const width = window.innerWidth < 1550 ? 5 : 10;
+            const width = window.innerWidth < 751 ? 10 : window.innerWidth < 1550 ? 5 : 10;
             if (width !== this.query.pageSize) {
                 this.query.pageSize = width;
                 if (shouldLoad) {
@@ -305,7 +330,12 @@ export default {
             }
         },
         getBoundCart: debounce(function () {
-            const { left, top } = document.getElementById("cartBtn").getBoundingClientRect();
+            const cartBtn = Array.from(document.querySelectorAll("#cartBtn, .mobile-cart-button")).find((item) => {
+                const rect = item.getBoundingClientRect();
+                return rect.width > 0 && rect.height > 0;
+            });
+            if (!cartBtn) return;
+            const { left, top } = cartBtn.getBoundingClientRect();
             this.$store.dispatch("mallNew/setBoundCart", { left: left + 10, top: top });
         }, 500),
     },
@@ -324,15 +354,36 @@ export default {
     min-height: calc(100vh - 96px);
     background: url("@{design}mall/bg.png") no-repeat center center;
     background-size: 100% 100%;
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: scroll;
+    display: grid;
+    grid-template-columns: auto minmax(500px, 1fr) 292px;
+    align-items: start;
+    overflow-x: auto;
     scrollbar-width: none;
+    position: relative;
+    isolation: isolate;
+
+    .mall-detail-empty {
+        min-height: calc(100vh - 96px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255, 255, 255, 0.72);
+
+        .el-empty__description p {
+            color: rgba(255, 255, 255, 0.72);
+        }
+    }
+
     .box-right {
         width: 292px;
-        position: fixed;
-        right: 0;
-        bottom: 0;
+        position: sticky;
+        top: 96px;
+        align-self: end;
+        z-index: 2;
+        min-height: calc(100vh - 96px);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
         .girl {
             width: 220px;
             height: 265px;
@@ -436,6 +487,54 @@ export default {
                     width: 0;
                     margin: 0 auto;
                 }
+            }
+        }
+    }
+
+    .mobile-cart-button {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1550px) {
+    .m-mall-box {
+        grid-template-columns: auto minmax(500px, 1fr) 292px;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .m-mall-box {
+        min-height: calc(100vh - 6.5rem);
+        display: block;
+        overflow-x: hidden;
+        background: #070f1c;
+        padding: 0.75rem;
+        box-sizing: border-box;
+
+        .good-detail,
+        .mall-detail-empty,
+        .box-right {
+            display: none;
+        }
+
+        .mobile-cart-button {
+            width: 3.75rem;
+            height: 3.75rem;
+            border: 0;
+            border-radius: 50%;
+            background: rgba(255, 163, 43, 1);
+            position: fixed;
+            left: 0.875rem;
+            bottom: 0.875rem;
+            z-index: 80;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.24);
+
+            img {
+                width: 1.875rem;
+                height: 1.875rem;
             }
         }
     }
