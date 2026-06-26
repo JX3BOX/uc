@@ -896,9 +896,13 @@ export default {
         --list-width: 700px;
         --sidebar-width: 180px;
         --sidebar-collapsed-width: 56px;
+        width: 100%;
     }
 
     .mall-list-panel {
+        width: auto;
+        min-width: 0;
+        flex: 1;
         padding: 12px;
     }
 

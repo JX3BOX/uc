@@ -19,7 +19,10 @@
                     全选&nbsp;({{ $store.getters["mallNew/checked_num"] }}/{{ $store.getters["mallNew/num"] }})
                 </div>
             </div>
-            <el-button type="info" plain @click="handleClear">清空</el-button>
+            <el-button type="info" plain size="small" @click="handleClear">
+                <i class="el-icon-delete"></i>
+                清空
+            </el-button>
         </div>
         <div class="m-cart-items">
             <div class="cart-empty" v-if="!list.length">
@@ -37,11 +40,11 @@
                         >
                             <i class="el-icon-check"></i>
                         </div>
-                        <img class="c-img" :src="item.goods.goods_images[0]" alt="" />
+                        <img class="c-img" :src="normalizeImageUrl(item.goods.goods_images?.[0])" alt="" />
                         <div class="c-info">
                             <div class="c-name">{{ item.goods.title }}</div>
                             <div class="c-goods-info">
-                                <div class="c-stepper" v-if="canAddMultipleGoods(item.goods)">
+                                <div class="c-stepper" v-if="item.can_buy !== 0 && canAddMultipleGoods(item.goods)">
                                     <button
                                         type="button"
                                         :disabled="item.amount <= 1"
@@ -66,13 +69,13 @@
                                     <img src="@/assets/img/vip/vip2/box_icon.svg" alt="" class="icon" svg-inline />
                                     {{ item.goods.price_boxcoin }}
                                 </span>
+                                <div class="bottom" v-if="item.can_buy === 0">{{ item.cannot_buy_reason }}</div>
                             </div>
                         </div>
-                        <div class="delete" @click="$store.dispatch('mallNew/deleteCartGoods', item.id)">
+                        <div class="delete" @click="deleteItem(item.id)">
                             <i class="el-icon-close"></i>
                         </div>
                     </div>
-                    <div class="bottom" v-if="item.can_buy === 0">{{ item.cannot_buy_reason }}</div>
                 </div>
             </template>
         </div>
@@ -119,6 +122,8 @@ import { __cdn } from "@/utils/config";
 import { debounce } from "lodash";
 import moment from "moment";
 import { canAddMultipleMallGoods } from "@/utils/mallCartLimit";
+import { resolveImagePath } from "@jx3box/jx3box-common/js/utils";
+import User from "@jx3box/jx3box-common/js/user";
 export default {
     name: "Cart",
     data() {
@@ -162,10 +167,18 @@ export default {
         },
     },
     mounted() {
-        this.$store.commit("mallNew/toState", { cart: this.list });
+        if (User.isLogin()) {
+            this.$store.commit("mallNew/toState", { cart: this.list });
+        }
     },
     methods: {
+        requireLogin() {
+            if (User.isLogin()) return true;
+            User.toLogin();
+            return false;
+        },
         allChange() {
+            if (!this.requireLogin()) return;
             const boolen = this.isAll;
             this.list.forEach((item) => {
                 item.checked = item.can_buy && !boolen;
@@ -173,18 +186,25 @@ export default {
             this.$store.commit("mallNew/toState", { cart: this.list });
         },
         handleClear() {
+            if (!this.requireLogin()) return;
             this.$store.dispatch("mallNew/clearCart");
+        },
+        deleteItem(id) {
+            if (!this.requireLogin()) return;
+            this.$store.dispatch("mallNew/deleteCartGoods", id);
         },
         closeCart() {
             this.$store.dispatch("mallNew/changeCartIsShow", false);
         },
         checkout() {
+            if (!this.requireLogin()) return;
             if (!this.$store.getters["mallNew/checked_num"]) {
                 return this.$message.warning("请先选择要结算的商品");
             }
             this.$store.dispatch("mallNew/changeCartConfirmIsShow", true);
         },
         itemChecked(item) {
+            if (!this.requireLogin()) return;
             if (item.can_buy === 0) return;
             this.list.forEach((i) => {
                 if (i.id === item.id) {
@@ -194,12 +214,14 @@ export default {
             this.$store.commit("mallNew/toState", { cart: this.list });
         },
         itemChange: debounce(function (item, val) {
+            if (!this.requireLogin()) return;
             this.$store.dispatch("mallNew/updateGoodsNum", {
                 shopping_item_id: item.id,
                 amount: val,
             });
         }, 500),
         changeAmount(item, delta) {
+            if (!this.requireLogin()) return;
             const stock = Number(item.goods?.stock) || 1;
             const next = Math.min(stock, Math.max(1, Number(item.amount) + delta));
             if (next === item.amount) return;
@@ -208,6 +230,14 @@ export default {
         },
         canAddMultipleGoods(good) {
             return canAddMultipleMallGoods(good);
+        },
+        normalizeImageUrl(url) {
+            const value = String(url || "").trim();
+            if (!value) return "";
+            if (/^(?:data:|blob:)/i.test(value)) return value;
+            if (value.startsWith("//")) return resolveImagePath(`https:${value}`);
+            if (/^https?:\/\//i.test(value)) return resolveImagePath(value);
+            return resolveImagePath(`${__cdn}${value.replace(/^\/+/, "")}`);
         },
     },
 };
@@ -222,22 +252,26 @@ export default {
     backdrop-filter: blur(2px);
 }
 .cart {
-    width: 390px;
+    width: 408px;
     height: calc(100vh - 96px);
     background: #f7f8fb;
     position: fixed;
-    right: -390px;
+    right: -408px;
     top: 96px;
     z-index: 1000;
     transition:
         transform 0.28s ease,
         box-shadow 0.28s ease;
     box-sizing: border-box;
-    padding: 18px;
+    padding: 18px 16px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    box-shadow: -16px 0 42px rgba(0, 0, 0, 0.22);
+    border-left: 1px solid rgba(255, 255, 255, 0.68);
+    border-radius: 18px 0 0 18px;
+    box-shadow:
+        -26px 0 54px rgba(0, 0, 0, 0.34),
+        -1px 0 0 rgba(36, 41, 46, 0.08);
     &.show {
         transform: translateX(-100%);
     }
@@ -246,34 +280,36 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        padding-bottom: 14px;
+        padding-bottom: 10px;
         border-bottom: 1px solid rgba(36, 41, 46, 0.1);
 
         .cart-title-text {
-            font-size: 20px;
+            font-size: 17px;
             font-weight: 800;
-            line-height: 28px;
+            line-height: 24px;
             color: rgba(36, 41, 46, 1);
         }
 
         .cart-title-sub {
             margin-top: 2px;
-            font-size: 12px;
-            line-height: 18px;
+            font-size: 11px;
+            line-height: 16px;
             color: rgba(93, 99, 110, 0.78);
         }
 
         .cart-close {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border: 0;
-            border-radius: 10px;
+            border-radius: 8px;
             background: transparent;
             color: rgba(36, 41, 46, 0.72);
+            font-size: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            margin-top: -2px;
             transition:
                 background 0.16s ease,
                 color 0.16s ease;
@@ -290,20 +326,20 @@ export default {
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        min-height: 38px;
-        margin: 12px 0;
+        min-height: 30px;
+        margin: 8px 0 10px;
         .u-check-all-box {
             display: flex;
             align-items: center;
             gap: 8px;
             .u-check-all {
-                width: 18px;
-                height: 18px;
+                width: 16px;
+                height: 16px;
                 border-radius: 50%;
                 border: none;
                 color: #fff;
-                font-size: 12px;
-                line-height: 18px;
+                font-size: 11px;
+                line-height: 16px;
                 background: rgba(36, 41, 46, 0.18);
                 text-align: center;
                 cursor: pointer;
@@ -313,18 +349,23 @@ export default {
                 }
             }
             .box-text {
-                font-size: 15px;
+                font-size: 12px;
                 font-weight: 700;
-                line-height: 22px;
+                line-height: 18px;
                 color: rgba(36, 41, 46, 1);
             }
         }
         :deep(.el-button) {
-            height: 32px;
-            padding: 0 14px;
-            border-radius: 9px;
-            font-size: 13px;
+            height: 24px;
+            padding: 0 8px;
+            border-radius: 8px;
+            font-size: 11px;
             font-weight: 700;
+
+            i {
+                margin-right: 3px;
+                font-size: 12px;
+            }
         }
     }
     .m-cart-items {
@@ -332,10 +373,14 @@ export default {
         min-height: 0;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 8px;
         overflow: auto;
         scrollbar-width: none;
-        padding: 2px 2px 12px;
+        padding: 8px 8px 12px;
+        border-radius: 14px;
+        background: rgba(36, 41, 46, 0.035);
+        border: 1px solid rgba(36, 41, 46, 0.045);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
 
         &::-webkit-scrollbar {
             display: none;
@@ -382,28 +427,31 @@ export default {
         .m-cart-item {
             width: 100%;
             box-sizing: border-box;
+            position: relative;
             background: #fff;
-            padding: 12px;
-            border: 1px solid rgba(36, 41, 46, 0.08);
-            border-radius: 14px;
-            box-shadow: 0 8px 20px rgba(9, 17, 30, 0.06);
+            padding: 10px;
+            min-height: 76px;
+            border: 1px solid rgba(36, 41, 46, 0.07);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(9, 17, 30, 0.035);
             &.cannotBuy {
-                border-color: rgba(255, 141, 26, 0.34);
-                background: linear-gradient(180deg, #fff 0%, rgba(255, 141, 26, 0.05) 100%);
+                border-color: rgba(255, 141, 26, 0.16);
+                background: #fff;
             }
             .top {
                 display: flex;
                 gap: 10px;
                 align-items: flex-start;
+                position: relative;
                 .c-check {
                     flex: none;
-                    width: 18px;
-                    height: 18px;
+                    width: 16px;
+                    height: 16px;
                     border-radius: 50%;
                     border: none;
                     color: #fff;
-                    font-size: 12px;
-                    line-height: 18px;
+                    font-size: 11px;
+                    line-height: 16px;
                     background: rgba(36, 41, 46, 0.18);
                     text-align: center;
                     cursor: pointer;
@@ -418,8 +466,8 @@ export default {
                 }
                 .c-img {
                     flex: none;
-                    width: 46px;
-                    height: 46px;
+                    width: 44px;
+                    height: 44px;
                     border-radius: 8px;
                     object-fit: cover;
                     background: rgba(36, 41, 46, 0.08);
@@ -429,33 +477,39 @@ export default {
                     min-width: 0;
                     display: flex;
                     flex-direction: column;
-                    justify-content: space-between;
                     gap: 8px;
                     .c-name {
-                        font-size: 14px;
+                        font-size: 12px;
                         font-weight: 700;
-                        line-height: 20px;
-                        color: rgba(16, 24, 40, 1);
+                        line-height: 19px;
+                        color: @color;
+                        padding-right: 26px;
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
                     }
                     .c-goods-info {
                         display: flex;
-                        gap: 10px;
+                        gap: 8px;
                         align-items: center;
-                        flex-wrap: wrap;
+                        flex-wrap: nowrap;
+                        width: 100%;
+                        min-height: 28px;
+                        box-sizing: border-box;
                         .c-stepper {
-                            width: 104px;
-                            height: 28px;
+                            width: 96px;
+                            height: 26px;
                             flex: none;
+                            order: 2;
+                            margin-left: auto;
                             display: grid;
-                            grid-template-columns: 30px 1fr 30px;
+                            grid-template-columns: 28px 1fr 28px;
                             align-items: center;
                             overflow: hidden;
-                            border: 1px solid rgba(88, 94, 226, 0.22);
+                            border: 1px solid rgba(255, 141, 26, 0.26);
                             border-radius: 9px;
-                            background: rgba(36, 41, 46, 0.05);
+                            background: #fff7ed;
+                            box-shadow: 0 3px 8px rgba(255, 141, 26, 0.1);
 
                             button,
                             span {
@@ -469,53 +523,76 @@ export default {
                             button {
                                 border: 0;
                                 padding: 0;
-                                background: rgba(36, 41, 46, 0.07);
-                                color: rgba(36, 41, 46, 0.72);
+                                background: rgba(255, 141, 26, 0.12);
+                                color: rgba(172, 83, 13, 0.82);
                                 cursor: pointer;
-                                font-size: 18px;
+                                font-size: 16px;
                                 line-height: 1;
                                 transition:
                                     background 0.16s ease,
                                     color 0.16s ease;
 
                                 &:hover:not(:disabled) {
-                                    background: rgba(255, 141, 26, 0.16);
+                                    background: rgba(255, 141, 26, 0.22);
                                     color: rgba(255, 141, 26, 1);
                                 }
 
                                 &:disabled {
                                     cursor: not-allowed;
-                                    color: rgba(36, 41, 46, 0.24);
+                                    background: rgba(36, 41, 46, 0.04);
+                                    color: rgba(36, 41, 46, 0.28);
                                 }
                             }
 
                             span {
                                 min-width: 0;
-                                color: rgba(36, 41, 46, 0.78);
-                                font-size: 14px;
+                                background: rgba(255, 255, 255, 0.82);
+                                color: rgba(36, 41, 46, 0.82);
+                                font-size: 13px;
                                 font-weight: 800;
-                                line-height: 28px;
+                                line-height: 26px;
                             }
                         }
+                    }
+                    .bottom {
+                        width: max-content;
+                        min-width: 96px;
+                        max-width: 176px;
+                        height: 26px;
+                        flex: none;
+                        order: 2;
+                        margin-left: auto;
+                        border-radius: 9px;
+                        background: rgba(255, 141, 26, 0.08);
+                        padding: 0 8px;
+                        box-sizing: border-box;
+                        font-size: 11px;
+                        font-weight: 700;
+                        line-height: 26px;
+                        color: rgba(217, 107, 16, 0.92);
+                        text-align: center;
+                        white-space: nowrap;
                     }
                     .u-price {
                         color: rgba(88, 94, 226, 1);
                         display: inline-flex;
                         align-items: center;
                         gap: 4px;
-                        font-size: 16px;
+                        order: 1;
+                        font-size: 14px;
                         font-weight: 800;
+                        line-height: 18px;
 
                         .icon {
-                            width: 16px;
-                            height: 16px;
+                            width: 15px;
+                            height: 15px;
                         }
                     }
                 }
                 .delete {
                     flex: none;
-                    width: 26px;
-                    height: 26px;
+                    width: 24px;
+                    height: 24px;
                     border-radius: 8px;
                     color: rgba(36, 41, 46, 0.62);
                     font-size: 13px;
@@ -523,6 +600,9 @@ export default {
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    position: absolute;
+                    right: 0;
+                    top: -3px;
                     transition:
                         background 0.16s ease,
                         color 0.16s ease;
@@ -533,25 +613,12 @@ export default {
                     }
                 }
             }
-            .bottom {
-                min-height: 24px;
-                border-radius: 8px;
-                background: rgba(255, 141, 26, 0.09);
-                margin-top: 10px;
-                padding: 3px 8px;
-                box-sizing: border-box;
-                font-size: 12px;
-                font-weight: 700;
-                line-height: 18px;
-                color: rgba(255, 141, 26, 1);
-                text-align: center;
-            }
         }
     }
     .user-info {
         flex: none;
-        margin-top: 12px;
-        padding: 12px 0 10px;
+        margin-top: 10px;
+        padding: 10px 0 8px;
         border-top: 1px dashed rgba(36, 41, 46, 0.18);
         border-bottom: 1px dashed rgba(36, 41, 46, 0.18);
         display: flex;
@@ -568,7 +635,7 @@ export default {
 
         .icon {
             margin-top: 4px;
-            width: 160px;
+            width: 148px;
             height: auto;
             color: rgba(0, 0, 0, 0.88);
         }
@@ -577,8 +644,8 @@ export default {
         flex: none;
         display: flex;
         flex-direction: column;
-        gap: 12px;
-        padding-top: 12px;
+        gap: 10px;
+        padding-top: 10px;
 
         .total-label {
             font-size: 13px;
@@ -588,19 +655,19 @@ export default {
         }
 
         .total {
-            min-height: 68px;
-            border-radius: 14px;
+            min-height: 64px;
+            border-radius: 12px;
             background: #ffffff;
             border: 1px solid rgba(36, 41, 46, 0.06);
             box-shadow: 0 8px 20px rgba(9, 17, 30, 0.05);
             .total-item {
-                height: 34px;
+                height: 32px;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                font-size: 14px;
+                font-size: 13px;
                 font-weight: 700;
-                padding: 0 16px;
+                padding: 0 14px;
                 color: rgba(36, 41, 46, 1);
                 .right {
                     display: flex;
@@ -616,14 +683,14 @@ export default {
         }
         .total-btn {
             cursor: pointer;
-            width: 176px;
-            height: 46px;
+            width: 170px;
+            height: 44px;
             border-radius: 999px;
             background: linear-gradient(180deg, rgba(255, 176, 63, 1) 0%, rgba(255, 150, 35, 1) 100%);
             align-self: center;
             text-align: center;
-            line-height: 46px;
-            font-size: 18px;
+            line-height: 44px;
+            font-size: 17px;
             font-weight: 800;
             color: rgba(255, 255, 255, 1);
             box-shadow:
@@ -656,11 +723,12 @@ export default {
 
 @media screen and (max-width: 750px) {
     .cart {
-        width: min(100vw, 390px);
+        width: min(100vw, 408px);
         height: calc(100vh - 60px);
-        right: max(-100vw, -390px);
+        right: max(-100vw, -408px);
         top: 60px;
         padding: 14px;
+        border-radius: 14px 0 0 14px;
 
         .cart-title {
             padding-bottom: 12px;
@@ -677,6 +745,7 @@ export default {
 
         .m-cart-items {
             gap: 8px;
+            padding: 7px;
 
             .m-cart-item {
                 padding: 10px;
@@ -697,6 +766,10 @@ export default {
 
                         .u-price {
                             font-size: 15px;
+                        }
+
+                        .bottom {
+                            width: 104px;
                         }
                     }
                 }

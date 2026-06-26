@@ -106,8 +106,21 @@ const routes = [
                 description: "pages.vip.mall.description",
             },
         },
-        redirect: "mall/list",
         children: [
+            {
+                name: "mall_home_new",
+                path: "",
+                component: () => import("@/views/vip/mallNew/Index.vue"),
+                meta: {
+                    keepAlive: true,
+                    title: "积分商城",
+                    i18n: {
+                        title: "pages.vip.mall.list.title",
+                        keywords: "pages.vip.mall.list.keywords",
+                        description: "pages.vip.mall.list.description",
+                    },
+                },
+            },
             {
                 name: "mall_list_new",
                 path: "list",

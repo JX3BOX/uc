@@ -36,7 +36,6 @@
                 v-if="showOnlyUnowned"
                 class="u-unowned-check"
                 :model-value="query.only_unowned"
-                :disabled="!isLoggedIn"
                 @change="handleChange($event, 'only_unowned')"
             >
                 只看未拥有
@@ -147,7 +146,9 @@ export default {
     },
     methods: {
         handleChange(value, key) {
-            if (key === "only_unowned" && !this.isLoggedIn) return;
+            if (key === "only_unowned" && !this.isLoggedIn) {
+                return User.toLogin();
+            }
             if (key === "only_unowned" && !this.showOnlyUnowned) return;
             if (key == "title") value = value.trim();
             this.changeQuery(key, value);

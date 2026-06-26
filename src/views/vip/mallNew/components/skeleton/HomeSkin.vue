@@ -34,7 +34,8 @@ export default {
 @media screen and (max-width: 750px) {
     .homeSkin-bg {
         .Skeleton {
-            background-color: #f2f2f2;
+            background-color: rgba(0, 0, 0, 0.46);
+            box-shadow: inset 0 0 0 0.1852vw rgba(255, 255, 255, 0.08);
             border-radius: 0.3704vw;
         }
         .size(88.8889vw,50vw);
@@ -95,7 +96,8 @@ export default {
 @media screen and (min-width: 750px) {
     .homeSkin-bg {
         .Skeleton {
-            background-color: #f2f2f2;
+            background-color: rgba(0, 0, 0, 0.46);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
             border-radius: 2px;
         }
         .size(480px,270px);

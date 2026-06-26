@@ -24,6 +24,7 @@ const store = {
         assetIsShow: false,
         navIsShow: false,
         cartConfirmIsShow: false,
+        batchConfirmIsShow: false,
     },
     mutations: {
         toState(state, data) {
@@ -37,6 +38,7 @@ const store = {
             commit("toState", { cartIsShow: isShow });
         },
         async clearCart({ commit }) {
+            if (!User.isLogin()) return false;
             deleteCart().then(() => {
                 commit("toState", {
                     cart: [],
@@ -44,6 +46,10 @@ const store = {
             });
         },
         async getCart({ commit }) {
+            if (!User.isLogin()) {
+                commit("toState", { cart: [] });
+                return [];
+            }
             return getCart().then((res) => {
                 const cart = res.data?.data || [];
                 commit("toState", {
@@ -52,16 +58,19 @@ const store = {
             });
         },
         async deleteCartGoods({ dispatch }, id) {
+            if (!User.isLogin()) return false;
             deleteCartGoods(id).then(() => {
                 dispatch("getCart");
             });
         },
         async updateGoodsNum({ dispatch }, { shopping_item_id, amount }) {
+            if (!User.isLogin()) return false;
             updateGoodsNum(shopping_item_id, amount).then(() => {
                 dispatch("getCart");
             });
         },
         async addCart({ dispatch }, { id, amount }) {
+            if (!User.isLogin()) return false;
             return addGoodsToCart(id, amount)
                 .then(() => {
                     dispatch("getCart");
@@ -73,6 +82,10 @@ const store = {
         },
         // 获取地址列表
         async getAddressList({ commit, state }) {
+            if (!User.isLogin()) {
+                commit("toState", { addressList: [], myAddress: {} });
+                return [];
+            }
             return getAddress().then((res) => {
                 const addressList = res.data?.data?.list || [];
                 const data = { addressList };
@@ -85,6 +98,10 @@ const store = {
         },
         // 获取默认地址
         async getMyAddress({ commit, state }) {
+            if (!User.isLogin()) {
+                commit("toState", { myAddress: {} });
+                return {};
+            }
             return getMyAddress()
                 .then((res) => {
                     const address = res.data?.data || {};
@@ -100,24 +117,31 @@ const store = {
         },
         // 提交订单
         async buyGoods({ dispatch }, { id, count, addressId, remark }) {
+            if (!User.isLogin()) return false;
             return toPayOrder(id, count, addressId, remark).then((res) => {
                 return dispatch("toPay", res.data.data.id).then(() => res);
             });
         },
         // 付款
         async toPay({ commit }, id) {
+            if (!User.isLogin()) return false;
             return toPay(id).then(() => {
                 commit("toState", { pay_status: true });
             });
         },
         // 获取我的资产
         async getAsset({ commit }) {
+            if (!User.isLogin()) {
+                commit("toState", { asset: {} });
+                return {};
+            }
             return User.getAsset().then((data) => {
                 commit("toState", { asset: data });
             });
         },
         // 切换地址并更新默认地址
         async changeAddress({ commit, dispatch, state }, addressId) {
+            if (!User.isLogin()) return false;
             if (!addressId || state.myAddress.id == addressId) return;
             return updateAddress(addressId).then(() => {
                 const myAddress = state.addressList.find((item) => item.id == addressId);
@@ -132,6 +156,9 @@ const store = {
         },
         changeCartConfirmIsShow({ commit }, isShow) {
             commit("toState", { cartConfirmIsShow: isShow });
+        },
+        changeBatchConfirmIsShow({ commit }, isShow) {
+            commit("toState", { batchConfirmIsShow: isShow });
         },
     },
     modules: {},

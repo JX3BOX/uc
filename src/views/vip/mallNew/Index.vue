@@ -27,7 +27,8 @@
         </div>
         <aside class="box-right">
             <button class="right-toggle" type="button" :title="rightToggleText" @click="isShowRight = !isShowRight">
-                <span class="right-toggle-icon">{{ isShowRight ? "›" : "‹" }}</span>
+                <ArrowRightBold v-if="isShowRight" class="right-toggle-icon" />
+                <ArrowLeftBold v-else class="right-toggle-icon" />
                 <span class="right-toggle-text">{{ rightToggleText }}</span>
             </button>
             <div class="right-scroll">
@@ -52,7 +53,7 @@
                                         <div>当前购物车</div>
                                         <div>合计：{{ $store.getters["mallNew/checked_num"] }}件</div>
                                     </div>
-                                    <div class="btn" id="cartBtn" @click="$store.dispatch('mallNew/changeCartIsShow', true)">
+                                    <div class="btn" id="cartBtn" @click="openCart">
                                         <img :src="imgUrl + 'cart.svg'" alt="" class="cart-icon" />
                                         查看购物车
                                     </div>
@@ -85,7 +86,7 @@
                                         <div class="left">{{ $store.getters["mallNew/all_price_points"] }}</div>
                                     </div>
                                 </div>
-                                <div class="total-btn" @click="$store.dispatch('mallNew/changeCartIsShow', true)">结算</div>
+                                <div class="total-btn" @click="openCart">结算</div>
                             </div>
                             <div class="arrow"></div>
                         </div>
@@ -105,10 +106,11 @@
         <button class="mobile-right-button" type="button" @click="isShowRight = true">
             <span>购物</span>
         </button>
-        <button class="mobile-cart-button" type="button" @click="$store.dispatch('mallNew/changeCartIsShow', true)">
+        <button class="mobile-cart-button" type="button" @click="openCart">
             <img :src="imgUrl + 'cart.svg'" alt="" />
         </button>
         <CartConfirm></CartConfirm>
+        <BatchOrder v-if="$store.state.mallNew.batchConfirmIsShow" embedded></BatchOrder>
     </div>
 </template>
 <script>
@@ -120,7 +122,10 @@ import GoodDetail from "@/views/vip/mallNew/components/GoodDetail.vue";
 import Cart from "@/views/vip/mallNew/components/Cart.vue";
 import { debounce } from "lodash";
 import CartConfirm from "@/views/vip/mallNew/components/CartConfirm.vue";
+import BatchOrder from "@/views/vip/mallNew/BatchOrder.vue";
 import { __cdn } from "@/utils/config";
+import { ArrowLeftBold, ArrowRightBold } from "@element-plus/icons-vue";
+import { resolveImagePath } from "@jx3box/jx3box-common/js/utils";
 
 const UNOWNED_FILTER_SUB_CATEGORIES = ["skin", "avatar", "emotion"];
 
@@ -256,7 +261,7 @@ export default {
             return this.query.category === "entity";
         },
         sanitizeOnlyUnowned() {
-            if (!this.canUseOnlyUnowned()) {
+            if (!User.isLogin() || !this.canUseOnlyUnowned()) {
                 const changed = this.query.only_unowned;
                 this.query.only_unowned = false;
                 return changed;
@@ -274,7 +279,12 @@ export default {
             if (title) params.title = title;
             if (this.query.category) params.category = this.query.category;
             if (this.query.sub_category) params.sub_category = this.query.sub_category;
-            if (this.shouldForceNoBuyForRequest() || (this.query.only_unowned && this.canUseOnlyUnowned())) params.no_buy = 1;
+            if (
+                User.isLogin() &&
+                (this.shouldForceNoBuyForRequest() || (this.query.only_unowned && this.canUseOnlyUnowned()))
+            ) {
+                params.no_buy = 1;
+            }
 
             if (this.query.level && this.query.level != 0) {
                 params.exp_limit = __userLevel[this.query.level]?.[0];
@@ -300,9 +310,20 @@ export default {
         normalizeGood(item = {}) {
             return {
                 ...item,
-                goods_images: Array.isArray(item.goods_images) ? item.goods_images : [],
+                goods_images: this.normalizeGoodImages(item.goods_images),
                 has_owned: this.hasOwnedGood(item),
             };
+        },
+        normalizeGoodImages(images = []) {
+            return Array.isArray(images) ? images.map((url) => this.normalizeGoodImage(url)).filter(Boolean) : [];
+        },
+        normalizeGoodImage(url) {
+            const value = String(url || "").trim();
+            if (!value) return "";
+            if (/^(?:data:|blob:)/i.test(value)) return value;
+            if (value.startsWith("//")) return resolveImagePath(`https:${value}`);
+            if (/^https?:\/\//i.test(value)) return resolveImagePath(value);
+            return resolveImagePath(`${__cdn}${value.replace(/^\/+/, "")}`);
         },
         markOwnedGood(item = {}) {
             return {
@@ -375,9 +396,15 @@ export default {
             if (this.query.vip_limit !== null && this.query.vip_limit !== "" && this.query.vip_limit != -1) {
                 routeQuery.vip_limit = this.query.vip_limit;
             }
-            if (this.query.only_unowned && this.canUseOnlyUnowned()) routeQuery.no_buy = 1;
+            if (User.isLogin() && this.query.only_unowned && this.canUseOnlyUnowned()) routeQuery.no_buy = 1;
             if (this.query.pageIndex > 1) routeQuery.pageIndex = this.query.pageIndex;
             return routeQuery;
+        },
+        openCart() {
+            if (!User.isLogin()) {
+                return User.toLogin();
+            }
+            this.$store.dispatch("mallNew/changeCartIsShow", true);
         },
         syncRouteQuery(forceListState = false) {
             const query = this.buildRouteQuery();
@@ -439,7 +466,9 @@ export default {
                 this.selectItem = this.decorateGood(this.markOwnedGood(this.selectItem));
             }
 
-            this.$store.dispatch("mallNew/getAsset").catch(() => {});
+            if (User.isLogin()) {
+                this.$store.dispatch("mallNew/getAsset").catch(() => {});
+            }
         },
         changeSelectItem(item) {
             if (this.isDetailInRight) {
@@ -496,6 +525,9 @@ export default {
         GoodDetail,
         Cart,
         CartConfirm,
+        BatchOrder,
+        ArrowLeftBold,
+        ArrowRightBold,
     },
 };
 </script>
@@ -505,6 +537,7 @@ export default {
     --right-width: 292px;
     --right-collapsed-width: 56px;
     width: 100%;
+    height: calc(100vh - 96px);
     min-height: calc(100vh - 96px);
     background: url("@{design}mall/bg.png") no-repeat center center;
     background-size: 100% 100%;
@@ -512,6 +545,7 @@ export default {
     grid-template-columns: auto minmax(500px, 1fr) var(--right-width);
     align-items: start;
     overflow-x: auto;
+    overflow-y: hidden;
     scrollbar-width: none;
     position: relative;
     isolation: isolate;
@@ -760,8 +794,8 @@ export default {
             }
 
             .right-toggle-icon {
-                font-size: 22px;
-                line-height: 1;
+                width: 12px;
+                height: 12px;
                 flex: none;
             }
 
@@ -950,7 +984,9 @@ export default {
 
                 .good-detail {
                     min-width: 0;
+                    height: auto;
                     min-height: auto;
+                    overflow: visible;
                     padding: 8px 0 0;
                     margin-left: 0;
 
@@ -1037,7 +1073,7 @@ export default {
 
                         .good-comment {
                             height: auto;
-                            max-height: 120px;
+                            max-height: none;
                             padding: 10px 16px;
                         }
                     }
@@ -1054,9 +1090,11 @@ export default {
 
 @media screen and (max-width: 750px) {
     .m-mall-box {
+        height: auto;
         min-height: calc(100vh - 60px);
         display: block;
         overflow-x: hidden;
+        overflow-y: visible;
         background: #070f1c;
         padding: 0.75rem;
         box-sizing: border-box;

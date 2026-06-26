@@ -7,33 +7,43 @@
     >
         <div class="content">
             <div class="title">购物车结算</div>
-            <div class="text">
-                确认使用<span class="price boxcoin">{{ $store.getters["mallNew/all_price_boxcoin"] || 0 }}盒币</span
-                >+<span class="price points">{{ $store.getters["mallNew/all_price_points"] || 0 }}积分</span>兑换<span
-                    class="prrice"
-                    >勾选的<span class="num">{{ $store.getters["mallNew/checked_num"] || 0 }}</span
-                    >件商品</span
-                >吗？
+            <div class="desc">确认兑换已勾选商品</div>
+            <div class="summary">
+                <div class="summary-row">
+                    <span class="summary-label">
+                        <img src="@/assets/img/vip/vip2/box_icon.svg" alt="" svg-inline />
+                        盒币
+                    </span>
+                    <span class="summary-value boxcoin">{{ $store.getters["mallNew/all_price_boxcoin"] || 0 }}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">
+                        <img src="@/assets/img/vip/vip2/points.svg" alt="" svg-inline />
+                        积分
+                    </span>
+                    <span class="summary-value points">{{ $store.getters["mallNew/all_price_points"] || 0 }}</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">
+                        <i class="el-icon-shopping-cart-2"></i>
+                        商品
+                    </span>
+                    <span class="summary-value num">{{ $store.getters["mallNew/checked_num"] || 0 }} 件</span>
+                </div>
             </div>
         </div>
         <div class="btn-box">
-            <el-button
-                round
-                @click="$store.dispatch('mallNew/changeCartConfirmIsShow', false)"
-                style="width: 77px; font-size: 12px"
-                >再想想</el-button
-            >
-            <el-button
-                round
-                @click="buyGoods"
-                style="width: 77px; font-size: 12px; background-color: rgba(255, 163, 43, 1); color: #fff"
-                >确认</el-button
-            >
+            <el-button round class="btn-cancel" @click="$store.dispatch('mallNew/changeCartConfirmIsShow', false)">
+                再想想
+            </el-button>
+            <el-button round class="btn-confirm" @click="buyGoods">确认兑换</el-button>
         </div>
     </el-dialog>
 </template>
 
 <script>
+import User from "@jx3box/jx3box-common/js/user";
+
 export default {
     name: "CartConfirm",
     props: {
@@ -44,11 +54,14 @@ export default {
     },
     methods: {
         buyGoods() {
+            if (!User.isLogin()) {
+                return User.toLogin();
+            }
             if (!this.$store.getters["mallNew/checked_num"]) {
                 return this.$message.warning("请先选择要结算的商品");
             }
             this.$store.dispatch("mallNew/changeCartConfirmIsShow", false);
-            this.$router.push({ name: "mall_batch_order_new" });
+            this.$store.dispatch("mallNew/changeBatchConfirmIsShow", true);
         },
     },
 };
@@ -56,39 +69,107 @@ export default {
 
 <style lang="less">
 .m-cart-confirm {
+    border-radius: 12px;
+    overflow: hidden;
+
     .el-dialog__header {
         padding: 0;
     }
     .el-dialog__body {
         width: 100%;
-        padding: 28px;
+        padding: 26px 30px 28px;
+        box-sizing: border-box;
     }
     .content {
         display: flex;
         align-items: center;
         flex-direction: column;
-        gap: 10px;
-        font-size: 12px;
+        gap: 8px;
         color: rgba(56, 56, 56, 1);
-        .price {
-            margin: 0 4px;
-            font-weight: 700;
-            .num {
-                color: rgba(255, 163, 43, 1);
+
+        .title {
+            font-size: 16px;
+            font-weight: 800;
+            line-height: 22px;
+            color: rgba(36, 41, 46, 1);
+        }
+
+        .desc {
+            font-size: 12px;
+            line-height: 18px;
+            color: rgba(93, 99, 110, 0.72);
+        }
+
+        .summary {
+            width: 100%;
+            margin-top: 8px;
+            padding: 10px 14px;
+            box-sizing: border-box;
+            border-radius: 12px;
+            background: #f7f8fb;
+            border: 1px solid rgba(36, 41, 46, 0.06);
+        }
+
+        .summary-row {
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            line-height: 18px;
+        }
+
+        .summary-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(36, 41, 46, 0.78);
+
+            svg,
+            i {
+                width: 14px;
+                height: 14px;
+                font-size: 14px;
+                color: rgba(36, 41, 46, 0.58);
             }
-            &.boxcoin {
-                color: rgba(64, 128, 255, 1);
-            }
-            &.points {
-                color: rgba(116, 120, 237, 1);
+        }
+
+        .summary-value {
+            font-size: 14px;
+            font-weight: 800;
+            color: rgba(255, 141, 26, 1);
+
+            &.num {
+                color: rgba(255, 141, 26, 1);
             }
         }
     }
     .btn-box {
         display: flex;
         justify-content: center;
-        gap: 10px;
-        margin-top: 21px;
+        gap: 12px;
+        margin-top: 20px;
+
+        .el-button {
+            width: 104px;
+            height: 34px;
+            padding: 0;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .btn-cancel {
+            color: rgba(93, 99, 110, 0.88);
+            border-color: rgba(36, 41, 46, 0.16);
+            background: #fff;
+        }
+
+        .btn-confirm {
+            border-color: rgba(255, 141, 26, 1);
+            background: linear-gradient(180deg, rgba(255, 176, 63, 1) 0%, rgba(255, 150, 35, 1) 100%);
+            color: #fff;
+            box-shadow: 0 8px 16px rgba(255, 145, 31, 0.22);
+        }
     }
 }
 </style>

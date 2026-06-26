@@ -3,23 +3,23 @@ const SUPPORTED_SKIN_CATEGORIES = ["calendar", "sidebar", "atcard", "homebg", "c
 const SKIN_CATEGORY_KEYWORDS = [
     {
         category: "calendar",
-        keywords: ["首页日历", "日历"],
+        keywords: ["PC首页日历", "移动首屏KV", "首屏KV", "首页日历", "日历"],
     },
     {
         category: "sidebar",
-        keywords: ["侧边栏主题", "侧栏风格", "侧边栏"],
+        keywords: ["PC作品侧栏", "移动底部图标", "作品侧栏", "底部图标", "侧边栏主题", "侧栏风格", "侧边栏"],
     },
     {
         category: "atcard",
-        keywords: ["个人名片", "被圈卡片", "圈人卡"],
+        keywords: ["PC个人名片", "移动个人名片", "个人名片", "被圈卡片", "圈人卡"],
     },
     {
         category: "homebg",
-        keywords: ["主页风格", "个人主页"],
+        keywords: ["PC主页风格", "移动主页风格", "移动个人中心主题", "个人中心主题", "主页风格", "个人主页"],
     },
     {
         category: "comment",
-        keywords: ["评论皮肤"],
+        keywords: ["PC评论风格", "移动论坛风格", "评论风格", "论坛风格", "评论皮肤"],
     },
 ];
 

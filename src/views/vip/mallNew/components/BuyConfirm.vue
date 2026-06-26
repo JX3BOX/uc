@@ -256,11 +256,7 @@ export default {
         buyGoods() {
             if (this.isSubmitting) return;
             if (!User.isLogin()) {
-                this.$message.error("请先登录");
-                setTimeout(() => {
-                    User.toLogin();
-                }, 1000);
-                return;
+                return User.toLogin();
             }
             const { category, is_virtual, id } = this.item;
             if (is_virtual && category == "virtual") {

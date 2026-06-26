@@ -95,6 +95,7 @@ import Address from "./components/address.vue";
 import { forEach } from "lodash";
 import { getItem } from "@/service/vip/mall";
 import { handleMallExchangeError } from "@/utils/mallExchangeError";
+import User from "@jx3box/jx3box-common/js/user";
 export default {
     name: "GoodsOrder",
     data: function () {
@@ -161,6 +162,9 @@ export default {
             // : this.$router.push('/mall');
         },
         load() {
+            if (!User.isLogin()) {
+                return User.toLogin();
+            }
             this.$store.dispatch("mallNew/getAddressList");
             this.$store.dispatch("mallNew/getMyAddress");
             if (this.id) this.getData();
@@ -173,6 +177,9 @@ export default {
             return _key;
         },
         toBuy() {
+            if (!User.isLogin()) {
+                return User.toLogin();
+            }
             const addressId = this.address?.id || 0;
             if (this.needs_address && !addressId) {
                 return this.$message.warning("请选择收货地址");

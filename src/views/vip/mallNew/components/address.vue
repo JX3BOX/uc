@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import User from "@jx3box/jx3box-common/js/user";
+
 export default {
     name: "GoodsAddress",
     emits: ["close"],
@@ -75,6 +77,10 @@ export default {
             this.$emit("close");
         },
         submit() {
+            if (!User.isLogin()) {
+                this.close();
+                return User.toLogin();
+            }
             if (!this.id) {
                 return this.close();
             }
@@ -83,6 +89,7 @@ export default {
         },
     },
     created() {
+        if (!User.isLogin()) return;
         this.$store.dispatch("mallNew/getAddressList");
         this.$store.dispatch("mallNew/getMyAddress");
     },
