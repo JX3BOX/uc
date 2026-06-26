@@ -60,6 +60,12 @@
                         <i class="el-icon-circle-check" v-if="canBuyInfo.points"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
+                    <div class="condition-item" :class="{ canBuy: canBuyInfo.stock }">
+                        <span>库存</span>
+                        <b>{{ stockText }}</b>
+                        <i class="el-icon-circle-check" v-if="canBuyInfo.stock"></i>
+                        <i class="el-icon-circle-close" v-else></i>
+                    </div>
                 </div>
                 <div class="buy-time" :class="{ canBuy: canBuyInfo.buy_time }" :title="sellTimeFullText">
                     <span>兑换期</span>
@@ -162,6 +168,7 @@ export default {
                     level: false,
                     user_level: "-",
                     buy_time: false,
+                    stock: false,
                 }
             );
         },
@@ -180,6 +187,9 @@ export default {
             const start = this.formatSellTime(this.good.start_sell_time);
             const end = this.formatSellTime(this.good.end_sell_time);
             return `${start} - ${end}`;
+        },
+        stockText() {
+            return Number(this.good.stock) || 0;
         },
         sanitizedDescribe() {
             const html = this.good.describe ? DOMPurify.sanitize(this.good.describe) : "";

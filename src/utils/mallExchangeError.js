@@ -43,6 +43,9 @@ function getMallRequirementMessages(item = {}, canBuyInfo = {}) {
     if (canBuyInfo.buy_time === false) {
         messages.push("不在可兑换时间内");
     }
+    if (canBuyInfo.stock === false) {
+        messages.push("库存不足：当前不可兑换");
+    }
 
     return messages;
 }

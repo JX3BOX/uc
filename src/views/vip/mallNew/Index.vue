@@ -425,8 +425,10 @@ export default {
                 level: true,
                 user_level: User.getLevel(item.exp_limit),
                 buy_time: true,
+                stock: true,
             };
             const time = new Date().getTime();
+            const stock = Number(item.stock) || 0;
             if (item.vip_limit === 1 && !User._isPRO(this.asset)) {
                 obj.canBuy = false;
                 obj.vip_limit = false;
@@ -446,6 +448,10 @@ export default {
             if (time < new Date(item.start_sell_time).getTime() || time > new Date(item.end_sell_time).getTime()) {
                 obj.canBuy = false;
                 obj.buy_time = false;
+            }
+            if (stock <= 0) {
+                obj.canBuy = false;
+                obj.stock = false;
             }
             return obj;
         },
