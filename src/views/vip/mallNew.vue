@@ -70,6 +70,9 @@ html {
 @media screen and (max-width: 750px) {
     .m-mall-breadcrumb-container {
         height: 2.75rem;
+        position: static;
+        top: auto;
+        z-index: auto;
     }
 }
 </style>

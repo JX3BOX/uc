@@ -33,6 +33,7 @@
         </div>
         <div class="filter-actions">
             <el-checkbox
+                v-if="showOnlyUnowned"
                 class="u-unowned-check"
                 :model-value="query.only_unowned"
                 :disabled="!isLoggedIn"
@@ -58,7 +59,7 @@ export default {
         RefreshLeft,
         Search,
     },
-    inject: ["query", "changeQuery"],
+    inject: ["query", "changeQuery", "canUseOnlyUnowned"],
     data() {
         return {
             levelOptions: [
@@ -129,21 +130,25 @@ export default {
                 this.query.title ||
                     (this.query.level !== null && this.query.level !== "" && this.query.level != 0) ||
                     (this.query.vip_limit !== null && this.query.vip_limit !== "" && this.query.vip_limit != -1) ||
-                    this.query.only_unowned
+                    (this.showOnlyUnowned && this.query.only_unowned)
             );
         },
         isLoggedIn() {
             return User.isLogin();
         },
+        showOnlyUnowned() {
+            return this.canUseOnlyUnowned();
+        },
     },
     mounted() {
-        if (!this.isLoggedIn && this.query.only_unowned) {
+        if ((!this.isLoggedIn || !this.showOnlyUnowned) && this.query.only_unowned) {
             this.changeQuery("only_unowned", false);
         }
     },
     methods: {
         handleChange(value, key) {
             if (key === "only_unowned" && !this.isLoggedIn) return;
+            if (key === "only_unowned" && !this.showOnlyUnowned) return;
             if (key == "title") value = value.trim();
             this.changeQuery(key, value);
         },

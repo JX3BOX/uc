@@ -187,14 +187,14 @@ export default {
                         addressId: 0,
                         remark: "虚拟商品购买",
                     })
-                    .then((res) => {
-                        this.$confirm("购买成功，是否跳转至订单界面?", "提示", {
+                    .then(() => {
+                        this.$confirm("兑换成功，是否立即前往装扮？", "提示", {
                             confirmButtonText: "确定",
                             cancelButtonText: "取消",
                             type: "warning",
                         })
                             .then(() => {
-                                const url = `${__root}dashboard/mall`;
+                                const url = `${__root}dashboard/frame`;
                                 window.open(url);
                             })
                             .catch(() => {});

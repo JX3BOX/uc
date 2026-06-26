@@ -3,52 +3,87 @@
         <div class="m-breadcrumb" v-if="windowWidth > 750">
             <span @click="goBack" class="u-back"><i class="el-icon-arrow-left"></i> 返回</span>
         </div>
-        <div class="m-goods el-card">
-            <img class="u-img" :src="item.goods_images[0]" />
-            <div class="m-info">
-                <span class="u-title">{{ item.title }}</span>
-                <div class="m-line">
-                    <span class="u-span">兑换数量：{{ count }}件</span>
-                    <span class="u-span">邮费：{{ item.postage ? item.postage / 100 + "元" : "包邮" }}</span>
+        <div class="m-order-shell">
+            <div class="m-order-header">
+                <div>
+                    <h1>确认兑换</h1>
+                    <p>核对商品、资产消耗与收货信息后提交订单</p>
                 </div>
-
-                <el-divider content-position="left">1. 兑换消耗</el-divider>
-
-                <span v-show="item.price_cny"
-                    >金箔： <b>{{ item.price_cny * count }}</b></span
-                >
-                <span v-show="item.price_points"
-                    >积分： <b>{{ item.price_points * count }}</b></span
-                >
-                <span v-show="item.price_boxcoin"
-                    >盒币： <b>{{ item.price_boxcoin * count }}</b></span
-                >
-
-                <el-divider content-position="left">2. 选择地址</el-divider>
-                <div class="m-address" v-if="show_address">
-                    <div class="m-button">
-                        <el-button type="primary" icon="Sort" @click="visible = true">切换地址</el-button>
-                        <a class="el-button el-button--warning" href="/dashboard/address" target="_blank"
-                            ><i class="el-icon-setting"></i> 管理地址</a
-                        >
-                    </div>
-                    <template v-if="address && address.id">
-                        <div class="u-my-address">
-                            <span class="u-label"><i class="el-icon-s-home"></i> 收货地址</span>
-                            <span class="u-name">{{ address.contact_name }} - {{ address.contact_phone }} </span>
-                            <span class="u-address">
-                                {{ address.province }}{{ address.city }}{{ address.area }}{{ address.address }}
-                            </span>
+                <span class="u-order-tag">积分商城</span>
+            </div>
+            <div class="m-goods el-card">
+                <div class="m-product">
+                    <img v-if="previewImage" class="u-img" :src="previewImage" />
+                    <div v-else class="u-img u-img-placeholder">暂无图片</div>
+                    <div class="m-product-info">
+                        <span class="u-title">{{ item.title }}</span>
+                        <div class="m-line">
+                            <span class="u-span">兑换数量：{{ count }}件</span>
+                            <span class="u-span">邮费：{{ item.postage ? item.postage / 100 + "元" : "包邮" }}</span>
                         </div>
-                    </template>
-                    <div v-else><el-button type="success" icon="Plus">添加地址</el-button></div>
+                    </div>
                 </div>
-                <div class="u-no-address" v-else>虚拟物品无需地址</div>
+                <div class="m-info">
+                    <section class="m-order-section">
+                        <div class="u-section-title">兑换消耗</div>
+                        <div class="m-cost-list">
+                            <span v-show="item.price_cny" class="u-cost"
+                                ><span>金箔</span><b>{{ item.price_cny * count }}</b></span
+                            >
+                            <span v-show="item.price_points" class="u-cost"
+                                ><span>积分</span><b>{{ item.price_points * count }}</b></span
+                            >
+                            <span v-show="item.price_boxcoin" class="u-cost"
+                                ><span>盒币</span><b>{{ item.price_boxcoin * count }}</b></span
+                            >
+                            <span v-if="!item.price_cny && !item.price_points && !item.price_boxcoin" class="u-cost"
+                                ><span>消耗</span><b>免费兑换</b></span
+                            >
+                        </div>
+                    </section>
 
-                <el-divider content-position="left">3. 备注</el-divider>
-                <el-input v-model="remark" placeholder="请输入备注" type="textarea" :rows="2"></el-input>
+                    <section class="m-order-section">
+                        <div class="u-section-row">
+                            <div class="u-section-title">收货信息</div>
+                            <div class="m-button" v-if="show_address">
+                                <el-button type="primary" text @click="visible = true">切换地址</el-button>
+                                <a class="u-address-link" href="/dashboard/address" target="_blank">管理地址</a>
+                            </div>
+                        </div>
+                        <div class="m-address" v-if="show_address">
+                            <template v-if="address && address.id">
+                                <div class="u-my-address">
+                                    <span class="u-name">{{ address.contact_name }} - {{ address.contact_phone }} </span>
+                                    <span class="u-address">
+                                        {{ address.province }}{{ address.city }}{{ address.area }}{{ address.address }}
+                                    </span>
+                                </div>
+                            </template>
+                            <a v-else class="u-empty-address" href="/dashboard/address" target="_blank">
+                                暂无收货地址，点击去添加
+                            </a>
+                        </div>
+                        <div class="u-no-address" v-else>虚拟物品无需地址</div>
+                    </section>
 
-                <el-button class="u-button" type="primary" @click="toBuy">确认订单</el-button>
+                    <section class="m-order-section">
+                        <div class="u-section-title">备注</div>
+                        <el-input
+                            v-model="remark"
+                            placeholder="可填写尺码、偏好或其他补充说明"
+                            type="textarea"
+                            :rows="3"
+                        ></el-input>
+                    </section>
+
+                    <div class="m-order-footer">
+                        <span class="u-submit-tip">
+                            确认后将兑换
+                            <span>{{ item.title }}</span>
+                        </span>
+                        <el-button class="u-button" type="primary" @click="toBuy">确认订单</el-button>
+                    </div>
+                </div>
             </div>
         </div>
         <Address :visible="visible" @close="closeAddress" />
@@ -67,7 +102,9 @@ export default {
             active: null,
             remark: "",
             visible: false,
-            item: {},
+            item: {
+                goods_images: [],
+            },
         };
     },
     components: { Address },
@@ -77,6 +114,9 @@ export default {
         },
         count() {
             return this.$route.params.count || 1;
+        },
+        previewImage() {
+            return this.item.goods_images?.[0] || "";
         },
         pay_status() {
             return this.$store.state.mallNew.pay_status;

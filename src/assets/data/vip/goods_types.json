@@ -19,9 +19,9 @@
         "icon": "el-icon-s-ticket",
         "sub_category": [
             { "name": "主题装扮", "key": "skin" },
-            { "name": "魔卡", "key": "palu" },
             { "name": "头像框", "key": "avatar" },
             { "name": "表情包", "key": "emotion" },
+            { "name": "魔卡", "key": "palu" },
             { "name": "激活码", "key": "codesn" }
         ]
     }

@@ -11,10 +11,6 @@
                 @error="handleImageError"
             />
             <div v-else class="good-item-img u-good-image-null">{{ imageFailed ? "图片加载失败" : "暂无图片" }}</div>
-            <span v-if="isLoggedIn && good.has_owned" class="u-owned-tag">
-                <Check class="owned-icon" />
-                已拥有
-            </span>
         </div>
         <div class="right">
             <div class="header">
@@ -30,8 +26,14 @@
             <div class="footer">
                 <button
                     class="button canBuy"
+                    :class="{ owned: isOwnedSingleGood }"
+                    :disabled="isOwnedSingleGood"
                     @click.stop="buyGoods(good)"
                 >
+                    <span v-if="isOwnedSingleGood" class="u-owned-tag">
+                        <Check class="owned-icon" />
+                        已拥有
+                    </span>
                     <div class="button-text canBuy">
                         <template v-if="good.price_boxcoin">
                             <img :src="imgUrl + 'box_coin.svg'" alt="" />{{ good.price_boxcoin }}盒币
@@ -43,12 +45,20 @@
                         <template v-if="!good.price_boxcoin && !good.price_points">免费兑换</template>
                     </div>
                 </button>
-                <div class="icon" @click.stop="addCart">
+                <button
+                    class="icon"
+                    type="button"
+                    :class="{ 'is-added': addFeedbackVisible, disabled: isOwnedSingleGood }"
+                    :disabled="isOwnedSingleGood"
+                    @click.stop="addCart"
+                >
                     <img :src="imgUrl + 'cart.svg'" alt="" />
-                </div>
+                    <span v-if="cartAmount" class="cart-count">{{ cartAmountText }}</span>
+                    <span v-if="addFeedbackVisible" :key="addFeedbackKey" class="cart-plus">+1</span>
+                </button>
             </div>
         </div>
-        <BuyConfirm :item="good" ref="buyConfirm" />
+        <BuyConfirm :item="good" ref="buyConfirm" @exchanged="$emit('exchanged', $event)" />
     </div>
 </template>
 
@@ -58,10 +68,17 @@ import { throttle } from "lodash";
 import { Check } from "@element-plus/icons-vue";
 import BuyConfirm from "./BuyConfirm.vue";
 import { __cdn } from "@/utils/config";
-import { playAddCartFly } from "@/utils/mallCartFly";
 import { alertMallRequirement } from "@/utils/mallExchangeError";
+import {
+    getMallGoodsCartAmount,
+    isOwnedSingleMallGoods,
+    MALL_DECORATION_OWNED_MESSAGE,
+    MALL_DECORATION_SINGLE_LIMIT_MESSAGE,
+    shouldBlockSingleDecorationAdd,
+} from "@/utils/mallCartLimit";
 export default {
     name: "GoodItem",
+    emits: ["exchanged"],
     inject: ["changeSelectItem"],
     components: {
         BuyConfirm,
@@ -71,6 +88,9 @@ export default {
         return {
             imgUrl: __cdn + "design/mall/",
             imageFailed: false,
+            addFeedbackVisible: false,
+            addFeedbackKey: 0,
+            addFeedbackTimer: null,
         };
     },
     props: {
@@ -89,6 +109,15 @@ export default {
         },
         isLoggedIn() {
             return User.isLogin();
+        },
+        cartAmount() {
+            return getMallGoodsCartAmount(this.$store.state.mallNew.cart, this.good);
+        },
+        cartAmountText() {
+            return this.cartAmount > 99 ? "99+" : String(this.cartAmount);
+        },
+        isOwnedSingleGood() {
+            return this.isLoggedIn && isOwnedSingleMallGoods(this.good);
         },
     },
     watch: {
@@ -115,16 +144,34 @@ export default {
             if (!this.good.canBuy?.canBuy) {
                 return alertMallRequirement(this, this.good, this.good.canBuy);
             }
+            if (isOwnedSingleMallGoods(this.good)) {
+                return this.$message({
+                    type: "warning",
+                    message: MALL_DECORATION_OWNED_MESSAGE,
+                });
+            }
             this.$refs.buyConfirm.isShow = true;
         }, 2000),
-        addCart: throttle(function (e) {
+        addCart: throttle(function () {
             if (!User.isLogin()) {
                 return User.toLogin();
             }
             if (!this.good.canBuy?.canBuy) {
                 return alertMallRequirement(this, this.good, this.good.canBuy);
             }
-            const num = this.$store.state.mallNew.cart?.find((item) => item.goods_id === this.good.id)?.amount || 0;
+            if (isOwnedSingleMallGoods(this.good)) {
+                return this.$message({
+                    type: "warning",
+                    message: MALL_DECORATION_OWNED_MESSAGE,
+                });
+            }
+            if (shouldBlockSingleDecorationAdd(this.$store.state.mallNew.cart, this.good)) {
+                return this.$message({
+                    type: "warning",
+                    message: MALL_DECORATION_SINGLE_LIMIT_MESSAGE,
+                });
+            }
+            const num = this.cartAmount;
             if (1 + num > this.good.stock) {
                 return this.$message({
                     type: "warning",
@@ -138,13 +185,21 @@ export default {
                 })
                 .then((bol) => {
                     if (bol) {
-                        this.fly(e);
+                        this.playAddFeedback();
                     }
                 });
         }, 1000),
-        fly(e) {
-            playAddCartFly(e, this.$store.state.mallNew.boundCart, { image: this.displayImage || this.previewImage });
+        playAddFeedback() {
+            this.addFeedbackKey += 1;
+            this.addFeedbackVisible = true;
+            clearTimeout(this.addFeedbackTimer);
+            this.addFeedbackTimer = setTimeout(() => {
+                this.addFeedbackVisible = false;
+            }, 620);
         },
+    },
+    beforeUnmount() {
+        clearTimeout(this.addFeedbackTimer);
     },
 };
 </script>
@@ -187,35 +242,6 @@ export default {
             color: rgba(255, 255, 255, 0.62);
             font-size: 0.6rem;
             font-weight: 500;
-        }
-        .u-owned-tag {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            height: 22px;
-            padding: 0 9px 0 7px;
-            border-radius: 999px;
-            background:
-                linear-gradient(180deg, rgba(42, 38, 27, 0.92), rgba(15, 17, 20, 0.86)),
-                rgba(18, 20, 24, 0.82);
-            border: 1px solid rgba(255, 203, 82, 0.46);
-            color: rgba(255, 219, 124, 1);
-            box-shadow:
-                0 5px 14px rgba(0, 0, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.12);
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.6rem;
-            font-weight: 500;
-            line-height: 22px;
-            backdrop-filter: blur(6px);
-
-            .owned-icon {
-                width: 12px;
-                height: 12px;
-                flex: none;
-            }
         }
     }
     .right {
@@ -389,10 +415,70 @@ export default {
                             inset 0 1px 0 rgba(255, 255, 255, 0.12),
                             inset 0 5px 12px rgba(24, 76, 180, 0.24);
                     }
+
+                    &.owned {
+                        overflow: visible;
+                        cursor: not-allowed;
+                        background: linear-gradient(180deg, rgba(75, 91, 119, 1) 0%, rgba(55, 70, 96, 1) 100%);
+                        box-shadow:
+                            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                            inset 0 -8px 14px rgba(20, 30, 48, 0.16);
+
+                        &:hover,
+                        &:active {
+                            transform: none;
+                            background: linear-gradient(180deg, rgba(75, 91, 119, 1) 0%, rgba(55, 70, 96, 1) 100%);
+                            box-shadow:
+                                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                                inset 0 -8px 14px rgba(20, 30, 48, 0.16);
+                        }
+
+                        &::before {
+                            display: none;
+                        }
+
+                        .button-text {
+                            color: rgba(255, 255, 255, 0.72);
+                        }
+                    }
+                }
+
+                .u-owned-tag {
+                    position: absolute;
+                    z-index: 3;
+                    top: -8px;
+                    right: -4px;
+                    height: 18px;
+                    padding: 0 7px 0 6px;
+                    border-radius: 999px;
+                    background:
+                        linear-gradient(180deg, rgba(37, 42, 50, 0.94), rgba(24, 29, 36, 0.92)),
+                        rgba(24, 29, 36, 0.88);
+                    border: 1px solid rgba(255, 216, 128, 0.36);
+                    color: rgba(255, 226, 157, 0.92);
+                    box-shadow:
+                        0 3px 10px rgba(0, 0, 0, 0.24),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 3px;
+                    font-size: 0.54rem;
+                    font-weight: 700;
+                    line-height: 18px;
+                    white-space: nowrap;
+                    pointer-events: none;
+                    backdrop-filter: blur(4px);
+
+                    .owned-icon {
+                        width: 10px;
+                        height: 10px;
+                        flex: none;
+                    }
                 }
 
             }
             .icon {
+                border: 0;
                 width: 28px;
                 height: 28px;
                 border-radius: 8px;
@@ -401,8 +487,9 @@ export default {
                 justify-content: center;
                 align-items: center;
                 flex: none;
+                cursor: pointer;
                 position: relative;
-                overflow: hidden;
+                overflow: visible;
                 box-shadow:
                     inset 0 1px 0 rgba(255, 255, 255, 0.22),
                     inset 0 -6px 10px rgba(196, 92, 8, 0.1);
@@ -415,6 +502,7 @@ export default {
                     content: "";
                     position: absolute;
                     inset: 0;
+                    border-radius: inherit;
                     background:
                         linear-gradient(120deg, transparent 0%, transparent 34%, rgba(255, 255, 255, 0.28) 50%, transparent 66%),
                         radial-gradient(120% 80% at 50% 100%, rgba(255, 226, 128, 0.24), transparent 64%);
@@ -446,14 +534,108 @@ export default {
                         inset 0 5px 10px rgba(171, 80, 6, 0.26);
                 }
 
+                &.disabled {
+                    cursor: not-allowed;
+                    background: linear-gradient(180deg, rgba(130, 136, 146, 1) 0%, rgba(96, 105, 118, 1) 100%);
+                    box-shadow:
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                        inset 0 -6px 10px rgba(20, 30, 48, 0.1);
+
+                    &:hover,
+                    &:active {
+                        transform: none;
+                        background: linear-gradient(180deg, rgba(130, 136, 146, 1) 0%, rgba(96, 105, 118, 1) 100%);
+                        box-shadow:
+                            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                            inset 0 -6px 10px rgba(20, 30, 48, 0.1);
+                    }
+
+                    &::before {
+                        display: none;
+                    }
+
+                    img {
+                        opacity: 0.68;
+                    }
+                }
+
+                &.is-added {
+                    animation: cart-pop 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+                }
+
                 img {
                     position: relative;
                     z-index: 1;
                     width: 20px;
                     height: 20px;
                 }
+
+                .cart-count {
+                    position: absolute;
+                    z-index: 2;
+                    top: -6px;
+                    right: -6px;
+                    min-width: 16px;
+                    height: 16px;
+                    padding: 0 4px;
+                    box-sizing: border-box;
+                    border-radius: 999px;
+                    background: linear-gradient(180deg, rgba(255, 92, 92, 1), rgba(233, 55, 74, 1));
+                    border: 1px solid rgba(36, 41, 46, 0.72);
+                    color: #fff;
+                    font-size: 10px;
+                    font-weight: 800;
+                    line-height: 14px;
+                    text-align: center;
+                    box-shadow: 0 4px 10px rgba(233, 55, 74, 0.32);
+                    pointer-events: none;
+                }
+
+                .cart-plus {
+                    position: absolute;
+                    z-index: 3;
+                    top: -20px;
+                    right: -4px;
+                    color: rgba(255, 220, 126, 1);
+                    font-size: 13px;
+                    font-weight: 900;
+                    line-height: 1;
+                    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+                    pointer-events: none;
+                    animation: cart-plus-rise 0.62s cubic-bezier(0.18, 0.82, 0.2, 1) both;
+                }
             }
         }
+    }
+}
+
+@keyframes cart-pop {
+    0% {
+        transform: scale(1);
+    }
+
+    45% {
+        transform: scale(1.12);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes cart-plus-rise {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 6px, 0) scale(0.86);
+    }
+
+    18% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate3d(0, -18px, 0) scale(1);
     }
 }
 
@@ -466,21 +648,6 @@ export default {
         .good-item-image {
             width: 7.25rem;
             height: 7.25rem;
-
-            .u-owned-tag {
-                top: 0.375rem;
-                right: 0.375rem;
-                height: 1.375rem;
-                padding: 0 0.5rem 0 0.375rem;
-                border-radius: 999px;
-                font-size: 0.6rem;
-                line-height: 1.375rem;
-
-                .owned-icon {
-                    width: 0.75rem;
-                    height: 0.75rem;
-                }
-            }
         }
 
         .right {
@@ -526,6 +693,25 @@ export default {
                     height: 1.75rem;
                     border-radius: 0.5rem;
 
+                    &.owned {
+                        background: linear-gradient(180deg, rgba(75, 91, 119, 1) 0%, rgba(55, 70, 96, 1) 100%);
+                    }
+
+                    .u-owned-tag {
+                        top: -0.42rem;
+                        right: -0.22rem;
+                        height: 1rem;
+                        padding: 0 0.38rem 0 0.32rem;
+                        gap: 0.16rem;
+                        font-size: 0.56rem;
+                        line-height: 1rem;
+
+                        .owned-icon {
+                            width: 0.58rem;
+                            height: 0.58rem;
+                        }
+                    }
+
                     .button-text {
                         min-width: 0;
                         height: 1.75rem;
@@ -547,9 +733,29 @@ export default {
                     height: 1.75rem;
                     border-radius: 0.5rem;
 
+                    &.disabled {
+                        background: linear-gradient(180deg, rgba(130, 136, 146, 1) 0%, rgba(96, 105, 118, 1) 100%);
+                    }
+
                     img {
                         width: 1rem;
                         height: 1rem;
+                    }
+
+                    .cart-count {
+                        top: -0.375rem;
+                        right: -0.375rem;
+                        min-width: 1rem;
+                        height: 1rem;
+                        padding: 0 0.25rem;
+                        font-size: 0.625rem;
+                        line-height: 0.875rem;
+                    }
+
+                    .cart-plus {
+                        top: -1.25rem;
+                        right: -0.25rem;
+                        font-size: 0.8rem;
                     }
                 }
             }

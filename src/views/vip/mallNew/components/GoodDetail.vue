@@ -45,9 +45,10 @@
                     }}{{ canBuyInfo.buy_time ? "" : "(不在兑换期内)" }}
                 </div>
                 <div class="buttons">
-                    <button class="button add-cart" @click="addCart">
+                    <button class="button add-cart" :class="{ 'is-added': addFeedbackVisible }" @click="addCart">
                         <img :src="imgUrl + 'cart-fill.svg'" alt="" />
                         加购
+                        <span v-if="addFeedbackVisible" :key="addFeedbackKey" class="cart-plus">+1</span>
                     </button>
                     <button class="button buy" @click="buyGoods">
                         <template v-if="good.price_boxcoin">
@@ -67,7 +68,7 @@
             </div>
             <div v-if="sanitizedDescribe" class="good-comment" v-html="sanitizedDescribe"></div>
         </div>
-        <BuyConfirm ref="buyConfirm" :item="good"></BuyConfirm>
+        <BuyConfirm ref="buyConfirm" :item="good" @exchanged="$emit('exchanged', $event)"></BuyConfirm>
     </div>
 </template>
 
@@ -77,13 +78,20 @@ import BuyConfirm from "./BuyConfirm.vue";
 import Skeleton from "@/views/vip/mallNew/components/skeleton/index.vue";
 import { throttle } from "lodash";
 import { __cdn } from "@/utils/config";
-import { playAddCartFly } from "@/utils/mallCartFly";
 import { resolveMallSkinCategory } from "@/utils/mallDecoration";
 import { alertMallRequirement } from "@/utils/mallExchangeError";
+import {
+    getMallGoodsCartAmount,
+    isOwnedSingleMallGoods,
+    MALL_DECORATION_OWNED_MESSAGE,
+    MALL_DECORATION_SINGLE_LIMIT_MESSAGE,
+    shouldBlockSingleDecorationAdd,
+} from "@/utils/mallCartLimit";
 import DOMPurify from "dompurify";
 import User from "@jx3box/jx3box-common/js/user";
 export default {
     name: "GoodMallDetail",
+    emits: ["exchanged"],
     components: {
         Skeleton,
         Like,
@@ -102,6 +110,9 @@ export default {
     data() {
         return {
             imgUrl: __cdn + "design/mall/",
+            addFeedbackVisible: false,
+            addFeedbackKey: 0,
+            addFeedbackTimer: null,
             apply: {
                 palu: "魔盒论坛列表页",
                 avatar: "头像框",
@@ -174,16 +185,34 @@ export default {
             if (!this.canBuyInfo.canBuy) {
                 return alertMallRequirement(this, this.good, this.canBuyInfo);
             }
+            if (isOwnedSingleMallGoods(this.good)) {
+                return this.$message({
+                    type: "warning",
+                    message: MALL_DECORATION_OWNED_MESSAGE,
+                });
+            }
             this.$refs.buyConfirm.isShow = true;
         }, 2000),
-        addCart: throttle(function (e) {
+        addCart: throttle(function () {
             if (!User.isLogin()) {
                 return User.toLogin();
             }
             if (!this.canBuyInfo.canBuy) {
                 return alertMallRequirement(this, this.good, this.canBuyInfo);
             }
-            const num = this.$store.state.mallNew.cart?.find((item) => item.goods_id === this.good.id)?.amount || 0;
+            if (isOwnedSingleMallGoods(this.good)) {
+                return this.$message({
+                    type: "warning",
+                    message: MALL_DECORATION_OWNED_MESSAGE,
+                });
+            }
+            if (shouldBlockSingleDecorationAdd(this.$store.state.mallNew.cart, this.good)) {
+                return this.$message({
+                    type: "warning",
+                    message: MALL_DECORATION_SINGLE_LIMIT_MESSAGE,
+                });
+            }
+            const num = getMallGoodsCartAmount(this.$store.state.mallNew.cart, this.good);
             if (1 + num > this.good.stock) {
                 return this.$message({
                     type: "warning",
@@ -197,13 +226,21 @@ export default {
                 })
                 .then((bol) => {
                     if (bol) {
-                        this.fly(e);
+                        this.playAddFeedback();
                     }
                 });
         }, 1000),
-        fly(e) {
-            playAddCartFly(e, this.$store.state.mallNew.boundCart, { image: this.previewImage });
+        playAddFeedback() {
+            this.addFeedbackKey += 1;
+            this.addFeedbackVisible = true;
+            clearTimeout(this.addFeedbackTimer);
+            this.addFeedbackTimer = setTimeout(() => {
+                this.addFeedbackVisible = false;
+            }, 620);
         },
+    },
+    beforeUnmount() {
+        clearTimeout(this.addFeedbackTimer);
     },
 };
 </script>
@@ -382,10 +419,28 @@ export default {
                         }
                     }
                     &.add-cart {
+                        position: relative;
+                        overflow: visible;
                         background: rgba(255, 163, 43, 1);
                         &:disabled {
                             background: rgba(168, 168, 168, 1);
                             cursor: not-allowed;
+                        }
+                        &.is-added {
+                            animation: detail-cart-pop 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+                        }
+                        .cart-plus {
+                            position: absolute;
+                            z-index: 2;
+                            top: -18px;
+                            right: 10px;
+                            color: rgba(255, 220, 126, 1);
+                            font-size: 13px;
+                            font-weight: 900;
+                            line-height: 1;
+                            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+                            pointer-events: none;
+                            animation: detail-cart-plus-rise 0.62s cubic-bezier(0.18, 0.82, 0.2, 1) both;
                         }
                     }
                     &.like {
@@ -413,6 +468,36 @@ export default {
                 rgba(255, 255, 255, 0) 100%
             );
         }
+    }
+}
+
+@keyframes detail-cart-pop {
+    0% {
+        transform: scale(1);
+    }
+
+    45% {
+        transform: scale(1.08);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes detail-cart-plus-rise {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 6px, 0) scale(0.86);
+    }
+
+    18% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate3d(0, -18px, 0) scale(1);
     }
 }
 </style>
