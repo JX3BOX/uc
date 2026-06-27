@@ -1,5 +1,13 @@
 const SUPPORTED_SKIN_CATEGORIES = ["calendar", "sidebar", "atcard", "homebg", "comment"];
 
+const SKIN_CATEGORY_DISPLAY_NAMES = {
+    homebg: "栖云居",
+    atcard: "照影笺",
+    calendar: "岁时绘",
+    comment: "清谈境",
+    sidebar: "游踪饰",
+};
+
 const SKIN_CATEGORY_KEYWORDS = [
     {
         category: "calendar",
@@ -44,4 +52,9 @@ function resolveMallSkinCategory(good = {}) {
     return matched?.category || "";
 }
 
-export { resolveMallSkinCategory };
+function getMallSkinDisplayName(good = {}) {
+    const category = resolveMallSkinCategory(good);
+    return SKIN_CATEGORY_DISPLAY_NAMES[category] || "";
+}
+
+export { getMallSkinDisplayName, resolveMallSkinCategory };

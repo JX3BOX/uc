@@ -257,9 +257,6 @@ export default {
         canUseOnlyUnowned() {
             return this.query.category === "virtual" && UNOWNED_FILTER_SUB_CATEGORIES.includes(this.query.sub_category);
         },
-        shouldForceNoBuyForRequest() {
-            return this.query.category === "entity";
-        },
         sanitizeOnlyUnowned() {
             if (!User.isLogin() || !this.canUseOnlyUnowned()) {
                 const changed = this.query.only_unowned;
@@ -279,10 +276,7 @@ export default {
             if (title) params.title = title;
             if (this.query.category) params.category = this.query.category;
             if (this.query.sub_category) params.sub_category = this.query.sub_category;
-            if (
-                User.isLogin() &&
-                (this.shouldForceNoBuyForRequest() || (this.query.only_unowned && this.canUseOnlyUnowned()))
-            ) {
+            if (User.isLogin() && this.query.only_unowned && this.canUseOnlyUnowned()) {
                 params.no_buy = 1;
             }
 

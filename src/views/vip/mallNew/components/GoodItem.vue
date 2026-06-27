@@ -11,6 +11,7 @@
                 @error="handleImageError"
             />
             <div v-else class="good-item-img u-good-image-null">{{ imageFailed ? "图片加载失败" : "暂无图片" }}</div>
+            <span v-if="skinDisplayName" class="skin-name" :class="`skin-name--${skinCategory}`">{{ skinDisplayName }}</span>
         </div>
         <div class="right">
             <div class="header">
@@ -76,6 +77,7 @@ import {
     MALL_DECORATION_SINGLE_LIMIT_MESSAGE,
     shouldBlockSingleDecorationAdd,
 } from "@/utils/mallCartLimit";
+import { getMallSkinDisplayName, resolveMallSkinCategory } from "@/utils/mallDecoration";
 export default {
     name: "GoodItem",
     emits: ["exchanged"],
@@ -118,6 +120,14 @@ export default {
         },
         isOwnedSingleGood() {
             return this.isLoggedIn && isOwnedSingleMallGoods(this.good);
+        },
+        skinCategory() {
+            if (this.good.category !== "virtual" || this.good.sub_category !== "skin") return "";
+            return resolveMallSkinCategory(this.good);
+        },
+        skinDisplayName() {
+            if (!this.skinCategory) return "";
+            return getMallSkinDisplayName(this.good);
         },
     },
     watch: {
@@ -226,6 +236,16 @@ export default {
         flex: none;
         width: 120px;
         height: 120px;
+        &::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 46px;
+            background: linear-gradient(180deg, rgba(7, 10, 14, 0) 0%, rgba(7, 10, 14, 0.5) 100%);
+            pointer-events: none;
+        }
         .good-item-img {
             width: 100%;
             height: 100%;
@@ -242,6 +262,122 @@ export default {
             color: rgba(255, 255, 255, 0.62);
             font-size: 0.6rem;
             font-weight: 500;
+        }
+        .skin-name {
+            position: absolute;
+            z-index: 1;
+            left: 7px;
+            bottom: 7px;
+            max-width: calc(100% - 14px);
+            height: 23px;
+            padding: 0 11px 0 12px;
+            border: 1px solid rgba(255, 245, 220, 0.5);
+            border-radius: 13px 16px 16px 8px / 12px 16px 13px 10px;
+            background:
+                radial-gradient(ellipse at 34% 120%, rgba(255, 247, 231, 0.23) 0 42%, transparent 43%),
+                radial-gradient(ellipse at 78% 116%, rgba(255, 227, 253, 0.18) 0 28%, transparent 29%),
+                linear-gradient(120deg, rgba(255, 237, 190, 0.5) 0%, rgba(244, 191, 255, 0.36) 46%, rgba(151, 207, 255, 0.34) 100%),
+                rgba(38, 31, 58, 0.52);
+            background-size:
+                auto,
+                auto,
+                180% 180%,
+                auto;
+            color: rgba(255, 252, 244, 0.98);
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 21px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            box-sizing: border-box;
+            box-shadow:
+                0 6px 18px rgba(77, 54, 119, 0.28),
+                0 0 14px rgba(255, 230, 166, 0.22),
+                inset 0 1px 0 rgba(255, 255, 255, 0.45),
+                inset 0 -1px 0 rgba(255, 215, 247, 0.28);
+            text-shadow:
+                0 1px 3px rgba(72, 46, 91, 0.42),
+                0 0 7px rgba(255, 255, 255, 0.28);
+            backdrop-filter: blur(9px) saturate(1.2);
+            animation: skinRibbonGlow 4.8s ease-in-out infinite;
+
+            &::before {
+                content: "✦";
+                position: absolute;
+                left: 8px;
+                top: 2px;
+                width: 8px;
+                height: 8px;
+                color: rgba(214, 239, 255, 0.68);
+                font-size: 6px;
+                line-height: 8px;
+                text-shadow: 0 0 7px rgba(214, 239, 255, 0.72);
+                pointer-events: none;
+                animation: skinSparkleSoft 3.9s ease-in-out infinite 0.7s;
+            }
+
+            &::after {
+                content: "✦";
+                position: absolute;
+                right: 3px;
+                top: 10px;
+                width: 8px;
+                height: 8px;
+                color: rgba(255, 255, 255, 0.95);
+                font-size: 7px;
+                line-height: 8px;
+                text-shadow:
+                    0 0 8px rgba(255, 239, 186, 0.9),
+                    0 0 7px rgba(255, 217, 250, 0.72);
+                pointer-events: none;
+                animation: skinSparkle 2.6s ease-in-out infinite;
+            }
+
+            &.skin-name--homebg {
+                background:
+                    radial-gradient(ellipse at 34% 120%, rgba(255, 190, 218, 0.34) 0 42%, transparent 43%),
+                    radial-gradient(ellipse at 78% 116%, rgba(255, 162, 205, 0.24) 0 28%, transparent 29%),
+                    linear-gradient(120deg, rgba(255, 205, 224, 0.66) 0%, rgba(255, 156, 199, 0.52) 48%, rgba(255, 217, 232, 0.44) 100%),
+                    rgba(74, 32, 51, 0.5);
+            }
+
+            &.skin-name--atcard {
+                background:
+                    radial-gradient(ellipse at 34% 120%, rgba(224, 247, 255, 0.27) 0 42%, transparent 43%),
+                    radial-gradient(ellipse at 78% 116%, rgba(196, 226, 255, 0.2) 0 28%, transparent 29%),
+                    linear-gradient(120deg, rgba(222, 250, 255, 0.5) 0%, rgba(174, 218, 255, 0.38) 48%, rgba(231, 219, 255, 0.34) 100%),
+                    rgba(24, 43, 65, 0.52);
+            }
+
+            &.skin-name--calendar {
+                background:
+                    radial-gradient(ellipse at 34% 120%, rgba(255, 252, 210, 0.34) 0 42%, transparent 43%),
+                    radial-gradient(ellipse at 78% 116%, rgba(255, 230, 128, 0.26) 0 28%, transparent 29%),
+                    linear-gradient(120deg, rgba(255, 248, 174, 0.64) 0%, rgba(255, 218, 92, 0.46) 48%, rgba(255, 239, 184, 0.38) 100%),
+                    rgba(66, 48, 18, 0.52);
+                box-shadow:
+                    0 6px 18px rgba(120, 86, 26, 0.3),
+                    0 0 16px rgba(255, 228, 96, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.52),
+                    inset 0 -1px 0 rgba(255, 218, 84, 0.34);
+            }
+
+            &.skin-name--comment {
+                background:
+                    radial-gradient(ellipse at 34% 120%, rgba(220, 255, 242, 0.27) 0 42%, transparent 43%),
+                    radial-gradient(ellipse at 78% 116%, rgba(184, 246, 224, 0.18) 0 28%, transparent 29%),
+                    linear-gradient(120deg, rgba(213, 255, 239, 0.5) 0%, rgba(151, 226, 207, 0.36) 48%, rgba(219, 244, 255, 0.32) 100%),
+                    rgba(22, 50, 45, 0.52);
+            }
+
+            &.skin-name--sidebar {
+                background:
+                    radial-gradient(ellipse at 34% 120%, rgba(233, 224, 255, 0.28) 0 42%, transparent 43%),
+                    radial-gradient(ellipse at 78% 116%, rgba(206, 190, 255, 0.2) 0 28%, transparent 29%),
+                    linear-gradient(120deg, rgba(226, 217, 255, 0.52) 0%, rgba(185, 166, 255, 0.38) 48%, rgba(232, 219, 255, 0.34) 100%),
+                    rgba(40, 32, 70, 0.52);
+            }
         }
     }
     .right {
@@ -760,6 +896,58 @@ export default {
                 }
             }
         }
+    }
+}
+
+@keyframes skinRibbonGlow {
+    0%,
+    100% {
+        background-position:
+            0 0,
+            0 0,
+            0% 50%,
+            0 0;
+        box-shadow:
+            0 6px 18px rgba(77, 54, 119, 0.24),
+            0 0 10px rgba(255, 230, 166, 0.16),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4),
+            inset 0 -1px 0 rgba(255, 215, 247, 0.24);
+    }
+    50% {
+        background-position:
+            0 0,
+            0 0,
+            100% 50%,
+            0 0;
+        box-shadow:
+            0 7px 20px rgba(106, 72, 148, 0.3),
+            0 0 16px rgba(255, 230, 166, 0.26),
+            inset 0 1px 0 rgba(255, 255, 255, 0.48),
+            inset 0 -1px 0 rgba(255, 215, 247, 0.32);
+    }
+}
+
+@keyframes skinSparkle {
+    0%,
+    100% {
+        opacity: 0.52;
+        transform: scale(0.86) rotate(0deg);
+    }
+    45% {
+        opacity: 1;
+        transform: scale(1.08) rotate(12deg);
+    }
+}
+
+@keyframes skinSparkleSoft {
+    0%,
+    100% {
+        opacity: 0.28;
+        transform: scale(0.78) rotate(-8deg);
+    }
+    58% {
+        opacity: 0.86;
+        transform: scale(1) rotate(8deg);
     }
 }
 </style>
