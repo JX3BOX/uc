@@ -44,7 +44,7 @@ export default {
 </script>
 <style lang="less">
 html {
-    font-size: calc(min(18px, (100vw / 414 * 16)));
+    font-size: calc(min(16px, (100vw / 414 * 16)));
 }
 .p-mall {
     font-size: 1rem;

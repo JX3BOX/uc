@@ -43,6 +43,12 @@ const pages = {
         template: "public/index.html",
         filename: "vip/index.html",
     },
+    ai: {
+        title: "AI 编辑器预览 - JX3BOX",
+        entry: "src/pages/ai/index.js",
+        template: "public/app.html",
+        filename: "ai/index.html",
+    },
 };
 
 const path = require("path");
