@@ -12,11 +12,20 @@
 <script>
 import AppLayout from "@/layouts/author/AppLayout.vue";
 import Me from "@/components/author/newComponents/Me.vue";
-import { getUserInfo, getDecoration, getDecorationJson } from "@/service/author/cms";
+import { getUserInfo, getDecorationV2 } from "@/service/author/cms";
 import User from "@jx3box/jx3box-common/js/user";
 import { __cdn } from "@/utils/config";
-const DECORATION_JSON = "decoration_json";
-const DECORATION_KEY = "decoration_me";
+import { resolveImagePath } from "@jx3box/jx3box-common/js/utils";
+const DECORATION_KEY = "decoration_me_pc_home_v2";
+const DECORATION_POSITION = {
+    lt: "top left",
+    rt: "top right",
+    lb: "bottom left",
+    rb: "bottom right",
+    ct: "top center",
+    cc: "center center",
+    cb: "bottom center",
+};
 export default {
     name: "Author",
     components: {
@@ -69,40 +78,90 @@ export default {
                     return;
                 }
             }
-            getDecoration({ using: 1, user_id: this.uid, type: "homebg" }).then((res) => {
-                let decorationList = res.data.data;
-                //筛选个人装扮
-                let decoration = decorationList.find((item) => item.type == "homebg");
-                if (!decoration) {
+            Promise.all([
+                getDecorationV2({ type: "homebg", subtype: "pc_homebanner", using: 1 }),
+                getDecorationV2({ type: "homebg", subtype: "pc_homebg", using: 1 }),
+            ]).then(([bannerRes, backgroundRes]) => {
+                const bannerDecoration = bannerRes?.data?.data?.[0];
+                const backgroundDecoration = backgroundRes?.data?.data?.[0];
+                const decorationItem = this.resolveDecorationItem(bannerDecoration);
+                const backgroundItem = this.resolveDecorationItem(backgroundDecoration);
+                const banner = this.resolveDecorationImage(decorationItem?.image);
+                const themeBackground = this.resolveThemeBackgroundImage(backgroundItem?.image);
+                if (!banner && !themeBackground) {
                     //空 则为无主题，不再加载接口，Me界面设No
                     sessionStorage.setItem(DECORATION_KEY + this.uid, JSON.stringify({ status: false }));
                     return;
                 }
-                let decorationJson = sessionStorage.getItem(DECORATION_JSON);
-                if (!decorationJson) {
-                    //加载远程json，用于颜色配置及主题存在部位判断
-                    getDecorationJson().then((json) => {
-                        let decoration_json = json.data;
-                        let theme = JSON.parse(JSON.stringify(decoration_json[decoration.val]));
-                        theme.status = true;
-                        sessionStorage.setItem(DECORATION_KEY + this.uid, JSON.stringify(theme));
-                        this.setDecoration(theme);
-                        //缓存远程JSON文件
-                        sessionStorage.setItem(DECORATION_JSON, JSON.stringify(decoration_json));
-                    });
-                } else {
-                    let theme = JSON.parse(decorationJson)[decoration.val];
-                    theme.status = true;
-                    sessionStorage.setItem(DECORATION_KEY + this.uid, JSON.stringify(theme));
-                    this.setDecoration(theme);
-                }
+                const theme = {
+                    ...bannerDecoration,
+                    ...decorationItem,
+                    banner: this.resolveDecorationImage(decorationItem?.image),
+                    bannerPosition: this.resolveDecorationPosition(decorationItem?.postion || decorationItem?.position),
+                    themeBackground: this.resolveThemeBackgroundImage(backgroundItem?.image),
+                    themeBackgroundPosition: this.resolveDecorationPosition(backgroundItem?.postion || backgroundItem?.position),
+                    status: true,
+                };
+                sessionStorage.setItem(DECORATION_KEY + this.uid, JSON.stringify(theme));
+                this.setDecoration(theme);
             });
+        },
+        resolveDecorationItem(decoration) {
+            const decorations = Array.isArray(decoration?.decorations)
+                ? decoration.decorations
+                : Array.isArray(decoration?.decoration)
+                ? decoration.decoration
+                : [];
+            if (decorations.length) {
+                return {
+                    ...decoration,
+                    ...(decorations.find((item) => item?.image) || decorations[0]),
+                };
+            }
+            return {
+                ...decoration,
+                ...decoration?.decoration,
+            };
+        },
+        resolveDecorationImage(image) {
+            if (!image) {
+                return "";
+            }
+            const markdownLink = String(image).match(/\]\(([^)]+)\)/);
+            const url = markdownLink?.[1] || image;
+            if (url.startsWith("//")) return resolveImagePath(`https:${url}`);
+            if (/^https?:\/\//i.test(url)) return resolveImagePath(url);
+            return resolveImagePath(__cdn + url.replace(/^\/+/, ""));
+        },
+        resolveThemeBackgroundImage(image) {
+            const url = this.resolveDecorationImage(image);
+            if (!url || document.body.offsetWidth <= 2560 || /x-oss-process=/.test(url)) {
+                return url;
+            }
+            const joiner = url.includes("?") ? "&" : "?";
+            return `${url}${joiner}x-oss-process=image/resize,w_2560`;
+        },
+        resolveDecorationPosition(position) {
+            if (!position) {
+                return "center center";
+            }
+            return DECORATION_POSITION[position] || position;
         },
         showDecoration: function (val, type) {
             return __cdn + `design/decoration/images/${val}/${type}.png`;
         },
         setDecoration(theme) {
             this.decorationMe = theme;
+            if (theme.themeBackground) {
+                this.themeStyle = {
+                    backgroundImage: `url(${theme.themeBackground})`,
+                    backgroundPosition: theme.themeBackgroundPosition || "center center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundAttachment: "fixed",
+                    backgroundSize: "cover",
+                };
+                return;
+            }
             let bgImg = [],
                 w = document.body.offsetWidth;
             // if(!theme.homebg_rb){

@@ -1,6 +1,12 @@
 <template>
     <div>
-        <div class="m-author-header" :style="{ backgroundImage: `url(${userDefinedStyle.banner})` }">
+        <div
+            class="m-author-header"
+            :style="{
+                backgroundImage: `url(${userDefinedStyle.banner})`,
+                backgroundPosition: userDefinedStyle.bannerPosition,
+            }"
+        >
             <div class="u-header-info">
                 <CommonAvatar
                     class="u-author-avatar"
@@ -245,6 +251,7 @@ export default {
                 honor: {},
                 sendMsg: {},
                 banner: `${__cdn}design/decoration/images/0_TESTSAMPLE/homebanner.png`,
+                bannerPosition: "center center",
             },
             // honor: null, //称号
             canSendLetter: false,
@@ -374,6 +381,11 @@ export default {
                     "border-color": decoration.buttoncolor,
                     color: decoration.buttontextcolor,
                 };
+            }
+            if (decoration.banner) {
+                this.userDefinedStyle.banner = decoration.banner;
+                this.userDefinedStyle.bannerPosition = decoration.bannerPosition || "center center";
+                return;
             }
             const webp = ["jx3box-birthday-5"];
             this.userDefinedStyle.banner =
