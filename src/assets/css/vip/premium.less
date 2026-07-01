@@ -30,15 +30,219 @@ ul {
         .flex;
         justify-content: space-between;
     }
-    .m-premium-buy {
+    .m-premium-exchange {
         margin: 0 40px;
         width: 100%;
+        min-width: 0;
         border-right: 1px solid #d9d9d9;
         border-left: 1px solid #d9d9d9;
+        padding: 0 40px;
+        box-sizing: border-box;
     }
     .m-premium-status,
     .m-privilege {
         flex-shrink: 0;
+    }
+}
+
+.m-premium-exchange {
+    color: #24292e;
+    .m-exchange-head {
+        .flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        .mb(18px);
+        .u-kicker {
+            .fz(12px,18px);
+            .bold;
+            color: #bf8b6a;
+            letter-spacing: 2px;
+        }
+        h1 {
+            .fz(24px,34px);
+            .bold;
+            margin: 2px 0 0 0;
+        }
+        .u-mall-link {
+            .db;
+            .r(999px);
+            .fz(12px,30px);
+            .bold;
+            color: #bf8b6a;
+            border: 1px solid #bf8b6a66;
+            padding: 0 14px;
+            text-decoration: none;
+            white-space: nowrap;
+            &:hover {
+                color: #9c6846;
+                border-color: #bf8b6a;
+                background: #fff8ea;
+            }
+        }
+    }
+
+    .m-exchange-card {
+        .r(18px);
+        background: linear-gradient(180deg, #fff8ea 0%, #fff 44%);
+        border: 1px solid #bf8b6a33;
+        box-shadow: 0 10px 30px #93725d17;
+        padding: 24px;
+        box-sizing: border-box;
+        &.is-loading,
+        &.is-error {
+            .flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            min-height: 320px;
+            gap: 12px;
+            color: #71523e;
+            .fz(14px,22px);
+            i {
+                .fz(28px);
+            }
+            b {
+                .fz(18px,26px);
+            }
+            button {
+                .pointer;
+                .r(999px);
+                .bold;
+                border: 0;
+                color: #fff;
+                background: #bf8b6a;
+                padding: 8px 20px;
+            }
+        }
+    }
+
+    .m-good-summary {
+        .flex;
+        align-items: center;
+        gap: 16px;
+        .u-good-cover {
+            flex-shrink: 0;
+            .size(96px);
+            .r(14px);
+            object-fit: cover;
+            background: #f5eadc;
+            box-shadow: 0 8px 20px #93725d26;
+        }
+        .u-good-cover-null {
+            .flex;
+            align-items: center;
+            justify-content: center;
+            .bold;
+            color: #bf8b6a;
+        }
+        .m-good-info {
+            min-width: 0;
+        }
+        .u-good-title {
+            .fz(20px,28px);
+            .bold;
+            color: #24292e;
+            word-break: break-word;
+        }
+        .u-good-desc {
+            .fz(13px,20px);
+            .mt(6px);
+            color: #24292e99;
+        }
+    }
+
+    .m-cost-panel {
+        .grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin: 22px 0 16px 0;
+        .u-cost-item {
+            .r(12px);
+            padding: 16px;
+            background: #fff;
+            border: 1px solid #24292e14;
+            span {
+                .db;
+                .fz(12px,18px);
+                color: #24292e80;
+            }
+            b {
+                .flex;
+                align-items: center;
+                gap: 8px;
+                .fz(26px,34px);
+                .mt(6px);
+                color: #bf8b6a;
+                img,
+                svg {
+                    .size(22px);
+                }
+            }
+        }
+    }
+
+    .m-condition-list {
+        .flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        span {
+            .r(999px);
+            .fz(12px,24px);
+            .bold;
+            color: #8e8e8e;
+            background: #ebebeb;
+            padding: 0 10px;
+            &.canBuy {
+                color: #3f7f4f;
+                background: #e7f7ec;
+            }
+        }
+    }
+
+    .u-period {
+        .fz(12px,18px);
+        color: #24292e80;
+        margin: 14px 0;
+    }
+
+    .u-warning {
+        .r(8px);
+        .fz(13px,20px);
+        color: #b45309;
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        padding: 10px 12px;
+        .mb(14px);
+    }
+
+    .u-exchange-button {
+        .pointer;
+        .r(12px);
+        .bold;
+        .fz(16px,48px);
+        .size(100%,48px);
+        color: #fff;
+        border: 0;
+        background: linear-gradient(90deg, #bf8b6a 0%, #8f5e3f 100%);
+        box-shadow: 0 10px 24px #93725d40;
+        transition: filter 0.15s ease, transform 0.15s ease;
+        &:hover {
+            filter: brightness(1.06);
+            transform: translateY(-1px);
+        }
+        &.disabled {
+            cursor: not-allowed;
+            filter: grayscale(1);
+            opacity: 0.58;
+            transform: none;
+        }
+    }
+
+    .u-tips {
+        .fz(12px,20px);
+        .mt(14px);
+        color: #24292e80;
     }
 }
 
@@ -59,34 +263,35 @@ ul {
             align-items: center;
             gap: 30px;
         }
-        .m-premium-buy--content .m-buy-box .u-title span{
-            .none;
-        }
-        .m-premium-buy {
+        .m-premium-exchange {
+            width: 100%;
+            margin: 0;
             padding: 0 10px;
             box-sizing: border-box;
-            border:none;
-            .m-list {
+            border: none;
+            .m-exchange-head {
                 flex-direction: column;
                 gap: 10px;
-                .u-item {
-                    width: 100%;
+                h1 {
+                    .fz(22px,30px);
                 }
+            }
+            .m-exchange-card {
+                padding: 18px;
+            }
+            .m-good-summary {
+                align-items: flex-start;
+                .u-good-cover {
+                    .size(72px);
+                }
+            }
+            .m-cost-panel {
+                grid-template-columns: 1fr;
             }
         }
         .m-premium-status,
         .m-privilege {
             order: 2;
-        }
-    }
-    .m-pay-content {
-        gap: 10px;
-        flex-direction: column;
-        .m-pay-price{
-            .x;
-        }
-        .u-pay-button{
-            .w(100%);
         }
     }
 }

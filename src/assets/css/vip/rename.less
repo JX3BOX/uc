@@ -1,56 +1,290 @@
-.m-vip-rename{
-    max-width:800px;
+.m-rename-page.m-vip-container {
+    background: linear-gradient(to bottom, #fff, #fff8ea);
+    padding: 50px;
+    box-sizing: border-box;
+    min-height: calc(100vh - 64px);
+}
+
+.m-vip-rename {
+    .r(30px);
     .auto(x);
-    padding:40px 0;
+    max-width: 1080px;
+    box-sizing: border-box;
+    padding: 48px 64px;
+    background-color: #fff;
+    box-shadow: 0 4px 20px #93725d1f;
 
-    .u-tip{
-        .fz(14px);
-        .mb(20px);
-        color:#999;
+    .m-vip-rename-title {
+        .mb(24px);
+    }
 
-        b{
-            color:#49c10f;
+    .u-tip {
+        .r(12px);
+        .fz(14px, 22px);
+        .mb(24px);
+        color: #71523e;
+        background: #fff8ea;
+        border: 1px solid #bf8b6a33;
+        padding: 14px 16px;
+
+        b {
+            color: #bf8b6a;
+            .fz(18px);
+        }
+
+        .el-button {
+            --el-color-primary: #bf8b6a;
+            --el-color-primary-light-3: #c99b7d;
+            --el-color-primary-dark-2: #9c6846;
         }
     }
 }
 
-.m-vip-rename-form{
+.m-vip-rename-main {
+    .grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 32px;
+    align-items: flex-start;
+}
 
-    .u-new-name{
-        .el-input-group__append{
+.m-vip-rename-form {
+    .r(18px);
+    padding: 28px;
+    box-sizing: border-box;
+    border: 1px solid #24292e14;
+    background: #fff;
+
+    .u-old-name b {
+        color: #24292e;
+    }
+
+    .u-new-name {
+        .el-input-group__append {
             .w(14px);
-            padding:0 14px;
+            padding: 0 14px;
         }
 
-        .el-icon-success{
-            color:#49c10f;
+        .el-icon-success {
+            color: #49c10f;
         }
-        .el-icon-error{
-            color:#fc3c3c;
+        .el-icon-error {
+            color: #fc3c3c;
         }
     }
 
-    .u-submit{
+    .u-submit {
         .w(160px);
     }
 
-    .el-alert{
+    .el-alert {
         .lh(1.1);
         .mt(10px);
     }
 }
-@media screen and (max-width:@phone){
-    .m-vip-rename{
-        padding:20px;
 
-        .el-form-item__label{
-            color:#888;
+.m-rename-card {
+    .r(18px);
+    padding: 24px;
+    box-sizing: border-box;
+    color: #24292e;
+    background: linear-gradient(180deg, #fff8ea 0%, #fff 46%);
+    border: 1px solid #bf8b6a33;
+    box-shadow: 0 10px 30px #93725d17;
+
+    .m-card-head {
+        .flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        .mb(14px);
+
+        .u-card-kicker {
+            .fz(12px, 18px);
+            .bold;
+            color: #bf8b6a;
+            letter-spacing: 2px;
         }
+
+        .u-mall-link {
+            .db;
+            .r(999px);
+            .fz(12px, 28px);
+            .bold;
+            color: #bf8b6a;
+            border: 1px solid #bf8b6a66;
+            padding: 0 12px;
+            text-decoration: none;
+            white-space: nowrap;
+
+            &:hover {
+                color: #9c6846;
+                border-color: #bf8b6a;
+                background: #fff8ea;
+            }
+        }
+    }
+
+    .m-rename-good {
+        .flex;
+        align-items: center;
+        gap: 14px;
+        min-height: 92px;
+
+        &.is-error {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+            color: #71523e;
+
+            b {
+                .fz(16px, 24px);
+            }
+
+            button {
+                .pointer;
+                .r(999px);
+                .bold;
+                border: 0;
+                color: #fff;
+                background: #bf8b6a;
+                padding: 8px 18px;
+            }
+        }
+
+        .u-card-cover {
+            flex-shrink: 0;
+            .size(82px);
+            .r(14px);
+            object-fit: cover;
+            background: #f5eadc;
+            box-shadow: 0 8px 20px #93725d26;
+        }
+
+        .u-card-cover-null {
+            .flex;
+            align-items: center;
+            justify-content: center;
+            .bold;
+            color: #bf8b6a;
+        }
+
+        .u-card-title {
+            .fz(20px, 28px);
+            .bold;
+            color: #24292e;
+            word-break: break-word;
+        }
+
+        .u-card-desc {
+            .fz(13px, 20px);
+            .mt(4px);
+            color: #24292e99;
+        }
+    }
+
+    .m-card-cost {
+        .flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 20px 0 12px 0;
+
+        span {
+            .flex;
+            align-items: center;
+            gap: 6px;
+            .r(999px);
+            .fz(13px, 28px);
+            .bold;
+            color: #bf8b6a;
+            background: #fff;
+            border: 1px solid #bf8b6a33;
+            padding: 0 10px;
+
+            img,
+            svg {
+                .size(16px);
+            }
+        }
+    }
+
+    .m-card-meta {
+        .flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        .mb(18px);
+
+        span {
+            .r(999px);
+            .fz(12px, 24px);
+            .bold;
+            color: #8e8e8e;
+            background: #ebebeb;
+            padding: 0 10px;
+
+            &.canBuy {
+                color: #3f7f4f;
+                background: #e7f7ec;
+            }
+        }
+    }
+
+    .u-card-buy {
+        .pointer;
+        .r(12px);
+        .bold;
+        .fz(16px, 46px);
+        .size(100%, 46px);
+        color: #fff;
+        border: 0;
+        background: linear-gradient(90deg, #bf8b6a 0%, #8f5e3f 100%);
+        box-shadow: 0 10px 24px #93725d40;
+        transition: filter 0.15s ease, transform 0.15s ease;
+
+        &:hover {
+            filter: brightness(1.06);
+            transform: translateY(-1px);
+        }
+
+        &.disabled {
+            cursor: not-allowed;
+            filter: grayscale(1);
+            opacity: 0.58;
+            transform: none;
+        }
+    }
+
+}
+
+.m-rename-result-desc {
+    a:hover {
+        box-shadow: 0 1px 0 @v4primary;
     }
 }
 
-.m-rename-result-desc{
-    a:hover{
-        box-shadow:0 1px 0 @v4primary;
+@media screen and (max-width: @phone) {
+    .m-rename-page.m-vip-container {
+        padding: 0;
+        background: none;
+    }
+
+    .m-vip-rename {
+        padding: 20px;
+        box-shadow: none;
+        border-radius: 0;
+        background: linear-gradient(to bottom, #fff, #fff8ea1f);
+
+        .el-form-item__label {
+            color: #888;
+        }
+    }
+
+    .m-vip-rename-main {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .m-vip-rename-form,
+    .m-rename-card {
+        padding: 18px;
     }
 }
