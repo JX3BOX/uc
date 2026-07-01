@@ -133,7 +133,7 @@
                                 </tr>
                             </thead>
                             <tr v-for="(item, i) in list" :key="i">
-                                <td>{{ formatType(item.action_type) }}</td>
+                                <td>{{ item.action_desc || formatType(item.action_type) }}</td>
                                 <td class="u-count" :class="showBoxcoinCls(item)">
                                     <span>{{ showBoxcoinOp(item) }}</span>
                                     <b>{{ countBoxCoin(item) }}</b>
