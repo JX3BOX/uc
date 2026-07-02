@@ -77,7 +77,7 @@ import {
     MALL_DECORATION_SINGLE_LIMIT_MESSAGE,
     shouldBlockSingleDecorationAdd,
 } from "@/utils/mallCartLimit";
-import { getMallSkinDisplayName, resolveMallSkinCategory } from "@/utils/mallDecoration";
+import { getMallSkinDisplayName, isMallSkinGood, resolveMallSkinCategory } from "@/utils/mallDecoration";
 export default {
     name: "GoodItem",
     emits: ["exchanged"],
@@ -122,7 +122,7 @@ export default {
             return this.isLoggedIn && isOwnedSingleMallGoods(this.good);
         },
         skinCategory() {
-            if (this.good.category !== "virtual" || this.good.sub_category !== "skin") return "";
+            if (!isMallSkinGood(this.good)) return "";
             return resolveMallSkinCategory(this.good);
         },
         skinDisplayName() {

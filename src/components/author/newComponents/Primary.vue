@@ -11,6 +11,11 @@
             </div>
         </div>
 
+        <!--作者角色-->
+        <div class="m-common-box m-role" v-if="hasAuthorRoles">
+            <AuthorRole :data="data"></AuthorRole>
+        </div>
+
         <!--他的荣誉-->
         <AuthorMedals :uid="uid" class="u-trophy m-common-box m-medals"></AuthorMedals>
 
@@ -31,6 +36,7 @@
 import AuthorFans from "@jx3box/jx3box-ui/src/author/AuthorFans";
 // import AuthorLink from "@jx3box/jx3box-ui/src/author/AuthorLink";
 import AuthorMedals from "@jx3box/jx3box-ui/src/author/AuthorMedals";
+import AuthorRole from "@jx3box/jx3box-ui/src/author/AuthorRole.vue";
 // import AuthorTeams from "@jx3box/jx3box-common-ui/src/author/AuthorTeams";
 import { getUserInfo } from "@jx3box/jx3box-ui/service/author";
 
@@ -43,11 +49,12 @@ export default {
         AuthorFans,
         // AuthorLink,
         AuthorMedals,
+        AuthorRole,
         // AuthorTeams,
     },
     data: function () {
         return {
-            data: "",
+            data: {},
             namespaceList: [],
             defult_link: "https://www.jx3box.com",
         };
@@ -62,6 +69,11 @@ export default {
                 page: 1,
                 per: 5,
             };
+        },
+        hasAuthorRoles: function () {
+            const roles = this.data?.public_roles;
+            if (Array.isArray(roles)) return roles.length;
+            return !!roles;
         },
     },
     mounted() {

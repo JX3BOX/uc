@@ -52,9 +52,13 @@ function resolveMallSkinCategory(good = {}) {
     return matched?.category || "";
 }
 
+function isMallSkinGood(good = {}) {
+    return good.sub_category === "skin" || !!resolveMallSkinCategory(good);
+}
+
 function getMallSkinDisplayName(good = {}) {
     const category = resolveMallSkinCategory(good);
     return SKIN_CATEGORY_DISPLAY_NAMES[category] || "";
 }
 
-export { getMallSkinDisplayName, resolveMallSkinCategory };
+export { getMallSkinDisplayName, isMallSkinGood, resolveMallSkinCategory };
