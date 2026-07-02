@@ -208,7 +208,7 @@ export default {
         .pr;
 
         &.is-select {
-            background-color: lighten(@v4primary, 30%);
+            background-color: lighten(@v4primary, 40%);
             border-color:@v4primary;
 
             // .u-name {

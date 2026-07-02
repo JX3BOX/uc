@@ -12,20 +12,58 @@
             <!-- 左右两侧 -->
             <div class="m-theme-left">
                 <div class="u-top">
-                    <img :src="previewUrl" class="u-img" fit="contain" v-if="previewUrl" />
+                    <div class="u-scene-preview" v-if="activeScenePreview">
+                        <div class="u-scene-tabs" v-if="currentSceneTabs.length > 1">
+                            <button
+                                v-for="scene in currentSceneTabs"
+                                :key="scene.subtype"
+                                type="button"
+                                :class="{ active: activeSceneSubtype === scene.subtype }"
+                                @click="selectSceneSubtype(scene.subtype)"
+                            >
+                                {{ scene.label }}
+                            </button>
+                        </div>
+                        <div class="u-scene-card">
+                            <component
+                                :is="activeScenePreview.component"
+                                :key="activeScenePreview.subtype"
+                                :theme="activeSceneTheme"
+                                :skin-config="activeSceneConfig"
+                                class="u-scene-item"
+                            />
+                            <div class="u-scene-modes" v-if="showSceneModes">
+                                <span
+                                    v-for="mode in activeSceneModes"
+                                    :key="mode.value"
+                                    :class="[`is-${mode.value}`, { active: activeSceneTheme === mode.value }]"
+                                    :title="mode.label"
+                                    @click="selectSceneTheme(mode.value)"
+                                >
+                                    <i :class="mode.icon"></i>
+                                    <em>{{ mode.label }}</em>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="u-no-preview" v-else>
                         暂 无<br />
                         预 览
                     </div>
                 </div>
                 <div class="u-bottom">
-                    <div class="u-type-box" v-for="(item, index) in themeType" :key="index">
+                    <div
+                        class="u-type-box"
+                        :class="{ active: activePreviewType === item.type }"
+                        v-for="(item, index) in themeType"
+                        :key="index"
+                        @click="selectPreviewType(item.type)"
+                    >
                         <img
                             :src="getActiveImg(item)"
                             class="u-img"
                             fit="contain"
                             v-if="isStatus(item)"
-                            @click="preview(item)"
                         />
                         <div class="u-no-select" v-else-if="!item.statue">
                             敬 请<br />
@@ -37,6 +75,10 @@
                         </div>
                         <div class="u-title">{{ item.name }}</div>
                     </div>
+                </div>
+                <div class="u-btn">
+                    <el-button type="primary" @click="decorationSubmit" size="large">确认</el-button>
+                    <el-button @click="reset" size="large">重置</el-button>
                 </div>
             </div>
             <div class="m-theme-right">
@@ -59,7 +101,7 @@
                                     :class="item2.isHave ? (item2.using ? 'select' : '') : 'noHave'"
                                     @click="setStatus(i, i2, item2)"
                                 >
-                                    <el-image :src="showDecoration(item2)" fit="contain" />
+                                    <el-image :src="showDecoration(item2)" fit="cover" />
                                 </div>
                                 <div class="u-decoration-name">{{ item2.text }}</div>
                             </div>
@@ -67,10 +109,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="u-btn">
-            <el-button type="primary" @click="decorationSubmit" size="large">确认</el-button>
-            <el-button @click="reset" size="large">重置</el-button>
         </div>
     </uc>
 </template>
@@ -82,32 +120,96 @@ import User from "@jx3box/jx3box-common/js/user";
 import { __imgPath, __cdn } from "@/utils/config";
 import { cloneDeep, flatten } from "lodash";
 import tabsData from "@/assets/data/dashboard/tabs.json";
+import { SKIN_SCENE_COMPONENTS } from "@/components/skin";
 const { themeTab } = tabsData;
 
-const sortBy = function (sort) {
-    return (x, y) => {
-        return x[sort] - y[sort];
-    };
+const normalizeSkinUrl = function (url) {
+    const raw = String(url || "").trim();
+    if (!raw) return "";
+    if (/^(https?:)?\/\//.test(raw)) return raw;
+    return __cdn + raw.replace(/^\/+/, "");
 };
 
-//去重并判断是否拥有
-const uniqueFromObject = function (arr, uniId, key, options, noKey = []) {
-    let res = new Map(),
-        newArr = [];
-    let optionsClone = cloneDeep(options);
-    let filterArr = arr.filter((item) => !res.has(item[uniId]) && res.set(item[uniId], 1));
-    optionsClone.forEach((item, i) => {
-        item.val = key;
-        if (noKey.indexOf(key) === -1) {
-            let find = filterArr.find((e) => e.type == item.type);
-            if (find) {
-                item.isHave = 1;
-                item.using = find.using;
-            }
-        }
-        newArr.push(item);
-    });
-    return newArr;
+const SKIN_TYPE_OPTIONS = [
+    { type: "calendar", text: "岁时绘", subtype: "pc_calendar", sort: 1, isHave: 0, using: 0, statue: 1 },
+    { type: "sidebar", text: "游踪饰", subtype: "pc_sidebar", sort: 2, isHave: 0, using: 0, statue: 1 },
+    { type: "comment", text: "清谈境", subtype: "pc_comment", sort: 3, isHave: 0, using: 0, statue: 1 },
+    { type: "homebg", text: "栖云居", subtype: "pc_homebg", sort: 4, isHave: 0, using: 0, statue: 1 },
+    { type: "atcard", text: "照影笺", subtype: "pc_authorcard", sort: 5, isHave: 0, using: 0, statue: 1 },
+];
+
+const SKIN_TYPE_SCENES = {
+    sidebar: [
+        "pc_sidebar",
+        "app_tabbar_icon_dashboard",
+        "app_tabbar_icon_dashboard_active",
+        "app_tabbar_icon_forum",
+        "app_tabbar_icon_forum_active",
+        "app_tabbar_icon_nav",
+        "app_tabbar_icon_nav_active",
+        "app_tabbar_icon_home",
+        "app_tabbar_icon_home_active",
+        "app_tabbar_bg",
+    ],
+    calendar: ["pc_calendar", "app_kv"],
+    comment: ["pc_comment", "app_forum"],
+    homebg: ["pc_home", "app_authorbg", "app_dashboardbg"],
+    atcard: ["pc_authorcard", "app_authorcard"],
+};
+
+const SKIN_SCENE_LABELS = {
+    app_kv: "[App]首屏KV",
+    pc_calendar: "[PC]首页日历",
+    app_tabbar_icon_dashboard: "[App]我的图标",
+    app_tabbar_icon_dashboard_active: "[App]我的图标(激活)",
+    app_tabbar_icon_forum: "[App]论坛图标",
+    app_tabbar_icon_forum_active: "[App]论坛图标(激活)",
+    app_tabbar_icon_nav: "[App]导航图标",
+    app_tabbar_icon_nav_active: "[App]导航图标(激活)",
+    app_tabbar_icon_home: "[App]首页图标",
+    app_tabbar_icon_home_active: "[App]首页图标(激活)",
+    app_tabbar_bg: "[App]底栏背景",
+    pc_sidebar: "[PC]侧栏背景",
+    app_forum: "[App]论坛KV",
+    pc_comment: "[PC]评论背景",
+    app_authorbg: "[App]作者主页",
+    app_dashboardbg: "[App]个人中心",
+    pc_home: "[PC]个人主页",
+    pc_homebanner: "[PC]个人主页横幅",
+    pc_homebg: "[PC]个人主页背景",
+    app_authorcard: "[App]用户卡片",
+    pc_authorcard: "[PC]用户卡片",
+};
+
+const SKIN_THEME_OPTIONS = [
+    { value: "all", label: "通用", icon: "el-icon-s-grid" },
+    { value: "light", label: "亮色", icon: "el-icon-sunny" },
+    { value: "dark", label: "暗色", icon: "el-icon-moon" },
+];
+
+const getSkinTypeOption = function (type) {
+    return SKIN_TYPE_OPTIONS.find((item) => item.type === type);
+};
+
+const getSkinConfig = function (source, key, type) {
+    const configs = source?.[key]?.decorations?.[type];
+    const subtype = getSkinTypeOption(type)?.subtype;
+    if (!Array.isArray(configs)) return null;
+    return configs.find((item) => item?.subtype === subtype && item?.image) || null;
+};
+
+const getSkinPreview = function (source, key, type) {
+    return normalizeSkinUrl(getSkinConfig(source, key, type)?.image);
+};
+
+const HIDDEN_SKIN_KEYS = ["0_TESTSAMPLE"];
+
+const isVisibleSkin = function (source, key) {
+    return !HIDDEN_SKIN_KEYS.includes(key) && source?.[key]?.status !== 0;
+};
+
+const hasSkinType = function (source, key, type) {
+    return !!getSkinConfig(source, key, type)?.image;
 };
 
 export default {
@@ -117,22 +219,81 @@ export default {
         return {
             tabList: themeTab,
             uid: User.getInfo().uid,
-            themeType: [
-                { name: "个人名片", type: "atcard", statue: 1 },
-                { name: "主页风格", type: "homebg", statue: 1 },
-                { name: "侧栏主题", type: "sidebar", statue: 1 },
-                { name: "首页日历", type: "calendar", statue: 1 },
-                { name: "评论皮肤", type: "comment", statue: 1 },
-                //{ name: "社区称号", type: "", statue: 0 },
-            ],
+            themeType: SKIN_TYPE_OPTIONS.map((item) => ({ name: item.text, type: item.type, statue: item.statue })),
             previewUrl: "",
+            activePreviewType: "calendar",
+            activeSceneSubtype: "pc_calendar",
+            activeSceneTheme: "all",
             decoration: [],
             decorationJson: [], //远程json
             originalActivateName: null,
             back: {},
         };
     },
-    computed: {},
+    computed: {
+        currentSceneTabs() {
+            return (SKIN_TYPE_SCENES[this.activePreviewType] || [])
+                .map((subtype) => ({
+                    subtype,
+                    label: SKIN_SCENE_LABELS[subtype] || subtype,
+                    component: SKIN_SCENE_COMPONENTS[subtype],
+                }))
+                .filter((item) => item.component);
+        },
+        activeScenePreview() {
+            return (
+                this.currentSceneTabs.find((item) => item.subtype === this.activeSceneSubtype) ||
+                this.currentSceneTabs[0] ||
+                null
+            );
+        },
+        activePreviewSkinKey() {
+            const list = flatten(this.decoration.map((item) => item.list));
+            return list.find((item) => item.type === this.activePreviewType && item.using == 1)?.val || "";
+        },
+        activeSceneModes() {
+            const configs =
+                this.decorationJson?.[this.activePreviewSkinKey]?.decorations?.[this.activePreviewType] || [];
+            const modeSet = new Set(
+                configs
+                    .filter((item) => item?.subtype === this.activeSceneSubtype && item?.theme)
+                    .map((item) => item.theme)
+            );
+
+            return SKIN_THEME_OPTIONS.filter((item) => modeSet.has(item.value));
+        },
+        activeSceneConfig() {
+            const configs =
+                this.decorationJson?.[this.activePreviewSkinKey]?.decorations?.[this.activePreviewType] || [];
+            if (this.activeSceneSubtype === "pc_home") {
+                return {
+                    page: configs.find((item) => item?.subtype === "pc_homebg") || null,
+                    banner: configs.find((item) => item?.subtype === "pc_homebanner") || null,
+                };
+            }
+            return (
+                configs.find(
+                    (item) => item?.subtype === this.activeSceneSubtype && item?.theme === this.activeSceneTheme
+                ) ||
+                configs.find((item) => item?.subtype === this.activeSceneSubtype) ||
+                null
+            );
+        },
+        showSceneModes() {
+            return !!this.activeSceneSubtype && !this.activeSceneSubtype.startsWith("pc_") && this.activeSceneModes.length;
+        },
+    },
+    watch: {
+        activeSceneModes: {
+            immediate: true,
+            handler(modes) {
+                if (!modes.length) return;
+                if (!modes.some((item) => item.value === this.activeSceneTheme)) {
+                    this.activeSceneTheme = modes[0].value;
+                }
+            },
+        },
+    },
     methods: {
         reset() {
             let back = cloneDeep(this.back);
@@ -144,37 +305,31 @@ export default {
             getDecorationJson().then((res) => {
                 sessionStorage.setItem("decoration_json", JSON.stringify(res.data));
                 this.decorationJson = res.data;
-                getDecoration().then((res) => {
-                    let typeArr = ["atcard", "homebg", "sidebar", "calendar", "comment"];
-                    let arr = res.data.data.filter((item) => item.type != "" && typeArr.indexOf(item.type) != -1);
-                    this.decoration = this.formattingData(arr, "val");
-                    this.decoration = this.sortData(this.decoration, this.decorationJson);
-                    this.back.decoration = cloneDeep(this.decoration);
-                    this.back.originalActivateName = cloneDeep(this.originalActivateName);
-                });
+                this.applyDecorationList([]);
+                getDecoration()
+                    .then((res) => {
+                        let typeArr = SKIN_TYPE_OPTIONS.map((item) => item.type);
+                        let arr = res.data.data.filter((item) => item.type != "" && typeArr.indexOf(item.type) != -1);
+                        this.applyDecorationList(arr);
+                    })
+                    .catch(() => {});
             });
+        },
+        applyDecorationList(arr) {
+            this.decoration = this.formattingData(arr, "val");
+            this.back.decoration = cloneDeep(this.decoration);
+            this.back.originalActivateName = cloneDeep(this.originalActivateName);
         },
         //数据分组，设置已激活name
         formattingData(arr, group_key) {
-            let map = {},
-                res = [],
-                noKey = [];
-            let options = [
-                { type: "atcard", text: "个人名片", sort: 1, isHave: 0, using: 0 },
-                { type: "homebg", text: "主页风格", sort: 2, isHave: 0, using: 0 },
-                { type: "sidebar", text: "侧栏主题", sort: 3, isHave: 0, using: 0 },
-                { type: "calendar", text: "首页日历", sort: 4, isHave: 0, using: 0 },
-                { type: "comment", text: "评论皮肤", sort: 5, isHave: 0, using: 0 },
-            ];
+            let options = SKIN_TYPE_OPTIONS;
+            const userSkinMap = {};
+
             arr.forEach((item, i) => {
                 let sortFind = options.find((e) => e.type == item.type);
                 if (sortFind) {
                     item.sort = sortFind.sort;
-                    if (!map[item[group_key]]) {
-                        map[item[group_key]] = [item];
-                    } else {
-                        map[item[group_key]].push(item);
-                    }
+                    userSkinMap[`${item[group_key]}__${item.type}`] = item;
                     if (item.using) {
                         this.originalActivateName = item[group_key];
                     }
@@ -182,26 +337,32 @@ export default {
             });
 
             let decorationJson = cloneDeep(this.decorationJson);
-            Object.keys(decorationJson).forEach((key, i) => {
-                if (!map[key] && decorationJson[key].status == 1) {
-                    noKey.push(key);
-                    let optionsClone = cloneDeep(options);
-                    let newArr = [];
-                    optionsClone.forEach((item) => {
-                        item.val = key;
-                        newArr.push(item);
-                    });
-                    map[key] = newArr;
-                }
-            });
-            Object.keys(map).forEach((key, i) => {
-                res.push({
-                    [group_key]: key,
-                    name: decorationJson[key]?.desc,
-                    list: uniqueFromObject(map[key], "type", key, options, noKey).sort(sortBy("sort")),
-                });
-            });
-            return res;
+            const keys = Object.keys(decorationJson).filter((key) => isVisibleSkin(decorationJson, key));
+
+            return keys
+                .map((key) => {
+                    const sourceItem = decorationJson[key] || {};
+                    const title = sourceItem.title || sourceItem.desc || key;
+                    return {
+                        val: key,
+                        name: title,
+                        list: options
+                            .filter((option) => hasSkinType(decorationJson, key, option.type))
+                            .map((option) => {
+                                const userSkin = userSkinMap[`${key}__${option.type}`];
+                                return {
+                                    ...option,
+                                    val: key,
+                                    name: title,
+                                    text: option.text,
+                                    isHave: userSkin ? 1 : 0,
+                                    using: userSkin?.using || 0,
+                                    image: getSkinPreview(decorationJson, key, option.type),
+                                };
+                            }),
+                    };
+                })
+                .filter((item) => item.list.length);
         },
         // 数据排序，新的装扮在前
         sortData(arr, source = {}) {
@@ -217,6 +378,7 @@ export default {
             if (!item.isHave) {
                 return;
             }
+            this.selectPreviewType(item.type);
             let type = item.type;
             let val = item.val;
             // 消除激活的同部位
@@ -244,7 +406,29 @@ export default {
             else return false;
         },
         preview(item) {
-            this.previewUrl = this.getActiveImg(item);
+            this.selectPreviewType(item.type);
+        },
+        selectPreviewType(type) {
+            this.activePreviewType = type;
+            this.activeSceneSubtype = (SKIN_TYPE_SCENES[type] || [])[0] || "";
+            this.syncSceneTheme();
+        },
+        selectSceneSubtype(subtype) {
+            this.activeSceneSubtype = subtype;
+            this.syncSceneTheme();
+        },
+        selectSceneTheme(theme) {
+            this.activeSceneTheme = theme;
+        },
+        syncSceneTheme() {
+            this.$nextTick(() => {
+                if (
+                    this.activeSceneModes.length &&
+                    !this.activeSceneModes.some((item) => item.value === this.activeSceneTheme)
+                ) {
+                    this.activeSceneTheme = this.activeSceneModes[0].value;
+                }
+            });
         },
         getActiveImg(item) {
             let type = item.type;
@@ -256,7 +440,7 @@ export default {
                 }
             });
             let defaultImg = "https://cdn.jx3box.com/static/dashboard/img/no.5fe91973.svg";
-            if (val) return __cdn + `design/decoration/images/${val}/${type}_preview.png`;
+            if (val) return getSkinPreview(this.decorationJson, val, type) || __cdn + `design/decoration/images/${val}/${type}_preview.png`;
             else return defaultImg;
         },
         decorationSubmit() {
@@ -296,7 +480,7 @@ export default {
             });
         },
         showDecoration: function (item) {
-            return __cdn + `design/decoration/images/${item.val}/${item.type}_preview.png`;
+            return item.image || __cdn + `design/decoration/images/${item.val}/${item.type}_preview.png`;
         },
     },
     mounted: function () {

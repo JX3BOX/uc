@@ -18,7 +18,7 @@ function setDecoration(data) {
 }
 
 function getDecorationJson() {
-    let url = __cdn + `design/decoration/index.json`;
+    let url = __cdn + `design/skin/index.json`;
     return axios.get(url);
 }
 
