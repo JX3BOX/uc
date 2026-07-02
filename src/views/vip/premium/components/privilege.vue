@@ -1,35 +1,48 @@
 <template>
     <div class="m-privilege">
-        <img class="u-privilege-title" src="@/assets/img/vip/vip2/privilege.png" alt="会员特权" />
-        <ul :class="`m-list-${l + 1}`" v-for="(list, l) in group" :key="l">
+        <div class="m-privilege-head">
+            <h3 class="u-privilege-title">会员特权</h3>
+            <span>开通高级版后自动生效</span>
+        </div>
+        <ul>
             <li v-for="(item, i) in list" :key="i">
-                <img class="u-icon" :src="require(`@/assets/img/vip/vip2/icon-${item.index}.svg`)" svg-inline />
-                <span>{{ item.text }}</span>
-                <span v-if="item.tag" class="u-tag" :style="{ backgroundColor: item.color }">{{ item.tag }}</span>
+                <el-icon class="u-icon"><component :is="item.icon" /></el-icon>
+                <span class="u-text">{{ item.text }}</span>
+                <span v-if="item.tag" class="u-tag" :class="`is-${item.tag.toLowerCase()}`">{{ item.tag }}</span>
             </li>
         </ul>
     </div>
 </template>
 
 <script>
+import {
+    Brush,
+    Coin,
+    CollectionTag,
+    MagicStick,
+    Medal,
+    MoreFilled,
+} from "@element-plus/icons-vue";
+
 export default {
     name: "privilege",
+    components: {
+        Brush,
+        Coin,
+        CollectionTag,
+        MagicStick,
+        Medal,
+        MoreFilled,
+    },
     data: function () {
         return {
-            group: [
-                [
-                    { text: "魔盒新功能提前体验", index: 1, tag: "Hot", color: "#E72525" },
-                    { text: "团队应用高级功能", index: 2 },
-                    { text: "个人战斗数据仓库（不限）", index: 3 },
-                    { text: "魔盒助手高级功能（不限）", index: 4 },
-                ],
-                [
-                    { text: "专属虚拟装扮", index: 5 },
-                    { text: "亲友名单无上限", index: 6 },
-                    { text: "专属昵称尾巴标识", index: 7 },
-                    { text: "签到双倍积分", index: 8, tag: "New", color: "#11D41E" },
-                    { text: "更多特权，敬请期待！", index: 9 },
-                ],
+            list: [
+                { text: "魔盒新功能提前体验", icon: "Medal" },
+                { text: "签到双倍积分", icon: "Coin" },
+                { text: "专属虚拟装扮", icon: "Brush" },
+                { text: "专属昵称尾巴标识", icon: "CollectionTag" },
+                { text: "亲友名单无上限", icon: "MagicStick" },
+                { text: "更多特权，敬请期待！", icon: "MoreFilled" },
             ],
         };
     },
@@ -39,31 +52,103 @@ export default {
 <style lang="less" scope>
 .m-privilege {
     user-select: none;
-    color: #4d4d4d;
-    max-width: 224px;
-    .u-privilege-title {
-        height: 28px;
+    color: #24292e;
+    width: 100%;
+    .r(8px);
+    box-sizing: border-box;
+    padding: 20px 22px 22px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+
+    .m-privilege-head {
+        .flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        .mb(14px);
+
+        span {
+            .fz(13px, 20px);
+            color: #6b7280;
+        }
     }
+
+    .u-privilege-title {
+        .fz(18px, 26px);
+        font-weight: 700;
+        margin: 0;
+        color: #24292e;
+    }
+
     ul {
-        padding: 0 0 20px 0;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        padding: 0;
+        margin: 0;
+
         li {
             display: flex;
             align-items: center;
-            font-size: 12px;
-            height: 20px;
+            min-height: 48px;
+            box-sizing: border-box;
+            padding: 9px 14px;
+            border-radius: 8px;
+            background: #f8fafc;
+            color: #4b5563;
+            font-size: 13px;
             line-height: 20px;
-            margin-top: 12px;
+
             .u-icon {
-                width: 16px;
-                height: 16px;
-                margin-right: 5px;
+                .size(28px);
+                .r(8px);
+                margin-right: 12px;
+                flex-shrink: 0;
+                color: @v4primary;
+                background: fade(@v4primary, 8%);
+
+                svg {
+                    .size(15px);
+                }
             }
+
+            .u-text {
+                min-width: 0;
+                font-weight: 400;
+                word-break: break-word;
+                flex: 0 1 auto;
+            }
+
             .u-tag {
                 border-radius: 3px;
-                margin-left: 5px;
+                margin-left: 6px;
                 color: #fff;
+                background: #ef4444;
                 padding: 0 6px;
+                flex-shrink: 0;
+                font-weight: 700;
+                .fz(12px, 20px);
             }
+
+            .u-tag.is-new {
+                background: #22c55e;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .m-privilege {
+        padding: 18px;
+
+        .m-privilege-head {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        ul {
+            grid-template-columns: 1fr;
         }
     }
 }

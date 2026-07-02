@@ -36,4 +36,15 @@ function getBoxcoinOverview() {
     return $pay().get(`/api/my/boxcoin/overview`);
 }
 
-export { getBoxcoinCashHistory, getBoxcoinGotHistory, cashBoxcoin, getBoxcoinConfig, getBoxcoinOverview };
+function exchangeBoxcoinToPoint(data) {
+    return $pay().post(`/api/vip/i/exchange/boxcoin-to-point`, data);
+}
+
+export {
+    getBoxcoinCashHistory,
+    getBoxcoinGotHistory,
+    cashBoxcoin,
+    getBoxcoinConfig,
+    getBoxcoinOverview,
+    exchangeBoxcoinToPoint,
+};

@@ -17,7 +17,59 @@
             </span>
             <!-- <a class="el-button u-btn el-button--primary el-button--small" href="/vip/boxcoin" target="_blank">充值</a> -->
             <el-button class="u-btn" type="primary" size="small" @click="togglePullBox" :disabled="!money">兑换</el-button>
+            <el-button
+                class="u-btn"
+                type="warning"
+                size="small"
+                @click="openExchangeDialog"
+                :disabled="!hasExchangeBoxcoin"
+                :loading="exchangeLockStatus"
+                >转换</el-button
+            >
         </div>
+        <el-dialog v-model="showExchangeBox" title="盒币转换积分" width="520px" :close-on-click-modal="!exchangeLockStatus">
+            <el-alert
+                class="m-boxcoin-tip"
+                title="盒币可按 10:1 转换为积分，即每 10 盒币可兑换 1 积分。转换后积分可用于积分商城、抽奖等场景。"
+                type="warning"
+                show-icon
+                :closable="false"
+            ></el-alert>
+            <el-form label-position="left" label-width="90px" class="m-boxcoin-form" :model="exchangeForm">
+                <el-form-item label="盒币类型">
+                    <el-select v-model="exchangeForm.boxcoin_type" placeholder="请选择盒币类型" :disabled="exchangeLockStatus">
+                        <el-option
+                            v-for="item in exchangeTypes"
+                            :key="item.value"
+                            :label="`${item.label}（可用 ${getExchangeTypeBalance(item.value)}）`"
+                            :value="item.value"
+                        ></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="盒币数量">
+                    <el-input-number
+                        v-model="exchangeForm.boxcoin_count"
+                        :min="10"
+                        :step="10"
+                        step-strictly
+                        controls-position="right"
+                        :disabled="exchangeLockStatus"
+                        placeholder="请输入要转换的盒币数量"
+                    ></el-input-number>
+                    <div class="u-exchange-tip">请输入 10 的整数倍，当前类型可用 {{ exchangeAvailableBoxcoin }} 盒币</div>
+                </el-form-item>
+                <el-form-item label="预计获得">
+                    <b class="u-exchange-point">{{ exchangePointCount }}</b>
+                    <span> 积分</span>
+                </el-form-item>
+            </el-form>
+            <template #footer>
+                <span class="dialog-footer">
+                    <el-button @click="showExchangeBox = false" :disabled="exchangeLockStatus">取消</el-button>
+                    <el-button type="primary" @click="openExchangeConfirm" :loading="exchangeLockStatus">确认转换</el-button>
+                </span>
+            </template>
+        </el-dialog>
         <div class="m-credit-pull" v-if="showPullBox">
             <el-alert class="m-boxcoin-ac" type="error" show-icon :closable="false" v-if="breadcrumb">
                 <slot name="title"><div v-html="breadcrumb"></div></slot>
@@ -81,7 +133,7 @@
                                 </tr>
                             </thead>
                             <tr v-for="(item, i) in list" :key="i">
-                                <td>{{ formatType(item.action_type) }}</td>
+                                <td>{{ item.action_desc || formatType(item.action_type) }}</td>
                                 <td class="u-count" :class="showBoxcoinCls(item)">
                                     <span>{{ showBoxcoinOp(item) }}</span>
                                     <b>{{ countBoxCoin(item) }}</b>
@@ -184,6 +236,7 @@ import {
     cashBoxcoin,
     getBoxcoinConfig,
     getBoxcoinOverview,
+    exchangeBoxcoinToPoint,
 } from "@/service/dashboard/boxcoin.js";
 import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 import { omit } from "lodash";
@@ -203,6 +256,28 @@ export default {
             showPullBox: false,
             lockStatus: false,
             formStatus: false,
+
+            // 盒币转换积分
+            showExchangeBox: false,
+            exchangeLockStatus: false,
+            exchangeForm: {
+                boxcoin_type: "all",
+                boxcoin_count: 10,
+            },
+            exchangeTypes: [
+                {
+                    label: "双端",
+                    value: "all",
+                },
+                {
+                    label: "重制",
+                    value: "std",
+                },
+                {
+                    label: "缘起",
+                    value: "origin",
+                },
+            ],
 
             // 记录列表
             loading: false,
@@ -307,6 +382,16 @@ export default {
         ready: function () {
             return this.canCash && this.formStatus;
         },
+        exchangeAvailableBoxcoin: function () {
+            return this.getExchangeTypeBalance(this.exchangeForm.boxcoin_type);
+        },
+        exchangePointCount: function () {
+            const count = Number(this.exchangeForm.boxcoin_count) || 0;
+            return Math.floor(count / 10);
+        },
+        hasExchangeBoxcoin: function () {
+            return this.total_all + this.total_std + this.total_origin > 0 && this.totalCoin > 0;
+        },
     },
     methods: {
         // 初始化
@@ -363,6 +448,89 @@ export default {
         },
         togglePullBox: function () {
             this.showPullBox = !this.showPullBox;
+        },
+        openExchangeDialog: function () {
+            this.resetExchangeForm();
+            this.showExchangeBox = true;
+        },
+        resetExchangeForm: function () {
+            this.exchangeForm = {
+                boxcoin_type: "all",
+                boxcoin_count: 10,
+            };
+        },
+        getExchangeTypeBalance: function (type) {
+            const map = {
+                all: this.total_all,
+                std: this.total_std,
+                origin: this.total_origin,
+            };
+            return map[type] || 0;
+        },
+        getExchangeTypeLabel: function (type) {
+            const item = this.exchangeTypes.find((item) => item.value === type);
+            return item?.label || type;
+        },
+        checkExchangeForm: function () {
+            const count = Number(this.exchangeForm.boxcoin_count);
+            if (!this.exchangeForm.boxcoin_type) {
+                this.$message.warning("请选择盒币类型");
+                return false;
+            }
+            if (!Number.isInteger(count) || count <= 0) {
+                this.$message.warning("请输入正确的盒币数量");
+                return false;
+            }
+            if (count % 10 !== 0) {
+                this.$message.warning("盒币数量必须是 10 的整数倍");
+                return false;
+            }
+            if (count > this.exchangeAvailableBoxcoin) {
+                this.$message.warning("转换数量不能超过当前类型可用盒币");
+                return false;
+            }
+            return true;
+        },
+        openExchangeConfirm: function () {
+            if (this.exchangeLockStatus || !this.checkExchangeForm()) return;
+
+            const count = Number(this.exchangeForm.boxcoin_count);
+            const point = this.exchangePointCount;
+            this.$confirm(
+                `<div class="m-boxcoin-msg">盒币类型：<b>${this.getExchangeTypeLabel(
+                    this.exchangeForm.boxcoin_type
+                )}</b> <br/> 消耗盒币：<b>${count}盒币</b> <br/> 预计获得：<b>${point}积分</b></div>`,
+                "确认转换",
+                {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    dangerouslyUseHTMLString: true,
+                }
+            ).then(() => {
+                this.exchangeLockStatus = true;
+                exchangeBoxcoinToPoint({
+                    boxcoin_count: count,
+                    boxcoin_type: this.exchangeForm.boxcoin_type,
+                })
+                    .then(() => {
+                        this.$message({
+                            type: "success",
+                            message: "转换成功",
+                        });
+                        this.showExchangeBox = false;
+                        this.resetExchangeForm();
+                        this.loadAsset();
+                        this.loadOverview();
+                        this.loadData();
+                    })
+                    .catch((err) => {
+                        const message = err?.response?.data?.msg || err?.message || "转换失败，请稍后再试";
+                        this.$message.error(message);
+                    })
+                    .finally(() => {
+                        this.exchangeLockStatus = false;
+                    });
+            }).catch(() => {});
         },
         canSelect: function (val) {
             return ~~this.money >= ~~val;

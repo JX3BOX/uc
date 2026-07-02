@@ -6,16 +6,16 @@
             <em>Professional</em>
         </div>
 
-        <div :class="`u-expire ${data.expireDate ? '' : 'u-null'}`">
-            {{ data.expireDate ? "已开通" : "尚未开通" }}
+        <div class="u-status">
+            <div :class="`u-expire ${data.expireDate ? '' : 'u-null'}`">
+                {{ data.expireDate ? "已开通" : "尚未开通" }}
+            </div>
+            <div class="u-time" v-if="data.expireDate">{{ `到期时间：${data.expireDate}` }}</div>
         </div>
-        <div class="u-time" v-if="data.expireDate">{{ `到期时间：${data.expireDate}` }}</div>
-        <div class="u-teammate" v-if="data.isTeammate" @click="getFreePro">团队成员免费续期</div>
     </div>
 </template>
 
 <script>
-import { getFreePro } from "@/service/vip/premium.js";
 export default {
     name: "premiumStatus",
     props: ["data"],
@@ -27,17 +27,7 @@ export default {
             return this.isLogin;
         },
     },
-    methods: {
-        getFreePro() {
-            getFreePro().then(() => {
-                this.$message({
-                    message: "亲爱的魔盒团队成员，续期成功",
-                    type: "success",
-                });
-                window.location.reload();
-            });
-        },
-    },
+    methods: {},
 };
 </script>
 
@@ -85,18 +75,6 @@ export default {
         .x;
         .fz(12px);
         .mt(10px);
-    }
-    .u-teammate {
-        .x;
-        .pointer;
-        .mt(15px);
-        .r(4px);
-        .fz(14px,26px);
-        color: #fff;
-        background-color: #fba524;
-        &:hover {
-            filter: brightness(1.1);
-        }
     }
 }
 </style>

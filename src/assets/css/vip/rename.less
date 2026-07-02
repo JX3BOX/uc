@@ -1,56 +1,272 @@
-.m-vip-rename{
-    max-width:800px;
+.m-rename-page.m-vip-container {
+    .mt(@header-height);
+    background: #f7f9fb;
+    padding: 80px 50px 50px;
+    box-sizing: border-box;
+    min-height: calc(100vh - @header-height - 60px);
+}
+
+.m-vip-rename {
+    .r(12px);
     .auto(x);
-    padding:40px 0;
+    max-width: 920px;
+    box-sizing: border-box;
+    padding: 44px 56px 72px;
+    background-color: #fff;
+    box-shadow: 0 8px 28px #24292e0f;
 
-    .u-tip{
-        .fz(14px);
-        .mb(20px);
-        color:#999;
+    .m-vip-rename-title {
+        .mb(28px);
+    }
+}
 
-        b{
-            color:#49c10f;
+.m-vip-rename-main {
+    .flex;
+    flex-direction: column;
+    gap: 32px;
+    background: #fff;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.m-rename-panel,
+.m-vip-rename-form {
+    box-sizing: border-box;
+}
+
+.m-rename-panel {
+    .flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    .r(8px);
+    padding: 24px 28px;
+    background: #f8fafc;
+}
+
+.m-rename-count {
+    .flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 0;
+    padding-bottom: 0;
+    border-bottom: 0;
+
+    span {
+        .fz(14px, 20px);
+        color: #6b7280;
+    }
+
+    b {
+        .fz(28px, 34px);
+        font-weight: 700;
+        color: @v4primary;
+    }
+}
+
+.m-rename-exchange {
+    .flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+    padding-top: 0;
+    flex: 1;
+
+    > div {
+        .flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 2px;
+        min-width: 0;
+    }
+
+    b {
+        .fz(15px, 22px);
+        color: #24292e;
+    }
+
+    span {
+        .fz(13px, 18px);
+        color: #24292e99;
+    }
+
+    .el-button {
+        flex-shrink: 0;
+        .r(4px);
+        min-width: 104px;
+        height: 36px;
+        font-weight: 700;
+        --el-color-primary: @v4primary;
+        --el-color-primary-light-3: lighten(@v4primary, 10%);
+        --el-color-primary-dark-2: darken(@v4primary, 8%);
+        --el-button-text-color: @v4primary;
+        --el-button-hover-text-color: #fff;
+        --el-button-active-text-color: #fff;
+        --el-button-bg-color: fade(@v4primary, 8%);
+        --el-button-border-color: fade(@v4primary, 35%);
+        --el-button-hover-bg-color: darken(@v4primary, 6%);
+        --el-button-hover-border-color: darken(@v4primary, 6%);
+        --el-button-active-bg-color: darken(@v4primary, 10%);
+        --el-button-active-border-color: darken(@v4primary, 10%);
+
+        span {
+            color: @v4primary;
+        }
+
+        &:hover,
+        &:active,
+        &:focus {
+            span {
+                color: #fff;
+            }
         }
     }
 }
 
-.m-vip-rename-form{
+.m-vip-rename-form {
+    .el-form-item {
+        margin-bottom: 22px;
+    }
 
-    .u-new-name{
-        .el-input-group__append{
-            .w(14px);
-            padding:0 14px;
+    .u-new-name {
+        .el-form-item__label {
+            .bold;
+            .fz(18px, 26px);
+            padding-bottom: 12px;
+            color: #24292e;
         }
 
-        .el-icon-success{
-            color:#49c10f;
+        .el-input__inner {
+            color: #24292e;
         }
-        .el-icon-error{
-            color:#fc3c3c;
+
+        .el-icon-success {
+            color: #49c10f;
+        }
+        .el-icon-error {
+            color: #fc3c3c;
         }
     }
 
-    .u-submit{
-        .w(160px);
+    .u-submit {
+        .w(180px);
     }
 
-    .el-alert{
+    .u-btns {
+        margin-top: 4px;
+        margin-bottom: 0;
+
+        .el-form-item__content {
+            margin-left: 0 !important;
+        }
+
+        .el-button {
+            .r(4px);
+            height: 44px;
+            min-width: 180px;
+            border: 0;
+            font-weight: 700;
+            --el-color-primary: @v4primary;
+            --el-color-primary-light-3: lighten(@v4primary, 10%);
+            --el-color-primary-dark-2: darken(@v4primary, 8%);
+            --el-button-text-color: #fff;
+            --el-button-hover-text-color: #fff;
+            --el-button-active-text-color: #fff;
+            --el-button-bg-color: @v4primary;
+            --el-button-border-color: @v4primary;
+            --el-button-hover-bg-color: darken(@v4primary, 6%);
+            --el-button-hover-border-color: darken(@v4primary, 6%);
+            --el-button-active-bg-color: darken(@v4primary, 10%);
+            --el-button-active-border-color: darken(@v4primary, 10%);
+
+            span {
+                color: #fff;
+            }
+
+            &.is-disabled,
+            &.is-disabled:hover {
+                color: #9ca3af;
+                background: #f3f4f6;
+                border: 1px solid #e5e7eb;
+                opacity: 1;
+
+                span {
+                    color: #9ca3af;
+                }
+            }
+        }
+    }
+
+    .el-alert {
         .lh(1.1);
         .mt(10px);
     }
 }
-@media screen and (max-width:@phone){
-    .m-vip-rename{
-        padding:20px;
 
-        .el-form-item__label{
-            color:#888;
-        }
+.m-rename-result-desc {
+    a:hover {
+        box-shadow: 0 1px 0 @v4primary;
     }
 }
 
-.m-rename-result-desc{
-    a:hover{
-        box-shadow:0 1px 0 @v4primary;
+@media screen and (max-width: @phone) {
+    .m-rename-page.m-vip-container {
+        padding: 0;
+        background: none;
+    }
+
+    .m-vip-rename {
+        padding: 20px;
+        box-shadow: none;
+        border-radius: 0;
+        background: #fff;
+
+        .el-form-item__label {
+            color: #888;
+        }
+    }
+
+    .m-vip-rename-main {
+        gap: 24px;
+    }
+
+    .m-vip-rename-form,
+    .m-rename-panel {
+        padding: 0;
+    }
+
+    .m-rename-panel {
+        .r(8px);
+        padding: 18px;
+        background: #f8fafc;
+    }
+
+    .m-rename-exchange {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+        flex: none;
+
+        .el-button {
+            .w(100%);
+        }
+
+        > div {
+            align-items: flex-start;
+        }
+    }
+
+    .m-rename-count {
+        justify-content: space-between;
+        width: 100%;
+
+        b {
+            .fz(28px, 32px);
+        }
+    }
+
+    .m-vip-rename-form .u-submit,
+    .m-vip-rename-form .u-btns .el-button {
+        .w(100%);
     }
 }

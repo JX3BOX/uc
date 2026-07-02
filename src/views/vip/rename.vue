@@ -1,66 +1,77 @@
 <template>
     <div>
         <CommonHeader></CommonHeader>
-        <div class="m-vip-container" v-if="isLogin">
+        <div class="m-vip-container m-rename-page" v-if="isLogin">
             <div class="m-vip-rename">
-                <simple-header class="m-vip-rename-title" title="修改您的昵称" desc="Rename your nickname" />
-                <div class="u-tip">
-                    <div v-if="!had_renamed"><i class="el-icon-s-opportunity"></i> 每个账号拥有一次免费更名机会</div>
-                    <div v-else>
-                        当前剩余可改名次数 <b>{{ count }}</b>
-                        <el-button
-                            @click="toPurchaseRenameCard"
-                            type="primary"
-                            icon="ShoppingCart"
-                            style="margin-left: 10px"
-                            >购买改名卡</el-button
-                        >
+                <simple-header class="m-vip-rename-title" title="修改昵称" desc="Rename your nickname" />
+
+                <div class="m-vip-rename-main" v-if="!done">
+                    <div class="m-rename-panel">
+                        <div class="m-rename-count">
+                            <span>剩余改名次数</span>
+                            <b>{{ count }}</b>
+                        </div>
+
+                        <div class="m-rename-exchange">
+                            <div>
+                                <b>积分兑换改名次数</b>
+                                <span v-if="isCardLoading">正在读取兑换信息...</span>
+                                <span v-else-if="cardLoadError">{{ cardLoadError }}</span>
+                                <span v-else>{{ renameCardPointText }}</span>
+                            </div>
+                            <el-button type="primary" plain @click="buy" :loading="isBuying" :disabled="isCardLoading">
+                                兑换
+                            </el-button>
+                        </div>
                     </div>
+
+                    <el-form
+                        class="m-vip-rename-form"
+                        ref="form"
+                        label-width="0"
+                        label-position="top"
+                        :class="{ isNormal: count }"
+                        size="large"
+                    >
+                        <el-form-item class="u-new-name" label="输入新名字">
+                            <el-input
+                                v-model="new_name"
+                                placeholder="2-20个字符,不允许特殊字符"
+                                show-word-limit
+                                :maxlength="20"
+                                :minlength="2"
+                                @input="checkName"
+                                :disabled="!count"
+                            >
+                                <template #append v-if="!isEmpty">
+                                    <i class="u-status" :class="checkicon"></i>
+                                </template>
+                            </el-input>
+                            <el-alert v-if="!isEmpty" :title="checktips" :type="status ? 'success' : 'error'" show-icon>
+                            </el-alert>
+                        </el-form-item>
+                        <el-form-item class="u-btns" label="">
+                            <el-button
+                                @click="submit"
+                                type="primary"
+                                class="u-submit u-submit-rename"
+                                icon="Check"
+                                v-if="count"
+                                :disabled="!status"
+                                >确认修改</el-button
+                            >
+                            <el-button
+                                @click="buy"
+                                type="primary"
+                                class="u-submit u-submit-buy"
+                                v-else
+                                icon="ShoppingCart"
+                                :loading="isBuying"
+                                >兑换改名次数</el-button
+                            >
+                        </el-form-item>
+                    </el-form>
                 </div>
-                <el-form
-                    class="m-vip-rename-form"
-                    ref="form"
-                    label-width="80px"
-                    label-position="left"
-                    v-if="!done"
-                    :class="{ isNormal: count }"
-                    size="large"
-                >
-                    <el-form-item class="u-old-name" label="当前昵称">
-                        <b>{{ old_name }}</b>
-                    </el-form-item>
-                    <el-form-item class="u-new-name" label="新昵称">
-                        <el-input
-                            v-model="new_name"
-                            placeholder="2-20个字符,不允许特殊字符"
-                            show-word-limit
-                            :maxlength="20"
-                            :minlength="2"
-                            @input="checkName"
-                            :disabled="!count"
-                        >
-                            <template #append>
-                                <i class="u-status" :class="checkicon"></i>
-                            </template>
-                        </el-input>
-                        <el-alert v-if="!isEmpty" :title="checktips" :type="status ? 'success' : 'error'" show-icon>
-                        </el-alert>
-                    </el-form-item>
-                    <el-form-item class="u-btns" label="">
-                        <el-button
-                            @click="submit"
-                            type="primary"
-                            class="u-submit u-submit-rename"
-                            icon="Check"
-                            v-if="count"
-                            :disabled="!status"
-                            >提交</el-button
-                        >
-                        <el-button @click="buy" type="primary" class="u-submit u-submit-buy" v-else icon="ShoppingCart"
-                            >购买改名次数</el-button
-                        >
-                    </el-form-item>
-                </el-form>
                 <result v-else>
                     <template #title>
                         <div class="m-rename-result-title">
@@ -76,17 +87,9 @@
                 </result>
             </div>
         </div>
-        <div class="m-vip-container" v-else>
+        <div class="m-vip-container m-rename-page" v-else>
             <el-alert title="请先登录" type="error" show-icon> </el-alert>
         </div>
-        <paypop
-            v-if="will"
-            v-model="dialog_visible"
-            :productDesc="productDesc"
-            :productId="productId"
-            :returnUrl="returnUrl"
-            @done="finish"
-        />
         <CommonFooter></CommonFooter>
     </div>
 </template>
@@ -97,19 +100,20 @@ import { sterilizer } from "sterilizer/index.js";
 import { checkNickname, doRename } from "@/service/vip/rename.js";
 import result from "@/components/vip/result.vue";
 import { __Root } from "@/utils/config";
-import paypop from "@/components/vip/paypop.vue";
-import callback from "@/utils/callback.js";
 import simple_header from "@/components/vip/simple_header.vue";
+import { getItem } from "@/service/vip/mall";
+import { handleMallExchangeError } from "@/utils/mallExchangeError";
+
+const RENAME_CARD_ID = 38;
+
 export default {
     data: function () {
         return {
-            // position: window.innerWidth < 768 ? "top" : "left",
             // 资产与权限
             isLogin: User.isLogin(),
-            asset: "",
+            asset: {},
 
             // 改名输入逻辑
-            old_name: User.getInfo().name,
             new_name: "",
             available: null,
             valid: null,
@@ -117,15 +121,11 @@ export default {
 
             // 状态与流程控制
             done: false, //是否改名完成
-            pay_success: false, //支付完成回调
-            refer: "", //开通完成后跳转至付费产品
-
-            // 支付弹层
-            dialog_visible: false, //弹层可见性
-            will: false, //用于确认支付弹层是否加载，再次打开窗口时不会重新创建订单
-            productId: "4", //改名卡产品ID
-            productDesc: "购买改名卡", //弹层标题
-            returnUrl: callback("rename"), //支付宝回调地址，当前页面
+            renameCardId: RENAME_CARD_ID,
+            renameCard: {},
+            isCardLoading: false,
+            isBuying: false,
+            cardLoadError: "",
 
             checktips: "",
         };
@@ -147,8 +147,56 @@ export default {
                 return "el-icon-error";
             }
         },
-        had_renamed: function () {
-            return (this.asset && ~~this.asset.had_renamed) || false;
+        stock() {
+            return Number(this.renameCard.stock) || 0;
+        },
+        renameCardPointText() {
+            if (!this.renameCard.id) return "兑换信息暂不可用";
+            const points = Number(this.renameCard.price_points) || 0;
+            return points ? `${points} 积分 / 次` : "免费兑换";
+        },
+        canBuyInfo() {
+            const item = this.renameCard || {};
+            const info = {
+                canBuy: true,
+                vip_limit: true,
+                box_coin: true,
+                points: true,
+                cny: true,
+                level: true,
+                buy_time: true,
+                stock: true,
+            };
+            if (!item.id) info.canBuy = false;
+            if (item.vip_limit === 1 && !User._isPRO(this.asset)) {
+                info.canBuy = false;
+                info.vip_limit = false;
+            }
+            if ((Number(this.asset.points) || 0) < (Number(item.price_points) || 0)) {
+                info.canBuy = false;
+                info.points = false;
+            }
+            if ((Number(this.asset.box_coin) || 0) < (Number(item.price_boxcoin) || 0)) {
+                info.canBuy = false;
+                info.box_coin = false;
+            }
+            if ((Number(this.asset.cny) || 0) < (Number(item.price_cny) || 0)) {
+                info.canBuy = false;
+                info.cny = false;
+            }
+            if ((Number(this.asset.experience) || 0) < (Number(item.exp_limit) || 0)) {
+                info.canBuy = false;
+                info.level = false;
+            }
+            if (!this.isInSellTime(item)) {
+                info.canBuy = false;
+                info.buy_time = false;
+            }
+            if (this.stock <= 0) {
+                info.canBuy = false;
+                info.stock = false;
+            }
+            return info;
         },
     },
     methods: {
@@ -192,16 +240,54 @@ export default {
                     }
                 });
         },
-        checkPermission: function () {
-            User.getAsset().then((data) => {
-                this.asset = data;
-                this.count = ~~data.rename_card_count;
-                console.log("当前改名次数", this.count);
+        checkPermission: function (minRenameCount = 0) {
+            return User.getAsset().then((data) => {
+                const count = Math.max(~~data.rename_card_count, minRenameCount);
+                const asset = {
+                    ...data,
+                    rename_card_count: count,
+                };
+                this.asset = asset;
+                this.$store.commit("mallNew/toState", { asset });
+                this.count = count;
             });
+        },
+        loadRenameCard() {
+            this.isCardLoading = true;
+            this.cardLoadError = "";
+            return getItem(this.renameCardId)
+                .then((res) => {
+                    this.renameCard = res.data?.data || {};
+                })
+                .catch((err) => {
+                    this.cardLoadError = err?.response?.data?.msg || err?.message || "请稍后再试";
+                })
+                .finally(() => {
+                    this.isCardLoading = false;
+                });
+        },
+        isInSellTime(item = {}) {
+            if (item.on_selling === 0) return false;
+            const now = Date.now();
+            const start = item.start_sell_time ? new Date(item.start_sell_time).getTime() : null;
+            const end = item.end_sell_time ? new Date(item.end_sell_time).getTime() : null;
+            if (start && now < start) return false;
+            if (end && now > end) return false;
+            return true;
+        },
+        getUnavailableMessage() {
+            if (!this.canBuyInfo.points) return `积分不足：需要 ${this.renameCard.price_points || 0} 积分`;
+            if (!this.canBuyInfo.box_coin) return `盒币不足：需要 ${this.renameCard.price_boxcoin || 0} 盒币`;
+            if (!this.canBuyInfo.cny) return `金箔不足：需要 ${this.renameCard.price_cny || 0} 金箔`;
+            if (!this.canBuyInfo.stock) return "库存不足：当前不可购买";
+            if (!this.canBuyInfo.buy_time) return "当前不在可购买时间内";
+            if (!this.canBuyInfo.level) return "账号等级不足，暂不能购买";
+            if (!this.canBuyInfo.vip_limit) return "该商品仅会员可购买";
+            return "当前不满足购买条件";
         },
         submit: function () {
             doRename(this.new_name).then(() => {
-                User.destroy().then((res) => {
+                User.destroy().then(() => {
                     this.done = true;
                     setTimeout(function () {
                         location.href = __Root + "account/login";
@@ -210,23 +296,63 @@ export default {
             });
         },
         buy: function () {
-            this.will = true;
-            this.dialog_visible = true;
-        },
-        finish: function () {
-            location.reload();
-        },
-        toPurchaseRenameCard() {
-            const url = "/vip/mall/38";
-            window.open(url, "_blank");
+            if (!this.renameCard.id) {
+                return this.loadRenameCard().then(() => {
+                    if (!this.renameCard.id) {
+                        this.$alert("兑换信息暂不可用，请稍后再试", "暂不能兑换", {
+                            confirmButtonText: "知道了",
+                            type: "warning",
+                        });
+                    }
+                });
+            }
+            if (!this.canBuyInfo.canBuy) {
+                return this.$alert(this.getUnavailableMessage(), "暂不能购买", {
+                    confirmButtonText: "知道了",
+                    type: "warning",
+                });
+            }
+            this.$confirm(`确认消耗${Number(this.renameCard.price_points) || 0}积分兑换一次改名卡吗？`, "确认兑换", {
+                confirmButtonText: "确认兑换",
+                cancelButtonText: "取消",
+                type: "warning",
+            })
+                .then(() => {
+                    this.isBuying = true;
+                    const nextCount = this.count + 1;
+                    return this.$store
+                        .dispatch("mallNew/buyGoods", {
+                            id: this.renameCardId,
+                            count: 1,
+                            addressId: 0,
+                            remark: "改名次数积分兑换",
+                        })
+                        .then(() => {
+                            this.$store.commit("mallNew/toState", { pay_status: false });
+                            return Promise.all([this.checkPermission(nextCount), this.loadRenameCard()]);
+                        })
+                        .then(() => {
+                            this.$notify.success({
+                                title: "购买成功",
+                                message: "改名次数已刷新",
+                            });
+                        });
+                })
+                .catch((error) => {
+                    if (error === "cancel" || error === "close") return;
+                    return handleMallExchangeError(this, error);
+                })
+                .finally(() => {
+                    this.isBuying = false;
+                });
         },
     },
     mounted: function () {
         this.checkPermission();
+        this.loadRenameCard();
     },
     components: {
         result,
-        paypop,
         "simple-header": simple_header,
     },
 };
