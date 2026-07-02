@@ -55,6 +55,12 @@ function getDecorationJson() {
     return axios.get(url);
 }
 
+function getUserSkin(params = {}) {
+    return $cms().get(`/api/cms/user/skin`, {
+        params,
+    });
+}
+
 function getDBM(params) {
     return $cms().get(`/api/cms/dbm/pkg`, {
         params,
@@ -75,6 +81,7 @@ export {
     getUserEmotions,
     getDecoration,
     getDecorationJson,
+    getUserSkin,
     getDBM,
     getCertification,
 };

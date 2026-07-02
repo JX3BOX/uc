@@ -1,6 +1,12 @@
 <template>
     <div>
-        <div class="m-author-header" :style="{ backgroundImage: `url(${userDefinedStyle.banner})` }">
+        <div
+            class="m-author-header"
+            :style="{
+                backgroundImage: `url(${userDefinedStyle.banner})`,
+                backgroundPosition: userDefinedStyle.bannerPosition,
+            }"
+        >
             <div class="u-header-info">
                 <CommonAvatar
                     class="u-author-avatar"
@@ -189,6 +195,17 @@ import Left from "./Left";
 import Primary from "./Primary";
 import Honor from "@jx3box/jx3box-ui/src/author/AuthorHonor.vue";
 import CommonAvatar from "@jx3box/jx3box-ui/src/author/Avatar.vue";
+
+const DEFAULT_BANNER_STYLE = {
+    fans: {},
+    btn: {},
+    userName: {},
+    honor: {},
+    sendMsg: {},
+    banner: `${__cdn}design/skin/default/pc_homebanner.png`,
+    bannerPosition: "right top",
+};
+
 export default {
     name: "Me",
     components: {
@@ -238,14 +255,7 @@ export default {
             authorInfo: {},
             avatarSize: "l",
             fansLink: "/dashboard/privacy?tab=myfans",
-            userDefinedStyle: {
-                fans: {},
-                btn: {},
-                userName: {},
-                honor: {},
-                sendMsg: {},
-                banner: `${__cdn}design/decoration/images/0_TESTSAMPLE/homebanner.png`,
-            },
+            userDefinedStyle: { ...DEFAULT_BANNER_STYLE },
             // honor: null, //称号
             canSendLetter: false,
             //是否拉黑
@@ -352,6 +362,7 @@ export default {
         },
         setDecorationStyle() {
             let decoration = this.decorationMe;
+            this.userDefinedStyle = { ...DEFAULT_BANNER_STYLE };
             if (!decoration.status) return;
             if (decoration.highlightcolor) {
                 this.userDefinedStyle.fans = {
@@ -375,12 +386,10 @@ export default {
                     color: decoration.buttontextcolor,
                 };
             }
-            const webp = ["jx3box-birthday-5"];
-            this.userDefinedStyle.banner =
-                __cdn +
-                `design/decoration/images/${decoration.name}/homebanner.${
-                    webp.includes(decoration.name) ? "webp" : "png"
-                }`;
+            if (decoration.banner) {
+                this.userDefinedStyle.banner = decoration.banner;
+                this.userDefinedStyle.bannerPosition = decoration.bannerPosition || DEFAULT_BANNER_STYLE.bannerPosition;
+            }
         },
         // 关注
         follow() {

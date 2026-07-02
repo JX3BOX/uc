@@ -12,11 +12,31 @@
 <script>
 import AppLayout from "@/layouts/author/AppLayout.vue";
 import Me from "@/components/author/newComponents/Me.vue";
-import { getUserInfo, getDecoration, getDecorationJson } from "@/service/author/cms";
+import { getUserInfo, getUserSkin } from "@/service/author/cms";
 import User from "@jx3box/jx3box-common/js/user";
 import { __cdn } from "@/utils/config";
-const DECORATION_JSON = "decoration_json";
-const DECORATION_KEY = "decoration_me";
+
+const HOMEBG_TYPE = "homebg";
+const PC_PAGE_BG_SUBTYPE = "pc_homebg";
+const PC_BANNER_SUBTYPE = "pc_homebanner";
+const SKIN_POSITION_MAP = {
+    lt: "left top",
+    mt: "center top",
+    ct: "center top",
+    rt: "right top",
+    lm: "left center",
+    ml: "left center",
+    mm: "center center",
+    cm: "center center",
+    o: "center center",
+    rm: "right center",
+    mr: "right center",
+    lb: "left bottom",
+    mb: "center bottom",
+    cb: "center bottom",
+    rb: "right bottom",
+};
+
 export default {
     name: "Author",
     components: {
@@ -52,81 +72,93 @@ export default {
             getUserInfo(this.uid).then((res) => {
                 this.$store.state.userdata = res.data.data;
             });
-            this.getDecoration();
+            this.loadSkin();
         }
     },
     methods: {
-        //获取装扮,动态获取uid的装扮，缓存指定UID
-        getDecoration() {
-            let decoration_local = sessionStorage.getItem(DECORATION_KEY + this.uid);
-            if (decoration_local) {
-                //解析本地缓存
-                let decoration_parse = JSON.parse(decoration_local);
-                if (!decoration_parse.status) return;
+        loadSkin() {
+            this.themeStyle = {};
+            this.decorationMe = { status: false };
 
-                if (decoration_parse) {
-                    this.setDecoration(decoration_parse);
-                    return;
-                }
-            }
-            getDecoration({ using: 1, user_id: this.uid, type: "homebg" }).then((res) => {
-                let decorationList = res.data.data;
-                //筛选个人装扮
-                let decoration = decorationList.find((item) => item.type == "homebg");
-                if (!decoration) {
-                    //空 则为无主题，不再加载接口，Me界面设No
-                    sessionStorage.setItem(DECORATION_KEY + this.uid, JSON.stringify({ status: false }));
-                    return;
-                }
-                let decorationJson = sessionStorage.getItem(DECORATION_JSON);
-                if (!decorationJson) {
-                    //加载远程json，用于颜色配置及主题存在部位判断
-                    getDecorationJson().then((json) => {
-                        let decoration_json = json.data;
-                        let theme = JSON.parse(JSON.stringify(decoration_json[decoration.val]));
-                        theme.status = true;
-                        sessionStorage.setItem(DECORATION_KEY + this.uid, JSON.stringify(theme));
-                        this.setDecoration(theme);
-                        //缓存远程JSON文件
-                        sessionStorage.setItem(DECORATION_JSON, JSON.stringify(decoration_json));
-                    });
-                } else {
-                    let theme = JSON.parse(decorationJson)[decoration.val];
-                    theme.status = true;
-                    sessionStorage.setItem(DECORATION_KEY + this.uid, JSON.stringify(theme));
-                    this.setDecoration(theme);
-                }
-            });
+            getUserSkin({
+                user_id: this.uid,
+                type: HOMEBG_TYPE,
+            })
+                .then((res) => {
+                    const skins = this.flattenUserSkinRows(res.data?.data);
+                    this.applyPageSkin(this.selectSkinBySubtype(skins, PC_PAGE_BG_SUBTYPE));
+                    this.applyBannerSkin(this.selectSkinBySubtype(skins, PC_BANNER_SUBTYPE));
+                })
+                .catch(() => {});
         },
-        showDecoration: function (val, type) {
-            return __cdn + `design/decoration/images/${val}/${type}.png`;
+        flattenUserSkinRows(rows = []) {
+            return (Array.isArray(rows) ? rows : []).flatMap((row) => (Array.isArray(row?.skins) ? row.skins : []));
         },
-        setDecoration(theme) {
-            this.decorationMe = theme;
-            let bgImg = [],
-                w = document.body.offsetWidth;
-            // if(!theme.homebg_rb){
-            //     bgImg.push('url('+this.showDecoration('0_TESTSAMPLE','homebg_rb')+') bottom right no-repeat fixed')
-            // }
-            // 背景进行4位置判断,homebg_lt>homebg_rt>homebg_lb>homebg_rb
-            let size = 1;
-            if (w > 1920) {
-                size = 2;
+        selectSkinBySubtype(list = [], subtype) {
+            const items = (Array.isArray(list) ? list : []).filter((item) => item?.subtype === subtype && item?.image);
+            if (!items.length) return null;
+
+            const currentTheme = this.getCurrentSkinTheme();
+            const getTheme = (item) =>
+                String(item?.theme || "")
+                    .trim()
+                    .toLowerCase();
+
+            return (
+                items.find((item) => getTheme(item) === "all") ||
+                items.find((item) => getTheme(item) === currentTheme) ||
+                items.find((item) => !getTheme(item)) ||
+                null
+            );
+        },
+        getCurrentSkinTheme() {
+            if (typeof window === "undefined") return "light";
+            return window.matchMedia?.("(prefers-color-scheme: dark)")?.matches ? "dark" : "light";
+        },
+        normalizeSkinImage(image = "") {
+            const raw = String(image || "").trim();
+            if (!raw) return "";
+            if (/^(https?:)?\/\//.test(raw)) return raw;
+            return `${__cdn}${raw.replace(/^\/+/, "")}`;
+        },
+        resolveSkinPosition(position, fallback = "right top") {
+            const raw = String(position || "").trim();
+            if (!raw) return fallback;
+
+            const key = raw.toLowerCase();
+            if (SKIN_POSITION_MAP[key]) return SKIN_POSITION_MAP[key];
+
+            const cssPositionPattern =
+                /^(?:(?:left|center|right)(?:\s+(?:top|center|bottom))?|(?:top|center|bottom)(?:\s+(?:left|center|right))?)$/i;
+            return cssPositionPattern.test(raw) ? raw : fallback;
+        },
+        applyPageSkin(skin) {
+            const image = this.normalizeSkinImage(skin?.image);
+            if (!image) {
+                this.themeStyle = {};
+                return;
             }
-            if (theme.homebg_lt) {
-                bgImg.push(`url(${this.showDecoration(theme.name, `homebg_lt@${size}x`)}) no-repeat fixed top left / cover`);
-            }
-            if (theme.homebg_rt) {
-                bgImg.push(`url( ${this.showDecoration(theme.name, `homebg_rt@${size}x`)}) no-repeat fixed top right / cover`);
-            }
-            if (theme.homebg_lb) {
-                bgImg.push(`url(${this.showDecoration(theme.name, `homebg_lb@${size}x`)}) no-repeat fixed bottom left / cover`);
-            }
-            if (theme.homebg_rb) {
-                bgImg.push(`url(${this.showDecoration(theme.name, `homebg_rb@${size}x`)})  no-repeat fixed bottom right / cover`);
-            }
+
             this.themeStyle = {
-                background: bgImg.toString(),
+                backgroundImage: `url(${image})`,
+                backgroundRepeat: "no-repeat",
+                backgroundAttachment: "fixed",
+                backgroundPosition: this.resolveSkinPosition(skin?.position, "center top"),
+                backgroundSize: "cover",
+            };
+        },
+        applyBannerSkin(skin) {
+            const banner = this.normalizeSkinImage(skin?.image);
+            if (!banner) return;
+
+            this.decorationMe = {
+                status: true,
+                banner,
+                bannerPosition: this.resolveSkinPosition(skin?.position, "right top"),
+                highlightcolor: skin?.highlightcolor,
+                textcolor: skin?.textcolor,
+                buttoncolor: skin?.buttoncolor,
+                buttontextcolor: skin?.buttontextcolor,
             };
         },
     },

@@ -78,6 +78,7 @@ module.exports = {
     //⚛️ Proxy ~
     devServer: {
         host: "localhost",
+        historyApiFallback: buildHistoryFallback(),
         // 与 @jx3box/jx3box-common/js/api.js 对齐：
         // 本地开发开启 `VUE_APP_PROXY_ENABLE=1` 后，会把请求 baseURL 切到 `${VUE_APP_PROXY_PREFIX}/${serviceKey}`
         proxy: buildEnvProxy(),
@@ -109,13 +110,6 @@ module.exports = {
                     quietDeps: true,
                 },
             },
-        },
-    },
-
-    // 过滤依赖包里的已知兼容性 warning（不影响运行，但会刷屏）
-    configureWebpack: {
-        stats: {
-            warningsFilter: [/node_modules[\\\\/]+@jx3box[\\\\/]+jx3box-common[\\\\/]+/],
         },
     },
 
@@ -158,6 +152,10 @@ module.exports = {
     },
 
     configureWebpack: {
+        // 过滤依赖包里的已知兼容性 warning（不影响运行，但会刷屏）
+        stats: {
+            warningsFilter: [/node_modules[\\\\/]+@jx3box[\\\\/]+jx3box-common[\\\\/]+/],
+        },
         plugins: [
             new webpack.DefinePlugin({
                 // 全局注入，用于 JS 或其他代码中
@@ -166,6 +164,23 @@ module.exports = {
         ],
     },
 };
+
+function buildHistoryFallback() {
+    const rewrites = Object.values(pages)
+        .filter((page) => page.filename && page.filename !== "index.html")
+        .map((page) => {
+            const prefix = "/" + page.filename.replace(/\/index\.html$/, "");
+            return {
+                from: new RegExp(`^${escapeRegExp(prefix)}(?:/.*)?$`),
+                to: page.filename.startsWith("/") ? page.filename : "/" + page.filename,
+            };
+        });
+
+    return {
+        disableDotRule: true,
+        rewrites,
+    };
+}
 
 // 注入全局样式资源（变量、mixin 等）
 // 本地css/var.less、mixin.less会覆盖node_modules里的同名文件，方便定制化

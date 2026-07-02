@@ -68,21 +68,25 @@ export default {
             let decoration_local = sessionStorage.getItem(DECORATION_KEY + this.uid);
             if (decoration_local) {
                 //解析本地缓存
-                let decoration_parse = JSON.parse(decoration_local);
-                if (!decoration_parse.status) return;
+                let decoration_parse = this.parseDecorationCache(decoration_local);
+                if (!decoration_parse) {
+                    sessionStorage.removeItem(DECORATION_KEY + this.uid);
+                } else {
+                    if (!decoration_parse.status) return;
 
-                if (decoration_parse) {
-                    this.setDecoration(decoration_parse);
-                    return;
+                    if (decoration_parse) {
+                        this.setDecoration(decoration_parse);
+                        return;
+                    }
                 }
             }
             getDecoration({ using: 1, user_id: this.uid, type: "homebg" }).then((res) => {
                 let decorationList = res.data.data;
                 //筛选个人装扮
-                let decoration = decorationList.find((item) => item.type == "homebg");
+                let decoration = decorationList?.find((item) => item.type == "homebg");
                 if (!decoration) {
                     //空 则为无主题，不再加载接口，Me界面设No
-                    sessionStorage.setItem(DECORATION_KEY + this.uid, JSON.stringify({ status: false }));
+                    this.cacheNoDecoration();
                     return;
                 }
                 let decorationJson = sessionStorage.getItem(DECORATION_JSON);
@@ -90,20 +94,44 @@ export default {
                     //加载远程json，用于颜色配置及主题存在部位判断
                     getDecorationJson().then((json) => {
                         let decoration_json = json.data;
-                        let theme = JSON.parse(JSON.stringify(decoration_json[decoration.val]));
-                        theme.status = true;
-                        sessionStorage.setItem(DECORATION_KEY + this.uid, JSON.stringify(theme));
-                        this.setDecoration(theme);
+                        this.applyDecorationConfig(decoration_json, decoration.val);
                         //缓存远程JSON文件
                         sessionStorage.setItem(DECORATION_JSON, JSON.stringify(decoration_json));
                     });
                 } else {
-                    let theme = JSON.parse(decorationJson)[decoration.val];
-                    theme.status = true;
-                    sessionStorage.setItem(DECORATION_KEY + this.uid, JSON.stringify(theme));
-                    this.setDecoration(theme);
+                    let decoration_config = this.parseDecorationCache(decorationJson);
+                    if (!decoration_config) {
+                        sessionStorage.removeItem(DECORATION_JSON);
+                        this.cacheNoDecoration();
+                        return;
+                    }
+                    this.applyDecorationConfig(decoration_config, decoration.val);
                 }
             });
+        },
+        parseDecorationCache(value) {
+            try {
+                return JSON.parse(value);
+            } catch (e) {
+                return null;
+            }
+        },
+        cacheNoDecoration() {
+            sessionStorage.setItem(DECORATION_KEY + this.uid, JSON.stringify({ status: false }));
+        },
+        applyDecorationConfig(decorationConfig, decorationVal) {
+            const themeConfig = decorationConfig?.[decorationVal];
+            if (!themeConfig) {
+                this.cacheNoDecoration();
+                return;
+            }
+
+            const theme = {
+                ...themeConfig,
+                status: true,
+            };
+            sessionStorage.setItem(DECORATION_KEY + this.uid, JSON.stringify(theme));
+            this.setDecoration(theme);
         },
         showDecoration: function(val, type) {
             return __cdn + `design/decoration/images/${val}/${type}.png`;
