@@ -16,7 +16,14 @@ function checkCode(data) {
     });
 }
 
-function resetPassword(data) {
+async function resetPassword(data) {
+    const encryptedPassword = await encryptPassword(data.password);
+    const params = {};
+
+    if (encryptedPassword.encrypted) {
+        params.encrypt = encryptedPassword.version;
+    }
+
     return $cms({
         headers: {
             "user-device-fingerprint": User.getDeviceFingerprint(),
@@ -24,9 +31,9 @@ function resetPassword(data) {
     }).put("api/cms/user/account/email/reset-password", {
         email: data.email,
         code: data.code,
-        password: encryptPassword(data.password),
+        password: encryptedPassword.value,
     },{
-        params: { encrypt : 1 }
+        params
     });
 }
 

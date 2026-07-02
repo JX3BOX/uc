@@ -23,32 +23,45 @@ function registerByEmail(data) {
 }
 
 // 邮箱密码登录
-function loginByEmail(data) {
+async function loginByEmail(data) {
+    const encryptedPassword = await encryptPassword(data.pass);
+    const params = {
+        app: 'jx3box',
+    };
+
+    if (encryptedPassword.encrypted) {
+        params.encrypt = encryptedPassword.version;
+    }
+
     return $cms({
         headers: {
             "user-device-fingerprint": User.getDeviceFingerprint(),
         },
     }).post("api/cms/user/account/email/login", {
         email: data.email,
-        password: encryptPassword(data.pass),
+        password: encryptedPassword.value,
     }, {
-        params: {
-            app: 'jx3box' ,
-            encrypt : 1
-        }
+        params
     });
     // 必须以携带模式请求
 }
 
 // 邮箱注册激活
-function verifyEmail(data) {
+async function verifyEmail(data) {
+    const encryptedPassword = await encryptPassword(data.password);
+    const params = {};
+
+    if (encryptedPassword.encrypted) {
+        params.encrypt = encryptedPassword.version;
+    }
+
     return $.put("api/cms/user/account/email/active", {
         email: data.email,
-        password: encryptPassword(data.password),
+        password: encryptedPassword.value,
         invitation: data.invitation,
         code: data.code,
     },{
-        params: { encrypt : 1 }
+        params
     });
 }
 
