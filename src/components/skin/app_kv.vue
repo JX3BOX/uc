@@ -102,6 +102,8 @@ export default {
 }
 
 .m-tabbar {
+    position: relative;
+    z-index: 2;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     align-items: center;
@@ -130,7 +132,7 @@ export default {
     }
 
     .m-tabbar i {
-        background: #f1f5f9;
+        background: #fff;
     }
 }
 </style>
