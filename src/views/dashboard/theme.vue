@@ -18,7 +18,12 @@
                                 v-for="scene in currentSceneTabs"
                                 :key="scene.subtype"
                                 type="button"
-                                :class="{ active: activeSceneSubtype === scene.subtype }"
+                                :class="{
+                                    active: activeScenePreview && activeScenePreview.subtype === scene.subtype,
+                                    disabled: scene.disabled,
+                                }"
+                                :disabled="scene.disabled"
+                                :title="scene.disabled ? '当前皮肤未包含该部位' : scene.label"
                                 @click="selectSceneSubtype(scene.subtype)"
                             >
                                 {{ scene.label }}
@@ -30,6 +35,7 @@
                                 :key="activeScenePreview.subtype"
                                 :theme="activeSceneTheme"
                                 :skin-config="activeSceneConfig"
+                                :authors="activeSkinAuthors"
                                 class="u-scene-item"
                             />
                             <div class="u-scene-modes" v-if="showSceneModes">
@@ -59,6 +65,15 @@
                         :key="index"
                         @click="selectPreviewType(item.type)"
                     >
+                        <button
+                            v-if="getActiveSkinByType(item.type)"
+                            type="button"
+                            class="u-clear-type"
+                            title="清除当前装扮"
+                            @click.stop="clearPreviewType(item.type)"
+                        >
+                            <i class="el-icon-close"></i>
+                        </button>
                         <img
                             :src="getActiveImg(item)"
                             class="u-img"
@@ -83,8 +98,20 @@
             </div>
             <div class="m-theme-right">
                 <!-- 主题渲染列表 -->
-                <div class="u-theme">
-                    <div class="u-decoration-list" v-for="(item, i) in decoration" :key="i + item.val">
+                <div class="u-skin-search">
+                    <el-input
+                        v-model="skinSearchKeyword"
+                        size="large"
+                        clearable
+                        placeholder="搜索皮肤名称"
+                    >
+                        <template #prefix>
+                            <el-icon><Search /></el-icon>
+                        </template>
+                    </el-input>
+                </div>
+                <div class="u-theme" v-if="filteredDecoration.length">
+                    <div class="u-decoration-list" v-for="(item, i) in filteredDecoration" :key="i + item.val">
                         <div class="u-title">
                             <span class="u-name"><i class="el-icon-collection-tag"></i> {{ item.name }}</span>
                             <a
@@ -108,6 +135,7 @@
                         </div>
                     </div>
                 </div>
+                <div class="u-search-empty" v-else>暂无匹配皮肤</div>
             </div>
         </div>
     </uc>
@@ -117,93 +145,26 @@
 import uc from "@/components/dashboard/uc.vue";
 import { getDecoration, setDecoration, getDecorationJson } from "@/service/dashboard/decoration";
 import User from "@jx3box/jx3box-common/js/user";
-import { __imgPath, __cdn } from "@/utils/config";
+import { __cdn } from "@/utils/config";
 import { cloneDeep, flatten } from "lodash";
 import tabsData from "@/assets/data/dashboard/tabs.json";
 import { SKIN_SCENE_COMPONENTS } from "@/components/skin";
+import {
+    SKIN_SCENE_LABELS,
+    SKIN_TYPE_OPTIONS,
+    SKIN_TYPE_SCENES,
+    getFirstAvailableSkinSceneSubtype,
+    getPreferredSkinSceneTheme,
+    getSkinPreview,
+    getSkinSceneAuthorsFromConfigs,
+    getSkinSceneConfig,
+    getSkinSceneModes,
+    getSkinTypeConfigs,
+    hasSkinType,
+    isSkinSceneAvailable,
+    isVisibleSkin,
+} from "@/components/skin/scene";
 const { themeTab } = tabsData;
-
-const normalizeSkinUrl = function (url) {
-    const raw = String(url || "").trim();
-    if (!raw) return "";
-    if (/^(https?:)?\/\//.test(raw)) return raw;
-    return __cdn + raw.replace(/^\/+/, "");
-};
-
-const SKIN_TYPE_OPTIONS = [
-    { type: "calendar", text: "岁时绘", subtype: "pc_calendar", sort: 1, isHave: 0, using: 0, statue: 1 },
-    { type: "sidebar", text: "游踪饰", subtype: "pc_sidebar", sort: 2, isHave: 0, using: 0, statue: 1 },
-    { type: "comment", text: "清谈境", subtype: "pc_comment", sort: 3, isHave: 0, using: 0, statue: 1 },
-    { type: "homebg", text: "栖云居", subtype: "pc_homebg", sort: 4, isHave: 0, using: 0, statue: 1 },
-    { type: "atcard", text: "照影笺", subtype: "pc_authorcard", sort: 5, isHave: 0, using: 0, statue: 1 },
-];
-
-const SKIN_TYPE_SCENES = {
-    sidebar: [
-        "pc_sidebar",
-        "app_tabbar",
-    ],
-    calendar: ["pc_calendar", "app_kv"],
-    comment: ["pc_comment", "app_forum"],
-    homebg: ["pc_home", "app_authorbg", "app_dashboardbg"],
-    atcard: ["pc_authorcard", "app_authorcard"],
-};
-
-const SKIN_SCENE_LABELS = {
-    app_kv: "[App]首屏KV",
-    pc_calendar: "[PC]首页日历",
-    app_tabbar_icon_dashboard: "[App]我的图标",
-    app_tabbar_icon_dashboard_active: "[App]我的图标(激活)",
-    app_tabbar_icon_forum: "[App]论坛图标",
-    app_tabbar_icon_forum_active: "[App]论坛图标(激活)",
-    app_tabbar_icon_nav: "[App]导航图标",
-    app_tabbar_icon_nav_active: "[App]导航图标(激活)",
-    app_tabbar_icon_home: "[App]首页图标",
-    app_tabbar_icon_home_active: "[App]首页图标(激活)",
-    app_tabbar_bg: "[App]底栏背景",
-    app_tabbar: "[App]底部导航",
-    pc_sidebar: "[PC]侧栏背景",
-    app_forum: "[App]论坛KV",
-    pc_comment: "[PC]评论背景",
-    app_authorbg: "[App]个人主页",
-    app_dashboardbg: "[App]个人中心",
-    pc_home: "[PC]个人主页",
-    pc_homebanner: "[PC]个人主页横幅",
-    pc_homebg: "[PC]个人主页背景",
-    app_authorcard: "[App]个人名片",
-    pc_authorcard: "[PC]个人名片",
-};
-
-const SKIN_THEME_OPTIONS = [
-    { value: "all", label: "通用", icon: "el-icon-s-grid" },
-    { value: "light", label: "亮色", icon: "el-icon-sunny" },
-    { value: "dark", label: "暗色", icon: "el-icon-moon" },
-];
-
-const getSkinTypeOption = function (type) {
-    return SKIN_TYPE_OPTIONS.find((item) => item.type === type);
-};
-
-const getSkinConfig = function (source, key, type) {
-    const configs = source?.[key]?.decorations?.[type];
-    const subtype = getSkinTypeOption(type)?.subtype;
-    if (!Array.isArray(configs)) return null;
-    return configs.find((item) => item?.subtype === subtype && item?.image) || null;
-};
-
-const getSkinPreview = function (source, key, type) {
-    return normalizeSkinUrl(getSkinConfig(source, key, type)?.image);
-};
-
-const HIDDEN_SKIN_KEYS = ["0_TESTSAMPLE"];
-
-const isVisibleSkin = function (source, key) {
-    return !HIDDEN_SKIN_KEYS.includes(key) && source?.[key]?.status !== 0;
-};
-
-const hasSkinType = function (source, key, type) {
-    return !!getSkinConfig(source, key, type)?.image;
-};
 
 export default {
     name: "theme",
@@ -219,96 +180,69 @@ export default {
             activeSceneTheme: "all",
             decoration: [],
             decorationJson: [], //远程json
+            skinSearchKeyword: "",
             originalActivateName: null,
             back: {},
         };
     },
     computed: {
+        filteredDecoration() {
+            const keyword = this.skinSearchKeyword.trim().toLowerCase();
+            if (!keyword) return this.decoration;
+            return this.decoration.filter((item) => String(item.name || "").toLowerCase().includes(keyword));
+        },
         currentSceneTabs() {
             return (SKIN_TYPE_SCENES[this.activePreviewType] || [])
                 .map((subtype) => ({
                     subtype,
                     label: SKIN_SCENE_LABELS[subtype] || subtype,
                     component: SKIN_SCENE_COMPONENTS[subtype],
+                    disabled: !this.isSceneAvailable(subtype, this.activePreviewType),
                 }))
                 .filter((item) => item.component);
         },
-        activeScenePreview() {
-            return (
-                this.currentSceneTabs.find((item) => item.subtype === this.activeSceneSubtype) ||
-                this.currentSceneTabs[0] ||
-                null
+        activeSceneSubtypeForPreview() {
+            const selected = this.currentSceneTabs.find(
+                (item) => item.subtype === this.activeSceneSubtype && !item.disabled
             );
+            const fallback = this.currentSceneTabs.find((item) => !item.disabled);
+            return (selected || fallback)?.subtype || "";
+        },
+        activeScenePreview() {
+            return this.currentSceneTabs.find((item) => item.subtype === this.activeSceneSubtypeForPreview) || null;
         },
         activePreviewSkinKey() {
             const list = flatten(this.decoration.map((item) => item.list));
             return list.find((item) => item.type === this.activePreviewType && item.using == 1)?.val || "";
         },
-        activeSceneModes() {
+        activeSkinAuthors() {
             const configs =
                 this.decorationJson?.[this.activePreviewSkinKey]?.decorations?.[this.activePreviewType] || [];
-            const subtypes =
-                this.activeSceneSubtype === "app_tabbar"
-                    ? [
-                          "app_tabbar_icon_dashboard",
-                          "app_tabbar_icon_dashboard_active",
-                          "app_tabbar_icon_forum",
-                          "app_tabbar_icon_forum_active",
-                          "app_tabbar_icon_nav",
-                          "app_tabbar_icon_nav_active",
-                          "app_tabbar_icon_home",
-                          "app_tabbar_icon_home_active",
-                          "app_tabbar_bg",
-                      ]
-                    : [this.activeSceneSubtype];
-            const modeSet = new Set(
-                configs
-                    .filter((item) => subtypes.includes(item?.subtype) && item?.theme)
-                    .map((item) => item.theme)
-            );
-
-            return SKIN_THEME_OPTIONS.filter((item) => modeSet.has(item.value));
+            return getSkinSceneAuthorsFromConfigs(configs, this.activeSceneSubtypeForPreview, this.activeSceneTheme);
+        },
+        activeSceneModes() {
+            const sceneSubtype = this.activeSceneSubtypeForPreview;
+            if (!sceneSubtype) return [];
+            const configs =
+                this.decorationJson?.[this.activePreviewSkinKey]?.decorations?.[this.activePreviewType] || [];
+            return getSkinSceneModes(configs, sceneSubtype);
         },
         activeSceneConfig() {
+            const sceneSubtype = this.activeSceneSubtypeForPreview;
+            if (!sceneSubtype) return null;
             const configs =
                 this.decorationJson?.[this.activePreviewSkinKey]?.decorations?.[this.activePreviewType] || [];
-            if (this.activeSceneSubtype === "pc_home") {
-                return {
-                    page: configs.find((item) => item?.subtype === "pc_homebg") || null,
-                    banner: configs.find((item) => item?.subtype === "pc_homebanner") || null,
-                };
-            }
-            if (this.activeSceneSubtype === "app_tabbar") {
-                const getConfig = (subtype) =>
-                    configs.find((item) => item?.subtype === subtype && item?.theme === this.activeSceneTheme) ||
-                    configs.find((item) => item?.subtype === subtype && item?.theme === "all") ||
-                    configs.find((item) => item?.subtype === subtype) ||
-                    null;
-                return {
-                    bg: getConfig("app_tabbar_bg"),
-                    dashboard: getConfig("app_tabbar_icon_dashboard"),
-                    dashboardActive: getConfig("app_tabbar_icon_dashboard_active"),
-                    forum: getConfig("app_tabbar_icon_forum"),
-                    forumActive: getConfig("app_tabbar_icon_forum_active"),
-                    nav: getConfig("app_tabbar_icon_nav"),
-                    navActive: getConfig("app_tabbar_icon_nav_active"),
-                    home: getConfig("app_tabbar_icon_home"),
-                    homeActive: getConfig("app_tabbar_icon_home_active"),
-                };
-            }
-            return (
-                configs.find(
-                    (item) => item?.subtype === this.activeSceneSubtype && item?.theme === this.activeSceneTheme
-                ) ||
-                configs.find((item) => item?.subtype === this.activeSceneSubtype) ||
-                null
-            );
+            return getSkinSceneConfig(configs, sceneSubtype, this.activeSceneTheme);
         },
         showSceneModes() {
-            return !!this.activeSceneSubtype && !this.activeSceneSubtype.startsWith("pc_") && this.activeSceneModes.length;
+            const sceneSubtype = this.activeSceneSubtypeForPreview;
+            return !!sceneSubtype && !sceneSubtype.startsWith("pc_") && this.activeSceneModes.length;
         },
     },
     watch: {
+        activePreviewSkinKey() {
+            this.syncSceneSubtype();
+        },
         activeSceneModes: {
             immediate: true,
             handler(modes) {
@@ -344,6 +278,26 @@ export default {
             this.decoration = this.formattingData(arr, "val");
             this.back.decoration = cloneDeep(this.decoration);
             this.back.originalActivateName = cloneDeep(this.originalActivateName);
+            this.syncSceneSubtype();
+        },
+        getActiveSkinKeyByType(type = this.activePreviewType) {
+            return this.getActiveSkinByType(type)?.val || "";
+        },
+        getActiveSkinByType(type = this.activePreviewType) {
+            const list = flatten(this.decoration.map((item) => item.list));
+            return list.find((item) => item.type === type && item.using == 1) || null;
+        },
+        getSkinTypeConfigs(type = this.activePreviewType) {
+            const skinKey = this.getActiveSkinKeyByType(type);
+            return getSkinTypeConfigs(this.decorationJson, skinKey, type);
+        },
+        isSceneAvailable(subtype, type = this.activePreviewType) {
+            const skinKey = this.getActiveSkinKeyByType(type);
+            return isSkinSceneAvailable(this.decorationJson, skinKey, type, subtype);
+        },
+        getFirstAvailableSceneSubtype(type = this.activePreviewType) {
+            const skinKey = this.getActiveSkinKeyByType(type);
+            return getFirstAvailableSkinSceneSubtype(this.decorationJson, skinKey, type);
         },
         //数据分组，设置已激活name
         formattingData(arr, group_key) {
@@ -435,10 +389,11 @@ export default {
         },
         selectPreviewType(type) {
             this.activePreviewType = type;
-            this.activeSceneSubtype = (SKIN_TYPE_SCENES[type] || [])[0] || "";
+            this.activeSceneSubtype = this.getFirstAvailableSceneSubtype(type);
             this.syncSceneTheme();
         },
         selectSceneSubtype(subtype) {
+            if (!this.isSceneAvailable(subtype)) return;
             this.activeSceneSubtype = subtype;
             this.syncSceneTheme();
         },
@@ -447,23 +402,31 @@ export default {
         },
         syncSceneTheme() {
             this.$nextTick(() => {
-                if (
-                    this.activeSceneModes.length &&
-                    !this.activeSceneModes.some((item) => item.value === this.activeSceneTheme)
-                ) {
-                    this.activeSceneTheme = this.activeSceneModes[0].value;
+                const nextTheme = getPreferredSkinSceneTheme(this.activeSceneModes, this.activeSceneTheme);
+                if (nextTheme !== this.activeSceneTheme) {
+                    this.activeSceneTheme = nextTheme;
                 }
             });
         },
-        getActiveImg(item) {
-            let type = item.type;
-            let val = undefined;
-            const _decorations = flatten(this.decoration.map((item) => item.list));
-            _decorations.forEach((item) => {
-                if (item.type == type && item.using == 1) {
-                    val = item.val;
+        syncSceneSubtype() {
+            this.$nextTick(() => {
+                if (this.isSceneAvailable(this.activeSceneSubtype)) return;
+                this.activeSceneSubtype = this.getFirstAvailableSceneSubtype(this.activePreviewType);
+            });
+        },
+        clearPreviewType(type) {
+            flatten(this.decoration.map((item) => item.list)).forEach((item) => {
+                if (item.type === type) {
+                    item.using = 0;
                 }
             });
+            if (this.activePreviewType === type) {
+                this.syncSceneSubtype();
+            }
+        },
+        getActiveImg(item) {
+            let type = item.type;
+            const val = this.getActiveSkinByType(type)?.val;
             let defaultImg = "https://cdn.jx3box.com/static/dashboard/img/no.5fe91973.svg";
             if (val) return getSkinPreview(this.decorationJson, val, type) || __cdn + `design/decoration/images/${val}/${type}_preview.png`;
             else return defaultImg;

@@ -53,7 +53,7 @@
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>PC评论背景</b>
+            <b>PC评论背景<SkinSceneAuthors :authors="authors" /></b>
             <span>comment / pc_comment</span>
         </div>
     </div>
@@ -61,6 +61,7 @@
 
 <script>
 import { __cdn } from "@/utils/config";
+import SkinSceneAuthors from "./SkinSceneAuthors.vue";
 
 const normalizeSkinUrl = function (url) {
     const raw = String(url || "").trim();
@@ -106,6 +107,13 @@ export default {
             type: Object,
             default: null,
         },
+        authors: {
+            type: Array,
+            default: () => [],
+        },
+    },
+    components: {
+        SkinSceneAuthors,
     },
     data() {
         return {

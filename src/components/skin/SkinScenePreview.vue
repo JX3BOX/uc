@@ -143,17 +143,22 @@
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>{{ title }}</b>
+            <b>{{ title }}<SkinSceneAuthors :authors="authors" /></b>
             <span>{{ subtitle }}</span>
         </div>
     </div>
 </template>
 
 <script>
+import SkinSceneAuthors from "./SkinSceneAuthors.vue";
+
 const TAB_ITEM_KEYS = ["home", "nav", "forum", "dashboard"];
 
 export default {
     name: "SkinScenePreview",
+    components: {
+        SkinSceneAuthors,
+    },
     props: {
         title: {
             type: String,
@@ -182,6 +187,10 @@ export default {
         skinConfig: {
             type: Object,
             default: null,
+        },
+        authors: {
+            type: Array,
+            default: () => [],
         },
     },
     computed: {

@@ -16,6 +16,14 @@ function getUserInfo(uid) {
     });
 }
 
+function searchUser(search) {
+    return $cms().get(`/api/cms/user/search`, {
+        params: {
+            search,
+        },
+    });
+}
+
 function getSuperAuthor(uid) {
     return $cms().get("/api/cms/user/is_super_author/" + uid);
 }
@@ -74,6 +82,7 @@ function getCertification(id) {
 export {
     getPosts,
     getUserInfo,
+    searchUser,
     getSuperAuthor,
     getIdentity,
     getUserPz,

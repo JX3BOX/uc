@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>PC个人名片</b>
+            <b>PC个人名片<SkinSceneAuthors :authors="authors" /></b>
             <span>atcard / pc_authorcard</span>
         </div>
     </div>
@@ -52,6 +52,7 @@
 
 <script>
 import { __cdn } from "@/utils/config";
+import SkinSceneAuthors from "./SkinSceneAuthors.vue";
 
 const normalizeSkinUrl = function (url) {
     const raw = String(url || "").trim();
@@ -97,6 +98,13 @@ export default {
             type: Object,
             default: null,
         },
+        authors: {
+            type: Array,
+            default: () => [],
+        },
+    },
+    components: {
+        SkinSceneAuthors,
     },
     data() {
         return {

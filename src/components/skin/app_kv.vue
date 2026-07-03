@@ -25,7 +25,7 @@
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>App首屏KV</b>
+            <b>App首屏KV<SkinSceneAuthors :authors="authors" /></b>
             <span>calendar / app_kv</span>
         </div>
     </div>
@@ -33,6 +33,7 @@
 
 <script>
 import { __cdn } from "@/utils/config";
+import SkinSceneAuthors from "./SkinSceneAuthors.vue";
 
 const normalizeSkinUrl = function (url) {
     const raw = String(url || "").trim();
@@ -52,6 +53,13 @@ export default {
             type: Object,
             default: null,
         },
+        authors: {
+            type: Array,
+            default: () => [],
+        },
+    },
+    components: {
+        SkinSceneAuthors,
     },
     computed: {
         imageUrl() {

@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>App个人主页头部</b>
+            <b>App个人主页头部<SkinSceneAuthors :authors="authors" /></b>
             <span>homebg / app_authorbg</span>
         </div>
     </div>
@@ -31,6 +31,7 @@
 
 <script>
 import { __cdn } from "@/utils/config";
+import SkinSceneAuthors from "./SkinSceneAuthors.vue";
 const normalizeSkinUrl = (url) => {
     const raw = String(url || "").trim();
     if (!raw) return "";
@@ -42,6 +43,10 @@ export default {
     props: {
         theme: { type: String, default: "all" },
         skinConfig: { type: Object, default: null },
+        authors: { type: Array, default: () => [] },
+    },
+    components: {
+        SkinSceneAuthors,
     },
     computed: {
         imageUrl() {

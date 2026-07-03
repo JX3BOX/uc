@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>App论坛背景</b>
+            <b>App论坛背景<SkinSceneAuthors :authors="authors" /></b>
             <span>comment / app_forum</span>
         </div>
     </div>
@@ -28,6 +28,7 @@
 
 <script>
 import { __cdn } from "@/utils/config";
+import SkinSceneAuthors from "./SkinSceneAuthors.vue";
 
 const normalizeSkinUrl = function (url) {
     const raw = String(url || "").trim();
@@ -47,6 +48,13 @@ export default {
             type: Object,
             default: null,
         },
+        authors: {
+            type: Array,
+            default: () => [],
+        },
+    },
+    components: {
+        SkinSceneAuthors,
     },
     computed: {
         imageUrl() {

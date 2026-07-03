@@ -1,13 +1,35 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
+import { searchUser } from "@/service/author/cms";
 
 const isMini = isMiniProgram() || isApp();
+const isNumericId = (value) => /^\d+$/.test(String(value || ""));
+
+const resolveAuthorNickname = async (to) => {
+    const author = String(to.params.id || "").trim();
+    if (!author || isNumericId(author)) return true;
+
+    const res = await searchUser(author).catch(() => null);
+    const uid = res?.data?.data?.ID;
+    if (!uid) return true;
+
+    return {
+        name: "index",
+        params: {
+            id: String(uid),
+        },
+        query: to.query,
+        hash: to.hash,
+        replace: true,
+    };
+};
 
 const routes = [
     {
-        path: "/:id(\\d+)",
+        path: "/:id",
         name: "index",
         component: isMini ? () => import("@/views/author/mobile/Index.vue") : () => import("@/views/author/Index.vue"),
+        beforeEnter: resolveAuthorNickname,
         meta: {
             i18n: {
                 title: "pages.author.title",
