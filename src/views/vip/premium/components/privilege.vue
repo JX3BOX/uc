@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { getMenu } from "@jx3box/jx3box-common/js/system";
 import {
     Brush,
     Coin,
@@ -23,6 +24,16 @@ import {
     Medal,
     MoreFilled,
 } from "@element-plus/icons-vue";
+
+const DEFAULT_LIST = [
+    { text: "魔盒新功能提前体验", icon: "Medal" },
+    { text: "签到双倍积分", icon: "Coin" },
+    { text: "专属虚拟装扮", icon: "Brush" },
+    { text: "专属昵称尾巴标识", icon: "CollectionTag" },
+    { text: "亲友名单无上限", icon: "MagicStick" },
+    { text: "更多特权，敬请期待！", icon: "MoreFilled" },
+];
+const ICONS = ["Brush", "Coin", "CollectionTag", "MagicStick", "Medal", "MoreFilled"];
 
 export default {
     name: "privilege",
@@ -36,15 +47,33 @@ export default {
     },
     data: function () {
         return {
-            list: [
-                { text: "魔盒新功能提前体验", icon: "Medal" },
-                { text: "签到双倍积分", icon: "Coin" },
-                { text: "专属虚拟装扮", icon: "Brush" },
-                { text: "专属昵称尾巴标识", icon: "CollectionTag" },
-                { text: "亲友名单无上限", icon: "MagicStick" },
-                { text: "更多特权，敬请期待！", icon: "MoreFilled" },
-            ],
+            list: DEFAULT_LIST,
         };
+    },
+    mounted() {
+        this.loadPrivileges();
+    },
+    methods: {
+        loadPrivileges() {
+            getMenu("vip_privileges")
+                .then((res) => {
+                    const list = (res || []).map(this.normalizePrivilege).filter((item) => item.text);
+                    if (list.length) {
+                        this.list = list;
+                    }
+                })
+                .catch(() => {
+                    this.list = DEFAULT_LIST;
+                });
+        },
+        normalizePrivilege(item = {}, index) {
+            const icon = item.icon || item.extend?.icon || item.meta?.icon || DEFAULT_LIST[index]?.icon || "MoreFilled";
+            return {
+                text: item.text || item.label || item.name || item.title || "",
+                icon: ICONS.includes(icon) ? icon : "MoreFilled",
+                tag: item.tag || item.extend?.tag || item.meta?.tag || "",
+            };
+        },
     },
 };
 </script>
