@@ -165,13 +165,13 @@ const SKIN_SCENE_LABELS = {
     pc_sidebar: "[PC]侧栏背景",
     app_forum: "[App]论坛KV",
     pc_comment: "[PC]评论背景",
-    app_authorbg: "[App]作者主页",
+    app_authorbg: "[App]个人主页",
     app_dashboardbg: "[App]个人中心",
     pc_home: "[PC]个人主页",
     pc_homebanner: "[PC]个人主页横幅",
     pc_homebg: "[PC]个人主页背景",
-    app_authorcard: "[App]用户卡片",
-    pc_authorcard: "[PC]用户卡片",
+    app_authorcard: "[App]个人名片",
+    pc_authorcard: "[PC]个人名片",
 };
 
 const SKIN_THEME_OPTIONS = [

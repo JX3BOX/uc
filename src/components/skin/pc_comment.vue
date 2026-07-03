@@ -249,7 +249,7 @@ export default {
     width: 66px;
     height: 14px;
     border-radius: 5px;
-    background: #635bff;
+    background: #d1d5db;
 }
 
 .u-cmt {
@@ -261,7 +261,7 @@ export default {
     max-width: 55%;
     height: 18px;
     border-radius: 999px;
-    background: #111827;
+    background: #d1d5db;
 }
 
 .u-toolbar {

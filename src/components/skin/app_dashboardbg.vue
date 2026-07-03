@@ -59,4 +59,18 @@ export default {
 <style lang="less" scoped>
 @import "./mobile-scene.less";
 @import "./mobile-header-scene.less";
+
+.m-app-dashboardbg-skin-scene {
+    .m-scene-stage {
+        min-height: 740px;
+        padding: 30px;
+    }
+
+    .m-phone {
+        width: 375px !important;
+        height: 667px !important;
+        border-width: 7px;
+        border-radius: 34px;
+    }
+}
 </style>

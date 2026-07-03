@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>PC用户卡片</b>
+            <b>PC个人名片</b>
             <span>atcard / pc_authorcard</span>
         </div>
     </div>
@@ -242,8 +242,8 @@ export default {
 
 .w-author {
     position: absolute;
-    left: 206px;
-    top: 148px;
+    left: 170px;
+    top: 170px;
     z-index: 1;
 }
 
@@ -263,18 +263,6 @@ export default {
         0 14px 34px rgba(31, 41, 55, 0.16),
         0 2px 8px rgba(31, 41, 55, 0.08);
 
-    &::before {
-        content: "";
-        position: absolute;
-        left: 22px;
-        top: -7px;
-        width: 12px;
-        height: 12px;
-        border-top: 1px solid rgba(132, 146, 166, 0.28);
-        border-left: 1px solid rgba(132, 146, 166, 0.28);
-        background: inherit;
-        transform: rotate(45deg);
-    }
 }
 
 .u-author {

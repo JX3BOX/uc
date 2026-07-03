@@ -266,7 +266,7 @@ export default {
         width: 20px;
         height: 20px;
         border-radius: 5px;
-        background: linear-gradient(135deg, #dbeafe, #818cf8);
+        background: linear-gradient(135deg, #e5e7eb, #cbd5e1);
     }
 }
 

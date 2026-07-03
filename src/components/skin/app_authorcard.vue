@@ -10,28 +10,39 @@
                             <span></span>
                         </div>
                     </div>
-                    <div class="u-post is-active">
-                        <i></i>
-                        <div>
-                            <b></b>
-                            <span></span>
+                    <div class="m-bottom-panel" :style="imageStyle">
+                        <div class="u-panel-top"></div>
+                        <div class="u-panel-bottom">
+                            <div class="u-panel-divider"></div>
+                            <div class="u-panel-author">
+                                <i></i>
+                                <b></b>
+                            </div>
+                            <div class="u-panel-lines">
+                                <span></span>
+                                <span></span>
+                            </div>
                         </div>
                     </div>
-                    <div class="m-pop-card" :style="imageStyle">
-                        <video v-if="animationUrl" class="u-animation" :src="animationUrl" autoplay muted loop playsinline></video>
-                        <div class="u-avatar"></div>
-                        <div class="u-name"></div>
-                        <div class="u-meta"></div>
-                        <div class="u-actions">
-                            <i></i>
-                            <i></i>
+                    <div class="m-card-list">
+                        <div
+                            class="m-content-card"
+                            :class="{ 'is-align-right': card === 2 }"
+                            v-for="card in 2"
+                            :key="card"
+                        >
+                            <div class="u-card-lines">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>App用户卡片</b>
+            <b>App个人名片</b>
             <span>atcard / app_authorcard</span>
         </div>
     </div>
@@ -63,9 +74,6 @@ export default {
         imageUrl() {
             return normalizeSkinUrl(this.skinConfig?.image);
         },
-        animationUrl() {
-            return normalizeSkinUrl(this.skinConfig?.animation);
-        },
         imageStyle() {
             return this.imageUrl ? { backgroundImage: `url(${this.imageUrl})` } : {};
         },
@@ -76,36 +84,50 @@ export default {
 <style lang="less" scoped>
 @import "./mobile-scene.less";
 
-.m-phone {
-    background: #f4f6fb;
+.m-app-authorcard-skin-scene {
+    .m-scene-stage {
+        min-height: 740px;
+        padding: 30px;
+    }
+
+    .m-phone {
+        width: 375px !important;
+        height: 667px !important;
+        border-width: 7px;
+        border-radius: 34px;
+        background: #f4f6fb;
+    }
 }
 
 .m-forum {
     position: relative;
     box-sizing: border-box;
     height: 100%;
-    padding: 28px 16px;
+    padding: 34px 20px;
 }
 
 .u-post {
     display: flex;
+    align-items: center;
     gap: 12px;
-    padding: 14px;
+    min-height: 118px;
+    padding: 20px 14px;
     margin-bottom: 12px;
     border-radius: 14px;
     background: #fff;
 
     i {
-        width: 42px;
-        height: 42px;
-        flex: 0 0 42px;
+        width: 56px;
+        height: 56px;
+        flex: 0 0 56px;
+        box-sizing: border-box;
+        border: 5px solid rgba(99, 102, 241, 0.24);
         border-radius: 50%;
         background: #dbe3ef;
     }
 
     div {
         flex: 1;
-        padding-top: 4px;
     }
 
     b,
@@ -127,92 +149,152 @@ export default {
     }
 }
 
-.is-active {
-    i {
-        border: 4px solid rgba(99, 102, 241, 0.24);
-        box-sizing: border-box;
-    }
+.m-card-list {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    box-sizing: border-box;
+    margin-top: 54px;
 }
 
-.m-pop-card {
+.m-bottom-panel {
     position: absolute;
-    left: 18px;
-    right: 18px;
-    top: 150px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
     box-sizing: border-box;
-    min-height: 210px;
-    padding: 22px 18px 18px;
+    height: 260px;
     overflow: hidden;
-    border-radius: 18px;
+    border-radius: 32px 32px 0 0;
     background-color: #fff;
     background-repeat: no-repeat;
     background-position: right top;
     background-size: cover;
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
-
-    &::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: rgba(255, 255, 255, 0.28);
-    }
-}
-
-.u-animation {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    box-shadow: 0 -12px 26px rgba(15, 23, 42, 0.1);
     pointer-events: none;
 }
 
-.m-pop-card .u-avatar,
-.m-pop-card .u-name,
-.m-pop-card .u-meta,
-.m-pop-card .u-actions {
+.u-panel-top {
+    height: 118px;
+}
+
+.u-panel-bottom {
     position: relative;
-    z-index: 1;
-}
-
-.m-pop-card .u-avatar {
-    width: 62px;
-    height: 62px;
     box-sizing: border-box;
-    border: 5px solid rgba(99, 102, 241, 0.22);
-    border-radius: 50%;
-    background: #cbd5e1;
+    height: calc(100% - 118px);
+    padding: 22px 28px 30px;
+    background: #fff;
 }
 
-.u-name,
-.u-meta {
-    border-radius: 999px;
-    background: #d6dbe5;
+.u-panel-divider {
+    height: 1px;
+    margin: -22px -28px 32px;
+    background: #edf0f5;
 }
 
-.u-name {
-    width: 118px;
-    height: 17px;
-    margin-top: 16px;
-}
-
-.u-meta {
-    width: 165px;
-    height: 13px;
-    margin-top: 10px;
-}
-
-.u-actions {
+.u-panel-author {
+    position: relative;
     display: flex;
-    gap: 12px;
-    margin-top: 20px;
+    align-items: center;
+    gap: 18px;
+    height: 40px;
+    margin-top: -44px;
+    margin-bottom: 22px;
 
     i {
+        width: 86px;
+        height: 86px;
+        flex: 0 0 86px;
+        box-sizing: border-box;
+        border: 6px solid rgba(255, 255, 255, 0.9);
+        border-radius: 50%;
+        background: rgba(226, 232, 240, 0.9);
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.1);
+    }
+
+    b {
         display: block;
-        flex: 1;
-        height: 32px;
-        border-radius: 10px;
+        width: 96px;
+        height: 12px;
+        margin-top: 22px;
+        border-radius: 999px;
         background: #d6dbe5;
+    }
+}
+
+.u-panel-lines {
+    padding-top: 24px;
+
+    span {
+        display: block;
+        height: 10px;
+        border-radius: 999px;
+        background: #d6dbe5;
+
+        & + span {
+            margin-top: 20px;
+        }
+
+        &:nth-child(1) {
+            width: 80%;
+        }
+
+        &:nth-child(2) {
+            width: 68%;
+        }
+    }
+}
+
+.m-content-card {
+    position: relative;
+    box-sizing: border-box;
+    min-height: 150px;
+    padding: 34px 28px;
+    overflow: hidden;
+    border-radius: 22px;
+    background-color: #f8fafc;
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-size: cover;
+}
+
+.u-card-lines {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    span {
+        display: block;
+        height: 14px;
+        border-radius: 999px;
+        background: rgba(214, 219, 229, 0.9);
+
+        & + span {
+            margin-top: 20px;
+        }
+
+        &:nth-child(1) {
+            width: 72%;
+        }
+
+        &:nth-child(2) {
+            width: 92%;
+        }
+
+        &:nth-child(3) {
+            width: 78%;
+        }
+    }
+}
+
+.is-align-right {
+    .u-card-lines {
+        align-items: flex-end;
     }
 }
 </style>

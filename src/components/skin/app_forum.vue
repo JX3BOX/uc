@@ -3,19 +3,19 @@
         <div class="m-scene-stage">
             <div class="m-phone" :style="imageStyle">
                 <video v-if="animationUrl" class="u-animation" :src="animationUrl" autoplay muted loop playsinline></video>
-                <div class="u-top">
-                    <i></i>
-                    <span></span>
-                </div>
-                <div class="u-tabs">
-                    <b v-for="index in 4" :key="index"></b>
-                </div>
-                <div class="m-post" v-for="index in 4" :key="index">
-                    <i></i>
-                    <div>
-                        <b></b>
-                        <span></span>
-                    </div>
+                <div class="m-forum-feed">
+                    <article class="m-forum-post" v-for="post in 2" :key="post">
+                        <div class="u-post-head">
+                            <i></i>
+                            <div>
+                                <b></b>
+                                <span></span>
+                            </div>
+                        </div>
+                        <div class="u-post-body">
+                            <span v-for="line in 4" :key="line"></span>
+                        </div>
+                    </article>
                 </div>
             </div>
         </div>
@@ -65,9 +65,20 @@ export default {
 <style lang="less" scoped>
 @import "./mobile-scene.less";
 
+.m-app-forum-skin-scene {
+    .m-scene-stage {
+        min-height: 740px;
+        padding: 30px;
+    }
+}
+
 .m-phone {
     box-sizing: border-box;
-    padding: 26px 16px;
+    width: 375px !important;
+    height: 667px !important;
+    padding: 34px 22px;
+    border-width: 7px;
+    border-radius: 34px;
     background-color: #f2f5fa;
     background-repeat: no-repeat;
     background-position: center top;
@@ -83,83 +94,104 @@ export default {
     pointer-events: none;
 }
 
-.u-top,
-.u-tabs,
-.m-post {
+.m-forum-feed {
     position: relative;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.u-top {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    i {
-        width: 34px;
-        height: 34px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.82);
-    }
-
-    span {
-        width: 118px;
-        height: 18px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.82);
-    }
-}
-
-.u-tabs {
-    display: flex;
-    gap: 12px;
-    margin: 24px 0 18px;
-
-    b {
-        width: 42px;
-        height: 20px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.82);
-    }
-}
-
-.m-post {
-    display: flex;
-    gap: 12px;
-    padding: 14px;
-    margin-bottom: 12px;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, 0.88);
+.m-forum-post {
+    box-sizing: border-box;
+    padding: 22px 20px 24px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
     backdrop-filter: blur(3px);
 
+    &:nth-child(2) {
+        opacity: 0.92;
+    }
+}
+
+.u-post-head {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 28px;
+
     i {
-        width: 42px;
-        height: 42px;
-        flex: 0 0 42px;
-        border-radius: 12px;
-        background: #dbe3ef;
+        width: 54px;
+        height: 54px;
+        flex: 0 0 54px;
+        box-sizing: border-box;
+        border: 7px solid rgba(255, 255, 255, 0.72);
+        border-radius: 50%;
+        background: rgba(226, 232, 240, 0.82);
+        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
     }
 
     div {
         flex: 1;
+        min-width: 0;
     }
 
     b,
     span {
         display: block;
         border-radius: 999px;
-        background: #e5e7eb;
+        background: rgba(226, 232, 240, 0.88);
     }
 
     b {
-        width: 80%;
-        height: 14px;
-        margin-bottom: 10px;
+        width: 112px;
+        height: 8px;
+        margin-bottom: 14px;
     }
 
     span {
-        width: 56%;
-        height: 12px;
+        width: 88px;
+        height: 8px;
+    }
+}
+
+.u-post-body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    span {
+        display: block;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(226, 232, 240, 0.9);
+    }
+
+    span:nth-child(1),
+    span:nth-child(2) {
+        width: 100%;
+    }
+
+    span:nth-child(3) {
+        width: 96%;
+    }
+
+    span:nth-child(4) {
+        width: 86%;
+    }
+}
+
+.is-theme-dark {
+    .m-forum-post {
+        background: rgba(17, 24, 39, 0.72);
+    }
+
+    .u-post-head i,
+    .u-post-head b,
+    .u-post-head span,
+    .u-post-body span {
+        background: rgba(71, 85, 105, 0.86);
     }
 }
 </style>

@@ -187,14 +187,14 @@ export default {
 }
 
 .u-avatar {
-    width: 92px;
-    height: 92px;
-    flex: 0 0 92px;
+    width: 82px;
+    height: 82px;
+    flex: 0 0 82px;
     box-sizing: border-box;
     margin-right: 34px;
     border: 8px solid rgba(255, 255, 255, 0.78);
     border-radius: 50%;
-    background: #cbd5e1;
+    background: rgba(226, 232, 240, 0.86);
 }
 
 .u-user {
@@ -203,17 +203,17 @@ export default {
 
 .u-name {
     width: 150px;
-    height: 22px;
+    height: 16px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.88);
+    background: rgba(255, 255, 255, 0.82);
 }
 
 .u-honor {
     width: 180px;
-    height: 22px;
+    height: 16px;
     margin-top: 14px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.72);
+    background: rgba(255, 255, 255, 0.82);
 }
 
 .m-author-primary {
