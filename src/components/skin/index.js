@@ -4,6 +4,7 @@ import AppAuthorcardSkinScene from "./app_authorcard.vue";
 import AppDashboardbgSkinScene from "./app_dashboardbg.vue";
 import AppForumSkinScene from "./app_forum.vue";
 import AppKvSkinScene from "./app_kv.vue";
+import AppTabbarSkinScene from "./app_tabbar.vue";
 import AppTabbarBgSkinScene from "./app_tabbar_bg.vue";
 import AppTabbarIconDashboardSkinScene from "./app_tabbar_icon_dashboard.vue";
 import AppTabbarIconDashboardActiveSkinScene from "./app_tabbar_icon_dashboard_active.vue";
@@ -28,6 +29,7 @@ export {
     AppDashboardbgSkinScene,
     AppForumSkinScene,
     AppKvSkinScene,
+    AppTabbarSkinScene,
     AppTabbarBgSkinScene,
     AppTabbarIconDashboardSkinScene,
     AppTabbarIconDashboardActiveSkinScene,
@@ -52,6 +54,7 @@ export const SKIN_SCENE_COMPONENTS = {
     app_dashboardbg: AppDashboardbgSkinScene,
     app_forum: AppForumSkinScene,
     app_kv: AppKvSkinScene,
+    app_tabbar: AppTabbarSkinScene,
     app_tabbar_bg: AppTabbarBgSkinScene,
     app_tabbar_icon_dashboard: AppTabbarIconDashboardSkinScene,
     app_tabbar_icon_dashboard_active: AppTabbarIconDashboardActiveSkinScene,

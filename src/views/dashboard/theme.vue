@@ -141,15 +141,7 @@ const SKIN_TYPE_OPTIONS = [
 const SKIN_TYPE_SCENES = {
     sidebar: [
         "pc_sidebar",
-        "app_tabbar_icon_dashboard",
-        "app_tabbar_icon_dashboard_active",
-        "app_tabbar_icon_forum",
-        "app_tabbar_icon_forum_active",
-        "app_tabbar_icon_nav",
-        "app_tabbar_icon_nav_active",
-        "app_tabbar_icon_home",
-        "app_tabbar_icon_home_active",
-        "app_tabbar_bg",
+        "app_tabbar",
     ],
     calendar: ["pc_calendar", "app_kv"],
     comment: ["pc_comment", "app_forum"],
@@ -169,6 +161,7 @@ const SKIN_SCENE_LABELS = {
     app_tabbar_icon_home: "[App]首页图标",
     app_tabbar_icon_home_active: "[App]首页图标(激活)",
     app_tabbar_bg: "[App]底栏背景",
+    app_tabbar: "[App]底部导航",
     pc_sidebar: "[PC]侧栏背景",
     app_forum: "[App]论坛KV",
     pc_comment: "[PC]评论背景",
@@ -254,9 +247,23 @@ export default {
         activeSceneModes() {
             const configs =
                 this.decorationJson?.[this.activePreviewSkinKey]?.decorations?.[this.activePreviewType] || [];
+            const subtypes =
+                this.activeSceneSubtype === "app_tabbar"
+                    ? [
+                          "app_tabbar_icon_dashboard",
+                          "app_tabbar_icon_dashboard_active",
+                          "app_tabbar_icon_forum",
+                          "app_tabbar_icon_forum_active",
+                          "app_tabbar_icon_nav",
+                          "app_tabbar_icon_nav_active",
+                          "app_tabbar_icon_home",
+                          "app_tabbar_icon_home_active",
+                          "app_tabbar_bg",
+                      ]
+                    : [this.activeSceneSubtype];
             const modeSet = new Set(
                 configs
-                    .filter((item) => item?.subtype === this.activeSceneSubtype && item?.theme)
+                    .filter((item) => subtypes.includes(item?.subtype) && item?.theme)
                     .map((item) => item.theme)
             );
 
@@ -269,6 +276,24 @@ export default {
                 return {
                     page: configs.find((item) => item?.subtype === "pc_homebg") || null,
                     banner: configs.find((item) => item?.subtype === "pc_homebanner") || null,
+                };
+            }
+            if (this.activeSceneSubtype === "app_tabbar") {
+                const getConfig = (subtype) =>
+                    configs.find((item) => item?.subtype === subtype && item?.theme === this.activeSceneTheme) ||
+                    configs.find((item) => item?.subtype === subtype && item?.theme === "all") ||
+                    configs.find((item) => item?.subtype === subtype) ||
+                    null;
+                return {
+                    bg: getConfig("app_tabbar_bg"),
+                    dashboard: getConfig("app_tabbar_icon_dashboard"),
+                    dashboardActive: getConfig("app_tabbar_icon_dashboard_active"),
+                    forum: getConfig("app_tabbar_icon_forum"),
+                    forumActive: getConfig("app_tabbar_icon_forum_active"),
+                    nav: getConfig("app_tabbar_icon_nav"),
+                    navActive: getConfig("app_tabbar_icon_nav_active"),
+                    home: getConfig("app_tabbar_icon_home"),
+                    homeActive: getConfig("app_tabbar_icon_home_active"),
                 };
             }
             return (
