@@ -74,12 +74,7 @@
                         >
                             <i class="el-icon-close"></i>
                         </button>
-                        <img
-                            :src="getActiveImg(item)"
-                            class="u-img"
-                            fit="contain"
-                            v-if="isStatus(item)"
-                        />
+                        <img :src="getActiveImg(item)" class="u-img" fit="contain" v-if="isStatus(item)" />
                         <div class="u-no-select" v-else-if="!item.statue">
                             敬 请<br />
                             期 待
@@ -99,12 +94,7 @@
             <div class="m-theme-right">
                 <!-- 主题渲染列表 -->
                 <div class="u-skin-search">
-                    <el-input
-                        v-model="skinSearchKeyword"
-                        size="large"
-                        clearable
-                        placeholder="搜索皮肤名称"
-                    >
+                    <el-input v-model="skinSearchKeyword" size="large" clearable placeholder="搜索皮肤名称">
                         <template #prefix>
                             <el-icon><Search /></el-icon>
                         </template>
@@ -156,6 +146,7 @@ import {
     getFirstAvailableSkinSceneSubtype,
     getPreferredSkinSceneTheme,
     getSkinPreview,
+    getSkinSceneAuthors,
     getSkinSceneAuthorsFromConfigs,
     getSkinSceneConfig,
     getSkinSceneModes,
@@ -189,7 +180,11 @@ export default {
         filteredDecoration() {
             const keyword = this.skinSearchKeyword.trim().toLowerCase();
             if (!keyword) return this.decoration;
-            return this.decoration.filter((item) => String(item.name || "").toLowerCase().includes(keyword));
+            return this.decoration.filter((item) =>
+                String(item.name || "")
+                    .toLowerCase()
+                    .includes(keyword)
+            );
         },
         currentSceneTabs() {
             return (SKIN_TYPE_SCENES[this.activePreviewType] || [])
@@ -216,6 +211,8 @@ export default {
             return list.find((item) => item.type === this.activePreviewType && item.using == 1)?.val || "";
         },
         activeSkinAuthors() {
+            const authors = getSkinSceneAuthors(this.activeSceneConfig);
+            if (authors.length) return authors;
             const configs =
                 this.decorationJson?.[this.activePreviewSkinKey]?.decorations?.[this.activePreviewType] || [];
             return getSkinSceneAuthorsFromConfigs(configs, this.activeSceneSubtypeForPreview, this.activeSceneTheme);
@@ -428,7 +425,11 @@ export default {
             let type = item.type;
             const val = this.getActiveSkinByType(type)?.val;
             let defaultImg = "https://cdn.jx3box.com/static/dashboard/img/no.5fe91973.svg";
-            if (val) return getSkinPreview(this.decorationJson, val, type) || __cdn + `design/decoration/images/${val}/${type}_preview.png`;
+            if (val)
+                return (
+                    getSkinPreview(this.decorationJson, val, type) ||
+                    __cdn + `design/decoration/images/${val}/${type}_preview.png`
+                );
             else return defaultImg;
         },
         decorationSubmit() {

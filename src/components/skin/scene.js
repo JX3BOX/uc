@@ -79,6 +79,10 @@ export function normalizeSkinAvatar(url) {
     return matched ? matched[1] : raw;
 }
 
+function pickSkinAuthorValue(author, keys) {
+    return keys.map((key) => author?.[key]).find((value) => value !== undefined && value !== null && value !== "");
+}
+
 export function getSkinTypeOption(type) {
     return SKIN_TYPE_OPTIONS.find((item) => item.type === type);
 }
@@ -151,14 +155,22 @@ export function normalizeSkinAuthors(authors) {
     if (!Array.isArray(authors)) return [];
     const seen = new Set();
     return authors
-        .map((author) => ({
-            id: author?.id || author?.user_id || author?.uid || "",
-            display_name: String(author?.display_name || author?.name || author?.nickname || "").trim(),
-            avatar: normalizeSkinAvatar(author?.avatar),
-        }))
-        .filter((author) => author.id && author.display_name)
+        .map((author) => {
+            const source = author?.author_info || author?.user_info || author?.creator_info || author?.user || author;
+            return {
+                id: pickSkinAuthorValue(source, ["id", "ID", "user_id", "uid"]) || "",
+                display_name: String(
+                    pickSkinAuthorValue(source, ["display_name", "name", "nickname", "nick_name", "user_nickname"]) ||
+                        ""
+                ).trim(),
+                avatar: normalizeSkinAvatar(
+                    pickSkinAuthorValue(source, ["avatar", "user_avatar", "avatar_url", "user_avatar_url"])
+                ),
+            };
+        })
+        .filter((author) => author.display_name)
         .filter((author) => {
-            const key = String(author.id);
+            const key = author.id ? `id:${author.id}` : `name:${author.display_name}|avatar:${author.avatar}`;
             if (seen.has(key)) return false;
             seen.add(key);
             return true;
@@ -184,9 +196,21 @@ export function getSkinSceneAuthors(sceneConfig) {
         if (Array.isArray(value.authors)) {
             authors.push(...value.authors);
         }
+        ["author_info", "user_info", "creator_info", "user"].forEach((key) => {
+            if (value[key] && typeof value[key] === "object") {
+                authors.push(value[key]);
+            }
+        });
+        if (value.author && typeof value.author === "object") {
+            visit(value.author);
+        }
 
         Object.keys(value).forEach((key) => {
-            if (["authors_info", "authors"].includes(key)) return;
+            if (
+                ["authors_info", "authors", "author_info", "user_info", "creator_info", "user", "author"].includes(key)
+            ) {
+                return;
+            }
             visit(value[key]);
         });
     };

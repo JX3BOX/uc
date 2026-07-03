@@ -1,13 +1,21 @@
 <template>
     <span class="m-skin-scene-authors" v-if="normalizedAuthors.length">
         <span class="u-label">作者：</span>
-        <template v-for="(author, index) in normalizedAuthors" :key="author.id || index">
-            <a :href="`/author/${author.id}`" target="_blank" rel="noopener noreferrer">
+        <span
+            v-for="(author, index) in normalizedAuthors"
+            :key="author.id || `${author.display_name}-${index}`"
+            class="u-author-wrap"
+        >
+            <a v-if="author.id" :href="`/author/${author.id}`" target="_blank" rel="noopener noreferrer">
                 <img v-if="author.avatar" :src="author.avatar" alt="" />
                 <em>{{ author.display_name }}</em>
             </a>
-            <i v-if="index < normalizedAuthors.length - 1" :key="`split-${index}`">、</i>
-        </template>
+            <span v-else class="u-author">
+                <img v-if="author.avatar" :src="author.avatar" alt="" />
+                <em>{{ author.display_name }}</em>
+            </span>
+            <i v-if="index < normalizedAuthors.length - 1">、</i>
+        </span>
     </span>
 </template>
 
@@ -34,6 +42,7 @@ export default {
 .m-skin-scene-authors {
     display: inline-flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 3px;
     min-width: 0;
     margin-left: 12px;
@@ -48,11 +57,16 @@ export default {
         font-weight: 400;
     }
 
-    a {
+    .u-author-wrap,
+    a,
+    .u-author {
         display: inline-flex;
         align-items: center;
         gap: 4px;
         min-width: 0;
+    }
+
+    a {
         color: #64748b;
         text-decoration: none;
         transition: color 0.15s ease;
