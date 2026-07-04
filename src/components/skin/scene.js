@@ -1,4 +1,5 @@
 import { __cdn } from "@/utils/config";
+import { resolveImagePath } from "@jx3box/jx3box-common/js/utils";
 
 export const SKIN_TYPE_OPTIONS = [
     { type: "calendar", text: "岁时绘", subtype: "pc_calendar", sort: 1, isHave: 0, using: 0, statue: 1 },
@@ -76,7 +77,7 @@ export function normalizeSkinUrl(url) {
 export function normalizeSkinAvatar(url) {
     const raw = String(url || "").trim();
     const matched = raw.match(/^\[[^\]]+\]\(([^)]+)\)$/);
-    return matched ? matched[1] : raw;
+    return resolveImagePath(matched ? matched[1] : raw);
 }
 
 function pickSkinAuthorValue(author, keys) {

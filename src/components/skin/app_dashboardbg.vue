@@ -77,5 +77,30 @@ export default {
         border-width: 7px;
         border-radius: 34px;
     }
+
+    .m-header {
+        align-items: flex-start;
+        justify-content: flex-end;
+        flex-direction: column;
+        padding: 0 26px 26px;
+    }
+
+    .u-avatar {
+        margin: 0 0 12px;
+    }
+
+    .u-info {
+        flex: 0 0 auto;
+        width: 100%;
+        padding-bottom: 0;
+
+        b {
+            width: 160px;
+        }
+
+        span {
+            width: 200px;
+        }
+    }
 }
 </style>

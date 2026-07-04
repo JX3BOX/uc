@@ -30,6 +30,15 @@
                             </button>
                         </div>
                         <div class="u-scene-card">
+                            <button
+                                type="button"
+                                class="u-scene-fullscreen"
+                                title="全屏预览"
+                                aria-label="全屏预览"
+                                @click="openScenePreviewDialog"
+                            >
+                                <el-icon><FullScreen /></el-icon>
+                            </button>
                             <component
                                 :is="activeScenePreview.component"
                                 :key="activeScenePreview.subtype"
@@ -87,8 +96,8 @@
                     </div>
                 </div>
                 <div class="u-btn">
-                    <el-button type="primary" @click="decorationSubmit" size="large">确认</el-button>
-                    <el-button @click="reset" size="large">重置</el-button>
+                    <el-button type="primary" @click="decorationSubmit" size="large" :loading="submitting">确认</el-button>
+                    <el-button @click="reset" size="large" :disabled="submitting">重置</el-button>
                 </div>
             </div>
             <div class="m-theme-right">
@@ -100,14 +109,21 @@
                         </template>
                     </el-input>
                 </div>
-                <div class="u-theme" v-if="filteredDecoration.length">
+                <div class="u-load-error" v-if="decorationJsonLoadError">
+                    <div>皮肤列表加载失败，请稍后重试。</div>
+                    <el-button type="primary" plain size="small" :loading="decorationJsonLoading" @click="loadDecoration">
+                        重试加载
+                    </el-button>
+                </div>
+                <div class="u-theme" v-else-if="filteredDecoration.length">
                     <div class="u-decoration-list" v-for="(item, i) in filteredDecoration" :key="i + item.val">
                         <div class="u-title">
                             <span class="u-name"><i class="el-icon-collection-tag"></i> {{ item.name }}</span>
                             <a
                                 class="u-buy"
-                                :href="`/vip/mall?category=virtual&sub_category=skin&search=${item.name}`"
+                                :href="getSkinMallUrl(item.name)"
                                 target="_blank"
+                                rel="noopener noreferrer"
                                 ><i class="el-icon-shopping-cart-2"></i> 前往获取</a
                             >
                         </div>
@@ -118,7 +134,13 @@
                                     :class="item2.isHave ? (item2.using ? 'select' : '') : 'noHave'"
                                     @click="setStatus(i, i2, item2)"
                                 >
-                                    <el-image :src="showDecoration(item2)" fit="cover" />
+                                    <el-image
+                                        :src="showDecoration(item2)"
+                                        fit="cover"
+                                        lazy
+                                        loading="lazy"
+                                        scroll-container=".m-theme-right"
+                                    />
                                 </div>
                                 <div class="u-decoration-name">{{ item2.text }}</div>
                             </div>
@@ -128,6 +150,72 @@
                 <div class="u-search-empty" v-else>暂无匹配皮肤</div>
             </div>
         </div>
+        <el-dialog
+            v-model="scenePreviewDialogVisible"
+            class="m-theme-preview-dialog"
+            fullscreen
+            append-to-body
+            destroy-on-close
+            :show-close="false"
+        >
+            <template #header>
+                <div class="u-preview-dialog-header">
+                    <div class="u-preview-dialog-title">
+                        <b>{{ activeScenePreview?.label || "全屏预览" }}</b>
+                        <span>{{ activePreviewType }} / {{ activeSceneSubtypeForPreview }}</span>
+                    </div>
+                    <div class="u-preview-scene-tabs" v-if="currentSceneTabs.length > 1">
+                        <button
+                            v-for="scene in currentSceneTabs"
+                            :key="`dialog-${scene.subtype}`"
+                            type="button"
+                            :class="{
+                                active: activeScenePreview && activeScenePreview.subtype === scene.subtype,
+                                disabled: scene.disabled,
+                            }"
+                            :disabled="scene.disabled"
+                            :title="scene.disabled ? '当前皮肤未包含该部位' : scene.label"
+                            @click="selectSceneSubtype(scene.subtype)"
+                        >
+                            {{ scene.label }}
+                        </button>
+                    </div>
+                    <div class="u-preview-dialog-actions">
+                        <div class="u-preview-scene-modes" v-if="activeSceneModes.length > 1">
+                            <span
+                                v-for="mode in activeSceneModes"
+                                :key="`dialog-${mode.value}`"
+                                :class="[`is-${mode.value}`, { active: activeSceneTheme === mode.value }]"
+                                :title="mode.label"
+                                @click="selectSceneTheme(mode.value)"
+                            >
+                                <i :class="mode.icon"></i>
+                                <em>{{ mode.label }}</em>
+                            </span>
+                        </div>
+                        <button
+                            type="button"
+                            class="u-preview-dialog-close"
+                            title="关闭预览"
+                            aria-label="关闭预览"
+                            @click="closeScenePreviewDialog"
+                        >
+                            <el-icon><Close /></el-icon>
+                        </button>
+                    </div>
+                </div>
+            </template>
+            <div class="u-preview-dialog-body" v-if="activeScenePreview">
+                <component
+                    :is="activeScenePreview.component"
+                    :key="`fullscreen-${activeScenePreview.subtype}`"
+                    :theme="activeSceneTheme"
+                    :skin-config="activeSceneConfig"
+                    :authors="activeSkinAuthors"
+                    class="u-scene-item u-scene-item--fullscreen"
+                />
+            </div>
+        </el-dialog>
     </uc>
 </template>
 
@@ -172,6 +260,10 @@ export default {
             decoration: [],
             decorationJson: [], //远程json
             skinSearchKeyword: "",
+            scenePreviewDialogVisible: false,
+            decorationJsonLoading: false,
+            decorationJsonLoadError: false,
+            submitting: false,
             originalActivateName: null,
             back: {},
         };
@@ -258,18 +350,29 @@ export default {
             this.originalActivateName = back.originalActivateName;
         },
         loadDecoration() {
-            getDecorationJson().then((res) => {
-                sessionStorage.setItem("decoration_json", JSON.stringify(res.data));
-                this.decorationJson = res.data;
-                this.applyDecorationList([]);
-                getDecoration()
-                    .then((res) => {
-                        let typeArr = SKIN_TYPE_OPTIONS.map((item) => item.type);
-                        let arr = res.data.data.filter((item) => item.type != "" && typeArr.indexOf(item.type) != -1);
-                        this.applyDecorationList(arr);
-                    })
-                    .catch(() => {});
-            });
+            this.decorationJsonLoading = true;
+            this.decorationJsonLoadError = false;
+
+            getDecorationJson()
+                .then((res) => {
+                    sessionStorage.setItem("decoration_json", JSON.stringify(res.data));
+                    this.decorationJson = res.data;
+                    this.applyDecorationList([]);
+                    return getDecoration()
+                        .then((res) => {
+                            let typeArr = SKIN_TYPE_OPTIONS.map((item) => item.type);
+                            let arr = res.data.data.filter((item) => item.type != "" && typeArr.indexOf(item.type) != -1);
+                            this.applyDecorationList(arr);
+                        })
+                        .catch(() => {});
+                })
+                .catch(() => {
+                    this.decorationJsonLoadError = true;
+                    this.$message.error("皮肤列表加载失败，请稍后重试");
+                })
+                .finally(() => {
+                    this.decorationJsonLoading = false;
+                });
         },
         applyDecorationList(arr) {
             this.decoration = this.formattingData(arr, "val");
@@ -397,6 +500,12 @@ export default {
         selectSceneTheme(theme) {
             this.activeSceneTheme = theme;
         },
+        openScenePreviewDialog() {
+            this.scenePreviewDialogVisible = true;
+        },
+        closeScenePreviewDialog() {
+            this.scenePreviewDialogVisible = false;
+        },
         syncSceneTheme() {
             this.$nextTick(() => {
                 const nextTheme = getPreferredSkinSceneTheme(this.activeSceneModes, this.activeSceneTheme);
@@ -433,6 +542,8 @@ export default {
             else return defaultImg;
         },
         decorationSubmit() {
+            if (this.submitting) return;
+            this.submitting = true;
             let activateType = [];
             let decorationName = "";
             //激活主题
@@ -447,26 +558,41 @@ export default {
                         type: item.type,
                     };
                 });
-            setDecoration(params).then((data) => {
-                //开始设置主题缓存,设置执行持久缓存，同时设置session,其他库优先获取session,无则获取local,还没数据则请求库所在主题位置接口
-                let decoration_res = {
-                    name: decorationName, //主题名称
-                    type: activateType, //主题激活部位，
-                };
-                if (!decorationName) {
-                    decoration_res.name = false;
-                }
-                localStorage.setItem("decoration_all", JSON.stringify(decoration_res));
-                //removeItem 个人相关部位
-                sessionStorage.removeItem("decoration_me" + this.uid);
-                sessionStorage.removeItem("decoration_sidebar" + this.uid);
-                sessionStorage.removeItem("decoration_calendar");
-                sessionStorage.removeItem("decoration_atcard" + this.uid);
-                this.$message({
-                    message: "主题更新成功",
-                    type: "success",
+            setDecoration(params)
+                .then(() => {
+                    //开始设置主题缓存,设置执行持久缓存，同时设置session,其他库优先获取session,无则获取local,还没数据则请求库所在主题位置接口
+                    let decoration_res = {
+                        name: decorationName, //主题名称
+                        type: activateType, //主题激活部位，
+                    };
+                    if (!decorationName) {
+                        decoration_res.name = false;
+                    }
+                    localStorage.setItem("decoration_all", JSON.stringify(decoration_res));
+                    //removeItem 个人相关部位
+                    sessionStorage.removeItem("decoration_me" + this.uid);
+                    sessionStorage.removeItem("decoration_sidebar" + this.uid);
+                    sessionStorage.removeItem("decoration_calendar");
+                    sessionStorage.removeItem("decoration_atcard" + this.uid);
+                    this.back.decoration = cloneDeep(this.decoration);
+                    this.back.originalActivateName = cloneDeep(this.originalActivateName);
+                    this.$message({
+                        message: "主题更新成功",
+                        type: "success",
+                    });
+                })
+                .catch((err) => {
+                    this.$message({
+                        message: err?.response?.data?.msg || err?.message || "主题更新失败，请稍后重试",
+                        type: "error",
+                    });
+                })
+                .finally(() => {
+                    this.submitting = false;
                 });
-            });
+        },
+        getSkinMallUrl(name = "") {
+            return `/vip/mall?category=virtual&sub_category=skin&search=${encodeURIComponent(name)}`;
         },
         showDecoration: function (item) {
             return item.image || __cdn + `design/decoration/images/${item.val}/${item.type}_preview.png`;

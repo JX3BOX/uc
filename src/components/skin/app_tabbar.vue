@@ -420,6 +420,7 @@ export default {
     font-size: var(--app-tabbar-label-size);
     line-height: 1.15;
     cursor: pointer;
+    transform: translateY(-10px);
 
     &.active {
         color: var(--tabbar-color-selected, #635bff);
