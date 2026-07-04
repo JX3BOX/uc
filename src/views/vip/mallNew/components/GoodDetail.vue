@@ -16,17 +16,14 @@
         </div>
         <div class="card">
             <div class="m-good-preview">
-                <div v-if="isDecorationPreview && goodInfo.img" class="skeleton-container">
-                    <Skeleton :category="goodInfo.category" :img="goodInfo.img"></Skeleton>
-                </div>
                 <el-carousel
-                    v-else-if="previewImages.length > 1"
+                    v-if="previewImages.length > 1"
                     class="goods-image-carousel"
                     height="400px"
                     arrow="always"
                 >
                     <el-carousel-item v-for="(image, index) in previewImages" :key="`${image}-${index}`">
-                        <img :src="image" class="goods-carousel-image" />
+                        <img :src="image" :alt="`${good.title || '商品图片'} ${index + 1}`" class="goods-carousel-image" />
                     </el-carousel-item>
                 </el-carousel>
                 <img v-else-if="previewImages.length === 1" :src="previewImages[0]" class="u-good-image" />
@@ -97,7 +94,6 @@
 <script>
 import Like from "./Like.vue";
 import BuyConfirm from "./BuyConfirm.vue";
-import Skeleton from "@/views/vip/mallNew/components/skeleton/index.vue";
 import { throttle } from "lodash";
 import { __cdn } from "@/utils/config";
 import { resolveMallSkinCategory } from "@/utils/mallDecoration";
@@ -116,7 +112,6 @@ export default {
     name: "GoodMallDetail",
     emits: ["exchanged"],
     components: {
-        Skeleton,
         Like,
         BuyConfirm,
     },
@@ -152,11 +147,13 @@ export default {
         id() {
             return this.good.id;
         },
-        isDecorationPreview() {
-            return this.good.category === "virtual" && this.good.sub_category === "skin";
-        },
         previewImages() {
-            return Array.isArray(this.good.goods_images) ? this.good.goods_images.filter(Boolean) : [];
+            const goodsImages = Array.isArray(this.good.goods_images) ? this.good.goods_images : [];
+            return this.uniqueImageUrls([...goodsImages, ...this.describeImages]);
+        },
+        describeImages() {
+            const html = this.good.describe ? DOMPurify.sanitize(this.good.describe) : "";
+            return this.extractHtmlImageUrls(html);
         },
         canBuyInfo() {
             return (
@@ -193,7 +190,7 @@ export default {
         },
         sanitizedDescribe() {
             const html = this.good.describe ? DOMPurify.sanitize(this.good.describe) : "";
-            return this.normalizeHtmlImageUrls(html);
+            return this.normalizeHtmlImageUrls(html, { stripImages: true });
         },
         goodInfo() {
             if (this.good && this.good.category === "virtual") {
@@ -206,13 +203,11 @@ export default {
                     }
                     return {
                         category,
-                        img: __cdn + `design/decoration/images/${this.good.remark}/${category}.png`,
                     };
                 }
                 if (this.good.sub_category === "palu") {
                     return {
                         category: "palu",
-                        img: __cdn + `design/decoration/palu/${this.good.remark}.png`,
                     };
                 }
             }
@@ -234,13 +229,43 @@ export default {
             if (/^https?:\/\//i.test(value)) return resolveImagePath(value);
             return resolveImagePath(`${__cdn}${value.replace(/^\/+/, "")}`);
         },
-        normalizeHtmlImageUrls(html) {
+        uniqueImageUrls(images = []) {
+            const seen = new Set();
+            return images
+                .map((url) => this.normalizeImageUrl(url))
+                .filter((url) => {
+                    if (!url || seen.has(url)) return false;
+                    seen.add(url);
+                    return true;
+                });
+        },
+        extractHtmlImageUrls(html) {
+            if (!html || typeof window === "undefined" || typeof window.DOMParser === "undefined") return [];
+            const doc = new window.DOMParser().parseFromString(`<div>${html}</div>`, "text/html");
+            return Array.from(doc.querySelectorAll("img"))
+                .map((img) => this.normalizeImageUrl(img.getAttribute("src")))
+                .filter(Boolean);
+        },
+        removeEmptyHtmlBlocks(doc) {
+            doc.querySelectorAll("p").forEach((node) => {
+                const text = (node.textContent || "").replace(/\u00a0/g, "").trim();
+                if (!text && !node.querySelector("img, video, iframe, a, table")) {
+                    node.remove();
+                }
+            });
+        },
+        normalizeHtmlImageUrls(html, options = {}) {
             if (!html || typeof window === "undefined" || typeof window.DOMParser === "undefined") return html;
             const doc = new window.DOMParser().parseFromString(`<div>${html}</div>`, "text/html");
             doc.querySelectorAll("img").forEach((img) => {
+                if (options.stripImages) {
+                    img.remove();
+                    return;
+                }
                 const src = this.normalizeImageUrl(img.getAttribute("src"));
                 if (src) img.setAttribute("src", src);
             });
+            this.removeEmptyHtmlBlocks(doc);
             return doc.body.firstElementChild?.innerHTML || html;
         },
         buyGoods: throttle(function () {
@@ -493,12 +518,6 @@ export default {
             background: rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.68);
             font-size: 14px;
-        }
-        .skeleton-container {
-            background: transparent;
-            padding: 0;
-            border-radius: 10px;
-            overflow: hidden;
         }
     }
     .buy-detail {
