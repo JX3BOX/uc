@@ -1,8 +1,11 @@
 <template>
     <AppLayout>
         <div class="m-main">
-            <el-image class="u-img" :fit="'contain'" :src="treasureImg" :preview-src-list="[treasureImg]"> </el-image>
-            <button @click="print" class="u-btn m-hide el-button el-button--primary">打印证书</button>
+            <template v-if="treasureImg">
+                <el-image class="u-img" :fit="'contain'" :src="treasureImg" :preview-src-list="[treasureImg]"> </el-image>
+                <button @click="print" class="u-btn m-hide el-button el-button--primary">打印证书</button>
+            </template>
+            <el-empty v-else-if="errorMessage" class="m-cert-empty" :description="errorMessage"></el-empty>
 
             <canvas id="canvas" ref="canvas"></canvas>
         </div>
@@ -24,6 +27,7 @@ export default {
             treasureImg: "",
             treasureInfo: false,
             contentData: {},
+            errorMessage: "",
             tianTuanCertificateCode,
         };
     },
@@ -42,11 +46,23 @@ export default {
     },
     methods: {
         load() {
-            if (!this.id) return
-            getCertification(this.id).then((res) => {
-                this.contentData = res.data.data;
-                this.draw();
-            });
+            if (!this.id) return;
+            this.errorMessage = "";
+            this.treasureImg = "";
+            this.contentData = {};
+            getCertification(this.id)
+                .then((res) => {
+                    const data = res.data.data;
+                    if (!data?.team_certificate) {
+                        this.errorMessage = "证书不存在或暂时无法访问";
+                        return;
+                    }
+                    this.contentData = data;
+                    this.draw();
+                })
+                .catch(() => {
+                    this.errorMessage = "证书加载失败，请稍后重试";
+                });
         },
         draw() {
             const canvas = document.getElementById("canvas");
@@ -247,6 +263,9 @@ export default {
         .w(200px);
         margin: 0 auto;
         .mt(50px);
+    }
+    .m-cert-empty {
+        .pt(120px);
     }
 }
 @media print {

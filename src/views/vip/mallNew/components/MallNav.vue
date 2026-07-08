@@ -6,7 +6,7 @@
                 <span>{{ toggleText }}</span>
             </button>
 
-            <a :href="lotteryLink" class="lottery-card" target="_blank" v-if="showLottery && isShowNav">
+            <a :href="lotteryLink" class="lottery-card" target="_blank" v-if="isShowNav">
                 <el-image :src="lottery" fit="cover"></el-image>
             </a>
 
@@ -119,7 +119,6 @@
 
 <script>
 import { ArrowLeft, ArrowRight, Box, Expand, Fold, GoodsFilled, Grid, Ticket } from "@element-plus/icons-vue";
-import { getConfig } from "@/service/vip/cms";
 import { __Root, __cdn } from "@/utils/config";
 import types from "@/assets/data/vip/goods_types.json";
 import SearchBox from "./SearchBox.vue";
@@ -161,11 +160,6 @@ export default {
             default: false,
         },
     },
-    data() {
-        return {
-            showLottery: false,
-        };
-    },
     computed: {
         navTypes() {
             return types
@@ -200,9 +194,6 @@ export default {
             return this.query.pageIndex < this.pageCount;
         },
     },
-    mounted() {
-        this.loadConfig();
-    },
     methods: {
         isCategoryActive(item) {
             return this.query.category == item.key && !this.query.sub_category;
@@ -225,11 +216,6 @@ export default {
         goNextPage() {
             if (!this.canNextPage) return;
             this.handleCurrentChange(this.query.pageIndex + 1);
-        },
-        loadConfig() {
-            getConfig({ key: "mall_lottery_pic" }).then((res) => {
-                this.showLottery = res?.val != "0";
-            });
         },
         closeMobileNav() {
             if (this.isShowNav && window.matchMedia?.("(max-width: 750px)").matches) {

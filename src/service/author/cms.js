@@ -76,7 +76,7 @@ function getDBM(params) {
 }
 
 function getCertification(id) {
-    return $team().get(`/api/team/team-certification-record/item/${id}`);
+    return $team({ interceptor: false }).get(`/api/team/team-certification-record/item/${id}`);
 }
 
 export {

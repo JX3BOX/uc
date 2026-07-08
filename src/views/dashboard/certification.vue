@@ -1,7 +1,7 @@
 <template>
     <uc class="m-dashboard-frame m-dashboard-skin" icon="el-icon-magic-stick" title="魔盒藏品" :tab-list="tabList">
         <div class="m-cert-list">
-            <el-empty v-if="!list.length" description="您还未获得过证书~"></el-empty>
+            <el-empty v-if="!loading && !list.length" :description="emptyText"></el-empty>
             <el-row :gutter="32">
                 <el-col v-for="(item, index) in list" :key="index" :xs="24" :sm="12" :md="8" :xl="6">
                     <a
@@ -94,10 +94,16 @@ export default {
             per: 12,
             total: 0,
             list: [],
+            loading: false,
+            loadError: false,
             tianTuanCertificateCode,
         };
     },
-    computed: {},
+    computed: {
+        emptyText() {
+            return this.loadError ? "证书列表加载失败，请稍后重试" : "您还未获得过证书~";
+        },
+    },
     methods: {
         showSchoolIcon,
         load() {
@@ -108,13 +114,25 @@ export default {
             this.getCertificateList();
         },
         getCertificateList() {
+            this.loading = true;
+            this.loadError = false;
             teamCertificationRecordList({
                 index: this.page,
                 pageSize: this.per,
-            }).then((res) => {
-                this.total = res.data.data.page.total;
-                this.list = res.data.data?.list || [];
-            });
+            })
+                .then((res) => {
+                    const data = res.data.data || {};
+                    this.total = data.page?.total || 0;
+                    this.list = data.list || [];
+                })
+                .catch(() => {
+                    this.total = 0;
+                    this.list = [];
+                    this.loadError = true;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         handleCurrentChange(current) {
             this.page = current;

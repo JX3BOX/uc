@@ -33,6 +33,36 @@ import Emotions from "@/components/author/Emotions.vue";
 import Data from "@/components/author/newComponents/Data.vue";
 import Fallow from "@/components/author/newComponents/Fallow";
 import Other from "@/components/author/newComponents/Other";
+import { markRaw } from "vue";
+
+const AUTHOR_TYPES = [
+    {
+        label: "作品",
+        value: "Post",
+        component: markRaw(Post),
+    },
+    {
+        label: "百科",
+        value: "Wiki",
+        component: markRaw(Wiki),
+    },
+    {
+        label: "帖子",
+        value: "Other",
+        component: markRaw(Other),
+    },
+    {
+        label: "数据",
+        value: "Data",
+        component: markRaw(Data),
+    },
+    {
+        label: "休闲",
+        value: "Fallow",
+        component: markRaw(Fallow),
+    },
+];
+
 export default {
     name: "Left",
     components: {
@@ -49,33 +79,7 @@ export default {
     data: function () {
         return {
             active: "Post",
-            types: [
-                {
-                    label: "作品",
-                    value: "Post",
-                    component: Post,
-                },
-                {
-                    label: "百科",
-                    value: "Wiki",
-                    component: Wiki,
-                },
-                {
-                    label: "帖子",
-                    value: "Other",
-                    component: Other,
-                },
-                {
-                    label: "数据",
-                    value: "Data",
-                    component: Data,
-                },
-                {
-                    label: "休闲",
-                    value: "Fallow",
-                    component: Fallow,
-                },
-            ],
+            types: AUTHOR_TYPES,
         };
     },
     computed: {

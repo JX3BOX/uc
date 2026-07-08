@@ -8,6 +8,7 @@
                 </el-image>
                 <button @click="print" class="u-btn m-hide el-button el-button--primary">打印证书</button>
             </template>
+            <el-empty v-else-if="errorMessage" class="m-cert-empty" :description="errorMessage"></el-empty>
 
             <canvas id="canvas" ref="canvas"></canvas>
         </div>
@@ -33,6 +34,7 @@ export default {
             treasureImg: "",
             exportImgTime: "",
             treasureInfo: false,
+            errorMessage: "",
         };
     },
     computed: {
@@ -51,10 +53,18 @@ export default {
     methods: {
         load() {
             if (!this.id) return;
+            this.errorMessage = "";
+            this.treasureInfo = false;
+            this.treasureImg = "";
             getCertification(this.id)
                 .then((res) => {
-                    this.treasureInfo = res.data.data;
-                    const { team_certificate } = res.data.data;
+                    const data = res.data.data;
+                    const { team_certificate } = data || {};
+                    if (!team_certificate) {
+                        this.errorMessage = "证书不存在或暂时无法访问";
+                        return;
+                    }
+                    this.treasureInfo = data;
                     let {
                         rank_id,
                         time,
@@ -67,7 +77,11 @@ export default {
                         team_server,
                         rank_name,
                     } = team_certificate;
-                    let drawConfig = CI[rank_id];
+                    let drawConfig = this.cloneDrawConfig(CI[rank_id]);
+                    if (!drawConfig) {
+                        this.errorMessage = "证书模板不存在";
+                        return;
+                    }
                     let { element } = drawConfig;
                     element.mapTime.content = this.formatTimeString(element.mapTime.content, time);
                     element.name.content = team_name;
@@ -102,10 +116,12 @@ export default {
                     this.drawConfig = drawConfig;
                     this.draw();
                 })
-                .catch((err) => {
-                    console.log(err);
-                    this.$router.push({ name: "index" });
+                .catch(() => {
+                    this.errorMessage = "证书加载失败，请稍后重试";
                 });
+        },
+        cloneDrawConfig(config) {
+            return config ? JSON.parse(JSON.stringify(config)) : null;
         },
         draw() {
             const canvas = document.getElementById("canvas");
@@ -489,6 +505,9 @@ export default {
         .w(200px);
         margin: 0 auto;
         .mt(50px);
+    }
+    .m-cert-empty {
+        .pt(120px);
     }
 }
 @media print {
