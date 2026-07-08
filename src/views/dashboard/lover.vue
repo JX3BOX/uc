@@ -1,62 +1,57 @@
 <template>
     <div class="m-privacy-lover">
-        <template v-if="list.length">
+        <div class="u-lover-panel">
+            <div class="u-lover-header">
+                <div class="u-lover-heading">
+                    <b>{{ relationActiveName || "我的情缘" }}</b>
+                    <span>{{ statusText }}</span>
+                </div>
+                <div class="u-lover-actions">
+                    <el-button v-if="canInvite" type="primary" @click="toAdd">邀请绑定</el-button>
+                </div>
+            </div>
+
             <div class="m-members">
-                <!-- 自己 -->
-                <div class="u-item" v-if="me.id">
-                    <a class="u-item-pic" :href="userLink(me)" target="_blank">
-                        <img class="u-item-avatar" :src="showAvatar(getAvatar(me))" />
-                    </a>
-                    <a class="u-item-name" :href="userLink(me)" target="_blank">{{ getName(me) }}</a>
-                </div>
-                <!-- 中间 -->
-                <div class="u-div">
-                    <div class="u-div-icon"><i class="el-icon-connection"></i></div>
-                    <template v-if="myLover.id && myLover.status">
-                        <div class="u-div-meta">
-                            {{ formatTime(myLover.updated_at) }}
-                        </div>
-                        <div class="u-div-meta u-div-unbind" @click="onExit(myLover)">
-                            <img svg-inline src="@/assets/img/dashboard/lover/unbind.svg" alt="" />解除绑定
-                        </div>
-                    </template>
-                </div>
-                <!-- 右侧 -->
                 <div class="m-wrapper">
-                    <div class="u-item" v-if="myLover.id">
-                        <!-- <div v-if="!myLover.status" class="u-cancel" @click.stop="onCancel(myLover)">
-                                <i class="el-icon-close"></i>
-                            </div> -->
-                        <a class="u-item-pic" :href="userLink(myLover)" target="_blank">
-                            <img class="u-item-avatar" :src="showAvatar(getAvatar(myLover))" />
-                        </a>
-                        <a class="u-item-name" :href="userLink(myLover)" target="_blank">{{ getName(myLover) }}</a>
-                        <div class="u-action">
-                            <div class="u-item-remark" v-if="!myLover.status">
-                                <div class="u-pending"><i class="el-icon-time"></i>等待确认中...</div>
-                                <el-button plain type="info" @click.stop="onCancel(myLover)">取消</el-button>
+                    <div class="u-lover-card" v-if="myLover.id" :class="{ 'is-bound': isBound, 'is-pending': isPending }">
+                        <div class="u-lover-user">
+                            <a class="u-item-pic" :href="userLink(myLover)" target="_blank">
+                                <img class="u-item-avatar" :src="showAvatar(getAvatar(myLover))" />
+                            </a>
+                            <div class="u-lover-info">
+                                <span class="u-item-label">{{ isPending ? "待确认" : "当前情缘" }}</span>
+                                <a class="u-item-name" :href="userLink(myLover)" target="_blank">{{ getName(myLover) }}</a>
                             </div>
                         </div>
+                        <div class="u-lover-meta">
+                            <div class="u-div-icon"><i class="el-icon-connection"></i></div>
+                            <div class="u-div-meta">
+                                <template v-if="isBound">绑定于 {{ formatTime(myLover.updated_at) }}</template>
+                                <template v-else>邀请已发送，等待对方确认</template>
+                            </div>
+                            <div class="u-div-unbind" v-if="isBound" @click="onExit(myLover)">
+                                <img svg-inline src="@/assets/img/dashboard/lover/unbind.svg" alt="" />解除绑定
+                            </div>
+                            <el-button v-else plain type="info" @click.stop="onCancel(myLover)">取消邀请</el-button>
+                        </div>
                     </div>
-                    <div class="u-item u-add-item" v-else @click="toAdd">
-                        <div class="u-add">
+                    <div class="u-lover-card u-add-item" v-else @click="toAdd">
+                        <div class="u-item-pic u-add">
                             <i class="el-icon-plus"></i>
                         </div>
-                        <div class="u-bind">绑定情缘</div>
-                    </div>
-                    <div class="u-pending u-wait-tip el-alert el-alert--warning is-light" v-if="waitList.length">
-                        <div>
-                            <i class="el-icon-warning-outline"></i> 您有
-                            <b>{{ waitList.length }}</b> 条情缘申请待处理,<span
-                                class="u-pending-btn"
-                                @click.stop="toWait"
-                                >查看</span
-                            >
-                        </div>
+                        <span class="u-item-label">未绑定</span>
+                        <div class="u-bind">邀请情缘</div>
                     </div>
                 </div>
             </div>
-        </template>
+
+            <div class="u-wait-tip" v-if="waitList.length">
+                <i class="el-icon-warning-outline"></i>
+                您有 <b>{{ waitList.length }}</b> 条情缘申请待处理
+                <span class="u-pending-btn" @click.stop="toWait">查看</span>
+            </div>
+        </div>
+
         <!-- 待处理列表 -->
         <waitList
             v-if="waitVisible"
@@ -123,21 +118,26 @@ export default {
         userId() {
             return User.getInfo().uid;
         },
-        me() {
-            return this.list.find((item) => item.user_id == this.userId) || {};
-        },
         myLover() {
             return this.list.find((item) => item.user_id != this.userId) || {};
         },
-    },
-    watch: {
-        list: {
-            deep: true,
-            handler(list) {
-                if (!list.length) {
-                    this.loadConf();
-                }
-            },
+        isBound() {
+            return !!(this.myLover.id && this.myLover.status);
+        },
+        isPending() {
+            return !!(this.myLover.id && !this.myLover.status);
+        },
+        canInvite() {
+            return !this.myLover.id;
+        },
+        statusText() {
+            if (this.isBound) {
+                return "当前已绑定情缘，可在此查看绑定时间或解除关系。";
+            }
+            if (this.isPending) {
+                return "已发出情缘邀请，等待对方确认。";
+            }
+            return "当前尚未绑定情缘，可通过 UID 邀请对方建立关系。";
         },
     },
     mounted() {},
@@ -168,27 +168,39 @@ export default {
             return item.user_info?.avatar || item.creator_info?.avatar;
         },
         getName(item) {
-            return item.user_info?.display_name || item.creator_info?.display_name;
+            return item.user_info?.display_name || item.creator_info?.display_name || "该用户";
+        },
+        handleRequestError(err) {
+            const data = err?.response?.data;
+            const message = data?.msg || data?.message || err?.message || "操作失败，请稍后再试";
+            this.$notify({
+                title: "操作失败",
+                message,
+                type: "error",
+            });
         },
         onExit(item) {
-            this.$confirm(`是否和 ${item.user_info?.display_name} 解除情缘绑定？`, "提示", {
+            this.$confirm(`是否和 ${this.getName(item)} 解除情缘绑定？`, "提示", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 type: "warning",
-            }).then(() => {
-                this.loading = true;
-                exitNet(item.net_id)
-                    .then(() => {
-                        this.$notify({
-                            title: "解除成功",
-                            type: "success",
+            })
+                .then(() => {
+                    this.loading = true;
+                    exitNet(item.net_id)
+                        .then(() => {
+                            this.$notify({
+                                title: "解除成功",
+                                type: "success",
+                            });
+                            this.onRefresh();
+                        })
+                        .catch((err) => this.handleRequestError(err))
+                        .finally(() => {
+                            this.loading = false;
                         });
-                        this.onRefresh();
-                    })
-                    .finally(() => {
-                        this.loading = false;
-                    });
-            });
+                })
+                .catch(() => {});
         },
         onCancel(item) {
             // 取消已发出但未接受的关系
@@ -201,6 +213,7 @@ export default {
                     });
                     this.onRefresh();
                 })
+                .catch((err) => this.handleRequestError(err))
                 .finally(() => {
                     this.loading = false;
                 });
@@ -214,135 +227,255 @@ export default {
 </script>
 
 <style lang="less">
-.m-whitelist-primary{
-    .el-tabs__content{
-        overflow-x: auto;
-    }
-}
 .m-privacy-lover {
-    min-width: 800px;
-    
-    .m-members {
-        .flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        margin-top: 20px;
+    .u-lover-panel {
+        max-width: 600px;
+        margin: 24px auto 0;
+        padding: 24px;
+        border-radius: 24px;
+        background: #fff;
+        box-sizing: border-box;
+    }
 
-        .u-div {
-            padding: 0 40px;
-            .u-div-icon {
-                .x;
-                .fz(40px);
-            }
-            .u-div-meta {
-                .x;
-                .fz(12px, 2.5);
-                color: #888;
-            }
-            .u-div-unbind {
-                .flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                color: #888;
-                img,
-                svg {
-                    .size(16px);
-                    margin-right: 5px;
-                    fill: #888;
-                }
-            }
-            .u-div-unbind:hover {
-                color: orange;
-                svg {
-                    fill: orange;
-                }
-            }
+    .u-lover-header {
+        padding: 18px;
+        border: 1px solid fade(@v4primary, 8%);
+        border-radius: 18px;
+        background: linear-gradient(180deg, fade(@v4primary, 6%) 0%, #ffffff 100%);
+    }
+
+    .u-lover-heading {
+        &::before {
+            content: "关系绑定";
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: fade(@v4primary, 10%);
+            color: @v4primary;
+            font-size: 12px;
+            font-weight: 700;
         }
 
-        .u-item {
-            position: relative;
+        b {
+            .db;
+            margin: 12px 0 6px;
+            color: #1f2d3d;
+            font-size: 22px;
+            line-height: 1.3;
+        }
+
+        span {
+            .db;
+            color: #7b8794;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+    }
+
+    .u-lover-actions {
+        .flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+    }
+
+    .m-members {
+        .flex;
+        flex-direction: column;
+        padding: 16px 0 0;
+
+        .m-wrapper {
+            width: 100%;
+        }
+
+        .u-lover-card {
             .flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-radius: 3px;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            padding: 40px 10px;
-            width: 200px;
-            min-height: 260px;
+            gap: 10px;
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            background-color: #fff;
+            border: 1px solid fade(@v4primary, 16%);
             box-sizing: border-box;
+            box-shadow: 0 10px 24px fade(@v4primary, 8%);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+            &:hover {
+                border-color: fade(@v4primary, 28%);
+                box-shadow: 0 14px 28px fade(@v4primary, 12%);
+            }
+
             &.u-add-item {
-                font-size: 30px;
+                border-color: rgba(123, 135, 148, 0.1);
+                background: rgba(123, 135, 148, 0.08);
+                box-shadow: none;
+            }
+
+            &.is-pending {
+                border-color: fade(#e6a23c, 45%);
+            }
+
+            &.u-add-item {
                 cursor: pointer;
+
                 &:hover {
-                    background-color: #f2f2f2;
+                    background: fade(@v4primary, 6%);
                 }
+
                 .u-add {
                     .flex;
                     align-items: center;
                     justify-content: center;
-                    .size(68px);
-                    .r(50%);
-                    color: #999;
+                    color: @primary;
+                    background-color: fade(@primary, 8%);
                 }
+
                 .u-bind {
-                    .fz(14px, 2.5);
-                    margin-top: 10px;
+                    .fz(15px, 24px);
                     .bold;
-                    .x;
-                    .db;
+                    color: @primary;
                 }
             }
+        }
 
-            .u-action {
-                position: absolute;
-                bottom: 20px;
+        .u-lover-user,
+        .u-lover-meta {
+            .flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .u-lover-info {
+            .flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .u-lover-meta {
+            padding: 12px;
+            border-radius: 12px;
+            background: #f7f9fc;
+            border: 1px solid rgba(31, 45, 61, 0.06);
+        }
+
+        .u-div-icon {
+            .flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            .size(28px);
+            .r(50%);
+            background-color: rgba(123, 135, 148, 0.08);
+            border: 1px solid rgba(123, 135, 148, 0.16);
+            color: #8b95a5;
+            .fz(14px);
+        }
+
+        .u-div-meta {
+            flex: 1;
+            min-width: 0;
+            .fz(13px, 20px);
+            color: #7b8794;
+            font-weight: 600;
+        }
+
+        .u-div-unbind {
+            .flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            .fz(12px, 20px);
+            cursor: pointer;
+            color: #8b95a5;
+
+            img,
+            svg {
+                .size(16px);
+                fill: #8b95a5;
+            }
+        }
+
+        .u-div-unbind:hover {
+            color: #e67e22;
+
+            svg {
+                fill: #e67e22;
+            }
+        }
+
+        .is-pending {
+            .u-div-icon {
+                color: #b7791f;
+                border-color: fade(#e6a23c, 22%);
+                background-color: fade(#e6a23c, 8%);
             }
         }
 
         .u-pending {
-            color: orange;
+            .fz(12px, 20px);
+            color: #e6a23c;
+
             i {
                 margin-right: 3px;
             }
         }
     }
+
     .u-item-pic {
-        .dbi;
-        .x;
-        .pr;
-        .auto(x);
-        .size(68px);
+        .flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        .size(52px);
+        border-radius: 14px;
+        overflow: hidden;
+        background-color: #f7f9fc;
         transition: 0.2s ease-in-out;
+
         &:hover {
             filter: saturate(120%) brightness(110%);
         }
     }
+
     .u-item-avatar {
-        .r(100%);
+        .size(52px);
+        border-radius: 14px;
     }
-    .u-item-status {
-        .pa;
-        .lt(50%, 50%);
-        transform: translate(-50%, -50%);
-        margin-top: -5px;
-        margin-left: -5px;
+
+    .u-item-placeholder {
+        color: #a8b0bd;
+        .fz(22px);
+    }
+
+    .u-item-label {
+        color: #7b8794;
+        font-size: 12px;
+        line-height: 18px;
+        font-weight: 500;
     }
 
     .u-item-name {
         .nobreak;
-        .fz(14px, 2.5);
-        margin-top: 10px;
+        flex: 1;
+        min-width: 0;
+        .fz(15px, 26px);
         .bold;
-        .x;
         .db;
+        color: @v4primary;
+        text-align: left;
+
         &:hover {
             color: @pink;
         }
     }
+
     .u-item-remark {
         .x;
         .fz(12px, 2);
@@ -355,47 +488,55 @@ export default {
             }
         }
     }
-    .u-item-btns {
-        .x;
-        .mt(10px);
+
+    .u-wait-tip {
+        margin-top: 14px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        background-color: #fdf6ec;
+        border: 1px solid #faecd8;
+        .fz(13px, 22px);
+        color: #8a5a13;
+
+        b {
+            color: #e6a23c;
+        }
+
+        .u-pending-btn {
+            margin-left: 8px;
+            color: @primary;
+            .pointer;
+        }
     }
-    .m-wrapper {
-        position: relative;
-        padding: 40px 0;
-        .u-wait-tip {
-            font-size: 11px;
-            text-align: center;
-            width: 100%;
-            position: absolute;
-            b {
-                color: orange;
-            }
-            span {
-                color: @primary;
-            }
+}
+
+@media screen and (max-width: @phone) {
+    .m-privacy-lover {
+        .u-lover-panel {
+            padding: 16px;
+            max-width: 100%;
+            border-radius: 18px;
         }
-        .u-cancel {
-            .none;
-            position: absolute;
-            top: 0;
-            right: 0;
-            padding: 10px;
-            cursor: pointer;
-            &:hover {
-                background: #eee;
-            }
+
+        .u-lover-actions {
+            justify-content: flex-start;
         }
-        .u-item {
-            &:hover {
-                .u-cancel {
-                    .dbi;
+
+        .m-members {
+            gap: 14px;
+            padding-top: 18px;
+
+            .u-lover-card {
+                padding: 12px;
+            }
+
+            .u-lover-meta {
+                flex-wrap: wrap;
+                align-items: flex-start;
+
+                .u-div-meta {
+                    width: calc(100% - 48px);
                 }
-            }
-        }
-        .u-pending {
-            margin-top: 5px;
-            .u-pending-btn {
-                .pointer;
             }
         }
     }

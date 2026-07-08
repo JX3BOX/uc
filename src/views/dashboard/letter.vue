@@ -89,16 +89,22 @@ export default {
         },
 
         loadUserInfo: function () {
-            getMyInfo().then((res) => {
-                if (res.data.data) {
-                    this.info = res.data.data;
-                }
-            });
+            getMyInfo({ mute: true })
+                .then((res) => {
+                    if (res.data.data) {
+                        this.info = res.data.data;
+                    }
+                })
+                .catch(() => {});
         },
         loadConf() {
-            getConfig({ key: "private_letter_everyday_count_limit" }).then((res) => {
-                this.total_limit = ~~res.data.data.val;
-            });
+            getConfig({ key: "private_letter_everyday_count_limit" })
+                .then((res) => {
+                    this.total_limit = ~~res.data.data?.val;
+                })
+                .catch(() => {
+                    this.total_limit = 0;
+                });
         },
     },
 };

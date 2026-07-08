@@ -109,7 +109,11 @@ export default {
                     this.peoples = {};
                     this.firstId = 0;
                     this.lastId = 0;
-                    this.hasHistory = false;
+                    this.hasHistory = true;
+                    this.historyFetched = false;
+                    this.historyFetching = false;
+                    this.historyError = false;
+                    this.newMessage = false;
                 }
                 this.isInit = true;
                 this.loadLetter();
@@ -158,12 +162,15 @@ export default {
             };
             return getLetterList(this.contact.sender_info.id, this.contact.receiver_info.id, params)
                 .then((res) => {
-                    this.letters = uniqBy(this.letters.concat(res.data.data?.letters || []), "id");
+                    const letters = res.data.data?.letters || [];
+                    this.letters = uniqBy(this.letters.concat(letters), "id");
                     this.peoples = res.data.data?.peoples || {};
                     this.lastId = this.letters[this.letters.length - 1]?.id || this.lastId;
                     this.firstId = this.letters[0]?.id || this.firstId;
-                    // 如果letters的长度小于limit，说明没有更多数据了
-                    this.hasHistory = !(this.letters.length < this.limit);
+                    // 首次拉取不足一页时，说明没有更早的历史消息。
+                    if (this.isInit) {
+                        this.hasHistory = letters.length >= this.limit;
+                    }
 
                     this.$nextTick(() => {
                         if (this.isInit) {

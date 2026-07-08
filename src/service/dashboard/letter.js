@@ -16,8 +16,8 @@ export function createRecentContact(uid) {
 }
 
 // 获取最近联系人
-export function getRecentContacts() {
-    return $next().get(`/api/letter/recently/contacts`);
+export function getRecentContacts(options = {}) {
+    return $next(options).get(`/api/letter/recently/contacts`);
 }
 
 /**

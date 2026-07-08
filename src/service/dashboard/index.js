@@ -16,8 +16,8 @@ function getUserInfo(uid) {
     });
 }
 
-function getMyInfo() {
-    return $cms().get(`/api/cms/user/my/info`, {
+function getMyInfo(options = {}) {
+    return $cms(options).get(`/api/cms/user/my/info`, {
         params: {
             __no_cache: 1,
         },

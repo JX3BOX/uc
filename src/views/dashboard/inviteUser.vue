@@ -110,25 +110,50 @@ export default {
                 .then((res) => {
                     this.userdata = res.data.data;
                 })
+                .catch((err) => {
+                    this.userdata = "";
+                    this.handleRequestError(err);
+                })
                 .finally(() => {
                     this.flag = true;
                 });
         },
-        inviteUser() {
-            if (!this.relationId) return;
+        handleRequestError(err) {
+            const data = err?.response?.data;
+            const message = data?.msg || data?.message || err?.message || "操作失败，请稍后再试";
+            this.$notify({
+                title: "操作失败",
+                message,
+                type: "error",
+            });
+        },
+        getCreatedRelationId(res) {
+            const data = res?.data?.data;
+            return data?.id || data?.ID || data?.net?.id || data?.relation_id || 0;
+        },
+        inviteUser(relationId = this.relationId) {
+            if (!relationId) {
+                this.$notify({
+                    title: "操作失败",
+                    message: "未找到关系网，请稍后再试",
+                    type: "error",
+                });
+                return Promise.resolve();
+            }
             this.loading = true;
-            inviteUserJoin(this.relationId, this.userdata.ID)
+            return inviteUserJoin(relationId, this.userdata.ID)
                 .then(() => {
                     this.$notify({
                         title: "已发送邀请",
                         type: "success",
                     });
                     this.$emit("update");
-                    this.close();
-                })
-                .finally(() => {
-                    this.loading = false;
-                });
+                        this.close();
+                    })
+                    .catch((err) => this.handleRequestError(err))
+                    .finally(() => {
+                        this.loading = false;
+                    });
         },
         add: throttle(function () {
             if (!this.userdata) {
@@ -144,9 +169,15 @@ export default {
                 this.inviteUser();
             } else {
                 // 当成员为空时，要先建立关系网再邀请
-                createRelationNet({ relationship_type: this.type }).then(() => {
-                    this.inviteUser();
-                });
+                this.loading = true;
+                createRelationNet({ relationship_type: this.type })
+                    .then((res) => {
+                        return this.inviteUser(this.getCreatedRelationId(res));
+                    })
+                    .catch((err) => this.handleRequestError(err))
+                    .finally(() => {
+                        this.loading = false;
+                    });
             }
         }, 500),
     },

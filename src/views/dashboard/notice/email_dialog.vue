@@ -1,76 +1,79 @@
 <template>
-    <el-dialog v-model="visible" @close="close" class="m-email-dialog" :width="isPhone ? '90%' : '950px'">
-        <div class="m-content">
-            <div class="m-pic"></div>
-            <div class="m-info">
-                <div class="u-title">更新邮箱</div>
-                <div class="u-email">
-                    当前邮箱地址：<span class="u-value"
-                        >{{ email || "当前未绑定邮箱"
-                        }}<el-tag v-if="email" class="u-status" :type="verified ? 'success' : 'warning'">{{
-                            verified ? "已验证" : "未验证"
-                        }}</el-tag></span
-                    >
+    <el-dialog
+        :title="email ? '更新邮箱' : '绑定邮箱'"
+        v-model="visible"
+        :width="isPhone ? '95%' : '600px'"
+        class="m-email-dialog"
+        :before-close="handleClose"
+        :close-on-click-modal="false"
+    >
+        <div class="m-email-content">
+            <div class="m-email-intro">
+                <span class="u-intro-tag">邮箱验证</span>
+                <h3>{{ email ? "更换绑定邮箱" : "绑定邮箱" }}</h3>
+                <p>用于账号安全验证、找回密码与重要通知提醒。</p>
+                <div class="m-current-email" :class="{ 'is-empty': !email }">
+                    <span class="u-current-label">{{ email ? "当前邮箱地址" : "当前状态" }}</span>
+                    <strong class="u-current-value">
+                        {{ email || "未绑定邮箱" }}
+                        <el-tag v-if="email" class="u-status" :type="verified ? 'success' : 'warning'">
+                            {{ verified ? "已验证" : "未验证" }}
+                        </el-tag>
+                    </strong>
                 </div>
+            </div>
 
-                <el-form :model="form" ref="form" :rules="rules" status-icon>
-                    <el-form-item prop="email">
-                        <el-input
-                            v-model.trim="form.email"
-                            size="large"
-                            placeholder="请输入邮箱"
-                            clearable
-                        >
-                            <template #prefix>
-                                <el-icon><Message /></el-icon>
-                            </template>
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item prop="code" v-if="hasSendBindEmail" class="u-code-input">
-                        <el-input v-model.trim="form.code" size="large" placeholder="请输入验证码">
-                            <template #prefix>
-                                <el-icon><Lock /></el-icon>
-                            </template>
-                        </el-input>
-                    </el-form-item>
-                </el-form>
-                <el-alert
-                    class="u-alert"
-                    v-if="hasSendBindEmail"
-                    title="邮件发送成功"
-                    type="success"
-                    description="一封邮箱验证的邮件已发送至您的邮箱,请注意查收"
-                    show-icon
-                    :closable="false"
-                >
-                </el-alert>
-                <div class="m-action">
-                    <!-- 未发送验证邮件 -->
-                    <template v-if="!hasSendBindEmail">
-                        <el-button
-                            type="primary"
-                            size="large"
-                            :disabled="!!!form.email"
-                            icon="Position"
-                            :loading="sendLoading"
-                            @click="bind"
-                        >
-                            发送验证邮件</el-button
-                        >
-                        <div class="u-tips">仅支持常见邮箱后缀<br>部分邮件服务商可能无法收到验证邮件</div>
-                    </template>
-                    <!-- 已发送验证邮件 -->
+            <el-form :model="form" ref="form" :rules="rules" status-icon size="large" class="m-email-form">
+                <el-form-item prop="email">
+                    <el-input v-model.trim="form.email" placeholder="请输入邮箱" clearable @input="onEmailInput">
+                        <template #prefix>
+                            <el-icon><Message /></el-icon>
+                        </template>
+                    </el-input>
+                </el-form-item>
+                <el-form-item prop="code" v-if="hasSendBindEmail" class="u-code-input">
+                    <el-input v-model.trim="form.code" placeholder="请输入验证码">
+                        <template #prefix>
+                            <el-icon><Lock /></el-icon>
+                        </template>
+                    </el-input>
+                </el-form-item>
+            </el-form>
+            <el-alert
+                class="u-alert"
+                v-if="hasSendBindEmail"
+                title="邮件发送成功"
+                type="success"
+                description="一封邮箱验证的邮件已发送至您的邮箱，请注意查收"
+                show-icon
+                :closable="false"
+            />
+            <p class="u-submit-tip" v-if="lastSentEmail && form.email !== lastSentEmail">邮箱已变更，请重新发送验证邮件</p>
+            <div class="m-action">
+                <template v-if="!hasSendBindEmail">
                     <el-button
-                        v-if="hasSendBindEmail"
+                        class="u-btn"
                         type="primary"
-                        size="large"
-                        :disabled="!!!form.code"
+                        :disabled="!form.email || sendLoading"
                         icon="Position"
-                        @click="submit"
-                        :loading="loading"
-                        >确认</el-button
+                        :loading="sendLoading"
+                        @click="bind"
                     >
-                </div>
+                        发送验证邮件
+                    </el-button>
+                    <div class="u-tips">仅支持常见邮箱后缀，部分邮件服务商可能无法收到验证邮件</div>
+                </template>
+                <el-button
+                    v-if="hasSendBindEmail"
+                    class="u-btn"
+                    type="primary"
+                    :disabled="canSubmit"
+                    icon="Position"
+                    @click="submit"
+                    :loading="loading"
+                >
+                    确认绑定
+                </el-button>
             </div>
         </div>
     </el-dialog>
@@ -107,11 +110,13 @@ export default {
                     { type: "email", message: "邮箱格式不正确", trigger: "blur" },
                     { validator: this.checkEmail, trigger: "blur" },
                 ],
+                code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
             },
             loading: false,
             sendLoading: false,
 
             hasSendBindEmail: false,
+            lastSentEmail: "",
 
             isPhone: window.innerWidth < 768,
             visible: false,
@@ -120,25 +125,48 @@ export default {
     watch: {
         modelValue(val) {
             this.visible = val;
+            if (val) {
+                this.resetForm();
+            }
         },
         visible(val) {
             if (!val) {
-                this.close();
+                this.resetForm();
+                this.$emit("update:modelValue", false);
             }
         },
     },
     computed: {
-        btnText() {
-            return this.hasSendBindEmail ? "确认" : "发送验证邮件";
+        canSubmit() {
+            return this.loading || !this.form.code || !this.form.email || this.form.email !== this.lastSentEmail;
         },
     },
     methods: {
-        close() {
-            this.$emit("update:modelValue", false);
+        resetForm() {
             this.form.email = "";
             this.form.code = "";
             this.hasSendBindEmail = false;
-            this.$refs.form.resetFields();
+            this.lastSentEmail = "";
+            this.loading = false;
+            this.sendLoading = false;
+            this.$nextTick(() => {
+                this.$refs.form?.clearValidate();
+            });
+        },
+        handleClose(done) {
+            if (typeof done === "function") {
+                done();
+                return;
+            }
+            this.visible = false;
+        },
+        onEmailInput() {
+            if (this.hasSendBindEmail) {
+                this.hasSendBindEmail = false;
+                this.lastSentEmail = "";
+                this.form.code = "";
+            }
+            this.$refs.form?.clearValidate(["email", "code"]);
         },
         checkEmail(rule, value, callback) {
             if (!value) {
@@ -168,6 +196,8 @@ export default {
                     })
                         .then((res) => {
                             this.hasSendBindEmail = true;
+                            this.lastSentEmail = this.form.email;
+                            this.form.code = "";
                         })
                         .catch(() => {
                             this.$message.error("验证邮件发送失败，请稍后重试");
@@ -179,23 +209,28 @@ export default {
             });
         },
         submit() {
-            this.$refs.form.validate((valid) => {
-                if (valid) {
-                    this.loading = true;
-                    sendVerifyEmail(this.form.code)
-                        .then((res) => {
-                            this.$emit("update");
-                            this.$message.success("邮箱绑定成功");
-                            this.close();
-                        })
-                        .catch(() => {
-                            this.$message.error("邮箱绑定失败，请检查验证码后重试");
-                        })
-                        .finally(() => {
-                            this.loading = false;
-                        });
-                }
-            });
+            if (!this.form.code) {
+                this.$message.error("请输入验证码");
+                return;
+            }
+            if (this.form.email !== this.lastSentEmail) {
+                this.$message.warning("请重新发送验证邮件");
+                return;
+            }
+
+            this.loading = true;
+            sendVerifyEmail(this.form.code)
+                .then((res) => {
+                    this.$emit("update");
+                    this.$message.success("邮箱绑定成功");
+                    this.handleClose();
+                })
+                .catch(() => {
+                    this.$message.error("邮箱绑定失败，请检查验证码后重试");
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
     },
 };
@@ -203,54 +238,151 @@ export default {
 
 <style lang="less">
 .m-email-dialog {
-    .m-pic {
-        width: 500px;
-        height: 500px;
-        background: url("~@/assets/img/dashboard/setting/email.png") no-repeat 0 0;
-        background-size: auto 100%;
+    .el-dialog__headerbtn {
+        .flex(o);
     }
 
-    .m-info {
-        .pa;
-        .rt(100px,150px);
-        height: 500px;
+    .el-dialog {
+        border-radius: 24px;
+        overflow: hidden;
     }
 
-    .u-title {
-        .bold;
-        font-size: 32px;
-        margin-bottom: 10px;
-        .x;
+    .el-dialog__body {
+        padding: 18px 24px 24px;
     }
 
-    .u-email {
-        padding: 10px;
-        font-size: 14px;
-        color: #999;
+    .m-email-content {
+        .flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .m-email-intro {
+        padding: 18px;
+        border: 1px solid fade(@v4primary, 8%);
+        border-radius: 18px;
+        background: linear-gradient(180deg, fade(@v4primary, 6%) 0%, #ffffff 100%);
+
+        .u-intro-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: fade(@v4primary, 10%);
+            color: @v4primary;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        h3 {
+            margin: 12px 0 6px;
+            color: #1f2d3d;
+            font-size: 22px;
+            line-height: 1.3;
+        }
+
+        p {
+            margin: 0;
+            color: #7b8794;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+    }
+
+    .m-current-email {
+        margin-top: 14px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        background: #fff;
+        border: 1px solid fade(@v4primary, 16%);
+        box-shadow: 0 10px 24px fade(@v4primary, 8%);
         .flex;
         align-items: center;
+        justify-content: space-between;
+        gap: 12px;
     }
 
-    .u-value {
-        color: orange;
+    .m-current-email.is-empty {
+        background: rgba(123, 135, 148, 0.08);
+        border-color: rgba(123, 135, 148, 0.1);
+        box-shadow: none;
+    }
+
+    .u-current-label {
+        color: #7b8794;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .u-current-value {
+        color: @v4primary;
+        font-size: 15px;
+        line-height: 1.4;
+        font-weight: 700;
+        word-break: break-all;
+        text-align: right;
+    }
+
+    .m-current-email.is-empty .u-current-value {
+        color: #1f2d3d;
     }
 
     .u-status {
-        margin-left: 5px;
+        margin-left: 8px;
+        vertical-align: 1px;
+    }
+
+    .m-email-form {
+        .el-form-item {
+            margin-bottom: 18px;
+        }
+    }
+
+    .el-input__wrapper {
+        min-height: 52px;
+        border-radius: 14px;
+        box-shadow: none;
+        border: 1px solid rgba(31, 45, 61, 0.08);
+        background: #f7f9fc;
     }
 
     .u-alert {
-        margin-bottom: 20px;
+        margin-top: -4px;
     }
 
     .m-action {
         .x;
     }
 
-    .u-tips{
-        .fz(12px,2);
-        color:#999;
-        margin-top:10px;
+    .u-btn {
+        width: 100%;
+        height: 48px;
+        border: 0;
+        border-radius: 14px;
+        background: linear-gradient(135deg, @v4primary 0%, lighten(@v4primary, 10%) 100%);
+        box-shadow: 0 14px 28px fade(@v4primary, 20%);
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .u-btn:not(.is-disabled):not(:disabled):hover {
+        background: linear-gradient(135deg, darken(@v4primary, 5%) 0%, lighten(@v4primary, 6%) 100%);
+    }
+
+    .u-submit-tip {
+        margin: -4px 2px 0;
+        color: #e6a23c;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .u-tips {
+        .fz(12px, 1.8);
+        color: #999;
+        margin-top: 10px;
+        white-space: nowrap;
     }
 
     .el-form-item.is-success {
@@ -262,21 +394,21 @@ export default {
 
 @media screen and (max-width: @phone) {
     .m-email-dialog {
-        .m-pic {
-            background: none;
-            .none;
+        .el-dialog__body {
+            padding: 16px;
         }
 
-        .m-info {
-            .pr;
-            .rt(0);
-            height: auto;
-        }
-        .u-email {
-            .flex;
-            align-items: center;
+        .m-current-email {
+            align-items: flex-start;
             flex-direction: column;
-            gap: 10px;
+        }
+
+        .u-current-value {
+            text-align: left;
+        }
+
+        .u-tips {
+            white-space: normal;
         }
     }
 }

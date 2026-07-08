@@ -71,14 +71,22 @@ export default {
             this.$router.push({ name: this.active });
         },
         loadCount() {
-            getLetterUnread().then((res) => {
-                const data = res.data?.data || {};
-                this.count.letter = data.letter || 0;
-            });
+            getLetterUnread()
+                .then((res) => {
+                    const data = res.data?.data || {};
+                    this.count.letter = data.letter || 0;
+                })
+                .catch(() => {
+                    this.count.letter = 0;
+                });
 
-            getMessageUnread().then((res) => {
-                this.count.message = res.data.data?.unread_count || 0;
-            });
+            getMessageUnread()
+                .then((res) => {
+                    this.count.message = res.data.data?.unread_count || 0;
+                })
+                .catch(() => {
+                    this.count.message = 0;
+                });
         },
     },
     mounted: function () {

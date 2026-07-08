@@ -1,4 +1,5 @@
 .m-dashboard-whitelist {
+    --privacy-card-bg: #fafbfc;
     display: flex;
     justify-content: space-between;
 }
@@ -38,7 +39,7 @@
         justify-content: center;
         align-items: center;
         border-radius: 3px;
-        background-color: #f9f9f9;
+        background-color: var(--privacy-card-bg);
         border: 1px solid #ddd;
         padding: 40px 10px;
         width: 200px;
@@ -59,6 +60,13 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
+    max-width: 600px;
+    margin: 24px auto 0;
+    padding: 24px;
+    border-radius: 24px;
+    border: 1px solid fade(@v4primary, 8%);
+    background: linear-gradient(180deg, fade(@v4primary, 6%) 0%, #ffffff 100%);
+    box-sizing: border-box;
 }
 .m-whitelist-list {
     &.isDraggable {
@@ -81,7 +89,7 @@
         .pr;
 
         .r(3px);
-        background-color: #f9f9f9;
+        background-color: var(--privacy-card-bg);
         border: 1px solid #ddd;
         margin: 0 10px 10px 0;
         padding: 40px 10px;
@@ -230,7 +238,7 @@
         flex-direction: row;
         flex-wrap: nowrap;
         margin-bottom: 10px;
-        background-color: #f9f9f9;
+        background-color: var(--privacy-card-bg);
         padding: 10px;
         .u-item-avatar {
             .size(40px);

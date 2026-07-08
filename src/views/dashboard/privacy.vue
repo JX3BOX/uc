@@ -12,7 +12,7 @@
                         v-for="(item, i) in relationNetTypes"
                     >
                         <lover
-                            v-if="active === 'lover' && isRelationNet"
+                            v-if="active === 'lover' && isRelationNet && !showOpen"
                             :list="members"
                             :waitList="waitList"
                             :relationId="relationId"
@@ -26,15 +26,15 @@
                     </el-tab-pane>
                 </template>
                 <el-tab-pane label="我的亲友" name="whitelist"></el-tab-pane>
-                <el-tab-pane label="黑名单" name="blacklist"></el-tab-pane>
                 <el-tab-pane label="我的关注" name="myfollow"></el-tab-pane>
                 <el-tab-pane label="我的粉丝" name="myfans"></el-tab-pane>
+                <el-tab-pane label="黑名单" name="blacklist"></el-tab-pane>
             </el-tabs>
 
             <template v-if="!isRelationNet">
                 <el-input
-                    v-if="active !== 'whitelist'"
                     class="m-privacy-search"
+                    size="large"
                     placeholder="请输入搜索内容"
                     v-model="keyword"
                     @keyup.enter="handleChange"
@@ -168,6 +168,7 @@ export default {
         return {
             // 列表区
             list: [],
+            kithList: [],
             loading: false,
 
             // 侧边栏
@@ -222,7 +223,8 @@ export default {
         },
         // 当前用户UID列表
         currentIdList: function () {
-            return this.list.map((item) => {
+            const list = this.active === "whitelist" ? this.kithList : this.list;
+            return list.map((item) => {
                 return item.kith_id;
             });
         },
@@ -232,7 +234,10 @@ export default {
         },
         // 当前亲友总数
         total: function () {
-            return this.list?.length;
+            if (this.active === "whitelist") {
+                return this.kithList?.length || 0;
+            }
+            return this.list?.length || 0;
         },
         // 无搜索结果
         isNull: function () {
@@ -338,10 +343,10 @@ export default {
             const query = {
                 tab: this.active,
             };
+            if (!this.isRelationNet && this.keyword) {
+                query.keyword = this.keyword;
+            }
             if (this.active !== "whitelist") {
-                if (this.keyword) {
-                    query.keyword = this.keyword;
-                }
                 if (this.pagination.pageIndex > 1) {
                     query.page = this.pagination.pageIndex;
                 }
@@ -375,7 +380,7 @@ export default {
             this.syncRoute();
         },
         initNormalTabQuery() {
-            this.keyword = this.active === "whitelist" ? "" : this.$route.query.keyword || "";
+            this.keyword = this.$route.query.keyword || "";
             const page = Number(this.$route.query.page);
             const pageSize = Number(this.$route.query.pageSize);
             this.pagination.pageIndex = Number.isInteger(page) && page > 0 ? page : 1;
@@ -465,7 +470,37 @@ export default {
         },
         handleChange() {
             this.pagination.pageIndex = 1;
+            if (this.active === "whitelist") {
+                this.applyKithFilter();
+                this.syncRoute();
+                return;
+            }
             this.loadList();
+        },
+        getKithSearchText(item) {
+            return [
+                item.kith_id,
+                item.user_id,
+                item.ID,
+                item.id,
+                item.remark,
+                this.getName(item),
+                this.getUserInfo(item)?.display_name,
+                this.getUserInfo(item)?.name,
+            ]
+                .filter((val) => val !== undefined && val !== null)
+                .join(" ")
+                .toLowerCase();
+        },
+        applyKithFilter() {
+            const keyword = String(this.keyword || "")
+                .trim()
+                .toLowerCase();
+            if (!keyword) {
+                this.list = this.kithList;
+                return;
+            }
+            this.list = this.kithList.filter((item) => this.getKithSearchText(item).includes(keyword));
         },
         loadRelationNetMembersByType() {
             // 加载关系网成员
@@ -596,7 +631,8 @@ export default {
                             return b.level - a.level;
                         });
                     }
-                    this.list = list || [];
+                    this.kithList = list || [];
+                    this.applyKithFilter();
                 });
             } else if (this.active === "myfollow") {
                 const params = {
@@ -623,7 +659,7 @@ export default {
             }
         },
         // 删除亲友
-        remove(kith_id, i) {
+        remove(kith_id) {
             removeKith(kith_id)
                 .then(() => {
                     this.$notify({
@@ -631,7 +667,8 @@ export default {
                         message: "删除成功",
                         type: "success",
                     });
-                    this.list.splice(i, 1);
+                    this.kithList = this.kithList.filter((item) => item.kith_id !== kith_id);
+                    this.applyKithFilter();
                 })
                 .catch((err) => this.handleRequestError(err));
         },

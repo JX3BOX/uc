@@ -34,7 +34,7 @@ export default {
         canOp: {
             type: Boolean,
             default: false,
-        }
+        },
     },
     emits: ["update:contact", "check:contacts"],
     data() {
@@ -72,13 +72,17 @@ export default {
     methods: {
         addContact(uid) {
             if (!uid) return;
-            createRecentContact(uid).then((res) => {
-                this.getContacts();
-            });
+            createRecentContact(uid)
+                .then(() => {
+                    this.getContacts();
+                })
+                .catch(() => {
+                    this.getContacts();
+                });
         },
         getContacts() {
             if (this.isInit) this.loading = true;
-            return getRecentContacts()
+            return getRecentContacts({ mute: true })
                 .then((res) => {
                     this.contacts = res?.data?.data || [];
 
@@ -92,22 +96,30 @@ export default {
                     this.isInit = false;
 
                 })
+                .catch(() => {
+                    this.contacts = [];
+                    this.$emit("check:contacts", false);
+                })
                 .finally(() => {
                     this.loading = false;
                 });
         },
         removeContact(item) {
-            deleteRecentContact(item?.receiver_info?.id).then((res) => {
-                this.contacts = this.contacts.filter((contact) => contact.receiver_info.id != item.receiver_info.id);
-                if (this.active == item.receiver_info.id && this.contacts.length) {
-                    this.active = this.contacts[0].receiver_info.id;
-                }
-                this.$emit("check:contacts", !!this.contacts?.length);
-            });
+            deleteRecentContact(item?.receiver_info?.id)
+                .then(() => {
+                    this.contacts = this.contacts.filter((contact) => contact.receiver_info.id != item.receiver_info.id);
+                    if (this.active == item.receiver_info.id && this.contacts.length) {
+                        this.active = this.contacts[0].receiver_info.id;
+                    }
+                    this.$emit("check:contacts", !!this.contacts?.length);
+                })
+                .catch(() => {});
         },
         onContactClick(item) {
             this.active = item.receiver_info.id;
-            item.latest_letter.has_read = 1;
+            if (item.latest_letter) {
+                item.latest_letter.has_read = 1;
+            }
         },
         showAvatar,
         showUnread(item) {

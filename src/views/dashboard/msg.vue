@@ -165,7 +165,9 @@ export default {
                     this.paginationShow = true;
                 })
                 .catch((err) => {
-                    this.$message.error(err.message);
+                    if (err?.message) {
+                        this.$message.error(err.message);
+                    }
                     this.paginationShow = true;
                 });
         },
@@ -198,7 +200,8 @@ export default {
         del(item) {
             removeMsg(item.ID).then((res) => {
                 if (res.data.code === 0) {
-                    item.deleted = Math.round(new Date() / 1000);
+                    this.data = this.data.filter((msg) => msg.ID !== item.ID);
+                    this.total = Math.max(0, this.total - 1);
                 } else {
                     this.$notify.error({ title: res.data.message });
                 }
