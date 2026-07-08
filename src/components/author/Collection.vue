@@ -75,6 +75,7 @@ export default {
             this.loading = true;
             getCollections(this.params)
                 .then((res) => {
+                    console.log(res);
                     this.list = res.data.data.list || [];
                     this.total = res.data.data.total || 1;
                 })

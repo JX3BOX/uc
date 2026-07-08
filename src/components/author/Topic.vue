@@ -84,8 +84,8 @@ export default {
             this.loading = true;
             getTopicList(this.params)
                 .then((res) => {
-                    this.list = res.data.data.list;
-                    this.total = res.data.data.page.pageTotal;
+                    this.list = res.data.data.list || [];
+                    this.total = res.data.data.page.total || 1;
                 })
                 .finally(() => {
                     this.loading = false;
