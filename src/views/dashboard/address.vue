@@ -5,7 +5,7 @@
             <el-button type="primary" icon="Plus" @click="add">添加地址</el-button>
 
             <div class="m-content">
-                <el-table :data="list">
+                <el-table :data="list" v-loading="loading">
                     <el-table-column prop="contact_name" label="姓名" width="180"> </el-table-column>
                     <el-table-column prop="contact_phone" label="电话" width="180"> </el-table-column>
                     <el-table-column label="默认地址" width="180">
@@ -20,7 +20,7 @@
                     </el-table-column>
                     <el-table-column label="操作" width="180">
                         <template #default="scope">
-                            <div>
+                            <div class="m-actions">
                                 <!--编辑-->
                                 <el-button circle @click="edit(scope.row)" icon="Edit"></el-button>
                                 <!--删除-->
@@ -32,7 +32,7 @@
                                     @confirm="del(scope.row.id)"
                                 >
                                     <template #reference>
-                                        <el-button style="margin-left: 10px" circle icon="Delete"></el-button>
+                                        <el-button circle icon="Delete"></el-button>
                                     </template>
                                 </el-popconfirm>
                             </div>
@@ -41,7 +41,13 @@
                 </el-table>
             </div>
             <!-- 地址表单 -->
-            <el-dialog class="m-address-dialog" v-model="visible" title="我的地址" width="750px">
+            <el-dialog
+                class="m-address-dialog"
+                v-model="visible"
+                :title="form.id ? '编辑地址' : '添加地址'"
+                width="680px"
+                @closed="resetForm"
+            >
                 <el-form :model="form" :rules="rules" ref="ruleForm" label-position="top">
                     <el-form-item label="联系人" prop="contact_name">
                         <el-input placeholder="请输入名称" v-model="form.contact_name"></el-input>
@@ -49,23 +55,24 @@
                     <el-form-item label="手机号" prop="contact_phone">
                         <el-input placeholder="请输入手机号" v-model="form.contact_phone"></el-input>
                     </el-form-item>
-                    <el-form-item label="联系地址" prop="address">
-                        <div class="m-line">
-                            <el-cascader
-                                class="u-address"
-                                v-model="address"
-                                :options="addressList"
-                                @change="handleChange"
-                            ></el-cascader>
-                            <el-input placeholder="详细地址" v-model="form.address"></el-input>
-                        </div>
+                    <el-form-item label="联系地址" prop="province">
+                        <el-cascader
+                            class="u-address"
+                            v-model="address"
+                            :options="addressList"
+                            placeholder="请选择省 / 市 / 区"
+                            clearable
+                            filterable
+                            @change="handleChange"
+                        ></el-cascader>
+                        <el-form-item class="m-detail-address" prop="address">
+                            <el-input placeholder="请输入详细地址" v-model="form.address"></el-input>
+                        </el-form-item>
                     </el-form-item>
                 </el-form>
                 <template #footer>
-                    <span class="m-footer">
-                        <el-button @click="visible = false">取 消</el-button>
-                        <el-button type="primary" @click="submit('ruleForm')">确 定</el-button>
-                    </span>
+                    <el-button @click="visible = false">取 消</el-button>
+                    <el-button type="primary" @click="submit('ruleForm')">确 定</el-button>
                 </template>
             </el-dialog>
         </div>
@@ -82,31 +89,31 @@ export default {
     components: { uc },
     data: function () {
         const checkPhone = (rule, value, callback) => {
-            if (value) {
-                const num = /^[1][3,4,5,7,8,9][0-9]{9}$/;
-                if (!num.test(value)) {
-                    callback(new Error("请输入正确的手机号"));
-                } else {
-                    callback();
-                }
+            if (!value) {
+                callback(new Error("请输入手机号"));
+                return;
+            }
+
+            const num = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+            if (!num.test(value)) {
+                callback(new Error("请输入正确的手机号"));
+            } else {
+                callback();
             }
         };
         const checkAddress = (rule, value, callback) => {
             if (value) {
-                if (this.form.province) {
-                    callback();
-                } else {
-                    callback(new Error("请选择省市区"));
-                }
+                callback();
             } else {
                 callback(new Error("请输入具体地址"));
             }
         };
         return {
-            address: "",
+            address: [],
             addressList,
 
             list: [],
+            loading: false,
             visible: false,
             form: {
                 contact_name: "",
@@ -120,27 +127,50 @@ export default {
             rules: {
                 contact_name: [{ required: true, message: "请输入联系人名称", trigger: "blur" }],
                 contact_phone: [{ required: true, validator: checkPhone, trigger: "blur" }],
+                province: [{ required: true, message: "请选择省市区", trigger: "change" }],
                 address: [{ required: true, validator: checkAddress, trigger: "blur" }],
             },
         };
     },
     computed: {},
     methods: {
+        getEmptyForm() {
+            return {
+                contact_name: "",
+                contact_phone: "",
+                province: "",
+                city: "",
+                area: "",
+                address: "",
+            };
+        },
         load() {
-            getAddress().then((res) => {
-                this.list = res.data.data.list;
-            });
+            this.loading = true;
+            return getAddress()
+                .then((res) => {
+                    this.list = res.data?.data?.list || [];
+                })
+                .catch(() => {
+                    this.list = [];
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         add() {
             this.visible = true;
-            this.form = this.$options.data().form;
-            this.address = "";
+            this.form = this.getEmptyForm();
+            this.address = [];
         },
         reset() {
             this.visible = false;
-            this.form = this.$options.data().form;
-            this.address = "";
-            location.reload();
+            this.resetForm();
+            this.load();
+        },
+        resetForm() {
+            this.form = this.getEmptyForm();
+            this.address = [];
+            this.$refs.ruleForm?.clearValidate();
         },
         submit(formName) {
             this.$refs[formName].validate((valid) => {
@@ -154,7 +184,7 @@ export default {
                               });
                               this.reset();
                           })
-                        : addAddress(this.form).then((res) => {
+                        : addAddress(form).then(() => {
                               this.$message({
                                   message: "添加成功",
                                   type: "success",
@@ -165,13 +195,14 @@ export default {
             });
         },
         handleChange(list) {
-            this.form.province = list[0];
-            this.form.city = list[1];
-            this.form.area = list[2];
+            this.form.province = list?.[0] || "";
+            this.form.city = list?.[1] || "";
+            this.form.area = list?.[2] || "";
+            this.$refs.ruleForm?.validateField("province");
         },
         edit(item) {
             this.visible = true;
-            this.form = item;
+            this.form = { ...item };
             this.address = [this.form.province, this.form.city, this.form.area];
         },
         del(id) {
@@ -180,13 +211,16 @@ export default {
                     message: "删除成功",
                     type: "success",
                 });
-                location.reload();
+                this.load();
             });
         },
         change(row) {
-            if (!row.is_default) return;
+            if (!row.is_default) {
+                this.load();
+                return;
+            }
             defaultAddress(row.id).then(() => {
-                location.reload();
+                this.load();
             });
         },
     },

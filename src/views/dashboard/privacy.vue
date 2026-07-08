@@ -48,7 +48,7 @@
                 </el-input>
 
                 <div class="m-whitelist-list u-list" v-if="list && list.length">
-                    <div class="u-item" v-for="(item, i) in list" :key="item.kith_id || item.id">
+                    <div class="u-item" v-for="(item, i) in list" :key="itemKey(item, i)">
                         <div class="u-item-actions">
                             <el-dropdown trigger="click" placement="bottom-end">
                                 <span class="u-item-dropdown" @click.stop>
@@ -133,7 +133,7 @@
             <el-button
                 class="u-submit"
                 type="success"
-                :disabled="active === 'wihtelist' && !allowAppend"
+                :disabled="!canAddUser"
                 @click="add"
                 >{{ btnText }}</el-button
             >
@@ -148,7 +148,6 @@ import {
     editKith,
     removeKith,
     getBlackList,
-    follow,
     deny,
     undeny,
 } from "@/service/dashboard/privacy.js";
@@ -255,7 +254,6 @@ export default {
         addFns() {
             return {
                 blacklist: deny,
-                myfollow: follow,
                 whitelist: addKith,
             };
         },
@@ -283,6 +281,12 @@ export default {
         showOpen() {
             return this.active == "lover" && !this.isAllowLover;
         },
+        canAddUser() {
+            if (this.active === "whitelist") {
+                return this.allowAppend;
+            }
+            return !!this.userdata && ["blacklist", "myfollow"].includes(this.active);
+        },
     },
     methods: {
         onOpen() {
@@ -291,32 +295,173 @@ export default {
                 cancelButtonText: "取消",
                 type: "warning",
             }).then(() => {
-                setUserConf({ accept_lover_request: 1 }).then(() => {
-                    this.$notify({
-                        title: "开启成功",
-                        type: "success",
-                    });
-                    this.isAllowLover = true;
-                    this.loadRelationNetMembersByType();
-                });
+                setUserConf({ accept_lover_request: 1 })
+                    .then(() => {
+                        this.$notify({
+                            title: "开启成功",
+                            type: "success",
+                        });
+                        this.isAllowLover = true;
+                        this.loadRelationNetMembersByType();
+                    })
+                    .catch((err) => this.handleRequestError(err));
             });
         },
-        loadConf() {
-            getUserConf().then((res) => {
-                this.isAllowLover = !!res?.data?.data?.accept_lover_request;
-                if (this.isAllowLover) {
-                    this.loadRelationNetMembersByType();
-                }
+        handleRequestError(err) {
+            const data = err?.response?.data;
+            const message = data?.msg || data?.message || err?.message || "请求失败，请稍后再试";
+            this.$notify({
+                title: "操作失败",
+                message,
+                type: "error",
             });
+        },
+        isRelationTab(tab) {
+            return this.relationNetTypes.some((item) => item.relationship_type === tab);
+        },
+        isNormalTab(tab) {
+            return ["whitelist", "blacklist", "myfollow", "myfans"].includes(tab);
+        },
+        normalizeTab(tab) {
+            if (!tab) {
+                return this.relationNetTypes[0]?.relationship_type || "whitelist";
+            }
+            if (tab && this.isRelationTab(tab)) {
+                return tab;
+            }
+            if (tab && this.isNormalTab(tab)) {
+                return tab;
+            }
+            return "whitelist";
+        },
+        routeQuery() {
+            const query = {
+                tab: this.active,
+            };
+            if (this.active !== "whitelist") {
+                if (this.keyword) {
+                    query.keyword = this.keyword;
+                }
+                if (this.pagination.pageIndex > 1) {
+                    query.page = this.pagination.pageIndex;
+                }
+                if (this.pagination.pageSize !== 10) {
+                    query.pageSize = this.pagination.pageSize;
+                }
+            }
+            return query;
+        },
+        syncRoute() {
+            const query = this.routeQuery();
+            const currentQuery = this.$route.query || {};
+            const same =
+                Object.keys(query).length === Object.keys(currentQuery).length &&
+                Object.keys(query).every((key) => String(query[key]) === String(currentQuery[key]));
+
+            if (!same) {
+                this.$router.replace({
+                    name: "privacy",
+                    query,
+                });
+            }
+        },
+        loadRelationTab() {
+            if (this.active == "lover") {
+                this.loadConf();
+            } else {
+                this.loadRelationNetMembersByType();
+            }
+            this.loadWaitInvites();
+            this.syncRoute();
+        },
+        initNormalTabQuery() {
+            this.keyword = this.active === "whitelist" ? "" : this.$route.query.keyword || "";
+            const page = Number(this.$route.query.page);
+            const pageSize = Number(this.$route.query.pageSize);
+            this.pagination.pageIndex = Number.isInteger(page) && page > 0 ? page : 1;
+            this.pagination.pageSize = Number.isInteger(pageSize) && pageSize > 0 ? pageSize : 10;
+        },
+        resetSidebarSearch() {
+            this.uid = "";
+            this.userdata = "";
+            this.flag = false;
+        },
+        setActiveTab(tab) {
+            this.active = this.normalizeTab(tab);
+            if (this.isRelationTab(this.active)) {
+                this.loadRelationTab();
+            } else {
+                this.initNormalTabQuery();
+                this.loadList();
+            }
+        },
+        getUserId(item) {
+            if (this.active === "whitelist") {
+                return item.kith_id || item.user_id || item.ID || item.id;
+            }
+            if (this.active === "myfans") {
+                return item.user_id || item.user_info?.id || item.user_info?.ID || item.id;
+            }
+            if (this.active === "blacklist") {
+                return item.bind_user_id || item.user_id || item.user_info?.id || item.user_info?.ID || item.id;
+            }
+            return item.author_id || item.author_info?.id || item.author_info?.ID || item.user_id || item.id;
+        },
+        getUserInfo(item) {
+            if (this.active === "whitelist") {
+                return item.kith_info || item.user_info || item;
+            }
+            if (this.active === "myfollow") {
+                return item.author_info || item.user_info || item.author || item;
+            }
+            return item.user_info || item.bind_user_info || item.author_info || item;
+        },
+        itemKey(item, i) {
+            return `${this.active}-${this.getUserId(item) || item.id || i}`;
+        },
+        getResponseList(res) {
+            const data = res?.data?.data;
+            if (Array.isArray(data?.list)) return data.list;
+            if (Array.isArray(data)) return data;
+            return [];
+        },
+        getResponseTotal(res) {
+            return res?.data?.data?.page?.total ?? 0;
+        },
+        runListRequest(request, resolveList) {
+            request
+                .then(resolveList)
+                .catch((err) => {
+                    this.list = [];
+                    this.pagination.total = 0;
+                    this.handleRequestError(err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+        loadConf() {
+            getUserConf()
+                .then((res) => {
+                    this.isAllowLover = !!res?.data?.data?.accept_lover_request;
+                    if (this.isAllowLover) {
+                        this.loadRelationNetMembersByType();
+                    }
+                })
+                .catch((err) => this.handleRequestError(err));
         },
         onRefresh(fn) {
             this?.[fn]();
         },
         async loadRelationNetTypes() {
             // 暂时只筛选官方的关系网类型 is_official & is_only_one
-            return await getRelationNetTypes().then((res) => {
-                this.relationNetTypes = res.data.data?.filter((item) => item.is_official && item.is_only_one);
-            });
+            return await getRelationNetTypes()
+                .then((res) => {
+                    this.relationNetTypes = res.data.data?.filter((item) => item.is_official && item.is_only_one);
+                })
+                .catch(() => {
+                    this.relationNetTypes = [];
+                });
         },
         handleChange() {
             this.pagination.pageIndex = 1;
@@ -332,6 +477,11 @@ export default {
                     this.members = res.data.data?.members || [];
                     this.net = res.data.data?.net || {};
                 })
+                .catch((err) => {
+                    this.members = [];
+                    this.net = {};
+                    this.handleRequestError(err);
+                })
                 .finally(() => {
                     this.loading = false;
                 });
@@ -344,26 +494,21 @@ export default {
                     this.waitList =
                         res.data?.data?.list?.filter((item) => item.net?.relationship_type === this.active) || [];
                 })
+                .catch((err) => {
+                    this.waitList = [];
+                    this.handleRequestError(err);
+                })
                 .finally(() => {
                     this.loading = false;
                 });
         },
         tabChange() {
-            if (this.relationNetTypes.find((item) => item.relationship_type === this.active)) {
-                if (this.active == "lover") {
-                    this.loadConf();
-                } else {
-                    this.loadRelationNetMembersByType();
-                }
-                this.$router.push({
-                    name: "privacy",
-                    query: {
-                        tab: this.active,
-                    },
-                });
+            this.resetSidebarSearch();
+            if (this.isRelationTab(this.active)) {
+                this.loadRelationTab();
                 return;
             }
-            this.keyword = this.$route.query.keyword || "";
+            this.keyword = "";
             this.pagination.pageIndex = 1;
             this.loadList();
         },
@@ -385,6 +530,10 @@ export default {
                 .then((res) => {
                     this.userdata = res.data.data;
                 })
+                .catch((err) => {
+                    this.userdata = "";
+                    this.handleRequestError(err);
+                })
                 .finally(() => {
                     this.flag = true;
                 });
@@ -398,76 +547,57 @@ export default {
                 });
                 return;
             }
-            if (this.active === "myfollow") {
-                addRssUser(this.userdata.ID, { title: this.userdata.display_name }).then((res) => {
-                    this.loadList();
+            if (this.active === "whitelist" && !this.allowAppend) {
+                this.$notify({
+                    title: "提示",
+                    message: this.isNewKith ? "亲友数量已达上限" : "该用户已添加",
+                    type: "warning",
                 });
-            } else {
-                this.addFns[this.active](this.userdata.ID).then((res) => {
-                    this.loadList();
-                });
+                return;
             }
-        },
-        // 添加亲友
-        addKith() {
-            this.allowAppend &&
-                addKith(this.uid).then(() => {
-                    this.$notify({
-                        title: "成功",
-                        message: "添加成功",
-                        type: "success",
-                    });
-                    this.list.push({
-                        kith_id: this.uid,
-                        level: 0,
-                        status: 0,
-                        kith_info: this.userdata,
-                    });
-                });
-        },
-        // 添加关注
-        follow() {
-            follow(this.userdata.ID).then(() => {
-                this.$notify({
-                    title: "成功",
-                    message: "关注成功",
-                    type: "success",
-                });
-                this.loadList();
-            });
-        },
-        // 添加黑名单
-        deny() {
-            deny(this.userdata.ID).then(() => {
-                this.$notify({
-                    title: "成功",
-                    message: "拉黑成功",
-                    type: "success",
-                });
-                this.loadList();
-            });
+            const addFn = this.active === "myfollow" ? addRssUser : this.addFns[this.active];
+            if (!addFn) return;
+            if (this.active === "myfollow") {
+                addFn(this.userdata.ID, { title: this.userdata.display_name })
+                    .then(() => {
+                        this.$notify({
+                            title: "成功",
+                            message: "关注成功",
+                            type: "success",
+                        });
+                        this.loadList();
+                    })
+                    .catch((err) => this.handleRequestError(err));
+            } else {
+                addFn(this.userdata.ID)
+                    .then(() => {
+                        this.$notify({
+                            title: "成功",
+                            message: this.active === "blacklist" ? "拉黑成功" : "添加成功",
+                            type: "success",
+                        });
+                        this.loadList();
+                    })
+                    .catch((err) => this.handleRequestError(err));
+            }
         },
         // 加载列表
         loadList() {
+            if (!this.isNormalTab(this.active)) {
+                this.active = "whitelist";
+            }
             this.loading = true;
-            this.$router.push({
-                name: "privacy",
-                query: {
-                    tab: this.active,
-                },
-            });
+            this.syncRoute();
             if (this.active === "whitelist") {
-                getKithList()
-                    .then((res) => {
-                        let list = res.data.data;
+                this.runListRequest(getKithList(), (res) => {
+                    let list = this.getResponseList(res);
+                    if (Array.isArray(list)) {
                         list = list.sort((a, b) => {
                             return b.level - a.level;
                         });
-                        this.list = list;
-                    })
-                    .finally(() => {
-                        this.loading = false;
-                    });
+                    }
+                    this.list = list || [];
+                });
             } else if (this.active === "myfollow") {
                 const params = {
                     index: this.pagination.pageIndex,
@@ -476,40 +606,34 @@ export default {
                     category: 2,
                 };
 
-                getMyRss(params)
-                    .then((res) => {
-                        this.list = res.data.data.list || [];
-                        this.pagination.total = res.data.data.page.total;
-                    })
-                    .finally(() => {
-                        this.loading = false;
-                    });
+                this.runListRequest(getMyRss(params), (res) => {
+                    this.list = this.getResponseList(res);
+                    this.pagination.total = this.getResponseTotal(res);
+                });
             } else {
                 const params = {
                     pageIndex: this.pagination.pageIndex,
                     pageSize: this.pagination.pageSize,
                     display_name: this.keyword,
                 };
-                this.fns[this.active](params)
-                    .then((res) => {
-                        this.list = res.data.data.list || [];
-                        this.pagination.total = res.data.data.page.total;
-                    })
-                    .finally(() => {
-                        this.loading = false;
-                    });
+                this.runListRequest(this.fns[this.active](params), (res) => {
+                    this.list = this.getResponseList(res);
+                    this.pagination.total = this.getResponseTotal(res);
+                });
             }
         },
         // 删除亲友
         remove(kith_id, i) {
-            removeKith(kith_id).then(() => {
-                this.$notify({
-                    title: "成功",
-                    message: "删除成功",
-                    type: "success",
-                });
-                this.list.splice(i, 1);
-            });
+            removeKith(kith_id)
+                .then(() => {
+                    this.$notify({
+                        title: "成功",
+                        message: "删除成功",
+                        type: "success",
+                    });
+                    this.list.splice(i, 1);
+                })
+                .catch((err) => this.handleRequestError(err));
         },
         // 编辑备注
         edit(kith_id, item) {
@@ -518,14 +642,16 @@ export default {
                 cancelButtonText: "取消",
             })
                 .then(({ value }) => {
-                    editKith(kith_id, { remark: value }).then(() => {
-                        this.$notify({
-                            title: "成功",
-                            message: "编辑成功",
-                            type: "success",
-                        });
-                        item.remark = value;
-                    });
+                    editKith(kith_id, { remark: value })
+                        .then(() => {
+                            this.$notify({
+                                title: "成功",
+                                message: "编辑成功",
+                                type: "success",
+                            });
+                            item.remark = value;
+                        })
+                        .catch((err) => this.handleRequestError(err));
                 })
                 .catch(() => {});
         },
@@ -541,57 +667,33 @@ export default {
                 cancelButtonText: "取消",
             })
                 .then(() => {
-                    // const id = this.active === 'myfans' || this.active == 'myfollow' ? item.user_id : item.bind_user_id;
-                    let id = "";
-                    if (this.active === "whitelist") {
-                        id = item.kith_id;
-                    } else if (this.active === "myfans") {
-                        id = item.user_id;
-                    } else if (this.active === "blacklist") {
-                        id = item.bind_user_id;
-                    } else {
-                        id = item.author_id;
-                    }
+                    const id = this.getUserId(item);
+                    const removeFn = this.removeFns[this.active];
+                    if (!id || !removeFn) return;
 
-                    this.removeFns[this.active](id).then(() => {
-                        this.$notify({
-                            title: "成功",
-                            message: "操作成功",
-                            type: "success",
-                        });
-                        this.loadList();
-                    });
+                    removeFn(id)
+                        .then(() => {
+                            this.$notify({
+                                title: "成功",
+                                message: "操作成功",
+                                type: "success",
+                            });
+                            this.loadList();
+                        })
+                        .catch((err) => this.handleRequestError(err));
                 })
                 .finally(() => {});
         },
         userLink(item) {
-            let id = "";
-            if (this.active === "whitelist") {
-                id = item.kith_id;
-            } else if (this.active === "myfans") {
-                id = item.user_id;
-            } else if (this.active === "blacklist") {
-                id = item.bind_user_id;
-            } else {
-                id = item.author_id;
-            }
-            return authorLink(id);
+            return authorLink(this.getUserId(item));
         },
         getAvatar(item) {
-            if (this.active == "myfans") {
-                return item.user_info?.avatar;
-            } else if (this.active == "myfollow") {
-                return item.author_info?.avatar;
-            }
-            return (item.kith_info || item).user_avatar;
+            const user = this.getUserInfo(item);
+            return user?.avatar || user?.user_avatar;
         },
         getName(item) {
-            if (this.active == "myfans") {
-                return item.user_info?.display_name;
-            } else if (this.active == "myfollow") {
-                return item.author_info?.display_name;
-            }
-            return (item.kith_info || item).display_name;
+            const user = this.getUserInfo(item);
+            return user?.display_name || user?.name || "匿名用户";
         },
         formatCreatedAt(item) {
             const createdAt = item?.created_at;
@@ -609,33 +711,21 @@ export default {
     },
     mounted: function () {
         this.loadRelationNetTypes().then(() => {
-            let routeTab = this.$route.query.tab;
-            const relationNetTypes = this.relationNetTypes;
-            if (relationNetTypes.length && !routeTab) {
-                routeTab = relationNetTypes[0].relationship_type;
-            }
-            if (routeTab && relationNetTypes.find((item) => item.relationship_type === routeTab)) {
-                this.active = routeTab;
-                if (this.active == "lover") {
-                    this.loadConf();
+            this.setActiveTab(this.$route.query.tab);
+        });
+        User.getAsset()
+            .then((asset) => {
+                if (User._isPRO(asset)) {
+                    this.identity = "pro";
+                } else if (User._isVIP(asset)) {
+                    this.identity = "vip";
                 } else {
-                    this.loadRelationNetMembersByType();
+                    this.identity = "member";
                 }
-                this.loadWaitInvites();
-            } else {
-                this.active = routeTab || "whitelist";
-                this.loadList();
-            }
-        });
-        User.getAsset().then((asset) => {
-            if (User._isPRO(asset)) {
-                this.identity = "pro";
-            } else if (User._isVIP(asset)) {
-                this.identity = "vip";
-            } else {
+            })
+            .catch(() => {
                 this.identity = "member";
-            }
-        });
+            });
     },
 };
 </script>

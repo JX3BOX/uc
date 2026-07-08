@@ -5,33 +5,57 @@
             .flex;
             gap: 20px;
         }
+
+        .m-actions {
+            .flex;
+            align-items: center;
+            gap: 10px;
+        }
     }
 }
 .m-address-dialog {
-    .m-line {
-        .flex;
-        .mb(20px);
-        gap: 20px;
-        .u-address {
-            flex: 1;
-            flex-shrink: 0;
-            min-width: 240px;
+    max-width: calc(100vw - 32px);
+    .r(8px);
+
+    .el-dialog__body {
+        padding: 10px 5px;
+    }
+
+    .u-address,
+    .el-input,
+    .el-cascader {
+        .w(100%);
+    }
+
+    .el-form--label-top .el-form-item__label {
+        padding: 0 0 8px;
+        line-height: 20px;
+        color: #606266;
+        font-weight: 500;
+    }
+
+    .el-form-item {
+        margin-bottom: 22px;
+    }
+
+    .m-detail-address {
+        margin: 12px 0 0;
+        .w(100%);
+
+        .el-form-item__content {
+            .w(100%);
         }
     }
 
-    .m-footer {
-        .flex;
-        .mb(20px);
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
+    .el-input__wrapper,
+    .el-cascader .el-input__wrapper {
+        min-height: 36px;
     }
-    .el-dialog__body {
-        padding: 20px 30px;
-        border-top: 1px solid #eee;
-    }
-    .el-form--label-top .el-form-item__label {
-        padding: 0;
+
+    @media screen and (max-width: 720px) {
+        .el-dialog__body {
+            padding: 20px 20px 4px;
+        }
     }
 }
 

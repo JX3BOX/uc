@@ -18,13 +18,21 @@
                     </span>
                     <el-button
                         type="primary"
+                        class="u-bind-btn"
                         @click="bind(types[type].uuid)"
                         size="large"
                         v-if="!checkStatus(types[type].idKey)"
                     >
-                        立即绑定
+                        <i class="el-icon-connection"></i>立即绑定
                     </el-button>
-                    <el-button v-else @click="unbind(types[type].uuid)" size="large" type="info">解除绑定
+                    <el-button
+                        v-else
+                        class="u-unbind-btn"
+                        @click="unbind(types[type].uuid)"
+                        size="large"
+                        type="info"
+                    >
+                        <img class="u-unbind-icon" svg-inline src="@/assets/img/dashboard/unbind.svg" alt="" />解除绑定
                     </el-button>
                 </div>
                 <qqbot :data="data" @refresh="loadAuth"></qqbot>

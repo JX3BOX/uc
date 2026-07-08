@@ -15,8 +15,7 @@
 </template>
 
 <script>
-import { validator } from "sterilizer";
-import { sendBindEmail, checkEmailAvailable, getProfile } from "@/service/dashboard/profile";
+import { getProfile } from "@/service/dashboard/profile";
 import EmailDialog from "./email_dialog.vue";
 export default {
     name: "email",
@@ -34,44 +33,6 @@ export default {
         };
     },
     methods: {
-        checkEmail: function () {
-            // 如果为空
-            if (this.email == "") {
-                this.email_validate = null;
-                this.email_available = null;
-                return;
-            }
-
-            // 校验格式
-            let result = validator(this.email, {
-                isEmail: true,
-                len: [3, 50],
-            });
-            this.email_validate = result;
-            if (!result) return;
-
-            // 邮箱是否可用
-            checkEmailAvailable(this.email).then((res) => {
-                this.email_available = !res.data.data?.isExist;
-            });
-        },
-        bind: function () {
-            if (!this.ready) {
-                this.$message.error("邮箱地址不合法");
-                return;
-            }
-
-            sendBindEmail({
-                email: this.email,
-            }).then((res) => {
-                this.$alert("申请提交成功,请前往邮箱验证", "消息", {
-                    confirmButtonText: "确定",
-                });
-                this.status = true;
-                this.verified = false;
-                this.address = this.email;
-            });
-        },
         handleClose() {
             this.visible = false;
         },

@@ -20,22 +20,47 @@
             >绑定公众号
         </el-button>
         <el-dialog
-            title="绑定微信公众号"
             v-model="visible"
-            :width="isPhone ? '95%' : '400px'"
+            :width="isPhone ? '92%' : '480px'"
             class="m-notice-wechat__dialog"
             :before-close="handleClose"
         >
+            <template #header>
+                <div class="m-wechat-header">
+                    <div class="u-wechat-icon">
+                        <i class="el-icon-chat-dot-round"></i>
+                    </div>
+                    <div>
+                        <div class="u-title">绑定微信公众号</div>
+                        <div class="u-subtitle">关注后可通过微信接收通知告警</div>
+                    </div>
+                </div>
+            </template>
             <div class="m-wechat-content" v-loading="loading">
-                <el-image class="u-qr" v-if="ticket" :src="qrcodeValue" lazy>
-                    <template #error>
-                        <div class="u-error">
-                            <i class="el-icon-picture-outline"></i>
-                        </div>
-                    </template>
-                </el-image>
-                <i class="u-tip">打开微信扫一扫，关注公众号接收通知告警</i>
-                <small class="u-tip-small">关注之后需要重新登陆方可生效</small>
+                <div class="m-qr-card">
+                    <el-image class="u-qr" v-if="ticket" :src="qrcodeValue">
+                        <template #error>
+                            <div class="u-error">
+                                <i class="el-icon-picture-outline"></i>
+                                <span>二维码加载失败</span>
+                            </div>
+                        </template>
+                    </el-image>
+                    <div class="u-qr-placeholder" v-else>
+                        <i class="el-icon-loading"></i>
+                    </div>
+                </div>
+                <div class="m-wechat-steps">
+                    <div class="u-step">
+                        <span class="u-step-index">1</span>
+                        <span>打开微信扫一扫</span>
+                    </div>
+                    <div class="u-step">
+                        <span class="u-step-index">2</span>
+                        <span>关注「剑三魔盒」公众号</span>
+                    </div>
+                </div>
+                <small class="u-tip-small">关注之后需要重新登录方可生效</small>
                 <div class="u-bind" v-show="success">
                     <i class="el-icon-success" style="color: #67c23a; margin-right: 5px"> </i>
                     <span class="u-bind-text">绑定成功</span>
@@ -62,6 +87,7 @@ export default {
             profile: null,
             success: false,
             loading: false,
+            bindCloseTimer: null,
 
             isPhone: window.innerWidth < 768,
         };
@@ -90,13 +116,18 @@ export default {
             });
         },
         open() {
+            this.clearBindCloseTimer();
+            this.success = false;
+            this.ticket = "";
             this.visible = true;
             this.loadQrcode();
         },
-        handleClose() {
+        handleClose(done) {
+            this.clearBindCloseTimer();
             this.visible = false;
-            if (this.sse) {
-                this.sse.disconnect();
+            this.closeSSE();
+            if (typeof done === "function") {
+                done();
             }
         },
         loadQrcode() {
@@ -128,11 +159,29 @@ export default {
         },
         onMessage() {
             this.success = true;
-            this.profile.wechat_mp_openid = true;
+            this.profile = {
+                ...(this.profile || {}),
+                wechat_mp_openid: true,
+            };
+            this.closeSSE();
+            this.clearBindCloseTimer();
 
-            setTimeout(() => {
+            this.bindCloseTimer = setTimeout(() => {
                 this.visible = false;
+                this.bindCloseTimer = null;
             }, 4000);
+        },
+        closeSSE() {
+            if (this.sse) {
+                this.sse.disconnect();
+                this.sse = null;
+            }
+        },
+        clearBindCloseTimer() {
+            if (this.bindCloseTimer) {
+                clearTimeout(this.bindCloseTimer);
+                this.bindCloseTimer = null;
+            }
         },
         unbind() {
             this.$confirm("解绑后无法用微信接收魔盒通知消息，确定解绑吗？", "提示", {
@@ -151,6 +200,10 @@ export default {
             }).catch(() => {});
         },
     },
+    beforeUnmount() {
+        this.clearBindCloseTimer();
+        this.closeSSE();
+    },
 };
 </script>
 <style lang="less">
@@ -161,29 +214,181 @@ export default {
     gap: 10px;
 }
 .m-notice-wechat__dialog {
+    .el-dialog {
+        border-radius: 14px;
+        overflow: hidden;
+    }
+    .el-dialog__header {
+        margin-right: 0;
+        padding: 26px 30px 12px;
+    }
+    .el-dialog__body {
+        padding: 0 30px 30px;
+    }
+    .el-dialog__headerbtn {
+        .flex(o);
+        top: 18px;
+        right: 18px;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        border-radius: 50%;
+        line-height: 1;
+        color: #3b42ff;
+        background: transparent;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+            color: #2f35e8;
+            background-color: #f5f6ff;
+        }
+        .el-dialog__close {
+            font-size: 20px;
+        }
+    }
+    .m-wechat-header {
+        .flex;
+        align-items: center;
+        gap: 14px;
+
+        .u-wechat-icon {
+            .flex;
+            align-items: center;
+            justify-content: center;
+            .size(44px);
+            flex: none;
+            border-radius: 12px;
+            color: #16a34a;
+            background: linear-gradient(135deg, #e9fbea 0%, #f3fff5 100%);
+            box-shadow: inset 0 0 0 1px #c9efcf;
+            font-size: 22px;
+        }
+        .u-title {
+            .fz(22px);
+            .bold;
+            color: #1f2937;
+            line-height: 1.25;
+        }
+        .u-subtitle {
+            margin-top: 6px;
+            .fz(13px);
+            color: #6b7280;
+            line-height: 1.5;
+        }
+    }
     .m-wechat-content {
         .flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 10px;
+        gap: 16px;
+        min-height: 366px;
+
+        .m-qr-card {
+            .flex;
+            align-items: center;
+            justify-content: center;
+            .size(232px);
+            box-sizing: border-box;
+            padding: 14px;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            box-shadow: 0 18px 42px rgba(31, 41, 55, 0.08);
+        }
         .u-qr {
             .flex;
             align-items: center;
             justify-content: center;
-            .size(180px);
+            .size(204px);
+            border-radius: 10px;
+            overflow: hidden;
             .el-image__inner {
                 .size(100%);
             }
         }
+        .u-qr-placeholder {
+            .flex;
+            align-items: center;
+            justify-content: center;
+            .size(204px);
+            border-radius: 10px;
+            color: #9ca3af;
+            background: #f3f4f6;
+            font-size: 28px;
+        }
         .u-error {
-            .fz(120px);
+            .flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            .size(204px);
+            color: #9ca3af;
+            background: #f3f4f6;
+            font-size: 42px;
+
+            span {
+                .fz(13px);
+            }
+        }
+        .m-wechat-steps {
+            .flex;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+        .u-step {
+            .flex;
+            align-items: center;
+            gap: 8px;
+            box-sizing: border-box;
+            padding: 9px 12px;
+            border-radius: 999px;
+            color: #374151;
+            background: #f9fafb;
+            border: 1px solid #edf0f3;
+            .fz(13px);
+            line-height: 1;
+        }
+        .u-step-index {
+            .flex;
+            align-items: center;
+            justify-content: center;
+            .size(18px);
+            flex: none;
+            border-radius: 50%;
+            color: #fff;
+            background: #16a34a;
+            .fz(12px);
+            .bold;
+        }
+        .u-bind {
+            .flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px 14px;
+            border-radius: 10px;
+            color: #166534;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            .bold;
         }
     }
 
     .u-tip-small {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 10px;
         font-size: 13px;
-        color: #f56c6c;
+        line-height: 1.5;
+        text-align: center;
+        color: #b45309;
+        background: #fffbeb;
+        border: 1px solid #fde68a;
         font-weight: 600;
     }
 }
@@ -195,6 +400,39 @@ export default {
         .u-bind-button {
             span {
                 .none;
+            }
+        }
+    }
+    .m-notice-wechat__dialog {
+        .el-dialog__header {
+            padding: 22px 20px 10px;
+        }
+        .el-dialog__body {
+            padding: 0 20px 24px;
+        }
+        .m-wechat-header {
+            padding-right: 32px;
+
+            .u-title {
+                .fz(20px);
+            }
+        }
+        .m-wechat-content {
+            min-height: 350px;
+
+            .m-qr-card {
+                .size(220px);
+            }
+            .u-qr,
+            .u-qr-placeholder,
+            .u-error {
+                .size(192px);
+            }
+            .m-wechat-steps {
+                flex-direction: column;
+            }
+            .u-step {
+                justify-content: center;
             }
         }
     }

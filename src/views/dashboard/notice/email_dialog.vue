@@ -18,18 +18,20 @@
                         <el-input
                             v-model.trim="form.email"
                             size="large"
-                            prefix-icon="el-icon-message"
                             placeholder="请输入邮箱"
                             clearable
-                        ></el-input>
+                        >
+                            <template #prefix>
+                                <el-icon><Message /></el-icon>
+                            </template>
+                        </el-input>
                     </el-form-item>
                     <el-form-item prop="code" v-if="hasSendBindEmail" class="u-code-input">
-                        <el-input
-                            v-model.trim="form.code"
-                            size="large"
-                            prefix-icon="el-icon-lock"
-                            placeholder="请输入验证码"
-                        ></el-input>
+                        <el-input v-model.trim="form.code" size="large" placeholder="请输入验证码">
+                            <template #prefix>
+                                <el-icon><Lock /></el-icon>
+                            </template>
+                        </el-input>
                     </el-form-item>
                 </el-form>
                 <el-alert
@@ -45,7 +47,14 @@
                 <div class="m-action">
                     <!-- 未发送验证邮件 -->
                     <template v-if="!hasSendBindEmail">
-                        <el-button type="primary" size="large" :disabled="!!!form.email" icon="Position" @click="bind">
+                        <el-button
+                            type="primary"
+                            size="large"
+                            :disabled="!!!form.email"
+                            icon="Position"
+                            :loading="sendLoading"
+                            @click="bind"
+                        >
                             发送验证邮件</el-button
                         >
                         <div class="u-tips">仅支持常见邮箱后缀<br>部分邮件服务商可能无法收到验证邮件</div>
@@ -100,6 +109,7 @@ export default {
                 ],
             },
             loading: false,
+            sendLoading: false,
 
             hasSendBindEmail: false,
 
@@ -131,25 +141,40 @@ export default {
             this.$refs.form.resetFields();
         },
         checkEmail(rule, value, callback) {
-            if (value === this.email && this.verified) {
-                callback(new Error("不可重复验证相同邮箱"));
+            if (!value) {
+                return callback();
             }
-            checkEmailAvailable(value).then((res) => {
-                if (res.data.data?.isExist) {
-                    callback(new Error("邮箱已被绑定"));
-                } else {
-                    callback();
-                }
-            });
+            if (value === this.email && this.verified) {
+                return callback(new Error("不可重复验证相同邮箱"));
+            }
+            checkEmailAvailable(value)
+                .then((res) => {
+                    if (res.data.data?.isExist) {
+                        callback(new Error("邮箱已被绑定"));
+                    } else {
+                        callback();
+                    }
+                })
+                .catch(() => {
+                    callback(new Error("邮箱校验失败，请稍后重试"));
+                });
         },
         bind() {
             this.$refs.form.validate((valid) => {
                 if (valid) {
+                    this.sendLoading = true;
                     sendBindEmail({
                         email: this.form.email,
-                    }).then((res) => {
-                        this.hasSendBindEmail = true;
-                    });
+                    })
+                        .then((res) => {
+                            this.hasSendBindEmail = true;
+                        })
+                        .catch(() => {
+                            this.$message.error("验证邮件发送失败，请稍后重试");
+                        })
+                        .finally(() => {
+                            this.sendLoading = false;
+                        });
                 }
             });
         },
@@ -157,12 +182,18 @@ export default {
             this.$refs.form.validate((valid) => {
                 if (valid) {
                     this.loading = true;
-                    sendVerifyEmail(this.form.code).then((res) => {
-                        this.$emit("update");
-                        this.$message.success("邮箱绑定成功");
-                        this.close();
-                        this.loading = false;
-                    });
+                    sendVerifyEmail(this.form.code)
+                        .then((res) => {
+                            this.$emit("update");
+                            this.$message.success("邮箱绑定成功");
+                            this.close();
+                        })
+                        .catch(() => {
+                            this.$message.error("邮箱绑定失败，请检查验证码后重试");
+                        })
+                        .finally(() => {
+                            this.loading = false;
+                        });
                 }
             });
         },

@@ -4,8 +4,11 @@
             <img class="u-qqbot" svg-inline :src="icon('qqbot')" />
             <span class="u-status"> QQ机器人 </span>
         </span>
-        <el-button type="primary" @click="bind" size="large" v-if="!checkStatus"> 立即绑定 </el-button>
-        <el-button v-else @click="unbind" size="large" type="info">解除绑定
+        <el-button type="primary" class="u-bind-btn" @click="bind" size="large" v-if="!checkStatus">
+            <i class="el-icon-connection"></i>立即绑定
+        </el-button>
+        <el-button v-else class="u-unbind-btn" @click="unbind" size="large" type="info">
+            <img class="u-unbind-icon" svg-inline src="@/assets/img/dashboard/unbind.svg" alt="" />解除绑定
         </el-button>
 
         <el-dialog

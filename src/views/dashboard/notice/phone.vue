@@ -6,7 +6,7 @@
                 phone ? "已绑定" : "未绑定"
             }}</el-tag>
         </div>
-        <el-button type="primary" size="large" :circle="isPhone" class="u-bind-button" @click="visible = true" icon="Edit">{{
+        <el-button type="primary" size="large" :circle="isPhone" class="u-bind-button" @click="openDialog" icon="Edit">{{
             phone ? "修改手机" : "绑定手机"
         }}</el-button>
         <el-dialog
@@ -192,8 +192,11 @@ export default {
                 this.$refs.phoneRef?.clearValidate();
             });
         },
+        openDialog() {
+            this.resetForm(true);
+            this.visible = true;
+        },
         handleClose(done) {
-            this.visible = false;
             this.resetForm();
             if (typeof done === "function") {
                 done();
@@ -355,9 +358,9 @@ export default {
 
     .m-phone-intro {
         padding: 18px;
-        border: 1px solid rgba(62, 108, 255, 0.08);
+        border: 1px solid fade(@v4primary, 8%);
         border-radius: 18px;
-        background: linear-gradient(180deg, #f8faff 0%, #ffffff 100%);
+        background: linear-gradient(180deg, fade(@v4primary, 6%) 0%, #ffffff 100%);
 
         .u-intro-tag {
             display: inline-flex;
@@ -365,8 +368,8 @@ export default {
             justify-content: center;
             padding: 5px 10px;
             border-radius: 999px;
-            background: rgba(47, 107, 255, 0.1);
-            color: #2f6bff;
+            background: fade(@v4primary, 10%);
+            color: @v4primary;
             font-size: 12px;
             font-weight: 700;
         }
@@ -389,8 +392,9 @@ export default {
             margin-top: 14px;
             padding: 12px 14px;
             border-radius: 14px;
-            background: rgba(47, 107, 255, 0.06);
-            border: 1px solid rgba(47, 107, 255, 0.08);
+            background: #fff;
+            border: 1px solid fade(@v4primary, 16%);
+            box-shadow: 0 10px 24px fade(@v4primary, 8%);
             .flex;
             align-items: center;
             justify-content: space-between;
@@ -400,6 +404,7 @@ export default {
         .m-current-phone.is-empty {
             background: rgba(123, 135, 148, 0.08);
             border-color: rgba(123, 135, 148, 0.1);
+            box-shadow: none;
         }
 
         .u-current-label {
@@ -409,12 +414,16 @@ export default {
         }
 
         .u-current-value {
-            color: #1f2d3d;
+            color: @v4primary;
             font-size: 15px;
             line-height: 1.4;
             font-weight: 700;
             word-break: break-all;
             text-align: right;
+        }
+
+        .m-current-phone.is-empty .u-current-value {
+            color: #1f2d3d;
         }
     }
 
@@ -471,10 +480,16 @@ export default {
         height: 52px;
         border: 0;
         border-radius: 14px;
-        background: #eef3ff;
-        color: #2f6bff;
+        background: fade(@v4primary, 8%);
+        color: @v4primary;
         font-weight: 700;
-        box-shadow: inset 0 0 0 1px rgba(47, 107, 255, 0.12);
+        box-shadow: inset 0 0 0 1px fade(@v4primary, 18%);
+    }
+
+    .u-send-code:not(.is-disabled):not(:disabled):hover {
+        background: fade(@v4primary, 12%);
+        color: darken(@v4primary, 6%);
+        box-shadow: inset 0 0 0 1px fade(@v4primary, 28%);
     }
 
     .u-send-code.is-disabled,
@@ -503,10 +518,14 @@ export default {
         height: 48px;
         border: 0;
         border-radius: 14px;
-        background: linear-gradient(135deg, #2f6bff 0%, #5b8cff 100%);
-        box-shadow: 0 14px 28px rgba(47, 107, 255, 0.2);
+        background: linear-gradient(135deg, @v4primary 0%, lighten(@v4primary, 10%) 100%);
+        box-shadow: 0 14px 28px fade(@v4primary, 20%);
         font-size: 15px;
         font-weight: 700;
+    }
+
+    .u-btn:not(.is-disabled):not(:disabled):hover {
+        background: linear-gradient(135deg, darken(@v4primary, 5%) 0%, lighten(@v4primary, 6%) 100%);
     }
 }
 
