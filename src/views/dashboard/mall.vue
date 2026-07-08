@@ -3,7 +3,7 @@
         <div class="m-dashboard m-dashboard-work m-dashboard-orders">
             <div class="m-dashboard-orders-cont">
                 <!-- 表单 -->
-                <div class="m-mall-list" v-if="list && list.length">
+                <div class="m-mall-list" v-loading="loading" v-if="list && list.length">
                     <table>
                         <thead>
                             <tr>
@@ -114,7 +114,7 @@
                         ></el-pagination>
                 </div>
                 <div class="m-mall-null" v-else>
-                    <el-alert title="还有任何订单记录" type="info" show-icon></el-alert>
+                    <el-alert title="还没有任何订单记录" type="info" show-icon></el-alert>
                 </div>
             </div>
         </div>
@@ -141,6 +141,7 @@ export default {
     data: function () {
         return {
             list: [],
+            loading: false,
 
             total: 0,
             pageIndex: 1,
@@ -191,10 +192,19 @@ export default {
     },
     methods: {
         load() {
-            getOrder(this.params).then((res) => {
-                this.list = res.data.data.list;
-                this.total = res.data.data.page.total;
-            });
+            this.loading = true;
+            getOrder(this.params)
+                .then((res) => {
+                    this.list = res.data.data.list || [];
+                    this.total = res.data.data.page.total || 0;
+                })
+                .catch(() => {
+                    this.list = [];
+                    this.total = 0;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         // 显示支付按钮
         showPay({ order_status, pay_status }) {
@@ -222,7 +232,7 @@ export default {
                     if (item.order.id == id) item.order.order_status = 1;
                     return item;
                 });
-            });
+            }).catch(() => {});
         },
         // 付款
         toPay(row) {
@@ -236,7 +246,7 @@ export default {
                     if (item.order.id == id) item.order.pay_status = 1;
                     return item;
                 });
-            });
+            }).catch(() => {});
         },
         // 确认收货
         isReceipt(id) {
@@ -249,7 +259,7 @@ export default {
                     if (item.order.id == id) item.order.order_status = 4;
                     return item;
                 });
-            });
+            }).catch(() => {});
         },
         handleShow(type, id) {
             this.type = type;

@@ -222,7 +222,7 @@ export default {
                             this.$message.success("提交申请成功，请等待管理审核。");
                         })
                         .catch((e) => {
-                            this.$message.error(e.message);
+                            this.$message.error(this.getErrorMessage(e));
                         })
                         .finally(() => {
                             this.processing = false;
@@ -230,28 +230,45 @@ export default {
                 }
             });
         },
+        getErrorMessage(e) {
+            return e?.response?.data?.msg || e?.response?.data?.message || e?.message || "请求失败，请稍后再试。";
+        },
         // 是否为签约作者
         checkSuperUser: function () {
             this.user?.profile?.uid &&
-                getSuperAuthorState(this.user?.profile?.uid).then((res) => {
-                    this.isSuperAuthor = res.data.data;
-                });
+                getSuperAuthorState(this.user?.profile?.uid)
+                    .then((res) => {
+                        this.isSuperAuthor = res.data.data;
+                    })
+                    .catch(() => {
+                        this.isSuperAuthor = false;
+                    });
         },
         // 加载申请记录
         loadContractAuthorLogs: function () {
-            getContractAuthorLogs().then((res) => {
-                this.logs = res.data.data.list;
-                if (this.logs && this.logs.length) {
-                    this.checked = this.logs[0]["checked"];
-                    this.checkedRemark = this.logs[0]["check_remark"];
-                    this.form = this.logs[0];
-                }
-            });
+            getContractAuthorLogs()
+                .then((res) => {
+                    this.logs = res.data.data?.list || [];
+                    if (this.logs && this.logs.length) {
+                        this.checked = this.logs[0]["checked"];
+                        this.checkedRemark = this.logs[0]["check_remark"];
+                        this.form = this.logs[0];
+                    }
+                })
+                .catch(() => {
+                    this.logs = [];
+                    this.checked = -1;
+                    this.checkedRemark = "";
+                });
         },
         loadAc() {
-            getBreadcrumb("sign-ac").then((data) => {
-                this.data = data;
-            });
+            getBreadcrumb("sign-ac")
+                .then((data) => {
+                    this.data = data;
+                })
+                .catch(() => {
+                    this.data = "";
+                });
         },
         // 初始化
         init: function () {
@@ -264,9 +281,13 @@ export default {
             this.$router.push({ name: "filter" });
         },
         loadLastLog() {
-            getLastContractAuthorLog().then((res) => {
-                this.last = res.data.data;
-            });
+            getLastContractAuthorLog()
+                .then((res) => {
+                    this.last = res.data.data || {};
+                })
+                .catch(() => {
+                    this.last = {};
+                });
         },
     },
     mounted: function () {

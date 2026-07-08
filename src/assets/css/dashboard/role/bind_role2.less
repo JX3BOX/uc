@@ -1,8 +1,21 @@
 @import "./index.less";
 .v-bind-role2 {
     padding: 0 0 120px 0;
+    overflow-x: hidden;
+
+    .m-bind-login {
+        max-width: 720px;
+        margin: 60px auto;
+        text-align: center;
+
+        .el-button {
+            margin-top: 20px;
+        }
+    }
+
     .m-steps {
-        width: 1440px;
+        width: 100%;
+        max-width: 1440px;
         margin: 60px auto;
     }
 
@@ -86,6 +99,18 @@
         margin-left: auto;
         margin-right: auto;
         cursor: pointer;
+
+        &.is-disabled {
+            cursor: not-allowed;
+            color: #a6a6a6;
+            border-color: #a6a6a6;
+        }
+    }
+
+    .u-token-error,
+    .u-roles-error {
+        margin: 16px auto 0 auto;
+        max-width: 520px;
     }
 
     .u-avatar {
@@ -155,5 +180,24 @@
     .u-sync-header {
         margin-bottom: 24px;
         font-size: 20px;
+    }
+}
+
+@media screen and (max-width: 1440px) {
+    .v-bind-role2 {
+        .m-step {
+            gap: 32px;
+        }
+
+        .u-step-img {
+            width: 28vw;
+            max-width: 400px;
+            min-width: 260px;
+        }
+
+        .u-step-body {
+            width: min(64vw, 930px);
+            padding: 32px 40px;
+        }
     }
 }

@@ -9,7 +9,11 @@
             </div> -->
             <el-button class="u-back" icon="ArrowLeft" @click="goBack">返回</el-button>
         </h2>
-        <div class="m-steps">
+        <div class="m-bind-login" v-if="!isLogin">
+            <el-alert title="请先登录后再绑定角色" type="warning" center show-icon :closable="false"></el-alert>
+            <el-button type="primary" @click="toLogin">立即登录</el-button>
+        </div>
+        <div class="m-steps" v-else>
             <!-- STEP 1 -->
             <div class="m-step is-1">
                 <div class="u-step-head">
@@ -31,8 +35,17 @@
                 <div class="u-step-body">
                     <div class="u-notice">在弹窗内输入下方“角色认证”验证码 - 点击【④确认】</div>
                     <div class="u-timer">( 10分钟内有效，超时请刷新页面 )</div>
-                    <div class="u-token" @click="copyToken">
-                        {{ token }}
+                    <el-alert
+                        v-if="tokenError"
+                        class="u-token-error"
+                        :title="tokenError"
+                        type="error"
+                        center
+                        show-icon
+                        :closable="false"
+                    ></el-alert>
+                    <div class="u-token" :class="{ 'is-disabled': tokenLoading || !token }" v-loading="tokenLoading" @click="copyToken">
+                        {{ tokenText }}
                     </div>
                     <div class="u-subtitle">
                         <span class="u-link-text"
@@ -40,13 +53,22 @@
                         >
                         <el-button @click="toMoreRoles" icon="ArrowRight">更多角色</el-button>
                     </div>
+                    <el-alert
+                        v-if="rolesError"
+                        class="u-roles-error"
+                        :title="rolesError"
+                        type="error"
+                        center
+                        show-icon
+                        :closable="false"
+                    ></el-alert>
                     <ul class="u-roles">
                         <router-link
                             :to="'/role/' + item.ID"
                             class="u-role"
                             :class="{ 'is-default': item.is_default_role }"
                             v-for="item in roles"
-                            :key="item.id"
+                            :key="item.ID"
                         >
                             <img class="u-avatar" :src="showAvatar(item.mount, item.body_type)" />
                             <span class="u-name">{{ item.name }}</span>
@@ -83,15 +105,22 @@ export default {
     data: function () {
         return {
             token: "",
+            tokenLoading: false,
+            tokenError: "",
 
             notice: "",
             sync_notice: "",
             roles: [],
+            rolesError: "",
         };
     },
     computed: {
         isLogin() {
             return User.isLogin();
+        },
+        tokenText() {
+            if (this.tokenLoading) return "验证码加载中";
+            return this.token || "暂无验证码";
         },
     },
     watch: {},
@@ -116,20 +145,37 @@ export default {
             const params = {
                 _no_page: 1,
             };
-            getRoles(params).then((res) => {
-                this.roles = res.data.data.list?.slice(0, 5) || [];
-            });
+            this.rolesError = "";
+            getRoles(params)
+                .then((res) => {
+                    this.roles = res.data.data.list?.slice(0, 5) || [];
+                })
+                .catch((err) => {
+                    this.roles = [];
+                    this.rolesError = this.getErrorMessage(err, "已绑定角色加载失败，请稍后重试");
+                });
         },
         loadToken() {
-            getToken().then((res) => {
-                this.token = res.data.data.token;
-            });
+            this.tokenLoading = true;
+            this.tokenError = "";
+            getToken()
+                .then((res) => {
+                    this.token = res.data.data.token || "";
+                    if (!this.token) this.tokenError = "验证码加载失败，请刷新页面重试";
+                })
+                .catch((err) => {
+                    this.token = "";
+                    this.tokenError = this.getErrorMessage(err, "验证码加载失败，请刷新页面重试");
+                })
+                .finally(() => {
+                    this.tokenLoading = false;
+                });
         },
         copyToken() {
-            if (!this.token) {
+            if (this.tokenLoading || !this.token) {
                 this.$notify.error({
                     title: "复制失败",
-                    message: "暂无验证码",
+                    message: this.tokenLoading ? "验证码加载中" : "暂无验证码",
                 });
                 return;
             }
@@ -158,6 +204,12 @@ export default {
         },
         goBack: function () {
             this.$router.push("/role");
+        },
+        toLogin: function () {
+            User.toLogin();
+        },
+        getErrorMessage: function (err, fallback) {
+            return err?.response?.data?.msg || err?.response?.data?.message || err?.message || fallback;
         },
     },
 };

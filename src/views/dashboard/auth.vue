@@ -13,7 +13,16 @@
                         <!-- {{ checkStatus(type) ? getNickname(type) : "未绑定" }} -->
                     </span>
                 </span>
-                <template v-if="type != 'user_phone' || (type == 'user_phone' && level >= 3)">
+                <el-tooltip
+                    v-if="isPhoneAuthLocked(type)"
+                    content="账号等级达到 Lv.3 后可绑定手机号认证"
+                    placement="top"
+                >
+                    <span class="u-phone-lock">
+                        <el-button class="u-button" type="info" size="large" disabled>Lv.3 可绑定</el-button>
+                    </span>
+                </el-tooltip>
+                <template v-else>
                     <el-button
                         class="u-button"
                         :type="!checkStatus(type) ? 'primary' : 'danger'"
@@ -113,6 +122,9 @@ export default {
 
             this.$router.push({ name: routeName });
         },
+        isPhoneAuthLocked(type) {
+            return type === "user_phone" && !this.checkStatus(type) && this.level < 3;
+        },
         loadUserInfo: function () {
             getMyInfo().then((res) => {
                 this.info = res.data.data || {};
@@ -179,6 +191,10 @@ export default {
 
     .u-button {
         .w(auto) !important;
+    }
+
+    .u-phone-lock {
+        display: inline-flex;
     }
 
     .u-status {

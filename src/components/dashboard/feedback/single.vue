@@ -654,7 +654,7 @@ export default {
                                 message: "撤销成功",
                                 type: "success",
                             });
-                            this.list.splice(i, 1);
+                            this.thxData.splice(i, 1);
                         });
                     }
                 },

@@ -100,6 +100,7 @@ export default {
                 canBuy: true,
                 vip_limit: true,
                 box_coin: true,
+                cny: true,
                 points: true,
                 level: true,
                 user_level: User.getLevel(item.exp_limit),
@@ -117,6 +118,10 @@ export default {
             if (this.assetPoints < this.requiredPoints || !this.requiredPoints) {
                 info.canBuy = false;
                 info.points = false;
+            }
+            if ((Number(this.asset.cny) || 0) < (Number(item.price_cny) || 0)) {
+                info.canBuy = false;
+                info.cny = false;
             }
             if ((Number(this.asset.experience) || 0) < (Number(item.exp_limit) || 0)) {
                 info.canBuy = false;
@@ -195,6 +200,16 @@ export default {
                 return this.$alert("当前兑换配置包含非积分消耗项，请联系管理员处理。", "暂不能兑换", {
                     confirmButtonText: "知道了",
                     type: "warning",
+                });
+            }
+            if (!this.premiumItem.id) {
+                return this.loadPremiumItem().then(() => {
+                    if (!this.premiumItem.id) {
+                        return this.$alert("兑换信息暂不可用，请稍后再试", "暂不能兑换", {
+                            confirmButtonText: "知道了",
+                            type: "warning",
+                        });
+                    }
                 });
             }
             if (!this.canBuyInfo.canBuy) {

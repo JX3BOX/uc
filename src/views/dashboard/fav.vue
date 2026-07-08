@@ -174,6 +174,10 @@ export default {
                     this.data = res.list || [];
                     this.total = res.page.total || 0;
                 })
+                .catch(() => {
+                    this.data = [];
+                    this.total = 0;
+                })
                 .finally(() => {
                     this.loading = false;
                     this.showPagination = true;

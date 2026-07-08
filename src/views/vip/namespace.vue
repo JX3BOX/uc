@@ -195,7 +195,14 @@ export default {
                 return User.toLogin();
             }
             if (!this.namespaceCard.id) {
-                return this.loadNamespaceCard();
+                return this.loadNamespaceCard().then(() => {
+                    if (!this.namespaceCard.id) {
+                        return this.$alert("兑换信息暂不可用，请稍后再试", "暂不能兑换", {
+                            confirmButtonText: "知道了",
+                            type: "warning",
+                        });
+                    }
+                });
             }
             if (!this.canBuyInfo.canBuy) {
                 return this.$alert(this.getUnavailableMessage(), "暂不能购买", {
@@ -232,6 +239,7 @@ export default {
                                 title: "兑换成功",
                                 message: "铭牌数量已刷新",
                             });
+                            this.done = true;
                         });
                 })
                 .catch((error) => {

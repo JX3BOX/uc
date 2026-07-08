@@ -7,13 +7,14 @@
                 v-model="search"
                 @keyup.enter="loadData"
                 clearable
+                size="large"
                 @clear="loadData"
             >
                 <template #prepend>
                     <span>关键词</span>
                 </template>
                 <template #append>
-                    <el-button icon="Search"></el-button>
+                    <el-button icon="Search" @click="loadData"></el-button>
                 </template>
             </el-input>
         </div>
@@ -126,6 +127,10 @@ export default {
                 .then(({ data }) => {
                     this.data = data.data.list || [];
                     this.total = data.data.page?.total;
+                })
+                .catch(() => {
+                    this.data = [];
+                    this.total = 0;
                 })
                 .finally(() => {
                     this.loading = false;

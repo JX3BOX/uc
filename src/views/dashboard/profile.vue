@@ -56,7 +56,8 @@
                     type="date"
                     placeholder="选择日期"
                     placement="bottom-start"
-                    :picker-options="birthday_options"
+                    value-format="YYYY-MM-DD"
+                    :disabled-date="disabledBirthdayDate"
                 ></el-date-picker>
             </el-form-item>
             <!-- <el-form-item class="u-phone">
@@ -151,38 +152,56 @@ export default {
             },
             position: window.innerWidth < 768 ? "top" : "left",
             tvmap,
-            birthday_options: {
-                disabledDate(time) {
-                    return time.getTime() > Date.now();
-                },
-            },
         };
     },
     computed: {},
     methods: {
         // 提交资料
         submit() {
-            updateProfile(this.form).then((res) => {
-                this.$message({
-                    message: "资料修改成功",
-                    type: "success",
+            updateProfile(this.form)
+                .then((res) => {
+                    this.$message({
+                        message: "资料修改成功",
+                        type: "success",
+                    });
+                })
+                .catch((err) => {
+                    this.$message.error(this.getErrorMessage(err, "资料修改失败"));
                 });
-            });
         },
         // 获取资料
         getProfile() {
-            getProfile().then((res) => {
-                let data = res.data.data;
-                this.form.jx3_server = data.jx3_server;
-                this.form.user_bio = data.user_bio;
-                this.form.qq_number = data.qq_number;
-                this.form.phone = data.phone;
-                this.form.address = data.address;
-                this.form.tv_id = data.tv_id;
-                this.form.tv_type = data.tv_type;
-                this.form.tuilan_id = data.tuilan_id;
-                this.form.birthday = data.birthday ? new Date(data.birthday) : "";
-            });
+            getProfile()
+                .then((res) => {
+                    let data = res.data.data;
+                    this.form.jx3_server = data.jx3_server;
+                    this.form.user_bio = data.user_bio;
+                    this.form.qq_number = data.qq_number;
+                    this.form.phone = data.phone;
+                    this.form.address = data.address;
+                    this.form.tv_id = data.tv_id;
+                    this.form.tv_type = data.tv_type;
+                    this.form.tuilan_id = data.tuilan_id;
+                    this.form.birthday = this.formatBirthday(data.birthday);
+                })
+                .catch(() => {});
+        },
+        formatBirthday(value) {
+            if (!value) return "";
+            const matched = String(value).match(/^\d{4}-\d{2}-\d{2}/);
+            if (matched) return matched[0];
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return "";
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        },
+        disabledBirthdayDate(time) {
+            return time.getTime() > Date.now();
+        },
+        getErrorMessage(err, fallback) {
+            return err?.response?.data?.msg || err?.data?.msg || fallback;
         },
     },
     mounted: function () {

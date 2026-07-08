@@ -6,6 +6,7 @@
                 placeholder="请输入搜索内容"
                 v-model="currentSearch"
                 clearable
+                size="large"
                 @clear="loadData"
             >
                 <template #prepend>
@@ -16,7 +17,7 @@
                 </template>
             </el-input>
         </div>
-        <ul class="m-dashboard-box-list" v-if="data.length">
+        <ul class="m-dashboard-box-list" v-if="filterData.length">
             <li v-for="(item, i) in filterData" :key="i">
                 <i class="u-icon">
                     <img svg-inline src="@/assets/img/dashboard/works/repo.svg" />
@@ -115,6 +116,10 @@ export default {
                 .then(({ data }) => {
                     this.data = data.data || [];
                     this.total = this.data.length || 0;
+                })
+                .catch(() => {
+                    this.data = [];
+                    this.total = 0;
                 })
                 .finally(() => {
                     this.loading = false;

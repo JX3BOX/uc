@@ -5,7 +5,7 @@
                 class="u-avatar"
                 :uid="uid"
                 :url="info.user_avatar"
-                size="l"
+                :size="240"
                 :frame="info.user_avatar_frame"
             />
             <div class="u-info">
@@ -335,6 +335,7 @@ export default {
                 points: 0, //积分
                 gift: 0, //礼品、商城订单
                 cny: 0, //金箔
+                ext_info: {},
             },
             medals: [],
             asset_logs: [],
@@ -412,16 +413,24 @@ export default {
             return `${this.info?.experience || 0} / ${this.currentLevelMaxExp}`;
         },
         loadUserInfo: function () {
-            getMyInfo().then((res) => {
-                if (res.data.data) {
-                    this.info = res.data.data;
-                }
-            });
+            if (!User.isLogin()) return;
+            getMyInfo({ mute: true })
+                .then((res) => {
+                    if (res.data.data) {
+                        this.info = res.data.data;
+                    }
+                })
+                .catch(() => {});
         },
         loadAsset: function () {
-            User.getAsset().then((data) => {
-                this.asset = data;
-            });
+            User.getAsset()
+                .then((data) => {
+                    this.asset = {
+                        ext_info: {},
+                        ...data,
+                    };
+                })
+                .catch(() => {});
         },
         loadFrames: function () {
             getFrames().then((res) => {
@@ -431,9 +440,17 @@ export default {
             });
         },
         loadAssetLogs: function () {
-            getMyAssetLogs(this.date).then((res) => {
-                this.asset_logs = res.data.data.list || [];
-            });
+            if (!User.isLogin()) {
+                this.asset_logs = [];
+                return;
+            }
+            getMyAssetLogs(this.date, { mute: true })
+                .then((res) => {
+                    this.asset_logs = res.data.data.list || [];
+                })
+                .catch(() => {
+                    this.asset_logs = [];
+                });
         },
         init: function () {
             this.loadUserInfo();

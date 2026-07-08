@@ -32,7 +32,7 @@
             <el-table-column label="购买时间" prop="created_at" min-width="160" />
             <el-table-column label="操作" min-width="100">
                 <template #default="{ row }">
-                    <el-button class="u-detail-btn" plain @click="toDetails(row)" icon="View">查看</el-button>
+                    <el-button class="u-detail-btn" plain @click.stop="toDetails(row)" icon="View">查看</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -102,6 +102,10 @@ export default {
                     this.limit = res.data.data.page.pageSize || 10;
                     this.total = res.data.data.page.total || 0;
                 })
+                .catch(() => {
+                    this.list = [];
+                    this.total = 0;
+                })
                 .finally(() => {
                     this.loading = false;
                 });
@@ -121,7 +125,7 @@ export default {
             }
         },
         filterChange(filters) {
-            this.post_type = filters.post_type[0] || "";
+            this.post_type = filters.post_type?.[0] || "";
         },
 
         // filters

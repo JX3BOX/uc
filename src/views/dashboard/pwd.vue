@@ -1,7 +1,7 @@
 <template>
     <uc class="m-dashboard-pwd">
         <div class="m-profile-pwd">
-            <form v-if="status" class="m-dashboard-pwd-doing">
+            <form v-if="status" class="m-dashboard-pwd-doing" @submit.prevent="done">
                 <img
                     class="u-pic"
                     svg-inline
@@ -79,7 +79,7 @@
                 <el-button
                     class="u-submit u-button"
                     type="primary"
-                    @click="done"
+                    native-type="submit"
                     :disabled="!ready"
                     size="large"
                     >提交</el-button
@@ -116,7 +116,7 @@ export default {
             pwd1: "",
             pwd2: "",
             pass_validate: null,
-            pass_validate_tip: "密码有效长度为6-50个字符",
+            pass_validate_tip: "密码有效长度为6-30个字符",
             pass_accordance_tip: "两次密码不一致",
             status: true,
         };
@@ -138,26 +138,34 @@ export default {
 
             // 校验第1个值
             this.pass_validate = validator(this.pwd1, {
-                len: [6, 50],
+                len: [6, 30],
             });
         },
         done: function() {
+            if (!this.ready) return;
             updatePassword({
                 password: this.pwd1,
-            }).then((res) => {
-                this.$message({
-                    message: "密码修改成功",
-                    type: "success",
-                });
-                this.status = false;
+            })
+                .then((res) => {
+                    this.$message({
+                        message: "密码修改成功",
+                        type: "success",
+                    });
+                    this.status = false;
 
-                User.destroy().then(() => {
-                    User.toLogin();
+                    User.destroy().then(() => {
+                        User.toLogin();
+                    });
+                })
+                .catch((err) => {
+                    this.$message.error(this.getErrorMessage(err, "密码修改失败"));
                 });
-            });
         },
         reset: function() {
             this.status = true;
+        },
+        getErrorMessage(err, fallback) {
+            return err?.response?.data?.msg || err?.data?.msg || fallback;
         },
     },
     mounted: function() {},

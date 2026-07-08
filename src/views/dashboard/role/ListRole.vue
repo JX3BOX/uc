@@ -133,6 +133,14 @@
                 </li>
             </ul>
         </div>
+        <template v-else-if="loadError">
+            <el-alert class="m-archive-null" :title="loadError" type="error" center show-icon :closable="false"></el-alert>
+            <div class="m-role-null">
+                <el-button type="primary" size="small" @click="loadData">
+                    <i class="el-icon-refresh"></i> 重新加载
+                </el-button>
+            </div>
+        </template>
         <template v-else>
             <el-alert class="m-archive-null" title="没有找到相关条目" type="info" center show-icon></el-alert>
             <div class="m-role-null">
@@ -188,6 +196,8 @@ export default {
         return {
             data: [],
             loading: false,
+            loadError: "",
+            loadSeq: 0,
 
             // 备注
             noteVisible: false,
@@ -234,10 +244,16 @@ export default {
                 },
             });
         },
+        getErrorMessage: function (err, fallback = "角色列表加载失败，请稍后重试") {
+            return err?.response?.data?.msg || err?.response?.data?.message || err?.message || fallback;
+        },
         loadData: function () {
+            const seq = ++this.loadSeq;
             this.loading = true;
+            this.loadError = "";
             getRoles(this.params)
                 .then((res) => {
+                    if (seq !== this.loadSeq) return;
                     this.data = res.data.data.list || [];
                     // 进行排序
                     // 默认角色第一
@@ -257,7 +273,13 @@ export default {
                         return a.name.localeCompare(b.name);
                     });
                 })
+                .catch((err) => {
+                    if (seq !== this.loadSeq) return;
+                    this.data = [];
+                    this.loadError = this.getErrorMessage(err);
+                })
                 .finally(() => {
+                    if (seq !== this.loadSeq) return;
                     this.loading = false;
                 });
         },
@@ -270,6 +292,7 @@ export default {
         addNote: function (item) {
             this.noteVisible = true;
             this.currentItem = item;
+            this.note = item.note || "";
         },
         confirmNote: function () {
             noteRole(this.currentItem.ID, this.note).then((res) => {
@@ -342,13 +365,20 @@ export default {
             }
         },
         onPublicChange: function (item) {
-            updateRoleVisible(item.ID, item.is_public_visible).then((res) => {
-                this.$notify({
-                    title: "成功",
-                    message: "设置成功",
-                    type: "success",
+            const nextVisible = item.is_public_visible;
+            const oldVisible = nextVisible ? 0 : 1;
+            updateRoleVisible(item.ID, nextVisible)
+                .then((res) => {
+                    this.$notify({
+                        title: "成功",
+                        message: "设置成功",
+                        type: "success",
+                    });
+                })
+                .catch((err) => {
+                    item.is_public_visible = oldVisible;
+                    this.$message.error(this.getErrorMessage(err, "设置失败，请稍后重试"));
                 });
-            });
         },
         teamStatus(status) {
             return {

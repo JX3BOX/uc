@@ -25,7 +25,7 @@
                 </el-select>
             </div>
             <div class="m-feedback-tool__item">
-                <el-date-picker v-model="time" type="month" placeholder="选择月份" format="yyyy年MM月">
+                <el-date-picker v-model="time" type="month" placeholder="选择月份" format="YYYY年MM月">
                 </el-date-picker>
             </div>
             <el-checkbox v-if="showUserFilters" class="u-only-check" v-model="onlyMe"> 指派给我的 </el-checkbox>
@@ -67,7 +67,7 @@
                         <span class="u-client" :class="'i-client-' + row.client">{{ formatClient(row.client) }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="来源" prop="type" v-show="!isEditor">
+                <el-table-column v-if="!isEditor" label="来源" prop="type">
                     <template #default="{ row }">
                         {{ types[row.type] }}
                     </template>
@@ -78,7 +78,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="备注" prop="remark"></el-table-column>
-                <el-table-column label="提交人" prop="user" v-show="isEditor">
+                <el-table-column v-if="isEditor" label="提交人" prop="user">
                     <template #default="{ row }">
                         <div class="m-assign">
                             <a class="u-assign" :href="authorLink(row.user.id)" target="_blank">

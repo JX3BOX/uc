@@ -40,6 +40,9 @@ function getMallRequirementMessages(item = {}, canBuyInfo = {}) {
     if (canBuyInfo.points === false) {
         messages.push(`积分不足：需要 ${item.price_points || 0} 积分`);
     }
+    if (canBuyInfo.cny === false) {
+        messages.push(`金箔不足：需要 ${item.price_cny || 0} 金箔`);
+    }
     if (canBuyInfo.buy_time === false) {
         messages.push("不在可兑换时间内");
     }

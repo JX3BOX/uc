@@ -7,6 +7,7 @@
                 v-model="currentSearch"
                 @keyup.enter="handleChange"
                 clearable
+                size="large"
                 @clear="handleChange"
             >
                 <template #prepend>
@@ -136,6 +137,10 @@ export default {
                 .then(({ data }) => {
                     this.data = data.data.list || [];
                     this.total = data.data.page.total || 0;
+                })
+                .catch(() => {
+                    this.data = [];
+                    this.total = 0;
                 })
                 .finally(() => {
                     this.loading = false;

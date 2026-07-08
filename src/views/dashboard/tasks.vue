@@ -4,28 +4,41 @@
         <div class="m-tasks-list" v-loading="loading">
             <taskItem v-for="(item, index) in list" :key="index" :data="item" @update="checkFinish" />
             <!-- 任务组 -->
-            <template v-if="Object.keys(group).length">
+            <template v-if="groupedTasks.length">
                 <div
                     class="u-item u-group"
-                    v-for="(task, key) in group"
-                    :key="key"
-                    :class="groupInfo[key].open ? 'open' : 'close'"
+                    v-for="groupItem in groupedTasks"
+                    :key="groupItem.key"
+                    :class="groupItem.info.open ? 'open' : 'close'"
                 >
                     <div class="u-parent u-item">
-                        <img class="u-img" :src="groupInfo[key].img" :alt="groupInfo[key].name" />
+                        <img class="u-img" :src="groupItem.info.img" :alt="groupItem.info.name" />
                         <div class="u-box">
-                            <a class="u-title" :href="groupInfo[key].url" target="_blank">{{ groupInfo[key].name }}</a>
+                            <a
+                                v-if="groupItem.info.url"
+                                class="u-title"
+                                :href="groupItem.info.url"
+                                target="_blank"
+                                >{{ groupItem.info.name }}</a
+                            >
+                            <span v-else class="u-title">{{ groupItem.info.name }}</span>
                             <el-button
-                                :type="groupInfo[key].open ? 'primary' : ''"
-                                @click="groupInfo[key].open = !groupInfo[key].open"
-                                >{{ groupInfo[key].open ? "折叠" : "展开"
-                                }}<i :class="groupInfo[key].open ? 'el-icon-caret-top' : 'el-icon-caret-right'"></i
+                                :type="groupItem.info.open ? 'primary' : ''"
+                                @click="toggleGroup(groupItem.key)"
+                                >{{ groupItem.info.open ? "折叠" : "展开"
+                                }}<i :class="groupItem.info.open ? 'el-icon-caret-top' : 'el-icon-caret-right'"></i
                             ></el-button>
                         </div>
                     </div>
-                    <taskItem v-for="(item, index) in task" :key="index" :data="item" @update="checkFinish" />
+                    <taskItem
+                        v-for="item in groupItem.tasks"
+                        :key="item?.task?.id || item?.id"
+                        :data="item"
+                        @update="checkFinish"
+                    />
                 </div>
             </template>
+            <el-empty v-if="!loading && !list.length && !groupedTasks.length" description="暂无任务"></el-empty>
         </div>
     </div>
 </template>
@@ -47,21 +60,37 @@ export default {
             groupInfo: {},
         };
     },
+    computed: {
+        defaultGroupIcon() {
+            return __imgPath + "image/common/jx3box_black.svg";
+        },
+        groupedTasks() {
+            return Object.keys(this.group).map((key) => {
+                return {
+                    key,
+                    tasks: this.group[key] || [],
+                    info: this.getGroupInfo(key),
+                };
+            });
+        },
+    },
     methods: {
         // 加载任务列表
         loadTasks() {
             this.loading = true;
             getTasks({ is_limit_everyday: 0, os_visible: 1 })
                 .then((res) => {
-                    const list = res.data.data.list;
-                    this.list = list.filter((item) => {
-                        return item.task.task_group == "" && item?.task.action_type != "task_account_bind_github";
+                    const list = res?.data?.data?.list || [];
+                    const tasks = Array.isArray(list) ? list.filter((item) => item?.task) : [];
+
+                    this.list = tasks.filter((item) => {
+                        return !item.task.task_group && item.task.action_type != "task_account_bind_github";
                     });
-                    this.group = list
+
+                    this.group = tasks
+                        .filter((item) => item.task.task_group)
                         .sort((a, b) => {
-                            const numA = parseInt(a.task.action_type.split("_").pop(), 10);
-                            const numB = parseInt(b.task.action_type.split("_").pop(), 10);
-                            return numA - numB;
+                            return this.getTaskOrder(a) - this.getTaskOrder(b);
                         })
                         .reduce((acc, cur) => {
                             if (cur.task.task_group) {
@@ -72,35 +101,104 @@ export default {
                             }
                             return acc;
                         }, {});
+                    this.syncGroupInfo();
+                })
+                .catch(() => {
+                    this.list = [];
+                    this.group = {};
                 })
                 .finally(() => {
                     this.loading = false;
                 });
         },
         loadAc() {
-            getBreadcrumb("task_group_info").then((data) => {
-                data = data.replace(/ /g, "");
-                this.groupInfo = JSON.parse(data);
+            getBreadcrumb("task_group_info")
+                .then((data) => {
+                    this.groupInfo = this.normalizeGroupInfo(data);
+                    this.syncGroupInfo();
+                })
+                .catch(() => {
+                    this.groupInfo = {};
+                    this.syncGroupInfo();
+                });
+        },
+        normalizeGroupInfo(data) {
+            if (!data) return {};
+
+            try {
+                const parsed = typeof data === "string" ? JSON.parse(data.replace(/ /g, "")) : data;
+                return Object.keys(parsed || {}).reduce((acc, key) => {
+                    acc[key] = {
+                        name: parsed[key]?.name || key,
+                        img: parsed[key]?.img || this.defaultGroupIcon,
+                        url: parsed[key]?.url || "",
+                        open: !!parsed[key]?.open,
+                    };
+                    return acc;
+                }, {});
+            } catch (e) {
+                return {};
+            }
+        },
+        getTaskOrder(item) {
+            const order = parseInt(item?.task?.action_type?.split("_").pop(), 10);
+            return Number.isFinite(order) ? order : 0;
+        },
+        getGroupInfo(key) {
+            return (
+                this.groupInfo[key] || {
+                    name: key,
+                    img: this.defaultGroupIcon,
+                    url: "",
+                    open: false,
+                }
+            );
+        },
+        syncGroupInfo() {
+            const next = { ...this.groupInfo };
+            Object.keys(this.group).forEach((key) => {
+                if (!next[key]) {
+                    next[key] = this.getGroupInfo(key);
+                }
             });
+            this.groupInfo = next;
+        },
+        toggleGroup(key) {
+            const info = this.getGroupInfo(key);
+            this.groupInfo = {
+                ...this.groupInfo,
+                [key]: {
+                    ...info,
+                    open: !info.open,
+                },
+            };
         },
         // 点击完成
         checkFinish(id) {
-            getCheckTasks(id).then((res) => {
-                if (res.data.data.hasFinish) {
-                    this.$notify({
-                        title: "成功",
-                        message: "完成任务，获得奖励",
-                        type: "success",
-                    });
-                    location.reload();
-                } else {
+            getCheckTasks(id)
+                .then((res) => {
+                    if (res?.data?.data?.hasFinish) {
+                        this.$notify({
+                            title: "成功",
+                            message: "完成任务，获得奖励",
+                            type: "success",
+                        });
+                        location.reload();
+                    } else {
+                        this.$notify({
+                            title: "提示",
+                            message: "您没有完成任务",
+                            type: "warning",
+                        });
+                    }
+                })
+                .catch(() => {
                     this.$notify({
                         title: "提示",
-                        message: "您没有完成任务",
+                        message: "任务状态检查失败，请稍后再试",
                         type: "warning",
                     });
-                }
-            });
+                });
         },
     },
     mounted: function () {

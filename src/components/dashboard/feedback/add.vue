@@ -222,7 +222,7 @@ export default {
         remove: function (file) {
             const imageUrl = this.uploadedMap[file?.uid] || file?.response?.data?.[0] || file?.url;
             this.imgs = this.imgs.filter((img) => img !== imageUrl);
-            if (file?.uid) this.$delete(this.uploadedMap, file.uid);
+            if (file?.uid) delete this.uploadedMap[file.uid];
         },
         async submit() {
             this.loading = true;
@@ -230,6 +230,7 @@ export default {
                 ...this.form,
                 images: this.imgs,
                 client: this.client,
+                refer: this.refer,
             };
             data.content = data.content.replace(/\n/g, "<br/>");
             feedback(data)

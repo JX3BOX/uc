@@ -126,6 +126,7 @@ export default {
             isCardLoading: false,
             isBuying: false,
             cardLoadError: "",
+            checkToken: 0,
 
             checktips: "",
         };
@@ -205,32 +206,48 @@ export default {
             if (this.isEmpty) {
                 this.valid = null;
                 this.available = null;
+                this.checktips = "";
                 return false;
             }
+            const checkingName = this.new_name;
+            const token = ++this.checkToken;
             // 长度限制
-            if (this.new_name.length < 2 || this.new_name.length > 20) {
+            if (checkingName.length < 2 || checkingName.length > 20) {
                 this.valid = false;
+                this.available = null;
+                this.checktips = "昵称格式不正确，长度2-20字符，禁止使用所有特殊符号";
                 return false;
             }
             // 不允许使用”账号已注销“
-            if (this.new_name == "账号已注销") {
+            if (checkingName == "账号已注销") {
                 this.valid = false;
+                this.available = null;
+                this.checktips = "昵称格式不正确，长度2-20字符，禁止使用所有特殊符号";
                 return false;
             }
             // 禁用符号
             this.new_name = sterilizer(this.new_name).kill().removeSpace().toString();
+            if (this.new_name !== checkingName) {
+                this.checkName();
+                return false;
+            }
             this.valid = true;
+            this.available = null;
+            this.checktips = "正在检查昵称...";
             let msg = "";
             // 可用性检查
-            checkNickname(this.new_name)
+            checkNickname(checkingName)
                 .then((res) => {
+                    if (token !== this.checkToken || checkingName !== this.new_name) return;
                     this.available = res.data.data;
                 })
                 .catch((err) => {
+                    if (token !== this.checkToken || checkingName !== this.new_name) return;
                     this.available = false;
-                    msg = err.data.msg;
+                    msg = err?.response?.data?.msg || err?.data?.msg || err?.message || "";
                 })
                 .finally(() => {
+                    if (token !== this.checkToken || checkingName !== this.new_name) return;
                     if (!this.valid) {
                         this.checktips = "昵称格式不正确，长度2-20字符，禁止使用所有特殊符号";
                     } else if (!this.available) {
@@ -286,6 +303,10 @@ export default {
             return "当前不满足购买条件";
         },
         submit: function () {
+            if (!this.isLogin) {
+                return User.toLogin();
+            }
+            if (!this.count || !this.status) return;
             doRename(this.new_name).then(() => {
                 User.destroy().then(() => {
                     this.done = true;
@@ -296,6 +317,9 @@ export default {
             });
         },
         buy: function () {
+            if (!this.isLogin) {
+                return User.toLogin();
+            }
             if (!this.renameCard.id) {
                 return this.loadRenameCard().then(() => {
                     if (!this.renameCard.id) {
@@ -348,7 +372,7 @@ export default {
         },
     },
     mounted: function () {
-        this.checkPermission();
+        this.isLogin && this.checkPermission();
         this.loadRenameCard();
     },
     components: {
