@@ -12,7 +12,6 @@
 
             <!-- 1.是否存在可找回 -->
             <main v-if="step == 1" class="m-main">
-                <el-alert title="找回密码,请填写绑定的邮箱" type="warning" :closable="false" show-icon> </el-alert>
                 <!-- 邮箱 -->
                 <div class="u-email">
                     <el-input
@@ -22,7 +21,7 @@
                         minlength="3"
                         maxlength="50"
                         type="email"
-                        @input="checkEmail"
+                        @input="checkEmailFormat"
                         size="large"
                     >
                         <template #prepend>
@@ -30,15 +29,15 @@
                         </template>
                     </el-input>
                     <i v-show="email_valid == true" class="el-icon-success u-ok"></i>
-                    <div class="u-tip">
-                        <el-alert
+                    <div >
+                        <el-alert class="u-tip"
                             v-show="email_validate == false"
                             :title="email_validate_tip"
                             type="error"
                             show-icon
                             :closable="false"
                         ></el-alert>
-                        <el-alert
+                        <el-alert class="u-tip"
                             v-show="email_valid == false"
                             :title="email_valid_tip"
                             type="error"
@@ -46,7 +45,14 @@
                             :closable="false"
                         ></el-alert>
                     </div>
-                    <el-button class="u-button" type="primary" @click="start" :disabled="!available" size="large">下一步</el-button>
+                    <el-button
+                        class="u-submit u-button"
+                        type="primary"
+                        @click="start"
+                        :disabled="!available || email_checking"
+                        :loading="email_checking"
+                        size="large"
+                    >下一步</el-button>
                 </div>
                 <footer class="m-footer">
                     <p class="u-login">已有账号? <a href="/account/login">登录 &raquo;</a></p>
@@ -58,11 +64,11 @@
 
             <!-- 2.填写验证码与新密码 -->
             <main v-if="step == 2" class="m-main">
-                <el-alert title="请填写邮箱收到的验证码 (60分钟内有效)" type="success" :closable="false"> </el-alert>
+                <el-alert class="u-notice" title="请填写邮箱收到的验证码 (60分钟内有效)" type="success" :closable="false"> </el-alert>
 
                 <!-- 验证码 -->
                 <div class="u-code">
-                    <el-input class="u-text u-code" v-model="code" placeholder="验证码" size="large" minlength="6" maxlength="6">
+                    <el-input class="u-text u-code" v-model="code" placeholder="验证码" size="large" minlength="6" maxlength="6" @input="checkCode">
                         <template #prepend>
                             <i class="el-icon-key"></i>
                         </template>
@@ -132,14 +138,14 @@
                 <template v-if="success == true">
                     <el-alert title="重设成功" type="success" description="您的密码已重设" show-icon :closable="false">
                     </el-alert>
-                    <a class="u-skip el-button u-button el-button--primary" href="/account/login">立即登录</a>
+                    <a class="u-skip u-submit el-button u-button el-button--primary el-button--large" href="/account/login">立即登录</a>
                 </template>
 
                 <!-- 失败 -->
                 <template v-if="success == false">
                     <el-alert title="操作失败" type="error" :description="failtips" show-icon :closable="false">
                     </el-alert>
-                    <el-button class="u-button u-submit" type="primary" @click="reset">返回</el-button>
+                    <el-button class="u-button u-submit" type="primary" @click="reset" size="large">返回</el-button>
                 </template>
             </main>
         </el-card>
@@ -150,7 +156,7 @@
 <script>
 import CardHeader from "@/components/account/CardHeader.vue";
 const { validator } = require("sterilizer");
-import { sendCode, checkCode, resetPassword } from "@/service/account/password.js";
+import { sendCode, resetPassword } from "@/service/account/password.js";
 import { checkEmail } from "@/service/account/email.js";
 import { __Root } from "@/utils/config";
 import {ElMessage} from "element-plus";
@@ -166,6 +172,7 @@ export default {
             email_validate_tip: "邮箱地址格式不正确",
             email_valid: null,
             email_valid_tip: "账号不存在",
+            email_checking: false,
 
             code: "",
             code_validate: null,
@@ -186,7 +193,7 @@ export default {
     },
     computed: {
         available: function () {
-            return this.email_validate && this.email_valid;
+            return this.email_validate;
         },
         accordance: function () {
             return this.pwd1 === this.pwd2;
@@ -194,15 +201,14 @@ export default {
         ready: function () {
             return (
                 this.available &&
-                // this.code_validate &&
-                // this.code_available &&
+                this.code_validate &&
                 this.pass_validate &&
                 this.accordance
             );
         },
     },
     methods: {
-        checkEmail: function () {
+        checkEmailFormat: function () {
             // 如果为空
             if (this.email == "") {
                 this.email_validate = null;
@@ -216,16 +222,7 @@ export default {
                 len: [3, 50],
             });
             this.email_validate = result;
-
-            // 检查是否存在
-            if (result) {
-                checkEmail(this.email).then((res) => {
-                    // 可以使用代表不存在
-                    this.email_valid = res.data.data?.isExist;
-                });
-            } else {
-                this.email_valid = null;
-            }
+            this.email_valid = null;
         },
         checkPass: function () {
             // 如果为空
@@ -239,14 +236,34 @@ export default {
             });
         },
         start: function () {
-            sendCode(this.email).then((res) => {
-                if (!res.data.code) {
-                    this.step = 2;
-                } else {
-                    ElMessage.error(res.data.msg);
-                    this.step = 0;
-                }
-            });
+            this.checkEmailFormat();
+            if (!this.email_validate || this.email_checking) return;
+
+            const email = this.email;
+            this.email_checking = true;
+            checkEmail(email)
+                .then((res) => {
+                    // 可以使用代表不存在
+                    const isExist = res.data.data?.isExist;
+                    if (email !== this.email) return;
+
+                    this.email_valid = isExist;
+                    if (!isExist) return;
+
+                    return sendCode(email).then((res) => {
+                        if (email !== this.email) return;
+
+                        if (!res.data.code) {
+                            this.step = 2;
+                        } else {
+                            ElMessage.error(res.data.msg);
+                            this.step = 0;
+                        }
+                    });
+                })
+                .finally(() => {
+                    this.email_checking = false;
+                });
         },
         checkCode: function () {
             // 如果为空
@@ -263,19 +280,13 @@ export default {
             });
             this.code_validate = result;
 
-            // 检查是否存在
-            if (result) {
-                checkCode({
-                    email: this.email,
-                    code: this.code,
-                }).then((res) => {
-                    this.code_available = res.data.data;
-                });
-            } else {
-                this.code_available = null;
-            }
+            this.code_available = null;
         },
         done: function () {
+            this.checkCode();
+            this.checkPass();
+            if (!this.ready) return;
+
             resetPassword({
                 email: this.email,
                 code: this.code,
@@ -300,6 +311,7 @@ export default {
             this.email = "";
             this.email_validate = null;
             this.email_valid = null;
+            this.email_checking = false;
             this.code = "";
             this.code_validate = null;
             this.code_available = null;

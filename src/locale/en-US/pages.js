@@ -55,11 +55,6 @@ export default {
             keywords: "JX3,JX3BOX,account,email",
             description: "JX3BOX account email verification page.",
         },
-        login_callback: {
-            title: "Sign-in Callback",
-            keywords: "JX3,JX3BOX,account,login",
-            description: "JX3BOX sign-in callback page.",
-        },
         login_callback_wesite: {
             title: "Website Sign-in Callback",
             keywords: "JX3,JX3BOX,account,login",

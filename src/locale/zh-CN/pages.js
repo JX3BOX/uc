@@ -50,11 +50,6 @@ export default {
             keywords: "剑网3,魔盒,JX3BOX,账号,邮箱",
             description: "JX3BOX 账号邮箱验证页面。",
         },
-        login_callback: {
-            title: "登录回调",
-            keywords: "剑网3,魔盒,JX3BOX,账号,登录",
-            description: "JX3BOX 登录回调页面。",
-        },
         login_callback_wesite: {
             title: "登录回调（微站）",
             keywords: "剑网3,魔盒,JX3BOX,账号,登录",

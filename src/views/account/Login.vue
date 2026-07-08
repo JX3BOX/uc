@@ -14,6 +14,7 @@
                                 placeholder="邮箱地址"
                                 minlength="3"
                                 maxlength="50"
+                                type="email"
                                 @change="checkEmail"
                                 size="large"
                             >
@@ -79,13 +80,13 @@
                 <main v-if="success == true" class="m-main">
                     <el-alert title="登录成功" type="success" description="欢迎回来(#^.^#)" show-icon :closable="false">
                     </el-alert>
-                    <a class="u-skip el-button u-button el-button--primary" :href="redirect">{{ redirect_button }}</a>
+                    <a class="u-skip u-submit el-button u-button el-button--primary el-button--large" :href="redirect">{{ redirect_button }}</a>
                 </main>
 
                 <main v-if="success == false" class="m-main">
                     <el-alert title="登录失败" type="error" :description="errors" show-icon :closable="false">
                     </el-alert>
-                    <el-button class="u-button u-submit" type="primary" @click="reset">返回</el-button>
+                    <el-button class="u-button u-submit" type="primary" @click="reset" size="large">返回</el-button>
                 </main>
             </template>
             <template v-else>
@@ -97,7 +98,7 @@
                             >
                         </template>
                     </el-alert>
-                    <el-button class="u-logout" type="danger" @click="logout" size="medium">登 出</el-button>
+                    <el-button class="u-logout" type="danger" @click="logout" size="large" icon="SwitchButton">登 出</el-button>
                 </div>
             </template>
         </el-card>
@@ -126,7 +127,7 @@ export default {
 
             email: "",
             email_validate: null,
-            email_validate_tip: "用户名有效长度为3-50个字符",
+            email_validate_tip: "邮箱地址格式不正确，长度限3-50个字符",
 
             pass: "",
             pass_validate: null,
@@ -165,6 +166,7 @@ export default {
 
             // 校验格式
             let result = validator(this.email, {
+                isEmail: true,
                 len: [3, 50],
             });
             this.email_validate = result;

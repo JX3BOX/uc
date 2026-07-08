@@ -55,11 +55,6 @@ export default {
             keywords: "劍網3,魔盒,JX3BOX,帳號,電子郵件",
             description: "JX3BOX 帳號電子郵件驗證頁面。",
         },
-        login_callback: {
-            title: "登入回調",
-            keywords: "劍網3,魔盒,JX3BOX,帳號,登入",
-            description: "JX3BOX 登入回調頁面。",
-        },
         login_callback_wesite: {
             title: "登入回調（微站）",
             keywords: "劍網3,魔盒,JX3BOX,帳號,登入",

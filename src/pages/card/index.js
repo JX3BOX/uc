@@ -72,7 +72,9 @@ app.use(ElementPlus, {
 });
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-    app.component(key, component);
+    if (!app.component(key)) {
+        app.component(key, component);
+    }
 }
 
 // 6.3 Tailwind

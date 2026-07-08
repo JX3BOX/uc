@@ -22,8 +22,9 @@
                             </template>
                         </el-input>
                         <i v-show="email_available == true" class="el-icon-success u-ok"></i>
-                        <div class="u-tip">
+                        <div>
                             <el-alert
+                                class="u-tip"
                                 v-show="email_validate == false"
                                 :title="email_validate_tip"
                                 type="error"
@@ -31,6 +32,7 @@
                                 :closable="false"
                             ></el-alert>
                             <el-alert
+                                class="u-tip"
                                 v-show="email_available == false"
                                 :title="email_available_tip"
                                 type="error"
@@ -42,7 +44,7 @@
 
                     <!-- 验证码 -->
                     <div class="u-code">
-                        <el-input class="u-text" placeholder="验证码" size="large" v-model="code">
+                        <el-input class="u-text" placeholder="验证码" size="large" v-model="code" minlength="6" maxlength="6" @input="checkCode">
                             <template #prepend>
                                 <i class="el-icon-postcard"></i>
                             </template>
@@ -50,6 +52,16 @@
                         <el-button class="u-code-btn" type="primary" @click="getCode" :disabled="code_disabled">{{
                             code_text
                         }}</el-button>
+                        <div>
+                            <el-alert
+                                class="u-tip"
+                                v-show="code_validate == false"
+                                :title="code_validate_tip"
+                                type="error"
+                                show-icon
+                                :closable="false"
+                            ></el-alert>
+                        </div>
                     </div>
 
                     <!-- 密码 -->
@@ -59,8 +71,9 @@
                                 <i class="el-icon-lock"></i>
                             </template>
                         </el-input>
-                        <div class="u-tip">
+                        <div>
                             <el-alert
+                                 class="u-tip"
                                 v-show="pass_validate == false"
                                 :title="pass_validate_tip"
                                 type="error"
@@ -117,12 +130,12 @@
                     :closable="false"
                 >
                 </el-alert>
-                <a class="u-skip el-button u-button el-button--primary" :href="login_url">立即登录</a>
+                <a class="u-skip u-submit el-button u-button el-button--primary el-button--large" :href="login_url">立即登录</a>
             </main>
 
             <main v-if="success == false" class="m-main">
                 <el-alert title="注册失败" type="error" :description="failtips" show-icon :closable="false"> </el-alert>
-                <el-button class="u-button u-submit" type="primary" @click="reset">返回</el-button>
+                <el-button class="u-button u-submit" type="primary" @click="reset" size="large">返回</el-button>
             </main>
         </el-card>
         <CommonBottom />
@@ -163,13 +176,15 @@ export default {
             agreement: false,
 
             code: "",
+            code_validate: null,
+            code_validate_tip: "验证码格式不正确",
             code_text: "发送验证码",
             interval: 0,
         };
     },
     computed: {
         ready: function () {
-            return this.email_validate && this.email_available && this.pass_validate && this.agreement;
+            return this.email_validate && this.email_available && this.code_validate && this.pass_validate && this.agreement;
         },
         login_url: function () {
             return "/account/login?redirect=" + this.redirect;
@@ -215,7 +230,19 @@ export default {
                 len: [6, 50],
             });
         },
+        checkCode: function () {
+            if (this.code == "") {
+                this.code_validate = null;
+                return;
+            }
+
+            this.code_validate = validator(this.code, {
+                isAlphanumeric: true,
+                len: 6,
+            });
+        },
         submit: function () {
+            this.checkCode();
             if (this.ready) {
                 verifyEmail({
                     email: this.email,
@@ -240,6 +267,8 @@ export default {
         reset: function () {
             this.success = null;
             this.agreement = false;
+            this.code = "";
+            this.code_validate = null;
         },
         checkDirect: function () {
             let search = new URLSearchParams(document.location.search);

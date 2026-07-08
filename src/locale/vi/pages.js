@@ -55,11 +55,6 @@ export default {
             keywords: "JX3,JX3BOX,tai khoan,email",
             description: "Trang xac minh email tai khoan JX3BOX.",
         },
-        login_callback: {
-            title: "Dang nhap callback",
-            keywords: "JX3,JX3BOX,tai khoan,dang nhap",
-            description: "Trang callback dang nhap JX3BOX.",
-        },
         login_callback_wesite: {
             title: "Dang nhap callback (website)",
             keywords: "JX3,JX3BOX,tai khoan,dang nhap",

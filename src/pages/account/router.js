@@ -1,11 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 const Register = () => import("@/views/account/Register.vue");
-const RegisterCallback = () => import("@/views/account/RegisterCallback.vue");
+const ThirdPartyRegisterCallback = () => import("@/views/account/ThirdPartyRegisterCallback.vue");
 
 const Login = () => import("@/views/account/Login.vue");
-const LoginCallback = () => import("@/views/account/LoginCallback.vue");
-const LoginCallbackWesite = () => import("@/views/account/LoginCallbackWesite.vue");
+const ThirdPartyLoginCallback = () => import("@/views/account/ThirdPartyLoginCallback.vue");
 
 const PasswordReset = () => import("@/views/account/PasswordReset.vue");
 
@@ -65,21 +64,9 @@ const routes = [
         },
     },
     {
-        name: "account_login_callback",
-        path: "/login_callback",
-        component: LoginCallback,
-        meta: {
-            i18n: {
-                title: "pages.account.login_callback.title",
-                keywords: "pages.account.login_callback.keywords",
-                description: "pages.account.login_callback.description",
-            },
-        },
-    },
-    {
         name: "account_login_callback_wesite",
         path: "/login_callback_wesite",
-        component: LoginCallbackWesite,
+        component: ThirdPartyLoginCallback,
         meta: {
             i18n: {
                 title: "pages.account.login_callback_wesite.title",
@@ -91,7 +78,7 @@ const routes = [
     {
         name: "account_register_callback",
         path: "/register_callback",
-        component: RegisterCallback,
+        component: ThirdPartyRegisterCallback,
         meta: {
             i18n: {
                 title: "pages.account.register_callback.title",
