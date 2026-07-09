@@ -9,9 +9,6 @@ import { encryptPassword } from "@/utils/pwd_encrypt";
 function getProfile() {
     return $cms().get("/api/cms/user/my/profile");
 }
-function getPasswordStatus() {
-    return $cms().get("/api/cms/user/my/password/status");
-}
 function updateProfile(data) {
     return $cms().put("/api/cms/user/my/profile", data);
 }
@@ -145,7 +142,6 @@ function checkPhone(params) {
 export {
     updateProfile,
     getProfile,
-    getPasswordStatus,
     updateAvatar,
     updatePassword,
     getPasswordStatus,
