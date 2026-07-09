@@ -48,9 +48,24 @@
     }
 }
 .m-main {
+    .el-form-item {
+        margin-bottom: 10px;
+    }
+    .el-form-item__content {
+        display: block;
+        line-height: normal;
+    }
+    .el-form-item__error {
+        position: static;
+        padding-top: 6px;
+        .fz(12px);
+    }
     // 输入框
     .u-text {
         margin-bottom: 10px;
+    }
+    .el-form-item .u-text {
+        margin-bottom: 0;
     }
     .u-ok {
         .pa;

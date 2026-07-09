@@ -1,10 +1,11 @@
 import { axios, $, $cms } from "./axios";
 import { __cms } from "@/utils/config";
-import User from "@jx3box/jx3box-common/js/user";
 import { encryptPassword } from "@/utils/pwd_encrypt";
+import { getDeviceFingerprintHeader } from "@/utils/account/fingerprint";
 
-function checkEmail(email) {
+async function checkEmail(email) {
     return $.get("api/cms/user/account/email/valid", {
+        headers: await getDeviceFingerprintHeader(),
         params: {
             email: email,
         },
@@ -12,11 +13,9 @@ function checkEmail(email) {
 }
 
 // 邮箱注册
-function registerByEmail(data) {
+async function registerByEmail(data) {
     return $cms({
-        headers: {
-            "user-device-fingerprint": User.getDeviceFingerprint(),
-        },
+        headers: await getDeviceFingerprintHeader(),
     }).post("api/cms/user/account/email/register", {
         email: data.email
     }, { params: { app: 'jx3box' } });
@@ -34,9 +33,7 @@ async function loginByEmail(data) {
     }
 
     return $cms({
-        headers: {
-            "user-device-fingerprint": User.getDeviceFingerprint(),
-        },
+        headers: await getDeviceFingerprintHeader(),
     }).post("api/cms/user/account/email/login", {
         email: data.email,
         password: encryptedPassword.value,
@@ -55,14 +52,19 @@ async function verifyEmail(data) {
         params.encrypt = encryptedPassword.version;
     }
 
-    return $.put("api/cms/user/account/email/active", {
-        email: data.email,
-        password: encryptedPassword.value,
-        invitation: data.invitation,
-        code: data.code,
-    },{
-        params
-    });
+    return $.put(
+        "api/cms/user/account/email/active",
+        {
+            email: data.email,
+            password: encryptedPassword.value,
+            invitation: data.invitation,
+            code: data.code,
+        },
+        {
+            headers: await getDeviceFingerprintHeader(),
+            params,
+        }
+    );
 }
 
 export { checkEmail, registerByEmail, loginByEmail, verifyEmail };

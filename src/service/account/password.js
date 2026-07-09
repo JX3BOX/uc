@@ -1,12 +1,18 @@
 import { axios, $, $cms } from "./axios";
 import { __server, __cms } from "@/utils/config";
-import User from "@jx3box/jx3box-common/js/user";
 import { encryptPassword } from "@/utils/pwd_encrypt";
+import { getDeviceFingerprintHeader } from "@/utils/account/fingerprint";
 
-function sendCode(email) {
-    return $.post("api/cms/user/account/email/forgot-password", {
-        email: email,
-    });
+async function sendCode(email) {
+    return $.post(
+        "api/cms/user/account/email/forgot-password",
+        {
+            email: email,
+        },
+        {
+            headers: await getDeviceFingerprintHeader(),
+        }
+    );
 }
 // 废弃
 function checkCode(data) {
@@ -25,9 +31,7 @@ async function resetPassword(data) {
     }
 
     return $cms({
-        headers: {
-            "user-device-fingerprint": User.getDeviceFingerprint(),
-        },
+        headers: await getDeviceFingerprintHeader(),
     }).put("api/cms/user/account/email/reset-password", {
         email: data.email,
         code: data.code,

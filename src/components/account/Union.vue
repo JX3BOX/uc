@@ -3,19 +3,19 @@
         <el-divider class="u-title">OR</el-divider>
         <el-row :gutter="20">
             <el-col :span="span" v-if="includes.includes('qq')"
-                ><a class="u-item" :href="getUnionLink('api/cms/user/union/qqsite/')">
+                ><a class="u-item" :href="getUnionLink('api/cms/user/union/qqsite/')" @click="persistAuthContext">
                     <i class="u-oauth-logo"><img svg-inline src="@/assets/img/account/qq.svg" /></i>
                     <span class="u-oauth-name">QQ</span>
                 </a></el-col
             >
             <el-col :span="span" v-if="includes.includes('wechat')"
-                ><a class="u-item" :href="getUnionLink('api/cms/user/union/wesite/')">
+                ><a class="u-item" :href="getUnionLink('api/cms/user/union/wesite/')" @click="persistAuthContext">
                     <i class="u-oauth-logo"><img svg-inline src="@/assets/img/account/wechat.svg" /></i>
                     <span class="u-oauth-name">微信</span>
                 </a></el-col
             >
             <el-col :span="span" v-if="includes.includes('weibo')"
-                ><a class="u-item" :href="getUnionLink('api/cms/user/union/weibosite/')">
+                ><a class="u-item" :href="getUnionLink('api/cms/user/union/weibosite/')" @click="persistAuthContext">
                     <i class="u-oauth-logo"><img svg-inline src="@/assets/img/account/weibo.svg" /></i>
                     <span class="u-oauth-name">微博</span>
                 </a></el-col
@@ -26,7 +26,9 @@
 
 <script>
 import connect from "@jx3box/jx3box-common/js/connect.js";
-const client = location.href.includes('origin') ? 'origin' : 'std'
+const search = new URLSearchParams(location.search);
+const queryClient = search.get("client");
+const client = ["origin", "std"].includes(queryClient) ? queryClient : location.hostname.includes("origin") ? "origin" : "std";
 import {__cms} from "@/utils/config";
 export default {
     name: "LoginWith",
@@ -64,6 +66,19 @@ export default {
             const cms = __cms;
             // const cms = 'http://localhost:7100/'
             return cms + path + this.mode + this.unionLinkSuffix;
+        },
+        persistAuthContext() {
+            const search = new URLSearchParams(location.search);
+            const redirect = search.get("redirect");
+            const alternate = search.get("alternate");
+
+            if (redirect) {
+                sessionStorage.setItem("redirect", redirect);
+            }
+
+            if (~~alternate) {
+                sessionStorage.setItem("alternate", 1);
+            }
         }
     },
     mounted: function () {},

@@ -5,17 +5,18 @@
             <Msg />
             <template v-if="!isLogin || isAlternate">
                 <main v-if="success == null" class="m-main">
-                    <form ref="loginForm">
+                    <el-form ref="loginForm" :model="form" :rules="loginRules" class="m-form" @submit.prevent>
                         <!-- 账号 -->
-                        <div class="u-email">
+                        <el-form-item class="u-email" prop="email">
                             <el-input
                                 class="u-text u-email"
-                                v-model="email"
+                                v-model="form.email"
                                 placeholder="邮箱地址"
                                 minlength="3"
                                 maxlength="50"
                                 type="email"
-                                @change="checkEmail"
+                                name="email"
+                                autocomplete="email"
                                 size="large"
                             >
 
@@ -23,25 +24,17 @@
                                     <i class="el-icon-message"></i>
                                 </template>
                             </el-input>
-                            <div class="u-tip">
-                                <el-alert
-                                    v-show="email_validate == false"
-                                    :title="email_validate_tip"
-                                    type="error"
-                                    show-icon
-                                    :closable="false"
-                                ></el-alert>
-                            </div>
-                        </div>
+                        </el-form-item>
 
                         <!-- 密码 -->
-                        <div class="u-pass">
+                        <el-form-item class="u-pass" prop="pass">
                             <el-input
                                 class="u-text"
                                 placeholder="输入密码"
-                                v-model="pass"
+                                v-model="form.pass"
                                 show-password
-                                @input="checkPass"
+                                name="password"
+                                autocomplete="current-password"
                                 @keyup.enter="submit"
                                 size="large"
                             >
@@ -49,20 +42,11 @@
                                     <i class="el-icon-lock"></i>
                                 </template>
                             </el-input>
-                            <div class="u-tip">
-                                <el-alert
-                                    v-show="pass_validate == false"
-                                    :title="pass_validate_tip"
-                                    type="error"
-                                    show-icon
-                                    :closable="false"
-                                ></el-alert>
-                            </div>
-                        </div>
+                        </el-form-item>
 
                         <!-- 提交 -->
-                        <el-button class="u-submit u-button" type="primary" @click="submit" size="large">登录</el-button>
-                    </form>
+                        <el-button class="u-submit u-button" type="primary" @click="submit" :loading="submitting" size="large">登录</el-button>
+                    </el-form>
 
                     <Union mode="login" :includes="['qq', 'wechat', 'weibo']" />
 
@@ -109,12 +93,13 @@
 <script>
 import CardHeader from "@/components/account/CardHeader.vue";
 import Union from "@/components/account/Union.vue";
-const { validator } = require("sterilizer");
 const cookie = require("@/utils/cookie");
 import { loginByEmail } from "@/service/account/email.js";
 import { __Root, __Links } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import Msg from "@/components/account/Msg.vue";
+import { validateEmail, validatePassword } from "@/utils/account/validators.js";
+import { ensureDeviceFingerprint } from "@/utils/account/fingerprint.js";
 export default {
     name: "Login",
     data: function () {
@@ -125,13 +110,11 @@ export default {
             redirect_button: "",
             errors: "未知异常",
 
-            email: "",
-            email_validate: null,
-            email_validate_tip: "邮箱地址格式不正确，长度限3-50个字符",
-
-            pass: "",
-            pass_validate: null,
-            pass_validate_tip: "密码有效长度为6-50个字符",
+            form: {
+                email: "",
+                pass: "",
+            },
+            submitting: false,
 
             homepage: __Root,
 
@@ -146,8 +129,11 @@ export default {
         };
     },
     computed: {
-        ready: function () {
-            return this.email_validate && this.pass_validate;
+        loginRules: function () {
+            return {
+                email: [{ validator: validateEmail, trigger: "blur" }],
+                pass: [{ validator: validatePassword, trigger: "blur" }],
+            };
         },
         register_url: function () {
             return __Links.account.register + "?redirect=" + this.redirect;
@@ -157,46 +143,21 @@ export default {
         },
     },
     methods: {
-        checkEmail: function () {
-            // 如果为空
-            if (this.email == "") {
-                this.email_validate = false;
-                return;
-            }
-
-            // 校验格式
-            let result = validator(this.email, {
-                isEmail: true,
-                len: [3, 50],
-            });
-            this.email_validate = result;
-        },
-        checkPass: function () {
-            // 如果为空
-            if (this.pass == "") {
-                this.pass_validate = false;
-                return;
-            }
-
-            // 校验格式
-            let result = validator(this.pass, {
-                len: [6, 50],
-            });
-            this.pass_validate = result;
-        },
-        submit: function () {
+        submit: async function () {
             if (this.isfrozen()) return;
+            if (this.submitting) return;
 
-            // FIX:当使用填充器时,无法激活change事件,则提交时验证
-            if (!this.ready) {
-                this.checkPass();
-                this.checkEmail();
+            try {
+                await this.$refs.loginForm.validate();
+            } catch (e) {
+                return;
             }
 
-            if (this.ready) {
+            this.submitting = true;
+            try {
                 loginByEmail({
-                    email: this.email,
-                    pass: this.pass,
+                    email: this.form.email,
+                    pass: this.form.pass,
                     // device_id: this.device_id,
                 })
                     .then((res) => {
@@ -240,15 +201,19 @@ export default {
                     .catch((err) => {
                         this.success = false;
                         this.errors = "网络异常或非法请求";
+                    })
+                    .finally(() => {
+                        this.submitting = false;
                     });
+            } catch (e) {
+                this.submitting = false;
             }
         },
         reset: function () {
             this.success = null;
-            this.email = "";
-            this.email_validate = null;
-            this.pass = "";
-            this.pass_validate = null;
+            this.form.email = "";
+            this.form.pass = "";
+            this.$refs.loginForm?.clearValidate();
         },
         frozen: function () {
             if (this.failcount >= this.faillimit) {
@@ -282,7 +247,7 @@ export default {
             }
         },
         checkDeviceID: function () {
-            User.generateFingerprint(() => {});
+            ensureDeviceFingerprint();
         },
         skip: function () {
             if (this.redirect) {

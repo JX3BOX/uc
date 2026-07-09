@@ -4,96 +4,60 @@
             <CardHeader />
             <Msg />
             <main v-if="success == null" class="m-main">
-                <form ref="registerForm" class="m-form">
+                <el-form ref="registerForm" :model="form" :rules="registerRules" class="m-form" @submit.prevent>
                     <!-- 账号 -->
-                    <div class="u-email">
+                    <el-form-item class="u-email" prop="email">
                         <el-input
                             class="u-text u-email"
-                            v-model="email"
+                            v-model="form.email"
                             placeholder="邮箱地址"
                             minlength="3"
                             maxlength="50"
                             type="email"
-                            @change="checkEmail"
+                            name="email"
+                            autocomplete="email"
+                            @input="handleEmailInput"
                             size="large"
                         >
                             <template #prepend>
                                 <i class="el-icon-message"></i>
                             </template>
                         </el-input>
-                        <i v-show="email_available == true" class="el-icon-success u-ok"></i>
-                        <div>
-                            <el-alert
-                                class="u-tip"
-                                v-show="email_validate == false"
-                                :title="email_validate_tip"
-                                type="error"
-                                show-icon
-                                :closable="false"
-                            ></el-alert>
-                            <el-alert
-                                class="u-tip"
-                                v-show="email_available == false"
-                                :title="email_available_tip"
-                                type="error"
-                                show-icon
-                                :closable="false"
-                            ></el-alert>
-                        </div>
-                    </div>
+                        <i v-show="emailAvailable == true" class="el-icon-success u-ok"></i>
+                    </el-form-item>
 
                     <!-- 验证码 -->
-                    <div class="u-code">
-                        <el-input class="u-text" placeholder="验证码" size="large" v-model="code" minlength="6" maxlength="6" @input="checkCode">
+                    <el-form-item class="u-code" prop="code">
+                        <el-input class="u-text" placeholder="验证码" size="large" v-model="form.code" minlength="6" maxlength="6" name="code" autocomplete="one-time-code">
                             <template #prepend>
                                 <i class="el-icon-postcard"></i>
                             </template>
                         </el-input>
-                        <el-button class="u-code-btn" type="primary" @click="getCode" :disabled="code_disabled">{{
+                        <el-button class="u-code-btn" type="primary" @click="getCode" :disabled="code_disabled" :loading="sendingCode">{{
                             code_text
                         }}</el-button>
-                        <div>
-                            <el-alert
-                                class="u-tip"
-                                v-show="code_validate == false"
-                                :title="code_validate_tip"
-                                type="error"
-                                show-icon
-                                :closable="false"
-                            ></el-alert>
-                        </div>
-                    </div>
+                    </el-form-item>
 
                     <!-- 密码 -->
-                    <div class="u-pass">
-                        <el-input class="u-text" placeholder="输入密码" size="large" v-model="pass" show-password @input="checkPass">
+                    <el-form-item class="u-pass" prop="pass">
+                        <el-input class="u-text" placeholder="输入密码" size="large" v-model="form.pass" show-password name="password" autocomplete="new-password">
                             <template #prepend>
                                 <i class="el-icon-lock"></i>
                             </template>
                         </el-input>
-                        <div>
-                            <el-alert
-                                 class="u-tip"
-                                v-show="pass_validate == false"
-                                :title="pass_validate_tip"
-                                type="error"
-                                show-icon
-                                :closable="false"
-                            ></el-alert>
-                        </div>
-                    </div>
+                    </el-form-item>
 
                     <!-- 邀请码 -->
-                    <div class="u-invite">
-                        <el-input class="u-text" size="large" placeholder="邀请码（非必填）" v-model="invite">
+                    <el-form-item class="u-invite" prop="invite">
+                        <el-input class="u-text" size="large" placeholder="邀请码（非必填）" v-model="form.invite" name="invitation">
                             <template #prepend>
                                 <i class="el-icon-present"></i>
                             </template>
                         </el-input>
-                    </div>
+                    </el-form-item>
 
-                    <div class="u-terms">
-                        <el-checkbox v-model="agreement" class="u-checkbox">
+                    <el-form-item class="u-terms" prop="agreement">
+                        <el-checkbox v-model="form.agreement" class="u-checkbox">
                             我已阅读并同意
                             <a href="/about/license" target="_blank">《用户协议》</a>、<a
                                 href="/about/privacy"
@@ -101,10 +65,10 @@
                                 >《隐私政策》</a
                             >、<a href="/about/treaty" target="_blank">《创作公约》</a>
                         </el-checkbox>
-                    </div>
-                </form>
+                    </el-form-item>
+                </el-form>
                 <!-- 提交 -->
-                <el-button class="u-submit u-button" type="primary" size="large" @click="submit" :disabled="!ready">
+                <el-button class="u-submit u-button" type="primary" size="large" @click="submit" :disabled="!ready || submitting" :loading="submitting">
                     注册
                 </el-button>
 
@@ -143,29 +107,35 @@
 </template>
 
 <script>
-const { validator } = require("sterilizer");
 import CardHeader from "@/components/account/CardHeader.vue";
 import { checkEmail, registerByEmail, verifyEmail } from "@/service/account/email.js";
 import { __Root } from "@/utils/config";
 import Msg from "@/components/account/Msg.vue";
 import Union from "@/components/account/Union.vue";
 import {ElMessage} from "element-plus";
+import {
+    isValidCode,
+    isValidEmail,
+    isValidPassword,
+    validateAgreement,
+    validateCode,
+    validatePassword,
+} from "@/utils/account/validators.js";
 
 export default {
     name: "Register",
     data: function () {
         return {
-            email: "",
-            email_validate: null,
-            email_validate_tip: "必须为有效的Email,长度限3-50个字符",
-            email_available: null,
-            email_available_tip: "邮箱地址已被使用",
-
-            pass: "",
-            pass_validate: null,
-            pass_validate_tip: "密码有效长度为6-50个字符",
-
-            invite: "",
+            form: {
+                email: "",
+                code: "",
+                pass: "",
+                invite: "",
+                agreement: false,
+            },
+            emailAvailable: null,
+            emailChecking: false,
+            emailRequestId: 0,
 
             success: null,
             failtips: "请求异常,请重试",
@@ -173,82 +143,97 @@ export default {
             homepage: __Root,
             redirect: "",
 
-            agreement: false,
-
-            code: "",
-            code_validate: null,
-            code_validate_tip: "验证码格式不正确",
             code_text: "发送验证码",
             interval: 0,
+            codeTimer: null,
+            sendingCode: false,
+            submitting: false,
         };
     },
     computed: {
         ready: function () {
-            return this.email_validate && this.email_available && this.code_validate && this.pass_validate && this.agreement;
+            return (
+                isValidEmail(this.form.email) &&
+                this.emailAvailable &&
+                isValidCode(this.form.code) &&
+                isValidPassword(this.form.pass) &&
+                this.form.agreement
+            );
         },
         login_url: function () {
             return "/account/login?redirect=" + this.redirect;
         },
         code_disabled: function () {
-            return !this.email || !this.email_available || this.interval > 0;
+            return !this.form.email || !this.emailAvailable || this.interval > 0 || this.sendingCode || this.emailChecking;
+        },
+        registerRules: function () {
+            return {
+                email: [{ validator: this.validateRegisterEmail, trigger: "blur" }],
+                code: [{ validator: validateCode, trigger: "blur" }],
+                pass: [{ validator: validatePassword, trigger: "blur" }],
+                agreement: [{ validator: validateAgreement, trigger: "change" }],
+            };
         },
     },
     methods: {
-        checkEmail: function () {
-            // 如果为空
-            if (this.email == "") {
-                this.email_validate = null;
-                this.email_available = null;
+        handleEmailInput: function () {
+            this.emailAvailable = null;
+            this.emailRequestId++;
+        },
+        validateRegisterEmail: function (rule, value, callback) {
+            if (!isValidEmail(value)) {
+                this.emailAvailable = null;
+                callback(new Error("必须为有效的Email,长度限3-50个字符"));
                 return;
             }
 
-            // 校验格式
-            let result = validator(this.email, {
-                isEmail: true,
-                len: [3, 50],
-            });
-            this.email_validate = result;
+            const email = value;
+            const requestId = ++this.emailRequestId;
+            this.emailChecking = true;
+            checkEmail(email)
+                .then((res) => {
+                    if (requestId !== this.emailRequestId || email !== this.form.email) {
+                        callback();
+                        return;
+                    }
 
-            // 检查可用性
-            if (result) {
-                checkEmail(this.email).then((res) => {
-                    this.email_available = !res.data.data.isExist;
+                    const available = !res.data.data.isExist;
+                    this.emailAvailable = available;
+                    if (!available) {
+                        callback(new Error("邮箱地址已被使用"));
+                        return;
+                    }
+
+                    callback();
+                })
+                .catch(() => {
+                    if (requestId === this.emailRequestId) {
+                        this.emailAvailable = null;
+                    }
+                    callback(new Error("邮箱校验失败，请稍后重试"));
+                })
+                .finally(() => {
+                    if (requestId === this.emailRequestId) {
+                        this.emailChecking = false;
+                    }
                 });
-            } else {
-                this.email_available = null;
-            }
         },
-        checkPass: function () {
-            // 如果为空
-            if (this.pass == "") {
-                this.pass_validate = null;
+        submit: async function () {
+            if (this.submitting) return;
+
+            try {
+                await this.$refs.registerForm.validate();
+            } catch (e) {
                 return;
             }
 
-            // 校验格式
-            this.pass_validate = validator(this.pass, {
-                len: [6, 50],
-            });
-        },
-        checkCode: function () {
-            if (this.code == "") {
-                this.code_validate = null;
-                return;
-            }
-
-            this.code_validate = validator(this.code, {
-                isAlphanumeric: true,
-                len: 6,
-            });
-        },
-        submit: function () {
-            this.checkCode();
             if (this.ready) {
+                this.submitting = true;
                 verifyEmail({
-                    email: this.email,
-                    password: this.pass,
-                    invitation: this.invite,
-                    code: this.code,
+                    email: this.form.email,
+                    password: this.form.pass,
+                    invitation: this.form.invite,
+                    code: this.form.code,
                 })
                     .then((res) => {
                         if (!res.data.code) {
@@ -261,14 +246,17 @@ export default {
                     .catch((err) => {
                         this.success = false;
                         this.failtips = "网络请求异常,请稍后重试";
+                    })
+                    .finally(() => {
+                        this.submitting = false;
                     });
             }
         },
         reset: function () {
             this.success = null;
-            this.agreement = false;
-            this.code = "";
-            this.code_validate = null;
+            this.form.agreement = false;
+            this.form.code = "";
+            this.$refs.registerForm?.clearValidate();
         },
         checkDirect: function () {
             let search = new URLSearchParams(document.location.search);
@@ -280,37 +268,63 @@ export default {
                 this.redirect = this.homepage;
             }*/
         },
-        getCode: function () {
-            registerByEmail({ email: this.email }).then((res) => {
-                if (res.data.code) {
-                    let msg = "";
-                    if (res.data.code == 99999) {
-                        msg = "抱歉,暂不支持该邮件服务商,请更换邮箱服务商";
-                    } else {
-                        msg = res.data.msg;
-                    }
-                    ElMessage.error(msg);
-                    return;
-                }
+        getCode: async function () {
+            if (this.sendingCode) return;
 
-                ElMessage.success("验证码已发送至您的邮箱");
-                // 倒计时
-                this.interval = 60;
-                this.code_text = this.interval + "s";
-                let timer = setInterval(() => {
-                    this.interval--;
-                    this.code_text = this.interval + "s";
-                    if (this.interval <= 0) {
-                        clearInterval(timer);
-                        this.code_text = "发送验证码";
+            try {
+                await this.$refs.registerForm.validateField("email");
+            } catch (e) {
+                return;
+            }
+
+            this.sendingCode = true;
+            registerByEmail({ email: this.form.email })
+                .then((res) => {
+                    if (res.data.code) {
+                        let msg = "";
+                        if (res.data.code == 99999) {
+                            msg = "抱歉,暂不支持该邮件服务商,请更换邮箱服务商";
+                        } else {
+                            msg = res.data.msg;
+                        }
+                        ElMessage.error(msg);
+                        return;
                     }
-                }, 1000);
-            });
+
+                    ElMessage.success("验证码已发送至您的邮箱");
+                    // 倒计时
+                    this.interval = 60;
+                    this.code_text = this.interval + "s";
+                    this.clearCodeTimer();
+                    this.codeTimer = setInterval(() => {
+                        this.interval--;
+                        this.code_text = this.interval + "s";
+                        if (this.interval <= 0) {
+                            this.clearCodeTimer();
+                            this.code_text = "发送验证码";
+                        }
+                    }, 1000);
+                })
+                .catch(() => {
+                    ElMessage.error("网络请求异常,请稍后重试");
+                })
+                .finally(() => {
+                    this.sendingCode = false;
+                });
+        },
+        clearCodeTimer: function () {
+            if (this.codeTimer) {
+                clearInterval(this.codeTimer);
+                this.codeTimer = null;
+            }
         },
     },
 
     mounted: function () {
         this.checkDirect();
+    },
+    beforeUnmount: function () {
+        this.clearCodeTimer();
     },
     components: {
         CardHeader,
