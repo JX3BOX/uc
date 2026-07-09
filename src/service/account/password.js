@@ -1,5 +1,4 @@
-import { axios, $, $cms } from "./axios";
-import { __server, __cms } from "@/utils/config";
+import { $, $cms } from "./axios";
 import { encryptPassword } from "@/utils/pwd_encrypt";
 import { getDeviceFingerprintHeader } from "@/utils/account/fingerprint";
 
@@ -11,15 +10,26 @@ async function sendCode(email) {
         },
         {
             headers: await getDeviceFingerprintHeader(),
+            params: {
+                app: "jx3box",
+            },
         }
     );
 }
-// 废弃
-function checkCode(data) {
-    return axios.post(__server + "account/password/reset/check", {
-        email: data.email,
-        code: data.code
-    });
+
+async function sendPhoneCode(phone) {
+    return $.post(
+        "api/cms/user/account/phone/forgot-password",
+        {
+            phone,
+        },
+        {
+            headers: await getDeviceFingerprintHeader(),
+            params: {
+                app: "jx3box",
+            },
+        }
+    );
 }
 
 async function resetPassword(data) {
@@ -36,9 +46,28 @@ async function resetPassword(data) {
         email: data.email,
         code: data.code,
         password: encryptedPassword.value,
-    },{
-        params
+    }, {
+        params,
     });
 }
 
-export { sendCode, checkCode, resetPassword };
+async function resetPhonePassword(data) {
+    const encryptedPassword = await encryptPassword(data.password);
+    const params = {};
+
+    if (encryptedPassword.encrypted) {
+        params.encrypt = encryptedPassword.version;
+    }
+
+    return $cms({
+        headers: await getDeviceFingerprintHeader(),
+    }).put("api/cms/user/account/phone/reset-password", {
+        phone: data.phone,
+        code: data.code,
+        password: encryptedPassword.value,
+    }, {
+        params,
+    });
+}
+
+export { sendCode, sendPhoneCode, resetPassword, resetPhonePassword };

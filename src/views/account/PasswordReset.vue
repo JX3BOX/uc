@@ -12,33 +12,32 @@
 
             <!-- 1.是否存在可找回 -->
             <main v-if="step == 1" class="m-main">
-                <el-form ref="emailForm" :model="form" :rules="emailRules" @submit.prevent>
-                    <!-- 邮箱 -->
-                    <el-form-item class="u-email" prop="email">
+                <el-form ref="accountForm" :model="form" :rules="accountRules" @submit.prevent="start">
+                    <!-- 邮箱或手机号 -->
+                    <el-form-item class="u-account" prop="account">
                         <el-input
-                            class="u-text u-email"
-                            v-model="form.email"
-                            placeholder="邮箱地址"
+                            class="u-text u-account"
+                            v-model.trim="form.account"
+                            placeholder="邮箱地址 / 手机号"
                             minlength="3"
                             maxlength="50"
-                            type="email"
-                            name="email"
-                            autocomplete="email"
-                            @input="handleEmailInput"
+                            name="account"
+                            autocomplete="username"
+                            @input="handleAccountInput"
                             size="large"
                         >
                             <template #prepend>
-                                <i class="el-icon-message"></i>
+                                <i :class="recoverMode === 'phone' ? 'el-icon-phone' : 'el-icon-message'"></i>
                             </template>
                         </el-input>
-                        <i v-show="emailValid == true" class="el-icon-success u-ok"></i>
+                        <i v-show="accountValid == true" class="el-icon-success u-ok"></i>
                     </el-form-item>
                     <el-button
                         class="u-submit u-button"
                         type="primary"
-                        @click="start"
-                        :disabled="!available || email_checking"
-                        :loading="email_checking"
+                        native-type="submit"
+                        :disabled="!available || account_checking"
+                        :loading="account_checking"
                         size="large"
                     >下一步</el-button>
                 </el-form>
@@ -52,9 +51,9 @@
 
             <!-- 2.填写验证码与新密码 -->
             <main v-if="step == 2" class="m-main">
-                <el-alert class="u-notice" title="请填写邮箱收到的验证码 (60分钟内有效)" type="success" :closable="false"> </el-alert>
+                <el-alert class="u-notice" :title="codeNotice" type="success" :closable="false"> </el-alert>
 
-                <el-form ref="resetForm" :model="form" :rules="resetRules" @submit.prevent>
+                <el-form ref="resetForm" :model="form" :rules="resetRules" @submit.prevent="done">
                     <!-- 验证码 -->
                     <el-form-item class="u-code" prop="code">
                         <el-input class="u-text u-code" v-model="form.code" placeholder="验证码" size="large" minlength="6" maxlength="6" name="code" autocomplete="one-time-code">
@@ -81,10 +80,9 @@
                             </template>
                         </el-input>
                     </el-form-item>
+                    <!-- 提交 -->
+                    <el-button class="u-submit u-button" type="primary" native-type="submit" size="large" :disabled="!ready || submitting" :loading="submitting">提交</el-button>
                 </el-form>
-
-                <!-- 提交 -->
-                <el-button class="u-submit u-button" type="primary" @click="done" size="large" :disabled="!ready || submitting" :loading="submitting">提交</el-button>
             </main>
 
             <!-- 3.提交后 -->
@@ -110,16 +108,18 @@
 
 <script>
 import CardHeader from "@/components/account/CardHeader.vue";
-import { sendCode, resetPassword } from "@/service/account/password.js";
+import { sendCode, sendPhoneCode, resetPassword, resetPhonePassword } from "@/service/account/password.js";
 import { checkEmail } from "@/service/account/email.js";
 import { __Root } from "@/utils/config";
 import {ElMessage} from "element-plus";
 import {
+    isValidAccountLogin,
     isValidCode,
     isValidEmail,
+    isValidLoginPhone,
     isValidPassword,
+    validateAccountLogin,
     validateCode,
-    validateEmail,
     validatePassword,
 } from "@/utils/account/validators.js";
 export default {
@@ -130,13 +130,14 @@ export default {
             success: false,
 
             form: {
-                email: "",
+                account: "",
                 code: "",
                 pwd1: "",
                 pwd2: "",
             },
-            emailValid: null,
-            email_checking: false,
+            recoverMode: "",
+            accountValid: null,
+            account_checking: false,
 
             failtips: "",
             submitting: false,
@@ -146,7 +147,7 @@ export default {
     },
     computed: {
         available: function () {
-            return isValidEmail(this.form.email);
+            return isValidAccountLogin(this.form.account);
         },
         accordance: function () {
             return this.form.pwd1 === this.form.pwd2;
@@ -159,9 +160,9 @@ export default {
                 this.accordance
             );
         },
-        emailRules: function () {
+        accountRules: function () {
             return {
-                email: [{ validator: validateEmail, trigger: "blur" }],
+                account: [{ validator: this.validateRecoverableAccount, trigger: "blur" }],
             };
         },
         resetRules: function () {
@@ -171,10 +172,37 @@ export default {
                 pwd2: [{ validator: this.validateConfirmPassword, trigger: "blur" }],
             };
         },
+        codeNotice: function () {
+            return this.recoverMode === "phone"
+                ? "请填写手机收到的验证码"
+                : "请填写邮箱收到的验证码 (60分钟内有效)";
+        },
     },
     methods: {
-        handleEmailInput: function () {
-            this.emailValid = null;
+        getRecoverMode: function (value) {
+            if (isValidEmail(value)) return "email";
+            if (isValidLoginPhone(value)) return "phone";
+            return "";
+        },
+        handleAccountInput: function () {
+            this.accountValid = null;
+            this.recoverMode = this.getRecoverMode(this.form.account);
+            this.$refs.accountForm?.clearValidate("account");
+        },
+        validateRecoverableAccount: function (rule, value, callback) {
+            validateAccountLogin(rule, value, (error) => {
+                if (error) {
+                    callback(error);
+                    return;
+                }
+
+                if (this.accountValid === false) {
+                    callback(new Error("账号不存在"));
+                    return;
+                }
+
+                callback();
+            });
         },
         validateConfirmPassword: function (rule, value, callback) {
             if (!value) {
@@ -190,36 +218,39 @@ export default {
             callback();
         },
         start: async function () {
-            if (this.email_checking) return;
+            if (this.account_checking) return;
 
             try {
-                await this.$refs.emailForm.validate();
+                await this.$refs.accountForm.validate();
             } catch (e) {
                 return;
             }
 
-            const email = this.form.email;
-            this.email_checking = true;
-            checkEmail(email)
+            const account = this.form.account;
+            const mode = this.getRecoverMode(account);
+            this.recoverMode = mode;
+            this.account_checking = true;
+
+            if (mode === "email") {
+                checkEmail(account)
                 .then((res) => {
                     // 可以使用代表不存在
                     const isExist = res.data.data?.isExist;
-                    if (email !== this.form.email) return;
+                    if (account !== this.form.account) return;
 
-                    this.emailValid = isExist;
+                    this.accountValid = isExist;
                     if (!isExist) {
-                        ElMessage.error("账号不存在");
+                        this.$refs.accountForm?.validateField("account").catch(() => {});
                         return;
                     }
 
-                    return sendCode(email).then((res) => {
-                        if (email !== this.form.email) return;
+                    return sendCode(account).then((res) => {
+                        if (account !== this.form.account) return;
 
                         if (!res.data.code) {
                             this.step = 2;
                         } else {
-                            ElMessage.error(res.data.msg);
-                            this.step = 0;
+                            ElMessage.error(res.data.msg || "验证码发送失败");
                         }
                     });
                 })
@@ -227,7 +258,30 @@ export default {
                     this.step = 0;
                 })
                 .finally(() => {
-                    this.email_checking = false;
+                    this.account_checking = false;
+                });
+                return;
+            }
+
+            sendPhoneCode(account)
+                .then((res) => {
+                    if (account !== this.form.account) return;
+
+                    if (!res.data.code) {
+                        this.accountValid = true;
+                        this.step = 2;
+                    } else if (res.data.code === 20047) {
+                        this.accountValid = false;
+                        this.$refs.accountForm?.validateField("account").catch(() => {});
+                    } else {
+                        ElMessage.error(res.data.msg || "验证码发送失败");
+                    }
+                })
+                .catch(() => {
+                    this.step = 0;
+                })
+                .finally(() => {
+                    this.account_checking = false;
                 });
         },
         done: async function () {
@@ -240,11 +294,20 @@ export default {
             }
 
             this.submitting = true;
-            resetPassword({
-                email: this.form.email,
+            const mode = this.recoverMode || this.getRecoverMode(this.form.account);
+            const action = mode === "phone" ? resetPhonePassword : resetPassword;
+            const payload = {
                 code: this.form.code,
                 password: this.form.pwd1,
-            })
+            };
+
+            if (mode === "phone") {
+                payload.phone = this.form.account;
+            } else {
+                payload.email = this.form.account;
+            }
+
+            action(payload)
                 .then((res) => {
                     this.step = 3;
                     if (!res.data.code) {
@@ -264,14 +327,15 @@ export default {
         reset: function () {
             this.step = 1;
             this.success = null;
-            this.form.email = "";
-            this.emailValid = null;
-            this.email_checking = false;
+            this.form.account = "";
+            this.recoverMode = "";
+            this.accountValid = null;
+            this.account_checking = false;
             this.form.code = "";
             this.form.pwd1 = "";
             this.form.pwd2 = "";
             this.submitting = false;
-            this.$refs.emailForm?.clearValidate();
+            this.$refs.accountForm?.clearValidate();
             this.$refs.resetForm?.clearValidate();
         },
     },

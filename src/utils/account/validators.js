@@ -107,6 +107,7 @@ export {
     isValidAccountLogin,
     isValidCode,
     isValidEmail,
+    isValidLoginPhone,
     isValidPassword,
     validateAccountLogin,
     validateAgreement,

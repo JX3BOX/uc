@@ -143,7 +143,7 @@ export default {
     },
     methods: {
         resetForm() {
-            this.form.email = "";
+            this.form.email = this.email && !this.verified ? this.email : "";
             this.form.code = "";
             this.hasSendBindEmail = false;
             this.lastSentEmail = "";
@@ -174,6 +174,9 @@ export default {
             }
             if (value === this.email && this.verified) {
                 return callback(new Error("不可重复验证相同邮箱"));
+            }
+            if (value === this.email && !this.verified) {
+                return callback();
             }
             checkEmailAvailable(value)
                 .then((res) => {

@@ -7,7 +7,7 @@
             }}</el-tag>
         </div>
         <el-button type="primary" :circle="isPhone" size="large" class="u-button" @click="visible = true" icon="Edit">{{
-            verified ? "修改邮箱" : "绑定邮箱"
+            currentEmail && verified ? "修改邮箱" : "绑定邮箱"
         }}</el-button>
 
         <email-dialog v-model="visible" :email="currentEmail" :verified="verified" @update="onUpdate" />
@@ -38,12 +38,12 @@ export default {
         },
         // 模糊地址
         blurAddress(text) {
-            return text.replace(/(.{2}).*(.{0}@.*)/, "$1****$2");
+            return String(text || "").replace(/(.{2}).*(.{0}@.*)/, "$1****$2");
         },
         load() {
             getProfile().then((res) => {
                 const data = res.data.data;
-                this.currentEmail = data?.user_email;
+                this.currentEmail = data?.user_email || "";
                 this.verified = !!data?.verify_email;
             });
         },
