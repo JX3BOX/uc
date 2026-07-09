@@ -153,9 +153,8 @@ export default {
                     });
                     this.status = false;
 
-                    User.destroy().then(() => {
-                        User.toLogin();
-                    });
+                    this.clearLocalLogin();
+                    User.toLogin("/dashboard/");
                 })
                 .catch((err) => {
                     this.$message.error(this.getErrorMessage(err, "密码修改失败"));
@@ -163,6 +162,12 @@ export default {
         },
         reset: function() {
             this.status = true;
+        },
+        clearLocalLogin() {
+            localStorage?.removeItem("created_at");
+            localStorage?.setItem("logged_in", "false");
+            localStorage?.removeItem("token");
+            localStorage?.removeItem("jx3box_permission");
         },
         getErrorMessage(err, fallback) {
             return err?.response?.data?.msg || err?.data?.msg || fallback;

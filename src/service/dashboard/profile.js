@@ -2,6 +2,7 @@ import { $cms, $_https, $next } from "@jx3box/jx3box-common/js/api.js";
 
 import axios from "axios";
 import { __imgPath } from "@/utils/config";
+import { encryptPassword } from "@/utils/pwd_encrypt";
 
 // 1.资料
 // -------------------------------
@@ -42,8 +43,22 @@ function sendVerifyCode(data) {
     });
 }
 // 重设密码
-function updatePassword(data) {
-    return $cms().put("/api/cms/user/my/password", data);
+async function updatePassword(data = {}) {
+    const encryptedPassword = await encryptPassword(data.password || "");
+    const params = {};
+
+    if (encryptedPassword.encrypted) {
+        params.encrypt = encryptedPassword.version;
+    }
+
+    return $cms().put(
+        "/api/cms/user/my/password",
+        {
+            ...data,
+            password: encryptedPassword.value,
+        },
+        { params }
+    );
 }
 
 // 4.邮箱
