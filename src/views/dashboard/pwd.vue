@@ -8,10 +8,11 @@
                     src="@/assets/img/dashboard/setting/pwd.svg"
                 />
                 <el-alert
+                    v-if="showPasswordNotice"
                     class="u-ac"
-                    title="请妥善保管"
+                    title="请设置密码"
                     type="warning"
-                    description="未绑定邮箱用户将无法使用找回密码功能"
+                    description="您还没有设置密码，将无法使用密码登录或查看卡密等功能。"
                     show-icon
                     :closable="false"
                 >
@@ -80,7 +81,8 @@
                     class="u-submit u-button"
                     type="primary"
                     native-type="submit"
-                    :disabled="!ready"
+                    :disabled="!ready || submitting"
+                    :loading="submitting"
                     size="large"
                     >提交</el-button
                 >
@@ -107,7 +109,7 @@
 import uc from "@/components/dashboard/uc.vue";
 import { validator } from "sterilizer";
 import User from "@jx3box/jx3box-common/js/user";
-import { updatePassword } from "@/service/dashboard/profile";
+import { getPasswordStatus, updatePassword } from "@/service/dashboard/profile";
 export default {
     name: "pwd",
     props: [],
@@ -119,6 +121,8 @@ export default {
             pass_validate_tip: "密码有效长度为6-30个字符",
             pass_accordance_tip: "两次密码不一致",
             status: true,
+            submitting: false,
+            hasPassword: null,
         };
     },
     computed: {
@@ -128,8 +132,35 @@ export default {
         ready: function() {
             return this.pass_validate && this.accordance;
         },
+        showPasswordNotice: function() {
+            return this.hasPassword === false;
+        },
     },
     methods: {
+        getPasswordStatusMock: function() {
+            if (process.env.NODE_ENV !== "development") return null;
+
+            const mockValue = new URLSearchParams(window.location.search).get("pwd_mock_no_password");
+            if (mockValue === "1") return false;
+            if (mockValue === "0") return true;
+            return null;
+        },
+        loadPasswordStatus: function() {
+            const mockStatus = this.getPasswordStatusMock();
+            if (mockStatus !== null) {
+                this.hasPassword = mockStatus;
+                return;
+            }
+
+            getPasswordStatus()
+                .then((res) => {
+                    const hasPassword = res?.data?.data?.has_password;
+                    this.hasPassword = typeof hasPassword === "boolean" ? hasPassword : null;
+                })
+                .catch(() => {
+                    this.hasPassword = null;
+                });
+        },
         checkPass: function() {
             // 如果为空
             if (this.pwd1 == "") {
@@ -142,7 +173,8 @@ export default {
             });
         },
         done: function() {
-            if (!this.ready) return;
+            if (!this.ready || this.submitting) return;
+            this.submitting = true;
             updatePassword({
                 password: this.pwd1,
             })
@@ -158,6 +190,9 @@ export default {
                 })
                 .catch((err) => {
                     this.$message.error(this.getErrorMessage(err, "密码修改失败"));
+                })
+                .finally(() => {
+                    this.submitting = false;
                 });
         },
         reset: function() {
@@ -173,7 +208,9 @@ export default {
             return err?.response?.data?.msg || err?.data?.msg || fallback;
         },
     },
-    mounted: function() {},
+    mounted: function() {
+        this.loadPasswordStatus();
+    },
     components: {
         uc,
     },
