@@ -39,6 +39,10 @@ function getUserOverview(uid) {
 
 // 3.密码
 // -------------------------------
+function getPasswordStatus() {
+    return $cms().get("/api/cms/user/my/password/status");
+}
+
 // 发送验证码
 function sendVerifyCode(data) {
     return $cms().post("/api/cms/user/account/email/forgot-password", data, {
@@ -144,6 +148,7 @@ export {
     getPasswordStatus,
     updateAvatar,
     updatePassword,
+    getPasswordStatus,
     sendVerifyEmail,
     checkEmailAvailable,
     sendBindEmail,
