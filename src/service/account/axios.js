@@ -1,6 +1,6 @@
 import axios from "axios";
 import User from "@jx3box/jx3box-common/js/user";
-import { __cms } from "@/utils/config";
+import { $cms as commonCms } from "@jx3box/jx3box-common/js/api.js";
 
 const $ = axios.create({
     withCredentials : true,
@@ -28,22 +28,10 @@ installInterceptors($)
 
 // cms通用请求接口
 function $cms(options) {
-    let domain = (options && options.domain) || __cms;
-    let config = {
-        // 同时发送cookie和basic auth
-        withCredentials: true,
-        baseURL: domain,
-        // baseURL: process.env.NODE_ENV === "production" ? domain : "/",
-        headers: Object.assign({}, options.headers || {}),
-    };
-
-    // 创建实例
-    const ins = axios.create(config);
-
-    // 指定拦截器
-    installInterceptors(ins);
-
-    return ins;
+    return commonCms({
+        ...(options || {}),
+        interceptor: false,
+    });
 }
 
 export { $, axios, $cms };

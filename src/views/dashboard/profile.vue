@@ -158,7 +158,15 @@ export default {
     methods: {
         // 提交资料
         submit() {
-            updateProfile(this.form)
+            const birthday = this.normalizeBirthday(this.form.birthday);
+            if (birthday === false) {
+                this.$message.error("生日格式不正确");
+                return;
+            }
+            updateProfile({
+                ...this.form,
+                birthday,
+            })
                 .then((res) => {
                     this.$message({
                         message: "资料修改成功",
@@ -196,6 +204,18 @@ export default {
             const month = String(date.getMonth() + 1).padStart(2, "0");
             const day = String(date.getDate()).padStart(2, "0");
             return `${year}-${month}-${day}`;
+        },
+        normalizeBirthday(value) {
+            if (!value || value === "0000-00-00" || value === "1970-01-01") return null;
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+
+            const [year, month, day] = value.split("-").map(Number);
+            const date = new Date(year, month - 1, day);
+            const isValidDate =
+                date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day;
+
+            if (!isValidDate || date.getTime() > Date.now()) return false;
+            return value;
         },
         disabledBirthdayDate(time) {
             return time.getTime() > Date.now();

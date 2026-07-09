@@ -7,21 +7,21 @@
                 <main v-if="success == null" class="m-main">
                     <el-form ref="loginForm" :model="form" :rules="loginRules" class="m-form" @submit.prevent>
                         <!-- 账号 -->
-                        <el-form-item class="u-email" prop="email">
+                        <el-form-item class="u-email" prop="account">
                             <el-input
                                 class="u-text u-email"
-                                v-model="form.email"
-                                placeholder="邮箱地址"
+                                v-model="form.account"
+                                placeholder="邮箱地址 / 手机号"
                                 minlength="3"
                                 maxlength="50"
-                                type="email"
-                                name="email"
-                                autocomplete="email"
+                                type="text"
+                                name="username"
+                                autocomplete="username"
                                 size="large"
                             >
 
                                 <template #prepend>
-                                    <i class="el-icon-message"></i>
+                                    <i class="el-icon-user"></i>
                                 </template>
                             </el-input>
                         </el-form-item>
@@ -94,11 +94,11 @@
 import CardHeader from "@/components/account/CardHeader.vue";
 import Union from "@/components/account/Union.vue";
 const cookie = require("@/utils/cookie");
-import { loginByEmail } from "@/service/account/email.js";
+import { loginByAccount } from "@/service/account/email.js";
 import { __Root, __Links } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import Msg from "@/components/account/Msg.vue";
-import { validateEmail, validatePassword } from "@/utils/account/validators.js";
+import { validateAccountLogin, validatePassword } from "@/utils/account/validators.js";
 import { ensureDeviceFingerprint } from "@/utils/account/fingerprint.js";
 export default {
     name: "Login",
@@ -111,7 +111,7 @@ export default {
             errors: "未知异常",
 
             form: {
-                email: "",
+                account: "",
                 pass: "",
             },
             submitting: false,
@@ -131,7 +131,7 @@ export default {
     computed: {
         loginRules: function () {
             return {
-                email: [{ validator: validateEmail, trigger: "blur" }],
+                account: [{ validator: validateAccountLogin, trigger: "blur" }],
                 pass: [{ validator: validatePassword, trigger: "blur" }],
             };
         },
@@ -155,8 +155,8 @@ export default {
 
             this.submitting = true;
             try {
-                loginByEmail({
-                    email: this.form.email,
+                loginByAccount({
+                    account: this.form.account,
                     pass: this.form.pass,
                     // device_id: this.device_id,
                 })
@@ -211,7 +211,7 @@ export default {
         },
         reset: function () {
             this.success = null;
-            this.form.email = "";
+            this.form.account = "";
             this.form.pass = "";
             this.$refs.loginForm?.clearValidate();
         },

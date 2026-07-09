@@ -43,6 +43,28 @@ async function loginByEmail(data) {
     // 必须以携带模式请求
 }
 
+// 邮箱或手机号密码登录
+async function loginByAccount(data) {
+    const encryptedPassword = await encryptPassword(data.pass);
+    const params = {
+        app: 'jx3box',
+    };
+
+    if (encryptedPassword.encrypted) {
+        params.encrypt = encryptedPassword.version;
+    }
+
+    return $cms({
+        headers: await getDeviceFingerprintHeader(),
+    }).post("api/cms/user/account/login", {
+        account: data.account,
+        password: encryptedPassword.value,
+    }, {
+        params
+    });
+    // 必须以携带模式请求
+}
+
 // 邮箱注册激活
 async function verifyEmail(data) {
     const encryptedPassword = await encryptPassword(data.password);
@@ -67,4 +89,4 @@ async function verifyEmail(data) {
     );
 }
 
-export { checkEmail, registerByEmail, loginByEmail, verifyEmail };
+export { checkEmail, registerByEmail, loginByEmail, loginByAccount, verifyEmail };
