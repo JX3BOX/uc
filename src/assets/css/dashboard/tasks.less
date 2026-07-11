@@ -65,6 +65,26 @@
                     .mr(10px);
                 }
             }
+            .u-actions {
+                .flex;
+                flex-shrink: 0;
+                margin-left: 12px;
+                gap: 8px;
+                .el-button + .el-button {
+                    margin-left: 0;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .m-tasks-list .u-item:not(.u-parent) > .u-box {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+        .u-actions {
+            margin-left: 0;
         }
     }
 }

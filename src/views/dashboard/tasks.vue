@@ -2,7 +2,14 @@
     <div class="m-credit m-tasks">
         <h2 class="u-title"><i class="el-icon-coffee-cup"></i> {{ $t("dashboard.tasks.title") }}</h2>
         <div class="m-tasks-list" v-loading="loading">
-            <taskItem v-for="(item, index) in list" :key="index" :data="item" @update="checkFinish" />
+            <taskItem
+                v-for="(item, index) in list"
+                :key="index"
+                :data="item"
+                :claiming="claimingTaskId === item.task.id"
+                :claim-disabled="claimingTaskId !== null"
+                @claim="claimReward"
+            />
             <!-- 任务组 -->
             <template v-if="groupedTasks.length">
                 <div
@@ -34,7 +41,9 @@
                         v-for="item in groupItem.tasks"
                         :key="item?.task?.id || item?.id"
                         :data="item"
-                        @update="checkFinish"
+                        :claiming="claimingTaskId === item.task.id"
+                        :claim-disabled="claimingTaskId !== null"
+                        @claim="claimReward"
                     />
                 </div>
             </template>
@@ -58,6 +67,7 @@ export default {
             list: [],
             group: {},
             groupInfo: {},
+            claimingTaskId: null,
         };
     },
     computed: {
@@ -173,8 +183,10 @@ export default {
                 },
             };
         },
-        // 点击完成
-        checkFinish(id) {
+        // 检查任务条件并领取奖励
+        claimReward(id) {
+            if (this.claimingTaskId !== null) return;
+            this.claimingTaskId = id;
             getCheckTasks(id)
                 .then((res) => {
                     if (res?.data?.data?.hasFinish) {
@@ -183,7 +195,7 @@ export default {
                             message: this.$t("dashboard.tasks.completedReward"),
                             type: "success",
                         });
-                        location.reload();
+                        this.loadTasks();
                     } else {
                         this.$notify({
                             title: this.$t("dashboard.common.tip"),
@@ -198,6 +210,9 @@ export default {
                         message: this.$t("dashboard.tasks.checkFailed"),
                         type: "warning",
                     });
+                })
+                .finally(() => {
+                    this.claimingTaskId = null;
                 });
         },
     },

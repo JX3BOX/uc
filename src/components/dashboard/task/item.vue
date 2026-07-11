@@ -11,13 +11,21 @@
                     </span>
                 </span>
             </div>
-            <div class="u-btn">
+            <div class="u-actions">
                 <el-button
-                    :type="data.hasFinish ? 'success' : 'default'"
-                    :disabled="data.hasFinish"
-                    :icon="(data.hasFinish && 'Check') || 'Right'"
-                    @click="checkFinish(data)"
-                    >{{ data.hasFinish ? $t("dashboard.common.completed") : $t("dashboard.tasks.goComplete") }}</el-button
+                    v-if="!data.hasFinish"
+                    :disabled="!data.task.task_url"
+                    icon="Right"
+                    @click="goComplete(data.task.task_url)"
+                    >{{ $t("dashboard.tasks.goComplete") }}</el-button
+                >
+                <el-button
+                    :type="data.hasFinish ? 'success' : 'primary'"
+                    :disabled="data.hasFinish || claimDisabled"
+                    :loading="claiming"
+                    :icon="data.hasFinish ? 'Check' : null"
+                    @click="claimReward(data.task.id)"
+                    >{{ $t("dashboard.tasks.claimReward") }}</el-button
                 >
             </div>
         </div>
@@ -27,7 +35,20 @@
 import { __imgPath } from "@/utils/config";
 export default {
     name: "tasks",
-    props: ["data"],
+    props: {
+        data: {
+            type: Object,
+            default: null,
+        },
+        claiming: {
+            type: Boolean,
+            default: false,
+        },
+        claimDisabled: {
+            type: Boolean,
+            default: false,
+        },
+    },
     data: function () {
         return {
             attr_name: {},
@@ -45,12 +66,12 @@ export default {
         },
     },
     methods: {
-        checkFinish({ hasFinish, task }) {
-            if (hasFinish) {
-                this.$emit("update", task.id);
-            } else {
-                window.open(task.task_url, "_blank");
-            }
+        goComplete(url) {
+            if (!url) return;
+            window.open(url, "_blank");
+        },
+        claimReward(id) {
+            this.$emit("claim", id);
         },
     },
 };
