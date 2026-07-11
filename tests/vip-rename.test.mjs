@@ -28,14 +28,20 @@ assert.match(
 
 assert.match(
     page,
-    /this\.\$confirm\(`确认消耗\$\{Number\(this\.renameCard\.price_points\) \|\| 0\}积分兑换一次改名卡吗？`,\s*"确认兑换"/,
+    /this\.\$confirm\(this\.\$t\("vip\.rename\.confirmExchangeMessage",\s*\{ points: Number\(this\.renameCard\.price_points\) \|\| 0 \}\),\s*this\.\$t\("vip\.common\.confirmExchange"\)/,
     "exchange confirmation should show the current point cost before buying a rename card"
 );
 
 assert.match(
     page,
-    /<el-input[\s\S]*v-model="new_name"[\s\S]*show-word-limit[\s\S]*:maxlength="20"[\s\S]*:minlength="2"[\s\S]*@input="checkName"[\s\S]*:disabled="!count"/,
-    "nickname input should keep length limits, availability checking, and no-count disabling"
+    /<el-input[\s\S]*v-model="new_name"[\s\S]*show-word-limit[\s\S]*:maxlength="20"[\s\S]*:minlength="2"[\s\S]*@input="scheduleNameCheck"[\s\S]*@blur="checkName"[\s\S]*:disabled="!count"/,
+    "nickname input should debounce availability checks, recheck on blur, and retain length limits and no-count disabling"
+);
+
+assert.match(
+    page,
+    /scheduleNameCheck:\s*function\s*\(\)\s*{[\s\S]*clearTimeout\(this\.nameCheckTimer\)[\s\S]*setTimeout\([\s\S]*this\.checkName\(\)[\s\S]*},\s*400\)/,
+    "nickname availability checks should wait until typing pauses"
 );
 
 assert.match(

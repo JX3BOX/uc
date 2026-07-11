@@ -5,6 +5,7 @@
  * @Description:
  */
 import { createRouter, createWebHistory } from "vue-router";
+import User from "@jx3box/jx3box-common/js/user";
 
 const index = () => import("@/views/dashboard/index.vue");
 
@@ -647,7 +648,12 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     if (to.fullPath.includes("/#")) {
-        next(to.fullPath.replace("/#", ""));
+        return next(to.fullPath.replace("/#", ""));
+    }
+    const isLocalhost = ["localhost", "127.0.0.1"].includes(location.hostname);
+    if (!isLocalhost && !User.isLogin()) {
+        User.toLogin(location.href);
+        return;
     }
     next();
 });

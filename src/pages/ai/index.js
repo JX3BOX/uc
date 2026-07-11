@@ -1,4 +1,6 @@
 import { createApp } from "vue";
+import { suppressProductionConsoleLog } from "@/utils/console";
+suppressProductionConsoleLog();
 import App from "./ai.vue";
 import router from "./router";
 

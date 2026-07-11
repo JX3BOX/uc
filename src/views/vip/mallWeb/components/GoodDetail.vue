@@ -11,7 +11,7 @@
             <div v-if="goodInfo.img" class="skeleton-container">
                 <Skeleton :category="goodInfo.category" :img="goodInfo.img"></Skeleton>
             </div>
-            <img :src="good.goods_images?.[0]" v-else style="width: 400px; height: 400px" />
+            <img :src="normalizeMallImage(good.goods_images?.[0])" v-else style="width: 400px; height: 400px" />
         </div>
         <div class="buy-detail">
             <div class="detail-card">
@@ -77,6 +77,7 @@ import { __cdn, __root } from "@/utils/config";
 import { playAddCartFly } from "@/utils/mallCartFly";
 import { handleMallExchangeError } from "@/utils/mallExchangeError";
 import { resolveMallSkinCategory } from "@/utils/mallDecoration";
+import { normalizeMallImage } from "@/utils/mallImage";
 export default {
     name: "GoodWebDetail",
     components: {
@@ -140,6 +141,7 @@ export default {
     },
 
     methods: {
+        normalizeMallImage,
         checkCanBuy(item) {
             const obj = {
                 canBuy: true,
@@ -229,7 +231,7 @@ export default {
                 });
         }, 1000),
         fly(e) {
-            playAddCartFly(e, this.$store.state.mallNew.boundCart, { image: this.good.goods_images?.[0] });
+            playAddCartFly(e, this.$store.state.mallNew.boundCart, { image: this.normalizeMallImage(this.good.goods_images?.[0]) });
         },
     },
 };

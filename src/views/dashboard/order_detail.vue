@@ -18,7 +18,7 @@
                 </div>
                 <div class="m-order el-card" v-if="goods">
                     <div class="m-img">
-                        <img v-if="goods.goods_images" :src="goods.goods_images[0]" />
+                        <img v-if="goods.goods_images" :src="normalizeMallImage(goods.goods_images[0])" />
                         <span class="u-link" v-if="goods.is_virtual" @click="openVirtual(goods)">{{
                             $t("dashboard.common.clickToView")
                         }}</span>
@@ -199,6 +199,7 @@ import uc from "@/components/dashboard/uc";
 import tabsData from "@/assets/data/dashboard/tabs.json";
 const { mallTab } = tabsData;
 import { append } from "domutils";
+import { normalizeMallImage } from "@/utils/mallImage";
 export default {
     name: "orderDetail",
     components: { uc },
@@ -260,6 +261,7 @@ export default {
         },
     },
     methods: {
+        normalizeMallImage,
         localizeStatusMap(name, source) {
             return Object.keys(source).reduce((result, key) => {
                 const path = `dashboard.dataLabels.${name}.${key}`;

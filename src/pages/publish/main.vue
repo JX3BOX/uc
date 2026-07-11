@@ -47,10 +47,9 @@ export default {
         },
     },
     created: function () {
-        if (location.hostname != "localhost") {
-            if (!User.isLogin()) {
-                User.toLogin();
-            }
+        if (!User.isLogin()) {
+            User.toLogin();
+            return;
         }
         this.init();
     },

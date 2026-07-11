@@ -25,7 +25,7 @@ export default {
     components: {
         GoodItem,
     },
-    inject: ["changeQuery", "query", "hasMore"],
+    inject: ["changeQuery", "query", "hasMore", "isLoading"],
     props: {
         list: {
             type: Array,
@@ -44,7 +44,7 @@ export default {
     methods: {
         handleScroll: debounce(function () {
             const goodList = this.$refs.goodList;
-            if (this.hasMore && goodList.scrollTop + goodList.clientHeight >= goodList.scrollHeight - 200) {
+            if (this.hasMore() && !this.isLoading() && goodList.scrollTop + goodList.clientHeight >= goodList.scrollHeight - 200) {
                 this.changeQuery("pageIndex", this.query.pageIndex + 1, true);
             }
         }, 500),

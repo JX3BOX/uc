@@ -17,7 +17,6 @@
 <script>
 import Info from "@/components/dashboard/Info.vue";
 import Nav from "@/components/dashboard/Nav.vue";
-import checkLogin from "@/utils/checkLogin";
 import mitt from "@/utils/mitt";
 export default {
     name: "dashboard",
@@ -28,9 +27,6 @@ export default {
         };
     },
     methods: {},
-    created: function () {
-        checkLogin();
-    },
     mounted() {
         mitt.on("refresh", () => {
             this.headerKey++;

@@ -207,7 +207,7 @@
                             <span>{{ $t("vip.lottery.thanks") }}</span>
                         </template>
                         <template v-if="item.prize_type == 'mall_goods'">
-                            <img class="u-img" :src="item.goods.goods_images[0]" />
+                            <img class="u-img" :src="normalizeMallImage(item.goods.goods_images[0])" />
                             <span>{{ item.goods.title }}</span>
                             <a :href="address" target="_blank" class="u-tips" v-if="!item.goods.is_virtual">
                                 {{ $t("vip.lottery.fillAddress") }}
@@ -244,6 +244,7 @@ import { getBreadcrumb, getConfig } from "@/service/vip/cms";
 import { getBlindBox, goodLucky, getMyLucky, getLuckyConfig, getMyInfo } from "@/service/vip/lottery";
 import { cloneDeep, throttle, zip } from "lodash";
 import { resolveImagePath } from "@jx3box/jx3box-common/js/utils";
+import { normalizeMallImage } from "@/utils/mallImage";
 import { __Root, __cdn } from "@/utils/config";
 import "@/assets/css/vip/lottery/hacker.less";
 import "@/assets/css/vip/lottery/dragon.less";
@@ -371,6 +372,7 @@ export default {
         this.loadUser();
     },
     methods: {
+        normalizeMallImage,
         loadUser() {
             if (this.isLogin) {
                 getMyInfo().then((res) => {

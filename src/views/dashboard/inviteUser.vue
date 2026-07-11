@@ -38,7 +38,7 @@ import { searchUserById } from "@/service/dashboard/privacy.js";
 import { createRelationNet, inviteUserJoin } from "@/service/dashboard/relation.js";
 import User from "@jx3box/jx3box-common/js/user.js";
 import { showAvatar } from "@jx3box/jx3box-common/js/utils";
-import { throttle } from "lodash";
+import { debounce, throttle } from "lodash";
 export default {
     name: "inviteUser",
     props: {
@@ -71,6 +71,7 @@ export default {
             uid: "",
             userdata: "",
             flag: false,
+            searchSeq: 0,
         };
     },
     computed: {
@@ -102,22 +103,25 @@ export default {
             this.$emit("close", false);
         },
         // 搜索
-        search(val) {
+        search: debounce(function (val) {
             if (!val || isNaN(val)) return;
 
+            const seq = ++this.searchSeq;
             this.flag = false;
             searchUserById(val)
                 .then((res) => {
+                    if (seq !== this.searchSeq) return;
                     this.userdata = res.data.data;
                 })
                 .catch((err) => {
+                    if (seq !== this.searchSeq) return;
                     this.userdata = "";
                     this.handleRequestError(err);
                 })
                 .finally(() => {
-                    this.flag = true;
+                    if (seq === this.searchSeq) this.flag = true;
                 });
-        },
+        }, 300),
         handleRequestError(err) {
             const data = err?.response?.data;
             const message = data?.msg || data?.message || err?.message || this.$t("dashboard.common.operationFailedRetry");

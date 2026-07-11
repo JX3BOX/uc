@@ -2,7 +2,7 @@
     <el-dialog v-model="isShow" width="85%" :show-close="false" class="m-buy-confirm">
         <div class="content">
             <img
-                :src="item?.goods_images?.[0] ? item.goods_images[0] : '@/assets/img/publish/logo.svg'"
+                :src="item?.goods_images?.[0] ? normalizeMallImage(item.goods_images[0]) : require('@/assets/img/publish/logo.svg')"
                 style="width: 32vw; height: 32vw"
             />
             <i18n-t keypath="vip.mall.buyConfirmMessage" tag="div" class="text">
@@ -23,6 +23,7 @@
 import User from "@jx3box/jx3box-common/js/user";
 import { __Root } from "@/utils/config";
 import { handleMallExchangeError } from "@/utils/mallExchangeError";
+import { normalizeMallImage } from "@/utils/mallImage";
 export default {
     name: "BuyConfirm",
     props: {
@@ -51,6 +52,7 @@ export default {
         },
     },
     methods: {
+        normalizeMallImage,
         buyGoods() {
             if (!User.isLogin()) {
                 this.$message.error(this.$t("vip.common.loginRequired"));

@@ -1,5 +1,7 @@
 // 1.Create APP
 import { createApp } from "vue";
+import { suppressProductionConsoleLog } from "@/utils/console";
+suppressProductionConsoleLog();
 import App from "./dashboard.vue";
 const app = createApp(App);
 

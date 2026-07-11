@@ -27,7 +27,7 @@
                             <img
                                 v-for="item in previewItems"
                                 :key="item.id"
-                                :src="item.goods?.goods_images?.[0]"
+                                :src="normalizeMallImage(item.goods?.goods_images?.[0])"
                                 :alt="item.goods?.title || $t('vip.mall.productImage')"
                                 class="cover"
                             />
@@ -145,6 +145,7 @@
 import { __Root } from "@/utils/config";
 import { batchMakeOrder, batchPayOrder } from "@/service/vip/mall";
 import { handleMallExchangeError } from "@/utils/mallExchangeError";
+import { normalizeMallImage } from "@/utils/mallImage";
 import User from "@jx3box/jx3box-common/js/user";
 import { ArrowDown, ArrowLeft, CircleCheckFilled, Close, Refresh, Setting } from "@element-plus/icons-vue";
 export default {
@@ -181,9 +182,6 @@ export default {
             return window.innerWidth;
         },
         cart() {
-            if (User.isLogin() && this.$store.state.mallNew.cart.length === 0) {
-                this.$store.dispatch("mallNew/getCart");
-            }
             return this.$store.state.mallNew.cart;
         },
         readyNumber() {
@@ -284,6 +282,7 @@ export default {
         },
     },
     methods: {
+        normalizeMallImage,
         goBack() {
             if (this.embedded) {
                 this.isShow = false;
@@ -397,11 +396,7 @@ export default {
         }
     },
     mounted() {
-        if (User.isLogin()) {
-            this.$store.dispatch("mallNew/getCart").then(() => {
-                this.loadAddress();
-            });
-        }
+        if (User.isLogin()) this.loadAddress();
     },
 };
 </script>

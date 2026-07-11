@@ -1,6 +1,6 @@
 <template>
     <div class="good-item" @click="$router.push({ name: 'mall_detail_web', params: { id: good.id } })">
-        <img :src="good.goods_images[0]" alt="" class="good-item-img" />
+        <img :src="normalizeMallImage(good.goods_images[0])" alt="" class="good-item-img" />
         <div class="right">
             <div class="header">
                 <div class="title">{{ good.title }}</div>
@@ -52,6 +52,7 @@ import { throttle } from "lodash";
 import BuyConfirm from "./BuyConfirm.vue";
 import { __cdn } from "@/utils/config";
 import { playAddCartFly } from "@/utils/mallCartFly";
+import { normalizeMallImage } from "@/utils/mallImage";
 export default {
     name: "GoodItem",
     components: {
@@ -69,6 +70,7 @@ export default {
         },
     },
     methods: {
+        normalizeMallImage,
         getLevel(exp_limit) {
             return User.getLevel(exp_limit);
         },
@@ -95,7 +97,7 @@ export default {
                 });
         }, 1000),
         fly(e) {
-            playAddCartFly(e, this.$store.state.mallNew.boundCart, { image: this.good.goods_images?.[0] });
+            playAddCartFly(e, this.$store.state.mallNew.boundCart, { image: this.normalizeMallImage(this.good.goods_images?.[0]) });
         },
     },
 };

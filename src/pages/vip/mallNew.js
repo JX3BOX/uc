@@ -2,6 +2,8 @@ import User from "@jx3box/jx3box-common/js/user";
 import { getCart, addGoodsToCart, deleteCart, deleteCartGoods, updateGoodsNum } from "@/service/vip/cart";
 import { getAddress, toPay, updateAddress, getMyAddress, toPayOrder } from "@/service/vip/mall";
 
+let cartRequest = null;
+
 function pickUsableAddress(list) {
     const addressList = Array.isArray(list) ? list : [];
     return (
@@ -50,12 +52,17 @@ const store = {
                 commit("toState", { cart: [] });
                 return [];
             }
-            return getCart().then((res) => {
-                const cart = res.data?.data || [];
-                commit("toState", {
-                    cart: cart,
+            if (cartRequest) return cartRequest;
+            cartRequest = getCart()
+                .then((res) => {
+                    const cart = res.data?.data || [];
+                    commit("toState", { cart });
+                    return cart;
+                })
+                .finally(() => {
+                    cartRequest = null;
                 });
-            });
+            return cartRequest;
         },
         async deleteCartGoods({ dispatch }, id) {
             if (!User.isLogin()) return false;

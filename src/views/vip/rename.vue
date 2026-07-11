@@ -40,7 +40,8 @@
                                 show-word-limit
                                 :maxlength="20"
                                 :minlength="2"
-                                @input="checkName"
+                                @input="scheduleNameCheck"
+                                @blur="checkName"
                                 :disabled="!count"
                             >
                                 <template #append v-if="!isEmpty">
@@ -127,6 +128,7 @@ export default {
             isBuying: false,
             cardLoadError: "",
             checkToken: 0,
+            nameCheckTimer: null,
 
             checktips: "",
         };
@@ -201,7 +203,16 @@ export default {
         },
     },
     methods: {
+        scheduleNameCheck: function () {
+            clearTimeout(this.nameCheckTimer);
+            this.nameCheckTimer = setTimeout(() => {
+                this.nameCheckTimer = null;
+                this.checkName();
+            }, 400);
+        },
         checkName: function () {
+            clearTimeout(this.nameCheckTimer);
+            this.nameCheckTimer = null;
             // 为空退出
             if (this.isEmpty) {
                 this.valid = null;
@@ -370,6 +381,9 @@ export default {
                     this.isBuying = false;
                 });
         },
+    },
+    beforeUnmount() {
+        clearTimeout(this.nameCheckTimer);
     },
     mounted: function () {
         this.isLogin && this.checkPermission();

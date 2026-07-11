@@ -33,6 +33,7 @@ export default {
             hasMore: true,
             isLoading: false,
             noData: false,
+            loadSeq: 0,
         };
     },
     components: {
@@ -44,8 +45,8 @@ export default {
         return {
             query: this.query,
             changeQuery: this.changeQuery,
-            hasMore: this.hasMore,
-            isLoading: this.isLoading,
+            hasMore: () => this.hasMore,
+            isLoading: () => this.isLoading,
             noData: this.noData,
         };
     },
@@ -64,11 +65,13 @@ export default {
     },
     methods: {
         async loadData() {
+            const seq = ++this.loadSeq;
             try {
                 if (this.query.pageIndex === 1) this.noData = false;
                 if (this.noData) return;
                 this.isLoading = true;
                 const res = await getItemList(removeEmpty(this.query));
+                if (seq !== this.loadSeq) return;
                 const list = res.data.data?.list || [];
                 const all = [...this.goodsList, ...list];
                 this.goodsList = this.query.pageIndex == 1 ? list : unionBy(all, "id");
@@ -76,9 +79,10 @@ export default {
                 this.hasMore = this.query.pageIndex < pageTotal;
                 if (!list.length) this.noData = true;
             } catch (error) {
+                if (seq !== this.loadSeq) return;
                 console.error("加载数据失败", error);
             } finally {
-                this.isLoading = false;
+                if (seq === this.loadSeq) this.isLoading = false;
             }
         },
         changeQuery(key, value, isChangePage) {

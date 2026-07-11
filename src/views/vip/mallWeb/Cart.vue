@@ -25,7 +25,7 @@
                     >
                         <i class="el-icon-check"></i>
                     </div>
-                    <img class="c-img" :src="item.goods.goods_images[0]" alt="" />
+                    <img class="c-img" :src="normalizeMallImage(item.goods.goods_images[0])" alt="" />
                     <div class="c-info">
                         <div class="c-name">{{ item.goods.title }}</div>
                         <div class="c-goods-info">
@@ -106,6 +106,7 @@ import { debounce } from "lodash";
 import { __cdn } from "@/utils/config";
 import moment from "moment";
 import CartConfirm from "./components/CartConfirm.vue";
+import { normalizeMallImage } from "@/utils/mallImage";
 export default {
     name: "Cart",
     components: {
@@ -145,6 +146,7 @@ export default {
         this.$store.commit("mallNew/toState", { cart: this.list });
     },
     methods: {
+        normalizeMallImage,
         allChange() {
             const boolen = this.isAll;
             this.list.forEach((item) => {
