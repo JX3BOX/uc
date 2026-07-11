@@ -1,6 +1,6 @@
 <template>
     <div class="m-publish-excerpt">
-        <el-input v-model="excerpt" :maxlength="200" show-word-limit type="textarea" placeholder="摘要信息"></el-input>
+        <el-input v-model="excerpt" :maxlength="200" show-word-limit type="textarea" :placeholder="$t('publish.form.excerptPlaceholder')"></el-input>
         <slot></slot>
     </div>
 </template>

@@ -1,9 +1,9 @@
 <template>
     <div class="m-category-list">
-        <span class="u-category">类别</span>
+        <span class="u-category">{{ $t("publish.common.category") }}</span>
         <el-radio-group v-model="category" @change="updateCategory">
             <!-- <el-tooltip v-for="item in options" :key="item.name" effect="dark" :content="item.remark" placement="top-start"> -->
-            <el-radio v-for="item in options" :key="item.name" border :value="item.name">{{ item.label }}</el-radio>
+            <el-radio v-for="item in options" :key="item.name" border :value="item.name">{{ optionLabel(item) }}</el-radio>
             <!-- </el-tooltip> -->
         </el-radio-group>
     </div>
@@ -57,6 +57,15 @@ export default {
     },
     emits: ["update", "update:modelValue"],
     methods: {
+        optionLabel(item) {
+            const key = {
+                guide: "guide",
+                story: "story",
+                discuz: "sharing",
+                help: "help",
+            }[item.name];
+            return key ? this.$t(`publish.community.categories.${key}`) : item.label;
+        },
         // 当 radio-group 内部的 category 变化时，更新到外部的 value 上
         updateCategory(newVal) {
             this.$emit("update:modelValue", newVal);

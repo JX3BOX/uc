@@ -1,7 +1,7 @@
 <template>
     <div class="m-author-info">
         <div class="m-top">
-            <div class="u-title">TA的作品</div>
+            <div class="u-title">{{ $t("author.profile.worksTitle") }}</div>
             <el-tabs class="m-tabs" v-model="active" stretch>
                 <el-tab-pane
                     v-for="item in types"
@@ -37,27 +37,27 @@ import { markRaw } from "vue";
 
 const AUTHOR_TYPES = [
     {
-        label: "作品",
+        labelKey: "author.tabs.works",
         value: "Post",
         component: markRaw(Post),
     },
     {
-        label: "百科",
+        labelKey: "author.tabs.wiki",
         value: "Wiki",
         component: markRaw(Wiki),
     },
     {
-        label: "帖子",
+        labelKey: "author.tabs.posts",
         value: "Other",
         component: markRaw(Other),
     },
     {
-        label: "数据",
+        labelKey: "author.tabs.data",
         value: "Data",
         component: markRaw(Data),
     },
     {
-        label: "休闲",
+        labelKey: "author.tabs.leisure",
         value: "Fallow",
         component: markRaw(Fallow),
     },
@@ -79,7 +79,7 @@ export default {
     data: function () {
         return {
             active: "Post",
-            types: AUTHOR_TYPES,
+            types: AUTHOR_TYPES.map((item) => ({ ...item, label: this.$t(item.labelKey) })),
         };
     },
     computed: {

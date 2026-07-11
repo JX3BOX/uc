@@ -19,7 +19,6 @@ const routes = [
         path: "/boxcoin",
         component: () => import("@/views/vip/boxcoin.vue"),
         meta: {
-            title: "盒币充值",
             i18n: {
                 title: "pages.vip.boxcoin.title",
                 keywords: "pages.vip.boxcoin.keywords",
@@ -32,7 +31,6 @@ const routes = [
         path: "/cny",
         component: () => import("@/views/vip/cny.vue"),
         meta: {
-            title: "金箔充值",
             i18n: {
                 title: "pages.vip.cny.title",
                 keywords: "pages.vip.cny.keywords",
@@ -45,7 +43,6 @@ const routes = [
         path: "/lottery",
         component: () => import("@/views/vip/lottery/index.vue"),
         meta: {
-            title: "积分抽奖",
             i18n: {
                 title: "pages.vip.lottery.title",
                 keywords: "pages.vip.lottery.keywords",
@@ -60,7 +57,6 @@ const routes = [
         path: "/premium",
         component: () => import("@/views/vip/premium/index.vue"),
         meta: {
-            title: "开通会员",
             i18n: {
                 title: "pages.vip.premium.title",
                 keywords: "pages.vip.premium.keywords",
@@ -73,7 +69,6 @@ const routes = [
         path: "/rename",
         component: () => import("@/views/vip/rename.vue"),
         meta: {
-            title: "修改昵称",
             i18n: {
                 title: "pages.vip.rename.title",
                 keywords: "pages.vip.rename.keywords",
@@ -86,7 +81,6 @@ const routes = [
         path: "/namespace",
         component: () => import("@/views/vip/namespace.vue"),
         meta: {
-            title: "剑三铭牌",
             i18n: {
                 title: "pages.vip.namespace.title",
                 keywords: "pages.vip.namespace.keywords",
@@ -99,7 +93,6 @@ const routes = [
         path: "/mall",
         component: () => import("@/views/vip/mallNew.vue"),
         meta: {
-            title: "积分商城",
             i18n: {
                 title: "pages.vip.mall.title",
                 keywords: "pages.vip.mall.keywords",
@@ -113,7 +106,6 @@ const routes = [
                 component: () => import("@/views/vip/mallNew/Index.vue"),
                 meta: {
                     keepAlive: true,
-                    title: "积分商城",
                     i18n: {
                         title: "pages.vip.mall.list.title",
                         keywords: "pages.vip.mall.list.keywords",
@@ -127,7 +119,6 @@ const routes = [
                 component: () => import("@/views/vip/mallNew/Index.vue"),
                 meta: {
                     keepAlive: true,
-                    title: "积分商城",
                     i18n: {
                         title: "pages.vip.mall.list.title",
                         keywords: "pages.vip.mall.list.keywords",
@@ -141,7 +132,6 @@ const routes = [
                 component: () => import("@/views/vip/mallNew/Index.vue"),
                 meta: {
                     keepAlive: true,
-                    title: "积分商城",
                     i18n: {
                         title: "pages.vip.mall.list.title",
                         keywords: "pages.vip.mall.list.keywords",
@@ -154,7 +144,6 @@ const routes = [
                 path: "batch",
                 component: () => import("@/views/vip/mallNew/BatchOrder.vue"),
                 meta: {
-                    title: "积分商城 - 订单",
                     i18n: {
                         title: "pages.vip.mall.batchOrder.title",
                         keywords: "pages.vip.mall.batchOrder.keywords",
@@ -167,7 +156,6 @@ const routes = [
                 path: "order/:id(\\d+)",
                 component: () => import("@/views/vip/mallNew/Order.vue"),
                 meta: {
-                    title: "积分商城 - 订单",
                     i18n: {
                         title: "pages.vip.mall.order.title",
                         keywords: "pages.vip.mall.order.keywords",
@@ -182,7 +170,6 @@ const routes = [
         path: "/mallWeb",
         component: () => import("@/views/vip/mallWeb.vue"),
         meta: {
-            title: "积分商城",
             i18n: {
                 title: "pages.vip.mall.title",
                 keywords: "pages.vip.mall.keywords",
@@ -197,7 +184,6 @@ const routes = [
                 component: () => import("@/views/vip/mallWeb/Index.vue"),
                 meta: {
                     keepAlive: true,
-                    title: "积分商城",
                     i18n: {
                         title: "pages.vip.mall.list.title",
                         keywords: "pages.vip.mall.list.keywords",
@@ -210,7 +196,6 @@ const routes = [
                 path: ":id(\\d+)",
                 component: () => import("@/views/vip/mallWeb/Detail.vue"),
                 meta: {
-                    title: "积分商城 - 商品详情",
                     i18n: {
                         title: "pages.vip.mall.detail.title",
                         keywords: "pages.vip.mall.detail.keywords",
@@ -223,7 +208,6 @@ const routes = [
                 path: "batch",
                 component: () => import("@/views/vip/mallNew/BatchOrder.vue"),
                 meta: {
-                    title: "积分商城 - 订单",
                     i18n: {
                         title: "pages.vip.mall.batchOrder.title",
                         keywords: "pages.vip.mall.batchOrder.keywords",
@@ -236,7 +220,6 @@ const routes = [
                 path: "order/:id(\\d+)",
                 component: () => import("@/views/vip/mallNew/Order.vue"),
                 meta: {
-                    title: "积分商城 - 订单",
                     i18n: {
                         title: "pages.vip.mall.order.title",
                         keywords: "pages.vip.mall.order.keywords",
@@ -249,7 +232,6 @@ const routes = [
                 path: "cart",
                 component: () => import("@/views/vip/mallWeb/Cart.vue"),
                 meta: {
-                    title: "积分商城 - 购物车",
                     i18n: {
                         title: "pages.vip.mall.cart.title",
                         keywords: "pages.vip.mall.cart.keywords",
@@ -267,7 +249,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    document.title = to.meta.title || "会员中心";
     if (to.fullPath.includes("/#")) {
         return next(to.fullPath.replace("/#", ""));
     }

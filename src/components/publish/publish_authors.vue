@@ -1,12 +1,12 @@
 <template>
     <div class="m-publish-authors" v-if="id && isSuper">
-        <el-form-item label="联合创作">
+        <el-form-item :label="$t('publish.nav.collaboration')">
             <div class="u-list">
                 <div class="u-item" v-for="(item, i) in list" :key="i">
                     <el-tooltip
                         class="item"
                         effect="dark"
-                        content="等待被邀请者确认"
+                        :content="$t('publish.collaboration.pendingConfirmation')"
                         placement="top"
                         v-if="!item.status"
                     >
@@ -15,18 +15,18 @@
                     <img class="u-avatar" :src="showAvatar(item.post_author_info.user_avatar)" />
                     <span class="u-name">
                         {{ item.post_author_info.display_name }}
-                        <span class="u-label">({{ item.label || "撰稿" }})</span>
+                        <span class="u-label">({{ item.label || $t("publish.collaboration.writer") }})</span>
                     </span>
-                    <el-tooltip class="item" effect="dark" content="修改备注" placement="top">
+                    <el-tooltip class="item" effect="dark" :content="$t('publish.collaboration.editRole')" placement="top">
                         <i class="u-edit el-icon-edit" @click="update(item)"></i>
                     </el-tooltip>
-                    <el-tooltip class="item" effect="dark" content="移除" placement="top">
+                    <el-tooltip class="item" effect="dark" :content="$t('publish.common.remove')" placement="top">
                         <i class="u-delete el-icon-delete" @click="remove(item, i)"></i>
                     </el-tooltip>
                 </div>
-                <el-button plain @click="openPop" type="primary" size="small">+ 添加联合创作者</el-button>
+                <el-button plain @click="openPop" type="primary" size="small">+ {{ $t("publish.collaboration.addAuthor") }}</el-button>
             </div>
-            <UserPop title="添加用户" v-model="visible" @confirm="addAuthor" />
+            <UserPop :title="$t('publish.collaboration.addUser')" v-model="visible" @confirm="addAuthor" />
         </el-form-item>
     </div>
 </template>
@@ -68,13 +68,13 @@ export default {
         addAuthor: function (userdata) {
             addUnionAuthor(this.id, userdata.ID).then((res) => {
                 this.$notify({
-                    title: "添加成功",
-                    message: "联合创作者添加成功",
+                    title: this.$t("publish.message.addSucceeded"),
+                    message: this.$t("publish.collaboration.addSucceeded"),
                     type: "success",
                 });
                 this.list.push({
                     post_author_info: userdata,
-                    label: "撰稿",
+                    label: this.$t("publish.collaboration.writer"),
                     status: 0,
                 });
             });
@@ -85,9 +85,9 @@ export default {
             });
         },
         update: function (item) {
-            this.$prompt("修改展示项，例如：撰稿/修订/主创/校稿..", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$prompt(this.$t("publish.collaboration.rolePlaceholder"), this.$t("publish.common.prompt"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
+                cancelButtonText: this.$t("publish.common.cancel"),
             }).then(({ value }) => {
                 updateUnionAuthor(this.id, item.post_author_info.ID, {
                     label: value,
@@ -95,8 +95,8 @@ export default {
                 }).then(() => {
                     item.label = value;
                     this.$notify({
-                        title: "修改成功",
-                        message: "备注更新成功",
+                        title: this.$t("publish.message.updateSucceeded"),
+                        message: this.$t("publish.collaboration.roleUpdated"),
                         type: "success",
                     });
                 });
@@ -105,8 +105,8 @@ export default {
         remove: function (item, i) {
             removeUnionAuthor(this.id, item.post_author_info.ID).then((res) => {
                 this.$notify({
-                    title: "删除成功",
-                    message: "成功移除联合创作者",
+                    title: this.$t("publish.message.deleteSucceeded"),
+                    message: this.$t("publish.collaboration.removeSucceeded"),
                     type: "success",
                 });
                 this.list.splice(i, 1);

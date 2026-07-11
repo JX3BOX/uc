@@ -1,11 +1,11 @@
 <template>
     <div class="m-publish-macro m-publish-tool-source">
-        <el-divider content-position="left">资源</el-divider>
+        <el-divider content-position="left">{{ $t("publish.resource.title") }}</el-divider>
 
         <div class="m-macro-box m-tool-source-box">
             <div class="m-tool-source-header">
                 <el-button class="m-macro-addbutton" icon="CirclePlus" type="primary" @click="addSource"
-                    >添加资源</el-button
+                    >{{ $t("publish.resource.add") }}</el-button
                 >
             </div>
 
@@ -14,22 +14,22 @@
                     <template #label>
                         <span class="u-tab-box">
                             <i class="el-icon-tickets u-tab-icon"></i>
-                            <span class="u-tab-name" :title="item.name">{{ i + 1 + "号位-" + item.name }}</span>
+                            <span class="u-tab-name" :title="item.name">{{ $t("publish.common.slotName", { index: i + 1, name: item.name }) }}</span>
                         </span>
                     </template>
                     <div class="m-source-name m-macro-item">
-                        <h5 class="u-title">名称</h5>
-                        <el-input v-model="item.name" size="large" placeholder="输入资源名称"></el-input>
+                        <h5 class="u-title">{{ $t("publish.common.name") }}</h5>
+                        <el-input v-model="item.name" size="large" :placeholder="$t('publish.resource.namePlaceholder')"></el-input>
                     </div>
                     <div class="m-source-mode m-macro-item">
-                        <h5 class="u-title">模式</h5>
+                        <h5 class="u-title">{{ $t("publish.resource.mode") }}</h5>
                         <el-radio-group v-model="item.mode" size="large">
-                            <el-radio value="0" border>远程</el-radio>
-                            <el-radio value="1" border>本地</el-radio>
+                            <el-radio value="0" border>{{ $t("publish.resource.remote") }}</el-radio>
+                            <el-radio value="1" border>{{ $t("publish.resource.local") }}</el-radio>
                         </el-radio-group>
                     </div>
                     <div class="m-source-file m-macro-item" v-if="item.mode == 1">
-                        <h5 class="u-title">文件</h5>
+                        <h5 class="u-title">{{ $t("publish.common.file") }}</h5>
                         <div class="m-raw-file">
                             <!-- <div class="u-warning">
                                 <i class="el-icon-warning-outline"></i>
@@ -42,12 +42,12 @@
                                 :id="'tool_' + i"
                                 @change="(e) => uploadSource(e, i)"
                             />
-                            <el-button type="primary" icon="Promotion" @click="selectSource(i)">上传文件</el-button>
+                            <el-button type="primary" icon="Promotion" @click="selectSource(i)">{{ $t("publish.upload.file") }}</el-button>
                             <span class="u-data-remark">{{ files[i] && files[i].name }}</span>
                             <div class="u-file" v-if="item.file">
-                                <span class="u-file__label">当前文件下载：</span>
+                                <span class="u-file__label">{{ $t("publish.resource.currentDownload") }}:</span>
                                 <span class="u-file__value"
-                                    ><i class="el-icon-document"></i>{{ item.name || i + 1 + "号位" }}</span
+                                    ><i class="el-icon-document"></i>{{ item.name || $t("publish.common.slot", { index: i + 1 }) }}</span
                                 >
                                 <a :href="item.file" target="_blank"
                                     ><i class="el-icon-download u-file__download"></i
@@ -56,14 +56,14 @@
                         </div>
                     </div>
                     <div class="m-source-file m-macro-item" v-if="item.mode == 0">
-                        <h5 class="u-title">文件</h5>
-                        <el-input v-model="item.file" size="large" placeholder="输入文件地址（例如网盘地址）"></el-input>
+                        <h5 class="u-title">{{ $t("publish.common.file") }}</h5>
+                        <el-input v-model="item.file" size="large" :placeholder="$t('publish.resource.urlPlaceholder')"></el-input>
                     </div>
                     <div class="m-source-remark m-macro-item">
-                        <h5 class="u-title">备注</h5>
+                        <h5 class="u-title">{{ $t("publish.common.note") }}</h5>
                         <el-input
                             v-model="item.remark"
-                            placeholder="输入备注（例如网盘密码）"
+                            :placeholder="$t('publish.resource.notePlaceholder')"
                             :rows="3"
                             type="textarea"
                         ></el-input>
@@ -161,8 +161,8 @@ export default {
     methods: {
         addSource() {
             if (this.data.data.length > 7) {
-                this.$alert("已经达到添加上限", "消息", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("publish.message.limitReached"), this.$t("publish.common.message"), {
+                    confirmButtonText: this.$t("publish.common.confirm"),
                 });
                 return;
             }
@@ -177,14 +177,14 @@ export default {
         },
         removeSource(name) {
             if (this.data.data.length < 2) {
-                this.$alert("必须保留1个资源", "消息", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("publish.resource.keepOne"), this.$t("publish.common.message"), {
+                    confirmButtonText: this.$t("publish.common.confirm"),
                 });
                 return;
             }
 
-            this.$alert("确定删除这个资源吗，删除后无法找回", "消息", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("publish.resource.confirmDelete"), this.$t("publish.common.message"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
                 callback: (action) => {
                     if (action == "confirm") {
                         // 删除
@@ -205,7 +205,7 @@ export default {
             upload(formData).then((res) => {
                 this.data.data[i].file = res.data.data[0];
                 this.$message({
-                    message: "上传成功",
+                    message: this.$t("publish.message.uploadSucceeded"),
                     type: "success",
                 });
             });

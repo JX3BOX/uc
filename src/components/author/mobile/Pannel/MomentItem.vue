@@ -2,7 +2,7 @@
     <div class="m-moment-item" >
         <div class="u-desc">
             <span class="u-time">{{time}}</span>
-            <span class="u-text">发布了{{labelType}}</span>
+            <span class="u-text">{{ $t("author.mobile.published", { type: labelType }) }}</span>
         </div>
         <div class="m-content">
             <el-image :src="banner" class="u-banner" fit="cover" />
@@ -68,7 +68,7 @@ export default {
         },
         labelType() {
             let types = Object.assign({
-                bbs:"帖子"
+                bbs: this.$t("author.tabs.posts")
             }, __postType, __wikiType, __appType, __gameType);
             const type = this.item.post_type;
             return types[type] || type;

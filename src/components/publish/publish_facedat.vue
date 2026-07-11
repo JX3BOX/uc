@@ -1,27 +1,27 @@
 <template>
     <div class="m-publish-facedat">
-        <el-divider content-position="left">① 数据</el-divider>
-        <el-form-item label="数据">
+        <el-divider content-position="left">① {{ $t("publish.common.data") }}</el-divider>
+        <el-form-item :label="$t('publish.common.data')">
             <input class="u-data-input" type="file" id="face_file" @change="processFile" accept=".jx3dat, .dat, .ini" />
-            <el-button type="primary" @click="selectData" icon="Upload">上传脸型数据</el-button>
+            <el-button type="primary" @click="selectData" icon="Upload">{{ $t("publish.face.uploadFaceData") }}</el-button>
             <span class="u-data-ready" v-show="facedat.file">
                 <i class="el-icon-success"></i>
-                已上传
+                {{ $t("publish.common.uploaded") }}
             </span>
         </el-form-item>
 
-        <el-form-item label="分析结果">
+        <el-form-item :label="$t('publish.face.analysis')">
             <el-input v-model="facedat.data" type="textarea" :rows="6" disabled></el-input>
         </el-form-item>
 
-        <el-divider content-position="left">② 美图</el-divider>
-        <el-form-item label="图册">
+        <el-divider content-position="left">② {{ $t("publish.face.gallery") }}</el-divider>
+        <el-form-item :label="$t('publish.face.album')">
             <UploadAlbum v-model="facedat.pics"></UploadAlbum>
         </el-form-item>
 
-        <el-divider content-position="left">③ 其它</el-divider>
-        <el-form-item label="作者">
-            <el-input v-model="facedat.author" placeholder="请注明原作者"></el-input>
+        <el-divider content-position="left">③ {{ $t("publish.common.other") }}</el-divider>
+        <el-form-item :label="$t('publish.common.author')">
+            <el-input v-model="facedat.author" :placeholder="$t('publish.face.authorPlaceholder')"></el-input>
         </el-form-item>
 
         <slot></slot>
@@ -121,7 +121,7 @@ export default {
             uploadFacedata(formdata).then((res) => {
                 this.facedat.file = res.data.data[0];
                 this.$message({
-                    message: "上传成功",
+                    message: this.$t("publish.message.uploadSucceeded"),
                     type: "success",
                 });
             });
@@ -130,7 +130,7 @@ export default {
             let file = e.target.files[0];
             if (file && file.size > 16384) {
                 this.$message({
-                    message: "文件过大，限 16KB 以内",
+                    message: this.$t("publish.upload.fileTooLarge16K"),
                     type: "error",
                 });
                 return;
@@ -154,8 +154,8 @@ export default {
                 } catch (ex) {
                     console.log(ex);
                     vm.$notify.error({
-                        title: "错误",
-                        message: "无法读取数据",
+                        title: this.$t("publish.common.error"),
+                        message: this.$t("publish.upload.cannotReadData"),
                     });
                     vm.$emit("fail", {
                         file: vm.file,
@@ -168,8 +168,8 @@ export default {
                     setTimeout(
                         () =>
                             vm.$notify({
-                                title: "成功",
-                                message: "数据读取成功，开始上传",
+                                title: this.$t("publish.common.success"),
+                                message: this.$t("publish.upload.readSucceeded"),
                                 type: "success",
                             }),
                         0
@@ -185,8 +185,8 @@ export default {
             };
             fr.onerror = function (e) {
                 vm.$notify.error({
-                    title: "错误",
-                    message: "文件读取异常",
+                    title: this.$t("publish.common.error"),
+                    message: this.$t("publish.upload.readFailed"),
                 });
             };
             fr.readAsArrayBuffer(file);

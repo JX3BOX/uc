@@ -236,7 +236,7 @@ export default {
                 fontCount: this.fontCount,
                 imgLink: __cdn + `design/card/festival/${key}.png`,
             };
-            if (text) data.text = text;
+            if (text) data.text = this.$t("card.holiday.happyDragonBoat");
             return data;
         },
     },

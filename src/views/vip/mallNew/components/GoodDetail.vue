@@ -1,7 +1,7 @@
 <template>
     <div class="good-detail" :class="{ 'without-nav': !isShowNav }">
         <div class="status-row">
-            <span class="status-label">当前商品</span>
+            <span class="status-label">{{ $t("vip.mall.currentProduct") }}</span>
             <span class="status-pill" :class="{ canBuy: canBuyInfo.canBuy }">
                 <i :class="canBuyInfo.canBuy ? 'el-icon-circle-check' : 'el-icon-circle-close'"></i>
                 {{ buyStatusText }}
@@ -10,7 +10,7 @@
         <div class="title-card">
             <div class="title">{{ good.title }}</div>
             <div class="apply" v-if="apply[goodInfo.category]">
-                <span>应用场景</span>
+                <span>{{ $t("vip.mall.applicationScene") }}</span>
                 <strong>{{ apply[goodInfo.category] }}</strong>
             </div>
         </div>
@@ -23,61 +23,61 @@
                     arrow="always"
                 >
                     <el-carousel-item v-for="(image, index) in previewImages" :key="`${image}-${index}`">
-                        <img :src="image" :alt="`${good.title || '商品图片'} ${index + 1}`" class="goods-carousel-image" />
+                        <img :src="image" :alt="`${good.title || $t('vip.mall.productImage')} ${index + 1}`" class="goods-carousel-image" />
                     </el-carousel-item>
                 </el-carousel>
                 <img v-else-if="previewImages.length === 1" :src="previewImages[0]" class="u-good-image" />
-                <div v-else class="u-good-image u-good-image-null">暂无预览</div>
+                <div v-else class="u-good-image u-good-image-null">{{ $t("vip.mall.noPreview") }}</div>
             </div>
         </div>
         <div class="buy-detail">
             <div class="detail-card">
                 <div class="condition">
                     <div class="condition-item" :class="{ canBuy: canBuyInfo.level }">
-                        <span>等级</span>
+                        <span>{{ $t("vip.mall.level") }}</span>
                         <b>Lv.{{ canBuyInfo.user_level }}</b>
                         <i class="el-icon-circle-check" v-if="canBuyInfo.level"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
                     <div class="condition-item" :class="{ canBuy: canBuyInfo.vip_limit }" v-if="good.vip_limit !== 0">
-                        <span>会员</span>
-                        <b>专属</b>
+                        <span>{{ $t("vip.mall.member") }}</span>
+                        <b>{{ $t("vip.mall.exclusive") }}</b>
                         <i class="el-icon-circle-check" v-if="canBuyInfo.vip_limit"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
                     <div class="condition-item" :class="{ canBuy: canBuyInfo.box_coin }" v-if="good.price_boxcoin">
-                        <span>盒币</span>
+                        <span>{{ $t("vip.mall.boxcoin") }}</span>
                         <b>{{ good.price_boxcoin }}</b>
                         <i class="el-icon-circle-check" v-if="canBuyInfo.box_coin"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
                     <div class="condition-item" :class="{ canBuy: canBuyInfo.points }" v-if="good.price_points">
-                        <span>积分</span>
+                        <span>{{ $t("vip.common.points") }}</span>
                         <b>{{ good.price_points }}</b>
                         <i class="el-icon-circle-check" v-if="canBuyInfo.points"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
                     <div class="condition-item" :class="{ canBuy: canBuyInfo.stock }">
-                        <span>库存</span>
+                        <span>{{ $t("vip.mall.stock") }}</span>
                         <b>{{ stockText }}</b>
                         <i class="el-icon-circle-check" v-if="canBuyInfo.stock"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
                 </div>
                 <div class="buy-time" :class="{ canBuy: canBuyInfo.buy_time }" :title="sellTimeFullText">
-                    <span>兑换期</span>
+                    <span>{{ $t("vip.mall.exchangePeriod") }}</span>
                     <b>{{ sellTimeRangeText }}</b>
-                    <em v-if="!canBuyInfo.buy_time">不在兑换期内</em>
+                    <em v-if="!canBuyInfo.buy_time">{{ $t("vip.mall.outsideExchangePeriod") }}</em>
                 </div>
                 <div class="buttons">
                     <button class="button add-cart" :class="{ 'is-added': addFeedbackVisible }" @click="addCart">
                         <img :src="imgUrl + 'cart-fill.svg'" alt="" />
-                        加购
+                        {{ $t("vip.mall.addToCart") }}
                         <span v-if="addFeedbackVisible" :key="addFeedbackKey" class="cart-plus">+1</span>
                     </button>
                     <button class="button buy" @click="buyGoods">
                         <img :src="redeemIcon" alt="" />
-                        <span>兑换</span>
+                        <span>{{ $t("vip.common.exchange") }}</span>
                     </button>
                     <button class="button like" @click="$refs.like.addLike()">
                         <img :src="imgUrl + 'like.svg'" alt="" />
@@ -102,8 +102,6 @@ import { resolveImagePath } from "@jx3box/jx3box-common/js/utils";
 import {
     getMallGoodsCartAmount,
     isOwnedSingleMallGoods,
-    MALL_DECORATION_OWNED_MESSAGE,
-    MALL_DECORATION_SINGLE_LIMIT_MESSAGE,
     shouldBlockSingleDecorationAdd,
 } from "@/utils/mallCartLimit";
 import DOMPurify from "dompurify";
@@ -131,19 +129,21 @@ export default {
             addFeedbackVisible: false,
             addFeedbackKey: 0,
             addFeedbackTimer: null,
-            apply: {
-                palu: "论坛帖子风格",
-                avatar: "头像框",
-                emoticon: "表情包",
-                homebg: "PC/移动主页风格、移动个人中心主题",
-                atcard: "PC/移动个人名片",
-                calendar: "PC首页日历、移动首屏KV",
-                comment: "PC评论风格、移动论坛风格",
-                sidebar: "PC作品侧栏、移动底部图标",
-            },
         };
     },
     computed: {
+        apply() {
+            return {
+                palu: this.$t("vip.mall.scenes.forumStyle"),
+                avatar: this.$t("vip.mall.scenes.avatar"),
+                emoticon: this.$t("vip.mall.scenes.emoticon"),
+                homebg: this.$t("vip.mall.scenes.homeBackground"),
+                atcard: this.$t("vip.mall.scenes.profileCard"),
+                calendar: this.$t("vip.mall.scenes.calendar"),
+                comment: this.$t("vip.mall.scenes.comment"),
+                sidebar: this.$t("vip.mall.scenes.sidebar"),
+            };
+        },
         id() {
             return this.good.id;
         },
@@ -170,7 +170,7 @@ export default {
             );
         },
         buyStatusText() {
-            return this.canBuyInfo.canBuy ? "可兑换" : "不满足兑换条件";
+            return this.canBuyInfo.canBuy ? this.$t("vip.mall.exchangeAvailable") : this.$t("vip.mall.notEligible");
         },
         redeemIcon() {
             return this.good.price_boxcoin ? this.imgUrl + "box_coin_fill.svg" : this.imgUrl + "point.svg";
@@ -178,7 +178,7 @@ export default {
         sellTimeFullText() {
             const start = this.good.start_sell_time || "-";
             const end = this.good.end_sell_time || "-";
-            return `可兑换时间：${start} ~ ${end}`;
+            return this.$t("vip.mall.exchangeTime", { start, end });
         },
         sellTimeRangeText() {
             const start = this.formatSellTime(this.good.start_sell_time);
@@ -278,7 +278,7 @@ export default {
             if (isOwnedSingleMallGoods(this.good)) {
                 return this.$message({
                     type: "warning",
-                    message: MALL_DECORATION_OWNED_MESSAGE,
+                    message: this.$t("vip.mall.alreadyOwned"),
                 });
             }
             this.$refs.buyConfirm.isShow = true;
@@ -293,20 +293,20 @@ export default {
             if (isOwnedSingleMallGoods(this.good)) {
                 return this.$message({
                     type: "warning",
-                    message: MALL_DECORATION_OWNED_MESSAGE,
+                    message: this.$t("vip.mall.alreadyOwned"),
                 });
             }
             if (shouldBlockSingleDecorationAdd(this.$store.state.mallNew.cart, this.good)) {
                 return this.$message({
                     type: "warning",
-                    message: MALL_DECORATION_SINGLE_LIMIT_MESSAGE,
+                    message: this.$t("vip.mall.singleDecorationLimit"),
                 });
             }
             const num = getMallGoodsCartAmount(this.$store.state.mallNew.cart, this.good);
             if (1 + num > this.good.stock) {
                 return this.$message({
                     type: "warning",
-                    message: "可兑换库存不足",
+                    message: this.$t("vip.mall.insufficientStock"),
                 });
             }
             this.$store

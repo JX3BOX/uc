@@ -10,7 +10,7 @@
                         <el-input
                             class="u-text u-email"
                             v-model="form.email"
-                            placeholder="邮箱地址"
+                            :placeholder="$t('account.common.emailPlaceholder')"
                             minlength="3"
                             maxlength="50"
                             type="email"
@@ -28,7 +28,7 @@
 
                     <!-- 验证码 -->
                     <el-form-item class="u-code" prop="code">
-                        <el-input class="u-text" placeholder="验证码" size="large" v-model="form.code" minlength="6" maxlength="6" name="code" autocomplete="one-time-code">
+                        <el-input class="u-text" :placeholder="$t('account.common.codePlaceholder')" size="large" v-model="form.code" minlength="6" maxlength="6" name="code" autocomplete="one-time-code">
                             <template #prepend>
                                 <i class="el-icon-postcard"></i>
                             </template>
@@ -40,7 +40,7 @@
 
                     <!-- 密码 -->
                     <el-form-item class="u-pass" prop="pass">
-                        <el-input class="u-text" placeholder="输入密码" size="large" v-model="form.pass" show-password name="password" autocomplete="new-password">
+                        <el-input class="u-text" :placeholder="$t('account.common.passwordPlaceholder')" size="large" v-model="form.pass" show-password name="password" autocomplete="new-password">
                             <template #prepend>
                                 <i class="el-icon-lock"></i>
                             </template>
@@ -49,7 +49,7 @@
 
                     <!-- 邀请码 -->
                     <el-form-item class="u-invite" prop="invite">
-                        <el-input class="u-text" size="large" placeholder="邀请码（非必填）" v-model="form.invite" name="invitation">
+                        <el-input class="u-text" size="large" :placeholder="$t('account.register.invitationPlaceholder')" v-model="form.invite" name="invitation">
                             <template #prepend>
                                 <i class="el-icon-present"></i>
                             </template>
@@ -58,48 +58,48 @@
 
                     <el-form-item class="u-terms" prop="agreement">
                         <el-checkbox v-model="form.agreement" class="u-checkbox">
-                            我已阅读并同意
-                            <a href="/about/license" target="_blank">《用户协议》</a>、<a
+                            {{ $t("account.register.agreementPrefix") }}
+                            <a href="/about/license" target="_blank">{{ $t("account.register.userAgreement") }}</a>{{ $t("account.register.agreementSeparator") }}<a
                                 href="/about/privacy"
                                 target="_blank"
-                                >《隐私政策》</a
-                            >、<a href="/about/treaty" target="_blank">《创作公约》</a>
+                                >{{ $t("account.register.privacyPolicy") }}</a
+                            >{{ $t("account.register.agreementSeparator") }}<a href="/about/treaty" target="_blank">{{ $t("account.register.creationConvention") }}</a>
                         </el-checkbox>
                     </el-form-item>
                 </el-form>
                 <!-- 提交 -->
                 <el-button class="u-submit u-button" type="primary" size="large" @click="submit" :disabled="!ready || submitting" :loading="submitting">
-                    注册
+                    {{ $t("account.common.register") }}
                 </el-button>
 
                 <Union mode="register" :includes="['qq', 'wechat', 'weibo']" />
 
                 <footer class="m-footer">
                     <p class="u-login">
-                        已有账号?
-                        <a :href="login_url">登录 &raquo;</a>
+                        {{ $t("account.common.haveAccount") }}
+                        <a :href="login_url">{{ $t("account.common.login") }} &raquo;</a>
                     </p>
                     <p class="u-resetpwd">
-                        <a href="/account/password_reset">忘记密码?</a>
+                        <a href="/account/password_reset">{{ $t("account.common.forgotPassword") }}</a>
                     </p>
                 </footer>
             </main>
 
             <main v-if="success == true" class="m-main">
                 <el-alert
-                    title="注册成功"
+                    :title="$t('account.register.successTitle')"
                     type="success"
-                    description="恭喜，您现在已经是「魔盒」的一员啦！"
+                    :description="$t('account.register.successDescription')"
                     show-icon
                     :closable="false"
                 >
                 </el-alert>
-                <a class="u-skip u-submit el-button u-button el-button--primary el-button--large" :href="login_url">立即登录</a>
+                <a class="u-skip u-submit el-button u-button el-button--primary el-button--large" :href="login_url">{{ $t("account.common.loginNow") }}</a>
             </main>
 
             <main v-if="success == false" class="m-main">
-                <el-alert title="注册失败" type="error" :description="failtips" show-icon :closable="false"> </el-alert>
-                <el-button class="u-button u-submit" type="primary" @click="reset" size="large">返回</el-button>
+                <el-alert :title="$t('account.register.failureTitle')" type="error" :description="failtips" show-icon :closable="false"> </el-alert>
+                <el-button class="u-button u-submit" type="primary" @click="reset" size="large">{{ $t("account.common.back") }}</el-button>
             </main>
         </el-card>
         <CommonBottom />
@@ -117,9 +117,6 @@ import {
     isValidCode,
     isValidEmail,
     isValidPassword,
-    validateAgreement,
-    validateCode,
-    validatePassword,
 } from "@/utils/account/validators.js";
 
 export default {
@@ -138,12 +135,12 @@ export default {
             emailRequestId: 0,
 
             success: null,
-            failtips: "请求异常,请重试",
+            failtips: this.$t("account.common.requestFailedRetry"),
 
             homepage: __Root,
             redirect: "",
 
-            code_text: "发送验证码",
+            code_text: this.$t("account.common.sendCode"),
             interval: 0,
             codeTimer: null,
             sendingCode: false,
@@ -169,13 +166,22 @@ export default {
         registerRules: function () {
             return {
                 email: [{ validator: this.validateRegisterEmail, trigger: "blur" }],
-                code: [{ validator: validateCode, trigger: "blur" }],
-                pass: [{ validator: validatePassword, trigger: "blur" }],
-                agreement: [{ validator: validateAgreement, trigger: "change" }],
+                code: [{ validator: this.validateRegisterCode, trigger: "blur" }],
+                pass: [{ validator: this.validateRegisterPassword, trigger: "blur" }],
+                agreement: [{ validator: this.validateRegisterAgreement, trigger: "change" }],
             };
         },
     },
     methods: {
+        validateRegisterCode: function (rule, value, callback) {
+            callback(isValidCode(value) ? undefined : new Error(this.$t("account.validation.code")));
+        },
+        validateRegisterPassword: function (rule, value, callback) {
+            callback(isValidPassword(value) ? undefined : new Error(this.$t("account.validation.password")));
+        },
+        validateRegisterAgreement: function (rule, value, callback) {
+            callback(value ? undefined : new Error(this.$t("account.validation.agreement")));
+        },
         handleEmailInput: function () {
             this.emailAvailable = null;
             this.emailRequestId++;
@@ -183,7 +189,7 @@ export default {
         validateRegisterEmail: function (rule, value, callback) {
             if (!isValidEmail(value)) {
                 this.emailAvailable = null;
-                callback(new Error("必须为有效的Email,长度限3-50个字符"));
+                callback(new Error(this.$t("account.validation.email")));
                 return;
             }
 
@@ -200,7 +206,7 @@ export default {
                     const available = !res.data.data.isExist;
                     this.emailAvailable = available;
                     if (!available) {
-                        callback(new Error("邮箱地址已被使用"));
+                        callback(new Error(this.$t("account.register.emailInUse")));
                         return;
                     }
 
@@ -210,7 +216,7 @@ export default {
                     if (requestId === this.emailRequestId) {
                         this.emailAvailable = null;
                     }
-                    callback(new Error("邮箱校验失败，请稍后重试"));
+                    callback(new Error(this.$t("account.register.emailCheckFailed")));
                 })
                 .finally(() => {
                     if (requestId === this.emailRequestId) {
@@ -245,7 +251,7 @@ export default {
                     })
                     .catch((err) => {
                         this.success = false;
-                        this.failtips = "网络请求异常,请稍后重试";
+                        this.failtips = this.$t("account.common.networkRetryLater");
                     })
                     .finally(() => {
                         this.submitting = false;
@@ -283,7 +289,7 @@ export default {
                     if (res.data.code) {
                         let msg = "";
                         if (res.data.code == 99999) {
-                            msg = "抱歉,暂不支持该邮件服务商,请更换邮箱服务商";
+                            msg = this.$t("account.register.emailProviderUnsupported");
                         } else {
                             msg = res.data.msg;
                         }
@@ -291,7 +297,7 @@ export default {
                         return;
                     }
 
-                    ElMessage.success("验证码已发送至您的邮箱");
+                    ElMessage.success(this.$t("account.register.codeSent"));
                     // 倒计时
                     this.interval = 60;
                     this.code_text = this.interval + "s";
@@ -301,12 +307,12 @@ export default {
                         this.code_text = this.interval + "s";
                         if (this.interval <= 0) {
                             this.clearCodeTimer();
-                            this.code_text = "发送验证码";
+                            this.code_text = this.$t("account.common.sendCode");
                         }
                     }, 1000);
                 })
                 .catch(() => {
-                    ElMessage.error("网络请求异常,请稍后重试");
+                    ElMessage.error(this.$t("account.common.networkRetryLater"));
                 })
                 .finally(() => {
                     this.sendingCode = false;

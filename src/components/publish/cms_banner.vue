@@ -1,6 +1,6 @@
 <template>
     <div class="m-cms-banner">
-        <publishBanner v-model="banner" :size="size" :info="info" is-cms></publishBanner>
+        <publishBanner v-model="banner" :size="size" :info="info || $t('publish.form.cmsBannerHint')" is-cms></publishBanner>
     </div>
 </template>
 
@@ -26,7 +26,7 @@ export default {
         },
         info: {
             type: String,
-            default: "非必选，首页海报尺寸1600*280（推荐3200*560支持高分屏），最大30M。",
+            default: "",
         },
     },
     data() {

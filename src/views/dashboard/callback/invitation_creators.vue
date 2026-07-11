@@ -1,7 +1,7 @@
 <template>
     <div class="m-callback m-invitation-creators">
-        <h1 class="u-title"><i class="el-icon-message"></i> 邀请</h1>
-        <p class="u-desc">你收到了一条联合创作邀请。</p>
+        <h1 class="u-title"><i class="el-icon-message"></i> {{ $t("dashboard.invitationCallback.title") }}</h1>
+        <p class="u-desc">{{ $t("dashboard.invitationCallback.coCreationReceived") }}</p>
         <div class="u-post">
             <div class="u-post-avatar">
                 <img :src="showAvatar(userdata.user_avatar)" />
@@ -17,10 +17,10 @@
         </div>
         <div class="u-btns">
             <el-button type="primary" icon="el-icon-check" :disabled="isNotExist || alreadyAccept" @click="accept">{{
-                alreadyAccept ? "已接受" : "接受"
+                alreadyAccept ? $t("dashboard.common.accepted") : $t("dashboard.common.accept")
             }}</el-button>
             <el-button type="info" icon="el-icon-close" @click="confirmQuit" :disabled="isNotExist">{{
-                alreadyAccept ? "退出联合创作" : "拒绝"
+                alreadyAccept ? $t("dashboard.invitationCallback.leaveCoCreation") : $t("dashboard.common.reject")
             }}</el-button>
         </div>
     </div>
@@ -92,9 +92,9 @@ export default {
                 });
         },
         confirmQuit: function () {
-            this.$confirm("确定退出联合创作吗？", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("dashboard.invitationCallback.leaveConfirm"), this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
@@ -105,7 +105,7 @@ export default {
         quit: function () {
             quitUnionPost(this.id).then(() => {
                 this.$message({
-                    message: "操作成功",
+                    message: this.$t("dashboard.common.operationSuccess"),
                     type: "success",
                 });
             });
@@ -119,7 +119,7 @@ export default {
         accept: function () {
             acceptPostInvitation(this.id).then((res) => {
                 this.$message({
-                    message: "操作成功",
+                    message: this.$t("dashboard.common.operationSuccess"),
                     type: "success",
                 });
                 location.href = this.post_link;

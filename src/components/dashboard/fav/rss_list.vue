@@ -3,7 +3,7 @@
         <div class="m-dashboard-msg-header">
             <el-input
                 class="m-dashboard-work-search"
-                placeholder="请输入搜索内容"
+                :placeholder="$t('dashboard.common.searchPlaceholder')"
                 v-model="search"
                 @keyup.enter="loadData"
                 clearable
@@ -11,7 +11,7 @@
                 @clear="loadData"
             >
                 <template #prepend>
-                    <span>关键词</span>
+                    <span>{{ $t("dashboard.common.keyword") }}</span>
                 </template>
                 <template #append>
                     <el-button icon="Search" @click="loadData"></el-button>
@@ -23,17 +23,17 @@
                 <i class="u-icon">
                     <img svg-inline src="@/assets/img/dashboard/works/repo.svg" />
                 </i>
-                <a class="u-title" target="_blank" :href="getLink(item)">{{ item.overview.title || "无标题" }}</a>
+                <a class="u-title" target="_blank" :href="getLink(item)">{{ item.overview.title || $t("dashboard.common.untitled") }}</a>
                 <div class="u-desc">
                     <span class="u-category"><i class="el-icon-folder"></i> {{ getTypeLabel(item) }} </span>
                     <span><i class="el-icon-date"></i> {{ dateFormat(item.created_at) }} </span>
                 </div>
                 <el-button-group class="u-action">
-                    <el-button icon="Delete" title="删除记录" @click="del(item.id)"></el-button>
+                    <el-button icon="Delete" :title="$t('dashboard.common.deleteRecord')" @click="del(item.id)"></el-button>
                 </el-button-group>
             </li>
         </ul>
-        <el-alert v-else class="m-dashboard-box-null" title="没有找到相关条目" type="info" center show-icon> </el-alert>
+        <el-alert v-else class="m-dashboard-box-null" :title="$t('dashboard.common.noItems')" type="info" center show-icon> </el-alert>
         <el-pagination
             class="m-dashboard-box-pages"
             background
@@ -80,7 +80,7 @@ export default {
         getTypeLabel(item) {
             let type = item.rss_category;
             if (categoryMap[type]) {
-                return categoryMap[type];
+                return this.$t(`dashboard.favorites.categories.${categories[type]}`);
             }
             type = item.post_type;
             return getTypeLabel(type);
@@ -94,16 +94,16 @@ export default {
             return getLink(type, item.post_id);
         },
         del(id) {
-            this.$confirm("确定要删除该订阅吗？", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("dashboard.favorites.deleteSubscriptionConfirm"), this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 type: "warning",
                 callback: (action) => {
                     if (action == "confirm") {
                         deleteRss(id).then(() => {
                             this.$message({
                                 type: "success",
-                                message: `操作成功`,
+                                message: this.$t("dashboard.common.operationSuccess"),
                             });
                             this.loadData();
                         });

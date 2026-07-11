@@ -4,17 +4,17 @@
             <CardHeader />
 
             <main v-if="success == null" class="m-main">
-                <el-alert title="登录中" type="info" description="正在处理第三方登录信息" show-icon :closable="false"> </el-alert>
+                <el-alert :title="$t('account.thirdPartyLogin.processingTitle')" type="info" :description="$t('account.thirdPartyLogin.processingDescription')" show-icon :closable="false"> </el-alert>
             </main>
 
             <main v-if="success == true" class="m-main">
-                <el-alert title="登录成功" type="success" description="欢迎回来(#^.^#)" show-icon :closable="false"> </el-alert>
+                <el-alert :title="$t('account.login.successTitle')" type="success" :description="$t('account.login.successDescription')" show-icon :closable="false"> </el-alert>
                 <a class="u-skip u-submit el-button u-button el-button--primary el-button--large" :href="redirect">{{ redirect_button }}</a>
             </main>
 
             <main v-if="success == false" class="m-main">
-                <el-alert title="登录失败" type="error" :description="errors" show-icon :closable="false"> </el-alert>
-                <a class="u-skip u-submit el-button u-button el-button--primary el-button--large" href="/account/login">返回登录</a>
+                <el-alert :title="$t('account.login.failureTitle')" type="error" :description="errors" show-icon :closable="false"> </el-alert>
+                <a class="u-skip u-submit el-button u-button el-button--primary el-button--large" href="/account/login">{{ $t("account.thirdPartyLogin.backToLogin") }}</a>
             </main>
         </el-card>
         <CommonBottom />
@@ -35,12 +35,12 @@ export default {
         return {
             success: null,
             redirect: client == "origin" ? __OriginRoot : __Root,
-            errors: "令牌不合法或已过期",
+            errors: this.$t("account.thirdPartyLogin.invalidToken"),
         };
     },
     methods: {
         fail(message) {
-            this.errors = message || "令牌不合法或已过期";
+            this.errors = message || this.$t("account.thirdPartyLogin.invalidToken");
             this.success = false;
         },
         init() {
@@ -84,7 +84,7 @@ export default {
                         this.skip();
                     })
                     .catch(() => {
-                        this.fail("登录态写入失败，请重试");
+                        this.fail(this.$t("account.thirdPartyLogin.sessionSaveFailed"));
                     });
             } catch (err) {
                 this.fail();

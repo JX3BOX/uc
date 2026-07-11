@@ -1,9 +1,9 @@
 <template>
     <div class="m-publish-lang">
-        <el-form-item label="语言">
+        <el-form-item :label="$t('publish.form.language')">
             <el-radio-group v-model="lang">
-                <el-radio value="cn">简体中文</el-radio>
-                <el-radio value="tr">繁體中文</el-radio>
+                <el-radio value="cn">{{ $t("publish.form.simplifiedChinese") }}</el-radio>
+                <el-radio value="tr">{{ $t("publish.form.traditionalChinese") }}</el-radio>
             </el-radio-group>
         </el-form-item>
         <slot></slot>

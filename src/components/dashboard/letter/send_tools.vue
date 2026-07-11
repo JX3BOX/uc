@@ -49,7 +49,7 @@ export default {
             const file = this.fileInput.files[0];
             if (!file) return;
             if (file.size > this.maxSize * 1024 * 1024) {
-                this.$message.error("图片大小不能超过" + this.maxSize + "M");
+                this.$message.error(this.$t("dashboard.message.imageSizeLimit", { size: this.maxSize }));
                 return;
             }
             const formData = new FormData();

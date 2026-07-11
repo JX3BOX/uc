@@ -4,17 +4,17 @@
             <a class="u-title" target="_blank" :href="postLink(item.id)">
                 <!-- [{{ item.type | typeFormat }}]  -->
                 <el-tag v-if="isPrivate(item)" class="u-private-tag" size="small" effect="plain">
-                    {{ publicmap[0] }}
+                    {{ $t("publish.visibility.privateShort") }}
                 </el-tag>
-                {{ item.title || "无标题" }}
+                {{ item.title || $t("publish.common.untitled") }}
             </a>
             <div class="u-desc">
                 <span class="u-desc-subitem">
-                    编号 :
+                    {{ $t("publish.common.id") }} :
                     <b>{{ item.id }}</b>
                 </span>
                 <span class="u-status u-desc-subitem">
-                    状态:
+                    {{ $t("publish.common.status") }}:
                     <b
                         :class="{
                             pass: item.status > 0,
@@ -24,11 +24,11 @@
                         >{{ statusFormat(item) }}</b
                     >
                 </span>
-                <time class="u-time u-desc-subitem">提交于: {{ dateFormat(item.createTime) }}</time>
+                <time class="u-time u-desc-subitem">{{ $t("publish.common.submittedAt") }}: {{ dateFormat(item.createTime) }}</time>
             </div>
             <el-button-group class="u-action">
-                <el-button icon="Edit" title="编辑" @click="edit(item.id)"></el-button>
-                <el-button icon="Delete" title="删除" @click="del(item.id, i)"></el-button>
+                <el-button icon="Edit" :title="$t('publish.common.edit')" @click="edit(item.id)"></el-button>
+                <el-button icon="Delete" :title="$t('publish.common.delete')" @click="del(item.id, i)"></el-button>
             </el-button-group>
         </li>
     </ul>
@@ -39,14 +39,12 @@ import examData from "@/assets/data/publish/exam.json";
 import dateFormat from "@/utils/dateFormat";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { deletePaper } from "@/service/publish/exam.js";
-const { types, statusmap, publicmap } = examData;
+const { types } = examData;
 export default {
     name: "paper",
     props: ["data"],
     data: function () {
         return {
-            statusmap,
-            publicmap,
             list: this.data || [],
         };
     },
@@ -63,13 +61,13 @@ export default {
             return getLink("paper", id);
         },
         del: function (id, i) {
-            this.$alert("确定删除吗？", "消息", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("publish.confirm.delete"), this.$t("publish.common.message"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
                 callback: (action) => {
                     if (action == "confirm") {
                         deletePaper(id).then((res) => {
                             this.$message({
-                                message: "删除成功",
+                                message: this.$t("publish.message.deleteSucceeded"),
                                 type: "success",
                             });
                             this.list.splice(i, 1);
@@ -82,13 +80,19 @@ export default {
             return dateFormat(new Date(val * 1000));
         },
         typeFormat: function (type) {
-            return types[type];
+            return this.$t(`publish.exam.types.${type}`);
         },
         isPrivate: function (item) {
             return item.is_public === 0;
         },
         statusFormat: function (item) {
-            return statusmap[item.status];
+            const key = {
+                "-2": "deleted",
+                "-1": "rejected",
+                0: "pendingReview",
+                1: "accepted",
+            }[item.status];
+            return this.$t(`publish.status.${key || "unknown"}`);
         },
     },
 };

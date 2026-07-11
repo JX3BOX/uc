@@ -1,6 +1,6 @@
 <template>
     <aside class="m-mall-nav" :class="{ 'is-collapsed': !isShowNav }">
-        <nav class="mall-sidebar" aria-label="积分商城分类">
+        <nav class="mall-sidebar" :aria-label="$t('vip.mall.categoriesLabel')">
             <button class="sidebar-toggle" type="button" :title="toggleText" @click="$emit('changeNav')">
                 <component :is="toggleIcon" />
                 <span>{{ toggleText }}</span>
@@ -43,14 +43,14 @@
             v-if="isShowNav"
             class="mobile-sidebar-backdrop"
             type="button"
-            aria-label="关闭分类"
+            :aria-label="$t('vip.mall.closeCategories')"
             @click="$emit('changeNav')"
         ></button>
 
         <section class="mall-list-panel">
             <button class="mobile-filter-button" type="button" @click="$emit('changeNav')">
                 <Expand />
-                <span>分类</span>
+                <span>{{ $t("vip.mall.categories") }}</span>
             </button>
             <SearchBox></SearchBox>
             <div class="goods-list" :class="{ 'is-loading': loading }" aria-live="polite" :aria-busy="loading ? 'true' : 'false'">
@@ -83,13 +83,13 @@
                             <span class="u-null-dot is-left"></span>
                             <span class="u-null-dot is-right"></span>
                         </div>
-                        <div class="u-null-title">当前条件下没有找到符合的商品</div>
-                        <div class="u-null-desc">换个分类或清空筛选条件再看看</div>
+                        <div class="u-null-title">{{ $t("vip.mall.noMatchingProducts") }}</div>
+                        <div class="u-null-desc">{{ $t("vip.mall.changeCategoryHint") }}</div>
                     </div>
                 </template>
             </div>
             <div class="pagination" v-if="query.total > query.pageSize">
-                <span class="pagination-total">共 {{ query.total }} 条</span>
+                <span class="pagination-total">{{ $t("vip.mall.totalItems", { total: query.total }) }}</span>
                 <el-pagination
                     class="desktop-pagination"
                     layout="prev, pager, next"
@@ -104,11 +104,11 @@
                 <div class="mobile-pagination-actions">
                     <button class="mobile-page-btn" type="button" :disabled="!canPrevPage" @click="goPrevPage">
                         <ArrowLeft />
-                        <span>上一页</span>
+                        <span>{{ $t("vip.mall.previousPage") }}</span>
                     </button>
                     <span class="mobile-page-current">{{ query.pageIndex }} / {{ pageCount }}</span>
                     <button class="mobile-page-btn" type="button" :disabled="!canNextPage" @click="goNextPage">
-                        <span>下一页</span>
+                        <span>{{ $t("vip.mall.nextPage") }}</span>
                         <ArrowRight />
                     </button>
                 </div>
@@ -166,6 +166,11 @@ export default {
                 .filter((item) => item.key !== "system")
                 .map((item) => ({
                     ...item,
+                    name: this.categoryName(item.key, item.name),
+                    sub_category: (item.sub_category || []).map((child) => ({
+                        ...child,
+                        name: this.categoryName(`${item.key}.${child.key}`, child.name),
+                    })),
                     iconComponent: CATEGORY_ICONS[item.key] || "Box",
                 }));
         },
@@ -176,7 +181,7 @@ export default {
             return __cdn + "design/event/lottery/lottery.png";
         },
         toggleText() {
-            return this.isShowNav ? "收起分类" : "展开分类";
+            return this.isShowNav ? this.$t("vip.mall.collapseCategories") : this.$t("vip.mall.expandCategories");
         },
         toggleIcon() {
             return this.isShowNav ? "Fold" : "Expand";
@@ -195,6 +200,11 @@ export default {
         },
     },
     methods: {
+        categoryName(key, fallback) {
+            const path = `vip.mall.categoryNames.${(key || "all").replace(/\./g, "_")}`;
+            const translated = this.$t(path);
+            return translated === path ? fallback : translated;
+        },
         isCategoryActive(item) {
             return this.query.category == item.key && !this.query.sub_category;
         },

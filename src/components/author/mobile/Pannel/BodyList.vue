@@ -7,7 +7,7 @@
                     <div class="u-item_img">
                         <img class="u-pic" :src="showThumb(item)" loading="lazy" style="object-fit: cover" />
                         <div class="u-body-body">
-                            {{ bodyMap[item.body_type]?.label || "未知" }}
+                            {{ bodyMap[item.body_type]?.label || $t("author.common.unknown") }}
                         </div>
                         <div class="u-item_tag">
                             <div class="u-tag_item green" v-if="item.is_new_face"></div>

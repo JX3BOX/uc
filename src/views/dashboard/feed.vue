@@ -1,6 +1,6 @@
 <template>
     <div class="m-dashboard-feed">
-        <el-alert title="即将登场" type="warning" show-icon> </el-alert>
+        <el-alert :title="$t('dashboard.common.comingSoon')" type="warning" show-icon> </el-alert>
     </div>
 </template>
 

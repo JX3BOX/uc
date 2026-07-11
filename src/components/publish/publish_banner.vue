@@ -1,7 +1,12 @@
 <template>
     <div class="m-publish-banner">
-        <el-divider content-position="left">海报</el-divider>
-        <uploadImage v-model="banner" :info="info" :max-size="30" :size="bannerSize"></uploadImage>
+        <el-divider content-position="left">{{ $t("publish.form.banner") }}</el-divider>
+        <uploadImage
+            v-model="banner"
+            :info="info || $t('publish.form.bannerHint')"
+            :max-size="30"
+            :size="bannerSize"
+        ></uploadImage>
     </div>
 </template>
 
@@ -28,7 +33,7 @@ export default {
         },
         info: {
             type: String,
-            default: "非必选，最大30M。",
+            default: "",
         },
         isCms: {
             type: Boolean,

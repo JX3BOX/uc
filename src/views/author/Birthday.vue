@@ -23,11 +23,9 @@
                 <div class="u-cont">
                     <img class="u-circle" src="@/assets/img/author/birthday/bg.png" alt />
                     <img class="u-light" src="@/assets/img/author/birthday/light.png" alt />
-                    <div class="u-title">
-                        祝
-                        <b>{{ name }}</b
-                        >侠士
-                    </div>
+                    <i18n-t keypath="author.birthday.wish" tag="div" class="u-title">
+                        <template #name><b>{{ name }}</b></template>
+                    </i18n-t>
                     <div class="u-age">
                         <span>{{ age }}</span>
                     </div>

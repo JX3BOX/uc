@@ -1,51 +1,51 @@
 <template>
     <div class="m-publish-box">
         <!-- 返回 -->
-        <publish-header name="物品清单" :localDraft="false">
+        <publish-header :name="$t('publish.types.itemList')" :localDraft="false">
             <slot name="header"></slot>
         </publish-header>
         <!-- 表单 -->
         <el-form class="u-form" label-position="left" label-width="80px">
             <!-- 清单名称 -->
-            <el-form-item label="标题">
+            <el-form-item :label="$t('publish.common.title')">
                 <el-input
                     v-model="data.title"
-                    placeholder="请输入物品清单的标题"
+                    :placeholder="$t('publish.itemList.titlePlaceholder')"
                     maxlength="20"
                     show-word-limit
                 ></el-input>
             </el-form-item>
-            <el-form-item label="可见性">
-                <el-radio v-model="data.public" :value="1">公开</el-radio>
-                <el-radio v-model="data.public" :value="0">私有</el-radio>
+            <el-form-item :label="$t('publish.form.visibility')">
+                <el-radio v-model="data.public" :value="1">{{ $t("publish.visibility.public") }}</el-radio>
+                <el-radio v-model="data.public" :value="0">{{ $t("publish.visibility.privateShort") }}</el-radio>
             </el-form-item>
             <!-- 清单描述 -->
-            <el-form-item label="描述">
+            <el-form-item :label="$t('publish.common.description')">
                 <el-input
                     type="textarea"
                     :rows="3"
                     v-model="data.description"
-                    placeholder="简单说明一下你的物品清单"
+                    :placeholder="$t('publish.itemList.descriptionPlaceholder')"
                     :maxlength="2000"
                     show-word-limit
                 ></el-input>
             </el-form-item>
             <!-- 清单类型 -->
-            <el-form-item label="类型">
+            <el-form-item :label="$t('publish.common.type')">
                 <el-radio-group v-model="data.type" size="medium" @change="resetPages">
-                    <el-radio-button value="1">道具清单</el-radio-button>
-                    <el-radio-button value="2">装备清单</el-radio-button>
+                    <el-radio-button value="1">{{ $t("publish.itemList.items") }}</el-radio-button>
+                    <el-radio-button value="2">{{ $t("publish.itemList.equipment") }}</el-radio-button>
                 </el-radio-group>
-                <el-button class="u-add-plan" size="medium" icon="Plus" @click="addRelation">新增分组</el-button>
+                <el-button class="u-add-plan" size="medium" icon="Plus" @click="addRelation">{{ $t("publish.itemList.addGroup") }}</el-button>
             </el-form-item>
             <!-- 制作清单 -->
-            <el-form-item label="清单">
+            <el-form-item :label="$t('publish.itemList.list')">
                 <div class="m-plan-list">
                     <!-- 搜索物品 -->
                     <div class="u-list-search" v-if="searchList.length">
                         <el-input
                             class="u-title"
-                            placeholder="请输入物品名称（可适配中括号）"
+                            :placeholder="$t('publish.itemList.searchPlaceholder')"
                             prefix-icon="Search"
                             v-model.lazy.trim="keyword"
                         ></el-input>
@@ -85,7 +85,7 @@
                                 <el-input
                                     class="u-title"
                                     type="text"
-                                    placeholder="子清单标题（选填）"
+                                    :placeholder="$t('publish.itemList.groupTitlePlaceholder')"
                                     v-model="relation.title"
                                     maxlength="20"
                                     show-word-limit
@@ -104,11 +104,11 @@
                                         >
                                             <itemIcon class="u-icon" :item_id="item.id" />
                                             <div class="u-count">
-                                                <span>数量：</span>
+                                                <span>{{ $t("publish.itemList.quantity") }}:</span>
                                                 <el-input-number
                                                     v-model.number="item.count"
                                                     :min="1"
-                                                    label="数字"
+                                                    :label="$t('publish.itemList.number')"
                                                 ></el-input-number>
                                             </div>
                                             <i
@@ -117,7 +117,7 @@
                                             ></i>
                                         </div>
                                     </template>
-                                    <div class="u-normal" v-else>拖拽所需道具到此处</div>
+                                    <div class="u-normal" v-else>{{ $t("publish.itemList.dragItemsHere") }}</div>
                                 </draggable>
                             </div>
                         </el-col>
@@ -126,7 +126,7 @@
                     <el-row v-else class="u-list-box u-list-equip" :gutter="20">
                         <el-col v-for="(equip, index) in equipList" :key="index" :span="6">
                             <div v-for="(eq, key) in equip" :key="key" class="u-list">
-                                <div class="u-title">{{ eq.label }}</div>
+                                <div class="u-title">{{ equipmentLabel(eq.title, eq.label) }}</div>
                                 <draggable
                                     :list="eq.list"
                                     :move="moveHandle"
@@ -146,7 +146,7 @@
                                             <i class="u-close el-icon-circle-close" @click="eq.list.splice(key, 1)"></i>
                                         </div>
                                     </template>
-                                    <div class="u-normal" v-else>拖拽所需道具到此处</div>
+                                    <div class="u-normal" v-else>{{ $t("publish.itemList.dragItemsHere") }}</div>
                                 </draggable>
                             </div>
                         </el-col>
@@ -156,7 +156,7 @@
             <!-- 提交表单 -->
             <el-form-item>
                 <el-button class="u-publish" icon="Promotion" type="primary" @click="submit" :loading="loading"
-                    >提交物品清单</el-button
+                    >{{ $t("publish.itemList.submit") }}</el-button
                 >
             </el-form-item>
         </el-form>
@@ -260,6 +260,10 @@ export default {
     },
 
     methods: {
+        equipmentLabel(key, fallback) {
+            const localeKey = key.replace(/_\d+$/, "");
+            return this.$t(`publish.itemList.slots.${localeKey}`) || fallback;
+        },
         // 物品
         // ===================================
         // 物品搜索
@@ -363,7 +367,7 @@ export default {
             this.plan_id
                 ? postMyPlans(this.plan_id, this.data)
                       .then(() => {
-                          this.$message({ message: "物品清单修改成功", type: "success" });
+                          this.$message({ message: this.$t("publish.itemList.updateSucceeded"), type: "success" });
                           this.$router.push({ name: "bucket", params: { type: "item_plan" } });
                       })
                       .finally(() => {
@@ -371,7 +375,7 @@ export default {
                       })
                 : addMyPlans(this.data)
                       .then(() => {
-                          this.$message({ message: "物品清单提交成功", type: "success" });
+                          this.$message({ message: this.$t("publish.itemList.submitSucceeded"), type: "success" });
                           this.$router.push({ name: "bucket", params: { type: "item_plan" } });
                       })
                       .finally(() => {

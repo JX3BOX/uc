@@ -2,23 +2,23 @@
     <div class="m-publish m-draft">
         <div class="m-draft-header">
             <h1 class="m-title">
-                <i class="el-icon-receiving"></i> 草稿箱
+                <i class="el-icon-receiving"></i> {{ $t("publish.nav.drafts") }}
                 <el-tooltip class="item" effect="dark" placement="top" popper-class="m-draft-help-tip">
                     <template #content>
-                        以下草稿是编辑器在当前浏览器下产生的临时本地草稿HTML源码，<br />并不存在于服务器中，仅用于断网或窗口异常关闭时恢复。
+                        {{ $t("publish.draft.description") }}
                     </template>
-                    <span class="u-help"><i class="el-icon-question"></i> <span>使用帮助</span></span>
+                    <span class="u-help"><i class="el-icon-question"></i> <span>{{ $t("publish.draft.help") }}</span></span>
                 </el-tooltip>
             </h1>
             <div class="u-op">
-                <el-button plain icon="Delete" @click="clean" :disabled="!isNotNull" size="small">清空</el-button>
+                <el-button plain icon="Delete" @click="clean" :disabled="!isNotNull" size="small">{{ $t("publish.common.clear") }}</el-button>
                 <el-dropdown class="u-dropdown" trigger="click" @command="handleCommand">
                     <el-button type="primary" :disabled="!canBatchOperate" size="small">
-                        批量操作<i class="el-icon-arrow-down el-icon--right"></i>
+                        {{ $t("publish.draft.batchActions") }}<i class="el-icon-arrow-down el-icon--right"></i>
                     </el-button>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <el-dropdown-item command="batchDel" size="small">批量删除</el-dropdown-item>
+                            <el-dropdown-item command="batchDel" size="small">{{ $t("publish.draft.batchDelete") }}</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
@@ -40,11 +40,11 @@
                             >
                             <div class="u-op">
                                 <el-button type="primary" plain icon="View" class="u-delete" @click.stop="preview(item)" size="small"
-                                    >预览</el-button
+                                    >{{ $t("publish.common.preview") }}</el-button
                                 >
-                                <el-popconfirm title="确定删除吗？" @confirm="del(item, i)">
+                                <el-popconfirm :title="$t('publish.confirm.delete')" @confirm="del(item, i)">
                                     <template #reference>
-                                        <el-button plain icon="Delete" class="u-delete" @click.stop size="small">删除</el-button>
+                                        <el-button plain icon="Delete" class="u-delete" @click.stop size="small">{{ $t("publish.common.delete") }}</el-button>
                                     </template>
                                 </el-popconfirm>
                             </div>
@@ -52,10 +52,10 @@
                     </li>
                 </ul>
             </div>
-            <div class="m-draft-null" v-else><i class="el-icon-warning-outline"></i> 暂无任何内容</div>
+            <div class="m-draft-null" v-else><i class="el-icon-warning-outline"></i> {{ $t("publish.common.noContent") }}</div>
         </template>
         <template v-else>
-            <el-alert title="您的浏览器太旧了，不支持本功能。" type="error" show-icon></el-alert>
+            <el-alert :title="$t('publish.draft.browserUnsupported')" type="error" show-icon></el-alert>
         </template>
     </div>
 </template>
@@ -110,8 +110,8 @@ export default {
         },
         // 清空
         clean: function () {
-            this.$alert("此操作不可逆！请谨慎操作！", "警告", {
-                confirmButtonText: "确定清空",
+            this.$alert(this.$t("publish.confirm.irreversible"), this.$t("publish.common.warning"), {
+                confirmButtonText: this.$t("publish.draft.confirmClear"),
                 callback: (action) => {
                     // 清空localstorage
                     this.db.clear();
@@ -119,9 +119,9 @@ export default {
                     this.data = [];
                     // 通知
                     this.$notify({
-                        title: "清空成功",
+                        title: this.$t("publish.message.clearSucceeded"),
                         type: "success",
-                        message: `本地草稿清空成功`,
+                        message: this.$t("publish.draft.clearSucceeded"),
                     });
                 },
             });
@@ -139,24 +139,24 @@ export default {
         // 复制
         onCopy: function (val) {
             this.$notify({
-                title: "复制成功",
-                message: "草稿源码复制成功",
+                title: this.$t("publish.message.copySucceeded"),
+                message: this.$t("publish.draft.copySucceeded"),
                 type: "success",
             });
         },
         onError: function () {
             this.$notify.error({
-                title: "复制失败",
-                message: "请手动复制",
+                title: this.$t("publish.message.copyFailed"),
+                message: this.$t("publish.draft.copyManually"),
             });
         },
 
         handleCommand: function (command) {
             switch (command) {
                 case "batchDel":
-                    this.$confirm("此操作不可逆！请谨慎操作！", "警告", {
-                        confirmButtonText: "确定删除",
-                        cancelButtonText: "取消",
+                    this.$confirm(this.$t("publish.confirm.irreversible"), this.$t("publish.common.warning"), {
+                        confirmButtonText: this.$t("publish.common.confirmDelete"),
+                        cancelButtonText: this.$t("publish.common.cancel"),
                         type: "warning",
                     }).then(() => {
                         let delList = this.data.filter((item) => item.checked);
@@ -165,9 +165,9 @@ export default {
                         });
                         this.data = this.data.filter((item) => !item.checked);
                         this.$notify({
-                            title: "删除成功",
+                            title: this.$t("publish.message.deleteSucceeded"),
                             type: "success",
-                            message: `成功删除${delList.length}个草稿`,
+                            message: this.$t("publish.draft.deletedCount", { count: delList.length }),
                         });
                     });
                     break;

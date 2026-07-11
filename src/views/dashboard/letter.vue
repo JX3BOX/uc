@@ -1,10 +1,11 @@
 <!-- 私信系统 -->
 <template>
-    <uc class="m-dashboard-frame m-dashboard-skin" icon="el-icon-bell" title="我的消息" :tab-list="tabList">
+    <uc class="m-dashboard-frame m-dashboard-skin" icon="el-icon-bell" :title="$t('dashboard.message.title')" :tab-list="tabList">
         <div class="m-dashboard-letter" v-if="hasData">
             <div class="m-dashboard-letter__left">
                 <div class="u-title">
-                    近期消息 <span class="u-limit">每日上限{{ total_limit }}条</span>
+                    {{ $t("dashboard.message.recent") }}
+                    <span class="u-limit">{{ $t("dashboard.message.dailyLimit", { count: total_limit }) }}</span>
                 </div>
                 <contact-list
                     @update:contact="updateContact"
@@ -18,7 +19,7 @@
             </div>
         </div>
         <div class="u-null" v-else>
-            <el-empty :image="emptyPng" description="这里什么都没有呢~"></el-empty>
+            <el-empty :image="emptyPng" :description="$t('dashboard.common.empty')"></el-empty>
         </div>
     </uc>
 </template>
@@ -49,7 +50,7 @@ export default {
             hasData: true,
             info: {
                 uid: 8,
-                name: "匿名",
+                name: this.$t("dashboard.common.anonymous"),
                 user_avatar: "https://img.jx3box.com/image/common/avatar.png",
                 user_avatar_frame: "default",
                 bio: "-",

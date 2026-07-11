@@ -1,7 +1,7 @@
 <template>
     <div class="m-dashboard-work m-dashboard-cms" v-loading="loading">
         <div class="m-dashboard-work-header">
-            <h2 class="u-title">反馈建议</h2>
+            <h2 class="u-title">{{ $t("publish.types.feedback") }}</h2>
         </div>
 
         <!-- <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search">
@@ -26,25 +26,25 @@
                         <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" />
                     </i>
                     <a class="u-title" target="_blank" :href="postLink(item.post_type, item.ID)">{{
-                        item.post_excerpt || "无标题"
+                        item.post_excerpt || $t("publish.common.untitled")
                     }}</a>
                     <div class="u-desc">
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
-                            留言时间 :
+                            {{ $t("publish.common.messageAt") }} :
                             {{ dateFormat(item.post_date) }}
                         </time>
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-button icon="Delete" title="删除" @click="del(item.ID, i)"></el-button>
+                        <el-button icon="Delete" :title="$t('publish.common.delete')" @click="del(item.ID, i)"></el-button>
                     </el-button-group>
                 </li>
             </ul>
             <el-alert
                 v-else
                 class="m-dashboard-box-null"
-                title="没有找到相关条目"
+                :title="$t('publish.common.noResults')"
                 type="info"
                 center
                 show-icon
@@ -65,7 +65,7 @@
 <script>
 import { getMyPosts, push, del } from "@/service/publish/cms.js";
 import { editLink, getLink } from "@jx3box/jx3box-common/js/utils.js";
-import { __postType, __visibleMap } from "@/utils/config";
+import { __postType } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 export default {
     name: "work",
@@ -125,14 +125,14 @@ export default {
             location.href = "/publish/#/" + type + "/" + id;
         },
         del: function (id, i) {
-            this.$alert("确定要删除吗？", "确认信息", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("publish.confirm.delete"), this.$t("publish.common.confirmation"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
                 callback: (action) => {
                     if (action == "confirm") {
                         del(id).then((res) => {
                             this.$notify({
-                                title: "成功",
-                                message: "删除成功",
+                                title: this.$t("publish.common.success"),
+                                message: this.$t("publish.message.deleteSucceeded"),
                                 type: "success",
                             });
                             this.data.splice(i, 1);
@@ -148,7 +148,7 @@ export default {
             }).then((res) => {
                 this.$message({
                     type: "success",
-                    message: `操作成功`,
+                    message: this.$t("publish.message.operationSucceeded"),
                 });
                 this.data[i].post_status = "draft";
             });
@@ -159,7 +159,7 @@ export default {
             }).then((res) => {
                 this.$message({
                     type: "success",
-                    message: `操作成功`,
+                    message: this.$t("publish.message.operationSucceeded"),
                 });
                 this.data[i].post_status = "publish";
             });
@@ -175,10 +175,19 @@ export default {
             return dateFormat(new Date(val));
         },
         typeFormat: function (val) {
-            return __postType[val];
+            const key = {
+                macro: "macros",
+                bps: "classGuides",
+                pvp: "pvpTips",
+                fb: "dungeonGuides",
+                tool: "tools",
+                notice: "news",
+            }[val];
+            return key ? this.$t(`publish.types.${key}`) : __postType[val];
         },
         visibleFormat: function (val) {
-            return __visibleMap[~~val];
+            const key = ["public", "private", "friends", "password", "paid", "followers"][~~val];
+            return this.$t(`publish.visibility.${key || "public"}`);
         },
     },
 };

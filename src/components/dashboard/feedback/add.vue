@@ -2,13 +2,13 @@
     <div class="m-add-feedback">
         <div class="type-box">
             <el-form inline class="m-type-form">
-                <el-form-item label="来源">
-                    <el-select v-model="form.type" placeholder="请选择问题来源" style="width:200px">
+                <el-form-item :label="$t('dashboard.feedback.source')">
+                    <el-select v-model="form.type" :placeholder="$t('dashboard.feedback.sourcePlaceholder')" style="width:200px">
                         <el-option v-for="(value, key) in types" :key="key" :value="key" :label="value"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="类别">
-                    <el-select v-model="form.subtype" placeholder="请选择问题类别" style="width:200px">
+                <el-form-item :label="$t('dashboard.feedback.category')">
+                    <el-select v-model="form.subtype" :placeholder="$t('dashboard.feedback.categoryPlaceholder')" style="width:200px">
                         <el-option v-for="(value, key) in subtypes" :key="key" :value="key" :label="value"></el-option>
                     </el-select>
                 </el-form-item>
@@ -19,13 +19,13 @@
                 v-model="form.content"
                 type="textarea"
                 :rows="10"
-                placeholder="输入反馈内容"
+                :placeholder="$t('dashboard.feedback.contentPlaceholder')"
                 @paste="handlePaste"
             ></el-input>
         </div>
         <div class="m-feedback-actions">
             <div class="m-feedback-attachment">
-                <div class="u-attachment-tip">支持图片和视频，单个文件最大 30MB，最多上传 {{ max }} 个附件</div>
+                <div class="u-attachment-tip">{{ $t("dashboard.feedback.attachmentTip", { max }) }}</div>
                 <el-upload
                     ref="upload"
                     class="u-upload avatar-uploader"
@@ -37,7 +37,7 @@
                     :on-change="change"
                     :on-exceed="exceed"
                     :limit="max"
-                    title="上传图片或视频"
+                    :title="$t('dashboard.feedback.uploadMedia')"
                     with-credentials
                     accept="image/jpg, image/jpeg, image/gif, image/png, image/bmp, video/mp4, video/quicktime, video/webm, video/ogg, video/x-m4v"
                     multiple
@@ -65,7 +65,7 @@
                 </el-dialog>
             </div>
             <div class="m-feedback-visible">
-                <span class="u-label">是否公开：</span>
+                <span class="u-label">{{ $t("dashboard.feedback.public") }}：</span>
                 <el-checkbox class="u-checkbox" :true-value="1" :false-value="0" v-model="form.public"></el-checkbox>
                 <!-- <el-tooltip v-show="!canSubmit" content="必须先填写类型，子类和内容">
                     <i class="el-icon-question"></i>
@@ -80,7 +80,7 @@
                     @click="submit"
                     :loading="loading"
                     size="large"
-                    >提交</el-button
+                    >{{ $t("dashboard.common.submit") }}</el-button
                 >
             </div>
         </div>
@@ -153,12 +153,12 @@ export default {
             const isVideo = type.startsWith("video/");
 
             if (!isImage && !isVideo) {
-                this.$message.warning("仅支持上传图片或视频文件");
+                this.$message.warning(this.$t("dashboard.feedback.mediaOnly"));
                 return false;
             }
 
             if (size > 30 * 1024 * 1024) {
-                this.$message.warning("单个附件大小不能超过 30MB");
+                this.$message.warning(this.$t("dashboard.feedback.fileTooLarge"));
                 return false;
             }
 
@@ -190,7 +190,7 @@ export default {
                     }
                     const imageUrl = res.data.data?.[0];
                     if (!imageUrl) {
-                        this.$message.error("上传返回数据异常");
+                        this.$message.error(this.$t("dashboard.feedback.uploadInvalidResponse"));
                         return;
                     }
                     this.uploadedMap[file.uid] = imageUrl;
@@ -205,13 +205,13 @@ export default {
                             `[${err.response.data.code}]${err.response.data.msg || err.response.data.message}`
                         );
                     } else {
-                        this.$message.error("网络请求异常");
+                        this.$message.error(this.$t("dashboard.common.networkError"));
                     }
                 });
         },
         // 附件上限
         exceed: function () {
-            this.$message.warning(`上传的附件个数最多为${this.max}个`);
+            this.$message.warning(this.$t("dashboard.feedback.attachmentLimit", { max: this.max }));
         },
         handlePictureCardPreview: function (file) {
             this.dialogImageUrl = file.url;
@@ -235,7 +235,7 @@ export default {
             data.content = data.content.replace(/\n/g, "<br/>");
             feedback(data)
                 .then((res) => {
-                    this.$message.success("提交成功");
+                    this.$message.success(this.$t("dashboard.common.submitSuccess"));
                     this.$refs.upload.clearFiles();
                     this.resetForm();
                 })

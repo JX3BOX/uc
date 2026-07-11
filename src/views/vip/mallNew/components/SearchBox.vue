@@ -1,6 +1,6 @@
 <template>
     <div class="m-search-bar">
-        <div class="filter-group" aria-label="商品筛选">
+        <div class="filter-group" :aria-label="$t('vip.mall.productFilters')">
             <label class="filter-item" v-for="item in filters" :key="item.key">
                 <span class="filter-label">{{ item.label }}</span>
                 <el-select
@@ -18,18 +18,18 @@
             <el-input
                 v-model="query.title"
                 placeholder=""
-                aria-label="搜索"
+                :aria-label="$t('vip.common.search')"
                 clearable
                 @clear="clearTitle"
                 @keyup.enter="submitSearch"
             >
                 <template #append>
-                    <el-button aria-label="搜索商品" @click="submitSearch">
+                    <el-button :aria-label="$t('vip.mall.searchProducts')" @click="submitSearch">
                         <el-icon><Search /></el-icon>
                     </el-button>
                 </template>
             </el-input>
-            <span v-if="!query.title" class="search-placeholder">搜索</span>
+            <span v-if="!query.title" class="search-placeholder">{{ $t("vip.common.search") }}</span>
         </div>
         <div class="filter-actions">
             <el-checkbox
@@ -38,11 +38,11 @@
                 :model-value="query.only_unowned"
                 @change="handleChange($event, 'only_unowned')"
             >
-                只看未拥有
+                {{ $t("vip.mall.onlyUnowned") }}
             </el-checkbox>
             <button class="reset-button" type="button" :disabled="!hasActiveFilter" @click="resetFilters">
                 <RefreshLeft class="reset-icon" />
-                <span>重置</span>
+                <span>{{ $t("vip.common.reset") }}</span>
             </button>
         </div>
     </div>
@@ -64,7 +64,7 @@ export default {
             levelOptions: [
                 {
                     value: 0,
-                    label: "全部",
+                    label: this.$t("vip.common.all"),
                 },
                 {
                     value: 1,
@@ -94,15 +94,15 @@ export default {
             memberOptions: [
                 {
                     value: -1,
-                    label: "全部",
+                    label: this.$t("vip.common.all"),
                 },
                 {
                     value: 1,
-                    label: "仅会员",
+                    label: this.$t("vip.mall.membersOnly"),
                 },
                 {
                     value: 0,
-                    label: "非会员",
+                    label: this.$t("vip.mall.nonMembers"),
                 },
             ],
         };
@@ -112,14 +112,14 @@ export default {
             return [
                 {
                     key: "level",
-                    label: "等级",
-                    placeholder: "全部",
+                    label: this.$t("vip.mall.level"),
+                    placeholder: this.$t("vip.common.all"),
                     options: this.levelOptions,
                 },
                 {
                     key: "vip_limit",
-                    label: "限定",
-                    placeholder: "全部",
+                    label: this.$t("vip.mall.restriction"),
+                    placeholder: this.$t("vip.common.all"),
                     options: this.memberOptions,
                 },
             ];

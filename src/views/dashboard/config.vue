@@ -1,41 +1,41 @@
 <template>
     <div class="m-dashboard m-dashboard-config">
-        <h2 class="u-title"><i class="el-icon-setting"></i> 全局设置</h2>
+        <h2 class="u-title"><i class="el-icon-setting"></i> {{ $t("dashboard.config.title") }}</h2>
         <el-form class="m-config-form" label-position="left" label-width="160px">
-            <el-form-item label="主题颜色">
+            <el-form-item :label="$t('dashboard.config.theme')">
                 <template #label>
-                    <span>主题颜色</span>
-                    <el-tooltip class="item" effect="dark" content="仅App有效" placement="top"
+                    <span>{{ $t("dashboard.config.theme") }}</span>
+                    <el-tooltip class="item" effect="dark" :content="$t('dashboard.config.appOnly')" placement="top"
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
                 </template>
                 <el-radio-group v-model="conf.theme" size="small">
-                    <el-radio-button value="light">浅色</el-radio-button>
-                    <el-radio-button value="dark">深色</el-radio-button>
+                    <el-radio-button value="light">{{ $t("dashboard.config.light") }}</el-radio-button>
+                    <el-radio-button value="dark">{{ $t("dashboard.config.dark") }}</el-radio-button>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item label="编辑器模式">
+            <el-form-item :label="$t('dashboard.config.editorMode')">
                 <el-radio-group v-model="conf.editor_mode" size="small">
-                    <el-radio-button value="tinymce">可视化</el-radio-button>
+                    <el-radio-button value="tinymce">{{ $t("dashboard.config.visual") }}</el-radio-button>
                     <el-radio-button value="markdown">Markdown</el-radio-button>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item label="评论默认排序">
+            <el-form-item :label="$t('dashboard.config.commentOrder')">
                 <el-radio-group v-model="conf.cmt_order" size="small">
-                    <el-radio-button value="DESC">最新靠前</el-radio-button>
-                    <el-radio-button value="ASC">最早靠前</el-radio-button>
+                    <el-radio-button value="DESC">{{ $t("dashboard.config.newestFirst") }}</el-radio-button>
+                    <el-radio-button value="ASC">{{ $t("dashboard.config.oldestFirst") }}</el-radio-button>
                 </el-radio-group>
             </el-form-item>
             <!-- <el-form-item label="接受赠礼">
                 <el-switch v-model="conf.allow_cny" active-color="#13ce66" active-text="开启" :active-value="1" :inactive-value="0"></el-switch>
             </el-form-item> -->
-            <el-form-item label="接受商城赠礼">
+            <el-form-item :label="$t('dashboard.config.acceptGifts')">
                 <template #label>
-                    <span>接受商城赠礼</span>
+                    <span>{{ $t("dashboard.config.acceptGifts") }}</span>
                     <el-tooltip
                         class="item"
                         effect="dark"
-                        content="当开启时，会接受其他用户为您在商城购买的虚拟礼物"
+                        :content="$t('dashboard.config.acceptGiftsTip')"
                         placement="top"
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
@@ -43,18 +43,18 @@
                 <el-switch
                     v-model="conf.allow_gift_of_mall_virtual_goods"
                     active-color="#13ce66"
-                    active-text="开启"
+                    :active-text="$t('dashboard.common.enabled')"
                     :active-value="1"
                     :inactive-value="0"
                 ></el-switch>
             </el-form-item>
-            <el-form-item label="订阅通知">
+            <el-form-item :label="$t('dashboard.config.subscriptionNotifications')">
                 <template #label>
-                    <span>订阅通知</span>
+                    <span>{{ $t("dashboard.config.subscriptionNotifications") }}</span>
                     <el-tooltip
                         class="item"
                         effect="dark"
-                        content="当开启时，订阅的作品或关注的用户有新作品发布或旧作品更新时，会收到短消息通知"
+                        :content="$t('dashboard.config.subscriptionTip')"
                         placement="top"
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
@@ -62,18 +62,18 @@
                 <el-switch
                     v-model="conf.feed_message"
                     active-color="#13ce66"
-                    active-text="开启"
+                    :active-text="$t('dashboard.common.enabled')"
                     :active-value="1"
                     :inactive-value="0"
                 ></el-switch>
             </el-form-item>
-            <el-form-item label="情缘功能">
+            <el-form-item :label="$t('dashboard.config.loverFeature')">
                 <template #label>
-                    <span>情缘功能</span>
+                    <span>{{ $t("dashboard.config.loverFeature") }}</span>
                     <el-tooltip
                         class="item"
                         effect="dark"
-                        content="当开启时，会接受其他用户向您申请绑定情缘"
+                        :content="$t('dashboard.config.loverTip')"
                         placement="top"
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
@@ -81,18 +81,18 @@
                 <el-switch
                     v-model="conf.accept_lover_request"
                     active-color="#13ce66"
-                    active-text="开启"
+                    :active-text="$t('dashboard.common.enabled')"
                     :active-value="1"
                     :inactive-value="0"
                 ></el-switch>
             </el-form-item>
-            <el-form-item label="关注限制">
+            <el-form-item :label="$t('dashboard.config.followLimit')">
                 <template #label>
-                    <span>关注限制</span>
+                    <span>{{ $t("dashboard.config.followLimit") }}</span>
                     <el-tooltip
                         class="item"
                         effect="dark"
-                        content="当用户关注自己成为粉丝时，要求的等级限制"
+                        :content="$t('dashboard.config.followLimitTip')"
                         placement="top"
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
@@ -106,10 +106,10 @@
                     ></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="语言偏好">
+            <el-form-item :label="$t('dashboard.config.language')">
                 <template #label>
-                    <span>语言偏好</span>
-                    <el-tooltip class="item" effect="dark" content="在小程序端默认的界面语言" placement="top"
+                    <span>{{ $t("dashboard.config.language") }}</span>
+                    <el-tooltip class="item" effect="dark" :content="$t('dashboard.config.languageTip')" placement="top"
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
                 </template>
@@ -122,26 +122,26 @@
                     ></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="客户端偏好">
+            <el-form-item :label="$t('dashboard.config.client')">
                 <template #label>
-                    <span>客户端偏好</span>
-                    <el-tooltip class="item" effect="dark" content="在小程序端默认的游戏客户端" placement="top"
+                    <span>{{ $t("dashboard.config.client") }}</span>
+                    <el-tooltip class="item" effect="dark" :content="$t('dashboard.config.clientTip')" placement="top"
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
                 </template>
                 <el-select v-model="conf.default_client" size="large">
-                    <el-option label="正式服（旗舰版/无界）" value="std"></el-option>
-                    <el-option label="怀旧服（缘起）" value="origin"></el-option>
+                    <el-option :label="$t('dashboard.config.standardClient')" value="std"></el-option>
+                    <el-option :label="$t('dashboard.config.originClient')" value="origin"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="日历链接">
+            <el-form-item :label="$t('dashboard.config.calendarLink')">
                 <template #label>
-                    <span>日历链接</span>
-                    <el-tooltip class="item" effect="dark" content="网站首页日历模块点击的快捷跳转地址" placement="top"
+                    <span>{{ $t("dashboard.config.calendarLink") }}</span>
+                    <el-tooltip class="item" effect="dark" :content="$t('dashboard.config.calendarLinkTip')" placement="top"
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
                 </template>
-                <el-input v-model="conf.fav_link" size="large" placeholder="输入日历链接"></el-input>
+                <el-input v-model="conf.fav_link" size="large" :placeholder="$t('dashboard.config.calendarLinkPlaceholder')"></el-input>
             </el-form-item>
             
 
@@ -165,7 +165,7 @@
                 <el-switch v-model="conf.achievement_process" active-color="#13ce66" active-text="同步" :active-value="1" :inactive-value="0" disabled></el-switch>
             </el-form-item> -->
             <el-form-item label="" class="u-btns">
-                <el-button class="u-publish" type="primary" @click="submit" size="large">保存</el-button>
+                <el-button class="u-publish" type="primary" @click="submit" size="large">{{ $t("dashboard.common.save") }}</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -206,7 +206,7 @@ export default {
 
             levelMap: new Array(8).fill(0).map((_, i) => {
                 return {
-                    label: `等级${i + 1}`,
+                    label: this.$t("dashboard.config.level", { level: i + 1 }),
                     value: i + 1,
                 };
             }),
@@ -231,7 +231,7 @@ export default {
         submit: function () {
             setUserConf(this.conf).then((res) => {
                 this.$message({
-                    message: "设置更新成功",
+                    message: this.$t("dashboard.config.updateSuccess"),
                     type: "success",
                 });
 

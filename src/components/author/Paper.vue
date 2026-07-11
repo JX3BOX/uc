@@ -8,7 +8,7 @@
                     <h2 class="u-post">
                         <!-- 标题文字 -->
                         <a :href="postLink(item.id, item.client)" class="u-title" target="_blank">{{
-                            item.title || "无标题"
+                            item.title || $t("author.common.noTitle")
                         }}</a>
                     </h2>
                     <!-- 字段 -->
@@ -25,7 +25,7 @@
                     <!-- 作者 -->
                     <div class="u-misc">
                         <span class="u-date">
-                            Created on
+                            {{ $t("author.common.createdOn") }}
                             <time>{{ item.createTime || dateFormat }}</time>
                         </span>
                     </div>

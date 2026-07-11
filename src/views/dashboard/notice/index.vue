@@ -1,12 +1,12 @@
 <template>
     <uc class="m-dashboard-notice">
         <div class="m-dashboard-content">
-            <el-alert class="u-tip" title="配置你的联系方式以接收魔盒通知" type="warning" show-icon> </el-alert>
+            <el-alert class="u-tip" :title="$t('dashboard.notice.tip')" type="warning" show-icon> </el-alert>
             <div class="m-dashboard-content-list">
                 <div class="m-item" v-for="(item, i) in list" :key="i">
                     <span class="u-notice-item">
                         <img class="u-icon" svg-inline :src="icon(item.key)" />
-                        <span class="u-label">{{ item.name }}</span>
+                        <span class="u-label">{{ $t(`dashboard.notice.types.${item.key}`) }}</span>
                     </span>
                     <component :is="item.component" />
                 </div>
@@ -28,9 +28,9 @@ export default {
     data: function () {
         return {
             list: [
-                { key: "email", name: "邮箱", component: email },
-                { key: "phone", name: "手机", component: phone },
-                { key: "wechat", name: "微信", component: wechat },
+                { key: "email", component: email },
+                { key: "phone", component: phone },
+                { key: "wechat", component: wechat },
             ],
         };
     },

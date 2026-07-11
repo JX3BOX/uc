@@ -1,13 +1,13 @@
 <template>
     <div class="m-publish-box" v-loading="loading">
         <!-- 头部 -->
-        <publish-header name="剑三骚话"></publish-header>
+        <publish-header :name="$t('publish.types.jokes')"></publish-header>
 
         <Emotion class="m-publish-joke-emotion" @selected="handleEmotionSelect"></Emotion>
 
         <el-form label-position="left" label-width="80px">
-            <el-form-item label="门派">
-                <el-select v-model="data.type" placeholder="请选择门派">
+            <el-form-item :label="$t('publish.exam.school')">
+                <el-select v-model="data.type" :placeholder="$t('publish.emotion.selectSchool')">
                     <el-option v-for="s in schools" :key="s.value" :value="s.key" :label="s.value">
                         <span style="float: left">{{ s.value }}</span>
                         <span style="float: right">
@@ -17,12 +17,12 @@
                 </el-select>
             </el-form-item>
 
-            <el-form-item label="内容">
+            <el-form-item :label="$t('publish.common.content')">
                 <el-input
                     v-model="data.content"
                     type="textarea"
                     :rows="6"
-                    placeholder="请输入内容"
+                    :placeholder="$t('publish.form.contentPlaceholder')"
                     id="textarea"
                     :maxlength="128"
                     :minlength="1"
@@ -49,12 +49,12 @@
                         @blur="handleInputConfirm"
                     >
                     </el-input>
-                    <el-button v-else class="button-new-tag"  @click="showInput">+ 新标签</el-button>
+                    <el-button v-else class="button-new-tag" @click="showInput">+ {{ $t("publish.form.newTag") }}</el-button>
                 </div>
             </el-form-item>-->
 
             <div class="m-publish-buttons">
-                <el-button type="primary" @click="publish" :disabled="processing" size="large">发 &nbsp;&nbsp; 布</el-button>
+                <el-button type="primary" @click="publish" :disabled="processing" size="large">{{ $t("publish.common.publish") }}</el-button>
             </div>
         </el-form>
     </div>
@@ -187,7 +187,7 @@ export default {
                 .then((res) => {
                     let id = this.id || res?.data?.data?.id;
                     this.$message({
-                        message: "发布成功,请等待审核",
+                        message: this.$t("publish.message.submittedForReview"),
                         type: "success",
                     });
                     // 跳转
@@ -213,8 +213,8 @@ export default {
 
             if (!str.length) {
                 this.$notify({
-                    title: "错误",
-                    message: "内容不能为空",
+                    title: this.$t("publish.common.error"),
+                    message: this.$t("publish.validation.contentRequired"),
                     type: "error",
                 });
                 return false;
@@ -247,8 +247,8 @@ export default {
 
             if (emotionLength > 10) {
                 this.$notify({
-                    title: "错误",
-                    message: "表情个数不能超过10个",
+                    title: this.$t("publish.common.error"),
+                    message: this.$t("publish.validation.maxEmotes", { count: 10 }),
                     type: "error",
                 });
                 return false;
@@ -259,8 +259,8 @@ export default {
 
             if (textLength * 2 + (str.length - textLength) > 128) {
                 this.$notify({
-                    title: "错误",
-                    message: "内容长度不能超过128个字符",
+                    title: this.$t("publish.common.error"),
+                    message: this.$t("publish.validation.maxContentLength", { count: 128 }),
                     type: "error",
                 });
                 return false;

@@ -1,22 +1,22 @@
 <template>
     <div class="m-credit m-boxcoin">
-        <h2 class="u-title"><i class="el-icon-coin"></i> 我的盒币</h2>
+        <h2 class="u-title"><i class="el-icon-coin"></i> {{ $t("dashboard.boxcoin.title") }}</h2>
         <div class="m-credit-total m-packet-total">
-            余额 :
+            {{ $t("dashboard.common.balance") }} :
             <b :class="{ hasLeft: hasLeft }">{{ money }}</b>
             <span class="u-types">
                 <span class="u-type u-type-std"
-                    >重制：<b>{{ total_std }}</b></span
+                    >{{ $t("dashboard.boxcoin.standard") }}：<b>{{ total_std }}</b></span
                 >
                 <span class="u-type u-type-origin"
-                    >缘起：<b>{{ total_origin }}</b></span
+                    >{{ $t("dashboard.boxcoin.origin") }}：<b>{{ total_origin }}</b></span
                 >
                 <span class="u-type u-type-all"
-                    >双端：<b>{{ total_all }}</b></span
+                    >{{ $t("dashboard.boxcoin.bothClients") }}：<b>{{ total_all }}</b></span
                 >
             </span>
             <!-- <a class="el-button u-btn el-button--primary el-button--small" href="/vip/boxcoin" target="_blank">充值</a> -->
-            <el-button class="u-btn" type="primary" size="small" @click="togglePullBox" :disabled="!money">兑换</el-button>
+            <el-button class="u-btn" type="primary" size="small" @click="togglePullBox" :disabled="!money">{{ $t("dashboard.common.exchange") }}</el-button>
             <el-button
                 class="u-btn"
                 type="warning"
@@ -24,29 +24,29 @@
                 @click="openExchangeDialog"
                 :disabled="!hasExchangeBoxcoin"
                 :loading="exchangeLockStatus"
-                >转换</el-button
+                >{{ $t("dashboard.common.convert") }}</el-button
             >
         </div>
-        <el-dialog v-model="showExchangeBox" title="盒币转换积分" width="520px" :close-on-click-modal="!exchangeLockStatus">
+        <el-dialog v-model="showExchangeBox" :title="$t('dashboard.boxcoin.convertTitle')" width="520px" :close-on-click-modal="!exchangeLockStatus">
             <el-alert
                 class="m-boxcoin-tip"
-                title="盒币可按 10:1 转换为积分，即每 10 盒币可兑换 1 积分。转换后积分可用于积分商城、抽奖等场景。"
+                :title="$t('dashboard.boxcoin.convertTip')"
                 type="warning"
                 show-icon
                 :closable="false"
             ></el-alert>
             <el-form label-position="left" label-width="90px" class="m-boxcoin-form" :model="exchangeForm">
-                <el-form-item label="盒币类型">
-                    <el-select v-model="exchangeForm.boxcoin_type" placeholder="请选择盒币类型" :disabled="exchangeLockStatus">
+                <el-form-item :label="$t('dashboard.boxcoin.type')">
+                    <el-select v-model="exchangeForm.boxcoin_type" :placeholder="$t('dashboard.boxcoin.typePlaceholder')" :disabled="exchangeLockStatus">
                         <el-option
                             v-for="item in exchangeTypes"
                             :key="item.value"
-                            :label="`${item.label}（可用 ${getExchangeTypeBalance(item.value)}）`"
+                            :label="$t('dashboard.boxcoin.availableType', { type: exchangeTypeLabel(item), amount: getExchangeTypeBalance(item.value) })"
                             :value="item.value"
                         ></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="盒币数量">
+                <el-form-item :label="$t('dashboard.boxcoin.amount')">
                     <el-input-number
                         v-model="exchangeForm.boxcoin_count"
                         :min="10"
@@ -54,19 +54,19 @@
                         step-strictly
                         controls-position="right"
                         :disabled="exchangeLockStatus"
-                        placeholder="请输入要转换的盒币数量"
+                        :placeholder="$t('dashboard.boxcoin.amountPlaceholder')"
                     ></el-input-number>
-                    <div class="u-exchange-tip">请输入 10 的整数倍，当前类型可用 {{ exchangeAvailableBoxcoin }} 盒币</div>
+                    <div class="u-exchange-tip">{{ $t("dashboard.boxcoin.multipleTip", { amount: exchangeAvailableBoxcoin }) }}</div>
                 </el-form-item>
-                <el-form-item label="预计获得">
+                <el-form-item :label="$t('dashboard.boxcoin.estimatedGain')">
                     <b class="u-exchange-point">{{ exchangePointCount }}</b>
-                    <span> 积分</span>
+                    <span> {{ $t("dashboard.common.points") }}</span>
                 </el-form-item>
             </el-form>
             <template #footer>
                 <span class="dialog-footer">
-                    <el-button @click="showExchangeBox = false" :disabled="exchangeLockStatus">取消</el-button>
-                    <el-button type="primary" @click="openExchangeConfirm" :loading="exchangeLockStatus">确认转换</el-button>
+                    <el-button @click="showExchangeBox = false" :disabled="exchangeLockStatus">{{ $t("dashboard.common.cancel") }}</el-button>
+                    <el-button type="primary" @click="openExchangeConfirm" :loading="exchangeLockStatus">{{ $t("dashboard.boxcoin.confirmConvert") }}</el-button>
                 </span>
             </template>
         </el-dialog>
@@ -74,62 +74,60 @@
             <el-alert class="m-boxcoin-ac" type="error" show-icon :closable="false" v-if="breadcrumb">
                 <slot name="title"><div v-html="breadcrumb"></div></slot>
             </el-alert>
-            <el-alert class="m-boxcoin-tip" title="1盒币可兑换1通宝，不可折现" type="warning" show-icon>
+            <el-alert class="m-boxcoin-tip" :title="$t('dashboard.boxcoin.exchangeTip')" type="warning" show-icon>
                 <slot name="description"><div class="u-tips" v-html="tips"></div> </slot>
             </el-alert>
             <el-form label-position="left" label-width="80px" class="m-boxcoin-form">
-                <el-form-item label="游戏大区">
-                    <el-select v-model="pull.zone" placeholder="请选择所在大区">
+                <el-form-item :label="$t('dashboard.boxcoin.gameZone')">
+                    <el-select v-model="pull.zone" :placeholder="$t('dashboard.boxcoin.zonePlaceholder')">
                         <el-option v-for="zone in zones" :key="zone" :label="zone" :value="zone"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="游戏账号">
-                    <el-input v-model="pull.account" placeholder="请务必填写正确的账号"></el-input>
+                <el-form-item :label="$t('dashboard.boxcoin.gameAccount')">
+                    <el-input v-model="pull.account" :placeholder="$t('dashboard.boxcoin.accountPlaceholder')"></el-input>
                 </el-form-item>
-                <el-form-item label="游戏账号">
-                    <el-input v-model="pull.accounts" placeholder="请重新再次输入游戏账号"></el-input>
+                <el-form-item :label="$t('dashboard.boxcoin.gameAccount')">
+                    <el-input v-model="pull.accounts" :placeholder="$t('dashboard.boxcoin.accountConfirmPlaceholder')"></el-input>
                 </el-form-item>
-                <el-form-item label="兑换数目">
+                <el-form-item :label="$t('dashboard.boxcoin.exchangeAmount')">
                     <el-radio-group v-model="pull.cash">
                         <el-radio :value="1500" border :disabled="!canSelect(1500)" v-if="client == 'std'"
-                            >1500通宝</el-radio
+                            >{{ $t("dashboard.boxcoin.tokens", { amount: 1500 }) }}</el-radio
                         >
-                        <el-radio :value="2000" border :disabled="!canSelect(2000)" v-if="isAdmin">2000通宝</el-radio>
-                        <el-radio :value="3000" border :disabled="!canSelect(3000)">3000通宝</el-radio>
-                        <el-radio :value="5000" border :disabled="!canSelect(5000)">5000通宝</el-radio>
-                        <el-radio :value="10000" border :disabled="!canSelect(10000)">10000通宝</el-radio>
-                        <el-radio :value="50000" border :disabled="!canSelect(50000)">50000通宝</el-radio>
-                        <el-radio :value="100000" border :disabled="!canSelect(100000)">100000通宝</el-radio>
-                        <el-radio :value="200000" border :disabled="!canSelect(200000)">200000通宝</el-radio>
+                        <el-radio :value="2000" border :disabled="!canSelect(2000)" v-if="isAdmin">{{ $t("dashboard.boxcoin.tokens", { amount: 2000 }) }}</el-radio>
+                        <el-radio :value="3000" border :disabled="!canSelect(3000)">{{ $t("dashboard.boxcoin.tokens", { amount: 3000 }) }}</el-radio>
+                        <el-radio :value="5000" border :disabled="!canSelect(5000)">{{ $t("dashboard.boxcoin.tokens", { amount: 5000 }) }}</el-radio>
+                        <el-radio :value="10000" border :disabled="!canSelect(10000)">{{ $t("dashboard.boxcoin.tokens", { amount: 10000 }) }}</el-radio>
+                        <el-radio :value="50000" border :disabled="!canSelect(50000)">{{ $t("dashboard.boxcoin.tokens", { amount: 50000 }) }}</el-radio>
+                        <el-radio :value="100000" border :disabled="!canSelect(100000)">{{ $t("dashboard.boxcoin.tokens", { amount: 100000 }) }}</el-radio>
+                        <el-radio :value="200000" border :disabled="!canSelect(200000)">{{ $t("dashboard.boxcoin.tokens", { amount: 200000 }) }}</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="邮箱地址">
-                    <el-input v-model="pull.email" placeholder="请务必填写正确的邮箱"></el-input>
+                <el-form-item :label="$t('dashboard.email.address')">
+                    <el-input v-model="pull.email" :placeholder="$t('dashboard.email.correctPlaceholder')"></el-input>
                 </el-form-item>
                 <el-form-item label>
                     <el-button type="primary" @click="openConfirmBox" :disabled="!ready || lockStatus"
-                        >提交申请</el-button
+                        >{{ $t("dashboard.common.submitApplication") }}</el-button
                     >
                     <span class="u-tip" v-if="!isAllowDate">
-                        <i class="el-icon-warning-outline"></i> 每月{{ start_date }}-{{
-                            end_date
-                        }}日结算期间不能进行兑换申请
+                        <i class="el-icon-warning-outline"></i> {{ $t("dashboard.boxcoin.settlementUnavailable", { start: start_date, end: end_date }) }}
                     </span>
                 </el-form-item>
             </el-form>
         </div>
         <div class="m-credit-table m-packet-table" v-loading="loading">
             <el-tabs v-model="tab" @tab-change="changeType" type="border-card">
-                <el-tab-pane label="盒币记录" name="in" lazy>
+                <el-tab-pane :label="$t('dashboard.boxcoin.history')" name="in" lazy>
                     <div class="m-packet-table" v-if="list && list.length">
                         <table class="m-boxcoin-in-list m-packet-in-list">
                             <thead>
                                 <tr>
-                                    <th>类型</th>
-                                    <th>数量</th>
-                                    <th>源于作品</th>
-                                    <th>备注</th>
-                                    <th>时间</th>
+                                    <th>{{ $t("dashboard.common.type") }}</th>
+                                    <th>{{ $t("dashboard.common.quantity") }}</th>
+                                    <th>{{ $t("dashboard.common.sourceWork") }}</th>
+                                    <th>{{ $t("dashboard.common.remark") }}</th>
+                                    <th>{{ $t("dashboard.common.time") }}</th>
                                 </tr>
                             </thead>
                             <tr v-for="(item, i) in list" :key="i">
@@ -140,7 +138,7 @@
                                 </td>
                                 <td>
                                     <a :href="getPostLink(item)" target="_blank" v-if="getPostLink(item)">
-                                        <i class="el-icon-link"></i> 点击查看
+                                        <i class="el-icon-link"></i> {{ $t("dashboard.common.clickToView") }}
                                     </a>
                                     <span v-else>-</span>
                                 </td>
@@ -154,7 +152,7 @@
                     <el-alert
                         v-else
                         class="m-credit-null m-packet-null"
-                        title="没有找到相关条目"
+                        :title="$t('dashboard.common.noItems')"
                         type="info"
                         center
                         show-icon
@@ -169,23 +167,23 @@
                         :total="total"
                     ></el-pagination>
                 </el-tab-pane>
-                <el-tab-pane label="兑换记录" name="out" lazy>
+                <el-tab-pane :label="$t('dashboard.boxcoin.exchangeHistory')" name="out" lazy>
                     <div class="m-packet-table" v-if="list && list.length">
                         <table class="m-boxcoin-out-list m-packet-in-list">
                             <thead>
                                 <tr>
-                                    <th>数量</th>
-                                    <th>大区</th>
-                                    <th>账号</th>
-                                    <th>邮箱</th>
-                                    <th>处理状态</th>
-                                    <th>备注</th>
-                                    <th>申请时间</th>
+                                    <th>{{ $t("dashboard.common.quantity") }}</th>
+                                    <th>{{ $t("dashboard.common.zone") }}</th>
+                                    <th>{{ $t("dashboard.common.account") }}</th>
+                                    <th>{{ $t("dashboard.common.email") }}</th>
+                                    <th>{{ $t("dashboard.common.processingStatus") }}</th>
+                                    <th>{{ $t("dashboard.common.remark") }}</th>
+                                    <th>{{ $t("dashboard.common.applicationTime") }}</th>
                                 </tr>
                             </thead>
                             <tr v-for="(item, i) in list" :key="i">
                                 <td>
-                                    <b>{{ item.cash }}通宝</b>
+                                    <b>{{ $t("dashboard.boxcoin.tokens", { amount: item.cash }) }}</b>
                                 </td>
                                 <td>{{ item.zone }}</td>
                                 <td>{{ item.account }}</td>
@@ -204,7 +202,7 @@
                     <el-alert
                         v-else
                         class="m-credit-null m-packet-null"
-                        title="没有找到相关条目"
+                        :title="$t('dashboard.common.noItems')"
                         type="info"
                         center
                         show-icon
@@ -303,13 +301,7 @@ export default {
             totalCoin: 0,
             uid: User.getInfo().uid,
 
-            tips: `每个月6~31日开放兑换，1~5日关闭兑换渠道进行汇总。（即1月6日的兑换，和1月31日的兑换，同样在2月1~5日进行汇总）<br />
-                    重制（正式服）汇总后，通常21个工作日内发放奖励，即前一月的兑换，通常在后一个月的月底发放，如遇特殊原因可能会在某些月份锁定兑换。<br />
-                    重制（正式服）会直充到账号上，不会有官方短信/邮件提醒，在个人充值记录中也不可查到。<br />
-                    缘起（怀旧服）汇总后，通常赛季末一次性发放，其中赛季末未兑换部分将被清空重置。<br />
-                    缘起（怀旧服）通过一卡通发放，可在个人中心›我的卡密中查看，如使用的第三方登录还没有设置过密码的用户，需要在个人中心›资料设置›修改密码中设置一个密码。<br />
-
-                    发放后，将会有魔盒公告，请关注首页侧边栏站内动态。`,
+            tips: this.$t("dashboard.boxcoin.defaultTips"),
         };
     },
     computed: {
@@ -469,24 +461,27 @@ export default {
         },
         getExchangeTypeLabel: function (type) {
             const item = this.exchangeTypes.find((item) => item.value === type);
-            return item?.label || type;
+            return item ? this.exchangeTypeLabel(item) : type;
+        },
+        exchangeTypeLabel(item) {
+            return this.$t(`dashboard.boxcoin.clientTypes.${item.value}`);
         },
         checkExchangeForm: function () {
             const count = Number(this.exchangeForm.boxcoin_count);
             if (!this.exchangeForm.boxcoin_type) {
-                this.$message.warning("请选择盒币类型");
+                this.$message.warning(this.$t("dashboard.boxcoin.typePlaceholder"));
                 return false;
             }
             if (!Number.isInteger(count) || count <= 0) {
-                this.$message.warning("请输入正确的盒币数量");
+                this.$message.warning(this.$t("dashboard.boxcoin.invalidAmount"));
                 return false;
             }
             if (count % 10 !== 0) {
-                this.$message.warning("盒币数量必须是 10 的整数倍");
+                this.$message.warning(this.$t("dashboard.boxcoin.multipleRequired"));
                 return false;
             }
             if (count > this.exchangeAvailableBoxcoin) {
-                this.$message.warning("转换数量不能超过当前类型可用盒币");
+                this.$message.warning(this.$t("dashboard.boxcoin.amountExceedsAvailable"));
                 return false;
             }
             return true;
@@ -497,13 +492,13 @@ export default {
             const count = Number(this.exchangeForm.boxcoin_count);
             const point = this.exchangePointCount;
             this.$confirm(
-                `<div class="m-boxcoin-msg">盒币类型：<b>${this.getExchangeTypeLabel(
+                `<div class="m-boxcoin-msg">${this.$t("dashboard.boxcoin.type")}：<b>${this.getExchangeTypeLabel(
                     this.exchangeForm.boxcoin_type
-                )}</b> <br/> 消耗盒币：<b>${count}盒币</b> <br/> 预计获得：<b>${point}积分</b></div>`,
-                "确认转换",
+                )}</b> <br/> ${this.$t("dashboard.boxcoin.consumed")}：<b>${count}${this.$t("dashboard.common.boxcoin")}</b> <br/> ${this.$t("dashboard.boxcoin.estimatedGain")}：<b>${point}${this.$t("dashboard.common.points")}</b></div>`,
+                this.$t("dashboard.boxcoin.confirmConvert"),
                 {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
+                    confirmButtonText: this.$t("dashboard.common.confirm"),
+                    cancelButtonText: this.$t("dashboard.common.cancel"),
                     dangerouslyUseHTMLString: true,
                 }
             ).then(() => {
@@ -515,7 +510,7 @@ export default {
                     .then(() => {
                         this.$message({
                             type: "success",
-                            message: "转换成功",
+                            message: this.$t("dashboard.boxcoin.convertSuccess"),
                         });
                         this.showExchangeBox = false;
                         this.resetExchangeForm();
@@ -524,7 +519,7 @@ export default {
                         this.loadData();
                     })
                     .catch((err) => {
-                        const message = err?.response?.data?.msg || err?.message || "转换失败，请稍后再试";
+                        const message = err?.response?.data?.msg || err?.message || this.$t("dashboard.boxcoin.convertFailed");
                         this.$message.error(message);
                     })
                     .finally(() => {
@@ -545,14 +540,14 @@ export default {
             this.formStatus = true;
         },
         openConfirmBox: function () {
-            if (/[\u4e00-\u9fa5]/.test(this.pull.account)) return this.$alert("请填写剑三登录账号，而不是角色名");
-            if (this.pull.account !== this.pull.accounts) return this.$alert(`请确认账号是否填写正确`);
+            if (/[\u4e00-\u9fa5]/.test(this.pull.account)) return this.$alert(this.$t("dashboard.boxcoin.accountNotRole"));
+            if (this.pull.account !== this.pull.accounts) return this.$alert(this.$t("dashboard.boxcoin.accountMismatch"));
 
             this.$alert(
-                `<div class="m-boxcoin-msg">大区：<b>${this.pull.zone}</b> <br/> 账号：<b>${this.pull.account}</b> <br/> 邮箱：<b>${this.pull.email}</b> <br/> 兑换：<b>${this.pull.cash}通宝</b></div>`,
-                "确认信息",
+                `<div class="m-boxcoin-msg">${this.$t("dashboard.common.zone")}：<b>${this.pull.zone}</b> <br/> ${this.$t("dashboard.common.account")}：<b>${this.pull.account}</b> <br/> ${this.$t("dashboard.common.email")}：<b>${this.pull.email}</b> <br/> ${this.$t("dashboard.common.exchange")}：<b>${this.$t("dashboard.boxcoin.tokens", { amount: this.pull.cash })}</b></div>`,
+                this.$t("dashboard.common.confirmInformation"),
                 {
-                    confirmButtonText: "确定",
+                    confirmButtonText: this.$t("dashboard.common.confirm"),
                     dangerouslyUseHTMLString: true,
                     callback: (action) => {
                         if (action == "confirm") {
@@ -565,7 +560,7 @@ export default {
                                 .then((res) => {
                                     this.$message({
                                         type: "success",
-                                        message: `申请成功,请耐心等待结算`,
+                                        message: this.$t("dashboard.boxcoin.applicationSuccess"),
                                     });
                                     this.showPullBox = false;
                                     this.money = this.money - this.pull.cash;
@@ -597,7 +592,7 @@ export default {
             return showTime(val);
         },
         formatType: function (val) {
-            return (val && types[val]) || "未知";
+            return (val && types[val]) || this.$t("dashboard.common.unknown");
         },
         formatRemark: function (str) {
             if (str) {
@@ -611,11 +606,11 @@ export default {
         },
         formatHistoryStatus: function (item) {
             const { status, received_in_game } = item;
-            if (status == 0) return "待处理";
-            if (status == 2) return "异常";
+            if (status == 0) return this.$t("dashboard.common.pending");
+            if (status == 2) return this.$t("dashboard.common.abnormal");
             if (status == 1) {
-                if (received_in_game == 1) return "已完成";
-                return "审批中";
+                if (received_in_game == 1) return this.$t("dashboard.common.completed");
+                return this.$t("dashboard.common.underApproval");
             }
         },
         statusClass(item) {

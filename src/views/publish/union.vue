@@ -2,7 +2,7 @@
     <div class="m-dashboard-work m-dashboard-cms m-dashboard-union" v-loading="loading">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">
-                联合创作
+                {{ $t("publish.nav.collaboration") }}
                 <span class="u-subtype">
                     <i class="el-icon-arrow-right"></i>
                     <span>{{ subtype }}</span>
@@ -32,7 +32,7 @@
                                 />
                             </el-tooltip>
                             </i>
-                            {{ item.union_post_raw.post_title || "无标题" }}
+                            {{ item.union_post_raw.post_title || $t("publish.common.untitled") }}
                         </a>
                         <div class="u-desc">
                             <!-- <span class="u-desc-subitem">
@@ -41,12 +41,12 @@
                             </span> -->
                             <time class="u-desc-subitem">
                                 <i class="el-icon-finished"></i>
-                                发布 :
+                                {{ $t("publish.common.publishedAt") }} :
                                 {{ dateFormat(item.union_post_raw.post_date) }}
                             </time>
                             <time class="u-desc-subitem">
                                 <i class="el-icon-refresh"></i>
-                                更新 :
+                                {{ $t("publish.common.updatedAt") }} :
                                 {{ dateFormat(item.union_post_raw.post_modified) }}
                             </time>
                         </div>
@@ -54,22 +54,22 @@
                         <el-button-group class="u-action">
                             <el-button
                                 icon="Edit"
-                                title="编辑"
+                                :title="$t('publish.common.edit')"
                                 @click="edit(item.union_post_raw.post_type, item.union_post_raw.ID)"
                             ></el-button>
                             <el-button
                                 v-if="isActive"
                                 icon="Delete"
-                                title="删除"
+                                :title="$t('publish.common.delete')"
                                 @click="del(item.union_post_raw.ID, i)"
                             ></el-button>
                             <el-popconfirm
                                 v-else
-                                title="确认退出该作品的联合创作者身份吗？"
+                                :title="$t('publish.confirm.leaveCollaboration')"
                                 @confirm="quit(item.union_post_raw.ID, i)"
                             >
                                 <template #reference>
-                                    <el-button class="u-quit" icon="Download" title="退出联合身份"></el-button>
+                                    <el-button class="u-quit" icon="Download" :title="$t('publish.common.leaveCollaboration')"></el-button>
                                 </template>
                             </el-popconfirm>
                         </el-button-group>
@@ -79,7 +79,7 @@
             <el-alert
                 v-else
                 class="m-dashboard-box-null"
-                title="没有找到相关条目"
+                :title="$t('publish.common.noResults')"
                 type="info"
                 center
                 show-icon
@@ -101,7 +101,6 @@
 import { del } from "@/service/publish/cms.js";
 import { getUnionPosts, quitUnionPost } from "@/service/publish/union.js";
 import { editLink, getLink } from "@jx3box/jx3box-common/js/utils.js";
-import { __postType, __visibleMap } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 export default {
     name: "work",
@@ -124,7 +123,9 @@ export default {
             };
         },
         subtype: function () {
-            return this.$route.name == "union_active" ? "邀请创作" : "受邀创作";
+            return this.$route.name == "union_active"
+                ? this.$t("publish.nav.invitedCreation")
+                : this.$t("publish.nav.receivedCreation");
         },
         isActive: function () {
             return this.$route.name == "union_active";
@@ -160,22 +161,22 @@ export default {
         quit: function (id, i) {
             quitUnionPost(id).then((res) => {
                 this.$notify({
-                    title: "退出成功",
-                    message: "成功退出该作品联合创作",
+                    title: this.$t("publish.message.leaveSucceeded"),
+                    message: this.$t("publish.message.leftCollaboration"),
                     type: "success",
                 });
                 this.data.splice(i, 1);
             });
         },
         del: function (id, i) {
-            this.$alert("确定要删除吗？", "确认信息", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("publish.confirm.delete"), this.$t("publish.common.confirmation"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
                 callback: (action) => {
                     if (action == "confirm") {
                         del(id).then((res) => {
                             this.$notify({
-                                title: "删除成功",
-                                message: "成功删除作品",
+                                title: this.$t("publish.message.deleteSucceeded"),
+                                message: this.$t("publish.message.workDeleted"),
                                 type: "success",
                             });
                             this.data.splice(i, 1);
@@ -188,7 +189,8 @@ export default {
             return dateFormat(new Date(val));
         },
         visibleFormat: function (val) {
-            return __visibleMap[~~val];
+            const key = ["public", "private", "friends", "password", "paid", "followers"][~~val];
+            return this.$t(`publish.visibility.${key || "public"}`);
         },
     },
 };

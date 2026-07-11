@@ -13,7 +13,7 @@
                     <h2 class="u-post">
                         <!-- 标题文字 -->
                         <a :href="postLink(item.id)" class="u-title" target="_blank"
-                            >{{ item.title || "无标题" }}</a
+                            >{{ item.title || $t("author.common.noTitle") }}</a
                         >
                     </h2>
 
@@ -25,7 +25,7 @@
                     <!-- 作者 -->
                     <div class="u-misc">
                         <span class="u-date">
-                            Created on
+                            {{ $t("author.common.createdOn") }}
                             <time>{{ dateFormat(item.created_at) }}</time>
                         </span>
                     </div>

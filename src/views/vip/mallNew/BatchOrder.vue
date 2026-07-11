@@ -3,7 +3,7 @@
         <div class="m-batch-back" v-if="windowWidth > 750">
             <button type="button" @click="goBack">
                 <ArrowLeft class="back-icon" />
-                返回
+                {{ $t("vip.common.back") }}
             </button>
         </div>
         <el-dialog
@@ -13,13 +13,13 @@
             class="m-buy-confirm m-batch-confirm"
             @closed="handleClosed"
         >
-            <button class="close" type="button" aria-label="关闭" @click="goBack">
+            <button class="close" type="button" :aria-label="$t('vip.common.close')" @click="goBack">
                 <Close class="close-icon" />
             </button>
             <div class="content">
                 <div class="header">
-                    <div class="title">确认兑换</div>
-                    <div class="desc">{{ needs_address ? "确认收货信息后完成实物兑换" : "将从你的账户扣除以下资产" }}</div>
+                    <div class="title">{{ $t("vip.common.confirmExchange") }}</div>
+                    <div class="desc">{{ needs_address ? $t("vip.mall.confirmPhysical") : $t("vip.mall.deductAssets") }}</div>
                 </div>
                 <div class="good-card batch-good-card">
                     <div class="cover-stack">
@@ -28,31 +28,31 @@
                                 v-for="item in previewItems"
                                 :key="item.id"
                                 :src="item.goods?.goods_images?.[0]"
-                                :alt="item.goods?.title || '商品图片'"
+                                :alt="item.goods?.title || $t('vip.mall.productImage')"
                                 class="cover"
                             />
                         </template>
-                        <div v-else class="cover cover-null">暂无</div>
+                        <div v-else class="cover cover-null">{{ $t("vip.mall.none") }}</div>
                     </div>
                     <div class="good-info">
-                        <div class="good-title">购物车批量兑换</div>
+                        <div class="good-title">{{ $t("vip.mall.batchExchange") }}</div>
                         <div class="good-subtitle">
-                            已选择 {{ checkedList.length }} 种商品，共 {{ readyNumber }} 件
+                            {{ $t("vip.mall.batchSelected", { types: checkedList.length, count: readyNumber }) }}
                         </div>
                         <div class="meta-line">
-                            <span>{{ needs_address ? "包含实物商品" : "虚拟物品无需地址" }}</span>
+                            <span>{{ needs_address ? $t("vip.mall.containsPhysical") : $t("vip.mall.virtualNoAddress") }}</span>
                         </div>
                         <div class="cost-list">
                             <span v-if="all_price_boxcoin" class="cost">
-                                <span class="cost-label">盒币</span>
+                                <span class="cost-label">{{ $t("vip.mall.boxcoin") }}</span>
                                 <span class="price">{{ all_price_boxcoin }}</span>
                             </span>
                             <span v-if="all_price_points" class="cost">
-                                <span class="cost-label">积分</span>
+                                <span class="cost-label">{{ $t("vip.common.points") }}</span>
                                 <span class="price">{{ all_price_points }}</span>
                             </span>
                             <span v-if="all_price_cny" class="cost">
-                                <span class="cost-label">金箔</span>
+                                <span class="cost-label">{{ $t("vip.mall.cny") }}</span>
                                 <span class="price">{{ all_price_cny }}</span>
                             </span>
                         </div>
@@ -60,17 +60,17 @@
                 </div>
                 <div v-if="needs_address" class="shipping-card">
                     <div class="section-head">
-                        <span class="section-title">收货地址</span>
+                        <span class="section-title">{{ $t("vip.mall.shippingAddress") }}</span>
                         <div class="section-actions">
                             <a href="/dashboard/address" target="_blank" class="manage-address">
                                 <Setting class="action-icon" />
-                                管理地址
+                                {{ $t("vip.mall.manageAddress") }}
                             </a>
                             <button
                                 class="refresh-address"
                                 type="button"
-                                title="刷新地址"
-                                aria-label="刷新地址"
+                                :title="$t('vip.mall.refreshAddress')"
+                                :aria-label="$t('vip.mall.refreshAddress')"
                                 :class="{ loading: addressLoading }"
                                 @click="refreshAddress"
                             >
@@ -83,7 +83,7 @@
                             <div class="address-main">
                                 <div class="address-contact">
                                     {{ selectedAddress.contact_name }} - {{ selectedAddress.contact_phone }}
-                                    <span v-if="isDefaultAddress(selectedAddress)" class="default-tag">默认地址</span>
+                                    <span v-if="isDefaultAddress(selectedAddress)" class="default-tag">{{ $t("vip.mall.defaultAddress") }}</span>
                                 </div>
                                 <div class="address-detail">
                                     {{ formatAddress(selectedAddress) }}
@@ -95,7 +95,7 @@
                             v-if="alternativeAddressList.length"
                             class="address-expand"
                             type="button"
-                            :title="addressExpanded ? '收起地址列表' : '展开地址列表'"
+                            :title="addressExpanded ? $t('vip.mall.collapseAddresses') : $t('vip.mall.expandAddresses')"
                             @click="addressExpanded = !addressExpanded"
                         >
                             <ArrowDown class="expand-icon" :class="{ expanded: addressExpanded }" />
@@ -111,31 +111,31 @@
                                 <span class="address-option-main">
                                     <span class="address-contact">
                                         {{ addressItem.contact_name }} - {{ addressItem.contact_phone }}
-                                        <span v-if="isDefaultAddress(addressItem)" class="default-tag">默认地址</span>
+                                        <span v-if="isDefaultAddress(addressItem)" class="default-tag">{{ $t("vip.mall.defaultAddress") }}</span>
                                     </span>
                                     <span class="address-detail">{{ formatAddress(addressItem) }}</span>
                                 </span>
                             </button>
                         </div>
                     </template>
-                    <a v-else class="address-empty" href="/dashboard/address" target="_blank">暂无收货地址，点击去添加</a>
+                    <a v-else class="address-empty" href="/dashboard/address" target="_blank">{{ $t("vip.mall.addAddressHint") }}</a>
                 </div>
                 <div v-else class="shipping-card no-address-card">
-                    <div class="section-title">收货地址</div>
-                    <div class="address-empty-static">虚拟物品无需填写收货地址</div>
+                    <div class="section-title">{{ $t("vip.mall.shippingAddress") }}</div>
+                    <div class="address-empty-static">{{ $t("vip.mall.virtualNoAddressLong") }}</div>
                 </div>
                 <div class="remark-card">
-                    <div class="section-title">备注</div>
-                    <el-input v-model="remark" placeholder="可填写尺码、偏好或其他补充说明" type="textarea" :rows="2" />
+                    <div class="section-title">{{ $t("vip.mall.remark") }}</div>
+                    <el-input v-model="remark" :placeholder="$t('vip.mall.remarkPlaceholder')" type="textarea" :rows="2" />
                 </div>
-                <div class="tip">
-                    确认后将兑换<span class="em">{{ checkedList.length }} 种商品</span>
-                </div>
+                <i18n-t keypath="vip.mall.willExchangeTypes" tag="div" class="tip">
+                    <template #types><span class="em">{{ $t("vip.mall.productTypes", { count: checkedList.length }) }}</span></template>
+                </i18n-t>
             </div>
             <div class="btn-box">
-                <el-button class="cancel-btn" round @click="goBack">取消</el-button>
+                <el-button class="cancel-btn" round @click="goBack">{{ $t("vip.common.cancel") }}</el-button>
                 <el-button class="confirm-btn" type="primary" round :loading="loading" :disabled="!ready" @click="toBuy">
-                    支付订单
+                    {{ $t("vip.mall.payOrder") }}
                 </el-button>
             </div>
         </el-dialog>
@@ -336,10 +336,10 @@ export default {
                 return User.toLogin();
             }
             if (!this.checkedList.length) {
-                return this.$message.warning("请先选择要结算的商品");
+                return this.$message.warning(this.$t("vip.mall.selectCheckoutProducts"));
             }
             if (this.needs_address && !this.address.id) {
-                return this.$message.warning("请选择收货地址");
+                return this.$message.warning(this.$t("vip.mall.selectAddress"));
             }
             const data = {
                 remark: this.remark,
@@ -358,14 +358,14 @@ export default {
                     }).then(() => {
                         this.$message({
                             type: "success",
-                            message: "下单成功",
+                            message: this.$t("vip.mall.orderSuccess"),
                         });
                         this.$store.dispatch("mallNew/getCart");
                         if (this.embedded) {
                             this.goBack();
-                            this.$confirm("下单成功，是否查看订单记录？", "提示", {
-                                confirmButtonText: "查看订单",
-                                cancelButtonText: "留在商城",
+                            this.$confirm(this.$t("vip.mall.orderSuccessPrompt"), this.$t("vip.common.prompt"), {
+                                confirmButtonText: this.$t("vip.mall.viewOrders"),
+                                cancelButtonText: this.$t("vip.mall.stayInStore"),
                                 type: "success",
                             })
                                 .then(() => {
@@ -376,7 +376,7 @@ export default {
                         }
                         const loading = this.$loading({
                             lock: true,
-                            text: "跳转中...",
+                            text: this.$t("vip.mall.redirecting"),
                         });
                         setTimeout(() => {
                             loading.close();

@@ -1,10 +1,10 @@
 <template>
     <div class="m-paid_attachment">
         <input class="u-data-input" type="file" id="face_file" @change="processFile" accept=".jx3dat, .dat, .ini" />
-        <el-button type="primary" @click="selectData" icon="Upload">{{ `上传${name}数据` }}</el-button>
+        <el-button type="primary" @click="selectData" icon="Upload">{{ $t("publish.face.uploadData", { type: name }) }}</el-button>
         <span class="u-data-ready" v-show="data.uuid">
             <i class="el-icon-success"></i>
-            已上传
+            {{ $t("publish.common.uploaded") }}
         </span>
     </div>
 </template>
@@ -43,8 +43,8 @@ export default {
     computed: {
         name() {
             const data = {
-                face: "脸型",
-                body: "体型",
+                face: this.$t("publish.face.faceShape"),
+                body: this.$t("publish.face.bodyShape"),
             };
             return data[this.type];
         },
@@ -73,7 +73,7 @@ export default {
                 this.data.id = res.data.data.id;
                 this.data.name = res.data.data.name;
                 this.$message({
-                    message: "数据上传成功",
+                    message: this.$t("publish.message.dataUploadSucceeded"),
                     type: "success",
                 });
                 this.$emit("update:data", this.data);
@@ -84,7 +84,7 @@ export default {
             // 大于64kb
             if (file && file.size > 65536) {
                 this.$message({
-                    message: "文件过大，限 64KB 以内",
+                    message: this.$t("publish.upload.fileTooLarge64K"),
                     type: "error",
                 });
                 return;
@@ -109,19 +109,19 @@ export default {
                     const result = load(e.target.result);
                     if (!result)
                         return vm.$notify.error({
-                            title: "错误",
-                            message: "数据类型解析失败",
+                            title: this.$t("publish.common.error"),
+                            message: this.$t("publish.face.parseTypeFailed"),
                         });
                     if (vm.type === "body" && result.type.startsWith("face")) {
                         return vm.$notify.error({
-                            title: "错误",
-                            message: "请导入体型数据",
+                            title: this.$t("publish.common.error"),
+                            message: this.$t("publish.face.importBodyData"),
                         });
                     }
                     if (vm.type === "face" && result.type === "body") {
                         return vm.$notify.error({
-                            title: "错误",
-                            message: "请导入脸型数据",
+                            title: this.$t("publish.common.error"),
+                            message: this.$t("publish.face.importFaceData"),
                         });
                     }
                     object = result.data;
@@ -132,8 +132,8 @@ export default {
                 } catch (ex) {
                     console.log(ex);
                     vm.$notify.error({
-                        title: "错误",
-                        message: "无法读取数据",
+                        title: this.$t("publish.common.error"),
+                        message: this.$t("publish.upload.cannotReadData"),
                     });
                     return;
                 }
@@ -143,8 +143,8 @@ export default {
                     setTimeout(
                         () =>
                             vm.$notify({
-                                title: "成功",
-                                message: "数据读取成功，开始上传",
+                                title: this.$t("publish.common.success"),
+                                message: this.$t("publish.upload.readSucceeded"),
                                 type: "success",
                             }),
                         0
@@ -156,8 +156,8 @@ export default {
             };
             fr.onerror = function (e) {
                 vm.$notify.error({
-                    title: "错误",
-                    message: "文件读取异常",
+                    title: this.$t("publish.common.error"),
+                    message: this.$t("publish.upload.readFailed"),
                 });
             };
             fr.readAsArrayBuffer(file);

@@ -1,53 +1,53 @@
 <template>
     <div class="m-page-order">
         <div class="m-breadcrumb" v-if="windowWidth > 750">
-            <span @click="goBack" class="u-back"><i class="el-icon-arrow-left"></i> 返回</span>
+            <span @click="goBack" class="u-back"><i class="el-icon-arrow-left"></i> {{ $t("vip.common.back") }}</span>
         </div>
         <div class="m-order-shell">
             <div class="m-order-header">
                 <div>
-                    <h1>确认兑换</h1>
-                    <p>核对商品、资产消耗与收货信息后提交订单</p>
+                    <h1>{{ $t("vip.common.confirmExchange") }}</h1>
+                    <p>{{ $t("vip.mall.orderReviewHint") }}</p>
                 </div>
-                <span class="u-order-tag">积分商城</span>
+                <span class="u-order-tag">{{ $t("vip.mall.title") }}</span>
             </div>
             <div class="m-goods el-card">
                 <div class="m-product">
                     <img v-if="previewImage" class="u-img" :src="previewImage" />
-                    <div v-else class="u-img u-img-placeholder">暂无图片</div>
+                    <div v-else class="u-img u-img-placeholder">{{ $t("vip.mall.noImage") }}</div>
                     <div class="m-product-info">
                         <span class="u-title">{{ item.title }}</span>
                         <div class="m-line">
-                            <span class="u-span">兑换数量：{{ count }}件</span>
-                            <span class="u-span">邮费：{{ item.postage ? item.postage / 100 + "元" : "包邮" }}</span>
+                            <span class="u-span">{{ $t("vip.mall.exchangeQuantity", { count }) }}</span>
+                            <span class="u-span">{{ item.postage ? $t("vip.mall.postageAmount", { amount: item.postage / 100 }) : $t("vip.mall.freeShipping") }}</span>
                         </div>
                     </div>
                 </div>
                 <div class="m-info">
                     <section class="m-order-section">
-                        <div class="u-section-title">兑换消耗</div>
+                        <div class="u-section-title">{{ $t("vip.mall.exchangeCost") }}</div>
                         <div class="m-cost-list">
                             <span v-show="item.price_cny" class="u-cost"
-                                ><span>金箔</span><b>{{ item.price_cny * count }}</b></span
+                                ><span>{{ $t("vip.mall.cny") }}</span><b>{{ item.price_cny * count }}</b></span
                             >
                             <span v-show="item.price_points" class="u-cost"
-                                ><span>积分</span><b>{{ item.price_points * count }}</b></span
+                                ><span>{{ $t("vip.common.points") }}</span><b>{{ item.price_points * count }}</b></span
                             >
                             <span v-show="item.price_boxcoin" class="u-cost"
-                                ><span>盒币</span><b>{{ item.price_boxcoin * count }}</b></span
+                                ><span>{{ $t("vip.mall.boxcoin") }}</span><b>{{ item.price_boxcoin * count }}</b></span
                             >
                             <span v-if="!item.price_cny && !item.price_points && !item.price_boxcoin" class="u-cost"
-                                ><span>消耗</span><b>免费兑换</b></span
+                                ><span>{{ $t("vip.mall.cost") }}</span><b>{{ $t("vip.common.freeExchange") }}</b></span
                             >
                         </div>
                     </section>
 
                     <section class="m-order-section">
                         <div class="u-section-row">
-                            <div class="u-section-title">收货信息</div>
+                            <div class="u-section-title">{{ $t("vip.mall.shippingInfo") }}</div>
                             <div class="m-button" v-if="show_address">
-                                <el-button type="primary" text @click="visible = true">切换地址</el-button>
-                                <a class="u-address-link" href="/dashboard/address" target="_blank">管理地址</a>
+                                <el-button type="primary" text @click="visible = true">{{ $t("vip.mall.switchAddress") }}</el-button>
+                                <a class="u-address-link" href="/dashboard/address" target="_blank">{{ $t("vip.mall.manageAddress") }}</a>
                             </div>
                         </div>
                         <div class="m-address" v-if="show_address">
@@ -60,17 +60,17 @@
                                 </div>
                             </template>
                             <a v-else class="u-empty-address" href="/dashboard/address" target="_blank">
-                                暂无收货地址，点击去添加
+                                {{ $t("vip.mall.addAddressHint") }}
                             </a>
                         </div>
-                        <div class="u-no-address" v-else>虚拟物品无需地址</div>
+                        <div class="u-no-address" v-else>{{ $t("vip.mall.virtualNoAddress") }}</div>
                     </section>
 
                     <section class="m-order-section">
-                        <div class="u-section-title">备注</div>
+                        <div class="u-section-title">{{ $t("vip.mall.remark") }}</div>
                         <el-input
                             v-model="remark"
-                            placeholder="可填写尺码、偏好或其他补充说明"
+                            :placeholder="$t('vip.mall.remarkPlaceholder')"
                             type="textarea"
                             :rows="3"
                         ></el-input>
@@ -78,10 +78,10 @@
 
                     <div class="m-order-footer">
                         <span class="u-submit-tip">
-                            确认后将兑换
+                            {{ $t("vip.mall.willExchange") }}
                             <span>{{ item.title }}</span>
                         </span>
-                        <el-button class="u-button" type="primary" @click="toBuy">确认订单</el-button>
+                        <el-button class="u-button" type="primary" @click="toBuy">{{ $t("vip.mall.confirmOrder") }}</el-button>
                     </div>
                 </div>
             </div>
@@ -182,7 +182,7 @@ export default {
             }
             const addressId = this.address?.id || 0;
             if (this.needs_address && !addressId) {
-                return this.$message.warning("请选择收货地址");
+                return this.$message.warning(this.$t("vip.mall.selectAddress"));
             }
             this.$store
                 .dispatch("mallNew/buyGoods", {

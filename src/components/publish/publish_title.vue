@@ -1,6 +1,6 @@
 <template>
     <div class="m-publish-title">
-        <el-divider content-position="left" v-if="!hideDiv">标题</el-divider>
+        <el-divider content-position="left" v-if="!hideDiv">{{ $t("publish.common.title") }}</el-divider>
         <el-input
             v-model="title"
             :maxlength="50"
@@ -8,7 +8,7 @@
             show-word-limit
             required
             size="large"
-            :placeholder="placeholder || '请填写标题'"
+            :placeholder="placeholder || $t('publish.form.titlePlaceholder')"
         ></el-input>
         <slot></slot>
     </div>

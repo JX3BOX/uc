@@ -1,12 +1,12 @@
 <template>
     <div class="m-publish-tags">
-        <el-form-item :label="label || '标签'">
+        <el-form-item :label="label || $t('publish.common.tags')">
             <template v-if="tags && tags.length">
                 <el-checkbox-group v-model="tag">
-                    <el-checkbox v-for="item in tags" :label="item" :key="item"></el-checkbox>
+                    <el-checkbox v-for="item in tags" :label="item" :key="item">{{ optionLabel(item) }}</el-checkbox>
                 </el-checkbox-group>
             </template>
-            <span v-else>无</span>
+            <span v-else>{{ $t("publish.common.none") }}</span>
         </el-form-item>
         <slot></slot>
     </div>
@@ -73,7 +73,20 @@ export default {
         },
     },
     computed: {},
-    methods: {},
+    methods: {
+        optionLabel(item) {
+            const key = {
+                抓马: "horseCatching",
+                宠物: "pets",
+                奇遇: "adventures",
+                浪客行: "wanderer",
+                体服: "testServer",
+                其它: "other",
+                其他: "other",
+            }[item];
+            return key ? this.$t(`publish.optionLabels.${key}`) : item;
+        },
+    },
     mounted: function () {},
     components: {},
 };

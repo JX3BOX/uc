@@ -37,19 +37,19 @@ export default {
             active: "Topic",
             types: [
                 {
-                    label: "主题",
+                    label: this.$t("author.tabs.topics"),
                     value: "Topic",
                     component: Topic,
                     icon: "el-icon-collection",
                 },
                 {
-                    label: "回帖",
+                    label: this.$t("author.tabs.replies"),
                     value: "Reply",
                     component: Reply,
                     icon: "el-icon-tickets",
                 },
                 {
-                    label: "小册",
+                    label: this.$t("author.tabs.booklets"),
                     value: "Collection",
                     component: Collection,
                     icon: "el-icon-orange",
@@ -65,19 +65,19 @@ export default {
                 //     component: Question
                 // },
                 {
-                    label: "铭牌",
+                    label: this.$t("author.tabs.namespace"),
                     value: "Namespace",
                     component: Namespace,
                     icon: "el-icon-pear",
                 },
                 {
-                    label: "趣图",
+                    label: this.$t("author.tabs.funImages"),
                     value: "Emotions",
                     component: Emotions,
                     icon: "el-icon-cherry",
                 },
                 {
-                    label: "骚话",
+                    label: this.$t("author.tabs.jokesShort"),
                     value: "Jokes",
                     component: Jokes,
                     icon: "el-icon-apple",

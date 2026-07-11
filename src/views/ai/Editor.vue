@@ -6,7 +6,7 @@
             <header class="m-ai-editor__header">
                 <div>
                     <div class="m-ai-editor__title">
-                        <h1>AI 编辑器预览</h1>
+                        <h1>{{ $t("ai.editor.title") }}</h1>
                         <el-dropdown
                             class="m-ai-editor__version-dropdown"
                             trigger="click"
@@ -30,20 +30,20 @@
                             </template>
                         </el-dropdown>
                     </div>
-                    <p>把 AI 生成的 HTML 粘贴到左侧，右侧使用魔盒文章渲染器实时预览。</p>
+                    <p>{{ $t("ai.editor.description") }}</p>
                 </div>
                 <div class="m-ai-editor__actions">
-                    <el-button :icon="DocumentCopy" type="primary" @click="copyContent">复制 HTML</el-button>
-                    <el-button :icon="Delete" @click="clearContent">清空</el-button>
+                    <el-button :icon="DocumentCopy" type="primary" @click="copyContent">{{ $t("ai.editor.copyHtml") }}</el-button>
+                    <el-button :icon="Delete" @click="clearContent">{{ $t("ai.editor.clear") }}</el-button>
                     <el-dropdown trigger="click" @command="handleActionCommand">
                         <el-button :loading="sampleLoading">
-                            更多
+                            {{ $t("ai.editor.more") }}
                             <el-icon class="el-icon--right"><ArrowDown /></el-icon>
                         </el-button>
                         <template #dropdown>
                             <el-dropdown-menu>
                                 <el-dropdown-item command="loadSample" :icon="RefreshLeft" :disabled="sampleLoading">
-                                    载入示例
+                                    {{ $t("ai.editor.loadSample") }}
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
@@ -53,33 +53,33 @@
 
             <section class="m-ai-editor__toolbar">
                 <div class="m-ai-editor__tool-group">
-                    <span class="m-ai-editor__tool-label">预览尺寸</span>
+                    <span class="m-ai-editor__tool-label">{{ $t("ai.editor.previewSize") }}</span>
                     <el-segmented v-model="previewWidth" :options="previewWidthOptions" />
                 </div>
                 <div class="m-ai-editor__tool-group">
-                    <span class="m-ai-editor__tool-label">主题</span>
-                    <el-switch v-model="darkPreview" active-text="暗色" inactive-text="浅色" />
+                    <span class="m-ai-editor__tool-label">{{ $t("ai.editor.theme") }}</span>
+                    <el-switch v-model="darkPreview" :active-text="$t('ai.editor.dark')" :inactive-text="$t('ai.editor.light')" />
                 </div>
                 <div class="m-ai-editor__tool-group">
-                    <span class="m-ai-editor__tool-label">渲染</span>
-                    <el-switch v-model="pageable" active-text="分页" inactive-text="单页" />
+                    <span class="m-ai-editor__tool-label">{{ $t("ai.editor.render") }}</span>
+                    <el-switch v-model="pageable" :active-text="$t('ai.editor.paginated')" :inactive-text="$t('ai.editor.singlePage')" />
                 </div>
                 <div class="m-ai-editor__tool-group">
-                    <span class="m-ai-editor__tool-label">正文</span>
+                    <span class="m-ai-editor__tool-label">{{ $t("ai.editor.body") }}</span>
                     <el-switch
                         :model-value="cleanPreview"
-                        active-text="清爽"
-                        inactive-text="原样"
+                        :active-text="$t('ai.editor.clean')"
+                        :inactive-text="$t('ai.editor.original')"
                         @change="handleCleanPreviewChange"
                     />
-                    <el-tooltip content="魔盒 App 默认会开启清爽模式" placement="top">
+                    <el-tooltip :content="$t('ai.editor.cleanModeTip')" placement="top">
                         <span class="m-ai-editor__info">i</span>
                     </el-tooltip>
                 </div>
             </section>
 
             <section v-if="issues.length" class="m-ai-editor__issues">
-                <strong>检查提示</strong>
+                <strong>{{ $t("ai.editor.checkTips") }}</strong>
                 <ul>
                     <li v-for="item in issues" :key="item">{{ item }}</li>
                 </ul>
@@ -88,19 +88,19 @@
             <section class="m-ai-editor__workspace">
                 <div class="m-ai-editor__panel m-ai-editor__input">
                     <div class="u-panel-title">
-                        <span>HTML 输入</span>
-                        <em>{{ contentLength }} 字符</em>
+                        <span>{{ $t("ai.editor.htmlInput") }}</span>
+                        <em>{{ $t("ai.editor.characterCount", { count: contentLength }) }}</em>
                     </div>
                     <textarea
                         v-model="content"
                         spellcheck="false"
-                        placeholder="把 AI 生成的 HTML 片段粘贴到这里。"
+                        :placeholder="$t('ai.editor.inputPlaceholder')"
                     ></textarea>
                 </div>
 
                 <div class="m-ai-editor__panel m-ai-editor__preview">
                     <div class="u-panel-title">
-                        <span>渲染预览</span>
+                        <span>{{ $t("ai.editor.renderPreview") }}</span>
                         <em>{{ previewLabel }}</em>
                     </div>
                     <div class="m-ai-editor__preview-stage" :class="{ 'is-dark': darkPreview }">
@@ -114,7 +114,7 @@
                             />
                             <div v-else class="m-ai-editor__empty">
                                 <el-icon><Document /></el-icon>
-                                <span>左侧输入 HTML 后，这里会显示文章渲染效果。</span>
+                                <span>{{ $t("ai.editor.emptyPreview") }}</span>
                             </div>
                         </div>
                     </div>
@@ -139,7 +139,7 @@ const APP_VERSIONS = [
     {
         value: "v0.0.1",
         label: "v0.0.1",
-        name: "基础预览版",
+        nameKey: "ai.editor.basicPreviewVersion",
         mode: "preview",
         aiEnabled: false,
     },
@@ -204,7 +204,6 @@ export default {
     data() {
         return {
             selectedVersion: APP_VERSIONS[0].value,
-            appVersions: APP_VERSIONS,
             content: "",
             darkPreview: false,
             pageable: false,
@@ -217,14 +216,19 @@ export default {
             DocumentCopy,
             RefreshLeft,
             Delete,
-            previewWidthOptions: [
-                { label: "桌面", value: "desktop" },
-                { label: "平板", value: "tablet" },
-                { label: "手机", value: "mobile" },
-            ],
         };
     },
     computed: {
+        appVersions() {
+            return APP_VERSIONS.map((item) => ({ ...item, name: this.$t(item.nameKey) }));
+        },
+        previewWidthOptions() {
+            return [
+                { label: this.$t("ai.editor.desktop"), value: "desktop" },
+                { label: this.$t("ai.editor.tablet"), value: "tablet" },
+                { label: this.$t("ai.editor.mobile"), value: "mobile" },
+            ];
+        },
         activeVersion() {
             return this.appVersions.find((item) => item.value === this.selectedVersion) || this.appVersions[0];
         },
@@ -233,11 +237,11 @@ export default {
         },
         previewLabel() {
             const map = {
-                desktop: "桌面宽度",
-                tablet: "平板宽度",
-                mobile: "手机宽度",
+                desktop: this.$t("ai.editor.desktopWidth"),
+                tablet: this.$t("ai.editor.tabletWidth"),
+                mobile: this.$t("ai.editor.mobileWidth"),
             };
-            return map[this.previewWidth] || "桌面宽度";
+            return map[this.previewWidth] || this.$t("ai.editor.desktopWidth");
         },
         previewCanvasStyle() {
             const widthMap = {
@@ -262,15 +266,15 @@ export default {
 
             if (isSameRenderableHtml(html, this.filteredContent)) return list;
 
-            list.push("输入 HTML 会被文章安全过滤改写，发布前建议按过滤后的结果检查。");
+            list.push(this.$t("ai.editor.issues.filtered"));
             if (/<script[\s>]/i.test(html) && !/<script[\s>]/i.test(this.filteredContent)) {
-                list.push("script 标签会被移除。");
+                list.push(this.$t("ai.editor.issues.scriptRemoved"));
             }
             if (/\son[a-z]+\s*=/i.test(html) && !/\son[a-z]+\s*=/i.test(this.filteredContent)) {
-                list.push("onclick/onerror 等事件属性会被移除。");
+                list.push(this.$t("ai.editor.issues.eventsRemoved"));
             }
             if (/\b(?:href|src)\s*=\s*(?:"\s*javascript\s*:|'\s*javascript\s*:|javascript\s*:)/i.test(html)) {
-                list.push("javascript: 链接会被清理。");
+                list.push(this.$t("ai.editor.issues.javascriptCleaned"));
             }
             return list;
         },
@@ -310,7 +314,7 @@ export default {
         async copyContent() {
             if (!this.content) return;
             await navigator.clipboard.writeText(this.content);
-            this.$message.success("已复制 HTML");
+            this.$message.success(this.$t("ai.editor.copySuccess"));
         },
         clearContent() {
             this.content = "";
@@ -323,10 +327,10 @@ export default {
             try {
                 const content = await getArticle(SAMPLE_ARTICLE_ID);
                 this.content = content || "";
-                this.$message.success("已载入示例文章");
+                this.$message.success(this.$t("ai.editor.sampleLoaded"));
             } catch (err) {
                 console.error(err);
-                this.$message.error("示例文章载入失败");
+                this.$message.error(this.$t("ai.editor.sampleLoadFailed"));
             } finally {
                 this.sampleLoading = false;
             }

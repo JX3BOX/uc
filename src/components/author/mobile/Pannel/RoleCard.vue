@@ -3,14 +3,14 @@
         <div   class="m-role-box">
             <div :class="['u-item', first.mount!=null?`mount-${first.mount}-var`:'', total > 1 ? 'has-num' : '']">
                 <div class="u-title">
-                    TA的角色
+                    {{ $t("author.mobile.roles") }}
                 </div>
                 <div class="m-info">
                     <div :class="['u-name', first.name && first.name.length <= 7 ? 'is-big' : '']">
-                        {{ first.name || '暂未绑定角色' }}
+                        {{ first.name || $t("author.mobile.noBoundRole") }}
                     </div>
                     <div class="m-ext">
-                        <div class="u-item">{{ first.server || '暂无' }}</div>
+                        <div class="u-item">{{ first.server || $t("author.common.none") }}</div>
                         <div v-if="mount_name" class="u-item">{{ mount_name }}</div>
                     </div>
                 </div>

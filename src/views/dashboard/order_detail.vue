@@ -1,23 +1,23 @@
 <template>
-    <uc class="m-order-detail" icon="el-icon-shopping-bag-1" title="订单中心" :tabList="tabList">
+    <uc class="m-order-detail" icon="el-icon-shopping-bag-1" :title="$t('dashboard.orders.title')" :tabList="tabList">
         <template #header>
-             <el-button @click="goBack" class="u-back"><i class="el-icon-arrow-left"></i> 返回</el-button>
+             <el-button @click="goBack" class="u-back"><i class="el-icon-arrow-left"></i> {{ $t("dashboard.common.back") }}</el-button>
         </template>
         <div class="m-mall-detail">
             <!-- <div class="m-breadcrumb">
-                <span @click="goBack" class="u-back"><i class="el-icon-arrow-left"></i> 返回</span>
+                <span @click="goBack" class="u-back"><i class="el-icon-arrow-left"></i> {{ $t("dashboard.common.back") }}</span>
             </div> -->
 
             <div class="m-content" v-if="goods">
                 <div class="m-address el-card" v-if="!goods.is_virtual">
-                    <span>收件人：{{ address.actual_contact }}</span>
-                    <span>联系电话：{{ address.actual_phone }}</span>
-                    <span>收货地址： {{ address.actual_address }}</span>
+                    <span>{{ $t("dashboard.orders.recipient") }}：{{ address.actual_contact }}</span>
+                    <span>{{ $t("dashboard.orders.contactPhone") }}：{{ address.actual_phone }}</span>
+                    <span>{{ $t("dashboard.orders.shippingAddress") }}： {{ address.actual_address }}</span>
                 </div>
                 <div class="m-order el-card" v-if="goods">
                     <div class="m-img">
                         <img v-if="goods.goods_images" :src="goods.goods_images[0]" />
-                        <span class="u-link" v-if="goods.is_virtual" @click="openVirtual(goods)">点击查看</span>
+                        <span class="u-link" v-if="goods.is_virtual" @click="openVirtual(goods)">{{ $t("dashboard.common.clickToView") }}</span>
                     </div>
                     <el-descriptions
                         class="m-descriptions"
@@ -26,54 +26,54 @@
                         :column="3"
                         border
                     >
-                        <el-descriptions-item label="下单时间">{{ order.created_at }}</el-descriptions-item>
-                        <el-descriptions-item label="订单编号" :span="2">{{ order.order_no }}</el-descriptions-item>
+                        <el-descriptions-item :label="$t('dashboard.orders.orderedAt')">{{ order.created_at }}</el-descriptions-item>
+                        <el-descriptions-item :label="$t('dashboard.orders.orderNumber')" :span="2">{{ order.order_no }}</el-descriptions-item>
 
-                        <el-descriptions-item label="购买数量">{{ order.goods_num }}</el-descriptions-item>
-                        <el-descriptions-item label="邮费">
-                            {{ goods.postage ? goods.postage / 100 + "元" : "包邮" }}
+                        <el-descriptions-item :label="$t('dashboard.orders.purchaseQuantity')">{{ order.goods_num }}</el-descriptions-item>
+                        <el-descriptions-item :label="$t('dashboard.orders.postage')">
+                            {{ goods.postage ? $t("dashboard.common.yuanAmount", { amount: goods.postage / 100 }) : $t("dashboard.orders.freeShipping") }}
                         </el-descriptions-item>
-                        <el-descriptions-item label="支付状态">{{ payStatus[order.pay_status] }}</el-descriptions-item>
-                        <el-descriptions-item label="订单状态">
+                        <el-descriptions-item :label="$t('dashboard.orders.paymentStatus')">{{ payStatus[order.pay_status] }}</el-descriptions-item>
+                        <el-descriptions-item :label="$t('dashboard.orders.orderStatus')">
                             {{ orderStatus[order.order_status] }}
                         </el-descriptions-item>
-                        <el-descriptions-item label="购买消耗">
+                        <el-descriptions-item :label="$t('dashboard.orders.purchaseCost')">
                             <div class="u-box">
                                 <span v-if="order.goods_price_cny">
-                                    金箔：<b>{{ order.goods_price_cny * order.goods_num }}</b>
+                                    {{ $t("dashboard.common.goldLeaf") }}：<b>{{ order.goods_price_cny * order.goods_num }}</b>
                                 </span>
                                 <span v-if="order.goods_price_boxcoin">
-                                    盒币：<b>{{ order.goods_price_boxcoin * order.goods_num }}</b>
+                                    {{ $t("dashboard.common.boxcoin") }}：<b>{{ order.goods_price_boxcoin * order.goods_num }}</b>
                                 </span>
                                 <span v-if="order.goods_price_point">
-                                    银铛：<b>{{ order.goods_price_point * order.goods_num }}</b>
+                                    {{ $t("dashboard.common.points") }}：<b>{{ order.goods_price_point * order.goods_num }}</b>
                                 </span>
                             </div>
                         </el-descriptions-item>
-                        <el-descriptions-item label="是否为赠送">{{
-                            order.is_vitural_gift_order ? "是" : "否"
+                        <el-descriptions-item :label="$t('dashboard.orders.isGift')">{{
+                            order.is_vitural_gift_order ? $t("dashboard.common.yes") : $t("dashboard.common.no")
                         }}</el-descriptions-item>
-                        <el-descriptions-item label="备注">{{ order.remark || "-" }}</el-descriptions-item>
-                        <el-descriptions-item label="评价" v-if="rate.comment" :span="3">
+                        <el-descriptions-item :label="$t('dashboard.common.remark')">{{ order.remark || "-" }}</el-descriptions-item>
+                        <el-descriptions-item :label="$t('dashboard.orders.review')" v-if="rate.comment" :span="3">
                             <div class="m-comment">
                                 <div class="m-text">
                                     <span class="u-comment">{{ rate.comment }}</span>
                                     <span class="u-add_comment" v-if="rate.add_comment"
-                                        >追加评价：{{ rate.add_comment }}</span
+                                        >{{ $t("dashboard.orders.appendReview") }}：{{ rate.add_comment }}</span
                                     >
                                     <el-input v-if="append" class="u-textarea" v-model="content">
                                         <template #append>
-                                            <span style="cursor: pointer" @click="appendComment">确定</span>
+                                            <span style="cursor: pointer" @click="appendComment">{{ $t("dashboard.common.confirm") }}</span>
                                         </template>
                                     </el-input>
                                 </div>
                                 <div class="u-button">
                                     <el-button @click="append = !append" link v-if="order.order_status == 5">
-                                        追加评论
+                                        {{ $t("dashboard.orders.appendComment") }}
                                     </el-button>
-                                    <el-popconfirm title="确认删除评价吗？" :width="200" @confirm="delComment(rate.id)">
+                                    <el-popconfirm :title="$t('dashboard.orders.deleteReviewConfirm')" :width="200" @confirm="delComment(rate.id)">
                                         <template #reference>
-                                            <el-button link>删除</el-button>
+                                            <el-button link>{{ $t("dashboard.common.delete") }}</el-button>
                                         </template>
                                     </el-popconfirm>
                                 </div>
@@ -83,15 +83,15 @@
                 </div>
                 <div class="m-button">
                     <template v-if="data.order.order_status == 0">
-                        <el-button @click="cancel(data.order.id)">取消订单</el-button>
-                        <el-button @click="open(data.order.id, 'address')">修改地址</el-button>
-                        <el-button @click="open(data.order.id, 'remark')">添加备注</el-button>
+                        <el-button @click="cancel(data.order.id)">{{ $t("dashboard.orders.cancelOrder") }}</el-button>
+                        <el-button @click="open(data.order.id, 'address')">{{ $t("dashboard.orders.changeAddress") }}</el-button>
+                        <el-button @click="open(data.order.id, 'remark')">{{ $t("dashboard.orders.addRemark") }}</el-button>
                     </template>
 
                     <el-button @click="toConfirm(data.order.id)" v-if="data.order.order_status == 3">
-                        确认收货
+                        {{ $t("dashboard.orders.confirmReceipt") }}
                     </el-button>
-                    <el-button @click="toPay(data)" v-if="showPay(data.order)">点击付款</el-button>
+                    <el-button @click="toPay(data)" v-if="showPay(data.order)">{{ $t("dashboard.orders.clickToPay") }}</el-button>
                 </div>
             </div>
 
@@ -105,7 +105,7 @@
             >
                 <template v-if="mode == 'address'">
                     <el-form ref="address_form" :model="address_form" :rules="address_rules" class="demo-form-inline">
-                        <el-form-item label="选择收货地址" prop="address_id">
+                        <el-form-item :label="$t('dashboard.orders.selectShippingAddress')" prop="address_id">
                             <el-select v-model="address_form.address_id">
                                 <el-option
                                     :label="`【 ${item.contact_name} ${item.contact_phone} 】 ${item.province}${item.city}${item.area}${item.address}`"
@@ -117,22 +117,22 @@
                         </el-form-item>
                         <el-form-item>
                             <div class="m-button">
-                                <el-button @click="close">取 消</el-button>
-                                <el-button type="primary" @click="submit('address_form')">确定</el-button>
+                                <el-button @click="close">{{ $t("dashboard.common.cancel") }}</el-button>
+                                <el-button type="primary" @click="submit('address_form')">{{ $t("dashboard.common.confirm") }}</el-button>
                             </div>
                         </el-form-item>
                     </el-form>
                 </template>
                 <template v-else>
                     <el-form ref="remark_form" :model="remark_form" :rules="remark_rules" class="demo-form-inline">
-                        <el-form-item label="备注" prop="remark">
-                            <el-input type="textarea" :rows="2" placeholder="请输入备注" v-model="remark_form.remark">
+                        <el-form-item :label="$t('dashboard.common.remark')" prop="remark">
+                            <el-input type="textarea" :rows="2" :placeholder="$t('dashboard.common.remarkPlaceholder')" v-model="remark_form.remark">
                             </el-input>
                         </el-form-item>
                         <el-form-item>
                             <div class="m-button">
-                                <el-button @click="close">取 消</el-button>
-                                <el-button type="primary" @click="submit('remark_form')">确定</el-button>
+                                <el-button @click="close">{{ $t("dashboard.common.cancel") }}</el-button>
+                                <el-button type="primary" @click="submit('remark_form')">{{ $t("dashboard.common.confirm") }}</el-button>
                             </div>
                         </el-form-item>
                     </el-form>
@@ -173,13 +173,13 @@ export default {
                 address_id: "",
             },
             address_rules: {
-                address_id: [{ required: true, message: "请选择地址", trigger: "change" }],
+                address_id: [{ required: true, message: this.$t("dashboard.orders.addressRequired"), trigger: "change" }],
             },
             remark_form: {
                 remark: "",
             },
             remark_rules: {
-                remark: [{ required: true, message: "请输入备注", trigger: "blur" }],
+                remark: [{ required: true, message: this.$t("dashboard.common.remarkPlaceholder"), trigger: "blur" }],
             },
             content: "",
             append: false,
@@ -213,7 +213,7 @@ export default {
             return orderStatus;
         },
         title() {
-            return this.mode == "address" ? "修改收货地址" : "修改备注";
+            return this.mode == "address" ? this.$t("dashboard.orders.changeShippingAddress") : this.$t("dashboard.orders.changeRemark");
         },
     },
     methods: {
@@ -246,7 +246,7 @@ export default {
         toConfirm(id) {
             toConfirm(id).then(() => {
                 this.$message({
-                    message: "收货成功",
+                    message: this.$t("dashboard.orders.receiptSuccess"),
                     type: "success",
                 });
                 this.data.order.order_status = 4;
@@ -275,7 +275,7 @@ export default {
         cancel(id) {
             closeOrder(id).then((res) => {
                 this.$message({
-                    message: "关闭订单成功",
+                    message: this.$t("dashboard.orders.closeSuccess"),
                     type: "success",
                 });
                 this.list = this.list.map((item) => {
@@ -289,7 +289,7 @@ export default {
             const id = data.order.id;
             toPay(id).then(() => {
                 this.$message({
-                    message: "支付成功",
+                    message: this.$t("dashboard.orders.paymentSuccess"),
                     type: "success",
                 });
                 this.list = this.list.map((item) => {
@@ -304,7 +304,7 @@ export default {
                     this.mode == "address"
                         ? updateOrderAddress(this.order_id, this.address_form.address_id).then(() => {
                               this.$message({
-                                  message: "修改地址成功",
+                                  message: this.$t("dashboard.orders.changeAddressSuccess"),
                                   type: "success",
                               });
 
@@ -322,7 +322,7 @@ export default {
                           })
                         : updateOrderRemark(this.order_id, this.remark_form.remark).then(() => {
                               this.$message({
-                                  message: "修改备注成功",
+                                  message: this.$t("dashboard.orders.changeRemarkSuccess"),
                                   type: "success",
                               });
                               this.data.order.remark = this.remark_form.remark;
@@ -362,7 +362,7 @@ export default {
             if (this.content)
                 appendGoodsRate(this.rate.id, { content: this.content }).then((res) => {
                     this.$message({
-                        message: "追评成功",
+                        message: this.$t("dashboard.orders.appendReviewSuccess"),
                         type: "success",
                     });
                     this.data.rate.add_comment = this.content;
@@ -374,7 +374,7 @@ export default {
         delComment(id) {
             delGoodsRate(id).then((res) => {
                 this.$message({
-                    message: "删除评价成功",
+                    message: this.$t("dashboard.orders.deleteReviewSuccess"),
                     type: "success",
                 });
                 this.data.rate.comment = "";

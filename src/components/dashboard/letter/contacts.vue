@@ -7,7 +7,7 @@
             :class="{ active: active == item.receiver_info.id, 'u-letter-unread': showUnread(item) }"
             @click="onContactClick(item)"
         >
-            <div class="u-close" @click.stop="removeContact(item)" title="移除" v-if="item.receiver_info.id != 0 && canOp">
+            <div class="u-close" @click.stop="removeContact(item)" :title="$t('dashboard.common.remove')" v-if="item.receiver_info.id != 0 && canOp">
                 <i class="el-icon-close"></i>
             </div>
             <img class="u-avatar" :src="showAvatar(item.receiver_info.avatar)" alt="" />
@@ -17,7 +17,7 @@
                     {{ item.receiver_info.display_name }}
                 </div>
                 <div class="u-latest-chat" v-if="item.latest_letter">
-                    {{ item.latest_letter.content_type ? `[图片]` : item.latest_letter.content }}
+                    {{ item.latest_letter.content_type ? $t("dashboard.message.imageMessage") : item.latest_letter.content }}
                 </div>
             </div>
         </div>

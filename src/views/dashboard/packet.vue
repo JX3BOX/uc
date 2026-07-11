@@ -1,8 +1,8 @@
 <template>
     <div class="m-credit m-packet">
-        <h2 class="u-title"><i class="el-icon-present"></i> 我的红包</h2>
+        <h2 class="u-title"><i class="el-icon-present"></i> {{ $t("dashboard.packet.title") }}</h2>
         <div class="m-credit-total m-packet-total">
-            余额 :
+            {{ $t("dashboard.common.balance") }} :
             <b :class="{ hasLeft: hasLeft }">{{ formatMoney(money) }}</b>
             <!-- <el-button
                 class="u-btn"
@@ -15,37 +15,37 @@
         </div>
         <div class="m-credit-pull m-packet-pull" v-if="showPullBox">
             <el-form label-position="left" label-width="80px">
-                <el-form-item label="类型">
-                    <el-select v-model="pull.pay_type" placeholder="请选择">
-                        <el-option v-for="(label, key) in pay_types" :key="key" :label="label" :value="key">
+                <el-form-item :label="$t('dashboard.common.type')">
+                    <el-select v-model="pull.pay_type" :placeholder="$t('dashboard.common.selectPlaceholder')">
+                        <el-option v-for="(label, key) in pay_types" :key="key" :label="paymentTypeLabel(key, label)" :value="key">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="账号">
-                    <el-input v-model="pull.account" placeholder="请务必填写正确的收款账号"></el-input>
+                <el-form-item :label="$t('dashboard.common.account')">
+                    <el-input v-model="pull.account" :placeholder="$t('dashboard.common.paymentAccountPlaceholder')"></el-input>
                 </el-form-item>
-                <el-form-item label="姓名">
-                    <el-input v-model="pull.username" placeholder="请务必填写正确的收款人"></el-input>
+                <el-form-item :label="$t('dashboard.common.name')">
+                    <el-input v-model="pull.username" :placeholder="$t('dashboard.common.payeePlaceholder')"></el-input>
                 </el-form-item>
                 <el-form-item label="">
                     <el-button type="primary" @click="openConfirmBox" :disabled="!money || lockStatus"
-                        >提交申请</el-button
+                        >{{ $t("dashboard.common.submitApplication") }}</el-button
                     >
                 </el-form-item>
             </el-form>
         </div>
         <div class="m-credit-table m-packet-table" v-loading="loading">
             <el-tabs v-model="activeName" @tab-change="changeType" type="border-card">
-                <el-tab-pane label="红包记录" name="my_packet_list">
+                <el-tab-pane :label="$t('dashboard.packet.history')" name="my_packet_list">
                     <div class="m-packet-table" v-if="my_packet_list && my_packet_list.length">
                         <table class="m-packet-in-list">
                             <thead>
                                 <tr>
-                                    <th>红包金额</th>
-                                    <th>红包类型</th>
-                                    <th>红包状态</th>
-                                    <th>备注</th>
-                                    <th>收入时间</th>
+                                    <th>{{ $t("dashboard.packet.amount") }}</th>
+                                    <th>{{ $t("dashboard.packet.type") }}</th>
+                                    <th>{{ $t("dashboard.packet.status") }}</th>
+                                    <th>{{ $t("dashboard.common.remark") }}</th>
+                                    <th>{{ $t("dashboard.packet.receivedAt") }}</th>
                                 </tr>
                             </thead>
                             <tr v-for="(item, i) in my_packet_list" :key="i">
@@ -53,7 +53,7 @@
                                     <b>{{ formatMoney(item.money) }}</b>
                                 </td>
                                 <td>{{ formatType(item.action_type) }}</td>
-                                <td>{{ item.is_success ? "已处理" : "未处理" }}</td>
+                                <td>{{ item.is_success ? $t("dashboard.common.processed") : $t("dashboard.common.unprocessed") }}</td>
                                 <td>{{ item.description || item.remark || "-" }}</td>
                                 <td>{{ formatDate(item.created_at) }}</td>
                             </tr>
@@ -63,7 +63,7 @@
                     <el-alert
                         v-else
                         class="m-credit-null m-packet-null"
-                        title="没有找到相关条目"
+                        :title="$t('dashboard.common.noItems')"
                         type="info"
                         center
                         show-icon
@@ -300,10 +300,10 @@ export default {
         },
         openConfirmBox: function () {
             this.$alert(
-                `<div class="m-packet-msg">请确认收款账号和收款人 <br/> 收款账号<b>${this.pull.account}</b> <br/> 收款人<b>${this.pull.username}</b></div>`,
-                "确认信息",
+                `<div class="m-packet-msg">${this.$t("dashboard.packet.confirmPayee")} <br/> ${this.$t("dashboard.common.paymentAccount")}<b>${this.pull.account}</b> <br/> ${this.$t("dashboard.common.payee")}<b>${this.pull.username}</b></div>`,
+                this.$t("dashboard.common.confirmInformation"),
                 {
-                    confirmButtonText: "确定",
+                    confirmButtonText: this.$t("dashboard.common.confirm"),
                     dangerouslyUseHTMLString: true,
                     callback: (action) => {
                         if (action == "confirm") {
@@ -313,7 +313,7 @@ export default {
                                 .then((res) => {
                                     this.$message({
                                         type: "success",
-                                        message: `申请成功,请耐心等待审核结果`,
+                                        message: this.$t("dashboard.packet.applicationSuccess"),
                                     });
                                     this.showPullBox = false;
                                     this.money = 0;
@@ -340,7 +340,7 @@ export default {
                     this.showPushBox = false;
                     this.$message({
                         type: "success",
-                        message: `操作成功`,
+                        message: this.$t("dashboard.common.operationSuccess"),
                     });
                     this.checkItem.status = this.push.status;
                 })
@@ -360,7 +360,7 @@ export default {
                     this.showGiftBox = false;
                     this.$message({
                         type: "success",
-                        message: `发放成功`,
+                        message: this.$t("dashboard.packet.grantSuccess"),
                     });
                 })
                 .finally(() => {
@@ -374,34 +374,30 @@ export default {
                 reason: User.getInfo().uid, //由哪个管理操作
             }).then((res) => {
                 this.$message({
-                    message: `收回数量` + res.data.data.successCount,
+                    message: this.$t("dashboard.packet.recoveredCount", { count: res.data.data.successCount }),
                     type: "success",
                 });
                 item.status = -1;
             });
         },
         formatType(val) {
-            const data = {
-                1: "领取红包",
-                2: "提现失败返回余额",
-                "-1": "回收红包",
-                "-2": "提现",
-                "-3": "红包过期",
-                "-4": "红包消费",
-            };
-            return data[val];
+            return this.$t(`dashboard.packet.actionTypes.${val}`);
         },
         formatDate: function (val) {
             return showTime(val);
         },
         formatStatus: function (val) {
-            return val ? "已提现" : "未提现";
+            return val ? this.$t("dashboard.packet.withdrawn") : this.$t("dashboard.packet.notWithdrawn");
         },
         formatHistoryStatus: function (val) {
-            return val ? paystatus[val] : "审核中";
+            return val ? paystatus[val] : this.$t("dashboard.packet.underReview");
         },
         formatPaytype: function (val) {
-            return val ? paytypes[val] : val;
+            return val ? this.paymentTypeLabel(val, paytypes[val]) : val;
+        },
+        paymentTypeLabel(key, fallback) {
+            const path = `dashboard.common.paymentTypes.${key}`;
+            return this.$te(path) ? this.$t(path) : fallback;
         },
         encryptAccount: function (val) {
             return val.slice(0, 3) + "******";

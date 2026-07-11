@@ -1,6 +1,6 @@
 <template>
     <div class="m-publish-xf m-publish-mix-subtype">
-        <el-form-item label="跨心法">
+        <el-form-item :label="$t('publish.form.crossSpecialization')">
             <el-select
                 v-model="mix_subtype"
                 size="large"

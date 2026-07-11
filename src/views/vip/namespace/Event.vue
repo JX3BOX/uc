@@ -1,9 +1,9 @@
 <template>
     <div class="m-vip-namespace-event">
         <div class="m-vip-namespace-event-cont">
-            <div class="u-title">申请铭牌领取</div>
-            <el-input v-model="uid" placeholder="请输入网站UID" :disabled="success"></el-input>
-            <el-button type="primary" @click="submit" :disabled="success">提交</el-button>
+            <div class="u-title">{{ $t("vip.event.namespaceClaimTitle") }}</div>
+            <el-input v-model="uid" :placeholder="$t('vip.event.uidPlaceholder')" :disabled="success"></el-input>
+            <el-button type="primary" @click="submit" :disabled="success">{{ $t("vip.common.submit") }}</el-button>
         </div>
     </div>
 </template>
@@ -24,7 +24,7 @@ export default {
             putNamespaceKolForId(this.uid).then((res) => {
                 this.success = true;
                 this.$message({
-                    message: "提交成功",
+                    message: this.$t("vip.common.submitSuccess"),
                     type: "success",
                 });
             });

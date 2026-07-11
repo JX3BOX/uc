@@ -1,11 +1,11 @@
 <template>
     <div class="m-publish-client">
-        <el-form-item label="版本">
+        <el-form-item :label="$t('publish.form.client')">
             <el-radio-group v-model="client" @change="handleChange">
-                <el-radio value="std">剑三</el-radio>
-                <el-radio value="origin">缘起</el-radio>
+                <el-radio value="std">{{ $t("publish.form.standardServer") }}</el-radio>
+                <el-radio value="origin">{{ $t("publish.form.originServer") }}</el-radio>
                 <!-- <el-radio value="wujie" v-if="showMobile">无界</el-radio> -->
-                <el-radio value="all" v-if="!forbidAll">全端</el-radio>
+                <el-radio value="all" v-if="!forbidAll">{{ $t("publish.form.allClients") }}</el-radio>
             </el-radio-group>
         </el-form-item>
         <slot></slot>

@@ -28,12 +28,12 @@ export default {
             active: "Question",
             types: [
                 {
-                    label: "题目",
+                    label: this.$t("author.tabs.question"),
                     value: "Question",
                     component: Question,
                 },
                 {
-                    label: "试卷",
+                    label: this.$t("author.tabs.paper"),
                     value: "Paper",
                     component: Paper,
                 },

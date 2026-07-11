@@ -114,17 +114,17 @@ export default {
             var weekC = diffValue / week;
             var monthC = diffValue / month;
             if (monthC >= 1 && monthC <= 12) {
-                result = " " + parseInt(monthC) + "月前";
+                result = this.$t("author.time.monthsAgo", { count: parseInt(monthC) });
             } else if (weekC >= 1 && weekC <= 3) {
-                result = " " + parseInt(weekC) + "周前";
+                result = this.$t("author.time.weeksAgo", { count: parseInt(weekC) });
             } else if (dayC >= 1 && dayC <= 6) {
-                result = " " + parseInt(dayC) + "天前";
+                result = this.$t("author.time.daysAgo", { count: parseInt(dayC) });
             } else if (hourC >= 1 && hourC <= 23) {
-                result = " " + parseInt(hourC) + "小时前";
+                result = this.$t("author.time.hoursAgo", { count: parseInt(hourC) });
             } else if (minC >= 1 && minC <= 59) {
-                result = " " + parseInt(minC) + "分钟前";
+                result = this.$t("author.time.minutesAgo", { count: parseInt(minC) });
             } else if (diffValue >= 0 && diffValue <= minute) {
-                result = "刚刚";
+                result = this.$t("author.time.justNow");
             } else {
                 let datetime = new Date();
                 datetime.setTime(new Date(date));

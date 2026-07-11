@@ -1,8 +1,8 @@
 <template>
     <div >
         <CommonHeader></CommonHeader>
-        <Breadcrumb name="订购高级版" slug="vip" root="/vip/premium" :publishEnable="false" :adminEnable="false" :feedbackEnable="true">
-            <img slot="logo" svg-inline src="@/assets/img/vip/logo.svg" />
+        <Breadcrumb :name="$t('vip.common.orderPremium')" slug="vip" root="/vip/premium" :publishEnable="false" :adminEnable="false" :feedbackEnable="true">
+            <template #logo><img svg-inline src="@/assets/img/vip/logo.svg" /></template>
         </Breadcrumb>
         <LeftSidebar>
             <Nav />
@@ -11,7 +11,7 @@
             <slot></slot>
         </Main>
         <div class="m-vip-container" v-else>
-            <el-alert title="请先登录" type="error" show-icon> </el-alert>
+            <el-alert :title="$t('vip.common.loginRequired')" type="error" show-icon> </el-alert>
         </div>
         <CommonFooter></CommonFooter>
     </div>

@@ -1,7 +1,7 @@
 <template>
     <div class="m-dashboard m-dashboard-profile m-dashboard-work m-dashboard-whitelist m-whitelist">
         <div class="m-whitelist-primary" v-loading="loading">
-            <h2 class="m-whitelist-title u-title"><i class="el-icon-ship"></i> 隐私设置</h2>
+            <h2 class="m-whitelist-title u-title"><i class="el-icon-ship"></i> {{ $t("dashboard.privacy.title") }}</h2>
 
             <el-tabs v-model="active" @tab-change="tabChange">
                 <template v-if="relationNetTypes.length">
@@ -20,28 +20,28 @@
                             @refresh="onRefresh"
                         ></lover>
                         <div class="m-fun-open" v-if="showOpen">
-                            <el-empty description="您尚未开启该功能"></el-empty>
-                            <el-button type="success" @click="onOpen">立即启用</el-button>
+                            <el-empty :description="$t('dashboard.privacy.notEnabled')"></el-empty>
+                            <el-button type="success" @click="onOpen">{{ $t("dashboard.privacy.enableNow") }}</el-button>
                         </div>
                     </el-tab-pane>
                 </template>
-                <el-tab-pane label="我的亲友" name="whitelist"></el-tab-pane>
-                <el-tab-pane label="我的关注" name="myfollow"></el-tab-pane>
-                <el-tab-pane label="我的粉丝" name="myfans"></el-tab-pane>
-                <el-tab-pane label="黑名单" name="blacklist"></el-tab-pane>
+                <el-tab-pane :label="$t('dashboard.privacy.friends')" name="whitelist"></el-tab-pane>
+                <el-tab-pane :label="$t('dashboard.privacy.following')" name="myfollow"></el-tab-pane>
+                <el-tab-pane :label="$t('dashboard.privacy.followers')" name="myfans"></el-tab-pane>
+                <el-tab-pane :label="$t('dashboard.privacy.blacklist')" name="blacklist"></el-tab-pane>
             </el-tabs>
 
             <template v-if="!isRelationNet">
                 <el-input
                     class="m-privacy-search"
                     size="large"
-                    placeholder="请输入搜索内容"
+                    :placeholder="$t('dashboard.common.searchPlaceholder')"
                     v-model="keyword"
                     @keyup.enter="handleChange"
                     clearable
                     @clear="handleChange"
                 >
-                    <template #prepend>关键词</template>
+                    <template #prepend>{{ $t("dashboard.common.keyword") }}</template>
                     <template #append>
                         <el-button icon="Search" @click="handleChange"></el-button>
                     </template>
@@ -58,11 +58,11 @@
                                     <el-dropdown-menu>
                                         <el-dropdown-item v-if="active === 'whitelist'" class="u-item-dropdown-menu">
                                             <el-popconfirm
-                                                title="确认删除亲友关系吗？"
+                                                :title="$t('dashboard.privacy.deleteFriendConfirm')"
                                                 @confirm="remove(item.kith_id, i)"
                                             >
                                                 <template #reference>
-                                                    <span class="u-item-dropdown-action" @click.stop>移除</span>
+                                                    <span class="u-item-dropdown-action" @click.stop>{{ $t("dashboard.common.remove") }}</span>
                                                 </template>
                                             </el-popconfirm>
                                         </el-dropdown-item>
@@ -71,7 +71,7 @@
                                             class="u-item-dropdown-menu"
                                             @click="removeOther(item)"
                                         >
-                                            移除
+                                            {{ $t("dashboard.common.remove") }}
                                         </el-dropdown-item>
                                     </el-dropdown-menu>
                                 </template>
@@ -83,13 +83,13 @@
                         <a class="u-item-name" :href="userLink(item)" target="_blank">{{ getName(item) }}</a>
                         <template v-if="active === 'whitelist'">
                             <span class="u-item-remark" v-if="item.status">
-                                备注：{{ item.remark || "无" }}
+                                {{ $t("dashboard.common.remark") }}：{{ item.remark || $t("dashboard.common.none") }}
                                 <i class="el-icon-edit-outline u-btn-edit" @click="edit(item.kith_id, item)"></i>
                             </span>
-                            <span class="u-item-remark u-pending" v-else> <i class="el-icon-loading"></i> 等待确认中... </span>
+                            <span class="u-item-remark u-pending" v-else> <i class="el-icon-loading"></i> {{ $t("dashboard.privacy.awaitingConfirmation") }} </span>
                         </template>
-                        <div class="u-item-time" :title="`建立时间：${formatCreatedAt(item)}`">
-                            建立时间：{{ formatCreatedAt(item) }}
+                        <div class="u-item-time" :title="$t('dashboard.privacy.createdAtValue', { time: formatCreatedAt(item) })">
+                            {{ $t("dashboard.privacy.createdAt") }}：{{ formatCreatedAt(item) }}
                         </div>
                     </div>
                 </div>
@@ -112,7 +112,7 @@
             <el-input
                 class="u-input"
                 v-model.number="uid"
-                placeholder="输入UID添加"
+                :placeholder="$t('dashboard.privacy.uidPlaceholder')"
                 suffix-icon="Search"
                 @keyup.enter="search"
                 @change="search"
@@ -124,11 +124,11 @@
                         <span class="u-item-uid">UID：{{ userdata.ID }}</span>
                         <b class="u-item-name">{{ userdata.display_name }}</b>
                     </div>
-                    <i class="u-item-exist" v-if="!isNewKith">已添加</i>
+                    <i class="u-item-exist" v-if="!isNewKith">{{ $t("dashboard.privacy.added") }}</i>
                 </div>
             </div>
             <div class="u-null" v-if="isNull">
-                <el-alert title="无搜索结果" type="info" show-icon :closable="false"></el-alert>
+                <el-alert :title="$t('dashboard.common.noSearchResults')" type="info" show-icon :closable="false"></el-alert>
             </div>
             <el-button
                 class="u-submit"
@@ -264,20 +264,20 @@ export default {
         },
         btnText() {
             return this.isRelationNet
-                ? "添加"
+                ? this.$t("dashboard.common.add")
                 : {
-                      blacklist: "拉黑",
-                      myfollow: "关注",
-                      whitelist: `添加亲友 (${this.total} / ${this.limit})`,
+                      blacklist: this.$t("dashboard.privacy.block"),
+                      myfollow: this.$t("dashboard.privacy.follow"),
+                      whitelist: this.$t("dashboard.privacy.addFriendCount", { total: this.total, limit: this.limit }),
                   }[this.active];
         },
         sideTitle() {
             return this.isRelationNet
                 ? this.relationActiveName
                 : {
-                      blacklist: "添加黑名单",
-                      myfollow: "添加关注",
-                      whitelist: "添加亲友",
+                      blacklist: this.$t("dashboard.privacy.addBlacklist"),
+                      myfollow: this.$t("dashboard.privacy.addFollow"),
+                      whitelist: this.$t("dashboard.privacy.addFriend"),
                   }[this.active];
         },
         userId() {
@@ -295,15 +295,15 @@ export default {
     },
     methods: {
         onOpen() {
-            this.$confirm(`是否立即启用？`, "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("dashboard.privacy.enableConfirm"), this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 type: "warning",
             }).then(() => {
                 setUserConf({ accept_lover_request: 1 })
                     .then(() => {
                         this.$notify({
-                            title: "开启成功",
+                            title: this.$t("dashboard.privacy.enableSuccess"),
                             type: "success",
                         });
                         this.isAllowLover = true;
@@ -314,9 +314,9 @@ export default {
         },
         handleRequestError(err) {
             const data = err?.response?.data;
-            const message = data?.msg || data?.message || err?.message || "请求失败，请稍后再试";
+            const message = data?.msg || data?.message || err?.message || this.$t("dashboard.common.requestFailed");
             this.$notify({
-                title: "操作失败",
+                title: this.$t("dashboard.common.operationFailed"),
                 message,
                 type: "error",
             });
@@ -576,16 +576,16 @@ export default {
         add() {
             if (!this.userdata) {
                 this.$notify({
-                    title: "提示",
-                    message: "请先输入UID进行搜索",
+                    title: this.$t("dashboard.common.tip"),
+                    message: this.$t("dashboard.privacy.searchUidFirst"),
                     type: "warning",
                 });
                 return;
             }
             if (this.active === "whitelist" && !this.allowAppend) {
                 this.$notify({
-                    title: "提示",
-                    message: this.isNewKith ? "亲友数量已达上限" : "该用户已添加",
+                    title: this.$t("dashboard.common.tip"),
+                    message: this.isNewKith ? this.$t("dashboard.privacy.friendLimit") : this.$t("dashboard.privacy.userAdded"),
                     type: "warning",
                 });
                 return;
@@ -596,8 +596,8 @@ export default {
                 addFn(this.userdata.ID, { title: this.userdata.display_name })
                     .then(() => {
                         this.$notify({
-                            title: "成功",
-                            message: "关注成功",
+                            title: this.$t("dashboard.common.success"),
+                            message: this.$t("dashboard.privacy.followSuccess"),
                             type: "success",
                         });
                         this.loadList();
@@ -607,8 +607,8 @@ export default {
                 addFn(this.userdata.ID)
                     .then(() => {
                         this.$notify({
-                            title: "成功",
-                            message: this.active === "blacklist" ? "拉黑成功" : "添加成功",
+                            title: this.$t("dashboard.common.success"),
+                            message: this.active === "blacklist" ? this.$t("dashboard.privacy.blockSuccess") : this.$t("dashboard.common.addSuccess"),
                             type: "success",
                         });
                         this.loadList();
@@ -663,8 +663,8 @@ export default {
             removeKith(kith_id)
                 .then(() => {
                     this.$notify({
-                        title: "成功",
-                        message: "删除成功",
+                        title: this.$t("dashboard.common.success"),
+                        message: this.$t("dashboard.common.deleteSuccess"),
                         type: "success",
                     });
                     this.kithList = this.kithList.filter((item) => item.kith_id !== kith_id);
@@ -674,16 +674,16 @@ export default {
         },
         // 编辑备注
         edit(kith_id, item) {
-            this.$prompt("请输入备注", "设置", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$prompt(this.$t("dashboard.common.remarkPlaceholder"), this.$t("dashboard.common.settings"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
             })
                 .then(({ value }) => {
                     editKith(kith_id, { remark: value })
                         .then(() => {
                             this.$notify({
-                                title: "成功",
-                                message: "编辑成功",
+                                title: this.$t("dashboard.common.success"),
+                                message: this.$t("dashboard.common.editSuccess"),
                                 type: "success",
                             });
                             item.remark = value;
@@ -694,14 +694,10 @@ export default {
         },
         // 移除
         removeOther(item) {
-            const msgs = {
-                blacklist: "确认解除对该用户的屏蔽？",
-                myfollow: "确认不再订阅该用户？",
-                myfans: "确认要移除粉丝？",
-            };
-            this.$confirm(msgs[this.active], "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            const message = this.$t(`dashboard.privacy.removeConfirm.${this.active}`);
+            this.$confirm(message, this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
             })
                 .then(() => {
                     const id = this.getUserId(item);
@@ -711,8 +707,8 @@ export default {
                     removeFn(id)
                         .then(() => {
                             this.$notify({
-                                title: "成功",
-                                message: "操作成功",
+                                title: this.$t("dashboard.common.success"),
+                                message: this.$t("dashboard.common.operationSuccess"),
                                 type: "success",
                             });
                             this.loadList();
@@ -730,7 +726,7 @@ export default {
         },
         getName(item) {
             const user = this.getUserInfo(item);
-            return user?.display_name || user?.name || "匿名用户";
+            return user?.display_name || user?.name || this.$t("dashboard.common.anonymousUser");
         },
         formatCreatedAt(item) {
             const createdAt = item?.created_at;

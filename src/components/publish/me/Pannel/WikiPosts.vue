@@ -20,11 +20,11 @@
                         <div class="u-post">
                             <!-- 标题文字 -->
                             <div class="u-title" target="_blank">
-                                {{ item.title || "无标题" }}
-                                <el-tag type="warning" size="small" v-if="item.checked == 0">等待审核</el-tag>
-                                <el-tag type="success" size="small" v-if="item.checked == 1">审核通过</el-tag>
-                                <el-tag type="danger" size="small" v-if="item.checked == 2">审核驳回</el-tag>
-                                <el-tag type="warning" size="small" v-if="item.checked == 3">等待验证</el-tag>
+                                {{ item.title || $t("publish.common.untitled") }}
+                                <el-tag type="warning" size="small" v-if="item.checked == 0">{{ $t("publish.status.pendingReview") }}</el-tag>
+                                <el-tag type="success" size="small" v-if="item.checked == 1">{{ $t("publish.status.approved") }}</el-tag>
+                                <el-tag type="danger" size="small" v-if="item.checked == 2">{{ $t("publish.status.rejected") }}</el-tag>
+                                <el-tag type="warning" size="small" v-if="item.checked == 3">{{ $t("publish.status.pendingVerification") }}</el-tag>
                             </div>
                             <time class="u-time">{{ dateFormat(item.updated) }}</time>
                         </div>
@@ -47,10 +47,7 @@ import xfmap from "@jx3box/jx3box-data/data/xf/xf.json";
 import SubTabContent from "@/components/publish/me/Pannel/SubTabContent.vue";
 import { getMineWiki } from "@/service/publish/wiki";
 
-const wikiTypes = {
-    ...__wikiType,
-    skill: "技能",
-};
+const wikiTypes = { ...__wikiType };
 export default {
     components: { SubTabContent },
     props: {
@@ -114,7 +111,15 @@ export default {
             return this.root[client] + getLink(type, id);
         },
         getTypeLabel: function (val) {
-            return val ? wikiTypes[val] : "未知";
+            if (!val) return this.$t("publish.common.unknown");
+            const key = {
+                achievement: "achievements",
+                item: "items",
+                quest: "quests",
+                knowledge: "knowledge",
+                skill: "skills",
+            }[val];
+            return key ? this.$t(`publish.mobile.${key}`) : wikiTypes[val];
         },
         getBanner: function (item, subtype, post_type) {
             if (item.post_banner) {

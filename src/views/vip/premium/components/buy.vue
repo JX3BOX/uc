@@ -2,8 +2,8 @@
     <div class="m-premium-buy--content">
         <div class="m-buy-box">
             <div class="u-title">
-                <img src="@/assets/img/vip/vip2/menu.svg" alt="套餐选择" />
-                <span>已选（1/1）</span>
+                <img src="@/assets/img/vip/vip2/menu.svg" :alt="$t('vip.premium.planSelection')" />
+                <span>{{ $t("vip.premium.selectedCount", { current: 1, total: 1 }) }}</span>
             </div>
             <ul class="m-list">
                 <li
@@ -13,22 +13,22 @@
                     @click="changeMenu(key)"
                 >
                     <div :class="`u-item-title ${key}`">{{ item.label }}</div>
-                    <div>开通{{ item.number }}个月</div>
+                    <div>{{ $t("vip.premium.subscribeMonths", { months: item.number }) }}</div>
                     <div :class="`u-price ${key}`">
                         <img class="u-icon-price" svg-inline src="@/assets/img/vip/vip2/money.svg" />
                         <b>{{ item.price }} </b>
-                        /月
+                        {{ $t("vip.premium.perMonth") }}
                     </div>
-                    <div>优惠{{ showDiscount(key) }}元</div>
-                    <div :class="`u-discount ${key}`">{{ item.discount ? `${item.discount}折` : "无折扣" }}</div>
+                    <div>{{ $t("vip.premium.saveAmount", { amount: showDiscount(key) }) }}</div>
+                    <div :class="`u-discount ${key}`">{{ item.discount ? $t("vip.premium.discount", { discount: item.discount }) : $t("vip.premium.noDiscount") }}</div>
                 </li>
             </ul>
         </div>
         <div class="m-buy-box m-buy-box--special">
             <div class="u-title">
-                <img src="@/assets/img/vip/vip2/special.svg" alt="魔盒5周年庆特惠" />
+                <img src="@/assets/img/vip/vip2/special.svg" :alt="$t('vip.premium.anniversaryOffer')" />
                 <span class="u-time">2024.12.28~2025.2.28</span>
-                <span>已选（2/2）</span>
+                <span>{{ $t("vip.premium.selectedCount", { current: 2, total: 2 }) }}</span>
             </div>
             <ul class="m-list m-list-text">
                 <li class="u-item" v-for="(item, i) in five" :key="i">
@@ -40,8 +40,8 @@
         </div>
         <!-- * 开通年费会员后需前往专题页申请领取实物奖品（<a href="/event/birthday/#/5?anchor=gift" target="_blank">点击前往</a>）<br> -->
         <div class="u-tips">
-            * 本虚拟商品无退货服务<br>
-            * 获取的积分以实际支付金额为准
+            * {{ $t("vip.premium.noReturns") }}<br>
+            * {{ $t("vip.premium.pointsByPayment") }}
         </div>
         <div class="m-pay-content">
             <div class="m-pay-price">
@@ -50,10 +50,10 @@
                     <b>{{ showPrice(mode) }}</b>
                 </div>
                 <div class="u-desc">
-                    原价{{ vip_map[mode].number * vip_price }}元，已优惠{{ showDiscount(mode) }}元。
+                    {{ $t("vip.premium.originalAndSaved", { original: vip_map[mode].number * vip_price, saved: showDiscount(mode) }) }}
                 </div>
             </div>
-            <div class="u-pay-button" @click="toPay">立即支付</div>
+            <div class="u-pay-button" @click="toPay">{{ $t("vip.premium.payNow") }}</div>
         </div>
         <paypop
             v-if="will"
@@ -78,21 +78,21 @@ export default {
             mode: "year",
             vip_map: {
                 year: {
-                    label: "年度会员",
+                    label: this.$t("vip.premium.yearly"),
                     id: 8,
                     number: 12,
                     price: 9.8,
                     discount: 6.5,
                 },
                 season: {
-                    label: "季度会员",
+                    label: this.$t("vip.premium.quarterly"),
                     id: 15,
                     number: 3,
                     price: 13.5,
                     discount: 9,
                 },
                 month: {
-                    label: "月度会员",
+                    label: this.$t("vip.premium.monthly"),
                     id: 14,
                     number: 1,
                     price: 15,
@@ -100,8 +100,8 @@ export default {
                 },
             },
             five: [
-                { text1: "每充值1元，", text2: "即可获得10魔盒积分" },
-                { text1: "每开通一次年费会员，", text2: "即可领取一套精美笔记本（4选1）" },
+                { text1: this.$t("vip.premium.offerRechargePrefix"), text2: this.$t("vip.premium.offerRechargeSuffix") },
+                { text1: this.$t("vip.premium.offerAnnualPrefix"), text2: this.$t("vip.premium.offerAnnualSuffix") },
             ],
 
             // 支付弹层
@@ -137,7 +137,7 @@ export default {
             if (!this.isLogin) {
                 User.toLogin();
             } else {
-                const product_desc = "开通/续费" + this.vip_map[this.mode]["number"] + "个月会员";
+                const product_desc = this.$t("vip.premium.productDescription", { months: this.vip_map[this.mode]["number"] });
                 this.productId = this.vip_map[this.mode]["id"];
                 this.productDesc = product_desc;
                 this.will = true;

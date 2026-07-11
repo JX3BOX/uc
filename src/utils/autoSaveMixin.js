@@ -185,7 +185,7 @@ export const AutoSaveMixin = {
 
             // 如果是全新作品且有内容，为其创建匿名本地缓存（处理网站接口异常，断网等情况）
             if (this.isNewPost && this.post.post_content) {
-                let anonymous = "无标题-" + new Date().getTime();
+                let anonymous = this.$t("publish.common.generatedUntitled", { index: new Date().getTime() });
                 key = this.post.post_type + "_" + (this.post.post_title || anonymous);
             }
             // 如果是发布过的作品，不检测有没有内容
@@ -224,8 +224,8 @@ export const AutoSaveMixin = {
         // 使用按钮
         // ==============================
         useDraft() {
-            this.$alert("是否使用该版本发布？", "确认信息", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("publish.confirm.useVersion"), this.$t("publish.common.confirmation"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
                 callback: (action) => {
                     if (action === "confirm") {
                         this.publish("publish", true);

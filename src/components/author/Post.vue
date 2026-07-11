@@ -13,19 +13,19 @@
                         <h2 class="u-post">
                             <!-- 标题文字 -->
                             <a class="u-title" :href="postLink(item.post_type, item.ID, item.client)" target="_blank">{{
-                                item.post_title || "无标题"
+                                item.post_title || $t("author.common.noTitle")
                             }}</a>
                         </h2>
 
                         <!-- 字段 -->
                         <div class="u-desc">
-                            {{ item.post_excerpt || item.post_title || "这个作者很懒,什么都没有留下" }}
+                            {{ item.post_excerpt || item.post_title || $t("author.list.noPostExcerpt") }}
                         </div>
 
                         <!-- 作者 -->
                         <div class="u-misc">
                             <span class="u-date">
-                                Updated on
+                                {{ $t("author.common.updatedOn") }}
                                 <time>{{ dateFormat(item.post_modified) }}</time>
                             </span>
                         </div>

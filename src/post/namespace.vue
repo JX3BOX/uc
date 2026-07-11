@@ -6,57 +6,56 @@
         <div class="m-publish-namespace-box">
             <header class="m-publish-namespace-header">
                 <div class="u-tip">
-                    铭牌是一个可以通过关键词快速访问的功能，例如定义铭牌
-                    "某某气纯宏"，则可以在浏览器地址栏中通过快速输入
+                    {{ $t("publish.namespace.descriptionPrefix") }}
                     <a href="https://剑网3.com/某某气纯宏" target="_blank">
                         <b>剑网3.com/某某气纯宏</b>
                     </a>
-                    访问你输入的链接
+                    {{ $t("publish.namespace.descriptionSuffix") }}
                 </div>
                 <div class="u-count">
                     <span class="u-count-txt">
-                        当前可建铭牌数：
-                        <b>{{ count }}</b> 个
+                        {{ $t("publish.namespace.availablePrefix") }}
+                        <b>{{ count }}</b> {{ $t("publish.namespace.availableSuffix") }}
                     </span>
                     <a
                         href="/vip/namespace?from=dashboard_namespace_create"
                         target="_blank"
                         class="u-btn-buy el-button el-button--primary el-button--small"
                     >
-                        <span class="el-icon-shopping-cart-2"></span>购买铭牌
+                        <span class="el-icon-shopping-cart-2"></span>{{ $t("publish.namespace.buy") }}
                     </a>
                     <!-- <a
                         href="/vip/namespace/?from=dashboard_namespace_create"
                         class="u-skip"
                         target="_blank"
                     >
-                        <span class="el-icon-connection"></span>限时0.99元抢注10个铭牌
+                        <span class="el-icon-connection"></span>{{ $t("publish.namespace.promotion") }}
                     </a> -->
                 </div>
             </header>
             <div class="m-namspace-tips" v-if="success">
-                <el-alert title="提交成功，请等待审核" type="success" show-icon></el-alert>
+                <el-alert :title="$t('publish.message.submittedForReview')" type="success" show-icon></el-alert>
             </div>
             <el-form class="m-publish-namespace-form" :rules="rules" :model="form" label-width="80px">
-                <el-form-item label="关键词" prop="key">
-                    <el-input v-model="form.key" placeholder="全局唯一关键词" size="large"></el-input>
+                <el-form-item :label="$t('publish.common.keyword')" prop="key">
+                    <el-input v-model="form.key" :placeholder="$t('publish.namespace.keywordPlaceholder')" size="large"></el-input>
                     <el-alert
                         style="margin-top: 5px"
                         v-if="!available"
-                        title="已有关键词，请重新输入"
+                        :title="$t('publish.namespace.keywordExists')"
                         type="error"
                         show-icon
                     />
                 </el-form-item>
-                <el-form-item label="链接" prop="link">
-                    <el-input v-model="form.link" size="large" placeholder="请输入跳转地址">
+                <el-form-item :label="$t('publish.common.link')" prop="link">
+                    <el-input v-model="form.link" size="large" :placeholder="$t('publish.namespace.linkPlaceholder')">
                         <template #prepend>https://</template>
                     </el-input>
                 </el-form-item>
-                <el-form-item label="描述">
+                <el-form-item :label="$t('publish.common.description')">
                     <el-input
                         v-model="form.desc"
-                        placeholder="请输入关于铭牌的描述"
+                        :placeholder="$t('publish.namespace.descriptionPlaceholder')"
                         maxlength="30"
                         show-word-limit
                         size="large"
@@ -69,7 +68,7 @@
                         type="primary"
                         :disabled="!ready || processing"
                         @click="onSubmit"
-                        >提交</el-button
+                        >{{ $t("publish.common.submit") }}</el-button
                     >
                 </el-form-item>
             </el-form>
@@ -93,7 +92,7 @@ export default {
     props: [],
     data: function () {
         return {
-            name: "剑三铭牌",
+            name: this.$t("publish.types.namespace"),
             form: lodash.cloneDeep(default_form),
             count: 0,
             available: false,
@@ -103,14 +102,14 @@ export default {
                 key: [
                     {
                         required: true,
-                        message: "请输入铭牌名称",
+                        message: this.$t("publish.validation.namespaceNameRequired"),
                         trigger: "blur",
                     },
                 ],
                 link: [
                     {
                         required: true,
-                        message: "请输入链接网址",
+                        message: this.$t("publish.validation.linkRequired"),
                         trigger: "blur",
                     },
                 ],
@@ -170,7 +169,7 @@ export default {
         onSubmit: function () {
             if (this.form.desc == "") {
                 let profile = User.getInfo();
-                this.data.desc = profile.name + "创建";
+                this.data.desc = this.$t("publish.namespace.createdBy", { name: profile.name });
             }
             this.processing = true;
             if (this.isEditMode) {
@@ -195,7 +194,11 @@ export default {
         },
         onSuccess() {
             this.success = true;
-            this.$notify.success({ title: "成功", message: "提交成功", showClose: false });
+            this.$notify.success({
+                title: this.$t("publish.common.success"),
+                message: this.$t("publish.message.submitSucceeded"),
+                showClose: false,
+            });
             setTimeout(() => {
                 this.$router.push({ name: "bucket_namespace" });
             }, 500);

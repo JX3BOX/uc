@@ -1,7 +1,7 @@
 <template>
     <div class="m-publish-box m-publish-box-facedata" v-loading="loading">
         <!-- 头部 -->
-        <publish-header name="捏脸分享"></publish-header>
+        <publish-header :name="$t('publish.types.faceShare')"></publish-header>
 
         <el-form label-position="left" label-width="80px">
             <!-- 信息 -->
@@ -15,14 +15,14 @@
                 <!-- 数据 -->
                 <publish-facedat v-model="post.post_meta" @updateMeta="updateMeta"></publish-facedat>
 
-                <el-form-item label="备注">
-                    <publish-title v-model="post.post_title" :hideDiv="true" placeholder="请填写描述"></publish-title>
+                <el-form-item :label="$t('publish.common.note')">
+                    <publish-title v-model="post.post_title" :hideDiv="true" :placeholder="$t('publish.form.descriptionPlaceholder')"></publish-title>
                 </el-form-item>
             </div>
 
             <!-- 附加 -->
             <!-- <div class="m-publish-append">
-                <el-divider content-position="left">附加</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.additional") }}</el-divider>
                 <publish-excerpt v-model="post.post_excerpt"></publish-excerpt>
                 <publish-collection v-model="post.post_collection"></publish-collection>
             </div>-->
@@ -30,7 +30,7 @@
             <!-- 扩展 -->
             <!-- <div class="m-publish-extend">
                 <el-divider content-position="left">
-                    <span class="u-toggle" @click="toggleSetting"><i :class="setting ? 'el-icon-caret-top' : 'el-icon-caret-right'"></i> 设置</span>
+                    <span class="u-toggle" @click="toggleSetting"><i :class="setting ? 'el-icon-caret-top' : 'el-icon-caret-right'"></i> {{ $t("publish.common.settings") }}</span>
                 </el-divider>
                 <div v-show="setting">
                     <publish-comment v-model="post.comment"></publish-comment>
@@ -46,10 +46,10 @@
             <!-- 按钮 -->
             <div class="m-publish-buttons">
                 <el-button size="large" type="primary" @click="publish('publish', true)" :disabled="processing"
-                    >发 &nbsp;&nbsp; 布</el-button
+                    >{{ $t("publish.common.publish") }}</el-button
                 >
                 <el-button size="large" plain @click="publish('draft', false)" :disabled="processing"
-                    >保存为草稿</el-button
+                    >{{ $t("publish.common.saveDraft") }}</el-button
                 >
             </div>
         </el-form>
@@ -207,7 +207,7 @@ export default {
             if (skip) {
                 // 提醒
                 this.$message({
-                    message: "发布成功",
+                    message: this.$t("publish.message.publishSucceeded"),
                     type: "success",
                 });
                 // 跳转
@@ -217,8 +217,8 @@ export default {
             } else {
                 // 提醒
                 this.$notify({
-                    title: "保存成功",
-                    message: "云端草稿保存成功",
+                    title: this.$t("publish.message.saveSucceeded"),
+                    message: this.$t("publish.message.cloudDraftSaved"),
                     type: "success",
                 });
                 // 路由

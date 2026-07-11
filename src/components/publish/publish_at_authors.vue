@@ -1,13 +1,13 @@
 <template>
     <div class="m-publish-authors">
-        <el-form-item label="@圈一下">
+        <el-form-item :label="$t('publish.form.mentionAuthors')">
             <div class="u-list">
                 <div class="u-item" v-for="(item, i) in list" :key="i">
                     <img class="u-avatar" :src="showAvatar(item.user_avatar)" />
                     <span class="u-name">
                         {{ item.display_name }}
                     </span>
-                    <el-tooltip class="item" effect="dark" content="移除" placement="top">
+                    <el-tooltip class="item" effect="dark" :content="$t('publish.common.remove')" placement="top">
                         <i class="u-delete el-icon-delete" @click="remove(item, i)"></i>
                     </el-tooltip>
                 </div>

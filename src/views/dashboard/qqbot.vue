@@ -2,26 +2,26 @@
     <div class="m-qqbot m-item">
         <span class="u-profile-item">
             <img class="u-qqbot" svg-inline :src="icon('qqbot')" />
-            <span class="u-status"> QQ机器人 </span>
+            <span class="u-status"> {{ $t("dashboard.qqbot.name") }} </span>
         </span>
         <el-button type="primary" class="u-bind-btn" @click="bind" size="large" v-if="!checkStatus">
-            <i class="el-icon-connection"></i>立即绑定
+            <i class="el-icon-connection"></i>{{ $t("dashboard.common.bindNow") }}
         </el-button>
         <el-button v-else class="u-unbind-btn" @click="unbind" size="large" type="info">
-            <img class="u-unbind-icon" svg-inline src="@/assets/img/dashboard/unbind.svg" alt="" />解除绑定
+            <img class="u-unbind-icon" svg-inline src="@/assets/img/dashboard/unbind.svg" alt="" />{{ $t("dashboard.common.unbind") }}
         </el-button>
 
         <el-dialog
             class="m-qqbot-dialog"
             :width="isPhone ? '95%' : ''"
             align="center"
-            title="绑定魔盒QQ机器人"
+            :title="$t('dashboard.qqbot.bindTitle')"
             v-model="showDialog"
         >
             <div class="m-qqbot-content">
                 <span
                     class="u-token"
-                    title="点击复制"
+                    :title="$t('dashboard.common.clickToCopy')"
                     @click="copyBindText"
                 >
                     <i class="el-icon-document-copy"></i>
@@ -29,7 +29,7 @@
                 </span>
             </div>
             <div class="m-custom-tip">
-                请复制以上内容，私聊发送给魔盒QQ机器人<br />
+                {{ $t("dashboard.qqbot.instruction") }}<br />
                 QQ: <b>{{ qq }}</b>
             </div>
         </el-dialog>
@@ -63,7 +63,7 @@ export default {
             return this.data.qqbot;
         },
         bindText() {
-            return `绑定账号 ${this.token}`;
+            return this.$t("dashboard.qqbot.bindText", { token: this.token });
         },
     },
     methods: {
@@ -77,16 +77,16 @@ export default {
             });
         },
         unbind: function () {
-            this.$confirm("确定要解绑【魔盒QQ机器人】吗？", "解绑", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("dashboard.qqbot.unbindConfirm"), this.$t("dashboard.common.unbind"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
                     unbindQQbot().then((res) => {
                         this.$message({
                             type: "success",
-                            message: "解绑成功",
+                            message: this.$t("dashboard.common.unbindSuccess"),
                         });
                         this.$emit("refresh");
                     });
@@ -97,15 +97,15 @@ export default {
             copyText(this.bindText)
                 .then(() => {
                     this.$notify({
-                        title: "复制成功",
+                        title: this.$t("dashboard.common.copySuccess"),
                         message: this.bindText,
                         type: "success",
                     });
                 })
                 .catch(() => {
                     this.$notify.error({
-                        title: "复制失败",
-                        message: "请手动复制",
+                        title: this.$t("dashboard.common.copyFailed"),
+                        message: this.$t("dashboard.common.copyManually"),
                     });
                 });
         },

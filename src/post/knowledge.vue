@@ -1,16 +1,16 @@
 <template>
     <div class="m-publish-box">
         <!-- 头部 -->
-        <publish-header name="通识百科">
+        <publish-header :name="$t('publish.types.knowledgeWiki')">
             <slot name="header"></slot>
         </publish-header>
 
         <el-form class="m-publish-post">
             <div class="m-publish-source">
-                <el-divider content-position="left">选择通识 *</el-divider>
+                <el-divider content-position="left">{{ $t("publish.wiki.selectKnowledge") }} *</el-divider>
                 <el-radio-group class="m-publish-action" v-model="action">
-                    <el-radio-button value="new" :disabled="isEditMode">新建词条</el-radio-button>
-                    <el-radio-button value="update">维护已有词条</el-radio-button>
+                    <el-radio-button value="new" :disabled="isEditMode">{{ $t("publish.wiki.createEntry") }}</el-radio-button>
+                    <el-radio-button value="update">{{ $t("publish.wiki.updateEntry") }}</el-radio-button>
                 </el-radio-group>
 
                 <!-- 编辑模式 -->
@@ -30,7 +30,7 @@
                             <el-select
                                 class="u-source-type"
                                 size="large"
-                                placeholder="选择通识类型"
+                                :placeholder="$t('publish.wiki.knowledgeTypePlaceholder')"
                                 v-model="knowledge.type"
                             >
                                 <el-option
@@ -42,13 +42,13 @@
                             </el-select>
                             <el-input
                                 class="u-source-name"
-                                placeholder="请输入通识名称"
+                                :placeholder="$t('publish.wiki.knowledgeNamePlaceholder')"
                                 v-model="knowledge.name"
                                 size="large"
                             ></el-input>
                         </div>
                         <p class="u-source-add-tip">
-                            <span>Note：添加完成后的通识需要经过管理员审核通过后才会在通识百科上展示哦</span>
+                            <span>{{ $t("publish.wiki.knowledgeReviewNote") }}</span>
                         </p>
                     </template>
                     <template v-else>
@@ -58,7 +58,7 @@
                             v-model.lazy="post.source_id"
                             filterable
                             remote
-                            placeholder="通过输入通识名称进行搜索"
+                            :placeholder="$t('publish.wiki.knowledgeSearchPlaceholder')"
                             :remote-method="loadSources"
                             :loading="options.loading"
                             clearable
@@ -82,20 +82,20 @@
             </div>
 
             <div class="m-publish-remark">
-                <el-divider content-position="left">修订说明 *</el-divider>
+                <el-divider content-position="left">{{ $t("publish.form.revisionNotes") }} *</el-divider>
                 <el-input
                     v-model="post.remark"
                     :maxlength="200"
                     :minlength="1"
                     show-word-limit
                     required
-                    placeholder="请简单描述一下本次修订说明"
+                    :placeholder="$t('publish.form.revisionNotesPlaceholder')"
                     size="large"
                 ></el-input>
             </div>
 
             <div class="m-publish-content">
-                <el-divider content-position="left">通识正文 *</el-divider>
+                <el-divider content-position="left">{{ $t("publish.wiki.knowledgeBody") }} *</el-divider>
                 <Tinymce v-model="post.content" :attachmentEnable="true" :resourceEnable="true" :height="600">
                     <el-alert
                         type="warning"
@@ -105,7 +105,7 @@
                     >
                         <template #title>
                             <span class="u-alert-title"
-                                >当前百科已经有更新的版本，你的攻略可能已经失效，请先进行比对。</span
+                                >{{ $t("publish.wiki.newerVersionWarning") }}</span
                             >
                             <el-link
                                 type="primary"
@@ -113,7 +113,7 @@
                                 :href="getLink(post.source_id)"
                                 target="_blank"
                                 class="u-view-latest"
-                                >查看最新攻略</el-link
+                                >{{ $t("publish.wiki.viewLatestArticle") }}</el-link
                             >
                             <el-link
                                 @click="getLatest"
@@ -121,7 +121,7 @@
                                 class="u-get-latest"
                                 type="primary"
                                 v-if="latest.post"
-                                >获取最新攻略</el-link
+                                >{{ $t("publish.wiki.loadLatestArticle") }}</el-link
                             >
                         </template>
                     </el-alert>
@@ -129,7 +129,7 @@
             </div>
 
             <div class="m-publish-tags">
-                <el-divider content-position="left">通识标签</el-divider>
+                <el-divider content-position="left">{{ $t("publish.wiki.knowledgeTags") }}</el-divider>
                 <el-tag
                     :key="key"
                     v-for="(tag, key) in post.tags"
@@ -144,12 +144,12 @@
                     v-if="inputVisible"
                     v-model="inputValue"
                     ref="saveTagInput"
-                    placeholder="回车以添加"
+                    :placeholder="$t('publish.form.enterToAdd')"
                     @keyup.enter="handleInputConfirm"
                     @blur="handleInputConfirm"
                 >
                 </el-input>
-                <el-button v-else class="button-new-tag" @click="showInput">+ 添加标签 </el-button>
+                <el-button v-else class="button-new-tag" @click="showInput">+ {{ $t("publish.form.addTag") }} </el-button>
             </div>
 
             <el-divider content-position="left"></el-divider>
@@ -161,7 +161,7 @@
                     type="primary"
                     @click="handleSubmit"
                     :disabled="processing"
-                    >提交通识
+                    >{{ $t("publish.wiki.submitKnowledge") }}
                 </el-button>
             </div>
         </el-form>
@@ -346,7 +346,7 @@ export default {
             let result = ["source_id", "content", "remark"].every((prop) => {
                 return !!this.post[prop];
             });
-            if (!result) this.$message.error("请完成必填项");
+            if (!result) this.$message.error(this.$t("publish.validation.completeRequired"));
             return result;
         },
         // 4.发布作品
@@ -363,7 +363,7 @@ export default {
             };
             wiki.post({ type: "knowledge", ...data, client: "all" })
                 .then(() => {
-                    this.$message({ message: "提交成功，请等待审核", type: "success" });
+                    this.$message({ message: this.$t("publish.message.submittedForReview"), type: "success" });
                     setTimeout(() => {
                         this.$router.push({ name: "wiki_post", params: { type: "knowledge" } });
                     }, 500);

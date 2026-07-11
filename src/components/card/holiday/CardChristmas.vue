@@ -2,8 +2,8 @@
     <div class="cardChristmas" @click.stop>
         <div class="christmas-card" @click="change">
             <template v-if="!show">
-                <img class="christmas-card__img" :src="imgList[0]" alt="圣诞节快乐" />
-                <img class="christmas-card__open" :src="imgList[1]" alt="圣诞节快乐" />
+                <img class="christmas-card__img" :src="imgList[0]" :alt="$t('card.holiday.merryChristmas')" />
+                <img class="christmas-card__open" :src="imgList[1]" :alt="$t('card.holiday.merryChristmas')" />
             </template>
             <div v-else :style="`background:url(${imgList[2]}) top center no-repeat;background-size: cover;`">
                 <img
@@ -11,7 +11,7 @@
                     class="animation christmas-card__content christmas-card__img"
                     :class="show ? 'flipInY' : ''"
                     :src="countImg"
-                    alt="圣诞节快乐"
+                    :alt="$t('card.holiday.merryChristmas')"
                 />
             </div>
         </div>

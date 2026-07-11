@@ -16,7 +16,7 @@
                             class="u-superauth"
                             :class="{ 'is-vip': !(isVIP || isPRO) }"
                             v-if="isSuperAuthor"
-                            title="签约作者"
+                            :title="$t('dashboard.honor.contractedAuthor')"
                         >
                             <img :src="super_author_icon" alt="superAuthor" />
                         </span>
@@ -29,10 +29,10 @@
                                     target="_blank"
                                     >{{ vipType }}</a
                                 >
-                                <span class="u-expire">（{{ `有效期至:${expire_date}` }}）</span>
+                                <span class="u-expire">（{{ $t("dashboard.home.validUntil", { date: expire_date }) }}）</span>
                             </template>
                             <a class="u-upgrade" href="/vip/premium?from=dashboard_index" target="_blank" v-else
-                                >升级账号类型</a
+                                >{{ $t("dashboard.home.upgradeAccount") }}</a
                             >
                         </span>
                     </div>
@@ -47,7 +47,7 @@
                         <el-tooltip
                             class="item"
                             effect="dark"
-                            :content="~~info.verify_email ? '邮箱已验证' : '邮箱未验证'"
+                            :content="~~info.verify_email ? $t('dashboard.home.emailVerified') : $t('dashboard.home.emailUnverified')"
                             placement="top"
                         >
                             <a href="/dashboard/email" :class="info.verify_email && 'done'"
@@ -57,7 +57,7 @@
                         <el-tooltip
                             class="item"
                             effect="dark"
-                            :content="~~info.user_phone ? '手机已绑定' : '手机未绑定'"
+                            :content="~~info.user_phone ? $t('dashboard.home.phoneBound') : $t('dashboard.home.phoneUnbound')"
                             placement="top"
                         >
                             <a href="/dashboard/phone" :class="info.user_phone && 'done'">
@@ -68,10 +68,10 @@
                     <span class="u-group">
                         <em>Group</em>
                         <b>{{ showGroupName(group) }}</b>
-                        <el-tooltip v-if="~~group < 16" placement="top" content="未认证的用户将无法使用发布中心">
+                        <el-tooltip v-if="~~group < 16" placement="top" :content="$t('dashboard.home.authRequiredForPublish')">
                             <span class="u-auth">
                                 <i class="u-unauth el-icon-warning"></i>
-                                <a href="/dashboard/auth" target="_blank">前往认证</a>
+                                <a href="/dashboard/auth" target="_blank">{{ $t("dashboard.home.goAuthenticate") }}</a>
                             </span>
                         </el-tooltip>
                     </span>
@@ -105,20 +105,20 @@
                         <el-tooltip
                             class="item"
                             effect="dark"
-                            content="1盒币可用于兑换1通宝，通过评审团/用户打赏获取"
+                            :content="$t('dashboard.home.boxcoinTip')"
                             placement="top"
                         >
-                            <div class="u-credit-name"><i class="el-icon-coin"></i> 盒币</div>
+                            <div class="u-credit-name"><i class="el-icon-coin"></i> {{ $t("dashboard.common.boxcoin") }}</div>
                         </el-tooltip>
                         <div class="u-credit-value">
                             <b>{{ asset.box_coin }}</b>
                         </div>
                         <div class="u-credit-op">
                             <!-- <a class="el-button el-button--primary el-button--small" href="/vip/boxcoin" target="_blank"
-                                >充值</a
+                                >{{ $t("dashboard.common.recharge") }}</a
                             > -->
                             <router-link class="el-button el-button--primary el-button--small" to="/boxcoin"
-                                >兑换</router-link
+                                >{{ $t("dashboard.common.exchange") }}</router-link
                             >
                         </div>
                     </div>
@@ -128,33 +128,33 @@
                         <el-tooltip
                             class="item"
                             effect="dark"
-                            content="积分可用于兑换限量纪念品、激活码等，通过发布作品或参与站内活动获取"
+                            :content="$t('dashboard.home.pointsTip')"
                             placement="top"
                         >
-                            <div class="u-credit-name"><i class="el-icon-sugar"></i> 积分</div>
+                            <div class="u-credit-name"><i class="el-icon-sugar"></i> {{ $t("dashboard.common.points") }}</div>
                         </el-tooltip>
                         <div class="u-credit-value">
                             <b>{{ asset.points }}</b>
                         </div>
                         <div class="u-credit-op">
                             <router-link class="el-button el-button--primary el-button--small" to="/points"
-                                >记录</router-link
+                                >{{ $t("dashboard.common.records") }}</router-link
                             >
                             <a class="el-button el-button--primary el-button--small" href="/vip/mall" target="_blank"
-                                >兑换</a
+                                >{{ $t("dashboard.common.exchange") }}</a
                             >
                         </div>
                     </div>
                 </el-col>
                 <el-col :span="6">
                     <div class="u-packet">
-                        <div class="u-credit-name"><i class="el-icon-bank-card"></i> 卡密</div>
+                        <div class="u-credit-name"><i class="el-icon-bank-card"></i> {{ $t("dashboard.cards.cardCode") }}</div>
                         <div class="u-credit-value" v-if="asset.ext_info">
                             <b>{{ Number(asset.ext_info.keycode || 0) + Number(asset.ext_info.sn || 0) }}</b>
                         </div>
                         <div class="u-credit-op">
                             <router-link class="el-button el-button--primary el-button--small" to="/card"
-                                >查看</router-link
+                                >{{ $t("dashboard.common.view") }}</router-link
                             >
                         </div>
                     </div>
@@ -162,20 +162,20 @@
                         <el-tooltip
                             class="item"
                             effect="dark"
-                            content="红包可用于积分商城抵扣现金，通过特殊活动获取"
+                            :content="$t('dashboard.home.packetTip')"
                             placement="top"
                         >
-                            <div class="u-credit-name"><i class="el-icon-present"></i> 红包</div>
+                            <div class="u-credit-name"><i class="el-icon-present"></i> {{ $t("dashboard.common.redPacket") }}</div>
                         </el-tooltip>
                         <div class="u-credit-value">
                             <b>{{ formatCredit(asset.red_packet)  }}</b>
                         </div>
                         <div class="u-credit-op">
                             <router-link class="el-button el-button--primary el-button--small" to="/packet"
-                                >记录</router-link
+                                >{{ $t("dashboard.common.records") }}</router-link
                             >
                             <a class="el-button el-button--primary el-button--small" href="/vip/mall" target="_blank"
-                                >兑换</a
+                                >{{ $t("dashboard.common.exchange") }}</a
                             >
                         </div>
                     </div> -->
@@ -185,20 +185,20 @@
                         <el-tooltip
                             class="item"
                             effect="dark"
-                            content="余额与人民币(单位分)为1:1，只能通过充值或玩家赠送获取"
+                            :content="$t('dashboard.home.goldLeafTip')"
                             placement="top"
                         >
-                            <div class="u-credit-name"><i class="el-icon-wallet"></i> 金箔</div>
+                            <div class="u-credit-name"><i class="el-icon-wallet"></i> {{ $t("dashboard.common.goldLeaf") }}</div>
                         </el-tooltip>
                         <div class="u-credit-value">
                             <b>{{ asset.cny }}</b>
                         </div>
                         <div class="u-credit-op">
                             <!-- <a class="el-button el-button--primary el-button--small" href="/vip/cny" target="_blank"
-                                >充值</a
+                                >{{ $t("dashboard.common.recharge") }}</a
                             > -->
                             <router-link class="el-button el-button--primary el-button--small" to="/cny"
-                                >记录</router-link
+                                >{{ $t("dashboard.common.records") }}</router-link
                             >
                         </div>
                     </div>
@@ -207,7 +207,7 @@
         </div>
         <div class="m-index-asset-logs">
             <h2 class="u-title">
-                <i class="el-icon-bell"></i> 资产动态
+                <i class="el-icon-bell"></i> {{ $t("dashboard.home.assetActivity") }}
                 <div class="u-dates">
                     <i class="el-icon-date"></i>
                     <el-radio-group v-model="date">
@@ -232,7 +232,7 @@
                             class="u-link"
                             :href="getPostLink(item.data.post_type, item.data.article_id)"
                             v-if="item.data.post_type && item.data.article_id"
-                            ><i class="el-icon-link"></i>查看详情</a
+                            ><i class="el-icon-link"></i>{{ $t("dashboard.common.viewDetails") }}</a
                         >
                     </span>
                     <!-- 盒币 -->
@@ -248,22 +248,22 @@
                             class="u-link"
                             :href="getPostLink(item.data.post_type, item.data.post_id)"
                             v-if="item.data.post_type && item.data.post_id"
-                            ><i class="el-icon-link"></i>查看详情</a
+                            ><i class="el-icon-link"></i>{{ $t("dashboard.common.viewDetails") }}</a
                         >
                     </span>
 
                     <!-- 订单 -->
                     <span class="u-order" v-if="item.type == 'order'">
-                        产品：{{ showProduct(item.data.product_id) }}， 金额：¥
+                        {{ $t("dashboard.orders.product") }}：{{ showProduct(item.data.product_id) }}， {{ $t("dashboard.common.amount") }}：¥
                         <b>{{ showPrice(item.data.total_fee) }}</b>
-                        ， 状态：{{ showPayStatus(item.data.pay_status) }}
+                        ， {{ $t("dashboard.common.status") }}：{{ showPayStatus(item.data.pay_status) }}
                     </span>
 
                     <!-- 红包 -->
                     <span class="u-redpack" v-if="item.type == 'redpack'">
-                        金额：¥
+                        {{ $t("dashboard.common.amount") }}：¥
                         <b>{{ showPrice(item.data.money) }}</b>
-                        ， 补充信息：{{ item.data.describe || "-" }}
+                        ， {{ $t("dashboard.home.additionalInfo") }}：{{ item.data.describe || "-" }}
                     </span>
 
                     <!-- 金箔 -->
@@ -279,14 +279,14 @@
                             class="u-link"
                             :href="getPostLink(item.data.link_article_type, item.data.link_article_id)"
                             v-if="item.data.link_article_type && item.data.link_article_id"
-                            ><i class="el-icon-link"></i>查看详情</a
+                            ><i class="el-icon-link"></i>{{ $t("dashboard.common.viewDetails") }}</a
                         >
                     </span>
 
                     <time class="u-time">{{ showTime(item.created_at) }}</time>
                 </li>
             </ul>
-            <div class="u-null" v-else><i class="el-icon-warning-outline"></i> 当前时间范围内无记录</div>
+            <div class="u-null" v-else><i class="el-icon-warning-outline"></i> {{ $t("dashboard.home.noRecordsInRange") }}</div>
         </div>
     </div>
 </template>
@@ -315,7 +315,7 @@ export default {
             group: User.getInfo().group,
             info: {
                 uid: 8,
-                name: "匿名",
+                name: this.$t("dashboard.common.anonymous"),
                 user_avatar: "https://img.jx3box.com/image/common/avatar.png",
                 user_avatar_frame: "default",
                 bio: "-",
@@ -373,15 +373,15 @@ export default {
         dates: function () {
             return [
                 {
-                    label: "今天",
+                    label: this.$t("dashboard.home.today"),
                     value: moment().format("YYYYMMDD"),
                 },
                 {
-                    label: "7天",
+                    label: this.$t("dashboard.home.sevenDays"),
                     value: moment().subtract(7, "days").format("YYYYMMDD"),
                 },
                 {
-                    label: "30天",
+                    label: this.$t("dashboard.home.thirtyDays"),
                     value: moment().subtract(30, "days").format("YYYYMMDD"),
                 },
             ];
@@ -465,7 +465,7 @@ export default {
         },
         showBoxcoinType: function (item) {
             if (item.action_type == 9) {
-                return item.operate_user_id == this.uid ? "作品付费" : "作品收入";
+                return item.operate_user_id == this.uid ? this.$t("dashboard.home.workPayment") : this.$t("dashboard.home.workIncome");
             }
             return boxcoin_types[item.action_type] || item.action_type;
         },
@@ -500,7 +500,7 @@ export default {
         },
         showCNYType: function (item) {
             if (item.action_type == "-2") {
-                return item.pay_user_id == this.uid ? "金箔消费" : "金箔收入";
+                return item.pay_user_id == this.uid ? this.$t("dashboard.home.goldLeafExpense") : this.$t("dashboard.home.goldLeafIncome");
             }
             return cny_types[item.action_type] || item.description || item.action_type;
         },
@@ -524,7 +524,7 @@ export default {
         //     return __imgPath + "image/group/" + groupid + ".svg";
         // },
         showGroupName: function (val) {
-            return val ? __userGroup[val] : "游客";
+            return val ? __userGroup[val] : this.$t("dashboard.home.guest");
         },
         formatCredit: function (val) {
             return val ? (val / 100).toFixed(2) : "0.00";

@@ -5,14 +5,14 @@
         <el-form label-position="left" label-width="80px">
             <!-- 正文 -->
             <div class="m-publish-content">
-                <el-divider content-position="left">回帖内容</el-divider>
+                <el-divider content-position="left">{{ $t("publish.community.replyContent") }}</el-divider>
                 <Tinymce v-model="data.content" :attachmentEnable="true" :resourceEnable="true" />
             </div>
 
             <!-- 按钮 -->
             <div class="m-publish-buttons">
                 <el-button type="primary" @click="onSubmit" :disabled="processing" size="large"
-                    >更 &nbsp;&nbsp; 新</el-button
+                    >{{ $t("publish.common.update") }}</el-button
                 >
             </div>
         </el-form>
@@ -78,7 +78,7 @@ export default {
             fn(this.id, data)
                 .then(() => {
                     this.$message({
-                        message: "更新回帖成功",
+                        message: this.$t("publish.community.replyUpdated"),
                         type: "success",
                     });
                     setTimeout(() => {
@@ -92,7 +92,7 @@ export default {
         getContent(item) {
             const val = item?.topic?.title?.slice(0, 30);
             if (val) {
-                return `回复：${val}`;
+                return this.$t("publish.community.replyTo", { content: val });
             }
             return "";
         }

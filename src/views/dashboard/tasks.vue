@@ -1,6 +1,6 @@
 <template>
     <div class="m-credit m-tasks">
-        <h2 class="u-title"><i class="el-icon-coffee-cup"></i> 任务中心</h2>
+        <h2 class="u-title"><i class="el-icon-coffee-cup"></i> {{ $t("dashboard.tasks.title") }}</h2>
         <div class="m-tasks-list" v-loading="loading">
             <taskItem v-for="(item, index) in list" :key="index" :data="item" @update="checkFinish" />
             <!-- 任务组 -->
@@ -25,7 +25,7 @@
                             <el-button
                                 :type="groupItem.info.open ? 'primary' : ''"
                                 @click="toggleGroup(groupItem.key)"
-                                >{{ groupItem.info.open ? "折叠" : "展开"
+                                >{{ groupItem.info.open ? $t("dashboard.tasks.collapse") : $t("dashboard.tasks.expand")
                                 }}<i :class="groupItem.info.open ? 'el-icon-caret-top' : 'el-icon-caret-right'"></i
                             ></el-button>
                         </div>
@@ -38,7 +38,7 @@
                     />
                 </div>
             </template>
-            <el-empty v-if="!loading && !list.length && !groupedTasks.length" description="暂无任务"></el-empty>
+            <el-empty v-if="!loading && !list.length && !groupedTasks.length" :description="$t('dashboard.tasks.empty')"></el-empty>
         </div>
     </div>
 </template>
@@ -179,23 +179,23 @@ export default {
                 .then((res) => {
                     if (res?.data?.data?.hasFinish) {
                         this.$notify({
-                            title: "成功",
-                            message: "完成任务，获得奖励",
+                            title: this.$t("dashboard.common.success"),
+                            message: this.$t("dashboard.tasks.completedReward"),
                             type: "success",
                         });
                         location.reload();
                     } else {
                         this.$notify({
-                            title: "提示",
-                            message: "您没有完成任务",
+                            title: this.$t("dashboard.common.tip"),
+                            message: this.$t("dashboard.tasks.notCompleted"),
                             type: "warning",
                         });
                     }
                 })
                 .catch(() => {
                     this.$notify({
-                        title: "提示",
-                        message: "任务状态检查失败，请稍后再试",
+                        title: this.$t("dashboard.common.tip"),
+                        message: this.$t("dashboard.tasks.checkFailed"),
                         type: "warning",
                     });
                 });

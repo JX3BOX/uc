@@ -10,10 +10,10 @@
                     <span class="u-empty-box__spark is-right"></span>
                 </div>
             </div>
-            <div class="u-empty-title">当前条件下没有找到符合的商品</div>
-            <div class="u-empty-desc">可以调整分类、等级或搜索关键词后再看看</div>
+            <div class="u-empty-title">{{ $t("vip.mall.noMatchingProducts") }}</div>
+            <div class="u-empty-desc">{{ $t("vip.mall.adjustFilters") }}</div>
         </div>
-        <div class="u-no-data" v-else-if="noData">~ ✿ 已经到底了哦 ✿ ~</div>
+        <div class="u-no-data" v-else-if="noData">~ ✿ {{ $t("vip.mall.endOfList") }} ✿ ~</div>
     </div>
 </template>
 

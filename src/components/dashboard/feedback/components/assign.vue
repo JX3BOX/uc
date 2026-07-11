@@ -1,7 +1,7 @@
 <template>
     <el-dialog class="w-dialog m-feedback-assign" v-model="show" :title="title" @close="close">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-            <el-form-item v-if="type !== 'coordination'" label="指派至" prop="assign">
+            <el-form-item v-if="type !== 'coordination'" :label="$t('dashboard.feedback.assignTo')" prop="assign">
                 <el-select
                     v-model="form.assign"
                     multiple
@@ -23,7 +23,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item v-else label="协同给" prop="coordination">
+            <el-form-item v-else :label="$t('dashboard.feedback.coordinateWith')" prop="coordination">
                 <el-select
                     v-model="form.coordination"
                     multiple
@@ -45,18 +45,18 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item v-if="type !== 'coordination'" label="项目" prop="repository">
-                <el-input v-model="form.repository" placeholder="请输入GitHub仓库" clearable></el-input>
+            <el-form-item v-if="type !== 'coordination'" :label="$t('dashboard.feedback.project')" prop="repository">
+                <el-input v-model="form.repository" :placeholder="$t('dashboard.feedback.repositoryPlaceholder')" clearable></el-input>
             </el-form-item>
-            <el-form-item label="备注" prop="remark">
-                <el-input v-model="form.remark" placeholder="请输入备注" clearable></el-input>
+            <el-form-item :label="$t('dashboard.common.remark')" prop="remark">
+                <el-input v-model="form.remark" :placeholder="$t('dashboard.common.remarkPlaceholder')" clearable></el-input>
             </el-form-item>
         </el-form>
         <template #footer>
             <div class="dialog-footer">
                 <div class="m-confirm">
-                    <el-button @click="close">取消</el-button>
-                    <el-button type="primary" :loading="loading" :disabled="loading" @click="submit"> 提交 </el-button>
+                    <el-button @click="close">{{ $t("dashboard.common.cancel") }}</el-button>
+                    <el-button type="primary" :loading="loading" :disabled="loading" @click="submit"> {{ $t("dashboard.common.submit") }} </el-button>
                 </div>
             </div>
         </template>
@@ -101,19 +101,19 @@ export default {
             },
             group,
             rules: {
-                assign: [{ required: true, message: "请选择指派人", trigger: ["blur", "change"] }],
-                coordination: [{ required: true, message: "请选择协同人", trigger: ["blur", "change"] }],
+                assign: [{ required: true, message: this.$t("dashboard.feedback.assigneeRequired"), trigger: ["blur", "change"] }],
+                coordination: [{ required: true, message: this.$t("dashboard.feedback.coordinatorRequired"), trigger: ["blur", "change"] }],
             },
         };
     },
     computed: {
         title() {
-            let title = "指派";
+            let title = this.$t("dashboard.feedback.assign");
             if (this.type === "transfer") {
-                title = "转交";
+                title = this.$t("dashboard.feedback.transfer");
             }
             if (this.type === "coordination") {
-                title = "协同";
+                title = this.$t("dashboard.feedback.coordinate");
             }
             return title;
         },
@@ -176,7 +176,7 @@ export default {
                     }
                     fn(this.id, data)
                         .then(() => {
-                            this.$message.success("提交成功");
+                            this.$message.success(this.$t("dashboard.common.submitSuccess"));
                             this.$emit("update");
                             this.close();
                         })

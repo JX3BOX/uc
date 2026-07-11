@@ -1,21 +1,21 @@
 <template>
     <div class="m-dashboard m-dashboard-work m-dashboard-wiki" v-loading="loading">
         <div class="m-dashboard-work-header">
-            <h2 class="u-title">{{ typeLabel }}百科</h2>
+            <h2 class="u-title">{{ $t("publish.types.wikiTitle", { type: typeLabel }) }}</h2>
             <a :href="publishLink" class="u-publish el-button el-button--primary"
-                ><i class="el-icon-document"></i> 发布作品</a
+                ><i class="el-icon-document"></i> {{ $t("publish.common.publishWork") }}</a
             >
         </div>
 
         <el-input
             class="m-dashboard-work-search u-source-search"
-            placeholder="请输入搜索内容"
+            :placeholder="$t('publish.common.searchPlaceholder')"
             v-model="achievement_post.keyword"
             @change="search_post"
             size="large"
         >
             <template #prepend>
-                <span>关键词</span>
+                <span>{{ $t("publish.common.keyword") }}</span>
             </template>
             <template #append>
                 <el-button icon="Search" @click="search_post"></el-button>
@@ -28,27 +28,27 @@
                     <span class="u-tab" v-text="getTypeLabel(post.type)"></span>
                     <div class="u-header">
                         <a class="u-title" target="_blank" :href="getLink(post)">
-                            {{ post.title || "无标题" }}
+                            {{ post.title || $t("publish.common.untitled") }}
                         </a>
-                        <el-tag type="warning" size="small" v-if="post.checked == 0">等待审核</el-tag>
-                        <el-tag type="success" size="small" v-if="post.checked == 1">审核通过</el-tag>
-                        <el-tag type="danger" size="small" v-if="post.checked == 2">审核驳回</el-tag>
-                        <el-tag type="warning" size="small" v-if="post.checked == 3">等待验证</el-tag>
+                        <el-tag type="warning" size="small" v-if="post.checked == 0">{{ $t("publish.status.pendingReview") }}</el-tag>
+                        <el-tag type="success" size="small" v-if="post.checked == 1">{{ $t("publish.status.approved") }}</el-tag>
+                        <el-tag type="danger" size="small" v-if="post.checked == 2">{{ $t("publish.status.rejected") }}</el-tag>
+                        <el-tag type="warning" size="small" v-if="post.checked == 3">{{ $t("publish.status.pendingVerification") }}</el-tag>
                     </div>
                     <div class="u-desc">
                         <span
                             v-if="post.checked == 2 && post.check_remark"
                             class="u-check_remark"
-                            v-html="`驳回理由：${post.check_remark}`"
+                            v-html="$t('publish.status.rejectionReason', { reason: post.check_remark })"
                         ></span>
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
-                            发布 :
+                            {{ $t("publish.common.publishedAt") }} :
                             {{ dateFormat(new Date(post.created * 1000)) }}
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
-                            更新 :
+                            {{ $t("publish.common.updatedAt") }} :
                             {{ dateFormat(new Date(post.updated * 1000)) }}
                         </time>
                     </div>
@@ -57,17 +57,17 @@
                         <el-button
                             icon="Edit"
                             :disabled="post.checked == 1 || post.checked == 3"
-                            title="编辑"
+                            :title="$t('publish.common.edit')"
                             @click="post_edit(post)"
                         ></el-button>
-                        <el-button icon="Delete" title="删除" @click="post_del(post)"></el-button>
+                        <el-button icon="Delete" :title="$t('publish.common.delete')" @click="post_del(post)"></el-button>
                     </el-button-group>
                 </li>
             </ul>
             <el-alert
                 v-else
                 class="m-dashboard-box-null"
-                title="没有找到相关条目"
+                :title="$t('publish.common.noResults')"
                 type="info"
                 center
                 show-icon
@@ -91,10 +91,7 @@ import { getTypeLabel, getLink } from "@jx3box/jx3box-common/js/utils";
 import { __wikiType } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki";
-const wikiTypes = {
-    ...__wikiType,
-    skill: "技能",
-};
+const wikiTypes = { ...__wikiType };
 export default {
     name: "wiki",
     props: [],
@@ -117,7 +114,7 @@ export default {
             return this.$route.params.type;
         },
         typeLabel: function () {
-            return wikiTypes[this.type];
+            return this.wikiTypeLabel(this.type, wikiTypes[this.type]);
         },
         publishLink: function () {
             return "/publish/#/" + this.type;
@@ -125,7 +122,17 @@ export default {
     },
     methods: {
         getTypeLabel: function (val) {
-            return val ? wikiTypes[val] : "未知";
+            return val ? this.wikiTypeLabel(val, wikiTypes[val]) : this.$t("publish.common.unknown");
+        },
+        wikiTypeLabel(type, fallback) {
+            const key = {
+                achievement: "achievements",
+                item: "items",
+                quest: "quests",
+                knowledge: "knowledge",
+                skill: "skills",
+            }[type];
+            return key ? this.$t(`publish.mobile.${key}`) : fallback;
         },
         post_page_change(i = 1) {
             this.post_page = i;
@@ -153,14 +160,14 @@ export default {
             });
         },
         post_del(post) {
-            this.$confirm(`确认删除吗？`, "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("publish.confirm.delete"), this.$t("publish.common.prompt"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
+                cancelButtonText: this.$t("publish.common.cancel"),
                 type: "warning",
                 beforeClose: (action, instance, done) => {
                     if (action === "confirm") {
                         wiki.remove(post.id).then(() => {
-                            this.$message.success("删除成功");
+                            this.$message.success(this.$t("publish.message.deleteSucceeded"));
                             this.post_page_change();
                             done();
                         });

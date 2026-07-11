@@ -2,15 +2,15 @@
     <div class="m-premium-status">
         <img :src="require(`@/assets/img/vip/vip2/badge-${data.expireDate ? 'vip' : 'common'}.png`)" />
         <div class="u-title">
-            <span>专业账号</span>
+            <span>{{ $t("vip.premium.professionalAccount") }}</span>
             <em>Professional</em>
         </div>
 
         <div class="u-status">
             <div :class="`u-expire ${data.expireDate ? '' : 'u-null'}`">
-                {{ data.expireDate ? "已开通" : "尚未开通" }}
+                {{ data.expireDate ? $t("vip.premium.active") : $t("vip.premium.inactive") }}
             </div>
-            <div class="u-time" v-if="data.expireDate">{{ `到期时间：${data.expireDate}` }}</div>
+            <div class="u-time" v-if="data.expireDate">{{ $t("vip.premium.expiresAt", { date: data.expireDate }) }}</div>
         </div>
     </div>
 </template>

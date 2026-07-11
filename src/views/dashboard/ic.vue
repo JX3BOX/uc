@@ -1,12 +1,12 @@
 <template>
     <div class="m-credit m-ic">
-        <h2 class="u-title"><i class="el-icon-coin"></i> 我的盒码</h2>
+        <h2 class="u-title"><i class="el-icon-coin"></i> {{ $t("dashboard.invitation.title") }}</h2>
         <div class="m-credit-table m-packet-table" v-loading="loading">
             <el-tabs v-model="tab" type="border-card">
-                <el-tab-pane label="注册邀请码" name="first" lazy>
+                <el-tab-pane :label="$t('dashboard.invitation.registrationCode')" name="first" lazy>
                     <div class="m-tip-box">
-                        <el-button class="u-btn" type="primary" @click="createCode"> 生成邀请码 </el-button>
-                        <el-alert class="m-ic-tip" title="邀请码生成规则" type="warning" show-icon>
+                        <el-button class="u-btn" type="primary" @click="createCode"> {{ $t("dashboard.invitation.generate") }} </el-button>
+                        <el-alert class="m-ic-tip" :title="$t('dashboard.invitation.rules')" type="warning" show-icon>
                             <slot name="description"><div v-html="rules"></div> </slot>
                         </el-alert>
                     </div>
@@ -15,9 +15,9 @@
                         <table class="m-ic-in-list m-packet-in-list">
                             <thead>
                                 <tr>
-                                    <th>邀请码</th>
-                                    <th>状态</th>
-                                    <th>生成时间</th>
+                                    <th>{{ $t("dashboard.invitation.code") }}</th>
+                                    <th>{{ $t("dashboard.common.status") }}</th>
+                                    <th>{{ $t("dashboard.invitation.generatedAt") }}</th>
                                 </tr>
                             </thead>
                             <tr v-for="(item, i) in list" :key="i">
@@ -30,7 +30,7 @@
                                 </td>
                                 <td>
                                     <el-tag :type="item.status ? 'success' : 'info'">{{
-                                        item.status ? "未使用" : "已使用"
+                                        item.status ? $t("dashboard.invitation.unused") : $t("dashboard.invitation.used")
                                     }}</el-tag>
                                 </td>
                                 <td>{{ formatDate(item.created_at) }}</td>
@@ -40,7 +40,7 @@
                     <el-alert
                         v-else
                         class="m-credit-null m-packet-null"
-                        title="没有找到相关条目"
+                        :title="$t('dashboard.common.noItems')"
                         type="info"
                         center
                         show-icon
@@ -77,7 +77,7 @@ export default {
         // 生成邀请码
         createCode() {
             genInvitation().then((res) => {
-                this.$message.success("生成邀请码成功");
+                this.$message.success(this.$t("dashboard.invitation.generateSuccess"));
                 this.loadData();
             });
         },
@@ -106,7 +106,7 @@ export default {
         // 复制成功
         onCopy: function (code) {
             navigator.clipboard.writeText(code).then(() => {
-                this.$message.success("复制成功");
+                this.$message.success(this.$t("dashboard.common.copySuccess"));
             });
         },
     },

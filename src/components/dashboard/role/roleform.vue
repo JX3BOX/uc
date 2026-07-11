@@ -1,21 +1,21 @@
 <template>
     <div class="m-role-form">
         <el-form ref="form" :model="form" label-width="80px" :label-position="position">
-            <el-form-item label="角色名">
+            <el-form-item :label="$t('dashboard.role.name')">
                 <el-input
                     v-model="form.name"
-                    placeholder="请输入角色名称"
+                    :placeholder="$t('dashboard.role.namePlaceholder')"
                     show-word-limit
                     :minlength="2"
                     :maxlength="20"
                 ></el-input>
             </el-form-item>
-            <el-form-item label="服务器">
-                <el-select v-model="form.server" placeholder="请选择服务器" filterable @change="setDefaultServer">
+            <el-form-item :label="$t('dashboard.role.server')">
+                <el-select v-model="form.server" :placeholder="$t('dashboard.role.serverPlaceholder')" filterable @change="setDefaultServer">
                     <el-option v-for="server in servers" :key="server" :label="server" :value="server"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="门派">
+            <el-form-item :label="$t('dashboard.role.school')">
                 <el-radio-group v-model="form.mount" size="medium">
                     <el-radio :value="key" v-for="(label, key) in school_map" :key="key" border>
                         <img class="u-icon-school" :src="showSchoolIcon(key)" />
@@ -23,8 +23,8 @@
                     </el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item label="体型">
-                <el-select v-model="form.body_type" placeholder="请选择体型">
+            <el-form-item :label="$t('dashboard.role.bodyType')">
+                <el-select v-model="form.body_type" :placeholder="$t('dashboard.role.bodyTypePlaceholder')">
                     <el-option
                         v-for="(label, key) in body_map"
                         :key="key"
@@ -33,10 +33,10 @@
                     ></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="备注">
+            <el-form-item :label="$t('dashboard.common.remark')">
                 <el-input
                     v-model="form.note"
-                    placeholder="请输入备注信息"
+                    :placeholder="$t('dashboard.common.remarkPlaceholder')"
                     show-word-limit
                     :minlength="2"
                     :maxlength="20"
@@ -96,8 +96,8 @@ export default {
     methods: {
         submit: function () {
             if (!this.form.name) {
-                this.$alert("角色名不能为空", "提醒", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("dashboard.role.nameRequired"), this.$t("dashboard.common.reminder"), {
+                    confirmButtonText: this.$t("dashboard.common.confirm"),
                 });
                 return;
             }

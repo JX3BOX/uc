@@ -1,10 +1,10 @@
 <template>
     <div class="v-role-add">
         <h2 class="u-title">
-            <i class="el-icon-setting"></i> 编辑角色
-            <el-button class="u-back" plain icon="ArrowLeft" @click="goBack">返回</el-button>
+            <i class="el-icon-setting"></i> {{ $t("dashboard.role.edit") }}
+            <el-button class="u-back" plain icon="ArrowLeft" @click="goBack">{{ $t("dashboard.common.back") }}</el-button>
         </h2>
-        <roleform :data="form" @submit="submit" btn_txt="更新" :processing="processing" />
+        <roleform :data="form" @submit="submit" :btn_txt="$t('dashboard.common.update')" :processing="processing" />
     </div>
 </template>
 
@@ -40,7 +40,7 @@ export default {
             getRole(this.id).then((res) => {
                 let hasRight = res.data.data.uid == User.getInfo().uid || User.isSuperAdmin();
                 if (!hasRight) {
-                    this.$message.error("没有操作权限");
+                    this.$message.error(this.$t("dashboard.common.noPermission"));
                     return;
                 } else {
                     this.form = res.data.data;
@@ -50,14 +50,14 @@ export default {
         submit: function () {
             // 如果是绑定的角色不能改
             if (!this.form.custom) {
-                this.$message.error("绑定角色不允许篡改");
+                this.$message.error(this.$t("dashboard.role.boundCannotEdit"));
                 return;
             }
             this.processing = true;
             updateRole(this.id, this.form)
                 .then((res) => {
                     this.$message({
-                        message: "更新成功",
+                        message: this.$t("dashboard.common.updateSuccess"),
                         type: "success",
                     });
                     this.$router.push("/role");

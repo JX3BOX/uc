@@ -8,18 +8,18 @@
                     <h2 class="u-post">
                         <!-- 标题文字 -->
                         <a :href="item.link || defult_link" class="u-title" target="_blank">{{
-                            item.key || "无标题"
+                            item.key || $t("author.common.noTitle")
                         }}</a>
                     </h2>
                     <!-- 字段 -->
                     <div class="u-desc">
-                        {{ item.desc || "这个词条没有任何描述" }}
+                        {{ item.desc || $t("author.list.noNamespaceDescription") }}
                     </div>
 
                     <!-- 作者 -->
                     <div class="u-misc">
                         <span class="u-date">
-                            Updated on
+                            {{ $t("author.common.updatedOn") }}
                             <time>{{ dateFormat(item.updated) }}</time>
                         </span>
                     </div>

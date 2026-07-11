@@ -13,7 +13,7 @@
                     <!-- 作者 -->
                     <div class="u-misc">
                         <span class="u-date">
-                            Created on
+                            {{ $t("author.common.createdOn") }}
                             <time>{{ dateFormat(item.created_at) }}</time>
                         </span>
                     </div>

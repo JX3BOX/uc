@@ -1,10 +1,10 @@
 <template>
     <div class="v-role-add">
         <h2 class="u-title">
-            <i class="el-icon-circle-plus-outline"></i> 创建角色
-            <el-button class="u-back" icon="ArrowLeft" @click="goBack">返回列表</el-button>
+            <i class="el-icon-circle-plus-outline"></i> {{ $t("dashboard.role.create") }}
+            <el-button class="u-back" icon="ArrowLeft" @click="goBack">{{ $t("dashboard.common.backToList") }}</el-button>
         </h2>
-        <roleform :data="form" @submit="submit" btn_txt="创建" :processing="processing" />
+        <roleform :data="form" @submit="submit" :btn_txt="$t('dashboard.common.create')" :processing="processing" />
     </div>
 </template>
 
@@ -34,7 +34,7 @@ export default {
             createRole(this.form)
                 .then((res) => {
                     this.$message({
-                        message: "更新成功",
+                        message: this.$t("dashboard.common.updateSuccess"),
                         type: "success",
                     });
                     this.$router.push("/role");

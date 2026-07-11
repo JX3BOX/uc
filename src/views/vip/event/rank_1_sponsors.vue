@@ -1,16 +1,16 @@
 <template>
     <div class="m-event-item">
         <div class="u-box">
-            <div class="u-title">领取专属免费PRO会员</div>
+            <div class="u-title">{{ $t("vip.event.proTitle") }}</div>
             <div class="u-content">
-                <h3>【领取条件】</h3>
-                <p>第一届「奉天证道·秘境百强榜」赛事赞助单位（任意价值）</p>
-                <p>获赠1年PRO会员</p>
+                <h3>{{ $t("vip.event.claimConditions") }}</h3>
+                <p>{{ $t("vip.event.sponsorCondition") }}</p>
+                <p>{{ $t("vip.event.sponsorReward") }}</p>
                 <p class="u-misc">
-                    <em>需在赞助时有提供网站UID,如需补录请提供支付凭证</em>
+                    <em>{{ $t("vip.event.sponsorNote") }}</em>
                 </p>
                 <el-button class="u-btn" type="warning" @click="getGift" :disabled="done" icon="Present"
-                    >点击领取</el-button
+                    >{{ $t("vip.event.claim") }}</el-button
                 >
             </div>
         </div>
@@ -29,11 +29,11 @@ export default {
             getFreeVip("rank_1_sponsors").then((res) => {
                 this.done = true;
                 this.$message({
-                    message: "领取成功",
+                    message: this.$t("vip.event.claimSuccess"),
                     type: "success",
                 });
-                this.$alert("领取成功", "提醒", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("vip.event.claimSuccess"), this.$t("vip.common.notice"), {
+                    confirmButtonText: this.$t("vip.common.confirm"),
                 });
             });
         },

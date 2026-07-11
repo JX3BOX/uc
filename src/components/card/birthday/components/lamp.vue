@@ -1,7 +1,7 @@
 <template>
     <div class="m-lamp">
         <div class="lamp-item" v-for="i in 12" :key="i">
-            <img :class="getImgClass(i)" :src="getImgSrc(i)" alt="lamp" />
+            <img :class="getImgClass(i)" :src="getImgSrc(i)" :alt="$t('card.common.lamp')" />
         </div>
     </div>
 </template>

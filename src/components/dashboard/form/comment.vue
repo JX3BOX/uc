@@ -1,21 +1,21 @@
 <template>
     <el-form class="m-goods-comment" :model="form" :rules="rules" ref="form" label-width="80px">
-        <el-form-item label="商品评价" prop="rate">
+        <el-form-item :label="$t('dashboard.orders.productReview')" prop="rate">
             <el-rate v-model="form.rate" :max="3"></el-rate>
         </el-form-item>
-        <el-form-item label="物流评价" prop="express_rate">
+        <el-form-item :label="$t('dashboard.orders.logisticsReview')" prop="express_rate">
             <el-rate v-model="form.express_rate" :max="3"></el-rate>
         </el-form-item>
-        <el-form-item label="评价内容" prop="comment">
+        <el-form-item :label="$t('dashboard.orders.reviewContent')" prop="comment">
             <el-input type="textarea" v-model="form.comment"></el-input>
         </el-form-item>
-        <el-form-item label="是否匿名" prop="is_anonymous">
+        <el-form-item :label="$t('dashboard.orders.anonymousReview')" prop="is_anonymous">
             <el-switch v-model="form.is_anonymous"></el-switch>
         </el-form-item>
 
         <div class="m-button">
-            <el-button @click="close('form')">取消</el-button>
-            <el-button type="primary" @click="submitForm('form')">确定</el-button>
+            <el-button @click="close('form')">{{ $t("dashboard.common.cancel") }}</el-button>
+            <el-button type="primary" @click="submitForm('form')">{{ $t("dashboard.common.confirm") }}</el-button>
         </div>
     </el-form>
 </template>
@@ -35,7 +35,7 @@ export default {
             },
 
             rules: {
-                comment: { required: true, message: "请填写评价内容", trigger: "blur" },
+                comment: { required: true, message: this.$t("dashboard.orders.reviewRequired"), trigger: "blur" },
             },
         };
     },
@@ -49,7 +49,7 @@ export default {
                 if (valid) {
                     goodsRate(this.form).then(() => {
                         this.$message({
-                            message: "评价成功",
+                            message: this.$t("dashboard.orders.reviewSuccess"),
                             type: "success",
                         });
                         this.close(this.order_id);

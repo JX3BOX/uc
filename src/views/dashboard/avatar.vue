@@ -13,15 +13,15 @@
                 >
                     <el-icon class="el-icon--upload"><upload-filled /></el-icon>
                     <div class="el-upload__text">
-                        将文件拖到此处，或
-                        <em>点击上传</em>
+                        {{ $t("dashboard.avatar.dropFile") }}
+                        <em>{{ $t("dashboard.avatar.clickUpload") }}</em>
                         <br />
-                        <span class="u-tip">只能上传jpg/png/gif文件</span>
+                        <span class="u-tip">{{ $t("dashboard.avatar.fileTypeTip") }}</span>
                     </div>
                 </el-upload>
             </div>
             <div class="m-profile-box m-profile-avatar-list">
-                <div class="u-title">默认头像</div>
+                <div class="u-title">{{ $t("dashboard.avatar.defaultAvatar") }}</div>
                 <template v-if="avatarList.length">
                     <span
                         class="u-avatar"
@@ -35,8 +35,8 @@
             </div>
         </div>
         <div class="u-profile-btn">
-            <el-button type="primary" @click="submit" size="large">确认</el-button>
-            <el-button @click="reset" size="large">重置</el-button>
+            <el-button type="primary" @click="submit" size="large">{{ $t("dashboard.common.confirm") }}</el-button>
+            <el-button @click="reset" size="large">{{ $t("dashboard.common.reset") }}</el-button>
         </div>
     </uc>
 </template>
@@ -90,7 +90,7 @@ export default {
             formdata.append("avatar", filedata);
             uploadAvatar(formdata).then((res) => {
                 this.$message({
-                    message: "上传成功",
+                    message: this.$t("dashboard.common.uploadSuccess"),
                     type: "success",
                 });
                 this.avatar = res.data.data[0];
@@ -114,7 +114,7 @@ export default {
             updateAvatar(this.data).then((res) => {
                 User.refresh("avatar", this.avatar);
                 this.$message({
-                    message: "头像更新成功",
+                    message: this.$t("dashboard.avatar.updateSuccess"),
                     type: "success",
                 });
             });

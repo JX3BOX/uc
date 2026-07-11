@@ -3,7 +3,7 @@
         <div class="m-main">
             <template v-if="treasureImg">
                 <el-image class="u-img" :fit="'contain'" :src="treasureImg" :preview-src-list="[treasureImg]"> </el-image>
-                <button @click="print" class="u-btn m-hide el-button el-button--primary">打印证书</button>
+                <button @click="print" class="u-btn m-hide el-button el-button--primary">{{ $t("author.certificate.print") }}</button>
             </template>
             <el-empty v-else-if="errorMessage" class="m-cert-empty" :description="errorMessage"></el-empty>
 
@@ -54,14 +54,14 @@ export default {
                 .then((res) => {
                     const data = res.data.data;
                     if (!data?.team_certificate) {
-                        this.errorMessage = "证书不存在或暂时无法访问";
+                        this.errorMessage = this.$t("author.certificate.notFound");
                         return;
                     }
                     this.contentData = data;
                     this.draw();
                 })
                 .catch(() => {
-                    this.errorMessage = "证书加载失败，请稍后重试";
+                    this.errorMessage = this.$t("author.certificate.loadFailed");
                 });
         },
         draw() {
@@ -117,7 +117,7 @@ export default {
                 // 赛事组
                 this.drawText(ctx, {
                     type: "text",
-                    content: "剑网3魔盒门派天团赛事组",
+                    content: this.$t("author.certificate.organizer"),
                     style: {
                         textAlign: "right",
                         fontSize: 28,
@@ -129,7 +129,7 @@ export default {
                 // 时间
                 this.drawText(ctx, {
                     type: "text",
-                    content: this.formatTimeString("yyyy年MM月dd日", this.contentData.team_certificate.time),
+                    content: this.formatCertificateDate(this.contentData.team_certificate.time),
                     style: {
                         textAlign: "right",
                         fontSize: 28,
@@ -208,6 +208,14 @@ export default {
                 .replace(/mm/, minutes)
                 .replace(/ss/, seconds);
             return timeString;
+        },
+        formatCertificateDate(dateTimeString) {
+            const date = new Date(dateTimeString);
+            return this.$t("author.certificate.date", {
+                year: date.getFullYear(),
+                month: (date.getMonth() + 1).toString().padStart(2, "0"),
+                day: date.getDate().toString().padStart(2, "0"),
+            });
         },
         print() {
             window.print();

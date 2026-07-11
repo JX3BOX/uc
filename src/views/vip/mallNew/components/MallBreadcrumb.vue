@@ -2,20 +2,26 @@
     <div class="m-mall-breadcrumb">
         <div class="left">
             <img class="icon" :src="imgUrl + 'mall.svg'" alt="" />
-            <a href="/vip/mall" class="title">积分商城</a>
+            <a href="/vip/mall" class="title">{{ $t("vip.mall.title") }}</a>
         </div>
         <div class="right">
-            <span class="asset-title">我的资产</span>
+            <span class="asset-title">{{ $t("vip.mall.myAssets") }}</span>
             <div class="lv button">Lv.{{ level }}</div>
             <div class="pro button" v-if="isPro">PRO</div>
             <div class="asset-continer">
                 <div class="item">
                     <img src="@/assets/img/vip/vip2/points.svg" alt="" class="icon" svg-inline />
-                    <div class="text">积分<span>（=银铛）</span>：{{ asset.points }}</div>
+                    <i18n-t keypath="vip.mall.pointsBalance" tag="div" class="text">
+                        <template #alias><span>{{ $t("vip.mall.pointsAlias") }}</span></template>
+                        <template #amount>{{ asset.points }}</template>
+                    </i18n-t>
                 </div>
                 <div class="item">
                     <img src="@/assets/img/vip/vip2/box_icon.svg" alt="" class="icon" svg-inline />
-                    <div class="text">盒币<span>（=通宝）</span>：{{ asset.box_coin }}</div>
+                    <i18n-t keypath="vip.mall.boxcoinBalance" tag="div" class="text">
+                        <template #alias><span>{{ $t("vip.mall.boxcoinAlias") }}</span></template>
+                        <template #amount>{{ asset.box_coin }}</template>
+                    </i18n-t>
                 </div>
             </div>
         </div>

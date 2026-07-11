@@ -37,7 +37,6 @@
 <script>
 import { getBirthdayDetail } from "@/service/author/birthday";
 import User from "@jx3box/jx3box-common/js/user";
-import dayjs from "dayjs";
 import { __cdn } from "@/utils/config";
 export default {
     name: "Default2025",
@@ -77,7 +76,7 @@ export default {
             return this.user.name;
         },
         date() {
-            return this.dateFormat(this.data.created_at);
+            return this.data?.created_at ? this.dateFormat(this.data.created_at) : "";
         },
         letterClass() {
             return {
@@ -102,7 +101,12 @@ export default {
     },
     methods: {
         dateFormat: function (val) {
-            return dayjs(val).format("YYYY年MM月DD日");
+            if (!val) return "";
+            return new Intl.DateTimeFormat(this.$i18n.locale, {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+            }).format(new Date(val));
         },
         loadData() {
             if (!this.isMine) return this.goBack();

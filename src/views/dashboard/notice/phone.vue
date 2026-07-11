@@ -3,14 +3,14 @@
         <div class="u-notice-value">
             <span class="u-address" v-if="phone">{{ phoneStr(phone) }}</span>
             <el-tag class="u-notice-status" :type="phone ? 'success' : 'info'">{{
-                phone ? "已绑定" : "未绑定"
+                phone ? $t("dashboard.common.bound") : $t("dashboard.common.unbound")
             }}</el-tag>
         </div>
         <el-button type="primary" size="large" :circle="isPhone" class="u-bind-button" @click="openDialog" icon="Edit">{{
-            phone ? "修改手机" : "绑定手机"
+            phone ? $t("dashboard.phone.change") : $t("dashboard.phone.bind")
         }}</el-button>
         <el-dialog
-            title="绑定手机"
+            :title="$t('dashboard.phone.bind')"
             v-model="visible"
             :width="isPhone ? '95%' : '600px'"
             class="m-notice-phone__dialog"
@@ -19,16 +19,16 @@
         >
             <div class="m-phone-content">
                 <div class="m-phone-intro">
-                    <span class="u-intro-tag">安全验证</span>
-                    <h3>{{ phone ? "更换绑定手机号" : "绑定手机号" }}</h3>
-                    <p>支持国际手机号，用于账号安全验证、通知提醒与重要操作确认。</p>
+                    <span class="u-intro-tag">{{ $t("dashboard.phone.securityVerification") }}</span>
+                    <h3>{{ phone ? $t("dashboard.phone.changeBound") : $t("dashboard.phone.bindMobile") }}</h3>
+                    <p>{{ $t("dashboard.phone.purpose") }}</p>
                     <div class="m-current-phone" v-if="phone">
-                        <span class="u-current-label">当前已绑定</span>
+                        <span class="u-current-label">{{ $t("dashboard.phone.currentBound") }}</span>
                         <strong class="u-current-value">{{ phoneStr(phone) }}</strong>
                     </div>
                     <div class="m-current-phone is-empty" v-else>
-                        <span class="u-current-label">当前状态</span>
-                        <strong class="u-current-value">未绑定手机号</strong>
+                        <span class="u-current-label">{{ $t("dashboard.common.currentStatus") }}</span>
+                        <strong class="u-current-value">{{ $t("dashboard.phone.unbound") }}</strong>
                     </div>
                 </div>
                 <el-form :model="form" :rules="rules" status-icon ref="phoneRef" size="large" class="m-phone-form">
@@ -43,11 +43,11 @@
                                 <el-option
                                     v-for="country in countryOptions"
                                     :key="country.iso2"
-                                    :label="`${country.name} +${country.callingCode}`"
+                                    :label="`${countryName(country)} +${country.callingCode}`"
                                     :value="country.iso2"
                                 >
                                     <div class="u-country-option">
-                                        <span>{{ country.name }}</span>
+                                        <span>{{ countryName(country) }}</span>
                                         <strong>+{{ country.callingCode }}</strong>
                                     </div>
                                 </el-option>
@@ -55,7 +55,7 @@
                             <el-input
                                 v-model.trim="form.phoneInput"
                                 class="u-phone-input"
-                                placeholder="输入手机号"
+                                :placeholder="$t('dashboard.phone.input')"
                                 @input="onPhoneInput"
                             >
                                 <template #prefix>
@@ -66,7 +66,7 @@
                     </el-form-item>
                     <el-form-item label="" prop="code">
                         <div class="m-code-row">
-                            <el-input v-model.trim="form.code" placeholder="输入验证码" class="u-code-input">
+                            <el-input v-model.trim="form.code" :placeholder="$t('dashboard.common.inputCode')" class="u-code-input">
                                 <template #prefix>
                                     <i class="el-icon-lock"></i>
                                 </template>
@@ -77,9 +77,9 @@
                         </div>
                     </el-form-item>
                 </el-form>
-                <p class="u-submit-tip" v-if="lastSentPhone && normalizedPhone !== lastSentPhone">手机号已变更，请重新获取验证码</p>
+                <p class="u-submit-tip" v-if="lastSentPhone && normalizedPhone !== lastSentPhone">{{ $t("dashboard.phone.changedResend") }}</p>
                 <el-button class="u-btn" type="primary" @click="verify" :loading="loading" :disabled="canSubmit">
-                    {{ phone ? "确认换绑" : "确认绑定" }}
+                    {{ phone ? $t("dashboard.phone.confirmChange") : $t("dashboard.phone.confirmBind") }}
                 </el-button>
             </div>
         </el-dialog>
@@ -121,7 +121,7 @@ export default {
                         trigger: "blur",
                     },
                 ],
-                code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
+                code: [{ required: true, message: this.$t("dashboard.common.codePlaceholder"), trigger: "blur" }],
             },
         };
     },
@@ -145,14 +145,21 @@ export default {
         },
         sendButtonText() {
             if (this.codeLoading) {
-                return "发送中";
+                return this.$t("dashboard.common.sending");
             }
-            return this.interval > 0 ? `${this.interval}s` : "发送验证码";
+            return this.interval > 0 ? `${this.interval}s` : this.$t("dashboard.common.sendCode");
         },
     },
     methods: {
         phoneStr: function (phone) {
             return maskPhone(phone);
+        },
+        countryName(country) {
+            try {
+                return new Intl.DisplayNames([this.$i18n.locale], { type: "region" }).of(country.iso2);
+            } catch (e) {
+                return country.name;
+            }
         },
         async loadProfile() {
             const res = await getProfile();
@@ -215,16 +222,16 @@ export default {
         async runPhoneValidation(checkAvailability = true) {
             const value = String(this.form.phoneInput || "").trim();
             if (!value) {
-                return { valid: false, error: "请输入手机号" };
+                return { valid: false, error: this.$t("dashboard.common.mobilePlaceholder") };
             }
 
             const normalizedPhone = this.normalizedPhone;
             if (!normalizedPhone) {
-                return { valid: false, error: "手机号格式不正确" };
+                return { valid: false, error: this.$t("dashboard.phone.invalid") };
             }
 
             if (this.currentPhone && normalizedPhone === this.currentPhone) {
-                return { valid: false, error: "手机号未变更" };
+                return { valid: false, error: this.$t("dashboard.phone.unchanged") };
             }
 
             if (!checkAvailability) {
@@ -236,12 +243,12 @@ export default {
                 const res = await checkPhone({ phone: normalizedPhone });
                 if (!res?.data?.data) {
                     this.hasBind = true;
-                    return { valid: false, error: "手机号已被绑定" };
+                    return { valid: false, error: this.$t("dashboard.phone.alreadyBound") };
                 }
                 this.hasBind = false;
                 return { valid: true, phone: normalizedPhone };
             } catch (error) {
-                return { valid: false, error: error?.response?.data?.msg || "手机号校验失败" };
+                return { valid: false, error: error?.response?.data?.msg || this.$t("dashboard.phone.checkFailed") };
             } finally {
                 this.checkingPhone = false;
             }
@@ -280,9 +287,9 @@ export default {
                 await sendPhoneCode({ phone: result.phone });
                 this.lastSentPhone = result.phone;
                 this.startTimer();
-                this.$message.success("发送成功");
+                this.$message.success(this.$t("dashboard.common.sendSuccess"));
             } catch (error) {
-                this.$message.error(error?.response?.data?.msg || "验证码发送失败");
+                this.$message.error(error?.response?.data?.msg || this.$t("dashboard.phone.codeSendFailed"));
             } finally {
                 this.codeLoading = false;
             }
@@ -294,11 +301,11 @@ export default {
                 return;
             }
             if (result.phone !== this.lastSentPhone) {
-                this.$message.warning("请先获取验证码");
+                this.$message.warning(this.$t("dashboard.phone.getCodeFirst"));
                 return;
             }
             if (!this.form.code) {
-                this.$message.error("请输入验证码");
+                this.$message.error(this.$t("dashboard.common.codePlaceholder"));
                 return;
             }
 
@@ -306,11 +313,11 @@ export default {
             try {
                 await verifyPhone({ phone: result.phone, code: this.form.code });
                 await this.loadProfile();
-                this.$message.success("绑定成功");
+                this.$message.success(this.$t("dashboard.common.bindSuccess"));
                 this.visible = false;
                 this.resetForm();
             } catch (error) {
-                this.$message.error(error?.response?.data?.msg || "绑定失败");
+                this.$message.error(error?.response?.data?.msg || this.$t("dashboard.common.bindFailed"));
             } finally {
                 this.loading = false;
             }

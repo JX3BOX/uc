@@ -2,11 +2,11 @@
     <nav class="m-nav">
         <a class="m-nav-publish el-button el-button--large el-button--primary" href="/publish" target="_blank">
             <!-- <i class="el-icon-edit-outline"></i> -->
-            <span>前往创作中心</span>
+            <span>{{ $t("dashboard.nav.creationCenter") }}</span>
         </a>
 
         <div v-for="item in navList" :key="item.group_name">
-            <h5 class="u-title">{{ item.group_name }}</h5>
+            <h5 class="u-title">{{ translateGroup(item.group_name) }}</h5>
             <div class="m-nav-group">
                 <router-link
                     v-for="child in item.children"
@@ -15,7 +15,7 @@
                     :class="isProfile(child.path) || isTheme(child.path) || isMall(child.path) || isMsg(child.path) || isFavor(child.path) || isTreasure(child.path)"
                 >
                     <i :class="child.icon"></i>
-                    <span>{{ child.name }}</span>
+                    <span>{{ translateItem(child) }}</span>
                 </router-link>
             </div>
         </div>
@@ -46,6 +46,19 @@ export default {
         // },
     },
     methods: {
+        translateGroup: function (name) {
+            const keys = {
+                我的仓库: "repository",
+                权益中心: "benefits",
+                账号中心: "account",
+                服务中心: "service",
+            };
+            return keys[name] ? this.$t(`dashboard.nav.groups.${keys[name]}`) : name;
+        },
+        translateItem: function (item) {
+            const key = String(item.path || "").replace(/^\//, "");
+            return key ? this.$t(`dashboard.nav.items.${key}`) : item.name;
+        },
         catg_url: function (val) {
             return dashboardLink(`#/${val}`);
         },

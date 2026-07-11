@@ -3,45 +3,43 @@
         <CommonHeader></CommonHeader>
         <Main class="m-vip-container m-namespace-page" :withoutRight="true" :withoutLeft="true">
             <div class="m-namespace">
-                <simple-header class="m-namespace-title" title="剑网3.com" desc="Register your namespace" />
+                <simple-header class="m-namespace-title" title="剑网3.com" :desc="$t('vip.namespace.subtitle')" />
 
                 <div class="m-namespace-main" v-if="!done">
                     <div class="m-namespace-panel">
                         <div class="m-namespace-count">
-                            <span>剩余铭牌次数</span>
+                            <span>{{ $t("vip.namespace.remainingCount") }}</span>
                             <b>{{ namespaceCount }}</b>
                         </div>
 
                         <div class="m-namespace-exchange">
                             <div>
-                                <b>积分兑换铭牌次数</b>
-                                <span v-if="isCardLoading">正在读取兑换信息...</span>
+                                <b>{{ $t("vip.namespace.pointsExchange") }}</b>
+                                <span v-if="isCardLoading">{{ $t("vip.common.loadingExchange") }}</span>
                                 <span v-else-if="cardLoadError">{{ cardLoadError }}</span>
-                                <span v-else>{{ cardCostText || "兑换信息暂不可用" }}</span>
+                                <span v-else>{{ cardCostText || $t("vip.common.exchangeInfoUnavailableShort") }}</span>
                             </div>
                             <el-button type="primary" plain @click="buy" :loading="isBuying" :disabled="isCardLoading">
-                                兑换
+                                {{ $t("vip.common.exchange") }}
                             </el-button>
                         </div>
                     </div>
 
                     <div class="m-namespace-guide">
-                        <h3>注册铭牌</h3>
-                        <p>
-                            铭牌可通过关键词快速在浏览器中输入<b>剑网3.com/您的关键词</b>访问指定链接地址。
-                        </p>
-                        <a class="u-register-link" :href="register_namespace_url" target="_blank">前往注册铭牌</a>
+                        <h3>{{ $t("vip.namespace.register") }}</h3>
+                        <i18n-t keypath="vip.namespace.guide" tag="p"><b>{{ $t("vip.namespace.exampleUrl") }}</b></i18n-t>
+                        <a class="u-register-link" :href="register_namespace_url" target="_blank">{{ $t("vip.namespace.goRegister") }}</a>
                     </div>
                 </div>
 
                 <result class="m-namespace-result" v-else>
                     <template #title>
-                        <div class="m-namespace-result-title">购买成功</div>
+                        <div class="m-namespace-result-title">{{ $t("vip.common.purchaseSuccess") }}</div>
                     </template>
                     <template #desc>
                         <div class="m-namespace-result-desc">
-                            <p>购买成功，<a :href="register_namespace_url" target="_blank">前往注册铭牌</a></p>
-                            <el-button class="u-back" @click="goBack" plain icon="RefreshLeft">返回</el-button>
+                            <i18n-t keypath="vip.namespace.purchaseSuccessGuide" tag="p"><a :href="register_namespace_url" target="_blank">{{ $t("vip.namespace.goRegister") }}</a></i18n-t>
+                            <el-button class="u-back" @click="goBack" plain icon="RefreshLeft">{{ $t("vip.common.back") }}</el-button>
                         </div>
                     </template>
                 </result>
@@ -91,9 +89,9 @@ export default {
         },
         cardCostText() {
             const costs = [];
-            if (this.namespaceCard.price_points) costs.push(`${this.namespaceCard.price_points} 积分`);
-            if (this.namespaceCard.price_boxcoin) costs.push(`${this.namespaceCard.price_boxcoin} 盒币`);
-            if (this.namespaceCard.price_cny) costs.push(`${this.namespaceCard.price_cny} 金箔`);
+            if (this.namespaceCard.price_points) costs.push(this.$t("vip.common.pointsAmount", { amount: this.namespaceCard.price_points }));
+            if (this.namespaceCard.price_boxcoin) costs.push(this.$t("vip.common.boxcoinAmount", { amount: this.namespaceCard.price_boxcoin }));
+            if (this.namespaceCard.price_cny) costs.push(this.$t("vip.common.cnyAmount", { amount: this.namespaceCard.price_cny }));
             return costs.join(" + ");
         },
         canBuyInfo() {
@@ -164,7 +162,7 @@ export default {
                     this.namespaceCard = res.data?.data || {};
                 })
                 .catch((err) => {
-                    this.cardLoadError = err?.response?.data?.msg || err?.message || "请稍后再试";
+                    this.cardLoadError = err?.response?.data?.msg || err?.message || this.$t("vip.common.tryLater");
                 })
                 .finally(() => {
                     this.isCardLoading = false;
@@ -180,15 +178,15 @@ export default {
             return true;
         },
         getUnavailableMessage() {
-            if (!this.canBuyInfo.namespace_level) return `账号等级不足：Lv.${NAMESPACE_MIN_LEVEL} 及以上用户才可兑换铭牌`;
-            if (!this.canBuyInfo.points) return `积分不足：需要 ${this.namespaceCard.price_points || 0} 积分`;
-            if (!this.canBuyInfo.box_coin) return `盒币不足：需要 ${this.namespaceCard.price_boxcoin || 0} 盒币`;
-            if (!this.canBuyInfo.cny) return `金箔不足：需要 ${this.namespaceCard.price_cny || 0} 金箔`;
-            if (!this.canBuyInfo.stock) return "库存不足：当前不可购买";
-            if (!this.canBuyInfo.buy_time) return "当前不在可购买时间内";
-            if (!this.canBuyInfo.level) return "账号等级不足，暂不能购买";
-            if (!this.canBuyInfo.vip_limit) return "该商品仅会员可购买";
-            return "当前不满足购买条件";
+            if (!this.canBuyInfo.namespace_level) return this.$t("vip.namespace.minimumLevel", { level: NAMESPACE_MIN_LEVEL });
+            if (!this.canBuyInfo.points) return this.$t("vip.requirements.pointsInsufficient", { amount: this.namespaceCard.price_points || 0 });
+            if (!this.canBuyInfo.box_coin) return this.$t("vip.requirements.boxcoinInsufficient", { amount: this.namespaceCard.price_boxcoin || 0 });
+            if (!this.canBuyInfo.cny) return this.$t("vip.requirements.cnyInsufficient", { amount: this.namespaceCard.price_cny || 0 });
+            if (!this.canBuyInfo.stock) return this.$t("vip.requirements.outOfStock");
+            if (!this.canBuyInfo.buy_time) return this.$t("vip.requirements.outsideSaleTime");
+            if (!this.canBuyInfo.level) return this.$t("vip.requirements.levelTooLow");
+            if (!this.canBuyInfo.vip_limit) return this.$t("vip.requirements.membersOnly");
+            return this.$t("vip.requirements.notEligible");
         },
         buy() {
             if (!this.isLogin) {
@@ -197,23 +195,23 @@ export default {
             if (!this.namespaceCard.id) {
                 return this.loadNamespaceCard().then(() => {
                     if (!this.namespaceCard.id) {
-                        return this.$alert("兑换信息暂不可用，请稍后再试", "暂不能兑换", {
-                            confirmButtonText: "知道了",
+                        return this.$alert(this.$t("vip.common.exchangeInfoUnavailable"), this.$t("vip.common.exchangeUnavailable"), {
+                            confirmButtonText: this.$t("vip.common.gotIt"),
                             type: "warning",
                         });
                     }
                 });
             }
             if (!this.canBuyInfo.canBuy) {
-                return this.$alert(this.getUnavailableMessage(), "暂不能购买", {
-                    confirmButtonText: "知道了",
+                return this.$alert(this.getUnavailableMessage(), this.$t("vip.common.purchaseUnavailable"), {
+                    confirmButtonText: this.$t("vip.common.gotIt"),
                     type: "warning",
                 }).catch(() => {});
             }
             const cost = Number(this.namespaceCard.price_points) || 0;
-            this.$confirm(`确认消耗${cost}积分兑换一个铭牌吗？`, "确认兑换", {
-                confirmButtonText: "确认兑换",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("vip.namespace.confirmExchangeMessage", { points: cost }), this.$t("vip.common.confirmExchange"), {
+                confirmButtonText: this.$t("vip.common.confirmExchange"),
+                cancelButtonText: this.$t("vip.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
@@ -236,8 +234,8 @@ export default {
                                 namespace_card_count: Math.max(this.namespaceCount, nextCount),
                             };
                             this.$notify.success({
-                                title: "兑换成功",
-                                message: "铭牌数量已刷新",
+                                title: this.$t("vip.common.exchangeSuccess"),
+                                message: this.$t("vip.namespace.countRefreshed"),
                             });
                             this.done = true;
                         });

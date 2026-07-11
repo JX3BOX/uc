@@ -1,17 +1,17 @@
 <template>
     <div class="m-publish-box">
         <!-- 头部 -->
-        <publish-header name="剑三小册" :localDraft="false">
+        <publish-header :name="$t('publish.types.collection')" :localDraft="false">
             <slot name="header"></slot>
         </publish-header>
 
         <el-form label-position="left" class="m-publish-collection">
             <!-- 💛 栏目字段 -->
             <div class="m-publish-title">
-                <el-divider content-position="left">标题</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.title") }}</el-divider>
                 <el-input
                     v-model="collection.title"
-                    placeholder="请输入小册标题"
+                    :placeholder="$t('publish.collection.titlePlaceholder')"
                     maxlength="30"
                     show-word-limit
                     size="large"
@@ -20,18 +20,18 @@
 
             <div class="m-publish-primary">
                 <div class="m-publish-primary-block">
-                    <el-divider content-position="left">可见性</el-divider>
-                    <el-radio v-model.number="collection.public" :label="this.public.PUBLIC">公开</el-radio>
-                    <el-radio v-model.number="collection.public" :label="this.public.PRIVATE">私有<el-tooltip content="私有仅使该小册不出现在公开小册大厅中" placement="top">
+                    <el-divider content-position="left">{{ $t("publish.form.visibility") }}</el-divider>
+                    <el-radio v-model.number="collection.public" :label="this.public.PUBLIC">{{ $t("publish.visibility.public") }}</el-radio>
+                    <el-radio v-model.number="collection.public" :label="this.public.PRIVATE">{{ $t("publish.visibility.privateShort") }}<el-tooltip :content="$t('publish.collection.privateHint')" placement="top">
                         <i class="el-icon-info"></i>
                     </el-tooltip></el-radio>
                     
                 </div>
                 <div class="m-publish-primary-block m-publish-collection-posts">
                     <el-divider content-position="left"
-                        >内容
+                        >{{ $t("publish.common.content") }}
                         <el-checkbox v-model="onlyMine" style="margin-left: 12px"
-                            >仅从自己作品中</el-checkbox
+                            >{{ $t("publish.collection.onlyOwnWorks") }}</el-checkbox
                         ></el-divider
                     >
                     <draggable
@@ -48,10 +48,10 @@
                             <i class="u-delete el-icon-close" @click="collection.posts.splice(key, 1)"></i>
                             <el-row class="m-posts-item" :gutter="10">
                                 <el-col :span="4" class="u-collection-type">
-                                    <el-select class="u-item-key" v-model="item.type" placeholder="请选择作品类型">
+                                    <el-select class="u-item-key" v-model="item.type" :placeholder="$t('publish.collection.workTypePlaceholder')">
                                         <el-option
                                             v-for="(type, k) in source_types"
-                                            :label="type"
+                                            :label="sourceTypeLabel(k, type)"
                                             :key="k"
                                             :value="k"
                                         ></el-option>
@@ -64,7 +64,7 @@
                                         v-model="item.id"
                                         filterable
                                         remote
-                                        placeholder="通过输入作品标题进行搜索"
+                                        :placeholder="$t('publish.collection.workSearchPlaceholder')"
                                         :remote-method="
                                             (query) => {
                                                 search_handle(query, item);
@@ -102,12 +102,12 @@
                                     </el-select>
                                     <el-input
                                         class="u-item-value"
-                                        placeholder="请输入完整网页链接（需以HTTP或HTTPS开头）"
+                                        :placeholder="$t('publish.collection.urlPlaceholder')"
                                         v-else
                                         v-model.trim="item.url"
                                     ></el-input>
                                     <div class="w-select is-small">
-                                        <div class="u-select-label">图标</div>
+                                        <div class="u-select-label">{{ $t("publish.form.icon") }}</div>
                                         <el-select
                                             v-model="item.icon"
                                             filterable
@@ -128,29 +128,29 @@
                                         </el-select>
                                     </div>
                                     <el-input v-model="item.custom_title" size="small">
-                                        <template #prepend>自定义标题</template>
+                                        <template #prepend>{{ $t("publish.collection.customTitle") }}</template>
                                     </el-input>
                                 </el-col>
                                 <!-- <el-col :span="12" class="u-collection-url" v-if="item.url && item.type == 'custom'">
-                                    <el-input v-model="item.title" placeholder="请输入自定义标题"></el-input>
+                                    <el-input v-model="item.title" :placeholder="$t('publish.collection.customTitlePlaceholder')"></el-input>
                                 </el-col> -->
                             </el-row>
                         </li>
                         </template>
                     </draggable>
-                    <div v-else class="u-posts-items-empty">暂无作品信息，请进行作品添加</div>
+                    <div v-else class="u-posts-items-empty">{{ $t("publish.collection.noWorks") }}</div>
                     <div class="u-posts-add" @click="add_posts_item">
                         <i class="el-icon-plus"></i>
-                        <span>添加作品</span>
+                        <span>{{ $t("publish.collection.addWork") }}</span>
                     </div>
                 </div>
 
                 <div class="m-publish-primary-block m-publish-description">
                     <el-divider content-position="left" @click="show_description = !show_description"
-                        >描述（选填）</el-divider
+                        >{{ $t("publish.collection.optionalDescription") }}</el-divider
                     >
-                    <span v-if="!show_description" @click="show_description = true" class="u-show">▼ 展开</span>
-                    <span v-if="show_description" @click="show_description = false" class="u-hide">▲ 收起</span>
+                    <span v-if="!show_description" @click="show_description = true" class="u-show">▼ {{ $t("publish.common.expand") }}</span>
+                    <span v-if="show_description" @click="show_description = false" class="u-hide">▲ {{ $t("publish.common.collapse") }}</span>
                     <Tinymce
                         v-show="show_description"
                         v-model="collection.description"
@@ -165,7 +165,7 @@
                     <publish-banner
                         v-model="collection.image"
                         :size="[128, 168]"
-                        info="小册的封面尺寸为 372 * 532 ，支持JPG,PNG上传"
+                        :info="$t('publish.collection.coverHint')"
                     ></publish-banner>
                 </div>
             </div>
@@ -177,7 +177,7 @@
                     @click="submit"
                     :loading="processing"
                     :disabled="processing"
-                    >发 &nbsp;&nbsp; 布</el-button
+                    >{{ $t("publish.common.publish") }}</el-button
                 >
             </div>
         </el-form>
@@ -253,6 +253,21 @@ export default {
         },
     },
     methods: {
+        sourceTypeLabel(key, fallback) {
+            const localeKey = {
+                custom: "custom",
+                community: "forum",
+                macro: "macros",
+                bps: "classGuides",
+                pvp: "pvpTips",
+                fb: "dungeonGuides",
+                tool: "tools",
+                bbs: "teahouse",
+                share: "faceShare",
+                house: "houseShare",
+            }[key];
+            return localeKey ? this.$t(`publish.types.${localeKey}`) : fallback;
+        },
         tags_filters(query) {
             let output = [];
             for (let tag of this.legal_tags) {
@@ -365,7 +380,7 @@ export default {
                     this.collection = collection;
                 } else {
                     this.$message({
-                        message: "该剑三小册已被删除或无权限访问",
+                        message: this.$t("publish.collection.unavailable"),
                         type: "warning",
                     });
                 }
@@ -383,22 +398,22 @@ export default {
             for (const i in collection.posts) {
                 const item = collection.posts[i];
                 if (!item.type) {
-                    message = "文章类型不能为空哦";
+                    message = this.$t("publish.validation.articleTypeRequired");
                     break;
                 }
                 if (item.type === "custom") {
                     item.title = item.custom_title ? item.custom_title.trim() : "";
                     if (!item.url) {
-                        message = "请填写正确的小册文章链接（http或https开头）";
+                        message = this.$t("publish.validation.collectionUrlInvalid");
                         break;
                     }
                     if (!item.title) {
-                        message = "请填写自定义链接的标题";
+                        message = this.$t("publish.validation.customTitleRequired");
                         break;
                     }
                 } else {
                     if (!item.id) {
-                        message = "请选择对应的文章";
+                        message = this.$t("publish.validation.selectArticleRequired");
                         break;
                     }
                 }
@@ -430,7 +445,9 @@ export default {
             }
             fn.then((res) => {
                 this.$message({
-                    message: this.id ? "更新成功" : "创建成功",
+                    message: this.id
+                        ? this.$t("publish.message.updateSucceeded")
+                        : this.$t("publish.message.createSucceeded"),
                     type: "success",
                 });
                 let id = this.id || res.data.data.id;
@@ -443,7 +460,7 @@ export default {
         },
 
         showPostType: function (type) {
-            return this.source_types[type];
+            return this.sourceTypeLabel(type, this.source_types[type]);
         },
         iconUrl: function (icon) {
             const key = icon.replace("_", "/");

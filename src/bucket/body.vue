@@ -1,15 +1,15 @@
 <template>
     <div class="m-dashboard-work m-dashboard-cms" v-loading="loading">
         <div class="m-dashboard-work-header">
-            <h2 class="u-title">体型数据</h2>
+            <h2 class="u-title">{{ $t("publish.types.bodyData") }}</h2>
             <a :href="publishLink" class="u-publish el-button el-button--primary">
-                <i class="el-icon-document"></i> 发布数据
+                <i class="el-icon-document"></i> {{ $t("publish.common.publishData") }}
             </a>
         </div>
 
-        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search" size="large">
+        <el-input class="m-dashboard-work-search" :placeholder="$t('publish.common.searchPlaceholder')" v-model="search" size="large">
             <template #prepend>
-                <span>关键词</span>
+                <span>{{ $t("publish.common.keyword") }}</span>
             </template>
             <template #append>
                 <el-button icon="Search"></el-button>
@@ -25,40 +25,40 @@
                             <img
                                 v-else
                                 src="@/assets/img/publish/works/draft.svg"
-                                title="已下架"
+                                :title="$t('publish.status.offline')"
                             />
                         </i>
-                        {{ item.title || "未命名" }}</a
+                        {{ item.title || $t("publish.common.unnamed") }}</a
                     >
                     <div class="u-desc">
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
-                            发布 :
+                            {{ $t("publish.common.publishedAt") }} :
                             <span class="u-time">{{ item.created_at }}</span>
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
-                            更新 :
+                            {{ $t("publish.common.updatedAt") }} :
                             <span class="u-time">{{ item.updated_at }}</span>
                         </time>
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-button icon="Edit" @click="edit(item.id)" title="编辑"></el-button>
+                        <el-button icon="Edit" @click="edit(item.id)" :title="$t('publish.common.edit')"></el-button>
                         <el-button
                             v-if="item.status == 1"
                             icon="Download"
                             @click="handleOffline(item.id)"
-                            title="下架"
+                            :title="$t('publish.common.takeOffline')"
                         ></el-button>
-                        <el-button v-else icon="Upload" @click="handleOnline(item.id)" title="上架"></el-button>
+                        <el-button v-else icon="Upload" @click="handleOnline(item.id)" :title="$t('publish.common.putOnline')"></el-button>
                     </el-button-group>
                 </li>
             </ul>
             <el-alert
                 v-else
                 class="m-dashboard-box-null"
-                title="没有找到相关条目"
+                :title="$t('publish.common.noResults')"
                 type="info"
                 center
                 show-icon
@@ -135,18 +135,18 @@ export default {
         },
         handleOnline: function (id) {
             bodyOnline(id).then((res) => {
-                this.$message.success("上架成功");
+                this.$message.success(this.$t("publish.message.onlineSucceeded"));
                 this.loadPosts();
             });
         },
         handleOffline: function (id) {
-            this.$confirm("此操作将下架该条数据, 是否继续?", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("publish.confirm.takeOffline"), this.$t("publish.common.prompt"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
+                cancelButtonText: this.$t("publish.common.cancel"),
                 type: "warning",
             }).then(() => {
                 bodyOffline(id).then((res) => {
-                    this.$message.success("下架成功");
+                    this.$message.success(this.$t("publish.message.offlineSucceeded"));
                     this.loadPosts();
                 });
             });

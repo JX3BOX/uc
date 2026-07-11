@@ -1,7 +1,7 @@
 <template>
     <div class="cardQixi" @click.stop>
         <div v-if="fontCount" :class="['u-count', { active }]" :style="{ backgroundImage: `url('${countImg}')` }"></div>
-        <div v-else :class="['u-count', { active }]">零</div>
+        <div v-else :class="['u-count', { active }]">{{ $t("card.common.zero") }}</div>
         <img :src="imgList[0]" class="u-img u-text" :class="{ active }" @click="close" />
         <img :src="imgList[1]" class="u-img u-bg" :class="{ active }" />
         <img :src="imgList[2]" class="u-img u-line" @click="open" />

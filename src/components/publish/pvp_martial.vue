@@ -23,7 +23,7 @@
         <!-- 奇穴技能 -->
         <div class="m-martial-skill" v-if="talentSkills && talentSkills.length && platform == 'std'">
             <div class="u-title">
-                <span class="u-title-name">奇穴技能</span>
+                <span class="u-title-name">{{ $t("publish.skill.talentSkills") }}</span>
                 <img src="@/assets/img/publish/skillset.png" class="u-title-img" alt="" />
             </div>
             <div class="m-skills">
@@ -39,7 +39,7 @@
         <!-- 江湖轻功 -->
         <div class="m-martial-skill" v-if="platform == 'std'">
             <div class="u-title">
-                <span class="u-title-name">江湖轻功</span>
+                <span class="u-title-name">{{ $t("publish.skill.qinggong") }}</span>
                 <img src="@/assets/img/publish/skillset.png" class="u-title-img" alt="" />
             </div>
             <div class="m-skills">

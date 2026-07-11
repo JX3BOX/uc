@@ -38,76 +38,76 @@ export default {
         return {
             tabs: [
                 {
-                    label: "文章",
+                    label: this.$t("publish.mobile.articles"),
                     value: "gl",
                     component: CmsPosts,
                     key: "article_is_public",
                     children: [
                         {
-                            label: "宏库",
+                            label: this.$t("publish.mobile.macros"),
                             value: "macro",
                         },
                         {
-                            label: "职业",
+                            label: this.$t("publish.mobile.classes"),
                             value: "bps",
                         },
                         {
-                            label: "副本",
+                            label: this.$t("publish.mobile.dungeons"),
                             value: "fb",
                         },
                         {
-                            label: "竞技",
+                            label: this.$t("publish.mobile.pvp"),
                             value: "pvp",
                         },
                         {
-                            label: "工具",
+                            label: this.$t("publish.mobile.tools"),
                             value: "tool",
                         },
                         {
-                            label: "其他",
+                            label: this.$t("publish.common.other"),
                             value: "other",
                         },
                     ],
                 },
                 {
-                    label: "百科",
+                    label: this.$t("publish.mobile.wiki"),
                     value: "wiki",
                     component: WikiPosts,
                     key: "article_is_public",
                     children: [
                         {
-                            label: "成就",
+                            label: this.$t("publish.mobile.achievements"),
                             value: "achievement",
                         },
                         {
-                            label: "物品",
+                            label: this.$t("publish.mobile.items"),
                             value: "item",
                         },
                         {
-                            label: "任务",
+                            label: this.$t("publish.mobile.quests"),
                             value: "quest",
                         },
                         {
-                            label: "通识",
+                            label: this.$t("publish.mobile.knowledge"),
                             value: "knowledge",
                         },
                     ],
                 },
 
                 {
-                    label: "休闲",
+                    label: this.$t("publish.mobile.casual"),
                     value: "Data",
                     key: "make_face_is_public",
                     component: SubTabContent,
                     children: [
                         {
-                            label: "捏脸",
+                            label: this.$t("publish.mobile.face"),
                             value: "face",
                             component: FaceList,
                             icon: "el-icon-grape",
                         },
                         {
-                            label: "体型",
+                            label: this.$t("publish.mobile.body"),
                             value: "body",
                             component: BodyList,
                             icon: "el-icon-watermelon",
@@ -115,18 +115,18 @@ export default {
                     ],
                 },
                 {
-                    label: "魔吧",
+                    label: this.$t("publish.mobile.community"),
                     value: "Other",
                     key: "community_topic_is_public",
                     component: SubTabContent,
                     children: [
                         {
-                            label: "发帖",
+                            label: this.$t("publish.mobile.topics"),
                             value: "Topic",
                             component: TopicList,
                         },
                         {
-                            label: "回帖",
+                            label: this.$t("publish.mobile.replies"),
                             value: "Reply",
                             component: ReplyList,
                         },

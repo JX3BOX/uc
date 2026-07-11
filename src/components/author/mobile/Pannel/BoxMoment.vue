@@ -3,7 +3,7 @@
         <div v-if="list && list.length" class="m-moment-list">
             <div class="m-month-group" v-for="monthGroup in groupList" :key="monthGroup.month">
                 <div class="u-month-title">
-                    {{ monthDict[monthGroup.month] }}月
+                    {{ $t("author.time.month", { month: monthGroup.month + 1 }) }}
                     <div class="u-slider"></div>
                 </div>
                 <div class="m-day-group" v-for="dayGroup in monthGroup.list" :key="dayGroup.day">
@@ -39,7 +39,6 @@ export default {
             per: 16,
             page: 1,
 
-            monthDict: ["壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖", "拾", "拾壹", "拾贰"],
         };
     },
     computed: {
@@ -115,7 +114,7 @@ export default {
             return dayjs(val).format("YYYY-M-DD HH:mm:ss");
         },
         cleanContent(content) {
-            return content?.replace(/<img[^>]*>/g, "#图片")?.replace(/<\/?[^>]+(>|$)/g, "");
+            return content?.replace(/<img[^>]*>/g, this.$t("author.common.imageMarker"))?.replace(/<\/?[^>]+(>|$)/g, "");
         },
         loadMore() {
             if (this.loading) return;

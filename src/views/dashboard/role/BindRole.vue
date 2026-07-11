@@ -1,28 +1,28 @@
 <template>
     <div class="v-role-bind">
         <h2 class="u-title">
-            <i class="el-icon-connection"></i> 绑定角色
+            <i class="el-icon-connection"></i> {{ $t("dashboard.role.bind") }}
             <!-- <div class="u-op">
                 <router-link to="/role/add" class="el-button el-button--primary el-button--small">
                     <i class="el-icon-plus"></i> 自定义角色
                 </router-link>
             </div> -->
-            <el-button class="u-back" icon="ArrowLeft" @click="goBack">返回</el-button>
+            <el-button class="u-back" icon="ArrowLeft" @click="goBack">{{ $t("dashboard.common.back") }}</el-button>
         </h2>
         <div class="m-role-bind">
             <el-tabs v-model="tab">
-                <el-tab-pane label="插件绑定（仅正式服可用）" name="std">
+                <el-tab-pane :label="$t('dashboard.role.pluginBindOfficialOnly')" name="std">
                     <template #label>
-                        <span>插件绑定<span class="u-tab-tip">（仅正式服可用）</span></span>
+                        <span>{{ $t("dashboard.role.pluginBind") }}<span class="u-tab-tip">{{ $t("dashboard.role.officialOnly") }}</span></span>
                     </template>
                     <div class="m-token" v-loading="loading">
                         <h2 class="u-title-name">
-                            绑定令牌
-                            <span class="u-desc">( 10分钟内有效，超时请刷新页面 )</span>
+                            {{ $t("dashboard.role.bindToken") }}
+                            <span class="u-desc">{{ $t("dashboard.role.tokenValidity") }}</span>
                         </h2>
                         <span
                             class="u-token"
-                            title="点击复制"
+                            :title="$t('dashboard.common.clickToCopy')"
                             @click="copyToken"
                         >
                             <i class="el-icon-document-copy"></i>
@@ -80,15 +80,15 @@ export default {
             copyText(this.token)
                 .then(() => {
                     this.$notify({
-                        title: "复制成功",
+                        title: this.$t("dashboard.common.copySuccess"),
                         message: this.token,
                         type: "success",
                     });
                 })
                 .catch(() => {
                     this.$notify.error({
-                        title: "复制失败",
-                        message: "请手动复制",
+                        title: this.$t("dashboard.common.copyFailed"),
+                        message: this.$t("dashboard.common.copyManually"),
                     });
                 });
         },
@@ -97,7 +97,7 @@ export default {
             createRole(this.form)
                 .then((res) => {
                     this.$message({
-                        message: "更新成功",
+                        message: this.$t("dashboard.common.updateSuccess"),
                         type: "success",
                     });
                     this.$router.push("/role");

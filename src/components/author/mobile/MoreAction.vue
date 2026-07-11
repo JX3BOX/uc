@@ -118,28 +118,28 @@ export default {
             t: true,
             defaultTypeInfo: {
                 report: {
-                    name: "举报",
+                    name: this.$t("author.profile.report"),
                     icon: "Warning",
                     method: "report",
                 },
                 edit: {
-                    name: "编辑",
+                    name: this.$t("author.actions.edit"),
                     icon: "Edit",
                     method: "edit",
                 },
                 del: {
-                    name: "删除",
+                    name: this.$t("author.actions.delete"),
                     icon: "Delete",
                     method: "del",
                     color: "#FF5959",
                 },
                 block: {
-                    name: "屏蔽",
+                    name: this.$t("author.actions.hide"),
                     icon: "CircleClose",
                     method: "block",
                 },
                 share: {
-                    name: "分享",
+                    name: this.$t("author.actions.share"),
                     icon: "Share",
                     method: "share",
                 },

@@ -4,7 +4,7 @@
             <el-input
                 class="u-input"
                 v-model.number="uid"
-                placeholder="输入UID添加"
+                :placeholder="$t('dashboard.privacy.uidPlaceholder')"
                 suffix-icon="Search"
                 @keyup.enter="search"
                 @change="search"
@@ -19,14 +19,14 @@
                 </div>
             </div>
             <div class="u-null" v-if="isNull">
-                <el-alert title="无搜索结果" type="info" show-icon :closable="false"></el-alert>
+                <el-alert :title="$t('dashboard.common.noSearchResults')" type="info" show-icon :closable="false"></el-alert>
             </div>
         </div>
         <template #footer>
             <div class="dialog-footer">
                 <div class="m-confirm">
-                    <el-button @click="close">取消</el-button>
-                    <el-button type="primary" :loading="loading" :disabled="loading" @click="add"> 提交 </el-button>
+                    <el-button @click="close">{{ $t("dashboard.common.cancel") }}</el-button>
+                    <el-button type="primary" :loading="loading" :disabled="loading" @click="add"> {{ $t("dashboard.common.submit") }} </el-button>
                 </div>
             </div>
         </template>
@@ -79,7 +79,7 @@ export default {
             return this.uid && !this.userdata && this.flag;
         },
         title() {
-            return "邀请" + this.relationActiveName;
+            return this.$t("dashboard.relationship.inviteTitle", { name: this.relationActiveName });
         },
         userId() {
             return User.getInfo().uid;
@@ -120,9 +120,9 @@ export default {
         },
         handleRequestError(err) {
             const data = err?.response?.data;
-            const message = data?.msg || data?.message || err?.message || "操作失败，请稍后再试";
+            const message = data?.msg || data?.message || err?.message || this.$t("dashboard.common.operationFailedRetry");
             this.$notify({
-                title: "操作失败",
+                title: this.$t("dashboard.common.operationFailed"),
                 message,
                 type: "error",
             });
@@ -134,8 +134,8 @@ export default {
         inviteUser(relationId = this.relationId) {
             if (!relationId) {
                 this.$notify({
-                    title: "操作失败",
-                    message: "未找到关系网，请稍后再试",
+                    title: this.$t("dashboard.common.operationFailed"),
+                    message: this.$t("dashboard.relationship.networkNotFound"),
                     type: "error",
                 });
                 return Promise.resolve();
@@ -144,7 +144,7 @@ export default {
             return inviteUserJoin(relationId, this.userdata.ID)
                 .then(() => {
                     this.$notify({
-                        title: "已发送邀请",
+                        title: this.$t("dashboard.relationship.invitationSent"),
                         type: "success",
                     });
                     this.$emit("update");
@@ -158,8 +158,8 @@ export default {
         add: throttle(function () {
             if (!this.userdata) {
                 this.$notify({
-                    title: "提示",
-                    message: "请先输入UID进行搜索",
+                    title: this.$t("dashboard.common.tip"),
+                    message: this.$t("dashboard.privacy.searchUidFirst"),
                     type: "warning",
                 });
                 return;

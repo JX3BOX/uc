@@ -2,12 +2,12 @@
     <div class="m-privacy-lover">
         <div class="u-lover-panel">
             <div class="u-lover-header">
-                <div class="u-lover-heading">
-                    <b>{{ relationActiveName || "我的情缘" }}</b>
+                <div class="u-lover-heading" :data-label="$t('dashboard.relationship.binding')">
+                    <b>{{ relationActiveName || $t("dashboard.relationship.myRelationship") }}</b>
                     <span>{{ statusText }}</span>
                 </div>
                 <div class="u-lover-actions">
-                    <el-button v-if="canInvite" type="primary" @click="toAdd">邀请绑定</el-button>
+                    <el-button v-if="canInvite" type="primary" @click="toAdd">{{ $t("dashboard.relationship.inviteBind") }}</el-button>
                 </div>
             </div>
 
@@ -19,36 +19,36 @@
                                 <img class="u-item-avatar" :src="showAvatar(getAvatar(myLover))" />
                             </a>
                             <div class="u-lover-info">
-                                <span class="u-item-label">{{ isPending ? "待确认" : "当前情缘" }}</span>
+                                <span class="u-item-label">{{ isPending ? $t("dashboard.relationship.pendingConfirmation") : $t("dashboard.relationship.current") }}</span>
                                 <a class="u-item-name" :href="userLink(myLover)" target="_blank">{{ getName(myLover) }}</a>
                             </div>
                         </div>
                         <div class="u-lover-meta">
                             <div class="u-div-icon"><i class="el-icon-connection"></i></div>
                             <div class="u-div-meta">
-                                <template v-if="isBound">绑定于 {{ formatTime(myLover.updated_at) }}</template>
-                                <template v-else>邀请已发送，等待对方确认</template>
+                                <template v-if="isBound">{{ $t("dashboard.relationship.boundAt", { time: formatTime(myLover.updated_at) }) }}</template>
+                                <template v-else>{{ $t("dashboard.relationship.sentWaiting") }}</template>
                             </div>
                             <div class="u-div-unbind" v-if="isBound" @click="onExit(myLover)">
-                                <img svg-inline src="@/assets/img/dashboard/lover/unbind.svg" alt="" />解除绑定
+                                <img svg-inline src="@/assets/img/dashboard/lover/unbind.svg" alt="" />{{ $t("dashboard.common.unbind") }}
                             </div>
-                            <el-button v-else plain type="info" @click.stop="onCancel(myLover)">取消邀请</el-button>
+                            <el-button v-else plain type="info" @click.stop="onCancel(myLover)">{{ $t("dashboard.relationship.cancelInvitation") }}</el-button>
                         </div>
                     </div>
                     <div class="u-lover-card u-add-item" v-else @click="toAdd">
                         <div class="u-item-pic u-add">
                             <i class="el-icon-plus"></i>
                         </div>
-                        <span class="u-item-label">未绑定</span>
-                        <div class="u-bind">邀请情缘</div>
+                        <span class="u-item-label">{{ $t("dashboard.common.unbound") }}</span>
+                        <div class="u-bind">{{ $t("dashboard.relationship.invite") }}</div>
                     </div>
                 </div>
             </div>
 
             <div class="u-wait-tip" v-if="waitList.length">
                 <i class="el-icon-warning-outline"></i>
-                您有 <b>{{ waitList.length }}</b> 条情缘申请待处理
-                <span class="u-pending-btn" @click.stop="toWait">查看</span>
+                {{ $t("dashboard.relationship.pendingCount", { count: waitList.length }) }}
+                <span class="u-pending-btn" @click.stop="toWait">{{ $t("dashboard.common.view") }}</span>
             </div>
         </div>
 
@@ -132,12 +132,12 @@ export default {
         },
         statusText() {
             if (this.isBound) {
-                return "当前已绑定情缘，可在此查看绑定时间或解除关系。";
+                return this.$t("dashboard.relationship.boundStatus");
             }
             if (this.isPending) {
-                return "已发出情缘邀请，等待对方确认。";
+                return this.$t("dashboard.relationship.pendingStatus");
             }
-            return "当前尚未绑定情缘，可通过 UID 邀请对方建立关系。";
+            return this.$t("dashboard.relationship.unboundStatus");
         },
     },
     mounted() {},
@@ -168,21 +168,21 @@ export default {
             return item.user_info?.avatar || item.creator_info?.avatar;
         },
         getName(item) {
-            return item.user_info?.display_name || item.creator_info?.display_name || "该用户";
+            return item.user_info?.display_name || item.creator_info?.display_name || this.$t("dashboard.common.thisUser");
         },
         handleRequestError(err) {
             const data = err?.response?.data;
-            const message = data?.msg || data?.message || err?.message || "操作失败，请稍后再试";
+            const message = data?.msg || data?.message || err?.message || this.$t("dashboard.common.operationFailedRetry");
             this.$notify({
-                title: "操作失败",
+                title: this.$t("dashboard.common.operationFailed"),
                 message,
                 type: "error",
             });
         },
         onExit(item) {
-            this.$confirm(`是否和 ${this.getName(item)} 解除情缘绑定？`, "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("dashboard.relationship.unbindConfirm", { name: this.getName(item) }), this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
@@ -190,7 +190,7 @@ export default {
                     exitNet(item.net_id)
                         .then(() => {
                             this.$notify({
-                                title: "解除成功",
+                                title: this.$t("dashboard.relationship.unbindSuccess"),
                                 type: "success",
                             });
                             this.onRefresh();
@@ -208,7 +208,7 @@ export default {
             deleteInvite(item.id)
                 .then((res) => {
                     this.$notify({
-                        title: "取消成功",
+                        title: this.$t("dashboard.common.cancelSuccess"),
                         type: "success",
                     });
                     this.onRefresh();
@@ -246,7 +246,7 @@ export default {
 
     .u-lover-heading {
         &::before {
-            content: "关系绑定";
+            content: attr(data-label);
             display: inline-flex;
             align-items: center;
             justify-content: center;

@@ -35,19 +35,19 @@ export default {
             active: "Pz",
             types: [
                 {
-                    label: "配装",
+                    label: this.$t("author.tabs.build"),
                     value: "Pz",
                     component: Pz,
                     icon: "el-icon-sugar",
                 },
                 {
-                    label: "插件",
+                    label: this.$t("author.tabs.plugins"),
                     value: "DBM",
                     component: DBM,
                     icon: "el-icon-cold-drink",
                 },
                 {
-                    label: "战斗",
+                    label: this.$t("author.tabs.battles"),
                     value: "Battle",
                     component: Battle,
                     icon: "el-icon-ice-cream",

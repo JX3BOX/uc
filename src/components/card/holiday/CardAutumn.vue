@@ -2,9 +2,9 @@
     <div class="cardAutumn" @click.stop>
         <span class="u-close" @click="close"></span>
         <div class="u-card" @click="change">
-            <img v-if="!show" :src="imgList[0]" alt="中秋节快乐！" />
-            <img v-else class="animation" :class="show ? 'flipInY' : ''" :src="imgList[1]" alt="中秋节快乐！" />
-            <span class="u-username" v-if="!show">{{ username }} 侠士</span>
+            <img v-if="!show" :src="imgList[0]" :alt="$t('card.holiday.midAutumn')" />
+            <img v-else class="animation" :class="show ? 'flipInY' : ''" :src="imgList[1]" :alt="$t('card.holiday.midAutumn')" />
+            <span class="u-username" v-if="!show">{{ $t("card.common.heroName", { name: username }) }}</span>
             <span v-else class="u-fontCount animation" :class="show ? 'fadeInDown' : ''">{{ fontCount }}</span>
         </div>
     </div>

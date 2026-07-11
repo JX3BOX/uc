@@ -1,15 +1,15 @@
 <template>
     <div class="m-dashboard m-dashboard-work m-dashboard-other">
         <div class="m-dashboard-work-header">
-            <h2 class="u-title">剑三小册</h2>
+            <h2 class="u-title">{{ $t("publish.types.collection") }}</h2>
             <a :href="publishLink" class="u-publish el-button el-button--primary">
-                <i class="el-icon-document"></i> 创建小册
+                <i class="el-icon-document"></i> {{ $t("publish.collection.create") }}
             </a>
         </div>
 
-        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search" size="large">
+        <el-input class="m-dashboard-work-search" :placeholder="$t('publish.common.searchPlaceholder')" v-model="search" size="large">
             <template #prepend>
-                <span>关键词</span>
+                <span>{{ $t("publish.common.keyword") }}</span>
             </template>
             <template #append>
                 <el-button icon="Search"></el-button>
@@ -24,23 +24,23 @@
                             <i class="u-icon">
                                 <img v-if="item.public" svg-inline src="@/assets/img/publish/works/repo.svg" />
                                 <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" /> </i
-                            >{{ item.title || "无标题" }}
+                            >{{ item.title || $t("publish.common.untitled") }}
                         </a>
                         <div class="u-desc">
                             <time class="u-desc-subitem">
                                 <i class="el-icon-finished"></i>
-                                发布 :
+                                {{ $t("publish.common.publishedAt") }} :
                                 <span class="u-time">{{ dateFormat(item.created) }}</span>
                             </time>
                             <time class="u-desc-subitem">
                                 <i class="el-icon-refresh"></i>
-                                更新 :
+                                {{ $t("publish.common.updatedAt") }} :
                                 <span class="u-time">{{ dateFormat(item.updated) }}</span>
                             </time>
                         </div>
                         <el-button-group class="u-action">
-                            <el-button icon="Edit" @click="post_edit(item.id)" title="编辑"></el-button>
-                            <el-button icon="Delete" @click="post_del(item.id)" title="删除"></el-button>
+                            <el-button icon="Edit" @click="post_edit(item.id)" :title="$t('publish.common.edit')"></el-button>
+                            <el-button icon="Delete" @click="post_del(item.id)" :title="$t('publish.common.delete')"></el-button>
                         </el-button-group>
                     </li>
                 </ul>
@@ -48,7 +48,7 @@
             <el-alert
                 v-else
                 class="m-dashboard-box-null"
-                title="没有找到相关条目"
+                :title="$t('publish.common.noResults')"
                 type="info"
                 center
                 show-icon
@@ -120,16 +120,16 @@ export default {
             location.href = "/publish/#/collection/" + id;
         },
         post_del(id) {
-            this.$confirm("确定要删除这篇小册吗？", "确认信息", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("publish.confirm.deleteCollection"), this.$t("publish.common.confirmation"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
+                cancelButtonText: this.$t("publish.common.cancel"),
                 type: "warning",
                 beforeClose: (action, instance, done) => {
                     if (action === "confirm") {
                         remove_collection(id).then((res) => {
                             this.$message({
                                 type: "success",
-                                message: `删除成功`,
+                                message: this.$t("publish.message.deleteSucceeded"),
                             });
                             this.loadPosts();
                         });

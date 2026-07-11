@@ -1,6 +1,6 @@
 <template>
     <div class="m-publish-design-task" v-if="text">
-        <el-divider content-position="left">头条记录</el-divider>
+        <el-divider content-position="left">{{ $t("publish.headline.records") }}</el-divider>
         <el-alert class="m-publish-task" :closable="false">
             {{ text }}
         </el-alert>
@@ -35,14 +35,14 @@ export default {
             const { published_at, flow, push_at } = this.task;
             if (flow == 3) {
                 if (!published_at) {
-                    return `近期于${dayjs(push_at).format('YYYY/MM/DD')}上过头条`
+                    return this.$t("publish.headline.publishedOn", { date: dayjs(push_at).format("YYYY/MM/DD") });
                 }
-                return `近期于${dayjs(published_at).format('YYYY/MM/DD')}上过头条`
+                return this.$t("publish.headline.publishedOn", { date: dayjs(published_at).format("YYYY/MM/DD") });
             } else {
                 if (!published_at) {
-                    return `近期将于<时间待定>上头条`
+                    return this.$t("publish.headline.scheduledPending");
                 }
-                return `近期将于${dayjs(published_at).format('YYYY/MM/DD')}上头条`
+                return this.$t("publish.headline.scheduledOn", { date: dayjs(published_at).format("YYYY/MM/DD") });
             }
         }
     },

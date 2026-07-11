@@ -7,13 +7,13 @@
                 style="font-size: 5.3333vw"
             ></i>
             <div class="select-item">
-                <el-select :value="c_level" @change="handleChange($event, 'level')" placeholder="等级限制">
+                <el-select :value="c_level" @change="handleChange($event, 'level')" :placeholder="$t('vip.mall.levelRestriction')">
                     <el-option v-for="item in level_options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </div>
             <div class="select-item">
-                <el-select :value="query.vip_limit" @change="handleChange($event, 'vip_limit')" placeholder="会员限制">
+                <el-select :value="query.vip_limit" @change="handleChange($event, 'vip_limit')" :placeholder="$t('vip.mall.memberRestriction')">
                     <el-option v-for="item in member_options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
@@ -22,7 +22,7 @@
         <div class="search-input">
             <el-input
                 :value="query.title"
-                placeholder="搜索商品关键词"
+                :placeholder="$t('vip.mall.searchPlaceholder')"
                 @input="handleChange($event, 'title')"
             >
                 <template #suffix>
@@ -30,7 +30,7 @@
                         v-if="query.title"
                         class="u-clear"
                         role="button"
-                        title="清空"
+                        :title="$t('vip.common.clear')"
                         @mousedown.prevent
                         @click.stop="clearTitle"
                         >×</span
@@ -56,7 +56,7 @@ export default {
             level_options: [
                 {
                     value: 0,
-                    label: "全部",
+                    label: this.$t("vip.common.all"),
                 },
                 {
                     value: 1,
@@ -86,15 +86,15 @@ export default {
             member_options: [
                 {
                     value: -1,
-                    label: "全部",
+                    label: this.$t("vip.common.all"),
                 },
                 {
                     value: 1,
-                    label: "会员限制",
+                    label: this.$t("vip.mall.membersOnly"),
                 },
                 {
                     value: 0,
-                    label: "非会员限制",
+                    label: this.$t("vip.mall.nonMembers"),
                 },
             ],
         };
@@ -105,9 +105,9 @@ export default {
                 if (this.query.level === null) {
                     return "";
                 } else if (this.query.level === 0) {
-                    return "全部";
+                    return this.$t("vip.common.all");
                 } else {
-                    return "等级：lv." + this.query.level;
+                    return this.$t("vip.mall.levelValue", { level: this.query.level });
                 }
             },
         },

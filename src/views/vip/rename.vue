@@ -3,24 +3,24 @@
         <CommonHeader></CommonHeader>
         <div class="m-vip-container m-rename-page" v-if="isLogin">
             <div class="m-vip-rename">
-                <simple-header class="m-vip-rename-title" title="修改昵称" desc="Rename your nickname" />
+                <simple-header class="m-vip-rename-title" :title="$t('vip.rename.title')" :desc="$t('vip.rename.subtitle')" />
 
                 <div class="m-vip-rename-main" v-if="!done">
                     <div class="m-rename-panel">
                         <div class="m-rename-count">
-                            <span>剩余改名次数</span>
+                            <span>{{ $t("vip.rename.remainingCount") }}</span>
                             <b>{{ count }}</b>
                         </div>
 
                         <div class="m-rename-exchange">
                             <div>
-                                <b>积分兑换改名次数</b>
-                                <span v-if="isCardLoading">正在读取兑换信息...</span>
+                                <b>{{ $t("vip.rename.pointsExchange") }}</b>
+                                <span v-if="isCardLoading">{{ $t("vip.common.loadingExchange") }}</span>
                                 <span v-else-if="cardLoadError">{{ cardLoadError }}</span>
                                 <span v-else>{{ renameCardPointText }}</span>
                             </div>
                             <el-button type="primary" plain @click="buy" :loading="isBuying" :disabled="isCardLoading">
-                                兑换
+                                {{ $t("vip.common.exchange") }}
                             </el-button>
                         </div>
                     </div>
@@ -33,10 +33,10 @@
                         :class="{ isNormal: count }"
                         size="large"
                     >
-                        <el-form-item class="u-new-name" label="输入新名字">
+                        <el-form-item class="u-new-name" :label="$t('vip.rename.newName')">
                             <el-input
                                 v-model="new_name"
-                                placeholder="2-20个字符,不允许特殊字符"
+                                :placeholder="$t('vip.rename.namePlaceholder')"
                                 show-word-limit
                                 :maxlength="20"
                                 :minlength="2"
@@ -58,7 +58,7 @@
                                 icon="Check"
                                 v-if="count"
                                 :disabled="!status"
-                                >确认修改</el-button
+                                >{{ $t("vip.rename.confirmChange") }}</el-button
                             >
                             <el-button
                                 @click="buy"
@@ -67,7 +67,7 @@
                                 v-else
                                 icon="ShoppingCart"
                                 :loading="isBuying"
-                                >兑换改名次数</el-button
+                                >{{ $t("vip.rename.exchangeCount") }}</el-button
                             >
                         </el-form-item>
                     </el-form>
@@ -75,20 +75,20 @@
                 <result v-else>
                     <template #title>
                         <div class="m-rename-result-title">
-                            修改成功，新昵称<b>{{ new_name || "未知" }}</b>
+                            {{ $t("vip.rename.successPrefix") }}<b>{{ new_name || $t("vip.common.unknown") }}</b>
                         </div>
                     </template>
                     <template #desc>
                         <div class="m-rename-result-desc">
                             <i class="el-icon-info"></i>
-                            修改昵称后部分应用需要自行重新更新作品方可生效，<a href="/account/login">重新登录</a>
+                            {{ $t("vip.rename.republishHint") }}<a href="/account/login">{{ $t("vip.rename.loginAgain") }}</a>
                         </div>
                     </template>
                 </result>
             </div>
         </div>
         <div class="m-vip-container m-rename-page" v-else>
-            <el-alert title="请先登录" type="error" show-icon> </el-alert>
+            <el-alert :title="$t('vip.common.loginRequired')" type="error" show-icon> </el-alert>
         </div>
         <CommonFooter></CommonFooter>
     </div>
@@ -152,9 +152,9 @@ export default {
             return Number(this.renameCard.stock) || 0;
         },
         renameCardPointText() {
-            if (!this.renameCard.id) return "兑换信息暂不可用";
+            if (!this.renameCard.id) return this.$t("vip.common.exchangeInfoUnavailableShort");
             const points = Number(this.renameCard.price_points) || 0;
-            return points ? `${points} 积分 / 次` : "免费兑换";
+            return points ? this.$t("vip.common.pointsPerExchange", { points }) : this.$t("vip.common.freeExchange");
         },
         canBuyInfo() {
             const item = this.renameCard || {};
@@ -215,14 +215,14 @@ export default {
             if (checkingName.length < 2 || checkingName.length > 20) {
                 this.valid = false;
                 this.available = null;
-                this.checktips = "昵称格式不正确，长度2-20字符，禁止使用所有特殊符号";
+                this.checktips = this.$t("vip.rename.invalidFormat");
                 return false;
             }
             // 不允许使用”账号已注销“
             if (checkingName == "账号已注销") {
                 this.valid = false;
                 this.available = null;
-                this.checktips = "昵称格式不正确，长度2-20字符，禁止使用所有特殊符号";
+                this.checktips = this.$t("vip.rename.invalidFormat");
                 return false;
             }
             // 禁用符号
@@ -233,7 +233,7 @@ export default {
             }
             this.valid = true;
             this.available = null;
-            this.checktips = "正在检查昵称...";
+            this.checktips = this.$t("vip.rename.checking");
             let msg = "";
             // 可用性检查
             checkNickname(checkingName)
@@ -249,11 +249,11 @@ export default {
                 .finally(() => {
                     if (token !== this.checkToken || checkingName !== this.new_name) return;
                     if (!this.valid) {
-                        this.checktips = "昵称格式不正确，长度2-20字符，禁止使用所有特殊符号";
+                        this.checktips = this.$t("vip.rename.invalidFormat");
                     } else if (!this.available) {
-                        this.checktips = msg || "昵称已被使用";
+                        this.checktips = msg || this.$t("vip.rename.nameUsed");
                     } else {
-                        this.checktips = "昵称可以使用";
+                        this.checktips = this.$t("vip.rename.nameAvailable");
                     }
                 });
         },
@@ -277,7 +277,7 @@ export default {
                     this.renameCard = res.data?.data || {};
                 })
                 .catch((err) => {
-                    this.cardLoadError = err?.response?.data?.msg || err?.message || "请稍后再试";
+                    this.cardLoadError = err?.response?.data?.msg || err?.message || this.$t("vip.common.tryLater");
                 })
                 .finally(() => {
                     this.isCardLoading = false;
@@ -293,14 +293,14 @@ export default {
             return true;
         },
         getUnavailableMessage() {
-            if (!this.canBuyInfo.points) return `积分不足：需要 ${this.renameCard.price_points || 0} 积分`;
-            if (!this.canBuyInfo.box_coin) return `盒币不足：需要 ${this.renameCard.price_boxcoin || 0} 盒币`;
-            if (!this.canBuyInfo.cny) return `金箔不足：需要 ${this.renameCard.price_cny || 0} 金箔`;
-            if (!this.canBuyInfo.stock) return "库存不足：当前不可购买";
-            if (!this.canBuyInfo.buy_time) return "当前不在可购买时间内";
-            if (!this.canBuyInfo.level) return "账号等级不足，暂不能购买";
-            if (!this.canBuyInfo.vip_limit) return "该商品仅会员可购买";
-            return "当前不满足购买条件";
+            if (!this.canBuyInfo.points) return this.$t("vip.requirements.pointsInsufficient", { amount: this.renameCard.price_points || 0 });
+            if (!this.canBuyInfo.box_coin) return this.$t("vip.requirements.boxcoinInsufficient", { amount: this.renameCard.price_boxcoin || 0 });
+            if (!this.canBuyInfo.cny) return this.$t("vip.requirements.cnyInsufficient", { amount: this.renameCard.price_cny || 0 });
+            if (!this.canBuyInfo.stock) return this.$t("vip.requirements.outOfStock");
+            if (!this.canBuyInfo.buy_time) return this.$t("vip.requirements.outsideSaleTime");
+            if (!this.canBuyInfo.level) return this.$t("vip.requirements.levelTooLow");
+            if (!this.canBuyInfo.vip_limit) return this.$t("vip.requirements.membersOnly");
+            return this.$t("vip.requirements.notEligible");
         },
         submit: function () {
             if (!this.isLogin) {
@@ -323,22 +323,22 @@ export default {
             if (!this.renameCard.id) {
                 return this.loadRenameCard().then(() => {
                     if (!this.renameCard.id) {
-                        this.$alert("兑换信息暂不可用，请稍后再试", "暂不能兑换", {
-                            confirmButtonText: "知道了",
+                        this.$alert(this.$t("vip.common.exchangeInfoUnavailable"), this.$t("vip.common.exchangeUnavailable"), {
+                            confirmButtonText: this.$t("vip.common.gotIt"),
                             type: "warning",
                         });
                     }
                 });
             }
             if (!this.canBuyInfo.canBuy) {
-                return this.$alert(this.getUnavailableMessage(), "暂不能购买", {
-                    confirmButtonText: "知道了",
+                return this.$alert(this.getUnavailableMessage(), this.$t("vip.common.purchaseUnavailable"), {
+                    confirmButtonText: this.$t("vip.common.gotIt"),
                     type: "warning",
                 });
             }
-            this.$confirm(`确认消耗${Number(this.renameCard.price_points) || 0}积分兑换一次改名卡吗？`, "确认兑换", {
-                confirmButtonText: "确认兑换",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("vip.rename.confirmExchangeMessage", { points: Number(this.renameCard.price_points) || 0 }), this.$t("vip.common.confirmExchange"), {
+                confirmButtonText: this.$t("vip.common.confirmExchange"),
+                cancelButtonText: this.$t("vip.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
@@ -357,8 +357,8 @@ export default {
                         })
                         .then(() => {
                             this.$notify.success({
-                                title: "购买成功",
-                                message: "改名次数已刷新",
+                                title: this.$t("vip.common.purchaseSuccess"),
+                                message: this.$t("vip.rename.countRefreshed"),
                             });
                         });
                 })

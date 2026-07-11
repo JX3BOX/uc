@@ -1,7 +1,7 @@
 <template>
     <el-dialog
         class="c-pay-pop"
-        :title="title"
+        :title="t || $t('vip.payment.title')"
         v-model="visible"
         :close-on-click-modal="false"
         :close-on-press-escape="false"
@@ -9,17 +9,19 @@
     >
         <div class="c-pay-pop-box">
             <el-tabs class="c-pay-pop-tab" v-model="pay_type" type="card">
-                <el-tab-pane label="支付宝" name="alipay">
+                <el-tab-pane :label="$t('vip.payment.alipay')" name="alipay">
                     <template #label>
                         <span class="u-tab"
-                            ><img src="@/assets/img/vip/paypop/alipay.png" />支付宝支付<em>支持花呗分期</em></span
+                            ><img src="@/assets/img/vip/paypop/alipay.png" />{{ $t("vip.payment.alipayPay")
+                            }}<em>{{ $t("vip.payment.installmentSupported") }}</em></span
                         >
                     </template>
                 </el-tab-pane>
-                <el-tab-pane label="微信" name="wepay">
+                <el-tab-pane :label="$t('vip.payment.wechat')" name="wepay">
                     <template #label>
                         <span class="u-tab"
-                            ><img src="@/assets/img/vip/paypop/wepay.png" />微信支付<em>支持信用卡</em></span
+                            ><img src="@/assets/img/vip/paypop/wepay.png" />{{ $t("vip.payment.wechatPay")
+                            }}<em>{{ $t("vip.payment.creditCardSupported") }}</em></span
                         >
                     </template>
                 </el-tab-pane>
@@ -28,21 +30,21 @@
                 <h2 class="u-title">{{ productDesc }}</h2>
                 <div class="u-price" v-if="price">
                     <b>{{ formatPrice(price) }}</b
-                    ><em>元</em>
+                    ><em>{{ $t("vip.common.yuan") }}</em>
                 </div>
                 <div class="u-paybox">
                     <i class="u-qrcode u-wechat">
                         <qrcode-vue v-if="qrcode" class="u-pic" :value="qrcode" :size="260" level="H"></qrcode-vue>
                     </i>
-                    <span class="u-skip u-skip-alipay" v-if="isAlipay"
-                        >手机不在身边？使用<a :href="skip_url" target="_blank">电脑版支付宝</a>支付。</span
-                    >
-                    <span class="u-exp">（20分钟过期，请在支付完成后点击【已完成支付】）</span>
+                    <i18n-t v-if="isAlipay" keypath="vip.payment.desktopAlipayTip" tag="span" class="u-skip u-skip-alipay">
+                        <a :href="skip_url" target="_blank">{{ $t("vip.payment.desktopAlipay") }}</a>
+                    </i18n-t>
+                    <span class="u-exp">{{ $t("vip.payment.expireTip") }}</span>
                     <transition name="fade">
                         <el-alert
                             class="u-warning"
                             v-show="warning_visible"
-                            title="订单尚未支付或已过期"
+                            :title="$t('vip.payment.unpaidOrExpired')"
                             type="error"
                             show-icon
                             @close="closeWarning"
@@ -54,8 +56,8 @@
         </div>
         <template #footer>
             <div class="u-btns">
-                <el-button size="large" @click="cancel">取 消</el-button>
-                <el-button size="large" type="primary" @click="check">已完成支付</el-button>
+                <el-button size="large" @click="cancel">{{ $t("vip.common.cancel") }}</el-button>
+                <el-button size="large" type="primary" @click="check">{{ $t("vip.payment.completed") }}</el-button>
             </div>
         </template>
     </el-dialog>
@@ -74,7 +76,6 @@ export default {
             // 窗口可见性
             visible: this.v || false,
             width: this.w || "50%",
-            title: this.t || "支付中心",
 
             // 产品
             pay_type: this.payMode || "alipay",
@@ -165,8 +166,8 @@ export default {
         check: function () {
             if (!this.order_id) {
                 this.$notify.error({
-                    title: "错误",
-                    message: "无效订单号",
+                    title: this.$t("vip.common.error"),
+                    message: this.$t("vip.payment.invalidOrderId"),
                 });
                 return;
             }

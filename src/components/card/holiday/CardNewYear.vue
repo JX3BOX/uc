@@ -2,8 +2,8 @@
     <div class="newYearsDay" @click.stop>
         <div @click="change" class="newYearsDay-card" :class="show ? 'newYearsDay-card__on' : 'newYearsDay-card__off'">
             <!-- v-if="!show" -->
-            <img class="newYearsDay-card__img newYearsDay-card__cover" :src="imgList[0]" alt="元旦节快乐" />
-            <img class="newYearsDay-card__img newYearsDay-card__content" :src="imgList[1]" alt="元旦节快乐" />
+            <img class="newYearsDay-card__img newYearsDay-card__cover" :src="imgList[0]" :alt="$t('card.holiday.happyNewYear')" />
+            <img class="newYearsDay-card__img newYearsDay-card__content" :src="imgList[1]" :alt="$t('card.holiday.happyNewYear')" />
             <img class="newYearsDay-card__click" v-if="!show" :src="imgList[2]" />
             <img class="newYearsDay-card__close" @click.stop="close" :src="imgList[3]" />
             <span class="newYearsDay-card__fontCount">{{ fontCount }}</span>

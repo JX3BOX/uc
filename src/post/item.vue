@@ -1,20 +1,20 @@
 <template>
     <div class="m-publish-box">
         <!-- 头部 -->
-        <publish-header name="物品百科">
+        <publish-header :name="$t('publish.types.itemWiki')">
             <slot name="header"></slot>
         </publish-header>
 
         <el-form class="m-publish-post">
             <div class="m-publish-source">
-                <el-divider content-position="left">选择物品 *</el-divider>
+                <el-divider content-position="left">{{ $t("publish.wiki.selectItem") }} *</el-divider>
                 <el-select
                     class="u-source-id"
                     v-model="post.source_id"
                     filterable
                     remote
                     :disabled="!!post.id"
-                    placeholder="输入物品名称/物品描述并按『回车』进行搜索"
+                    :placeholder="$t('publish.wiki.itemSearchPlaceholder')"
                     :remote-method="search_handle"
                     :loading="options.loading"
                     size="large"
@@ -29,17 +29,17 @@
             </div>
 
             <div class="m-publish-level">
-                <el-divider content-position="left">综合难度 *</el-divider>
+                <el-divider content-position="left">{{ $t("publish.wiki.overallDifficulty") }} *</el-divider>
                 <el-rate v-model="post.level" class="u-level"></el-rate>
             </div>
 
             <div class="m-publish-remark">
-                <el-divider content-position="left">修订说明 *</el-divider>
-                <el-input v-model="post.remark" size="large" placeholder="请简单描述一下本次修订的说明"></el-input>
+                <el-divider content-position="left">{{ $t("publish.form.revisionNotes") }} *</el-divider>
+                <el-input v-model="post.remark" size="large" :placeholder="$t('publish.form.revisionNotesPlaceholder')"></el-input>
             </div>
 
             <div class="m-publish-content">
-                <el-divider content-position="left">攻略正文 *</el-divider>
+                <el-divider content-position="left">{{ $t("publish.wiki.guideBody") }} *</el-divider>
                 <Tinymce v-model="post.content" :attachmentEnable="true" :resourceEnable="true" :height="400">
                     <el-alert
                         type="warning"
@@ -49,7 +49,7 @@
                     >
                         <template #title>
                             <span class="u-alert-title"
-                                >当前百科已经有更新的版本，你的攻略可能已经失效，请先进行比对。</span
+                                >{{ $t("publish.wiki.newerVersionWarning") }}</span
                             >
                             <el-link
                                 type="primary"
@@ -57,7 +57,7 @@
                                 :href="getLink(post.source_id)"
                                 target="_blank"
                                 class="u-view-latest"
-                                >查看最新攻略</el-link
+                                >{{ $t("publish.wiki.viewLatestGuide") }}</el-link
                             >
                             <el-link
                                 @click="getLatest"
@@ -65,7 +65,7 @@
                                 class="u-get-latest"
                                 type="primary"
                                 v-if="latest.post"
-                                >获取最新攻略</el-link
+                                >{{ $t("publish.wiki.loadLatestGuide") }}</el-link
                             >
                         </template>
                     </el-alert>
@@ -75,7 +75,7 @@
             <el-divider content-position="left"></el-divider>
             <div class="m-publish-commit">
                 <el-button class="u-publish" size="large" icon="Promotion" type="primary" @click="toPublish" :disabled="processing"
-                    >提交攻略</el-button
+                    >{{ $t("publish.wiki.submitGuide") }}</el-button
                 >
             </div>
         </el-form>
@@ -139,20 +139,20 @@ export default {
         toPublish: function () {
             if (!this.post.source_id) {
                 this.$message({
-                    message: "请选择要修订攻略的物品",
+                    message: this.$t("publish.wiki.selectItemRequired"),
                     type: "warning",
                 });
                 return;
             }
 
             if (!this.post.content) {
-                this.$message({ message: "要编写攻略正文哦", type: "warning" });
+                this.$message({ message: this.$t("publish.validation.guideBodyRequired"), type: "warning" });
                 return;
             }
 
             if (!(this.post.level >= 1 && this.post.level <= 5)) {
                 this.$message({
-                    message: "请选择适合的综合难度",
+                    message: this.$t("publish.validation.difficultyRequired"),
                     type: "warning",
                 });
                 return;
@@ -160,7 +160,7 @@ export default {
 
             if (!this.post.remark) {
                 this.$message({
-                    message: "请简单描述本次修订说明",
+                    message: this.$t("publish.validation.revisionNotesRequired"),
                     type: "warning",
                 });
                 return;
@@ -180,7 +180,7 @@ export default {
                     .then((data) => {
                         data = data.data;
                         this.$message({
-                            message: "提交成功，请等待审核",
+                            message: this.$t("publish.message.submittedForReview"),
                             type: "success",
                         });
                         setTimeout(() => {
@@ -195,7 +195,7 @@ export default {
                     .then((data) => {
                         data = data.data;
                         this.$message({
-                            message: "提交成功，请等待审核",
+                            message: this.$t("publish.message.submittedForReview"),
                             type: "success",
                         });
                         setTimeout(() => {

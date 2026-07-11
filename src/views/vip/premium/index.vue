@@ -3,7 +3,7 @@
         <CommonHeader :key="currentKey"></CommonHeader>
         <Main class="m-vip-container m-premium-page" :withoutRight="true" :withoutLeft="true">
             <div class="m-vip-premium">
-                <simple-header class="m-vip-premium-title" title="会员中心" desc="Professional Account" />
+                <simple-header class="m-vip-premium-title" :title="$t('vip.premium.title')" :desc="$t('vip.premium.subtitle')" />
 
                 <div class="m-vip-premium-main">
                     <div class="m-premium-panel">
@@ -11,10 +11,10 @@
 
                         <div class="m-premium-exchange">
                             <div>
-                                <b>积分兑换会员</b>
-                                <span v-if="isItemLoading">正在读取兑换信息...</span>
+                                <b>{{ $t("vip.premium.pointsExchange") }}</b>
+                                <span v-if="isItemLoading">{{ $t("vip.common.loadingExchange") }}</span>
                                 <span v-else-if="loadError">{{ loadError }}</span>
-                                <span v-else>{{ requiredPointsText }} 积分 / 次</span>
+                                <span v-else>{{ $t("vip.premium.pointsPerExchange", { points: requiredPointsText }) }}</span>
                             </div>
                             <el-button type="primary" @click="exchangePremium" :loading="isSubmitting" :disabled="isItemLoading">
                                 {{ exchangeButtonText }}
@@ -86,7 +86,7 @@ export default {
             return Number(this.premiumItem.price_points) || 0;
         },
         requiredPointsText() {
-            return this.requiredPoints ? this.requiredPoints : "待配置";
+            return this.requiredPoints ? this.requiredPoints : this.$t("vip.common.pendingConfig");
         },
         stock() {
             return Number(this.premiumItem.stock) || 0;
@@ -142,10 +142,9 @@ export default {
             return !!this.canBuyInfo.canBuy && !this.configError && !this.isSubmitting;
         },
         exchangeButtonText() {
-            if (this.isSubmitting) return "兑换中...";
-            if (this.configError) return "兑换配置异常";
-            if (!this.isLogin) return "兑换";
-            return "兑换";
+            if (this.isSubmitting) return this.$t("vip.common.exchanging");
+            if (this.configError) return this.$t("vip.premium.configError");
+            return this.$t("vip.common.exchange");
         },
     },
     methods: {
@@ -175,7 +174,7 @@ export default {
                     this.premiumItem = res.data?.data || {};
                 })
                 .catch((err) => {
-                    this.loadError = err?.response?.data?.msg || err?.message || "请稍后再试";
+                    this.loadError = err?.response?.data?.msg || err?.message || this.$t("vip.common.tryLater");
                 })
                 .finally(() => {
                     this.isItemLoading = false;
@@ -197,16 +196,16 @@ export default {
                 return User.toLogin();
             }
             if (this.configError) {
-                return this.$alert("当前兑换配置包含非积分消耗项，请联系管理员处理。", "暂不能兑换", {
-                    confirmButtonText: "知道了",
+                return this.$alert(this.$t("vip.premium.invalidConfigMessage"), this.$t("vip.common.exchangeUnavailable"), {
+                    confirmButtonText: this.$t("vip.common.gotIt"),
                     type: "warning",
                 });
             }
             if (!this.premiumItem.id) {
                 return this.loadPremiumItem().then(() => {
                     if (!this.premiumItem.id) {
-                        return this.$alert("兑换信息暂不可用，请稍后再试", "暂不能兑换", {
-                            confirmButtonText: "知道了",
+                        return this.$alert(this.$t("vip.common.exchangeInfoUnavailable"), this.$t("vip.common.exchangeUnavailable"), {
+                            confirmButtonText: this.$t("vip.common.gotIt"),
                             type: "warning",
                         });
                     }
@@ -216,9 +215,9 @@ export default {
                 return alertMallRequirement(this, this.premiumItem, this.canBuyInfo);
             }
 
-            this.$confirm(`确认使用 ${this.requiredPoints} 积分开通高级版会员？`, "确认兑换", {
-                confirmButtonText: "确认兑换",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("vip.premium.confirmMessage", { points: this.requiredPoints }), this.$t("vip.common.confirmExchange"), {
+                confirmButtonText: this.$t("vip.common.confirmExchange"),
+                cancelButtonText: this.$t("vip.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
@@ -237,8 +236,8 @@ export default {
                         })
                         .then(() => {
                             this.$notify.success({
-                                title: "兑换成功",
-                                message: "会员权益已开通或续期",
+                                title: this.$t("vip.common.exchangeSuccess"),
+                                message: this.$t("vip.premium.exchangeSuccessMessage"),
                             });
                         });
                 })

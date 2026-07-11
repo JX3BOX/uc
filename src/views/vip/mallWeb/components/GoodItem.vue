@@ -9,7 +9,7 @@
                 </div>
                 <div class="tags">
                     <div class="tag">lv.{{ getLevel(good.exp_limit) }}</div>
-                    <div class="tag" v-if="good.vip_limit === 1">会员专享</div>
+                    <div class="tag" v-if="good.vip_limit === 1">{{ $t("vip.mall.memberExclusive") }}</div>
                 </div>
             </div>
             <div class="footer">
@@ -18,14 +18,14 @@
                     @click.stop="buyGoods(good)"
                     :disabled="!good.canBuy.canBuy"
                 >
-                    <div v-if="!good.canBuy.canBuy" class="button-text">不满足兑换条件</div>
+                    <div v-if="!good.canBuy.canBuy" class="button-text">{{ $t("vip.mall.notEligible") }}</div>
                     <div v-else class="button-text canBuy">
                         <template v-if="good.price_boxcoin">
                             <img
                                 src="@/assets/img/vip/vip2/box_icon.svg"
                                 svg-inline
                                 style="fill: white; margin-right: 0.6vw; width: 3.2vw; height: 3.2vw"
-                            />{{ good.price_boxcoin }}盒币
+                            />{{ $t("vip.common.boxcoinAmount", { amount: good.price_boxcoin }) }}
                         </template>
                         <template v-if="good.price_boxcoin && good.price_points"> + </template>
                         <template v-if="good.price_points">
@@ -33,7 +33,7 @@
                                 src="@/assets/img/vip/vip2/points.svg"
                                 svg-inline
                                 style="fill: white; margin-right: 0.6vw; width: 3.2vw; height: 3.2vw"
-                            />{{ good.price_points }}积分
+                            />{{ $t("vip.common.pointsAmount", { amount: good.price_points }) }}
                         </template>
                     </div>
                 </button>
@@ -80,7 +80,7 @@ export default {
             if (1 + num > this.good.stock) {
                 return this.$message({
                     type: "warning",
-                    message: "可兑换库存不足",
+                    message: this.$t("vip.mall.insufficientStock"),
                 });
             }
             this.$store

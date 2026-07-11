@@ -1,13 +1,13 @@
 <template>
     <div class="m-publish-visible">
-        <el-form-item label="阅读权限">
+        <el-form-item :label="$t('publish.form.visibility')">
             <el-radio-group v-model="visible">
-                <el-radio value="0">公开</el-radio>
-                <el-radio value="1" :disabled="disabled">仅自己可见</el-radio>
-                <el-radio value="2" :disabled="disabled">仅亲友可见</el-radio>
-                <el-radio value="3" disabled>密码可见</el-radio>
-                <el-radio value="4" disabled>付费可见</el-radio>
-                <el-radio value="5" :disabled="disabled">粉丝可见</el-radio>
+                <el-radio value="0">{{ $t("publish.visibility.public") }}</el-radio>
+                <el-radio value="1" :disabled="disabled">{{ $t("publish.visibility.private") }}</el-radio>
+                <el-radio value="2" :disabled="disabled">{{ $t("publish.visibility.friends") }}</el-radio>
+                <el-radio value="3" disabled>{{ $t("publish.visibility.password") }}</el-radio>
+                <el-radio value="4" disabled>{{ $t("publish.visibility.paid") }}</el-radio>
+                <el-radio value="5" :disabled="disabled">{{ $t("publish.visibility.followers") }}</el-radio>
             </el-radio-group>
         </el-form-item>
     </div>

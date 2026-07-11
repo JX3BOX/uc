@@ -1,13 +1,13 @@
 <template>
     <div class="m-event-item">
         <div class="u-box">
-            <div class="u-title">领取专属免费铭牌</div>
+            <div class="u-title">{{ $t("vip.event.kolTitle") }}</div>
             <div class="u-content">
-                <h3>【领取条件】</h3>
-                <p>魔盒KOL/作者群专属提前批</p>
-                <p>获赠10个铭牌</p>
+                <h3>{{ $t("vip.event.claimConditions") }}</h3>
+                <p>{{ $t("vip.event.kolCondition") }}</p>
+                <p>{{ $t("vip.event.kolReward") }}</p>
                 <el-button class="u-btn" type="warning" @click="getGift" :disabled="done" icon="Present"
-                    >点击领取</el-button
+                    >{{ $t("vip.event.claim") }}</el-button
                 >
             </div>
         </div>
@@ -26,11 +26,11 @@ export default {
             getFreeNamespace("kol-1").then((res) => {
                 this.done = true;
                 this.$message({
-                    message: "领取成功",
+                    message: this.$t("vip.event.claimSuccess"),
                     type: "success",
                 });
-                this.$alert("领取成功", "提醒", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("vip.event.claimSuccess"), this.$t("vip.common.notice"), {
+                    confirmButtonText: this.$t("vip.common.confirm"),
                 });
             });
         },

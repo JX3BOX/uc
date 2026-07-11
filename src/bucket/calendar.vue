@@ -1,15 +1,15 @@
 <template>
     <div class="m-dashboard-work m-dashboard-cms" v-loading="loading">
         <div class="m-dashboard-work-header">
-            <h2 class="u-title">日历记录</h2>
+            <h2 class="u-title">{{ $t("publish.types.calendar") }}</h2>
             <a :href="publishLink" class="u-publish el-button el-button--primary">
-                <i class="el-icon-document"></i> 贡献纪事
+                <i class="el-icon-document"></i> {{ $t("publish.calendar.contribute") }}
             </a>
         </div>
 
-        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model.lazy="search">
+        <el-input class="m-dashboard-work-search" :placeholder="$t('publish.common.searchPlaceholder')" v-model.lazy="search">
             <template #prepend>
-                <span>关键词</span>
+                <span>{{ $t("publish.common.keyword") }}</span>
             </template>
             <template #append>
                 <el-button icon="Search"></el-button>
@@ -20,30 +20,30 @@
             <ul class="m-dashboard-box-list" v-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
                     <i class="u-item-icon el-icon-chat-dot-round" v-if="item.status == 1"></i>
-                    <i class="u-item-icon el-icon-lock" v-else :title="item.status == 0 ? '待审核' : '审核未通过'"></i>
-                    <a class="u-title" target="_blank" :href="postLink(item.id)">{{ item.desc || "未命名" }}</a>
+                    <i class="u-item-icon el-icon-lock" v-else :title="item.status == 0 ? $t('publish.status.pendingReview') : $t('publish.status.rejected')"></i>
+                    <a class="u-title" target="_blank" :href="postLink(item.id)">{{ item.desc || $t("publish.common.unnamed") }}</a>
                     <div class="u-desc">
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
-                            发布 :
+                            {{ $t("publish.common.publishedAt") }} :
                             {{ dateFormat(item.created_at) }}
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
-                            更新 :
+                            {{ $t("publish.common.updatedAt") }} :
                             {{ dateFormat(item.updated_at) }}
                         </time>
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-button icon="Edit" @click="edit(item.id)" title="编辑"></el-button>
+                        <el-button icon="Edit" @click="edit(item.id)" :title="$t('publish.common.edit')"></el-button>
                     </el-button-group>
                 </li>
             </ul>
             <el-alert
                 v-else
                 class="m-dashboard-box-null"
-                title="没有找到相关条目"
+                :title="$t('publish.common.noResults')"
                 type="info"
                 center
                 show-icon

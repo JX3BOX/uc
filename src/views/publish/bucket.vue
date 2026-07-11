@@ -4,14 +4,14 @@
         <div class="m-dashboard-work-header">
             <h2 class="u-title">{{ title }}</h2>
             <a :href="publishLink" class="u-publish el-button el-button--primary">
-                <i class="el-icon-document"></i> 发布作品
+                <i class="el-icon-document"></i> {{ $t("publish.common.publishWork") }}
             </a>
         </div>
 
         <!-- 搜索框 -->
-        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search" size="large">
+        <el-input class="m-dashboard-work-search" :placeholder="$t('publish.common.searchPlaceholder')" v-model="search" size="large">
             <template #prepend>
-                <span>关键词</span>
+                <span>{{ $t("publish.common.keyword") }}</span>
             </template>
             <template #append>
                 <el-button icon="Search"></el-button>
@@ -32,7 +32,7 @@
             <el-alert
                 v-else-if="!loading"
                 class="m-dashboard-box-null"
-                title="没有找到相关条目"
+                :title="$t('publish.common.noResults')"
                 type="info"
                 center
                 show-icon
@@ -77,9 +77,9 @@ export default {
             search: "",
 
             types: {
-                item_plan: "我的清单",
-                question: "我的题目",
-                paper: "我的试卷",
+                item_plan: this.$t("publish.types.myLists"),
+                question: this.$t("publish.types.myQuestions"),
+                paper: this.$t("publish.types.myPapers"),
             },
         };
     },

@@ -1,10 +1,10 @@
 <template>
     <div class="m-publish-macro m-publish-wujie-skill">
-        <el-divider content-position="left">武学助手序列</el-divider>
+        <el-divider content-position="left">{{ $t("publish.sequence.title") }}</el-divider>
         <div class="m-macro-box">
             <div class="m-macro-header">
                 <el-button class="m-macro-addbutton" icon="CirclePlus" type="primary" @click="addMacro"
-                    >添加序列</el-button
+                    >{{ $t("publish.sequence.add") }}</el-button
                 >
                 <!-- <a
                     class="m-macro-help el-button el-button--success is-plain "
@@ -20,22 +20,22 @@
                     <template #label
                         ><span class="u-tab-box">
                             <img class="u-tabicon" :src="icon(item)" />
-                            <span class="u-tab-name" :title="item.name">{{ i + 1 + "号位-" + item.name }}</span>
+                            <span class="u-tab-name" :title="item.name">{{ $t("publish.common.slotName", { index: i + 1, name: item.name }) }}</span>
                         </span></template
                     >
                     <div class="m-macro-cloud m-macro-item">
                         <h5 class="u-title">
-                            武学序列图标/名称
+                            {{ $t("publish.sequence.iconName") }}
                             <a class="u-icon-links" href="/app/icons" target="_blank">
                                 <i class="el-icon-question"></i>
-                                图标大全
+                                {{ $t("publish.common.iconLibrary") }}
                             </a>
                         </h5>
                         <div class="u-group">
                             <div class="u-subblock m-macro-icon">
                                 <el-input
                                     v-model="item.icon"
-                                    placeholder="图标ID"
+                                    :placeholder="$t('publish.common.iconId')"
                                     :minlength="1"
                                     :maxlength="10"
                                     :min="1"
@@ -48,7 +48,7 @@
                             <div class="u-subblock m-macro-name">
                                 <el-input
                                     v-model="item.name"
-                                    placeholder="每个序列名称请使用自己名下唯一命名"
+                                    :placeholder="$t('publish.sequence.uniqueNamePlaceholder')"
                                     :minlength="1"
                                     :maxlength="maxlength"
                                     show-word-limit
@@ -83,7 +83,7 @@
                     <div class="m-macro-macro">
                         <div class="m-macro-header">
                             <el-button class="m-macro-addbutton" icon="CirclePlus" type="primary" @click="addSkill"
-                                >添加技能</el-button
+                                >{{ $t("publish.skill.add") }}</el-button
                             >
                         </div>
 
@@ -94,7 +94,7 @@
                                         <img class="u-skill-icon" :src="iconLink(skill.IconID)" :alt="skill.IconID" />
                                         <span class="u-name" :title="skill.Name">{{ skill.Name }}</span>
                                     </div>
-                                    <i class="u-remove-icon" title="移除" @click="removeSelected(index)"
+                                    <i class="u-remove-icon" :title="$t('publish.common.remove')" @click="removeSelected(index)"
                                         ><i class="el-icon-close"></i
                                     ></i>
                                 </li>
@@ -104,16 +104,16 @@
                                 type="warning"
                                 :closable="false"
                                 v-if="!item.sq || !item.sq.length"
-                                title="暂未选择技能"
+                                :title="$t('publish.skill.noneSelected')"
                             ></el-alert>
                         </div>
                     </div>
-                    <el-form-item label="其它" class="m-macro-misc">
+                    <el-form-item :label="$t('publish.common.other')" class="m-macro-misc">
                         <el-row>
                             <el-col :span="8" class="u-speed">
-                                <el-input v-model="item.speed" placeholder="填写推荐的急速阈值">
+                                <el-input v-model="item.speed" :placeholder="$t('publish.gear.hastePlaceholder')">
                                     <template #prepend
-                                        >急速阈值
+                                        >{{ $t("publish.gear.hasteThreshold") }}
                                         <slot name="pre-prepend"></slot>
                                     </template>
                                 </el-input>
@@ -121,11 +121,11 @@
                             <el-col :span="8"></el-col>
                         </el-row>
                     </el-form-item>
-                    <el-form-item label="说明" class="m-macro-desc">
+                    <el-form-item :label="$t('publish.common.instructions')" class="m-macro-desc">
                         <el-input
                             v-model="item.desc"
                             type="textarea"
-                            placeholder="重要说明（会出现在武学序列第一行）"
+                            :placeholder="$t('publish.sequence.instructionsPlaceholder')"
                         ></el-input>
                     </el-form-item>
                     <div class="m-macro-op">
@@ -135,7 +135,7 @@
                             type="danger"
                             plain
                             icon="Delete"
-                            >移除本序列</el-button
+                            >{{ $t("publish.sequence.remove") }}</el-button
                         >
                     </div>
                 </el-tab-pane>
@@ -254,8 +254,8 @@ export default {
         // 添加武学序列
         addMacro: function () {
             if (this.macros.data.length > 7) {
-                this.$alert("已经达到添加上限", "消息", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("publish.message.limitReached"), this.$t("publish.common.message"), {
+                    confirmButtonText: this.$t("publish.common.confirm"),
                 });
                 return;
             }
@@ -274,14 +274,14 @@ export default {
         // 删除序列
         removeMacro: function (name) {
             if (this.macros.data.length < 2) {
-                this.$alert("必须保留1个序列", "消息", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("publish.sequence.keepOne"), this.$t("publish.common.message"), {
+                    confirmButtonText: this.$t("publish.common.confirm"),
                 });
                 return;
             }
 
-            this.$alert("确定删除这个序列吗，删除后无法找回", "消息", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("publish.sequence.confirmDelete"), this.$t("publish.common.message"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
                 callback: (action) => {
                     if (action == "confirm") {
                         // 删除
@@ -298,7 +298,7 @@ export default {
         check: function () {
             this.macros.data.forEach((item, i) => {
                 if (!item.name) {
-                    item.name = "未标题-" + i;
+                    item.name = this.$t("publish.common.generatedUntitled", { index: i });
                 }
             });
         },
@@ -306,8 +306,8 @@ export default {
             let name = sterilizer(data.name).removeSpace().kill().toString();
             if (!name) {
                 this.$notify.error({
-                    title: "错误",
-                    message: "序列名称不允许包含特殊字符,不能为空",
+                    title: this.$t("publish.common.error"),
+                    message: this.$t("publish.sequence.invalidName"),
                 });
                 return;
             }
@@ -318,8 +318,8 @@ export default {
                 JSON.parse(data.talent);
             } catch (e) {
                 this.$notify.error({
-                    title: "错误",
-                    message: "奇穴编码格式错误",
+                    title: this.$t("publish.common.error"),
+                    message: this.$t("publish.skill.invalidTalentCode"),
                 });
             }
         },

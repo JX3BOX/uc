@@ -1,6 +1,3 @@
-export const MALL_DECORATION_SINGLE_LIMIT_MESSAGE = "装扮类商品仅可拥有1份";
-export const MALL_DECORATION_OWNED_MESSAGE = "已拥有该商品，无需重复兑换";
-
 export function canAddMultipleMallGoods(good = {}) {
     return good.category !== "virtual" || good.sub_category === "palu";
 }

@@ -1,13 +1,13 @@
 <template>
-    <el-dialog class="w-dialog m-wait-list-dialog" v-model="show" width="560px" title="待处理列表" @close="close">
+    <el-dialog class="w-dialog m-wait-list-dialog" v-model="show" width="560px" :title="$t('dashboard.relationship.pendingList')" @close="close">
         <div class="m-wait-list" v-loading="loading">
             <div class="u-wait-intro">
-                <span class="u-intro-tag">情缘申请</span>
-                <h3>待处理列表</h3>
-                <p>处理来自其他用户的情缘邀请。接受后将建立情缘关系，拒绝后该申请会从列表移除。</p>
+                <span class="u-intro-tag">{{ $t("dashboard.relationship.request") }}</span>
+                <h3>{{ $t("dashboard.relationship.pendingList") }}</h3>
+                <p>{{ $t("dashboard.relationship.pendingDescription") }}</p>
             </div>
             <div class="u-empty" v-if="!waitList.length">
-                <el-empty description="暂无待处理申请"></el-empty>
+                <el-empty :description="$t('dashboard.relationship.noPending')"></el-empty>
             </div>
             <div class="u-list" v-else>
                 <div class="u-item" v-for="(item, i) in waitList" :key="item.id || item.net_id || i">
@@ -16,11 +16,11 @@
                     </a>
                     <div class="u-item-info">
                         <a class="u-item-name" :href="userLink(item)" target="_blank">{{ getName(item) }}</a>
-                        <span class="u-item-desc">邀请你成为情缘</span>
+                        <span class="u-item-desc">{{ $t("dashboard.relationship.invitesYou") }}</span>
                     </div>
                     <div class="u-action" v-if="!item.status">
-                        <el-button v-if="list.length <= 1" @click="onAccept(item)" type="primary">接受</el-button>
-                        <el-button @click="onReject(item)">拒绝</el-button>
+                        <el-button v-if="list.length <= 1" @click="onAccept(item)" type="primary">{{ $t("dashboard.common.accept") }}</el-button>
+                        <el-button @click="onReject(item)">{{ $t("dashboard.common.reject") }}</el-button>
                     </div>
                 </div>
             </div>
@@ -80,21 +80,21 @@ export default {
             return item.user_info?.avatar || item.creator_info?.avatar;
         },
         getName(item) {
-            return item.user_info?.display_name || item.creator_info?.display_name || "该用户";
+            return item.user_info?.display_name || item.creator_info?.display_name || this.$t("dashboard.common.thisUser");
         },
         handleRequestError(err) {
             const data = err?.response?.data;
-            const message = data?.msg || data?.message || err?.message || "操作失败，请稍后再试";
+            const message = data?.msg || data?.message || err?.message || this.$t("dashboard.common.operationFailedRetry");
             this.$notify({
-                title: "操作失败",
+                title: this.$t("dashboard.common.operationFailed"),
                 message,
                 type: "error",
             });
         },
         onAccept(item) {
-            this.$confirm(`是否接受 ${this.getName(item)} 的邀请，成为ta的情缘？`, "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("dashboard.relationship.acceptConfirm", { name: this.getName(item) }), this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
@@ -102,7 +102,7 @@ export default {
                     dealInvite(item.net_id, 1)
                         .then(() => {
                             this.$notify({
-                                title: "接受成功",
+                                title: this.$t("dashboard.relationship.acceptSuccess"),
                                 type: "success",
                             });
                             this.close();
@@ -117,9 +117,9 @@ export default {
                 .catch(() => {});
         },
         onReject(item) {
-            this.$confirm(`是否拒绝 ${this.getName(item)} 的邀请？`, "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("dashboard.relationship.rejectConfirm", { name: this.getName(item) }), this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
@@ -127,7 +127,7 @@ export default {
                     dealInvite(item.net_id, 2)
                         .then(() => {
                             this.$notify({
-                                title: "拒绝成功",
+                                title: this.$t("dashboard.relationship.rejectSuccess"),
                                 type: "success",
                             });
                             this.close();

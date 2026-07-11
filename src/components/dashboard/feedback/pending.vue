@@ -3,7 +3,7 @@
         <!-- tool -->
         <div class="m-feedback-tool">
             <div class="m-feedback-tool__item">
-                <el-select v-model="select" class="u-select" placeholder="请选择处理人" filterable style="width:200px" clearable>
+                <el-select v-model="select" class="u-select" :placeholder="$t('dashboard.feedback.handlerPlaceholder')" filterable style="width:200px" clearable>
                     <el-option
                         :label="item.teammate_info.display_name"
                         v-for="(item, i) in assigns"
@@ -25,11 +25,11 @@
                 </el-select>
             </div>
             <div class="m-feedback-tool__item">
-                <el-date-picker v-model="time" type="month" placeholder="选择月份" format="YYYY年MM月">
+                <el-date-picker v-model="time" type="month" :placeholder="$t('dashboard.feedback.selectMonth')" format="YYYY-MM">
                 </el-date-picker>
             </div>
-            <el-checkbox v-if="showUserFilters" class="u-only-check" v-model="onlyMe"> 指派给我的 </el-checkbox>
-            <el-checkbox v-if="showUserFilters" class="u-only-check" v-model="isSupport"> 我参与协同的 </el-checkbox>
+            <el-checkbox v-if="showUserFilters" class="u-only-check" v-model="onlyMe"> {{ $t("dashboard.feedback.assignedToMe") }} </el-checkbox>
+            <el-checkbox v-if="showUserFilters" class="u-only-check" v-model="isSupport"> {{ $t("dashboard.feedback.coordinatedByMe") }} </el-checkbox>
         </div>
         <!-- list -->
         <div class="m-feedback-list" v-loading="loading">
@@ -43,7 +43,7 @@
                 size="large"
             >
                 <el-table-column
-                    label="状态"
+                    :label="$t('dashboard.common.status')"
                     prop="status"
                     column-key="status"
                     :filters="filterOptions.status"
@@ -57,7 +57,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    label="客户端"
+                    :label="$t('dashboard.common.client')"
                     prop="client"
                     column-key="client"
                     :filters="filterOptions.client"
@@ -67,18 +67,18 @@
                         <span class="u-client" :class="'i-client-' + row.client">{{ formatClient(row.client) }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column v-if="!isEditor" label="来源" prop="type">
+                <el-table-column v-if="!isEditor" :label="$t('dashboard.feedback.source')" prop="type">
                     <template #default="{ row }">
                         {{ types[row.type] }}
                     </template>
                 </el-table-column>
-                <el-table-column label="类型" prop="subtype">
+                <el-table-column :label="$t('dashboard.common.type')" prop="subtype">
                     <template #default="{ row }">
                         {{ subtypes[row.subtype] }}
                     </template>
                 </el-table-column>
-                <el-table-column label="备注" prop="remark"></el-table-column>
-                <el-table-column v-if="isEditor" label="提交人" prop="user">
+                <el-table-column :label="$t('dashboard.common.remark')" prop="remark"></el-table-column>
+                <el-table-column v-if="isEditor" :label="$t('dashboard.common.submitter')" prop="user">
                     <template #default="{ row }">
                         <div class="m-assign">
                             <a class="u-assign" :href="authorLink(row.user.id)" target="_blank">
@@ -88,7 +88,7 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="指派给">
+                <el-table-column :label="$t('dashboard.feedback.assignedTo')">
                     <template #default="{ row }">
                         <div class="m-assign" v-if="row.assign_user && row.assign_user.length">
                             <a
@@ -104,7 +104,7 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="协同">
+                <el-table-column :label="$t('dashboard.feedback.coordinate')">
                     <template #default="{ row }">
                         <div class="m-assign" v-if="row.coordination_user && row.coordination_user.length">
                             <a
@@ -120,17 +120,17 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column label="提交时间" prop="created_at">
+                <el-table-column :label="$t('dashboard.common.submittedAt')" prop="created_at">
                     <template #default="{ row }">
                         {{ formatTime(row.created_at) }}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="120">
+                <el-table-column :label="$t('dashboard.common.actions')" width="120">
                     <template #default="{ row }">
                         <el-tooltip :content="row.content" placement="top" popper-class="m-content-popover">
-                            <el-button type="primary" link size="small">查看</el-button>
+                            <el-button type="primary" link size="small">{{ $t("dashboard.common.view") }}</el-button>
                         </el-tooltip>
-                        <el-button link type="primary" @click.stop="onRemarkClick(row)" size="small">备注</el-button>
+                        <el-button link type="primary" @click.stop="onRemarkClick(row)" size="small">{{ $t("dashboard.common.remark") }}</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -340,14 +340,14 @@ export default {
             );
         },
         onRemarkClick(row) {
-            this.$prompt("请输入备注", "备注", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$prompt(this.$t("dashboard.common.remarkPlaceholder"), this.$t("dashboard.common.remark"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 inputValue: row.remark,
                 beforeClose: (action, instance, done) => {
                     if (action === "confirm") {
                         if (!instance.inputValue) {
-                            this.$message.error("请输入备注");
+                            this.$message.error(this.$t("dashboard.common.remarkPlaceholder"));
                             done();
                         } else {
                             updateFeedback(row.id, {

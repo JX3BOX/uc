@@ -1,17 +1,17 @@
 <template>
     <div class="v-bind-role2">
         <h2 class="u-title">
-            <i class="el-icon-connection"></i> 绑定角色
+            <i class="el-icon-connection"></i> {{ $t("dashboard.role.bind") }}
             <!-- <div class="u-op">
                 <router-link to="/role/add" class="el-button el-button--primary el-button--small">
                     <i class="el-icon-plus"></i> 自定义角色
                 </router-link>
             </div> -->
-            <el-button class="u-back" icon="ArrowLeft" @click="goBack">返回</el-button>
+            <el-button class="u-back" icon="ArrowLeft" @click="goBack">{{ $t("dashboard.common.back") }}</el-button>
         </h2>
         <div class="m-bind-login" v-if="!isLogin">
-            <el-alert title="请先登录后再绑定角色" type="warning" center show-icon :closable="false"></el-alert>
-            <el-button type="primary" @click="toLogin">立即登录</el-button>
+            <el-alert :title="$t('dashboard.role.loginFirst')" type="warning" center show-icon :closable="false"></el-alert>
+            <el-button type="primary" @click="toLogin">{{ $t("dashboard.common.loginNow") }}</el-button>
         </div>
         <div class="m-steps" v-else>
             <!-- STEP 1 -->
@@ -33,8 +33,8 @@
                     <img class="u-step-img" src="@/assets/img/dashboard/role/step2.png" alt="" />
                 </div>
                 <div class="u-step-body">
-                    <div class="u-notice">在弹窗内输入下方“角色认证”验证码 - 点击【④确认】</div>
-                    <div class="u-timer">( 10分钟内有效，超时请刷新页面 )</div>
+                    <div class="u-notice">{{ $t("dashboard.role.tokenInstruction") }}</div>
+                    <div class="u-timer">{{ $t("dashboard.role.tokenValidity") }}</div>
                     <el-alert
                         v-if="tokenError"
                         class="u-token-error"
@@ -49,9 +49,9 @@
                     </div>
                     <div class="u-subtitle">
                         <span class="u-link-text"
-                            ><img src="@/assets/img/dashboard/link.svg" alt="" />当前魔盒账号已绑定角色：</span
+                            ><img src="@/assets/img/dashboard/link.svg" alt="" />{{ $t("dashboard.role.boundRoles") }}：</span
                         >
-                        <el-button @click="toMoreRoles" icon="ArrowRight">更多角色</el-button>
+                        <el-button @click="toMoreRoles" icon="ArrowRight">{{ $t("dashboard.role.moreRoles") }}</el-button>
                     </div>
                     <el-alert
                         v-if="rolesError"
@@ -119,8 +119,8 @@ export default {
             return User.isLogin();
         },
         tokenText() {
-            if (this.tokenLoading) return "验证码加载中";
-            return this.token || "暂无验证码";
+            if (this.tokenLoading) return this.$t("dashboard.role.tokenLoading");
+            return this.token || this.$t("dashboard.role.noToken");
         },
     },
     watch: {},
@@ -152,7 +152,7 @@ export default {
                 })
                 .catch((err) => {
                     this.roles = [];
-                    this.rolesError = this.getErrorMessage(err, "已绑定角色加载失败，请稍后重试");
+                    this.rolesError = this.getErrorMessage(err, this.$t("dashboard.role.rolesLoadFailed"));
                 });
         },
         loadToken() {
@@ -161,11 +161,11 @@ export default {
             getToken()
                 .then((res) => {
                     this.token = res.data.data.token || "";
-                    if (!this.token) this.tokenError = "验证码加载失败，请刷新页面重试";
+                    if (!this.token) this.tokenError = this.$t("dashboard.role.tokenLoadFailed");
                 })
                 .catch((err) => {
                     this.token = "";
-                    this.tokenError = this.getErrorMessage(err, "验证码加载失败，请刷新页面重试");
+                    this.tokenError = this.getErrorMessage(err, this.$t("dashboard.role.tokenLoadFailed"));
                 })
                 .finally(() => {
                     this.tokenLoading = false;
@@ -174,8 +174,8 @@ export default {
         copyToken() {
             if (this.tokenLoading || !this.token) {
                 this.$notify.error({
-                    title: "复制失败",
-                    message: this.tokenLoading ? "验证码加载中" : "暂无验证码",
+                    title: this.$t("dashboard.common.copyFailed"),
+                    message: this.tokenLoading ? this.$t("dashboard.role.tokenLoading") : this.$t("dashboard.role.noToken"),
                 });
                 return;
             }
@@ -183,15 +183,15 @@ export default {
                 .writeText(this.token)
                 .then(() => {
                     this.$notify({
-                        title: "复制成功",
+                        title: this.$t("dashboard.common.copySuccess"),
                         message: this.token,
                         type: "success",
                     });
                 })
                 .catch(() => {
                     this.$notify.error({
-                        title: "复制失败",
-                        message: "请手动复制",
+                        title: this.$t("dashboard.common.copyFailed"),
+                        message: this.$t("dashboard.common.copyManually"),
                     });
                 });
         },

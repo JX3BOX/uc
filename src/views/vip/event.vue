@@ -6,7 +6,7 @@
         </Breadcrumb> -->
         <Main class="m-vip-container" :withoutRight="true" :withoutLeft="true">
             <div class="m-vip-event">
-                <simple-header title="魔盒活动" desc="Gift for U" />
+                <simple-header :title="$t('vip.event.title')" :desc="$t('vip.event.subtitle')" />
                 <router-view />
             </div>
         </Main>

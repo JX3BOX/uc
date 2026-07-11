@@ -1,6 +1,6 @@
 <template>
     <div class="m-publish-qixue" v-show="subtype !== '通用'">
-        <h5 class="u-title">奇穴方案</h5>
+        <h5 class="u-title">{{ $t("publish.skill.talentBuild") }}</h5>
         <div class="m-talent-box qx-container"></div>
     </div>
 </template>

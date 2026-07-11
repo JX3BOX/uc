@@ -1,12 +1,12 @@
 /dashboard
 <template>
-    <uc class="m-dashboard-honor m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tab-list="tabList">
+    <uc class="m-dashboard-honor m-dashboard-skin" icon="el-icon-brush" :title="$t('dashboard.theme.title')" :tab-list="tabList">
         <template #header>
             <a
                 class="u-link el-button el-button--default el-button--small is-round is-plain"
                 href="/vip/mall?category=virtual"
                 target="_blank"
-                ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
+                ><i class="el-icon-shopping-cart-2"></i> {{ $t("dashboard.theme.getDecorations") }}</a
             >
         </template>
         <div class="m-honor">
@@ -21,11 +21,11 @@
                     />
                     <div class="u-author-info">
                         <span class="u-name">
-                            <span @click="copyData(data.display_name || '匿名')">{{ data.display_name || "匿名" }}</span
+                            <span @click="copyData(data.display_name || $t('dashboard.common.anonymous'))">{{ data.display_name || $t("dashboard.common.anonymous") }}</span
                             >&nbsp;<span class="u-uid" @click="copyData(data.ID || 0)">(UID : {{ data.ID || 0 }})</span>
                         </span>
                         <div class="u-tips">
-                            <el-tooltip :content="`当前经验 ${data.experience || 0}`" placement="top">
+                            <el-tooltip :content="$t('dashboard.honor.currentExperience', { value: data.experience || 0 })" placement="top">
                                 <span
                                     class="u-level"
                                     :class="'lv-' + level"
@@ -38,9 +38,9 @@
                                     <i class="u-icon vip">{{ vipType }}</i>
                                 </span>
                             </el-tooltip>
-                            <el-tooltip content="签约作者" v-if="isSuperAuthor" placement="top">
+                            <el-tooltip :content="$t('dashboard.honor.contractedAuthor')" v-if="isSuperAuthor" placement="top">
                                 <span class="u-superauthor">
-                                    <i class="u-icon superauthor">签约作者</i>
+                                    <i class="u-icon superauthor">{{ $t("dashboard.honor.contractedAuthor") }}</i>
                                 </span>
                             </el-tooltip>
                         </div>
@@ -58,9 +58,9 @@
             <div class="m-honor-right">
                 <div class="u-honor-list">
                     <div class="u-title">
-                        <span class="u-name"><i class="el-icon-collection-tag"></i>称号</span>
+                        <span class="u-name"><i class="el-icon-collection-tag"></i>{{ $t("dashboard.honor.title") }}</span>
                         <a class="u-buy" :href="`/vip/mall?category=virtual&sub_category=honor`" target="_blank"
-                            ><i class="el-icon-shopping-cart-2"></i> 前往获取</a
+                            ><i class="el-icon-shopping-cart-2"></i> {{ $t("dashboard.theme.goGet") }}</a
                         >
                     </div>
                     <div class="u-honor-item">
@@ -78,8 +78,8 @@
             </div>
         </div>
         <div class="m-btn">
-            <el-button type="primary" @click="submit" size="large">确认</el-button>
-            <el-button @click="reset" size="large">重置</el-button>
+            <el-button type="primary" @click="submit" size="large">{{ $t("dashboard.common.confirm") }}</el-button>
+            <el-button @click="reset" size="large">{{ $t("dashboard.common.reset") }}</el-button>
         </div>
     </uc>
 </template>
@@ -103,7 +103,7 @@ export default {
             isVIP: false,
             info: {
                 uid: User.getInfo().uid,
-                name: "匿名",
+                name: this.$t("dashboard.common.anonymous"),
                 user_avatar: `${__imgPath}/image/common/avatar.png`,
                 user_avatar_frame: "default",
                 bio: "-",
@@ -138,7 +138,7 @@ export default {
             return this.isPRO ? "PRO" : "PRE";
         },
         vipTypeTitle: function () {
-            return this.isPRO ? "专业版会员用户" : "高级版会员用户";
+            return this.isPRO ? this.$t("dashboard.honor.proMember") : this.$t("dashboard.honor.advancedMember");
         },
         level: function () {
             return User.getLevel(this.data?.experience || 0);
@@ -242,8 +242,8 @@ export default {
                 let isUsing = this.honorList?.find((item) => item.using == 1);
                 let isCustomize = {
                     type: "honor_customize",
-                    img: "不佩戴称号",
-                    name: "取消佩戴称号",
+                    img: this.$t("dashboard.honor.noTitle"),
+                    name: this.$t("dashboard.honor.removeTitle"),
                     using: isUsing ? 0 : 1,
                     isHave: true,
                     isCustomize: true, //是否是自己定义的
@@ -286,14 +286,14 @@ export default {
             if (item?.id) {
                 setHonor(item.id).then((res) => {
                     this.$message({
-                        message: "称号更新成功",
+                        message: this.$t("dashboard.honor.updateSuccess"),
                         type: "success",
                     });
                 });
             } else {
                 cancelHonor().then((res) => {
                     this.$message({
-                        message: "称号更新成功",
+                        message: this.$t("dashboard.honor.updateSuccess"),
                         type: "success",
                     });
                 });

@@ -11,7 +11,7 @@
             <div class="m-header">
                 <div class="m-name-avatar">
                     <div class="m-avatar-box" :class="{ 'no-frame': !avatar_frame }">
-                        <CommonAvatar :uid="uid" :url="avatar" :size="80" />
+                        <RetinaAvatar :uid="uid" :url="avatar" :size="70" />
                         <img class="u-frame" :src="frameUrl" />
                     </div>
                     <div class="u-name-uid">
@@ -21,22 +21,22 @@
                 </div>
                 <div class="m-info-box">
                     <div v-if="uid" class="u-info">
-                        <div class="u-level u-value">Lv.{{ level }} <span class="u-tip">用户</span></div>
-                        <div class="u-fans u-value">{{ fansNum }} <span class="u-tip">粉丝</span></div>
+                        <div class="u-level u-value">Lv.{{ level }} <span class="u-tip">{{ $t("author.profile.user") }}</span></div>
+                        <div class="u-fans u-value">{{ fansNum }} <span class="u-tip">{{ $t("author.profile.followers") }}</span></div>
                         <div class="u-gift u-value">
-                            {{ formatBoxcoin(boxcoin_count) }} <span class="u-tip">累计打赏</span>
+                            {{ formatBoxcoin(boxcoin_count) }} <span class="u-tip">{{ $t("author.profile.totalTips") }}</span>
                         </div>
                     </div>
                     <div v-if="data.user_bio" class="m-signature">
-                        {{ data.user_bio || "这个人太懒了~没有写签名。" }}
+                        {{ data.user_bio || $t("author.profile.noBio") }}
                     </div>
                     <div v-if="isSuperAuthor || isPRO" class="m-ext-info">
-                        <div v-if="isSuperAuthor" class="u-author">签约作者</div>
-                        <div v-if="isPRO" class="u-pro"><span>Pro 专业版</span></div>
+                        <div v-if="isSuperAuthor" class="u-author">{{ $t("author.profile.signedAuthor") }}</div>
+                        <div v-if="isPRO" class="u-pro"><span>{{ $t("author.profile.proEdition") }}</span></div>
                     </div>
                     <div class="m-op">
                         <button class="u-btn u-subscribe" :class="{ 'is-subscribe': subscribed }" @click="follow">
-                            {{ hadDeny ? "已拉黑" : subscribed ? (isFollower ? "互相关注" : "已关注") : "关注TA" }}
+                            {{ followLabel }}
                         </button>
                         <div class="u-more" @click="openMore">
                             <img class="u-icon" svg-inline src="@/assets/img/author/mobile/nav_more.svg" />
@@ -69,12 +69,12 @@ import CmsPosts from "@/components/author/mobile/Pannel/CmsPosts.vue";
 import TopicList from "@/components/author/mobile/Pannel/TopicList.vue";
 import FaceList from "@/components/author/mobile/Pannel/FaceList.vue";
 import SimpleMoreAction from "@/components/author/mobile/MoreAction.vue";
-import CommonAvatar from "@jx3box/jx3box-ui/src/author/Avatar.vue";
+import RetinaAvatar from "@/components/author/RetinaAvatar.vue";
 
 export default {
     name: "MobileMe",
     components: {
-        CommonAvatar,
+        RetinaAvatar,
         SimpleMoreAction,
         ContentTabList,
     },
@@ -122,7 +122,7 @@ export default {
             medal_map,
             frames,
             isVIP: false,
-            attentionText: "已关注",
+            attentionText: this.$t("author.profile.following"),
             moreOperate: false,
             moreOperatePhone: false,
             authorInfo: {},
@@ -150,25 +150,25 @@ export default {
 
             tabs: [
                 {
-                    label: "动态",
+                    label: this.$t("author.tabs.activity"),
                     value: "BoxMoment",
                     component: markRaw(BoxMoment),
                     key: "personal_activities_is_public",
                 },
                 {
-                    label: "文章",
+                    label: this.$t("author.tabs.articles"),
                     value: "Works",
                     component: markRaw(CmsPosts),
                     key: "article_is_public",
                 },
                 {
-                    label: "帖子",
+                    label: this.$t("author.tabs.posts"),
                     value: "Other",
                     key: "community_topic_is_public",
                     component: markRaw(TopicList),
                 },
                 {
-                    label: "捏脸",
+                    label: this.$t("author.tabs.faces"),
                     value: "Data",
                     key: "make_face_is_public",
                     component: markRaw(FaceList),
@@ -185,7 +185,7 @@ export default {
     },
     computed: {
         name() {
-            return this.data?.display_name || "匿名";
+            return this.data?.display_name || this.$t("author.common.anonymous");
         },
         uid: function () {
             return ~~this.$store.state.uid;
@@ -212,7 +212,7 @@ export default {
             return this.isPRO ? "PRO" : "PRE";
         },
         vipTypeTitle: function () {
-            return this.isPRO ? "专业版会员用户" : "高级版会员用户";
+            return this.isPRO ? this.$t("author.profile.proMember") : this.$t("author.profile.premiumMember");
         },
         level: function () {
             return User.getLevel(this.data?.experience || 0);
@@ -250,12 +250,17 @@ export default {
                 return this.privateConf[i.key] !== 0;
             });
         },
+        followLabel() {
+            if (this.hadDeny) return this.$t("author.profile.blocked");
+            if (!this.subscribed) return this.$t("author.profile.follow");
+            return this.isFollower ? this.$t("author.profile.mutualFollowing") : this.$t("author.profile.following");
+        },
         // TODO: 后续改成图片
         diffYearText() {
             const obj = {
-                3: "三年老粉",
-                5: "五年元老",
-                10: "十年长者",
+                3: this.$t("author.profile.threeYearFan"),
+                5: this.$t("author.profile.fiveYearVeteran"),
+                10: this.$t("author.profile.tenYearVeteran"),
             };
 
             if (this.diffYear >= 10) {
@@ -277,7 +282,7 @@ export default {
                     list: [
                         {
                             method: "close",
-                            name: "取消",
+                            name: this.$t("author.common.cancel"),
                         },
                     ],
                 },
@@ -285,13 +290,13 @@ export default {
             if (!this.hadDeny) {
                 res[0].list.push({
                     method: "black",
-                    name: this.hadDeny ? "取消拉黑" : "拉黑",
+                    name: this.hadDeny ? this.$t("author.profile.unblock") : this.$t("author.profile.block"),
                 });
             }
 
             res[0].list.push({
                 method: "report",
-                name: "举报",
+                name: this.$t("author.profile.report"),
             });
 
             return res;
@@ -304,12 +309,10 @@ export default {
         },
         formatBoxcoin(val) {
             const num = Number(val) || 0;
-
-            if (num > 10000) {
-                return `${(num / 10000).toFixed(2)}w`;
-            }
-
-            return num;
+            return new Intl.NumberFormat(this.$i18n.locale, {
+                notation: num > 10000 ? "compact" : "standard",
+                maximumFractionDigits: 2,
+            }).format(num);
         },
         onSelect(item) {
             if (item.method === "black") {
@@ -330,15 +333,15 @@ export default {
             this.$copyText(String(text)).then(
                 function (e) {
                     _this.$notify({
-                        title: "复制成功",
-                        message: "复制内容：" + text,
+                        title: _this.$t("author.common.copySuccess"),
+                        message: _this.$t("author.common.copiedContent", { content: text }),
                         type: "success",
                     });
                 },
                 function (e) {
                     _this.$notify({
-                        title: "复制失败",
-                        message: "请手动复制",
+                        title: _this.$t("author.common.copyFailed"),
+                        message: _this.$t("author.common.copyManually"),
                         type: "warning",
                     });
                 }
@@ -405,15 +408,15 @@ export default {
                 return;
             }
             if (this.subscribed) {
-                this.$confirm("确定不再关注此人？", "提示", {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
+                this.$confirm(this.$t("author.profile.unfollowConfirm"), this.$t("author.common.notice"), {
+                    confirmButtonText: this.$t("author.common.confirm"),
+                    cancelButtonText: this.$t("author.common.cancel"),
                     type: "warning",
                 })
                     .then(() => {
                         unsubscribeAuthor({ id: this.uid })
                             .then((res) => {
-                                this.$message.success("操作成功");
+                                this.$message.success(this.$t("author.common.operationSuccess"));
                                 this.subscribed = false;
                             })
                             .catch((err) => {
@@ -425,7 +428,7 @@ export default {
                 subscribeAuthor({ id: this.uid, data: { title: this.display_name } })
                     .then((res) => {
                         this.subscribed = true;
-                        this.$message.success("关注成功");
+                        this.$message.success(this.$t("author.profile.followSuccess"));
                     })
                     .catch((err) => {
                         console.log(err);
@@ -439,9 +442,11 @@ export default {
         formatFansNum(num) {
             if (num < 10000) {
                 return num === 0 ? "" : num;
-            } else {
-                return (num / 10000).toFixed(1) + "万";
             }
+            return new Intl.NumberFormat(this.$i18n.locale, {
+                notation: "compact",
+                maximumFractionDigits: 1,
+            }).format(num);
         },
         loadFans() {
             if (!this.uid) {
@@ -484,16 +489,16 @@ export default {
         },
         //拉黑
         joinBlacklist() {
-            this.$confirm("确定要拉黑此人？", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("author.profile.blockConfirm"), this.$t("author.common.notice"), {
+                confirmButtonText: this.$t("author.common.confirm"),
+                cancelButtonText: this.$t("author.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
                     deny(this.uid)
                         .then(() => {
                             this.hadDeny = true;
-                            this.$message.success("拉黑成功");
+                            this.$message.success(this.$t("author.profile.blockSuccess"));
                         })
                         .catch((err) => {
                             console.log(err);
@@ -506,7 +511,7 @@ export default {
             undeny(this.uid)
                 .then(() => {
                     this.hadDeny = false;
-                    this.$message.success("操作成功");
+                    this.$message.success(this.$t("author.common.operationSuccess"));
                 })
                 .catch((err) => {
                     console.log(err);

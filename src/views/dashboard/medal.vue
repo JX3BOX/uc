@@ -1,15 +1,15 @@
 <template>
-    <uc class="m-dashboard-medal m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tab-list="tabList">
+    <uc class="m-dashboard-medal m-dashboard-skin" icon="el-icon-brush" :title="$t('dashboard.theme.title')" :tab-list="tabList">
         <template #header>
             <a
                 class="u-link el-button el-button--default el-button--small is-round is-plain"
                 href="/vip/mall?category=virtual"
                 target="_blank"
-                ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
+                ><i class="el-icon-shopping-cart-2"></i> {{ $t("dashboard.theme.getDecorations") }}</a
             >
         </template>
         <div class="m-medal-content">
-            <el-divider content-position="left">已获得</el-divider>
+            <el-divider content-position="left">{{ $t("dashboard.common.obtained") }}</el-divider>
             <div class="u-list">
                 <div class="u-item is-have" v-for="item in userMedals" :key="item.id" :title="item.medal_desc">
                     <img class="u-img" :src="imgSrc(item.medal)" :alt="item.medal" />
@@ -22,11 +22,11 @@
                         size="small"
                     >
                         <!-- <i :class="item.is_wear ? 'el-icon-help' : 'el-icon-s-help'"></i> -->
-                        {{ item.is_wear ? "卸下" : "佩戴" }}
+                        {{ item.is_wear ? $t("dashboard.medal.takeOff") : $t("dashboard.medal.wear") }}
                     </el-button>
                 </div>
             </div>
-            <el-divider content-position="left">未获得</el-divider>
+            <el-divider content-position="left">{{ $t("dashboard.common.notObtained") }}</el-divider>
             <div class="u-list">
                 <div class="u-item" v-for="item in noMedals" :key="item.id" :title="item.desc">
                     <img class="u-img" :src="imgSrc(item.name)" :alt="item.name" />
@@ -104,7 +104,7 @@ export default {
                 setMedal(this.uid, item.id, 0)
                     .then(() => {
                         item.is_wear = 0;
-                        this.$message.success("操作成功");
+                        this.$message.success(this.$t("dashboard.common.operationSuccess"));
                     })
                     .catch(() => {
                         item.is_wear = 1; // 如果取消失败，保持原状态
@@ -114,7 +114,7 @@ export default {
                 setMedal(this.uid, item.id, 1)
                     .then(() => {
                         item.is_wear = 1;
-                        this.$message.success("操作成功");
+                        this.$message.success(this.$t("dashboard.common.operationSuccess"));
                     })
                     .catch(() => {
                         item.is_wear = 0; // 如果佩戴失败，保持原状态

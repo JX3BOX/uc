@@ -1,9 +1,9 @@
 <template>
     <div class="m-credit m-boxcoin m-cny">
-        <h2 class="u-title"><i class="el-icon-wallet"></i> 我的金箔</h2>
+        <h2 class="u-title"><i class="el-icon-wallet"></i> {{ $t("dashboard.cny.title") }}</h2>
 
         <div class="m-credit-total m-packet-total">
-            余额 :
+            {{ $t("dashboard.common.balance") }} :
             <b :class="{ hasLeft: hasLeft }">{{ money }}</b>
             <!-- <a class="el-button u-btn el-button--primary el-button--small" href="/vip/cny" target="_blank">充值</a> -->
             <!-- <el-button class="u-btn" type="primary" @click="togglePullBox"  :disabled="!money"
@@ -17,7 +17,7 @@
             </el-alert>
             <el-alert
                 class="m-boxcoin-tip"
-                title="100金箔可兑换1元人民币，最小兑换起步100金箔"
+                :title="$t('dashboard.cny.exchangeTip')"
                 type="warning"
                 show-icon
             >
@@ -29,50 +29,48 @@
                 > -->
             </el-alert>
             <el-form label-position="left" label-width="80px" class="m-boxcoin-form" :model="pull">
-                <el-form-item label="类型">
-                    <el-select v-model="pull.pay_type" placeholder="请选择">
-                        <el-option v-for="(label, key) in paytypes" :key="key" :label="label" :value="key"> </el-option>
+                <el-form-item :label="$t('dashboard.common.type')">
+                    <el-select v-model="pull.pay_type" :placeholder="$t('dashboard.common.selectPlaceholder')">
+                        <el-option v-for="(label, key) in paytypes" :key="key" :label="paymentTypeLabel(key, label)" :value="key"> </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="账号">
-                    <el-input v-model="pull.account" placeholder="请务必填写正确的收款账号"></el-input>
+                <el-form-item :label="$t('dashboard.common.account')">
+                    <el-input v-model="pull.account" :placeholder="$t('dashboard.common.paymentAccountPlaceholder')"></el-input>
                 </el-form-item>
-                <el-form-item label="确认账号">
-                    <el-input v-model="pull.account_sure" placeholder="请务必填写正确的收款账号"></el-input>
+                <el-form-item :label="$t('dashboard.cny.confirmAccount')">
+                    <el-input v-model="pull.account_sure" :placeholder="$t('dashboard.common.paymentAccountPlaceholder')"></el-input>
                 </el-form-item>
-                <el-form-item label="姓名">
-                    <el-input v-model="pull.username" placeholder="请务必填写正确的收款人"></el-input>
+                <el-form-item :label="$t('dashboard.common.name')">
+                    <el-input v-model="pull.username" :placeholder="$t('dashboard.common.payeePlaceholder')"></el-input>
                 </el-form-item>
-                <el-form-item label="数量">
+                <el-form-item :label="$t('dashboard.common.quantity')">
                     <el-input-number
                         v-model.number="pull.money"
                         :max="money"
                         :min="100"
                         :step="100"
-                        placeholder="请务必填写正确的金额"
+                        :placeholder="$t('dashboard.cny.amountPlaceholder')"
                     >
                         <!-- <template slot="prepend"></template> -->
-                        <template #append>金箔（分）</template>
+                        <template #append>{{ $t("dashboard.cny.goldLeafCents") }}</template>
                     </el-input-number>
                     <div class="u-tip" v-if="pull.money">
-                        手续费{{ formatMoney(fee) }}元，实际到账{{ formatMoney(real) }}元
+                        {{ $t("dashboard.cny.feeSummary", { fee: formatMoney(fee), amount: formatMoney(real) }) }}
                     </div>
                 </el-form-item>
                 <el-form-item label>
                     <el-button type="primary" @click="openConfirmBox" :disabled="!ready || lockStatus"
-                        >提交申请</el-button
+                        >{{ $t("dashboard.common.submitApplication") }}</el-button
                     >
                     <span class="u-tip" v-if="!isAllowDate">
-                        <i class="el-icon-warning-outline"></i> 每月{{ start_date }}-{{
-                            end_date
-                        }}日结算期间不能进行提现申请
+                        <i class="el-icon-warning-outline"></i> {{ $t("dashboard.cny.settlementUnavailable", { start: start_date, end: end_date }) }}
                     </span>
                 </el-form-item>
             </el-form>
         </div>
         <div class="m-credit-table m-packet-table" v-loading="loading">
             <el-tabs type="border-card" v-model="tab">
-                <el-tab-pane label="变动记录" name="list">
+                <el-tab-pane :label="$t('dashboard.cny.changeHistory')" name="list">
                     <div class="m-packet-table" v-if="list && list.length">
                         <table class="m-boxcoin-in-list m-packet-in-list">
                             <!-- "id": 48,
@@ -95,31 +93,31 @@
 
                             <thead>
                                 <tr>
-                                    <th>类型</th>
-                                    <th>来源</th>
-                                    <th>去向</th>
-                                    <th>数量</th>
-                                    <th>备注</th>
-                                    <th>时间</th>
+                                    <th>{{ $t("dashboard.common.type") }}</th>
+                                    <th>{{ $t("dashboard.common.source") }}</th>
+                                    <th>{{ $t("dashboard.cny.destination") }}</th>
+                                    <th>{{ $t("dashboard.common.quantity") }}</th>
+                                    <th>{{ $t("dashboard.common.remark") }}</th>
+                                    <th>{{ $t("dashboard.common.time") }}</th>
                                 </tr>
                             </thead>
                             <tr v-for="(item, i) in list" :key="i">
                                 <td>
-                                    {{ item.description || formatType(item.action_type) || "未知" }}
+                                    {{ item.description || formatType(item.action_type) || $t("dashboard.common.unknown") }}
                                 </td>
                                 <td>
                                     <a class="u-user" :href="authorLink(item.pay_user.id)" v-if="item.pay_user">
                                         <img class="u-avatar" :src="showAvatar(item.pay_user.avatar)" alt="" />
                                         {{ item.pay_user.display_name }}
                                     </a>
-                                    <span v-else>系统</span>
+                                    <span v-else>{{ $t("dashboard.common.system") }}</span>
                                 </td>
                                 <td>
                                     <a class="u-user" :href="authorLink(item.access_user.id)" v-if="!!item.access_user">
                                         <img class="u-avatar" :src="showAvatar(item.access_user.avatar)" alt="" />
                                         {{ item.access_user.display_name }}
                                     </a>
-                                    <span v-else>系统</span>
+                                    <span v-else>{{ $t("dashboard.common.system") }}</span>
                                 </td>
                                 <td class="u-count" :class="{ isNegative: !isIncome(item) }">
                                     <span>{{ isIncome(item) ? "+" : "-" }}</span>
@@ -135,7 +133,7 @@
                     <el-alert
                         v-else
                         class="m-credit-null m-packet-null"
-                        title="没有找到相关条目"
+                        :title="$t('dashboard.common.noItems')"
                         type="info"
                         center
                         show-icon
@@ -250,6 +248,10 @@ export default {
         },
     },
     methods: {
+        paymentTypeLabel(key, fallback) {
+            const path = `dashboard.common.paymentTypes.${key}`;
+            return this.$te(path) ? this.$t(path) : fallback;
+        },
         // 初始化
         init: function () {
             getBoxcoinConfig().then((res) => {
@@ -298,16 +300,16 @@ export default {
         },
         openConfirmBox: function () {
             const { account_sure, account } = this.pull;
-            if (account_sure !== account) return this.$message.error("填写的账户不一致");
+            if (account_sure !== account) return this.$message.error(this.$t("dashboard.cny.accountMismatch"));
             delete this.pull.account_sure;
             this.$alert(
                 `<div class="m-packet-msg">
-                收款账号<b>${this.pull.account}</b><br/>
-                收款人<b>${this.pull.username}</b><br/>
+                ${this.$t("dashboard.common.paymentAccount")}<b>${this.pull.account}</b><br/>
+                ${this.$t("dashboard.common.payee")}<b>${this.pull.username}</b><br/>
                 </div>`,
-                "确认信息",
+                this.$t("dashboard.common.confirmInformation"),
                 {
-                    confirmButtonText: "确定",
+                    confirmButtonText: this.$t("dashboard.common.confirm"),
                     dangerouslyUseHTMLString: true,
                     callback: (action) => {
                         if (action == "confirm") {
@@ -317,7 +319,7 @@ export default {
                                 .then((res) => {
                                     this.$message({
                                         type: "success",
-                                        message: `申请成功,请耐心等待结算`,
+                                        message: this.$t("dashboard.cny.applicationSuccess"),
                                     });
                                     this.showPullBox = false;
                                     this.money = this.money - this.pull.money;
@@ -369,7 +371,7 @@ export default {
             return showTime(val);
         },
         formatType: function (val) {
-            return (val && types[val]) || "未知";
+            return (val && types[val]) || this.$t("dashboard.common.unknown");
         },
         formatRemark: function (str) {
             if (str) {

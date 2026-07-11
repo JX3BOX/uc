@@ -9,10 +9,10 @@
 
                 <div class="u-progress">
                     <div class="u-line" :style="`width: ${userAchievement.progress}%`"></div>
-                    <div class="u-text">奇遇总进度：{{ userAchievement.progress }}%</div>
+                    <div class="u-text">{{ $t("author.adventure.totalProgress", { progress: userAchievement.progress }) }}</div>
                 </div>
 
-                <div class="u-time">记录时间：{{ userAchievement.updated_at }}</div>
+                <div class="u-time">{{ $t("author.adventure.recordedAt", { time: userAchievement.updated_at }) }}</div>
             </div>
 
             <div class="m-right">
@@ -22,7 +22,7 @@
 
         <div class="m-qy-box">
             <div class="m-counter m-world-count">
-                <div>绝世奇遇</div>
+                <div>{{ $t("author.adventure.epic") }}</div>
                 <div class="m-count-info">
                     {{ userAchievement.perfectNowNum + "/" + userAchievement.perfectAllNum }}
                 </div>
@@ -45,7 +45,7 @@
                         stroke-linejoin="round"
                     />
                 </svg>
-                {{ showCard ? "展示立绘" : "展示名牌" }}
+                {{ showCard ? $t("author.adventure.showPortrait") : $t("author.adventure.showNameplate") }}
             </div>
 
             <div v-if="!showCard" class="m-world" :style="{ zoom: contentZoom }">
@@ -92,7 +92,7 @@
 
         <div class="m-qy-box">
             <div class="m-counter m-normal-count">
-                <div>普通奇遇</div>
+                <div>{{ $t("author.adventure.normal") }}</div>
                 <div class="m-count-info">
                     {{ userAchievement.normalNowNum + "/" + userAchievement.normalAllNum }}
                 </div>
@@ -138,7 +138,7 @@
         <!-- 宠物奇遇 -->
         <div class="m-qy-box">
             <div class="m-counter m-qy-count">
-                <div>宠物奇遇</div>
+                <div>{{ $t("author.adventure.pet") }}</div>
                 <div class="m-count-info">
                     {{ userAchievement.petNowNum + "/" + userAchievement.petAllNum }}
                 </div>

@@ -4,13 +4,13 @@
             <el-col :span="4">
                 <router-link to="/question">
                     <i class="el-icon-s-opportunity"></i>
-                    <span>剑三题目</span>
+                    <span>{{ $t("publish.types.questions") }}</span>
                 </router-link>
             </el-col>
             <el-col :span="4">
                 <router-link to="/paper">
                     <img svg-inline src="@/assets/img/publish/channel/100.svg" />
-                    <span>剑三试卷</span>
+                    <span>{{ $t("publish.types.papers") }}</span>
                 </router-link>
             </el-col>
         </div>

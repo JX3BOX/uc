@@ -8,7 +8,7 @@
                         <img class="u-pic" :src="showThumb(item)" loading="lazy" />
                     </i>
                 </a>
-                <i class="u-star-mark" v-if="!!item.star">STAR</i>
+                <i class="u-star-mark" v-if="!!item.star">{{ $t("author.common.star") }}</i>
             </div>
         </div>
         <div class="m-empty" v-else>

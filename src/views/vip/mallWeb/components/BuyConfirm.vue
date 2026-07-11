@@ -5,16 +5,15 @@
                 :src="item?.goods_images?.[0] ? item.goods_images[0] : '@/assets/img/publish/logo.svg'"
                 style="width: 32vw; height: 32vw"
             />
-            <div class="text">
-                确认使用<span class="price">{{ confirmText }}</span
-                >兑换<span class="title">{{ item.title }}</span
-                >嘛？
-            </div>
+            <i18n-t keypath="vip.mall.buyConfirmMessage" tag="div" class="text">
+                <template #cost><span class="price">{{ confirmText }}</span></template>
+                <template #product><span class="title">{{ item.title }}</span></template>
+            </i18n-t>
         </div>
         <div class="btn-box">
-            <el-button round @click.stop="isShow = false" style="width: 20.5333vw; font-size: 3.2vw">取消</el-button>
+            <el-button round @click.stop="isShow = false" style="width: 20.5333vw; font-size: 3.2vw">{{ $t("vip.common.cancel") }}</el-button>
             <el-button type="primary" round @click.stop="buyGoods" style="width: 20.5333vw; font-size: 3.2vw"
-                >确定</el-button
+                >{{ $t("vip.common.confirm") }}</el-button
             >
         </div>
     </el-dialog>
@@ -40,13 +39,13 @@ export default {
     computed: {
         confirmText() {
             if (this.item.price_points && this.item.price_boxcoin) {
-                return `${this.item.price_boxcoin}盒币和${this.item.price_points}积分`;
+                return this.$t("vip.mall.boxcoinAndPoints", { boxcoin: this.item.price_boxcoin, points: this.item.price_points });
             }
             if (this.item.price_points) {
-                return `${this.item.price_points}积分`;
+                return this.$t("vip.common.pointsAmount", { amount: this.item.price_points });
             }
             if (this.item.price_boxcoin) {
-                return `${this.item.price_boxcoin}盒币`;
+                return this.$t("vip.common.boxcoinAmount", { amount: this.item.price_boxcoin });
             }
             return "";
         },
@@ -54,7 +53,7 @@ export default {
     methods: {
         buyGoods() {
             if (!User.isLogin()) {
-                this.$message.error("请先登录");
+                this.$message.error(this.$t("vip.common.loginRequired"));
                 setTimeout(() => {
                     User.toLogin();
                 }, 1000);
@@ -71,9 +70,9 @@ export default {
                         remark: "虚拟商品购买",
                     })
                     .then(() => {
-                        this.$confirm("兑换成功，是否立即前往装扮？", "提示", {
-                            confirmButtonText: "确定",
-                            cancelButtonText: "取消",
+                        this.$confirm(this.$t("vip.mall.goDecoratePrompt"), this.$t("vip.common.prompt"), {
+                            confirmButtonText: this.$t("vip.common.confirm"),
+                            cancelButtonText: this.$t("vip.common.cancel"),
                             type: "warning",
                         })
                             .then(() => {

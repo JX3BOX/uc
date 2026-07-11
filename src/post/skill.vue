@@ -1,13 +1,13 @@
 <template>
     <div class="m-publish-box">
         <!-- 头部 -->
-        <publish-header name="技能百科">
+        <publish-header :name="$t('publish.types.skillWiki')">
             <slot name="header"></slot>
         </publish-header>
 
         <el-form class="m-publish-post">
             <div class="m-publish-source">
-                <el-divider content-position="left">选择技能 *</el-divider>
+                <el-divider content-position="left">{{ $t("publish.wiki.selectSkill") }} *</el-divider>
                 <el-select
                     class="u-source-id"
                     v-model="post.source_id"
@@ -33,20 +33,20 @@
             </div>
 
             <div class="m-publish-remark">
-                <el-divider content-position="left">修订说明 *</el-divider>
+                <el-divider content-position="left">{{ $t("publish.form.revisionNotes") }} *</el-divider>
                 <el-input
                     v-model="post.remark"
                     :maxlength="200"
                     :minlength="1"
                     show-word-limit
                     required
-                    placeholder="请简单描述一下本次修订的说明"
+                    :placeholder="$t('publish.form.revisionNotesPlaceholder')"
                     size="large"
                 ></el-input>
             </div>
 
             <div class="m-publish-content">
-                <el-divider content-position="left">百科正文 *</el-divider>
+                <el-divider content-position="left">{{ $t("publish.wiki.articleBody") }} *</el-divider>
                 <Tinymce v-model="post.content" :attachmentEnable="true" :resourceEnable="true" :height="400">
                     <el-alert
                         type="warning"
@@ -56,7 +56,7 @@
                     >
                         <template #title>
                             <span class="u-alert-title"
-                                >当前百科已经有更新的版本，你的攻略可能已经失效，请先进行比对。</span
+                                >{{ $t("publish.wiki.newerVersionWarning") }}</span
                             >
                             <el-link
                                 type="primary"
@@ -64,7 +64,7 @@
                                 :href="getLink(post.source_id)"
                                 target="_blank"
                                 class="u-view-latest"
-                                >查看最新攻略</el-link
+                                >{{ $t("publish.wiki.viewLatestArticle") }}</el-link
                             >
                             <el-link
                                 @click="getLatest"
@@ -72,7 +72,7 @@
                                 class="u-get-latest"
                                 type="primary"
                                 v-if="latest.post"
-                                >获取最新攻略</el-link
+                                >{{ $t("publish.wiki.loadLatestArticle") }}</el-link
                             >
                         </template>
                     </el-alert>
@@ -82,7 +82,7 @@
             <el-divider content-position="left"></el-divider>
             <div class="m-publish-commit">
                 <el-button class="u-publish" size="large" icon="Promotion" type="primary" @click="toPublish" :disabled="processing"
-                    >提交百科
+                    >{{ $t("publish.wiki.submitArticle") }}
                 </el-button>
             </div>
         </el-form>
@@ -140,20 +140,20 @@ export default {
         toPublish: function () {
             if (!this.post.source_id) {
                 this.$message({
-                    message: "请选择要修订百科的技能",
+                    message: this.$t("publish.wiki.selectSkillRequired"),
                     type: "warning",
                 });
                 return;
             }
 
             if (!this.post.content) {
-                this.$message({ message: "要编写百科正文哦", type: "warning" });
+                this.$message({ message: this.$t("publish.validation.articleBodyRequired"), type: "warning" });
                 return;
             }
 
             if (!this.post.remark) {
                 this.$message({
-                    message: "请简单描述本次修订说明",
+                    message: this.$t("publish.validation.revisionNotesRequired"),
                     type: "warning",
                 });
                 return;
@@ -172,7 +172,7 @@ export default {
                     .then((data) => {
                         data = data.data;
                         this.$message({
-                            message: "提交成功，请等待审核",
+                            message: this.$t("publish.message.submittedForReview"),
                             type: "success",
                         });
                         setTimeout(() => {
@@ -187,7 +187,7 @@ export default {
                     .then((data) => {
                         data = data.data;
                         this.$message({
-                            message: "提交成功，请等待审核",
+                            message: this.$t("publish.message.submittedForReview"),
                             type: "success",
                         });
                         setTimeout(() => {

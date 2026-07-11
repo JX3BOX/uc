@@ -63,7 +63,7 @@ export default {
             return "/author/" + this.uid;
         },
         name: function () {
-            return this.$store.state.userdata.display_name || "魔盒";
+            return this.$store.state.userdata.display_name || this.$t("author.common.jx3box");
         },
     },
     created: function () {

@@ -1,7 +1,7 @@
 <template>
     <div class="m-publish-extend">
-        <el-form-item label="其它">
-            <el-checkbox v-model="includeVideo" :true-value="1" :fasle-value="0">内含视频</el-checkbox>
+        <el-form-item :label="$t('publish.common.other')">
+            <el-checkbox v-model="includeVideo" :true-value="1" :fasle-value="0">{{ $t("publish.form.containsVideo") }}</el-checkbox>
         </el-form-item>
     </div>
 </template>

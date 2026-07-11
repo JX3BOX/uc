@@ -16,14 +16,14 @@
                     <!-- 左侧 -->
                     <div class="m-left">
                         <div class="logo">
-                            <img :src="`${themeImg}logo.svg?123`" alt="魔盒盲盒" />
+                            <img :src="`${themeImg}logo.svg?123`" :alt="$t('vip.lottery.blindBox')" />
                             <el-tooltip effect="light" placement="bottom-start">
                                 <template #content>
                                     <div class="m-blindbox-info">
                                         {{ info }}
                                     </div>
                                 </template>
-                                <img class="u-info" :src="`${__imgRoot}desc.svg`" alt="活动说明" />
+                                <img class="u-info" :src="`${__imgRoot}desc.svg`" :alt="$t('vip.event.eventDetails')" />
                             </el-tooltip> 
                         </div>
                         <!-- 抽奖盒子 -->
@@ -38,7 +38,7 @@
                                 <img
                                     class="u-img"
                                     :src="`${themeImg}${theme === 'weiqi' && index < 5 ? 'boxBlack' : 'box'}.svg?123`"
-                                    alt="奖品"
+                                    :alt="$t('vip.lottery.prize')"
                                     :key="replay + 'box' + index"
                                     v-show="showBox(index)"
                                 />
@@ -55,11 +55,11 @@
                         <div class="m-prize box">
                             <div class="m-title">
                                 <div style="display: flex">
-                                    <img :src="`${__imgRoot}prize.png`" class="u-prize" alt="奖品一览" />
-                                    <div class="u-preview" @click="preview = true">速览</div>
+                                    <img :src="`${__imgRoot}prize.png`" class="u-prize" :alt="$t('vip.lottery.prizeOverview')" />
+                                    <div class="u-preview" @click="preview = true">{{ $t("vip.lottery.quickView") }}</div>
                                 </div>
                                 <el-dialog
-                                    title="奖品速览"
+                                    :title="$t('vip.lottery.quickViewTitle')"
                                     v-model="preview"
                                     width="80%"
                                     :before-close="() => (preview = false)"
@@ -78,8 +78,8 @@
                                             <div class="u-prize">
                                                 <img :src="item.img" />
                                                 <div class="u-prize-name">{{ item.name }}</div>
-                                                <span class="u-prize-count" v-if="item.name !== '积分（积分）'"
-                                                    >剩余量 <b>{{ item.prize_count - item.be_won_count }}</b
+                                                <span class="u-prize-count" v-if="!item.unlimited"
+                                                    >{{ $t("vip.lottery.remaining") }} <b>{{ item.prize_count - item.be_won_count }}</b
                                                     ><el-progress
                                                         :percentage="
                                                             Number(
@@ -92,13 +92,13 @@
                                                         "
                                                     ></el-progress
                                                 ></span>
-                                                <span v-else>不限量</span>
+                                                <span v-else>{{ $t("vip.lottery.unlimited") }}</span>
                                             </div>
                                         </a>
                                     </div>
                                 </el-dialog>
                                 <el-tooltip effect="light" placement="right-start">
-                                    <span class="u-odds" v-show="odds">+ 概率公式</span>
+                                    <span class="u-odds" v-show="odds">+ {{ $t("vip.lottery.oddsFormula") }}</span>
                                     <template #content>
                                         <div class="m-blindbox-info">
                                             {{ odds }}
@@ -121,8 +121,8 @@
                                             <div class="u-prize">
                                                 <img :src="item.img" />
                                                 <div class="u-count" v-if="item.prize_count">
-                                                    <span>【总数量】{{ item.prize_count }}</span>
-                                                    <span>【已抽出】{{ item.be_won_count }}</span>
+                                                    <span>{{ $t("vip.lottery.totalQuantity", { count: item.prize_count }) }}</span>
+                                                    <span>{{ $t("vip.lottery.drawnQuantity", { count: item.be_won_count }) }}</span>
                                                 </div>
                                             </div>
                                         </el-tooltip>
@@ -139,8 +139,8 @@
                                             <div class="u-prize">
                                                 <img :src="item.img" />
                                                 <div class="u-count" v-if="item.prize_count">
-                                                    <span>【总数量】{{ item.prize_count }}</span>
-                                                    <span>【已抽出】{{ item.be_won_count }}</span>
+                                                    <span>{{ $t("vip.lottery.totalQuantity", { count: item.prize_count }) }}</span>
+                                                    <span>{{ $t("vip.lottery.drawnQuantity", { count: item.be_won_count }) }}</span>
                                                 </div>
                                             </div>
                                         </el-tooltip>
@@ -156,7 +156,7 @@
                                 :src="`${themeImg}refresh.svg`"
                                 class="u-img refresh"
                                 @click="refreshBox"
-                                alt="刷新盲盒"
+                                :alt="$t('vip.lottery.refreshBlindBox')"
                                 v-if="theme !== 'weiqi'"
                             />
                             <!-- 围棋主题需要换图片所以用div的背景图代替 -->
@@ -179,12 +179,12 @@
                             <!-- 中奖记录 -->
                             <div class="m-history box" :class="history ? 'history' : 'close'">
                                 <div class="m-title" @click="openHistory">
-                                    <img :src="`${__imgRoot}history.png`" class="u-history" alt="开盒记录" />
+                                    <img :src="`${__imgRoot}history.png`" class="u-history" :alt="$t('vip.lottery.history')" />
                                     <img
                                         :src="`${__imgRoot}close.png`"
                                         width="42px"
                                         class="u-close"
-                                        alt="关闭"
+                                        :alt="$t('vip.common.close')"
                                         @click.stop="closeHistory"
                                     />
                                 </div>
@@ -200,17 +200,17 @@
                     <div class="u-item box" v-for="(item, i) in myPrizes" :key="i">
                         <template v-if="item.prize_type == 'vip_asset'">
                             <img class="u-img" :src="`${__imgRoot}points.png`" />
-                            <span>{{ item.vip_asset_once_give + asset[item.vip_asset_type] }}</span>
+                            <span>{{ item.vip_asset_once_give + assetLabels[item.vip_asset_type] }}</span>
                         </template>
                         <template v-if="item.prize_type == 'thanks'">
                             <img class="u-img" :src="`${__imgRoot}thanks.png?123`" />
-                            <span>感谢参与</span>
+                            <span>{{ $t("vip.lottery.thanks") }}</span>
                         </template>
                         <template v-if="item.prize_type == 'mall_goods'">
                             <img class="u-img" :src="item.goods.goods_images[0]" />
                             <span>{{ item.goods.title }}</span>
                             <a :href="address" target="_blank" class="u-tips" v-if="!item.goods.is_virtual">
-                                点击填写收货地址
+                                {{ $t("vip.lottery.fillAddress") }}
                             </a>
                         </template>
                     </div>
@@ -219,13 +219,13 @@
                     :src="`${themeImg}${history ? 'ok' : 'get'}.svg?123`"
                     class="u-get"
                     :class="{ disabled: prizesInterval !== null }"
-                    alt="拿下"
+                    :alt="$t('vip.lottery.claimPrize')"
                     @click.stop="closePrize"
                 />
             </div>
         </div>
         <div class="mark" v-if="!event_status">
-            <div class="m-box"><img :src="`${__imgRoot}null.png`" alt="活动暂未开启" /></div>
+            <div class="m-box"><img :src="`${__imgRoot}null.png`" :alt="$t('vip.lottery.notOpen')" /></div>
         </div>
         <div class="mark" v-if="visible" @click="visible = false">
             <div class="m-box">
@@ -267,18 +267,6 @@ export default {
             activeList: [],
             replay: 0,
             historyList: [],
-            status: {
-                0: "全部",
-                1: "抽奖中",
-                2: "中奖",
-                3: "未中奖",
-            },
-            asset: {
-                boxcoin: "盒币（重制）",
-                boxcoin_origin: "盒币（缘起）",
-                point: "积分",
-            },
-
             mark: false,
             history: false,
             close: false,
@@ -338,6 +326,13 @@ export default {
             return {
                 point: `${this.__imgRoot}points.png`,
                 boxcoin: `${this.__imgRoot}boxcoin.png`,
+            };
+        },
+        assetLabels() {
+            return {
+                boxcoin: this.$t("vip.lottery.boxcoinRemastered"),
+                boxcoin_origin: this.$t("vip.lottery.boxcoinOrigin"),
+                point: this.$t("vip.common.points"),
             };
         },
         //判断是否需要动画
@@ -432,7 +427,7 @@ export default {
                     const userLevel = User.getLevel(this.user.experience);
 
                     if (userLevelLimit > userLevel) {
-                        this.$alert("很抱歉，您的用户等级不足", "无法进行当前活动", {
+                        this.$alert(this.$t("vip.lottery.levelTooLow"), this.$t("vip.lottery.activityUnavailable"), {
                             type: "error",
                         });
                     }
@@ -440,7 +435,7 @@ export default {
                     this.refreshBox();
                 })
                 .catch((e) => {
-                    this.$alert("活动还未开始或已结束", {
+                    this.$alert(this.$t("vip.lottery.notStartedOrEnded"), {
                         type: "error",
                     });
                 });
@@ -448,7 +443,7 @@ export default {
         setPrizeList(data) {
             return data.prize.map((item) => {
                 if (item.prize_type != "mall_goods" && this.assetImg[item.vip_asset_type])
-                    return { img: this.assetImg[item.vip_asset_type], name: "积分（积分）" };
+                    return { img: this.assetImg[item.vip_asset_type], name: this.$t("vip.common.points"), unlimited: true };
                 return {
                     id: item.mall_goods.id,
                     img: resolveImagePath(item.mall_goods.goods_images[0]),
@@ -460,9 +455,9 @@ export default {
         },
         // 登录
         toLogin() {
-            this.$confirm("参与抽奖必须登录, 是否登录?", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("vip.lottery.loginPrompt"), this.$t("vip.common.prompt"), {
+                confirmButtonText: this.$t("vip.common.confirm"),
+                cancelButtonText: this.$t("vip.common.cancel"),
                 type: "warning",
             }).then(() => {
                 User.toLogin();
@@ -569,7 +564,7 @@ export default {
                     if (count > 5) {
                         clearInterval(this.prizesInterval);
                         this.prizesInterval = null;
-                        return this.$alert("请前往开盒记录查看，如无结果请联系网站管理人员", "开盒出现异常", {
+                        return this.$alert(this.$t("vip.lottery.drawErrorMessage"), this.$t("vip.lottery.drawErrorTitle"), {
                             type: "error",
                         });
                     }

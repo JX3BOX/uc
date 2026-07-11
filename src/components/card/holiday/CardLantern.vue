@@ -1,12 +1,12 @@
 <template>
     <div class="cardLantern">
         <div class="u-lanternFestival-card" :class="show ? 'u-card-on' : 'u-card-off'" @click="change">
-            <img class="u-card-bg" :src="imgList[0]" alt="元宵节快乐!" />
-            <img class="u-card-bg02" :src="imgList[1]" alt="元宵节快乐!" />
-            <img class="u-card-button" :src="imgList[2]" alt="元宵节快乐!" />
-            <img class="u-card-icon" :src="imgList[3]" alt="元宵节快乐!" />
-            <img class="u-card-icon02" :src="imgList[4]" alt="元宵节快乐!" />
-            <img class="u-card-content" :src="imgList[5]" alt="元宵节快乐!" />
+            <img class="u-card-bg" :src="imgList[0]" :alt="$t('card.holiday.happyLanternFestival')" />
+            <img class="u-card-bg02" :src="imgList[1]" :alt="$t('card.holiday.happyLanternFestival')" />
+            <img class="u-card-button" :src="imgList[2]" :alt="$t('card.holiday.happyLanternFestival')" />
+            <img class="u-card-icon" :src="imgList[3]" :alt="$t('card.holiday.happyLanternFestival')" />
+            <img class="u-card-icon02" :src="imgList[4]" :alt="$t('card.holiday.happyLanternFestival')" />
+            <img class="u-card-content" :src="imgList[5]" :alt="$t('card.holiday.happyLanternFestival')" />
             <div class="u-card-count">{{ fontCount }}</div>
         </div>
     </div>

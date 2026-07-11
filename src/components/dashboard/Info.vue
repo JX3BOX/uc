@@ -3,7 +3,9 @@
         <div class="u-stat"></div>
         <div class="u-home">
             <a class="u-home-btn el-button el-button--small is-plain" :href="home"
-                ><img class="u-home-icon" svg-inline src="@/assets/img/dashboard/home.svg" />个人主页</a
+                ><img class="u-home-icon" svg-inline src="@/assets/img/dashboard/home.svg" />{{
+                    $t("dashboard.common.personalHomepage")
+                }}</a
             >
         </div>
     </div>

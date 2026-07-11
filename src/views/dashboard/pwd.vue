@@ -10,9 +10,9 @@
                 <el-alert
                     v-if="showPasswordNotice"
                     class="u-ac"
-                    title="请设置密码"
+                    :title="$t('dashboard.password.setPassword')"
                     type="warning"
-                    description="您还没有设置密码，将无法使用密码登录或查看卡密等功能。"
+                    :description="$t('dashboard.password.noPasswordTip')"
                     show-icon
                     :closable="false"
                 >
@@ -22,7 +22,7 @@
                 <div class="u-pass">
                     <el-input
                         class="u-text"
-                        placeholder="新密码"
+                        :placeholder="$t('dashboard.password.newPassword')"
                         v-model="pwd1"
                         show-password
                         @change="checkPass"
@@ -51,7 +51,7 @@
                 <div class="u-pass">
                     <el-input
                         class="u-text"
-                        placeholder="重复密码"
+                        :placeholder="$t('dashboard.password.repeatPassword')"
                         v-model="pwd2"
                         show-password
                         @input="checkPass"
@@ -84,7 +84,7 @@
                     :disabled="!ready || submitting"
                     :loading="submitting"
                     size="large"
-                    >提交</el-button
+                    >{{ $t("dashboard.common.submit") }}</el-button
                 >
             </form>
             <div v-else class="m-dashboard-pwd-done">
@@ -93,12 +93,12 @@
                     svg-inline
                     src="@/assets/img/dashboard/setting/checked.svg"
                 />
-                <p>修改成功</p>
+                <p>{{ $t("dashboard.common.updateSuccess") }}</p>
                 <el-button
                     class="u-submit u-button"
                     type="primary"
                     @click="reset"
-                    >返回</el-button
+                    >{{ $t("dashboard.common.back") }}</el-button
                 >
             </div>
         </div>
@@ -118,8 +118,8 @@ export default {
             pwd1: "",
             pwd2: "",
             pass_validate: null,
-            pass_validate_tip: "密码有效长度为6-30个字符",
-            pass_accordance_tip: "两次密码不一致",
+            pass_validate_tip: this.$t("dashboard.password.lengthTip"),
+            pass_accordance_tip: this.$t("dashboard.password.mismatch"),
             status: true,
             submitting: false,
             hasPassword: null,
@@ -180,7 +180,7 @@ export default {
             })
                 .then((res) => {
                     this.$message({
-                        message: "密码修改成功",
+                        message: this.$t("dashboard.password.updateSuccess"),
                         type: "success",
                     });
                     this.status = false;
@@ -189,7 +189,7 @@ export default {
                     User.toLogin("/dashboard/");
                 })
                 .catch((err) => {
-                    this.$message.error(this.getErrorMessage(err, "密码修改失败"));
+                    this.$message.error(this.getErrorMessage(err, this.$t("dashboard.password.updateFailed")));
                 })
                 .finally(() => {
                     this.submitting = false;

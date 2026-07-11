@@ -3,7 +3,7 @@
         <div class="u-notice-value">
             <span class="u-value" v-if="isWechatVerified">******</span>
             <el-tag class="u-notice-status" :type="isWechatVerified ? 'success' : 'info'">{{
-                isWechatVerified ? "已绑定" : "未绑定"
+                isWechatVerified ? $t("dashboard.common.bound") : $t("dashboard.common.unbound")
             }}</el-tag>
         </div>
         <el-button
@@ -14,10 +14,10 @@
             @click="unbind"
             :circle="isPhone"
             size="large"
-            >解除绑定
+            >{{ $t("dashboard.common.unbind") }}
         </el-button>
         <el-button type="primary" size="large" :circle="isPhone" class="u-bind-button" icon="Connection" @click="open" v-else
-            >绑定公众号
+            >{{ $t("dashboard.wechat.bindOfficial") }}
         </el-button>
         <el-dialog
             v-model="visible"
@@ -31,8 +31,8 @@
                         <i class="el-icon-chat-dot-round"></i>
                     </div>
                     <div>
-                        <div class="u-title">绑定微信公众号</div>
-                        <div class="u-subtitle">关注后可通过微信接收通知告警</div>
+                        <div class="u-title">{{ $t("dashboard.wechat.bindOfficialAccount") }}</div>
+                        <div class="u-subtitle">{{ $t("dashboard.wechat.notificationTip") }}</div>
                     </div>
                 </div>
             </template>
@@ -42,7 +42,7 @@
                         <template #error>
                             <div class="u-error">
                                 <i class="el-icon-picture-outline"></i>
-                                <span>二维码加载失败</span>
+                                <span>{{ $t("dashboard.wechat.qrFailed") }}</span>
                             </div>
                         </template>
                     </el-image>
@@ -53,17 +53,17 @@
                 <div class="m-wechat-steps">
                     <div class="u-step">
                         <span class="u-step-index">1</span>
-                        <span>打开微信扫一扫</span>
+                        <span>{{ $t("dashboard.wechat.openScan") }}</span>
                     </div>
                     <div class="u-step">
                         <span class="u-step-index">2</span>
-                        <span>关注「剑三魔盒」公众号</span>
+                        <span>{{ $t("dashboard.wechat.followOfficial") }}</span>
                     </div>
                 </div>
-                <small class="u-tip-small">关注之后需要重新登录方可生效</small>
+                <small class="u-tip-small">{{ $t("dashboard.wechat.reloginTip") }}</small>
                 <div class="u-bind" v-show="success">
                     <i class="el-icon-success" style="color: #67c23a; margin-right: 5px"> </i>
-                    <span class="u-bind-text">绑定成功</span>
+                    <span class="u-bind-text">{{ $t("dashboard.common.bindSuccess") }}</span>
                 </div>
             </div>
         </el-dialog>
@@ -184,14 +184,14 @@ export default {
             }
         },
         unbind() {
-            this.$confirm("解绑后无法用微信接收魔盒通知消息，确定解绑吗？", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("dashboard.wechat.unbindConfirm"), this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 type: "warning",
             }).then(() => {
                 unbindWechat().then(() => {
                     this.$notify({
-                        title: "解绑成功",
+                        title: this.$t("dashboard.common.unbindSuccess"),
                         type: "success",
                         duration: 2000,
                     });

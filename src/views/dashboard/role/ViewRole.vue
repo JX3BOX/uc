@@ -1,7 +1,7 @@
 <template>
     <div class="v-role-view">
         <h2 class="u-title">
-            <i class="el-icon-user"></i> 角色信息
+            <i class="el-icon-user"></i> {{ $t("dashboard.role.info") }}
             <!-- <div class="u-op" v-if="data && isCustom && hasRight">
                 <router-link
                     :to="'/role/edit/' + id"
@@ -18,7 +18,7 @@
                     icon="Delete"
                 >删除</el-button>
             </div>-->
-            <el-button class="u-back" plain icon="ArrowLeft" @click="goBack">返回</el-button>
+            <el-button class="u-back" plain icon="ArrowLeft" @click="goBack">{{ $t("dashboard.common.back") }}</el-button>
         </h2>
         <div class="m-role-detail" v-if="data">
             <div class="m-role-info">
@@ -36,16 +36,16 @@
                 </div>
                 <div class="u-meta">
                     <span class="u-server">
-                        <em>服务器</em>
+                        <em>{{ $t("dashboard.role.server") }}</em>
                         {{ data.server }}
                     </span>
                     <span class="u-school">
-                        <em>门派</em>
+                        <em>{{ $t("dashboard.role.school") }}</em>
                         <img class="u-icon" :src="showSchoolIcon(data.mount)" />
                         {{ showSchoolName(data.mount) }}
                     </span>
                     <span class="u-body">
-                        <em>体型</em>
+                        <em>{{ $t("dashboard.role.bodyType") }}</em>
                         {{ showBodyType(data.body_type) }}
                     </span>
                 </div>
@@ -63,7 +63,7 @@
                         </a>
                     </span>
                     <span class="u-remark">
-                        <em>绑定于</em>
+                        <em>{{ $t("dashboard.role.boundAt") }}</em>
                         {{ showTime(data.created_at) }}
                     </span>
                 </div>
@@ -90,7 +90,7 @@
             <div class="m-role-belongs" v-if="hasRight">
                 <el-divider content-position="left">
                     <i class="el-icon-collection-tag"></i>
-                    加入团队
+                    {{ $t("dashboard.role.joinedTeams") }}
                 </el-divider>
                 <template v-if="teams && teams.length">
                     <div class="u-teams">
@@ -100,10 +100,10 @@
                             <span class="u-team-name">{{ item.team_name }}</span>
                         </router-link>
                     </div>
-                    <div class="u-lock"><i class="el-icon-lock"></i>加入的团队仅自己可见</div>
+                    <div class="u-lock"><i class="el-icon-lock"></i>{{ $t("dashboard.role.teamsPrivate") }}</div>
                 </template>
                 <template v-else>
-                    <div class="u-lock"><i class="el-icon-warning-outline"></i>当前角色没有加入任何团队</div>
+                    <div class="u-lock"><i class="el-icon-warning-outline"></i>{{ $t("dashboard.role.noTeams") }}</div>
                 </template>
             </div>
         </div>
@@ -112,7 +112,7 @@
                 <img class="u-icon" svg-inline src="@/assets/img/dashboard/warning.svg" />
                 Not Found
             </p>
-            角色不存在或没有权限
+            {{ $t("dashboard.role.notFound") }}
         </div>
     </div>
 </template>
@@ -160,14 +160,14 @@ export default {
     },
     methods: {
         delRole: function () {
-            this.$alert("确定删除该角色吗？", "消息", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("dashboard.role.deleteConfirm"), this.$t("dashboard.common.message"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
                 callback: (action) => {
                     if (action == "confirm") {
                         deleteRole(this.id).then((res) => {
                             this.$notify({
-                                title: "删除成功",
-                                message: "角色删除成功",
+                                title: this.$t("dashboard.common.deleteSuccess"),
+                                message: this.$t("dashboard.role.deleteSuccess"),
                                 type: "success",
                             });
                             this.$router.push("/role");

@@ -44,18 +44,20 @@
                         <div class="cart-container">
                             <div class="cart-content">
                                 <div class="cart-text">
-                                    欢迎光临魔盒积分商城！~<br />你可以<span class="blue">单独兑换</span>或<span class="orange"
-                                        >放入购物车</span
-                                    >一并结算！
+                                    {{ $t("vip.mall.welcome") }}<br />
+                                    <i18n-t keypath="vip.mall.cartIntro">
+                                        <template #separate><span class="blue">{{ $t("vip.mall.exchangeSeparately") }}</span></template>
+                                        <template #cart><span class="orange">{{ $t("vip.mall.addToCart") }}</span></template>
+                                    </i18n-t>
                                 </div>
                                 <div class="cart-btn">
                                     <div class="text">
-                                        <div>当前购物车</div>
-                                        <div>合计：{{ $store.getters["mallNew/checked_num"] }}件</div>
+                                        <div>{{ $t("vip.mall.currentCart") }}</div>
+                                        <div>{{ $t("vip.mall.totalPieces", { count: $store.getters["mallNew/checked_num"] }) }}</div>
                                     </div>
                                     <div class="btn" id="cartBtn" @click="openCart">
                                         <img :src="imgUrl + 'cart.svg'" alt="" class="cart-icon" />
-                                        查看购物车
+                                        {{ $t("vip.mall.viewCart") }}
                                     </div>
                                 </div>
                                 <div class="total">
@@ -68,7 +70,7 @@
                                                 style="fill: rgba(56, 56, 56, 1)"
                                                 class="total-icon"
                                             />
-                                            <div>盒币<span class="quilt-text">（=通宝）</span></div>
+                                            <div>{{ $t("vip.mall.boxcoin") }}<span class="quilt-text">{{ $t("vip.mall.boxcoinAlias") }}</span></div>
                                         </div>
                                         <div class="left">{{ $store.getters["mallNew/all_price_boxcoin"] }}</div>
                                     </div>
@@ -81,12 +83,12 @@
                                                 style="fill: rgba(56, 56, 56, 1)"
                                                 class="total-icon"
                                             />
-                                            <div>银铛<span class="quilt-text">（=积分）</span></div>
+                                            <div>{{ $t("vip.mall.silverToken") }}<span class="quilt-text">{{ $t("vip.mall.silverTokenAlias") }}</span></div>
                                         </div>
                                         <div class="left">{{ $store.getters["mallNew/all_price_points"] }}</div>
                                     </div>
                                 </div>
-                                <div class="total-btn" @click="openCart">结算</div>
+                                <div class="total-btn" @click="openCart">{{ $t("vip.mall.checkout") }}</div>
                             </div>
                             <div class="arrow"></div>
                         </div>
@@ -99,12 +101,12 @@
             v-if="isShowRight"
             class="mobile-right-backdrop"
             type="button"
-            aria-label="关闭右侧信息"
+            :aria-label="$t('vip.mall.closeRightPanel')"
             @click="isShowRight = false"
         ></button>
         <Cart></Cart>
         <button class="mobile-right-button" type="button" @click="isShowRight = true">
-            <span>购物</span>
+            <span>{{ $t("vip.mall.shopping") }}</span>
         </button>
         <button class="mobile-cart-button" type="button" @click="openCart">
             <img :src="imgUrl + 'cart.svg'" alt="" />
@@ -187,8 +189,8 @@ export default {
             });
         },
         rightToggleText() {
-            if (this.isDetailInRight) return this.isShowRight ? "收起详情" : "查看详情";
-            return this.isShowRight ? "收起侧栏" : "展开侧栏";
+            if (this.isDetailInRight) return this.isShowRight ? this.$t("vip.mall.collapseDetails") : this.$t("vip.mall.viewDetails");
+            return this.isShowRight ? this.$t("vip.mall.collapseSidebar") : this.$t("vip.mall.expandSidebar");
         },
         isDetailInRight() {
             return this.isMediumLayout;
@@ -205,13 +207,13 @@ export default {
         detailEmptyText() {
             if (this.isListEmpty) {
                 return {
-                    title: "这里暂时没有可查看的商品",
-                    desc: "可以换个分类、等级或清空筛选条件再看看",
+                    title: this.$t("vip.mall.noViewableProducts"),
+                    desc: this.$t("vip.mall.adjustFilters"),
                 };
             }
             return {
-                title: "请选择一个商品",
-                desc: "在左侧列表点击商品后，这里会展示预览、兑换条件和操作按钮",
+                title: this.$t("vip.mall.selectProduct"),
+                desc: this.$t("vip.mall.selectProductHint"),
             };
         },
     },
@@ -359,7 +361,7 @@ export default {
                 if (seq !== this.loadSeq) return;
                 this.goodsList = [];
                 this.query.total = 0;
-                this.$message.error("商品列表加载失败");
+                this.$message.error(this.$t("vip.mall.productListLoadFailed"));
             } finally {
                 if (seq === this.loadSeq) {
                     this.isLoading = false;

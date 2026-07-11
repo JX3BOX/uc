@@ -1,8 +1,8 @@
 <template>
     <div class="v-sync-data">
         <h2 class="u-title">
-            <i class="el-icon-connection"></i> 同步数据
-            <el-button class="u-back" icon="ArrowLeft" @click="goBack">返回</el-button>
+            <i class="el-icon-connection"></i> {{ $t("dashboard.role.syncData") }}
+            <el-button class="u-back" icon="ArrowLeft" @click="goBack">{{ $t("dashboard.common.back") }}</el-button>
         </h2>
         <div class="m-tutorial" v-html="notice"></div>
     </div>

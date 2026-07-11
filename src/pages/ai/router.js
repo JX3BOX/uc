@@ -12,7 +12,11 @@ const routes = [
         path: "/editor",
         component: Editor,
         meta: {
-            title: "AI 编辑器预览",
+            i18n: {
+                title: "pages.ai.editor.title",
+                description: "pages.ai.editor.description",
+                keywords: "pages.ai.editor.keywords",
+            },
         },
     },
 ];

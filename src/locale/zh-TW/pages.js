@@ -34,6 +34,13 @@ export default {
             description: "劍網3魔盒（JX3BOX）首頁：公告資訊、社群內容、江湖快報等。",
         },
     },
+    ai: {
+        editor: {
+            title: "AI 編輯器預覽",
+            keywords: "劍網3,魔盒,JX3BOX,AI,編輯器,文章預覽",
+            description: "JX3BOX AI 編輯器文章預覽頁面。",
+        },
+    },
     account: {
         login: {
             title: "登入",

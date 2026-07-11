@@ -38,25 +38,25 @@ export default {
             active: "Face",
             types: [
                 {
-                    label: "捏脸",
+                    label: this.$t("author.tabs.faces"),
                     value: "Face",
                     component: Face,
                     icon: "el-icon-grape",
                 },
                 {
-                    label: "体型",
+                    label: this.$t("author.tabs.bodyTypes"),
                     value: "Body",
                     component: Body,
                     icon: "el-icon-watermelon",
                 },
                 {
-                    label: "试卷",
+                    label: this.$t("author.tabs.paper"),
                     value: "Paper",
                     component: Paper,
                     icon: "el-icon-ice-cream-round",
                 },
                 {
-                    label: "题目",
+                    label: this.$t("author.tabs.question"),
                     value: "Question",
                     component: Question,
                     icon: "el-icon-lollipop",

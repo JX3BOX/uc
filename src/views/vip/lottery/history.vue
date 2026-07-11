@@ -2,30 +2,30 @@
     <div class="m-history-content">
         <div class="m-toolbar">
             <el-radio-group v-model="status" fill="#000">
-                <el-radio-button value="0">全部记录</el-radio-button>
-                <el-radio-button value="2">中奖</el-radio-button>
-                <el-radio-button value="3">未中奖</el-radio-button>
+                <el-radio-button value="0">{{ $t("vip.lottery.allRecords") }}</el-radio-button>
+                <el-radio-button value="2">{{ $t("vip.lottery.won") }}</el-radio-button>
+                <el-radio-button value="3">{{ $t("vip.lottery.notWon") }}</el-radio-button>
             </el-radio-group>
         </div>
         <el-table class="m-table-box" :data="list" align="left" v-loading="loading">
-            <el-table-column prop="created_at" width="160px" label="抽奖时间"></el-table-column>
+            <el-table-column prop="created_at" width="160px" :label="$t('vip.lottery.drawTime')"></el-table-column>
             <el-table-column
                 prop="chance_count"
                 :width="status == '2' ? '90px' : ''"
-                label="抽奖次数"
+                :label="$t('vip.lottery.drawCount')"
             ></el-table-column>
-            <el-table-column prop="win_count" width="90px" label="中奖数量" v-if="status == '2'"></el-table-column>
-            <el-table-column label="状态" v-if="status !== '2'">
+            <el-table-column prop="win_count" width="90px" :label="$t('vip.lottery.winCount')" v-if="status == '2'"></el-table-column>
+            <el-table-column :label="$t('vip.common.status')" v-if="status !== '2'">
                 <template #default="scope">
                     <el-tag :type="scope.row.status == 2 ? 'success' : 'info'">
-                        {{ scope.row.status == 2 ? "中奖" : "未中奖" }}
+                        {{ scope.row.status == 2 ? $t("vip.lottery.won") : $t("vip.lottery.notWon") }}
                     </el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" v-if="status !== '3'">
+            <el-table-column :label="$t('vip.common.actions')" v-if="status !== '3'">
                 <template #default="scope">
-                    <el-button v-if="scope.row.status == 2" @click="look(scope.row.id)"> 查看详情 </el-button>
-                    <el-button v-if="scope.row.address" @click="editAddress"> 填写地址 </el-button>
+                    <el-button v-if="scope.row.status == 2" @click="look(scope.row.id)"> {{ $t("vip.common.viewDetails") }} </el-button>
+                    <el-button v-if="scope.row.address" @click="editAddress"> {{ $t("vip.lottery.fillAddressShort") }} </el-button>
                 </template>
             </el-table-column>
         </el-table>

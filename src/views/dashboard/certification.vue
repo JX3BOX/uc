@@ -1,5 +1,5 @@
 <template>
-    <uc class="m-dashboard-frame m-dashboard-skin" icon="el-icon-magic-stick" title="魔盒藏品" :tab-list="tabList">
+    <uc class="m-dashboard-frame m-dashboard-skin" icon="el-icon-magic-stick" :title="$t('dashboard.treasure.title')" :tab-list="tabList">
         <div class="m-cert-list">
             <el-empty v-if="!loading && !list.length" :description="emptyText"></el-empty>
             <el-row :gutter="32">
@@ -30,18 +30,18 @@
                         ></div>
                         <div class="m-info">
                             <div class="u-title">{{ item.team_certificate.rank_name }}</div>
-                            <div class="u-tip">团队：{{ item.team_certificate.team_name }}</div>
+                            <div class="u-tip">{{ $t("dashboard.certification.team") }}：{{ item.team_certificate.team_name }}</div>
                             <template v-if="isSuperstar(item)">
                                 <div class="u-tip">
-                                    门派：{{ tianTuanCertificateCode[item.team_certificate.sort_no] }}
+                                    {{ $t("dashboard.role.school") }}：{{ tianTuanCertificateCode[item.team_certificate.sort_no] }}
                                 </div>
-                                <div class="u-tip">团长：{{ item.team_certificate.leader }}</div>
-                                <div class="u-tip">通关时间：{{ item.team_certificate.time }}</div>
+                                <div class="u-tip">{{ $t("dashboard.certification.leader") }}：{{ item.team_certificate.leader }}</div>
+                                <div class="u-tip">{{ $t("dashboard.certification.clearTime") }}：{{ item.team_certificate.time }}</div>
                             </template>
                             <template v-else>
-                                <div class="u-tip">服务器：{{ item.team_certificate.team_server }}</div>
-                                <div class="u-tip">团长：{{ item.team_certificate.leader }}</div>
-                                <div class="u-tip">获得时间：{{ item.team_certificate.awardtime }}</div>
+                                <div class="u-tip">{{ $t("dashboard.role.server") }}：{{ item.team_certificate.team_server }}</div>
+                                <div class="u-tip">{{ $t("dashboard.certification.leader") }}：{{ item.team_certificate.leader }}</div>
+                                <div class="u-tip">{{ $t("dashboard.common.obtainedAt") }}：{{ item.team_certificate.awardtime }}</div>
                             </template>
                         </div>
                         <!-- 门派天团 -->
@@ -101,7 +101,7 @@ export default {
     },
     computed: {
         emptyText() {
-            return this.loadError ? "证书列表加载失败，请稍后重试" : "您还未获得过证书~";
+            return this.loadError ? this.$t("dashboard.certification.loadFailed") : this.$t("dashboard.certification.empty");
         },
     },
     methods: {

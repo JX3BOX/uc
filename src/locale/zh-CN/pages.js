@@ -28,6 +28,18 @@ export default {
             keywords: "剑网3,魔盒,JX3BOX,工具,攻略,资讯,社区",
             description: "剑网3魔盒（JX3BOX）首页：公告资讯、社区内容、江湖快报等。",
         },
+        index: {
+            title: "首页",
+            keywords: "剑网3,魔盒,JX3BOX,工具,攻略,资讯,社区",
+            description: "剑网3魔盒（JX3BOX）首页：公告资讯、社区内容、江湖快报等。",
+        },
+    },
+    ai: {
+        editor: {
+            title: "AI 编辑器预览",
+            keywords: "剑网3,魔盒,JX3BOX,AI,编辑器,文章预览",
+            description: "JX3BOX AI 编辑器文章预览页面。",
+        },
     },
     account: {
         login: {

@@ -22,12 +22,12 @@
 
                 <div v-if="item.visible === 5" class="m-lock follow">
                     <img class="icon" src="@/assets/img/author/mobile/eye.svg">
-                    内容仅粉丝可见
+                    {{ $t("publish.visibility.followersOnlyContent") }}
                 </div>
 
                 <div v-else-if="item.visible === 3" class="m-lock password">
                     <img class="icon" src="@/assets/img/author/mobile/lock.svg">
-                    内容被密码锁住啦
+                    {{ $t("publish.visibility.passwordLockedContent") }}
                 </div>
 
                 <template v-else>
@@ -127,14 +127,14 @@ export default {
             const diff = now.diff(date, "day");
             if (diff === 0) {
                 if (now.diff(date, "minute") <= 60) {
-                    return { text: "刚刚", icon: "el-icon-loading" };
+                    return { text: this.$t("publish.time.justNow"), icon: "el-icon-loading" };
                 } else if (now.diff(date, "minute") <= 120) {
-                    return { text: "2小时内", icon: "el-icon-time" };
+                    return { text: this.$t("publish.time.withinTwoHours"), icon: "el-icon-time" };
                 } else {
-                    return { text: `${now.diff(date, "hour")}小时`, icon: "el-icon-time" };
+                    return { text: this.$t("publish.time.hours", { count: now.diff(date, "hour") }), icon: "el-icon-time" };
                 }
             } else if (diff === 1) {
-                return { text: "昨天", icon: "el-icon-time" };
+                return { text: this.$t("publish.time.yesterday"), icon: "el-icon-time" };
             } else if (diff >= 2 && diff <= 365) {
                 return { text: date.format("MM-DD"), icon: "el-icon-date" };
             } else {

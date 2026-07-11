@@ -1,8 +1,8 @@
 <template>
     <div class="m-privilege">
         <div class="m-privilege-head">
-            <h3 class="u-privilege-title">会员特权</h3>
-            <span>开通高级版后自动生效</span>
+            <h3 class="u-privilege-title">{{ $t("vip.premium.privileges") }}</h3>
+            <span>{{ $t("vip.premium.privilegesHint") }}</span>
         </div>
         <ul>
             <li v-for="(item, i) in list" :key="i">
@@ -26,12 +26,12 @@ import {
 } from "@element-plus/icons-vue";
 
 const DEFAULT_LIST = [
-    { text: "魔盒新功能提前体验", icon: "Medal" },
-    { text: "签到双倍积分", icon: "Coin" },
-    { text: "专属虚拟装扮", icon: "Brush" },
-    { text: "专属昵称尾巴标识", icon: "CollectionTag" },
-    { text: "亲友名单无上限", icon: "MagicStick" },
-    { text: "更多特权，敬请期待！", icon: "MoreFilled" },
+    { key: "earlyAccess", icon: "Medal" },
+    { key: "doublePoints", icon: "Coin" },
+    { key: "exclusiveDecorations", icon: "Brush" },
+    { key: "nicknameBadge", icon: "CollectionTag" },
+    { key: "unlimitedFriends", icon: "MagicStick" },
+    { key: "moreComing", icon: "MoreFilled" },
 ];
 const ICONS = ["Brush", "Coin", "CollectionTag", "MagicStick", "Medal", "MoreFilled"];
 
@@ -47,10 +47,19 @@ export default {
     },
     data: function () {
         return {
-            list: DEFAULT_LIST,
+            list: [],
         };
     },
+    computed: {
+        defaultList() {
+            return DEFAULT_LIST.map((item) => ({
+                ...item,
+                text: this.$t(`vip.premium.defaultPrivileges.${item.key}`),
+            }));
+        },
+    },
     mounted() {
+        this.list = this.defaultList;
         this.loadPrivileges();
     },
     methods: {
@@ -63,11 +72,11 @@ export default {
                     }
                 })
                 .catch(() => {
-                    this.list = DEFAULT_LIST;
+                    this.list = this.defaultList;
                 });
         },
         normalizePrivilege(item = {}, index) {
-            const icon = item.icon || item.extend?.icon || item.meta?.icon || DEFAULT_LIST[index]?.icon || "MoreFilled";
+            const icon = item.icon || item.extend?.icon || item.meta?.icon || this.defaultList[index]?.icon || "MoreFilled";
             return {
                 text: item.text || item.label || item.name || item.title || "",
                 icon: ICONS.includes(icon) ? icon : "MoreFilled",

@@ -11,7 +11,7 @@
                             <el-input
                                 class="u-text u-email"
                                 v-model="form.account"
-                                placeholder="邮箱地址 / 手机号"
+                                :placeholder="$t('account.common.accountPlaceholder')"
                                 minlength="3"
                                 maxlength="50"
                                 type="text"
@@ -30,7 +30,7 @@
                         <el-form-item class="u-pass" prop="pass">
                             <el-input
                                 class="u-text"
-                                placeholder="输入密码"
+                                :placeholder="$t('account.common.passwordPlaceholder')"
                                 v-model="form.pass"
                                 show-password
                                 name="password"
@@ -45,32 +45,32 @@
                         </el-form-item>
 
                         <!-- 提交 -->
-                        <el-button class="u-submit u-button" type="primary" @click="submit" :loading="submitting" size="large">登录</el-button>
+                        <el-button class="u-submit u-button" type="primary" @click="submit" :loading="submitting" size="large">{{ $t("account.common.login") }}</el-button>
                     </el-form>
 
                     <Union mode="login" :includes="['qq', 'wechat', 'weibo']" />
 
                     <footer class="m-footer">
                         <p class="u-login">
-                            还没有账号?
-                            <a :href="register_url">立即注册 &raquo;</a>
+                            {{ $t("account.login.noAccount") }}
+                            <a :href="register_url">{{ $t("account.login.registerNow") }} &raquo;</a>
                         </p>
                         <p class="u-resetpwd">
-                            <a :href="reset_url">忘记密码?</a>
+                            <a :href="reset_url">{{ $t("account.common.forgotPassword") }}</a>
                         </p>
                     </footer>
                 </main>
 
                 <main v-if="success == true" class="m-main">
-                    <el-alert title="登录成功" type="success" description="欢迎回来(#^.^#)" show-icon :closable="false">
+                    <el-alert :title="$t('account.login.successTitle')" type="success" :description="$t('account.login.successDescription')" show-icon :closable="false">
                     </el-alert>
                     <a class="u-skip u-submit el-button u-button el-button--primary el-button--large" :href="redirect">{{ redirect_button }}</a>
                 </main>
 
                 <main v-if="success == false" class="m-main">
-                    <el-alert title="登录失败" type="error" :description="errors" show-icon :closable="false">
+                    <el-alert :title="$t('account.login.failureTitle')" type="error" :description="errors" show-icon :closable="false">
                     </el-alert>
-                    <el-button class="u-button u-submit" type="primary" @click="reset" size="large">返回</el-button>
+                    <el-button class="u-button u-submit" type="primary" @click="reset" size="large">{{ $t("account.common.back") }}</el-button>
                 </main>
             </template>
             <template v-else>
@@ -78,11 +78,11 @@
                     <el-alert class="u-current-info" type="warning" show-icon :closable="false" center>
                         <template #title>
                             <span
-                                >已登录为 <b>{{ username }}</b></span
+                                >{{ $t("account.login.loggedInAs") }} <b>{{ username }}</b></span
                             >
                         </template>
                     </el-alert>
-                    <el-button class="u-logout" type="danger" @click="logout" size="large" icon="SwitchButton">登 出</el-button>
+                    <el-button class="u-logout" type="danger" @click="logout" size="large" icon="SwitchButton">{{ $t("account.common.logout") }}</el-button>
                 </div>
             </template>
         </el-card>
@@ -98,7 +98,7 @@ import { loginByAccount } from "@/service/account/email.js";
 import { __Root, __Links } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import Msg from "@/components/account/Msg.vue";
-import { validateAccountLogin, validatePassword } from "@/utils/account/validators.js";
+import { isValidAccountLogin, isValidPassword } from "@/utils/account/validators.js";
 import { ensureDeviceFingerprint } from "@/utils/account/fingerprint.js";
 export default {
     name: "Login",
@@ -108,7 +108,7 @@ export default {
 
             redirect: "",
             redirect_button: "",
-            errors: "未知异常",
+            errors: this.$t("account.common.unknownError"),
 
             form: {
                 account: "",
@@ -131,8 +131,8 @@ export default {
     computed: {
         loginRules: function () {
             return {
-                account: [{ validator: validateAccountLogin, trigger: "blur" }],
-                pass: [{ validator: validatePassword, trigger: "blur" }],
+                account: [{ validator: this.validateAccount, trigger: "blur" }],
+                pass: [{ validator: this.validateLoginPassword, trigger: "blur" }],
             };
         },
         register_url: function () {
@@ -143,6 +143,12 @@ export default {
         },
     },
     methods: {
+        validateAccount: function (rule, value, callback) {
+            callback(isValidAccountLogin(value) ? undefined : new Error(this.$t("account.validation.account")));
+        },
+        validateLoginPassword: function (rule, value, callback) {
+            callback(isValidPassword(value) ? undefined : new Error(this.$t("account.validation.password")));
+        },
         submit: async function () {
             if (this.isfrozen()) return;
             if (this.submitting) return;
@@ -189,7 +195,7 @@ export default {
                                     this.skip();
                                 })
                                 .catch((err) => {
-                                    alert("浏览器版本太低,不支持本站");
+                                    alert(this.$t("account.login.browserUnsupported"));
                                 });
                         } else {
                             this.success = false;
@@ -200,7 +206,7 @@ export default {
                     })
                     .catch((err) => {
                         this.success = false;
-                        this.errors = "网络异常或非法请求";
+                        this.errors = this.$t("account.common.invalidRequestOrNetwork");
                     })
                     .finally(() => {
                         this.submitting = false;
@@ -223,7 +229,7 @@ export default {
         isfrozen: function () {
             if (this.failcount >= this.faillimit) {
                 this.success = false;
-                this.errors = "失败次数过多,请24小时后再试";
+                this.errors = this.$t("account.login.tooManyAttempts");
                 return true;
             }
             return false;
@@ -233,10 +239,10 @@ export default {
             let redirect = search.get("redirect");
             if (redirect) {
                 this.redirect = redirect;
-                this.redirect_button = "即将跳转";
+                this.redirect_button = this.$t("account.login.redirecting");
             } else {
                 this.redirect = this.homepage;
-                this.redirect_button = "返回首页";
+                this.redirect_button = this.$t("account.common.backHome");
             }
             let alternate = search.get("alternate");
 

@@ -1,18 +1,18 @@
 <template>
     <el-dialog class="w-dialog m-feedback-assign" v-model="show" :title="title" @close="close">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-            <el-form-item label="项目" prop="repository">
-                <el-input v-model="form.repository" placeholder="请输入GitHub仓库" clearable></el-input>
+            <el-form-item :label="$t('dashboard.feedback.project')" prop="repository">
+                <el-input v-model="form.repository" :placeholder="$t('dashboard.feedback.repositoryPlaceholder')" clearable></el-input>
             </el-form-item>
-            <el-form-item label="备注" prop="remark">
-                <el-input v-model="form.remark" placeholder="请输入备注" clearable></el-input>
+            <el-form-item :label="$t('dashboard.common.remark')" prop="remark">
+                <el-input v-model="form.remark" :placeholder="$t('dashboard.common.remarkPlaceholder')" clearable></el-input>
             </el-form-item>
         </el-form>
         <template #footer>
             <div class="dialog-footer">
                 <div class="m-confirm">
-                    <el-button @click="close">取消</el-button>
-                    <el-button type="primary" :loading="loading" :disabled="loading" @click="submit"> 提交 </el-button>
+                    <el-button @click="close">{{ $t("dashboard.common.cancel") }}</el-button>
+                    <el-button type="primary" :loading="loading" :disabled="loading" @click="submit"> {{ $t("dashboard.common.submit") }} </el-button>
                 </div>
             </div>
         </template>
@@ -54,16 +54,16 @@ export default {
         title() {
             let str = "";
             if (this.staged.status === 1) {
-                str = "开始处理";
+                str = this.$t("dashboard.feedback.startProcessing");
             }
             if (this.staged.status === 2) {
-                str = "处理完成";
+                str = this.$t("dashboard.feedback.processingComplete");
             }
             if (this.staged.status === 10 || this.staged.status === 11) {
-                str = "结束工单";
+                str = this.$t("dashboard.feedback.endTicket");
             }
             if (this.staged.status === 2 && this.isClose) {
-                str = "关闭工单";
+                str = this.$t("dashboard.feedback.closeTicket");
             }
             return str;
         },
@@ -105,7 +105,7 @@ export default {
                     }
                     switchMiscFeedback(this.id, data)
                         .then(() => {
-                            this.$message.success("操作成功");
+                            this.$message.success(this.$t("dashboard.common.operationSuccess"));
                             this.$emit("update");
                             this.close();
                         })

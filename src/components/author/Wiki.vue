@@ -14,19 +14,19 @@
                     <h2 class="u-post">
                         <!-- 标题文字 -->
                         <a :href="postLink(item.type, item.source_id, item.client)" class="u-title" target="_blank">{{
-                            item.title || "无标题"
+                            item.title || $t("author.common.noTitle")
                         }}</a>
                     </h2>
                     <!-- 字段 -->
                     <div class="u-desc">
                         <i :class="item.client" class="u-client">{{ clientLabel(item.client) }}</i
-                        >{{ showType(item.type) }}百科
+                        >{{ $t("author.list.wikiType", { type: showType(item.type) }) }}
                     </div>
 
                     <!-- 作者 -->
                     <div class="u-misc">
                         <span class="u-date">
-                            Updated on
+                            {{ $t("author.common.updatedOn") }}
                             <time>{{ dateFormat(item.updated) }}</time>
                         </span>
                     </div>

@@ -1,11 +1,11 @@
 <template>
     <div class="m-event-item">
         <div class="u-box">
-            <div class="u-title">第二届秘境百强榜魔盒会员奖励</div>
+            <div class="u-title">{{ $t("vip.event.rank2Title") }}</div>
             <div class="u-content">
-                <p>根据不同奖项奖励有所不同，详见<a href="/bbs/21805" target="_blank">活动说明</a></p>
+                <i18n-t keypath="vip.event.rank2Description" tag="p"><a href="/bbs/21805" target="_blank">{{ $t("vip.event.eventDetails") }}</a></i18n-t>
                 <div class="u-options">
-                    <el-select v-model="key" placeholder="请选择领取奖项">
+                    <el-select v-model="key" :placeholder="$t('vip.event.selectPrize')">
                         <el-option
                             v-for="item in options"
                             :key="item.value"
@@ -15,7 +15,7 @@
                     </el-select>
                 </div>
                 <el-button class="u-btn" type="warning" @click="getGift" :disabled="done" icon="Present"
-                    >点击领取</el-button
+                    >{{ $t("vip.event.claim") }}</el-button
                 >
             </div>
         </div>
@@ -28,40 +28,43 @@ export default {
     data: function () {
         return {
             done: false,
-            options: [
-                {
-                    label: "11-30名竞速排名（1年专业会员）",
-                    value: "rank_2_top30",
-                },
-                {
-                    label: "31-100名竞速排名（1月专业会员）",
-                    value: "rank_2_top100",
-                },
-                {
-                    label: "门派天团（1年高级会员）",
-                    value: "rank_2_school",
-                },
-                {
-                    label: "个人天梯（1年高级会员）",
-                    value: "rank_2_ladder",
-                },
-            ],
             key: "",
         };
     },
-    computed: {},
+    computed: {
+        options() {
+            return [
+                {
+                    label: this.$t("vip.event.rankTop30"),
+                    value: "rank_2_top30",
+                },
+                {
+                    label: this.$t("vip.event.rankTop100"),
+                    value: "rank_2_top100",
+                },
+                {
+                    label: this.$t("vip.event.rankSchool"),
+                    value: "rank_2_school",
+                },
+                {
+                    label: this.$t("vip.event.rankLadder"),
+                    value: "rank_2_ladder",
+                },
+            ];
+        },
+    },
     methods: {
         getGift: function () {
             if (!this.key) {
-                this.$alert("请选择需要领取的奖项", "提醒", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("vip.event.selectPrizeWarning"), this.$t("vip.common.notice"), {
+                    confirmButtonText: this.$t("vip.common.confirm"),
                 });
                 return;
             }
             getFreeVip(this.key).then((res) => {
                 this.done = true;
-                this.$alert("领取成功", "提醒", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("vip.event.claimSuccess"), this.$t("vip.common.notice"), {
+                    confirmButtonText: this.$t("vip.common.confirm"),
                 });
             });
         },

@@ -23,7 +23,7 @@
                         <!-- 标题 -->
                         <div class="u-post">
                             <!-- 标题文字 -->
-                            <div class="u-title" target="_blank">{{ item.post_title || "无标题" }}</div>
+                            <div class="u-title" target="_blank">{{ item.post_title || $t("publish.common.untitled") }}</div>
                             <time class="u-time">{{ dateFormat(item.post_modified) }}</time>
                         </div>
                     </a>

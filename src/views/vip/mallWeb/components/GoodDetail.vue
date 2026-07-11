@@ -1,11 +1,11 @@
 <template>
     <div class="good-detail" :class="{ 'without-nav': !isShowNav }">
         <div :class="{ 'canBuy-text': true, canBuy: good.canBuy?.canBuy }">
-            {{ good.canBuy?.canBuy ? "—&emsp;当前商品 · 可兑换&emsp;—" : "—&emsp;当前商品 · 不满足兑换条件&emsp;—" }}
+            {{ good.canBuy?.canBuy ? $t("vip.mall.currentAvailable") : $t("vip.mall.currentUnavailable") }}
         </div>
         <div class="title-card">
             <div class="title">{{ good.title }}</div>
-            <div class="apply" v-if="apply[goodInfo.category]">应用场景：{{ apply[goodInfo.category] }}</div>
+            <div class="apply" v-if="apply[goodInfo.category]">{{ $t("vip.mall.applicationSceneValue", { scene: apply[goodInfo.category] }) }}</div>
         </div>
         <div class="card">
             <div v-if="goodInfo.img" class="skeleton-container">
@@ -17,42 +17,42 @@
             <div class="detail-card">
                 <div class="condition">
                     <div class="condition-item" :class="{ canBuy: good.canBuy?.level }">
-                        所需等级：lv.{{ good.canBuy?.user_level }}
+                        {{ $t("vip.mall.requiredLevel", { level: good.canBuy?.user_level }) }}
                         <i class="el-icon-circle-check" v-if="good.canBuy?.level"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
                     <div class="condition-item" :class="{ canBuy: good.canBuy?.vip_limit }">
-                        会员专属
+                        {{ $t("vip.mall.memberExclusive") }}
                         <i class="el-icon-circle-check" v-if="good.canBuy?.vip_limit"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
                     <div class="condition-item" :class="{ canBuy: good.canBuy?.box_coin }" v-if="good.price_boxcoin">
-                        所需盒币：{{ good.price_boxcoin }}
+                        {{ $t("vip.mall.requiredBoxcoin", { amount: good.price_boxcoin }) }}
                         <i class="el-icon-circle-check" v-if="good.canBuy?.box_coin"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
                     <div class="condition-item" :class="{ canBuy: good.canBuy?.points }" v-if="good.price_points">
-                        所需积分：{{ good.price_points }}
+                        {{ $t("vip.mall.requiredPoints", { amount: good.price_points }) }}
                         <i class="el-icon-circle-check" v-if="good.canBuy?.points"></i>
                         <i class="el-icon-circle-close" v-else></i>
                     </div>
                 </div>
                 <div class="buy-time" :class="{ canBuy: good.canBuy?.buy_time }">
-                    可兑换时间：{{ good.start_sell_time }} ~ {{ good.end_sell_time
-                    }}{{ good.canBuy?.buy_time ? "" : "(不在兑换期内)" }}
+                    {{ $t("vip.mall.exchangeTime", { start: good.start_sell_time, end: good.end_sell_time })
+                    }}{{ good.canBuy?.buy_time ? "" : $t("vip.mall.outsideExchangePeriodSuffix") }}
                 </div>
                 <div class="buttons">
                     <button class="button add-cart" :disabled="!good?.canBuy?.canBuy" @click="addCart">
                         <img :src="imgUrl + 'cart-fill.svg'" alt="" />
-                        加购
+                        {{ $t("vip.mall.addToCart") }}
                     </button>
                     <button class="button buy" @click="buyGoods" :disabled="!good?.canBuy?.canBuy">
                         <template v-if="good.price_boxcoin">
-                            <img :src="imgUrl + 'box_coin_fill.svg'" alt="" />{{ good.price_boxcoin }}盒币
+                            <img :src="imgUrl + 'box_coin_fill.svg'" alt="" />{{ $t("vip.common.boxcoinAmount", { amount: good.price_boxcoin }) }}
                         </template>
                         <template v-if="good.price_boxcoin && good.price_points"> + </template>
                         <template v-if="good.price_points">
-                            <img :src="imgUrl + 'point.svg'" alt="" />{{ good.price_points }}积分
+                            <img :src="imgUrl + 'point.svg'" alt="" />{{ $t("vip.common.pointsAmount", { amount: good.price_points }) }}
                         </template>
                     </button>
                     <!-- <button class="button like">
@@ -92,20 +92,22 @@ export default {
     data() {
         return {
             imgUrl: __cdn + "design/mall/",
-            apply: {
-                palu: "魔盒论坛列表页",
-                avatar: "头像框",
-                emoticon: "表情包",
-                comment: "评论皮肤",
-                sidebar: "侧边栏主题",
-                atcard: "个人名片",
-                calendar: "首页日历",
-                homebg: "主页风格",
-            },
             good: {},
         };
     },
     computed: {
+        apply() {
+            return {
+                palu: this.$t("vip.mall.scenes.forumStyle"),
+                avatar: this.$t("vip.mall.scenes.avatar"),
+                emoticon: this.$t("vip.mall.scenes.emoticon"),
+                comment: this.$t("vip.mall.scenes.comment"),
+                sidebar: this.$t("vip.mall.scenes.sidebar"),
+                atcard: this.$t("vip.mall.scenes.profileCard"),
+                calendar: this.$t("vip.mall.scenes.calendar"),
+                homebg: this.$t("vip.mall.scenes.homeBackground"),
+            };
+        },
         id() {
             return this.$route.params.id;
         },
@@ -172,7 +174,7 @@ export default {
         },
         buyGoods: throttle(function () {
             if (!User.isLogin()) {
-                this.$message.error("请先登录");
+                this.$message.error(this.$t("vip.common.loginRequired"));
                 setTimeout(() => {
                     User.toLogin();
                 }, 1000);
@@ -188,9 +190,9 @@ export default {
                         remark: "虚拟商品购买",
                     })
                     .then(() => {
-                        this.$confirm("兑换成功，是否立即前往装扮？", "提示", {
-                            confirmButtonText: "确定",
-                            cancelButtonText: "取消",
+                        this.$confirm(this.$t("vip.mall.goDecoratePrompt"), this.$t("vip.common.prompt"), {
+                            confirmButtonText: this.$t("vip.common.confirm"),
+                            cancelButtonText: this.$t("vip.common.cancel"),
                             type: "warning",
                         })
                             .then(() => {
@@ -212,7 +214,7 @@ export default {
             if (1 + num > this.good.stock) {
                 return this.$message({
                     type: "warning",
-                    message: "可兑换库存不足",
+                    message: this.$t("vip.mall.insufficientStock"),
                 });
             }
             this.$store

@@ -1,7 +1,7 @@
 <template>
     <div class="m-publish-box" v-loading="loading">
         <!-- 头部 -->
-        <publish-header name="公告资讯"></publish-header>
+        <publish-header :name="$t('publish.types.news')"></publish-header>
 
         <el-form label-position="left" label-width="80px">
             <!-- 标题 -->
@@ -9,7 +9,7 @@
 
             <!-- 信息 -->
             <div class="m-publish-info">
-                <el-divider content-position="left">信息</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.information") }}</el-divider>
                 <!-- 客户端 -->
                 <publish-client v-model="post.client"></publish-client>
                 <publish-subtype v-model="post.post_subtype" :options="notice_types"></publish-subtype>
@@ -17,7 +17,7 @@
 
             <!-- 正文 -->
             <div class="m-publish-content">
-                <el-divider content-position="left">正文</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.body") }}</el-divider>
                 <Tinymce
                     v-model="post.post_content"
                     :attachmentEnable="true"
@@ -28,14 +28,14 @@
 
             <!-- 附加 -->
             <div class="m-publish-append">
-                <el-divider content-position="left">附加</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.additional") }}</el-divider>
                 <publish-excerpt v-model="post.post_excerpt"></publish-excerpt>
                 <!-- <publish-collection v-model="post.post_collection"></publish-collection> -->
             </div>
 
             <!-- 扩展 -->
             <div class="m-publish-extend">
-                <el-divider content-position="left">设置</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.settings") }}</el-divider>
                 <publish-comment v-model="post.comment"></publish-comment>
                 <publish-gift v-model="post.allow_gift"></publish-gift>
                 <publish-visible v-model="post.visible"></publish-visible>
@@ -44,7 +44,7 @@
 
             <!-- 临时 -->
             <div class="m-publish-extend">
-                <el-divider content-position="left">临时</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.temporary") }}</el-divider>
                 <publish-at-authors></publish-at-authors>
             </div>
 
@@ -57,10 +57,10 @@
             <!-- 按钮 -->
             <div class="m-publish-buttons">
                 <el-button size="large" type="primary" @click="publish('publish', true)" :disabled="processing"
-                    >发 &nbsp;&nbsp; 布</el-button
+                    >{{ $t("publish.common.publish") }}</el-button
                 >
                 <el-button size="large" plain @click="publish('draft', false)" :disabled="processing"
-                    >保存为草稿</el-button
+                    >{{ $t("publish.common.saveDraft") }}</el-button
                 >
             </div>
         </el-form>
@@ -223,7 +223,7 @@ export default {
             if (skip) {
                 // 提醒
                 this.$message({
-                    message: "发布成功",
+                    message: this.$t("publish.message.publishSucceeded"),
                     type: "success",
                 });
                 // 跳转
@@ -233,8 +233,8 @@ export default {
             } else {
                 // 提醒
                 this.$notify({
-                    title: "保存成功",
-                    message: "云端草稿保存成功",
+                    title: this.$t("publish.message.saveSucceeded"),
+                    message: this.$t("publish.message.cloudDraftSaved"),
                     type: "success",
                 });
                 // 路由

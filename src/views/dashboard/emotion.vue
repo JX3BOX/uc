@@ -1,17 +1,17 @@
 <template>
-    <uc class="m-dashboard-emotion m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tabList="tabList">
+    <uc class="m-dashboard-emotion m-dashboard-skin" icon="el-icon-brush" :title="$t('dashboard.theme.title')" :tabList="tabList">
         <template #header>
             <a
                 class="u-link el-button el-button--default el-button--small is-round is-plain"
                 href="/vip/mall?category=virtual"
                 target="_blank"
-                ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
+                ><i class="el-icon-shopping-cart-2"></i> {{ $t("dashboard.theme.getDecorations") }}</a
             >
         </template>
         <div class="m-emotion-content-preview">
             <div class="m-title">
-                <span>表情包内容展示</span>
-                <span class="u-tip">点击表情包可以预览其中的表情</span>
+                <span>{{ $t("dashboard.emotion.previewTitle") }}</span>
+                <span class="u-tip">{{ $t("dashboard.emotion.previewTip") }}</span>
             </div>
             <div class="m-emotion-content-list" v-if="previewEmotion">
                 <div class="m-emotion-content-item" v-for="(item, index) in previewEmotion.items" :key="index">
@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <el-divider content-position="left">已获得</el-divider>
+        <el-divider content-position="left">{{ $t("dashboard.common.obtained") }}</el-divider>
         <div class="m-emotion-list">
             <div
                 class="m-emotion-item"
@@ -36,11 +36,11 @@
         </div>
         <div class="m-actions">
             <el-button icon="CircleCheck" type="primary" @click="onSave" :loading="loading" size="large"
-                >确定激活({{ selectedKeys.length }}/5)</el-button
+                >{{ $t("dashboard.emotion.confirmActivation", { count: selectedKeys.length }) }}</el-button
             >
-            <div class="u-tip">自定义表情包最多只能同时激活五个。挑选完毕后，需点击按钮方可实装。</div>
+            <div class="u-tip">{{ $t("dashboard.emotion.limitTip") }}</div>
         </div>
-        <el-divider content-position="left">未获得</el-divider>
+        <el-divider content-position="left">{{ $t("dashboard.common.notObtained") }}</el-divider>
         <div class="m-emotion-list">
             <div
                 class="m-emotion-item is-not-owned"
@@ -50,7 +50,7 @@
             >
                 <img class="u-img" :src="emotion.cover" alt="" />
                 <span class="u-name">{{ emotion.group_name }}</span>
-                <span class="u-go-buy" @click.stop="goBuy(emotion.group_name)">前往兑换</span>
+                <span class="u-go-buy" @click.stop="goBuy(emotion.group_name)">{{ $t("dashboard.emotion.goExchange") }}</span>
             </div>
         </div>
     </uc>
@@ -141,7 +141,7 @@ export default {
                 this.selectedKeys = this.selectedKeys.filter((k) => k !== key);
             } else {
                 if (this.selectedKeys.length >= 5) {
-                    this.$message.error("最多只能选择五个表情包");
+                    this.$message.error(this.$t("dashboard.emotion.maxFive"));
                     return;
                 }
                 this.selectedKeys.push(key);
@@ -167,7 +167,7 @@ export default {
                 return;
             }
             setDecoration(data).then((res) => {
-                this.$message.success("保存成功");
+                this.$message.success(this.$t("dashboard.common.saveSuccess"));
                 this.loading = false;
             });
         },

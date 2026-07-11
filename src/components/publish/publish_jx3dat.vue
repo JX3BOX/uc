@@ -1,6 +1,6 @@
 <template>
     <div class="m-publish-jx3dat">
-        <el-divider content-position="left">数据</el-divider>
+        <el-divider content-position="left">{{ $t("publish.common.data") }}</el-divider>
         <slot></slot>
 
         <!-- 团控数据类型字段 -->
@@ -8,10 +8,10 @@
             <div class="m-jx3data-box">
                 <div class="m-jx3dat-header">
                     <el-button class="m-jx3dat-addbutton" icon="CirclePlus" type="primary" @click="addDBM"
-                        >添加数据</el-button
+                        >{{ $t("publish.data.add") }}</el-button
                     >
                     <a class="m-jx3dat-help el-button el-button--success is-plain" href="/tool/13912" target="_blank">
-                        <i class="el-icon-info"></i> 点击查看发布帮助
+                        <i class="el-icon-info"></i> {{ $t("publish.common.viewPublishHelp") }}
                     </a>
                 </div>
 
@@ -24,7 +24,7 @@
                             </span></template
                         >
                         <div class="m-jx3dat-item">
-                            <h5 class="u-title">订阅名</h5>
+                            <h5 class="u-title">{{ $t("publish.data.subscriptionName") }}</h5>
                             <div class="u-group">
                                 <div class="u-subblock">
                                     <el-input
@@ -34,7 +34,7 @@
                                         show-word-limit
                                         @change="checkDataName(item)"
                                         :disabled="i == 0"
-                                        :placeholder="i == 0 ? '默认版' : '版本名称'"
+                                        :placeholder="i == 0 ? $t('publish.data.defaultVersion') : $t('publish.data.versionName')"
                                     >
                                         <template #prepend>
                                             <b class="u-feed"
@@ -52,47 +52,47 @@
 
                                     <el-tooltip
                                         effect="dark"
-                                        content="设置不公开后,仍然可以通过订阅名下载,仅不做展示"
+                                        :content="$t('publish.data.privateDownloadHint')"
                                         placement="top"
                                     >
-                                        <span class="u-status">{{ item.status ? "公开" : "私有" }}</span>
+                                        <span class="u-status">{{ item.status ? $t("publish.visibility.public") : $t("publish.visibility.privateShort") }}</span>
                                     </el-tooltip>
                                 </div>
                             </div>
                         </div>
                         <div class="m-jx3dat-item">
-                            <h5 class="u-title">数据标题</h5>
+                            <h5 class="u-title">{{ $t("publish.data.title") }}</h5>
                             <el-input
                                 v-model="item.desc"
-                                placeholder="数据描述"
+                                :placeholder="$t('publish.data.description')"
                                 :maxlength="50"
                                 show-word-limit
                             ></el-input>
                         </div>
                         <div class="m-jx3dat-item m-jx3data-jx3dat">
-                            <h5 class="u-title">数据文件</h5>
+                            <h5 class="u-title">{{ $t("publish.data.file") }}</h5>
                             <div class="u-warning">
                                 <i class="el-icon-warning-outline"></i>
-                                当前数据文件将作为
+                                {{ $t("publish.data.uploadAsPrefix") }}
                                 <b>{{ item.name }}</b
-                                >的文件上传，上传完后如若重新修改版本名称则需要重新上传对应文件
+                                >{{ $t("publish.data.uploadAsSuffix") }}
                             </div>
                             <input class="u-data-input" type="file" :id="'jx3dat_' + i" @change="uploadDBM(item, i)" />
                             <el-button type="primary" icon="Promotion" plain @click="selectDBM(i)"
-                                >上传数据文件</el-button
+                                >{{ $t("publish.data.uploadFile") }}</el-button
                             >
                             <span class="u-data-remark">{{ item.origin_name }}</span>
                             <el-input
                                 class="u-fileurl"
                                 :class="{ isUploaded: item.isUploaded }"
                                 @change="aniDBM(item)"
-                                placeholder="数据地址"
+                                :placeholder="$t('publish.data.url')"
                                 :disabled="true"
                                 :value="item.file"
                                 v-if="item.file"
                             >
                                 <template #prepend>
-                                    <span class="u-status">当前文件地址</span>
+                                    <span class="u-status">{{ $t("publish.data.currentUrl") }}</span>
                                 </template>
                                 <template #append>
                                     <span
@@ -102,7 +102,7 @@
                                         v-clipboard:error="onError"
                                     >
                                         <i class="el-icon-document-copy"></i>
-                                        <span>点击复制</span>
+                                        <span>{{ $t("publish.common.clickToCopy") }}</span>
                                     </span>
                                 </template>
                             </el-input>
@@ -126,29 +126,29 @@
             <div class="m-jx3data-more">
                 <div class="u-more" @click="toggleMoreFeed">
                     <i :class="moreFeedsVisible ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
-                    <span>其它订阅号</span>
+                    <span>{{ $t("publish.data.otherSubscriptions") }}</span>
                 </div>
                 <template v-if="moreFeedsVisible">
                     <el-row class="u-tr">
                         <el-col :span="24">
-                            <el-input v-model="jx3dats.github" placeholder="(非必填)">
-                                <template #prepend>Github订阅号</template>
+                            <el-input v-model="jx3dats.github" :placeholder="$t('publish.common.optional')">
+                                <template #prepend>{{ $t("publish.data.githubSubscription") }}</template>
                                 <template #append>@github</template>
                             </el-input>
                         </el-col>
                     </el-row>
                     <el-row class="u-tr">
                         <el-col :span="24">
-                            <el-input v-model="jx3dats.gitee" placeholder="(非必填)">
-                                <template #prepend>Gitee订阅号</template>
+                            <el-input v-model="jx3dats.gitee" :placeholder="$t('publish.common.optional')">
+                                <template #prepend>{{ $t("publish.data.giteeSubscription") }}</template>
                                 <template #append>@gitee</template>
                             </el-input>
                         </el-col>
                     </el-row>
                     <el-row class="u-tr">
                         <el-col :span="24">
-                            <el-input v-model="jx3dats.aliyun" placeholder="(非必填)">
-                                <template #prepend>Aliyun订阅号</template>
+                            <el-input v-model="jx3dats.aliyun" :placeholder="$t('publish.common.optional')">
+                                <template #prepend>{{ $t("publish.data.aliyunSubscription") }}</template>
                                 <template #append>@aliyun</template>
                             </el-input>
                         </el-col>
@@ -162,19 +162,19 @@
         </template>
 
         <!-- 其它类型上传字段 -->
-        <el-form-item v-else label="数据" class="m-jx3dat-other">
+        <el-form-item v-else :label="$t('publish.common.data')" class="m-jx3dat-other">
             <input class="u-data-input" type="file" id="otherdata" @change="uploadDat" />
-            <el-button type="primary" icon="Promotion" plain size="medium" @click="selectDat">上传数据文件</el-button>
+            <el-button type="primary" icon="Promotion" plain size="medium" @click="selectDat">{{ $t("publish.data.uploadFile") }}</el-button>
             <span class="u-data-remark">{{ jx3dats.origin_name }}</span>
             <el-input
                 v-if="jx3dats.down"
                 class="u-fileurl"
-                placeholder="数据地址"
+                :placeholder="$t('publish.data.url')"
                 :disabled="true"
                 :value="jx3dats.down"
             >
                 <template #prepend>
-                    <span class="u-status">当前文件地址</span>
+                    <span class="u-status">{{ $t("publish.data.currentUrl") }}</span>
                 </template>
                 <template #append>
                     <span
@@ -184,7 +184,7 @@
                         v-clipboard:error="onError"
                     >
                         <i class="el-icon-document-copy"></i>
-                        <span>点击复制</span>
+                        <span>{{ $t("publish.common.clickToCopy") }}</span>
                     </span>
                 </template>
             </el-input>
@@ -334,8 +334,8 @@ export default {
             let fileInput = document.getElementById("jx3dat_" + i);
             let file = fileInput.files[0];
             if (!file) {
-                this.$alert("请先选择文件", "提醒", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("publish.upload.selectFileFirst"), this.$t("publish.common.reminder"), {
+                    confirmButtonText: this.$t("publish.common.confirm"),
                 });
                 return;
             }
@@ -348,7 +348,7 @@ export default {
                 if (res) {
                     item.file = res.data.download_url;
                     this.$message({
-                        message: "数据上传成功",
+                        message: this.$t("publish.message.dataUploadSucceeded"),
                         type: "success",
                     });
                     item._version = Date.now();
@@ -360,8 +360,8 @@ export default {
             // 目前设置最多3个版本
             if (this.jx3dats.data.length >= 3 && !this.isVIP) {
                 this.$alert(
-                    '默认只能设置3个版本，<a href="/vip/premium?from=jx3dat_feed" target="_blank">开通高级版账号</a>无限制',
-                    "消息",
+                    this.$t("publish.data.versionLimitHtml"),
+                    this.$t("publish.common.message"),
                     {
                         dangerouslyUseHTMLString: true,
                     }
@@ -370,7 +370,7 @@ export default {
             }
 
             this.jx3dats.data.push({
-                name: "版本" + this.totalVersions,
+                name: this.$t("publish.data.generatedVersion", { index: this.totalVersions }),
                 desc: "",
                 status: true,
                 file: "",
@@ -383,21 +383,21 @@ export default {
             // this.jx3dats.data.splice(i, 1);
 
             if (name == 1) {
-                this.$alert("✘ 必须保留默认数据", "消息", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("publish.data.keepDefault"), this.$t("publish.common.message"), {
+                    confirmButtonText: this.$t("publish.common.confirm"),
                 });
                 return;
             }
 
             if (this.jx3dats.data.length < 2) {
-                this.$alert("✘ 必须保留默认数据", "消息", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("publish.data.keepDefault"), this.$t("publish.common.message"), {
+                    confirmButtonText: this.$t("publish.common.confirm"),
                 });
                 return;
             }
 
-            this.$alert("确定删除这个数据吗，删除后无法找回", "消息", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("publish.data.confirmDelete"), this.$t("publish.common.message"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
                 callback: (action) => {
                     if (action == "confirm") {
                         // 删除
@@ -419,8 +419,8 @@ export default {
             let fileInput = document.getElementById("otherdata");
             let file = fileInput.files[0];
             if (!file) {
-                this.$alert("请先选择文件", "提醒", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("publish.upload.selectFileFirst"), this.$t("publish.common.reminder"), {
+                    confirmButtonText: this.$t("publish.common.confirm"),
                 });
                 return;
             }
@@ -434,7 +434,7 @@ export default {
                 this.jx3dats.down = res.data.data[0];
 
                 this.$message({
-                    message: "上传成功",
+                    message: this.$t("publish.message.uploadSucceeded"),
                     type: "success",
                 });
 
@@ -452,15 +452,15 @@ export default {
         },
         onCopy: function (val) {
             this.$notify({
-                title: "复制成功",
-                message: "复制成功",
+                title: this.$t("publish.message.copySucceeded"),
+                message: this.$t("publish.message.copySucceeded"),
                 type: "success",
             });
         },
         onError: function () {
             this.$notify.error({
-                title: "复制失败",
-                message: "复制失败",
+                title: this.$t("publish.message.copyFailed"),
+                message: this.$t("publish.message.copyFailed"),
             });
         },
     },

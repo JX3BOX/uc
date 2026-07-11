@@ -8,33 +8,33 @@
     <div class="m-feedback-index">
         <section class="m-feedback-box">
             <el-tabs v-model="active">
-                <el-tab-pane label="提交反馈" name="submit" lazy>
+                <el-tab-pane :label="$t('dashboard.feedback.submitFeedback')" name="submit" lazy>
                     <add></add>
                 </el-tab-pane>
-                <el-tab-pane label="我的反馈" name="myfeedback" lazy>
+                <el-tab-pane :label="$t('dashboard.feedback.myFeedback')" name="myfeedback" lazy>
                     <list v-if="active === 'myfeedback'"></list>
                 </el-tab-pane>
-                <el-tab-pane v-if="isTeammate" label="待处理" name="pending" lazy>
+                <el-tab-pane v-if="isTeammate" :label="$t('dashboard.feedback.pending')" name="pending" lazy>
                     <pending v-if="active === 'pending'"></pending>
                 </el-tab-pane>
-                <el-tab-pane v-if="isTeammate" label="处理中" name="doing" lazy>
+                <el-tab-pane v-if="isTeammate" :label="$t('dashboard.feedback.processing')" name="doing" lazy>
                     <pending v-if="active === 'doing'" :status="2"></pending>
                 </el-tab-pane>
-                <el-tab-pane v-if="isTeammate" label="已处理" name="resolved" lazy>
+                <el-tab-pane v-if="isTeammate" :label="$t('dashboard.feedback.processed')" name="resolved" lazy>
                     <pending v-if="active === 'resolved'" :status="10"></pending>
                 </el-tab-pane>
-                <el-tab-pane v-if="isTeammate" label="已关闭" name="closed" lazy>
+                <el-tab-pane v-if="isTeammate" :label="$t('dashboard.feedback.closed')" name="closed" lazy>
                     <pending v-if="active === 'closed'" :status="11"></pending>
                 </el-tab-pane>
-                <el-tab-pane v-if="isTeammate" label="待指派" name="unassigned" lazy>
+                <el-tab-pane v-if="isTeammate" :label="$t('dashboard.feedback.unassigned')" name="unassigned" lazy>
                     <pending v-if="active === 'unassigned'" :status="0" :show-user-filters="false"></pending>
                 </el-tab-pane>
             </el-tabs>
         </section>
         <aside class="m-feedback-aside">
             <div class="m-feedback-extend">
-                <a class="u-btn el-button el-button--warning" href="/tool/108048" target="_blank" type="warning">自助检测</a>
-                <el-button class="u-btn" type="warning" plain @click="handleEraseClick">注销账号</el-button>
+                <a class="u-btn el-button el-button--warning" href="/tool/108048" target="_blank" type="warning">{{ $t("dashboard.feedback.selfCheck") }}</a>
+                <el-button class="u-btn" type="warning" plain @click="handleEraseClick">{{ $t("dashboard.feedback.deleteAccount") }}</el-button>
             </div>
             <div class="m-feedback-faq">
                 <div class="u-title"><i class="el-icon-question"></i> FAQ</div>

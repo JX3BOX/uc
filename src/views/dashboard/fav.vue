@@ -1,9 +1,9 @@
 <template>
     <div class="m-dashboard m-dashboard-work m-dashboard-fav">
         <div class="m-dashboard-work-header">
-            <h2 class="u-title"><i class="el-icon-star-off"></i> 收藏订阅</h2>
-            <el-select v-model="searchType" placeholder="类型过滤" class="u-filter" @change="handleChange" style="width:200px;">
-                <el-option label="全部" value="all"> </el-option>
+            <h2 class="u-title"><i class="el-icon-star-off"></i> {{ $t("dashboard.favorites.title") }}</h2>
+            <el-select v-model="searchType" :placeholder="$t('dashboard.favorites.typeFilter')" class="u-filter" @change="handleChange" style="width:200px;">
+                <el-option :label="$t('dashboard.common.all')" value="all"> </el-option>
                 <el-option-group v-for="group in options" :key="group.label" :label="group.label">
                     <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
@@ -11,18 +11,18 @@
             </el-select>
         </div>
         <el-tabs v-model="favChangeCount" @tab-change="loadData">
-            <el-tab-pane label="收藏" name="fav">
-                <template #label> <i class="el-icon-star-off"></i> 收藏 </template>
+            <el-tab-pane :label="$t('dashboard.favorites.favorites')" name="fav">
+                <template #label> <i class="el-icon-star-off"></i> {{ $t("dashboard.favorites.favorites") }} </template>
                 <div v-if="favChangeCount === 'fav'" class="m-dashboard-box" v-loading="loading">
                     <div class="m-dashboard-msg-header">
                         <el-input
                             class="m-dashboard-work-search"
-                            placeholder="请输入搜索内容"
+                            :placeholder="$t('dashboard.common.searchPlaceholder')"
                             v-model="search"
                             @keyup.enter="handleChange"
                             size="large"
                         >
-                            <template #prepend>关键词</template>
+                            <template #prepend>{{ $t("dashboard.common.keyword") }}</template>
                             <template #append>
                                 <el-button icon="Search" @click="handleChange"></el-button>
                             </template>
@@ -34,20 +34,20 @@
                                 <img svg-inline src="@/assets/img/dashboard/works/repo.svg" />
                             </i>
                             <a class="u-title" target="_blank" :href="getLink(item.post_type, item.post_id)">{{
-                                item.post_title || "无标题"
+                                item.post_title || $t("dashboard.common.untitled")
                             }}</a>
                             <div class="u-desc">
                                 <span class="u-category"
                                     ><i class="el-icon-folder"></i> {{ getTypeLabel(item.post_type) }}
                                 </span>
-                                <span><i class="el-icon-date"></i> 于 {{ dateFormat(item.created) }} 加入收藏 </span>
+                                <span><i class="el-icon-date"></i> {{ $t("dashboard.favorites.addedAt", { time: dateFormat(item.created) }) }} </span>
                             </div>
                             <el-button-group class="u-action">
-                                <el-button icon="Delete" title="取消收藏" @click="del(item.id)"></el-button>
+                                <el-button icon="Delete" :title="$t('dashboard.favorites.unfavorite')" @click="del(item.id)"></el-button>
                             </el-button-group>
                         </li>
                     </ul>
-                    <el-alert v-else class="m-dashboard-box-null" title="没有找到相关条目" type="info" center show-icon>
+                    <el-alert v-else class="m-dashboard-box-null" :title="$t('dashboard.common.noItems')" type="info" center show-icon>
                     </el-alert>
                     <el-pagination
                         v-if="showPagination"
@@ -63,12 +63,12 @@
                     </el-pagination>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="订阅" name="sub">
-                <template #label> <i class="u-tab-icon el-icon-news"></i> 订阅 </template>
+            <el-tab-pane :label="$t('dashboard.favorites.subscriptions')" name="sub">
+                <template #label> <i class="u-tab-icon el-icon-news"></i> {{ $t("dashboard.favorites.subscriptions") }} </template>
                 <rss-list v-if="favChangeCount === 'sub'" />
             </el-tab-pane>
-            <el-tab-pane label="历史记录" name="log">
-                <template #label> <i class="el-icon-time"></i> 历史记录 </template>
+            <el-tab-pane :label="$t('dashboard.favorites.history')" name="log">
+                <template #label> <i class="el-icon-time"></i> {{ $t("dashboard.favorites.history") }} </template>
                 <visit-log
                     v-if="favChangeCount === 'log'"
                     :type="searchType"
@@ -76,8 +76,8 @@
                     @change-search="changeSearch"
                 />
             </el-tab-pane>
-            <el-tab-pane label="稍后再看" name="watch_later">
-                <template #label> <i class="el-icon-news"></i> 稍后再看 </template>
+            <el-tab-pane :label="$t('dashboard.favorites.watchLater')" name="watch_later">
+                <template #label> <i class="el-icon-news"></i> {{ $t("dashboard.favorites.watchLater") }} </template>
                 <wait-list
                     v-if="favChangeCount === 'watch_later'"
                     :type="searchType"
@@ -113,25 +113,25 @@ export default {
             searchType: "all",
             options: [
                 {
-                    label: "文章作品",
+                    label: this.$t("dashboard.favorites.postWorks"),
                     options: Object.entries(__postType).map((item) => {
                         return { value: item[0], label: item[1] };
                     }),
                 },
                 {
-                    label: "百科词条",
+                    label: this.$t("dashboard.favorites.wikiEntries"),
                     options: Object.entries(__wikiType).map((item) => {
                         return { value: item[0], label: item[1] };
                     }),
                 },
                 {
-                    label: "游戏资料",
+                    label: this.$t("dashboard.favorites.gameData"),
                     options: Object.entries(__gameType).map((item) => {
                         return { value: item[0], label: item[1] };
                     }),
                 },
                 {
-                    label: "其它应用",
+                    label: this.$t("dashboard.favorites.otherApps"),
                     options: Object.entries(__appType)
                         .map((item) => {
                             return { value: item[0], label: item[1] };
@@ -192,16 +192,16 @@ export default {
             this.search = val;
         },
         del: function (id) {
-            this.$confirm("确定要取消收藏吗？", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("dashboard.favorites.unfavoriteConfirm"), this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
                     delFav(id).then(() => {
                         this.$message({
                             type: "success",
-                            message: `取消收藏成功`,
+                            message: this.$t("dashboard.favorites.unfavoriteSuccess"),
                         });
                         this.loadData();
                     });

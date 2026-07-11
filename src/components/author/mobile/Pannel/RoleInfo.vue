@@ -1,6 +1,6 @@
 <template>
     <div class="m-role-info">
-        <div class="u-join-time">加入魔盒于 {{ time(data.user_registered) }}</div>
+        <div class="u-join-time">{{ $t("author.profile.joinedJx3boxAt", { time: time(data.user_registered) }) }}</div>
         <div class="m-role-card">
             <role-card />
         </div>

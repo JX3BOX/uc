@@ -6,37 +6,37 @@
         class="m-cart-confirm"
     >
         <div class="content">
-            <div class="title">购物车结算</div>
-            <div class="desc">确认兑换已勾选商品</div>
+            <div class="title">{{ $t("vip.mall.cartCheckout") }}</div>
+            <div class="desc">{{ $t("vip.mall.confirmSelected") }}</div>
             <div class="summary">
                 <div class="summary-row">
                     <span class="summary-label">
                         <img src="@/assets/img/vip/vip2/box_icon.svg" alt="" svg-inline />
-                        盒币
+                        {{ $t("vip.mall.boxcoin") }}
                     </span>
                     <span class="summary-value boxcoin">{{ $store.getters["mallNew/all_price_boxcoin"] || 0 }}</span>
                 </div>
                 <div class="summary-row">
                     <span class="summary-label">
                         <img src="@/assets/img/vip/vip2/points.svg" alt="" svg-inline />
-                        积分
+                        {{ $t("vip.common.points") }}
                     </span>
                     <span class="summary-value points">{{ $store.getters["mallNew/all_price_points"] || 0 }}</span>
                 </div>
                 <div class="summary-row">
                     <span class="summary-label">
                         <i class="el-icon-shopping-cart-2"></i>
-                        商品
+                        {{ $t("vip.mall.products") }}
                     </span>
-                    <span class="summary-value num">{{ $store.getters["mallNew/checked_num"] || 0 }} 件</span>
+                    <span class="summary-value num">{{ $t("vip.mall.pieces", { count: $store.getters["mallNew/checked_num"] || 0 }) }}</span>
                 </div>
             </div>
         </div>
         <div class="btn-box">
             <el-button round class="btn-cancel" @click="$store.dispatch('mallNew/changeCartConfirmIsShow', false)">
-                再想想
+                {{ $t("vip.mall.thinkAgain") }}
             </el-button>
-            <el-button round class="btn-confirm" @click="buyGoods">确认兑换</el-button>
+            <el-button round class="btn-confirm" @click="buyGoods">{{ $t("vip.common.confirmExchange") }}</el-button>
         </div>
     </el-dialog>
 </template>
@@ -58,7 +58,7 @@ export default {
                 return User.toLogin();
             }
             if (!this.$store.getters["mallNew/checked_num"]) {
-                return this.$message.warning("请先选择要结算的商品");
+                return this.$message.warning(this.$t("vip.mall.selectCheckoutProducts"));
             }
             this.$store.dispatch("mallNew/changeCartConfirmIsShow", false);
             this.$store.dispatch("mallNew/changeBatchConfirmIsShow", true);

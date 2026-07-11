@@ -4,13 +4,13 @@
             <img
                 v-if="displayImage"
                 :src="displayImage"
-                :alt="good.title || '商品图片'"
+                :alt="good.title || $t('vip.mall.productImage')"
                 class="good-item-img"
                 loading="lazy"
                 decoding="async"
                 @error="handleImageError"
             />
-            <div v-else class="good-item-img u-good-image-null">{{ imageFailed ? "图片加载失败" : "暂无图片" }}</div>
+            <div v-else class="good-item-img u-good-image-null">{{ imageFailed ? $t("vip.mall.imageLoadFailed") : $t("vip.mall.noImage") }}</div>
             <span v-if="skinDisplayName" class="skin-name" :class="`skin-name--${skinCategory}`">{{ skinDisplayName }}</span>
         </div>
         <div class="right">
@@ -21,7 +21,7 @@
                 </div>
                 <div class="tags">
                     <div class="tag level-tag">Lv.{{ getLevel(good.exp_limit) }}</div>
-                    <div class="tag vip-tag" v-if="good.vip_limit === 1">会员专享</div>
+                    <div class="tag vip-tag" v-if="good.vip_limit === 1">{{ $t("vip.mall.memberExclusive") }}</div>
                 </div>
             </div>
             <div class="footer">
@@ -33,17 +33,17 @@
                 >
                     <span v-if="isOwnedSingleGood" class="u-owned-tag">
                         <Check class="owned-icon" />
-                        已拥有
+                        {{ $t("vip.mall.owned") }}
                     </span>
                     <div class="button-text canBuy">
                         <template v-if="good.price_boxcoin">
-                            <img :src="imgUrl + 'box_coin.svg'" alt="" />{{ good.price_boxcoin }}盒币
+                            <img :src="imgUrl + 'box_coin.svg'" alt="" />{{ $t("vip.common.boxcoinAmount", { amount: good.price_boxcoin }) }}
                         </template>
                         <template v-if="good.price_boxcoin && good.price_points"> + </template>
                         <template v-if="good.price_points">
-                            <img :src="imgUrl + 'point.svg'" alt="" />{{ good.price_points }}积分
+                            <img :src="imgUrl + 'point.svg'" alt="" />{{ $t("vip.common.pointsAmount", { amount: good.price_points }) }}
                         </template>
-                        <template v-if="!good.price_boxcoin && !good.price_points">免费兑换</template>
+                        <template v-if="!good.price_boxcoin && !good.price_points">{{ $t("vip.common.freeExchange") }}</template>
                     </div>
                 </button>
                 <button
@@ -73,8 +73,6 @@ import { alertMallRequirement } from "@/utils/mallExchangeError";
 import {
     getMallGoodsCartAmount,
     isOwnedSingleMallGoods,
-    MALL_DECORATION_OWNED_MESSAGE,
-    MALL_DECORATION_SINGLE_LIMIT_MESSAGE,
     shouldBlockSingleDecorationAdd,
 } from "@/utils/mallCartLimit";
 import { getMallSkinDisplayName, isMallSkinGood, resolveMallSkinCategory } from "@/utils/mallDecoration";
@@ -157,7 +155,7 @@ export default {
             if (isOwnedSingleMallGoods(this.good)) {
                 return this.$message({
                     type: "warning",
-                    message: MALL_DECORATION_OWNED_MESSAGE,
+                    message: this.$t("vip.mall.alreadyOwned"),
                 });
             }
             this.$refs.buyConfirm.isShow = true;
@@ -172,20 +170,20 @@ export default {
             if (isOwnedSingleMallGoods(this.good)) {
                 return this.$message({
                     type: "warning",
-                    message: MALL_DECORATION_OWNED_MESSAGE,
+                    message: this.$t("vip.mall.alreadyOwned"),
                 });
             }
             if (shouldBlockSingleDecorationAdd(this.$store.state.mallNew.cart, this.good)) {
                 return this.$message({
                     type: "warning",
-                    message: MALL_DECORATION_SINGLE_LIMIT_MESSAGE,
+                    message: this.$t("vip.mall.singleDecorationLimit"),
                 });
             }
             const num = this.cartAmount;
             if (1 + num > this.good.stock) {
                 return this.$message({
                     type: "warning",
-                    message: "可兑换库存不足",
+                    message: this.$t("vip.mall.insufficientStock"),
                 });
             }
             this.$store

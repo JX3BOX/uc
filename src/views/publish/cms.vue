@@ -3,13 +3,13 @@
         <div class="m-dashboard-work-header">
             <h2 class="u-title">{{ typeLabel }}</h2>
             <a :href="publishLink" class="u-publish el-button el-button--primary el-button">
-                <i class="el-icon-document"></i> 发布作品
+                <i class="el-icon-document"></i> {{ $t("publish.common.publishWork") }}
             </a>
         </div>
 
-        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search" size="large">
+        <el-input class="m-dashboard-work-search" :placeholder="$t('publish.common.searchPlaceholder')" v-model="search" size="large">
             <template #prepend>
-                <span>关键词</span>
+                <span>{{ $t("publish.common.keyword") }}</span>
             </template>
             <template #append>
                 <el-button icon="Search"></el-button>
@@ -34,7 +34,7 @@
                                 />
                             </el-tooltip>
                         </i>
-                        {{ item.post_title || "无标题" }}</a
+                        {{ item.post_title || $t("publish.common.untitled") }}</a
                     >
                     <div class="u-desc">
                         <!-- <span class="u-desc-subitem">
@@ -43,26 +43,26 @@
                         </span> -->
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
-                            发布 :
+                            {{ $t("publish.common.publishedAt") }} :
                             <span class="u-time">{{ dateFormat(item.post_date) }}</span>
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
-                            更新 :
+                            {{ $t("publish.common.updatedAt") }} :
                             <span class="u-time">{{ dateFormat(item.post_modified) }}</span>
                         </time>
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-button icon="Edit" title="编辑" @click="edit(item.post_type, item.ID)"></el-button>
-                        <el-button icon="Delete" title="删除" @click="del(item.ID)"></el-button>
+                        <el-button icon="Edit" :title="$t('publish.common.edit')" @click="edit(item.post_type, item.ID)"></el-button>
+                        <el-button icon="Delete" :title="$t('publish.common.delete')" @click="del(item.ID)"></el-button>
                     </el-button-group>
                 </li>
             </ul>
             <el-alert
                 v-else
                 class="m-dashboard-box-null"
-                title="没有找到相关条目"
+                :title="$t('publish.common.noResults')"
                 type="info"
                 center
                 show-icon
@@ -83,9 +83,8 @@
 <script>
 import { getMyPosts, push, del } from "@/service/publish/cms.js";
 import { editLink, getLink } from "@jx3box/jx3box-common/js/utils.js";
-import { __postType, __visibleMap } from "@/utils/config";
+import { __postType } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
-import statusMap from "@/assets/data/publish/status.json";
 export default {
     name: "work",
     props: [],
@@ -100,7 +99,6 @@ export default {
             order: "update",
             client: "std",
             types: Object.assign(__postType, { joke: "剑三骚话" }),
-            statusMap,
         };
     },
     computed: {
@@ -108,7 +106,7 @@ export default {
             return this.$route.params.type;
         },
         typeLabel: function () {
-            return this.types[this.type];
+            return this.postTypeLabel(this.type, this.types[this.type]);
         },
         params: function () {
             return {
@@ -144,6 +142,18 @@ export default {
         },
     },
     methods: {
+        postTypeLabel(type, fallback) {
+            const key = {
+                macro: "macros",
+                bps: "classGuides",
+                pvp: "pvpTips",
+                fb: "dungeonGuides",
+                tool: "tools",
+                notice: "news",
+                joke: "jokes",
+            }[type];
+            return key ? this.$t(`publish.types.${key}`) : fallback;
+        },
         loadPosts: function () {
             this.loading = true;
             getMyPosts(this.params)
@@ -159,14 +169,14 @@ export default {
             location.href = "/publish/#/" + type + "/" + id;
         },
         del: function (id) {
-            this.$alert("确定要删除吗？", "确认信息", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("publish.confirm.delete"), this.$t("publish.common.confirmation"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
                 callback: (action) => {
                     if (action == "confirm") {
                         del(id).then((res) => {
                             this.$message({
                                 type: "success",
-                                message: `删除成功`,
+                                message: this.$t("publish.message.deleteSucceeded"),
                             });
                             location.reload();
                         });
@@ -180,7 +190,7 @@ export default {
             }).then((res) => {
                 this.$message({
                     type: "success",
-                    message: `操作成功`,
+                    message: this.$t("publish.message.operationSucceeded"),
                 });
                 this.data[i].post_status = "draft";
             });
@@ -191,7 +201,7 @@ export default {
             }).then((res) => {
                 this.$message({
                     type: "success",
-                    message: `操作成功`,
+                    message: this.$t("publish.message.operationSucceeded"),
                 });
                 this.data[i].post_status = "publish";
             });
@@ -213,10 +223,17 @@ export default {
             return __postType[val];
         },
         visibleFormat: function (val) {
-            return __visibleMap[~~val];
+            const key = ["public", "private", "friends", "password", "paid", "followers"][~~val];
+            return this.$t(`publish.visibility.${key || "public"}`);
         },
         statusFormat: function (val) {
-            return statusMap[val];
+            const key = {
+                publish: "published",
+                draft: "draft",
+                pending: "pendingReview",
+                dustbin: "deleted",
+            }[val];
+            return this.$t(`publish.status.${key || "unknown"}`);
         },
     },
 };

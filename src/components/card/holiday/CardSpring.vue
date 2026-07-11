@@ -1,17 +1,17 @@
 <template>
     <div :class="year ? 'cardSpringYear' : 'cardSpring'" @click.stop>
         <div class="u-springFestival-card" v-if="year" :class="show ? 'u-card-on' : 'u-card-off'" @click="change">
-            <img class="u-card-bg" :src="bg" alt="新年快乐" />
-            <img class="u-card-cover" :src="cover" alt="新年快乐" />
-            <img class="u-card-button" :src="button" alt="新年快乐" />
-            <img class="u-card-content" :src="countImg" alt="新年快乐" />
+            <img class="u-card-bg" :src="bg" :alt="$t('card.holiday.happyLunarNewYear')" />
+            <img class="u-card-cover" :src="cover" :alt="$t('card.holiday.happyLunarNewYear')" />
+            <img class="u-card-button" :src="button" :alt="$t('card.holiday.happyLunarNewYear')" />
+            <img class="u-card-content" :src="countImg" :alt="$t('card.holiday.happyLunarNewYear')" />
         </div>
         <div class="u-springFestival-card fadeInUpBig p-animation" v-else>
             <div class="u-letter u-img m-animation" ref="letter" @click="close">
-                <img class="u-img" :src="letter" alt="新年快乐" />
-                <img class="u-img" :src="countImg" alt="新年快乐" />
+                <img class="u-img" :src="letter" :alt="$t('card.holiday.happyLunarNewYear')" />
+                <img class="u-img" :src="countImg" :alt="$t('card.holiday.happyLunarNewYear')" />
             </div>
-            <img class="u-cover u-img" ref="cover" :src="cover" alt="新年快乐" @click="open" />
+            <img class="u-cover u-img" ref="cover" :src="cover" :alt="$t('card.holiday.happyLunarNewYear')" @click="open" />
         </div>
     </div>
 </template>

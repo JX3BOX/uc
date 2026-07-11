@@ -7,13 +7,13 @@
 <template>
     <div class="m-feedback-erase" v-loading="loading">
         <div class="m-feedback-article">
-            <h1 class="u-title">账号注销</h1>
+            <h1 class="u-title">{{ $t("dashboard.feedback.accountDeletion") }}</h1>
             <common-article :content="article"></common-article>
         </div>
         <div class="u-tips">
-            <div class="u-checkbox"><el-checkbox v-model="agree">我已知晓并同意上述规则</el-checkbox></div>
+            <div class="u-checkbox"><el-checkbox v-model="agree">{{ $t("dashboard.feedback.agreeRules") }}</el-checkbox></div>
             <div class="u-confirm">
-                <el-button type="danger" :disabled="!agree" @click="handleConfirm">确认注销</el-button>
+                <el-button type="danger" :disabled="!agree" @click="handleConfirm">{{ $t("dashboard.feedback.confirmDeletion") }}</el-button>
             </div>
         </div>
     </div>
@@ -44,24 +44,24 @@ export default {
     methods: {
         handleConfirm() {
             this.$confirm(
-                "所有财富（例如盒币，红包，积分等将永远无法再使用，也不会退回），本账号绑定的邮箱手机等不可用于再次注册, 是否继续?",
-                "提示",
+                this.$t("dashboard.feedback.deletionWarning"),
+                this.$t("dashboard.common.tip"),
                 {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
+                    confirmButtonText: this.$t("dashboard.common.confirm"),
+                    cancelButtonText: this.$t("dashboard.common.cancel"),
                     type: "warning",
                 }
             ).then(() => {
-                this.$prompt("请输入密码", "确认密码", {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
+                this.$prompt(this.$t("dashboard.password.enterPassword"), this.$t("dashboard.password.confirmPassword"), {
+                    confirmButtonText: this.$t("dashboard.common.confirm"),
+                    cancelButtonText: this.$t("dashboard.common.cancel"),
                     inputType: "password",
                 }).then(({ value }) => {
                     leave(value)
                         .then(() => {
                             this.$message({
                                 type: "success",
-                                message: "注销成功",
+                                message: this.$t("dashboard.feedback.deletionSuccess"),
                             });
                             User.destroy();
                             location.href = "/";
@@ -69,7 +69,7 @@ export default {
                         .catch((res) => {
                             this.$message({
                                 type: "error",
-                                message: res.data.msg || "注销失败",
+                                message: res.data.msg || this.$t("dashboard.feedback.deletionFailed"),
                             });
                         });
                 }).catch(() => {})

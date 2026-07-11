@@ -1,7 +1,7 @@
 <template>
     <div class="cart-web">
         <div class="cart-title">
-            购物车清单<i class="el-icon-close" @click="$router.go(-1)" style="cursor: pointer"></i>
+            {{ $t("vip.mall.cartList") }}<i class="el-icon-close" @click="$router.go(-1)" style="cursor: pointer"></i>
         </div>
         <div class="dashed"></div>
         <div class="cart-header">
@@ -10,10 +10,10 @@
                     <i class="el-icon-check"></i>
                 </div>
                 <div class="box-text">
-                    全选&nbsp;({{ $store.getters["mallNew/checked_num"] }}/{{ $store.getters["mallNew/num"] }})
+                    {{ $t("vip.mall.selectAll") }}&nbsp;({{ $store.getters["mallNew/checked_num"] }}/{{ $store.getters["mallNew/num"] }})
                 </div>
             </div>
-            <div class="clear-btn" @click="handleClear">清空</div>
+            <div class="clear-btn" @click="handleClear">{{ $t("vip.common.clear") }}</div>
         </div>
         <div class="m-cart-items">
             <div class="m-cart-item" v-for="item in list" :key="item.id" :class="{ cannotBuy: item.can_buy === 0 }">
@@ -68,7 +68,7 @@
         </div>
         <div class="dashed"></div>
         <div class="total-price">
-            <div style="font-size: 3.2vw; color: rgba(56, 56, 56, 1)">合计：</div>
+            <div style="font-size: 3.2vw; color: rgba(56, 56, 56, 1)">{{ $t("vip.mall.totalLabel") }}</div>
             <div class="total">
                 <div class="total-item">
                     <div class="right">
@@ -78,7 +78,7 @@
                             svg-inline
                             style="fill: rgba(56, 56, 56, 1)"
                         />
-                        <div>盒币<span>（=通宝）</span></div>
+                        <div>{{ $t("vip.mall.boxcoin") }}<span>{{ $t("vip.mall.boxcoinAlias") }}</span></div>
                     </div>
                     <div class="left">{{ $store.getters["mallNew/all_price_boxcoin"] }}</div>
                 </div>
@@ -90,12 +90,12 @@
                             svg-inline
                             style="fill: rgba(56, 56, 56, 1)"
                         />
-                        <div>银铛<span>（=积分）</span></div>
+                        <div>{{ $t("vip.mall.silverToken") }}<span>{{ $t("vip.mall.silverTokenAlias") }}</span></div>
                     </div>
                     <div class="left">{{ $store.getters["mallNew/all_price_points"] }}</div>
                 </div>
             </div>
-            <div class="total-btn" @click="checkout">结算</div>
+            <div class="total-btn" @click="checkout">{{ $t("vip.mall.checkout") }}</div>
         </div>
         <CartConfirm ref="cartConfirm"></CartConfirm>
     </div>
@@ -157,7 +157,7 @@ export default {
         },
         checkout() {
             if (!this.$store.getters["mallNew/checked_num"]) {
-                return this.$message.warning("请先选择要结算的商品");
+                return this.$message.warning(this.$t("vip.mall.selectCheckoutProducts"));
             }
             this.$refs.cartConfirm.isShow = true;
         },

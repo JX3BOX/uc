@@ -3,10 +3,10 @@
         <div class="m-main">
             <template v-if="treasureInfo.team_certificate">
                 <div class="u-title m-hide">{{ treasureInfo.team_certificate.rank_name }}</div>
-                <div class="u-time m-hide">获得时间：{{ treasureInfo.team_certificate.awardtime }}</div>
+                <div class="u-time m-hide">{{ $t("author.certificate.awardedAt", { time: treasureInfo.team_certificate.awardtime }) }}</div>
                 <el-image class="u-img" :fit="'contain'" :src="treasureImg" :preview-src-list="[treasureImg]">
                 </el-image>
-                <button @click="print" class="u-btn m-hide el-button el-button--primary">打印证书</button>
+                <button @click="print" class="u-btn m-hide el-button el-button--primary">{{ $t("author.certificate.print") }}</button>
             </template>
             <el-empty v-else-if="errorMessage" class="m-cert-empty" :description="errorMessage"></el-empty>
 
@@ -61,7 +61,7 @@ export default {
                     const data = res.data.data;
                     const { team_certificate } = data || {};
                     if (!team_certificate) {
-                        this.errorMessage = "证书不存在或暂时无法访问";
+                        this.errorMessage = this.$t("author.certificate.notFound");
                         return;
                     }
                     this.treasureInfo = data;
@@ -79,11 +79,19 @@ export default {
                     } = team_certificate;
                     let drawConfig = this.cloneDrawConfig(CI[rank_id]);
                     if (!drawConfig) {
-                        this.errorMessage = "证书模板不存在";
+                        this.errorMessage = this.$t("author.certificate.templateNotFound");
                         return;
                     }
                     let { element } = drawConfig;
-                    element.mapTime.content = this.formatTimeString(element.mapTime.content, time);
+                    if (element.topTitle) {
+                        element.topTitle.content = this.$t("author.certificate.topRanking", { edition: rank_id });
+                    }
+                    if (element.qrTitle) {
+                        element.qrTitle.content = this.$t("author.certificate.dungeonRanking");
+                    }
+                    element.mapTime.content = this.$t("author.certificate.clearTime", {
+                        time: this.formatLocaleDateTime(time),
+                    });
                     element.name.content = team_name;
                     element.rank.content = sort_no;
                     element.team.content = teammate;
@@ -93,17 +101,19 @@ export default {
                         }
                     }
                     if (element.colonel) {
-                        element.colonel.content = `团长：${leader}`;
+                        element.colonel.content = this.$t("author.certificate.leader", { name: leader });
                     }
                     if (element.signTime) {
-                        element.signTime.content = this.formatTimeString(element.signTime.content, awardtime);
+                        element.signTime.content = this.$t("author.certificate.issueDate", {
+                            date: this.formatLocaleDate(awardtime),
+                        });
                         if (element.signTime.addUrl) {
                             element.signTime.content =
                                 __Root + element.signTime.addUrl + "  " + element.signTime.content;
                         }
                     }
                     if (element.time) {
-                        element.time.content = this.takeTimeCalc(element.time.content, duration);
+                        element.time.content = this.formatDuration(duration);
                     }
                     if (element.server) {
                         element.server.content = team_server;
@@ -111,13 +121,13 @@ export default {
                     if (element.qrSubTitle) {
                         element.qrSubTitle.content = rank_name;
                     } else if (element.mapName) {
-                        element.mapName.content = `副本名称：${rank_name}`;
+                        element.mapName.content = this.$t("author.certificate.dungeonName", { name: rank_name });
                     }
                     this.drawConfig = drawConfig;
                     this.draw();
                 })
                 .catch(() => {
-                    this.errorMessage = "证书加载失败，请稍后重试";
+                    this.errorMessage = this.$t("author.certificate.loadFailed");
                 });
         },
         cloneDrawConfig(config) {
@@ -173,15 +183,15 @@ export default {
                 drawStyle = data.style.topThreeStyle;
             }
             if (data.content == 1) {
-                drawText = "冠军";
+                drawText = this.$t("author.certificate.firstPlace");
             } else if (data.content == 2) {
-                drawText = "亚军";
+                drawText = this.$t("author.certificate.secondPlace");
             } else if (data.content == 3) {
-                drawText = "季军";
+                drawText = this.$t("author.certificate.thirdPlace");
             } else if (drawStyle.content) {
                 drawText = drawStyle.content;
             } else {
-                drawText = `第${data.content}名`;
+                drawText = this.$t("author.certificate.place", { rank: data.content });
             }
 
             const fontUrl = fontMap[data.style.fontName];
@@ -433,6 +443,31 @@ export default {
             let remainingSeconds = seconds % 60;
             timeString = timeString.replace(/hh/, hours).replace(/mm/, minutes).replace(/ss/, remainingSeconds);
             return timeString;
+        },
+        formatDuration(seconds) {
+            const total = Number(seconds) || 0;
+            return this.$t("author.certificate.clearDuration", {
+                hours: Math.floor(total / 3600),
+                minutes: Math.floor((total % 3600) / 60),
+                seconds: total % 60,
+            });
+        },
+        formatLocaleDate(value) {
+            return new Intl.DateTimeFormat(this.$i18n.locale, {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+            }).format(new Date(value));
+        },
+        formatLocaleDateTime(value) {
+            return new Intl.DateTimeFormat(this.$i18n.locale, {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+            }).format(new Date(value));
         },
         formatTimeString(timeString, dateTimeString) {
             const date = new Date(dateTimeString);

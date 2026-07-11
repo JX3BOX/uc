@@ -1,17 +1,17 @@
 <template>
     <div class="m-dashboard m-dashboard-work m-dashboard-wiki" v-loading="loading">
         <div class="m-dashboard-work-header">
-            <h2 class="u-title">通用评论</h2>
+            <h2 class="u-title">{{ $t("publish.types.cmsComments") }}</h2>
         </div>
 
         <el-input
             class="m-dashboard-work-search u-source-search"
-            placeholder="请输入搜索内容"
+            :placeholder="$t('publish.common.searchPlaceholder')"
             v-model="search"
             size="large"
         >
             <template #prepend>
-                <span>关键词</span>
+                <span>{{ $t("publish.common.keyword") }}</span>
             </template>
             <template #append>
                 <el-button icon="Search"></el-button>
@@ -22,19 +22,19 @@
             <ul class="m-dashboard-box-list" v-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
                     <a class="u-title" target="_blank" :href="postLink(item.category, item.postID)">
-                        <i class="u-icon el-icon-chat-line-square"> </i>{{ item.content || "未知" }}</a
+                        <i class="u-icon el-icon-chat-line-square"> </i>{{ item.content || $t("publish.common.unknown") }}</a
                     >
                     <!-- <span class="u-desc">{{item.content || '未知'}}</span> -->
                     <div class="u-desc">
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
-                            发布 :
+                            {{ $t("publish.common.publishedAt") }} :
                             <span class="u-time">{{ dateFormat(item.commentDate) }}</span>
                         </time>
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+                        <el-tooltip class="item" effect="dark" :content="$t('publish.common.delete')" placement="top-start">
                             <el-button icon="Delete" @click="del(item.id, i)"></el-button>
                         </el-tooltip>
                     </el-button-group>
@@ -43,7 +43,7 @@
             <el-alert
                 v-else
                 class="m-dashboard-box-null"
-                title="没有找到相关条目"
+                :title="$t('publish.common.noResults')"
                 type="info"
                 center
                 show-icon
@@ -103,13 +103,13 @@ export default {
             return getLink(type, id);
         },
         del: function (id, i) {
-            this.$alert("确定删除吗？", "消息", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("publish.confirm.delete"), this.$t("publish.common.message"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
                 callback: (action) => {
                     if (action == "confirm") {
                         deleteComment(id).then((res) => {
                             this.$message({
-                                message: "删除成功",
+                                message: this.$t("publish.message.deleteSucceeded"),
                                 type: "success",
                             });
                             this.data.splice(i, 1);

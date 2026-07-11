@@ -4,7 +4,7 @@
         <div class="u-send-content">
             <el-input
                 type="textarea"
-                placeholder="按 Ctrl+Enter 可快速发送消息"
+                :placeholder="$t('dashboard.message.sendPlaceholder')"
                 v-model="content"
                 id="letterInput"
                 @keydown.ctrl.enter="send"
@@ -15,7 +15,7 @@
                 <span class="u-current-sum" :class="{ over: isOver }">{{ currentSum }}</span>
                 <span class="u-max-sum">/{{ max }}</span>
             </span>
-            <el-button :disabled="isOver || !currentSum" @click="send">发送</el-button>
+            <el-button :disabled="isOver || !currentSum" @click="send">{{ $t("dashboard.common.send") }}</el-button>
         </div>
     </div>
 </template>

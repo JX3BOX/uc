@@ -2,13 +2,13 @@
     <div class="m-notice-wechat" v-loading="loading" @click="handleClose">
         <div class="m-wechat-content">
             <el-image class="u-qr" v-if="ticket" :src="qrcodeValue" lazy> </el-image>
-            <i class="u-tip" v-if="!success">请关注公众号再进行抽奖</i>
+            <i class="u-tip" v-if="!success">{{ $t("vip.lottery.followWechat") }}</i>
             <template v-else>
                 <div class="u-bind">
                     <i class="el-icon-success" style="color: #67c23a; margin-right: 5px"> </i>
-                    <span class="u-bind-text">绑定成功</span>
+                    <span class="u-bind-text">{{ $t("vip.lottery.bindSuccess") }}</span>
                 </div>
-                <span class="u-tips">请刷新页面后再进行抽奖</span>
+                <span class="u-tips">{{ $t("vip.lottery.refreshAfterBind") }}</span>
             </template>
         </div>
     </div>

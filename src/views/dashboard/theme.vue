@@ -1,11 +1,11 @@
 <template>
-    <uc class="m-dashboard-theme m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tab-list="tabList">
+    <uc class="m-dashboard-theme m-dashboard-skin" icon="el-icon-brush" :title="$t('dashboard.theme.title')" :tab-list="tabList">
         <template #header>
             <a
                 class="u-link el-button el-button--default el-button--small is-round is-plain"
                 href="/vip/mall?category=virtual"
                 target="_blank"
-                ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
+                ><i class="el-icon-shopping-cart-2"></i> {{ $t("dashboard.theme.getDecorations") }}</a
             >
         </template>
         <div class="m-theme-box">
@@ -23,7 +23,7 @@
                                     disabled: scene.disabled,
                                 }"
                                 :disabled="scene.disabled"
-                                :title="scene.disabled ? '当前皮肤未包含该部位' : scene.label"
+                                :title="scene.disabled ? $t('dashboard.theme.partUnavailable') : scene.label"
                                 @click="selectSceneSubtype(scene.subtype)"
                             >
                                 {{ scene.label }}
@@ -33,8 +33,8 @@
                             <button
                                 type="button"
                                 class="u-scene-fullscreen"
-                                title="全屏预览"
-                                aria-label="全屏预览"
+                                :title="$t('dashboard.theme.fullscreenPreview')"
+                                :aria-label="$t('dashboard.theme.fullscreenPreview')"
                                 @click="openScenePreviewDialog"
                             >
                                 <el-icon><FullScreen /></el-icon>
@@ -62,8 +62,7 @@
                         </div>
                     </div>
                     <div class="u-no-preview" v-else>
-                        暂 无<br />
-                        预 览
+                        {{ $t("dashboard.theme.noPreview") }}
                     </div>
                 </div>
                 <div class="u-bottom">
@@ -78,41 +77,39 @@
                             v-if="getActiveSkinByType(item.type)"
                             type="button"
                             class="u-clear-type"
-                            title="清除当前装扮"
+                            :title="$t('dashboard.theme.clearCurrent')"
                             @click.stop="clearPreviewType(item.type)"
                         >
                             <i class="el-icon-close"></i>
                         </button>
                         <img :src="getActiveImg(item)" class="u-img" fit="contain" v-if="isStatus(item)" />
                         <div class="u-no-select" v-else-if="!item.statue">
-                            敬 请<br />
-                            期 待
+                            {{ $t("dashboard.common.comingSoon") }}
                         </div>
                         <div class="u-no-select" v-else>
-                            暂 无<br />
-                            设 置
+                            {{ $t("dashboard.theme.notSet") }}
                         </div>
                         <div class="u-title">{{ item.name }}</div>
                     </div>
                 </div>
                 <div class="u-btn">
-                    <el-button type="primary" @click="decorationSubmit" size="large" :loading="submitting">确认</el-button>
-                    <el-button @click="reset" size="large" :disabled="submitting">重置</el-button>
+                    <el-button type="primary" @click="decorationSubmit" size="large" :loading="submitting">{{ $t("dashboard.common.confirm") }}</el-button>
+                    <el-button @click="reset" size="large" :disabled="submitting">{{ $t("dashboard.common.reset") }}</el-button>
                 </div>
             </div>
             <div class="m-theme-right">
                 <!-- 主题渲染列表 -->
                 <div class="u-skin-search">
-                    <el-input v-model="skinSearchKeyword" size="large" clearable placeholder="搜索皮肤名称">
+                    <el-input v-model="skinSearchKeyword" size="large" clearable :placeholder="$t('dashboard.theme.searchPlaceholder')">
                         <template #prefix>
                             <el-icon><Search /></el-icon>
                         </template>
                     </el-input>
                 </div>
                 <div class="u-load-error" v-if="decorationJsonLoadError">
-                    <div>皮肤列表加载失败，请稍后重试。</div>
+                    <div>{{ $t("dashboard.theme.loadFailed") }}</div>
                     <el-button type="primary" plain size="small" :loading="decorationJsonLoading" @click="loadDecoration">
-                        重试加载
+                        {{ $t("dashboard.common.retry") }}
                     </el-button>
                 </div>
                 <div class="u-theme" v-else-if="filteredDecoration.length">
@@ -124,7 +121,7 @@
                                 :href="getSkinMallUrl(item.name)"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                ><i class="el-icon-shopping-cart-2"></i> 前往获取</a
+                                ><i class="el-icon-shopping-cart-2"></i> {{ $t("dashboard.theme.goGet") }}</a
                             >
                         </div>
                         <div class="u-decoration-item">
@@ -147,7 +144,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="u-search-empty" v-else>暂无匹配皮肤</div>
+                <div class="u-search-empty" v-else>{{ $t("dashboard.theme.noMatchingSkins") }}</div>
             </div>
         </div>
         <el-dialog
@@ -161,7 +158,7 @@
             <template #header>
                 <div class="u-preview-dialog-header">
                     <div class="u-preview-dialog-title">
-                        <b>{{ activeScenePreview?.label || "全屏预览" }}</b>
+                        <b>{{ activeScenePreview?.label || $t("dashboard.theme.fullscreenPreview") }}</b>
                         <span>{{ activePreviewType }} / {{ activeSceneSubtypeForPreview }}</span>
                     </div>
                     <div class="u-preview-scene-tabs" v-if="currentSceneTabs.length > 1">
@@ -174,7 +171,7 @@
                                 disabled: scene.disabled,
                             }"
                             :disabled="scene.disabled"
-                            :title="scene.disabled ? '当前皮肤未包含该部位' : scene.label"
+                            :title="scene.disabled ? $t('dashboard.theme.partUnavailable') : scene.label"
                             @click="selectSceneSubtype(scene.subtype)"
                         >
                             {{ scene.label }}
@@ -196,8 +193,8 @@
                         <button
                             type="button"
                             class="u-preview-dialog-close"
-                            title="关闭预览"
-                            aria-label="关闭预览"
+                            :title="$t('dashboard.theme.closePreview')"
+                            :aria-label="$t('dashboard.theme.closePreview')"
                             @click="closeScenePreviewDialog"
                         >
                             <el-icon><Close /></el-icon>
@@ -368,7 +365,7 @@ export default {
                 })
                 .catch(() => {
                     this.decorationJsonLoadError = true;
-                    this.$message.error("皮肤列表加载失败，请稍后重试");
+                    this.$message.error(this.$t("dashboard.theme.loadFailed"));
                 })
                 .finally(() => {
                     this.decorationJsonLoading = false;
@@ -577,13 +574,13 @@ export default {
                     this.back.decoration = cloneDeep(this.decoration);
                     this.back.originalActivateName = cloneDeep(this.originalActivateName);
                     this.$message({
-                        message: "主题更新成功",
+                        message: this.$t("dashboard.theme.updateSuccess"),
                         type: "success",
                     });
                 })
                 .catch((err) => {
                     this.$message({
-                        message: err?.response?.data?.msg || err?.message || "主题更新失败，请稍后重试",
+                        message: err?.response?.data?.msg || err?.message || this.$t("dashboard.theme.updateFailed"),
                         type: "error",
                     });
                 })

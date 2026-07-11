@@ -1,9 +1,9 @@
 <template>
     <div class="m-dashboard m-dashboard-work m-dashboard-other">
         <div class="m-dashboard-work-header">
-            <h2 class="u-title">剑三铭牌</h2>
+            <h2 class="u-title">{{ $t("publish.types.namespace") }}</h2>
             <a :href="publishLink" class="u-publish el-button el-button--primary">
-                <i class="el-icon-document"></i> 创建铭牌
+                <i class="el-icon-document"></i> {{ $t("publish.namespace.create") }}
             </a>
         </div>
 
@@ -15,21 +15,21 @@
                             <div class="u-box">
                                 <div class="u-title">
                                     <span class="el-icon-postcard u-icon"></span>
-                                    <a class="u-name" target="_blank" :href="item.link">{{ item.key || "未知" }}</a>
+                                    <a class="u-name" target="_blank" :href="item.link">{{ item.key || $t("publish.common.unknown") }}</a>
                                 </div>
                                 <div class="u-desc">
                                     <span class="u-status u-desc-subitem">
-                                        状态:
+                                        {{ $t("publish.common.status") }}:
                                         <el-tag :type="item.status == 1 ? 'success' : item.status == 2 ? 'danger' : 'info'" size="small">{{ statusmap[item.status] }}</el-tag>
                                     </span>
-                                    <time class="u-time u-desc-subitem">创建于: {{ dateFormat(item.created) }}</time>
+                                    <time class="u-time u-desc-subitem">{{ $t("publish.common.createdAt") }}: {{ dateFormat(item.created) }}</time>
                                 </div>
                             </div>
                             <el-button-group class="u-action">
                                 <el-button
                                     icon="Edit"
                                     @click="edit(item.ID, item.source_type, item.source_id)"
-                                    title="编辑"
+                                    :title="$t('publish.common.edit')"
                                     circle
                                     plain
                                 ></el-button>
@@ -41,7 +41,7 @@
             <el-alert
                 v-else
                 class="m-dashboard-box-null"
-                title="没有找到相关条目"
+                :title="$t('publish.common.noResults')"
                 type="info"
                 center
                 show-icon
@@ -63,11 +63,6 @@
 <script>
 import { getNamespace } from "@/service/publish/namespace";
 import dateFormat from "@/utils/dateFormat";
-const statusmap = {
-    0: "待审核",
-    1: "正常启用",
-    2: "未通过审核",
-};
 export default {
     name: "bucket_namespace",
     props: ["data"],
@@ -75,13 +70,19 @@ export default {
         return {
             loading: false,
             list: [],
-            statusmap,
             per: 16,
             total: 1,
             page: 1,
         };
     },
     computed: {
+        statusmap: function () {
+            return {
+                0: this.$t("publish.status.pendingReview"),
+                1: this.$t("publish.status.active"),
+                2: this.$t("publish.status.rejected"),
+            };
+        },
         params: function () {
             return {
                 page: this.page,

@@ -1,7 +1,7 @@
 <template>
     <div class="m-publish-box" v-loading="loading">
         <!-- 头部 -->
-        <publish-header name="剑三茶馆">
+        <publish-header :name="$t('publish.types.teahouse')">
             <publish-revision :enable="true" :post="post"></publish-revision>
         </publish-header>
 
@@ -11,7 +11,7 @@
 
             <!-- 信息 -->
             <div class="m-publish-info">
-                <el-divider content-position="left">信息</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.information") }}</el-divider>
                 <!-- 原创 -->
                 <publish-original v-model="post.original"></publish-original>
                 <!-- 客户端 -->
@@ -20,7 +20,7 @@
                 <publish-subtype v-model="post.post_subtype" :options="bbs_types"></publish-subtype>
 
                 <!-- 主题 -->
-                <publish-tags v-model="post.topics" :options="topics" label="主题"></publish-tags>
+                <publish-tags v-model="post.topics" :options="topics" :label="$t('publish.common.topic')"></publish-tags>
 
                 <!-- 标签 -->
                 <!-- <publish-topic-bucket v-model="buckets"></publish-topic-bucket> -->
@@ -28,9 +28,9 @@
 
             <!-- 正文 -->
             <div class="m-publish-content">
-                <el-divider content-position="left">正文</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.body") }}</el-divider>
                 <el-radio-group class="m-publish-editormode" size="large" :class="`is-${post.post_mode}`" v-model="post.post_mode">
-                    <el-radio-button value="tinymce">可视化编辑器</el-radio-button>
+                    <el-radio-button value="tinymce">{{ $t("publish.form.visualEditor") }}</el-radio-button>
                     <el-radio-button value="markdown">Markdown</el-radio-button>
                 </el-radio-group>
                 <Markdown
@@ -49,11 +49,11 @@
 
             <!-- 附加 -->
             <div class="m-publish-append">
-                <el-divider content-position="left">摘要</el-divider>
+                <el-divider content-position="left">{{ $t("publish.form.excerpt") }}</el-divider>
                 <publish-excerpt v-model="post.post_excerpt"></publish-excerpt>
             </div>
             <div class="m-publish-append">
-                <el-divider content-position="left">小册</el-divider>
+                <el-divider content-position="left">{{ $t("publish.types.collection") }}</el-divider>
                 <publish-collection v-model="post.post_collection" :defaultCollapse="post.collection_collapse">
                     <publish-collection-collapse v-model="post.collection_collapse"></publish-collection-collapse>
                 </publish-collection>
@@ -61,10 +61,10 @@
 
             <!-- 扩展 -->
             <div class="m-publish-extend">
-                <el-divider content-position="left">设置</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.settings") }}</el-divider>
                 <publish-comment v-model="post.comment">
-                    <el-checkbox v-model="visible_for_self" :true-value="1" :fasle-value="0">仅自己可见</el-checkbox>
-                    <el-checkbox v-model="open_white_list" :true-value="1" :fasle-value="0">开启评论过滤</el-checkbox>
+                    <el-checkbox v-model="visible_for_self" :true-value="1" :fasle-value="0">{{ $t("publish.visibility.onlyMe") }}</el-checkbox>
+                    <el-checkbox v-model="open_white_list" :true-value="1" :fasle-value="0">{{ $t("publish.form.commentFilter") }}</el-checkbox>
                 </publish-comment>
                 <publish-gift v-model="post.allow_gift"></publish-gift>
                 <publish-visible v-model="post.visible"></publish-visible>
@@ -74,7 +74,7 @@
 
             <!-- 临时 -->
             <div class="m-publish-extend">
-                <el-divider content-position="left">临时</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.temporary") }}</el-divider>
                 <publish-at-authors></publish-at-authors>
             </div>
 
@@ -86,14 +86,14 @@
 
             <div class="m-publish-doc">
                 <el-checkbox v-model="hasRead" :true-value="1" :fasle-value="0"
-                    >我已阅读并了解<a href="/notice/119" @click.stop target="_blank">《创作发布规范》</a></el-checkbox
+                    >{{ $t("publish.form.readAndUnderstand") }}<a href="/notice/119" @click.stop target="_blank">{{ $t("publish.form.publishingGuidelines") }}</a></el-checkbox
                 >
             </div>
 
             <!-- 按钮 -->
             <div class="m-publish-buttons">
                 <template v-if="isDraft || isRevision">
-                    <el-button type="primary" @click="useDraft" :disabled="processing">使用此版本</el-button>
+                    <el-button type="primary" @click="useDraft" :disabled="processing">{{ $t("publish.common.useThisVersion") }}</el-button>
                 </template>
                 <template v-else>
                     <el-button
@@ -101,10 +101,10 @@
                         size="large"
                         @click="publish('publish', true)"
                         :disabled="processing || !hasRead"
-                        >发 &nbsp;&nbsp; 布</el-button
+                        >{{ $t("publish.common.publish") }}</el-button
                     >
                     <el-button plain size="large" @click="publish('draft', false)" :disabled="processing || !hasRead"
-                        >保存为草稿</el-button
+                        >{{ $t("publish.common.saveDraft") }}</el-button
                     >
                 </template>
             </div>
@@ -305,7 +305,7 @@ export default {
             if (skip) {
                 // 提醒
                 this.$message({
-                    message: "发布成功",
+                    message: this.$t("publish.message.publishSucceeded"),
                     type: "success",
                 });
                 // 跳转
@@ -315,8 +315,8 @@ export default {
             } else {
                 // 提醒
                 this.$notify({
-                    title: "保存成功",
-                    message: "云端草稿保存成功",
+                    title: this.$t("publish.message.saveSucceeded"),
+                    message: this.$t("publish.message.cloudDraftSaved"),
                     type: "success",
                 });
                 // 路由

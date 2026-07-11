@@ -29,15 +29,15 @@
         >
             <!-- 💛 栏目字段 -->
             <template>
-                <el-form-item label="原创">
+                <el-form-item :label="$t('publish.form.original')">
                     <el-switch v-model="post.original" active-color="#13ce66"> </el-switch>
                 </el-form-item>
 
                 <!-- 1.选择坐标 -->
-                <el-form-item label="府邸坐标" class="m-house-coord">
+                <el-form-item :label="$t('publish.house.coordinates')" class="m-house-coord">
                     <el-row :gutter="20">
                         <el-col :span="8">
-                            <el-select v-model="post.post_subtype" filterable placeholder="地图">
+                            <el-select v-model="post.post_subtype" filterable :placeholder="$t('publish.house.map')">
                                 <el-option v-for="item in maps" :key="item" :label="item" :value="item"> </el-option>
                             </el-select>
                         </el-col>
@@ -46,69 +46,69 @@
                                 class="m-flower-rec-select"
                                 v-model="post.post_meta.server"
                                 filterable
-                                placeholder="服务器名"
+                                :placeholder="$t('publish.house.server')"
                             >
                                 <el-option v-for="item in servers" :key="item" :label="item" :value="item"> </el-option>
                             </el-select>
                         </el-col>
                         <el-col :span="8"
-                            ><el-input v-model="post.post_meta.line" placeholder="所在分线"
-                                ><template #append>线</template></el-input
+                            ><el-input v-model="post.post_meta.line" :placeholder="$t('publish.house.line')"
+                                ><template #append>{{ $t("publish.house.lineUnit") }}</template></el-input
                             ></el-col
                         >
                     </el-row>
                 </el-form-item>
 
                 <!-- 2.房屋类型 -->
-                <el-form-item label="房型属性" class="m-house-coord">
+                <el-form-item :label="$t('publish.house.attributes')" class="m-house-coord">
                     <el-row :gutter="20">
                         <el-col :span="8"
                             ><el-input
                                 v-model="post.post_meta.num"
-                                placeholder="所在房号"
+                                :placeholder="$t('publish.house.roomNumber')"
                                 @change="computeArea(post.post_meta.num)"
-                                ><template #append>号</template></el-input
+                                ><template #append>{{ $t("publish.house.roomUnit") }}</template></el-input
                             ></el-col
                         >
                         <el-col :span="8"
-                            ><el-input v-model="post.post_meta.area" placeholder="面积"
-                                ><template #append>平米</template></el-input
+                            ><el-input v-model="post.post_meta.area" :placeholder="$t('publish.house.area')"
+                                ><template #append>{{ $t("publish.house.squareMeters") }}</template></el-input
                             ></el-col
                         >
                         <el-col :span="8"
-                            ><el-input v-model="post.post_meta.level" placeholder="房屋等级" :min="1" :max="99"
-                                ><template #prepend>等级</template></el-input
+                            ><el-input v-model="post.post_meta.level" :placeholder="$t('publish.house.level')" :min="1" :max="99"
+                                ><template #prepend>{{ $t("publish.house.levelLabel") }}</template></el-input
                             ></el-col
                         >
                     </el-row>
                 </el-form-item>
 
                 <!-- 3.家园图片 -->
-                <el-form-item label="家园图赏">
+                <el-form-item :label="$t('publish.house.gallery')">
                     <album :imgList="post.post_meta.pics" @albumChange="updateAlbum"></album>
                 </el-form-item>
 
                 <!-- 3.蓝图分享 -->
-                <el-form-item label="蓝图分享">
+                <el-form-item :label="$t('publish.house.blueprintShare')">
                     <el-switch v-model="post.post_meta.hasData" active-color="#13ce66"></el-switch>
                 </el-form-item>
                 <div class="m-publish-datalist" v-if="post.post_meta.hasData">
                     <div class="u-wrapper">
                         <el-row class="u-thead">
-                            <el-col :span="6">类型</el-col>
-                            <el-col :span="6">说明</el-col>
-                            <el-col :span="6">数据</el-col>
-                            <el-col :span="6">操作</el-col>
+                            <el-col :span="6">{{ $t("publish.common.type") }}</el-col>
+                            <el-col :span="6">{{ $t("publish.common.instructions") }}</el-col>
+                            <el-col :span="6">{{ $t("publish.common.data") }}</el-col>
+                            <el-col :span="6">{{ $t("publish.common.actions") }}</el-col>
                         </el-row>
                         <div class="u-tbody">
                             <el-row class="u-tr" v-for="(data, i) in post.post_meta.blueprint" :key="i">
                                 <el-col class="u-type" :span="6">
-                                    <el-radio v-model="data.type" value="全局设计图">全局设计图</el-radio>
-                                    <el-radio v-model="data.type" value="局部设计图">局部设计图</el-radio>
+                                    <el-radio v-model="data.type" value="全局设计图">{{ $t("publish.house.globalBlueprint") }}</el-radio>
+                                    <el-radio v-model="data.type" value="局部设计图">{{ $t("publish.house.localBlueprint") }}</el-radio>
                                 </el-col>
 
                                 <el-col :span="6"
-                                    ><el-input v-model="data.desc" placeholder="蓝图说明"></el-input
+                                    ><el-input v-model="data.desc" :placeholder="$t('publish.house.blueprintDescription')"></el-input
                                 ></el-col>
 
                                 <el-col :span="6" class="u-action">
@@ -120,23 +120,23 @@
                                         @change="uploadData($event, data, i)"
                                     />
                                     <el-button type="primary" size="medium" @click="selectData(i)" icon="Upload"
-                                        >上传蓝图</el-button
+                                        >{{ $t("publish.house.uploadBlueprint") }}</el-button
                                     >
                                     <span class="u-data-ready" v-show="data.file">
                                         <i class="el-icon-success"></i>
-                                        已上传
+                                        {{ $t("publish.common.uploaded") }}
                                     </span>
                                 </el-col>
 
                                 <el-col :span="6" class="u-action">
                                     <!-- 增加 -->
                                     <el-button plain @click="addData(i)" icon="CirclePlus" size="medium"
-                                        >增加</el-button
+                                        >{{ $t("publish.common.add") }}</el-button
                                     >
 
                                     <!-- 删除 -->
                                     <el-button type="danger" v-if="i !== 0" @click="delData(i)" icon="Remove"
-                                        >删除</el-button
+                                        >{{ $t("publish.common.delete") }}</el-button
                                     >
                                 </el-col>
                             </el-row>
@@ -170,7 +170,7 @@ export default {
         return {
             //基本 - 类型设置
             type: "house",
-            name: "家园分享",
+            name: this.$t("publish.types.houseShare"),
             loaded: false,
 
             //字段 - meta表数据,可设置默认值
@@ -273,7 +273,7 @@ export default {
         addData: function (i) {
             // 目前设置最多10个版本
             if (this.post.post_meta.blueprint.length > 10) {
-                this.$message.error("默认上限10个");
+                this.$message.error(this.$t("publish.message.defaultLimit", { count: 10 }));
                 return;
             }
             this.post.post_meta.blueprint.push({

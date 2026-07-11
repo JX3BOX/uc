@@ -4,7 +4,7 @@
             <img :src="imgLink" :alt="text" />
             <span class="u-count">{{ fontCount }}</span>
             <span class="u-user">{{ user }}</span>
-            <span class="u-close" @click="close"><i class="el-icon-close"></i> <span>关闭</span></span>
+            <span class="u-close" @click="close"><i class="el-icon-close"></i> <span>{{ $t("card.common.close") }}</span></span>
         </div>
     </div>
 </template>

@@ -6,9 +6,9 @@
         }}</el-button>
 
         <!-- 弹出界面 -->
-        <el-dialog class="c-large-dialog" title="上传" v-model="dialogVisible">
+        <el-dialog class="c-large-dialog" :title="$t('publish.common.upload')" v-model="dialogVisible">
             <!-- 清空按钮 -->
-            <el-button class="u-upload-clear" plain icon="Delete" @click="clear">清空</el-button>
+            <el-button class="u-upload-clear" plain icon="Delete" @click="clear">{{ $t("publish.common.clear") }}</el-button>
 
             <!-- 限制提示 -->
             <el-alert class="u-upload-tip" :title="tip" type="info" show-icon :closable="false"></el-alert>
@@ -53,7 +53,7 @@
 
             <!-- 插入按钮 -->
             <template #footer>
-                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button @click="dialogVisible = false">{{ $t("publish.common.cancel") }}</el-button>
                 <el-button type="primary" @click="insert">
                     {{ buttonTXT }}
                 </el-button>
@@ -101,8 +101,8 @@ export default {
             dialogVisible: false,
             tip:
                 this.desc ||
-                `一次最多同时上传${this.max}个文件（单个文件不超过${this.sizeLimit}M），格式限常见的图片、文档、数据表及压缩包`,
-            btn_txt: this.text || "上传附件",
+                this.$t("publish.upload.batchHint", { max: this.max, size: this.sizeLimit }),
+            btn_txt: this.text || this.$t("publish.upload.attachments"),
 
             fileList: [],
             selectedCount: 0,
@@ -122,7 +122,7 @@ export default {
     },
     computed: {
         buttonTXT: function () {
-            return this.selectedCount ? "插 入" : "确 定";
+            return this.selectedCount ? this.$t("publish.common.insert") : this.$t("publish.common.confirm");
         },
     },
     methods: {
@@ -157,7 +157,7 @@ export default {
                         }
                         // 提醒
                         this.$message({
-                            message: "上传成功",
+                            message: this.$t("publish.message.uploadSucceeded"),
                             type: "success",
                         });
 
@@ -177,7 +177,7 @@ export default {
                         if (err.response.data.code) {
                             this.$message.error(`[${err.response.data.code}] ${err.response.data.message}`);
                         } else {
-                            this.$message.error("请求异常");
+                            this.$message.error(this.$t("publish.message.requestFailed"));
                         }
                     });
             }

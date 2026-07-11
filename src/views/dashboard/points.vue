@@ -1,14 +1,14 @@
 <template>
     <div class="m-points" v-loading="loading">
-        <h2><i class="el-icon-sugar"></i> 我的银铛</h2>
+        <h2><i class="el-icon-sugar"></i> {{ $t("dashboard.points.title") }}</h2>
         <div class="m-balance">
-            <span class="u-label">余额 : </span>
+            <span class="u-label">{{ $t("dashboard.common.balance") }} : </span>
             <b :class="money > 0 ? 'u-have' : ''" class="u-num">{{ money }}</b>
-            <a class="el-button u-btn el-button--primary el-button--small" href="/vip/mall" target="_blank">兑换</a>
+            <a class="el-button u-btn el-button--primary el-button--small" href="/vip/mall" target="_blank">{{ $t("dashboard.common.exchange") }}</a>
         </div>
         <el-tabs class="m-tabs" type="border-card" v-model="tab_value" @tab-change="changeTab" >
             <!-- 积分记录 -->
-            <el-tab-pane label="积分记录" name="point" lazy>
+            <el-tab-pane :label="$t('dashboard.points.pointsHistory')" name="point" lazy>
                 <el-table
                     class="m-table"
                     :data="list"
@@ -17,32 +17,32 @@
                     header-cell-class-name="u-header-cell"
                     size="large"
                 >
-                    <el-table-column label="类型">
+                    <el-table-column :label="$t('dashboard.common.type')">
                         <template #default="scope">{{ formatType(scope.row.action_type) }}</template>
                     </el-table-column>
-                    <el-table-column label="数量">
+                    <el-table-column :label="$t('dashboard.common.quantity')">
                         <template #default="scope">
                             <div class="u-count" :class="{ isNegative: Number(scope.row.count) < 0 }">
                                 <span>{{ Number(scope.row.count) > 0 ? "+" : "" }}</span> <b>{{ scope.row.count }}</b>
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="count" label="源于作品">
+                    <el-table-column prop="count" :label="$t('dashboard.common.sourceWork')">
                         <template #default="scope">
                             <a
                                 class="u-link"
                                 :href="getPostLink(scope.row)"
                                 target="_blank"
                                 v-if="getPostLink(scope.row)"
-                                ><i class="el-icon-link"></i> 点击查看
+                                ><i class="el-icon-link"></i> {{ $t("dashboard.common.clickToView") }}
                             </a>
                             <span v-else> - </span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="备注">
+                    <el-table-column :label="$t('dashboard.common.remark')">
                         <template #default="scope">{{ formatRemark(scope.row.remark) }}</template>
                     </el-table-column>
-                    <el-table-column label="时间">
+                    <el-table-column :label="$t('dashboard.common.time')">
                         <template #default="scope">
                             <span>{{ showTime(scope.row.created_at) }}</span>
                         </template>
@@ -59,7 +59,7 @@
                     :total="total"
                 ></el-pagination>
             </el-tab-pane>
-            <el-tab-pane label="经验记录" name="ex" lazy>
+            <el-tab-pane :label="$t('dashboard.points.experienceHistory')" name="ex" lazy>
                 <el-table
                     class="m-table"
                     :data="list"
@@ -68,32 +68,32 @@
                     header-cell-class-name="u-header-cell"
                     size="large"
                 >
-                    <el-table-column label="类型">
+                    <el-table-column :label="$t('dashboard.common.type')">
                         <template #default="scope">{{ formatType(scope.row.action_type) }}</template>
                     </el-table-column>
-                    <el-table-column label="数量">
+                    <el-table-column :label="$t('dashboard.common.quantity')">
                         <template #default="scope">
                             <div class="u-count" :class="{ isNegative: Number(scope.row.count) < 0 }">
                                 <span>{{ Number(scope.row.count) > 0 ? "+" : "" }}</span> <b>{{ scope.row.count }}</b>
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="count" label="源于作品">
+                    <el-table-column prop="count" :label="$t('dashboard.common.sourceWork')">
                         <template #default="scope">
                             <a
                                 class="u-link"
                                 :href="getPostLink(scope.row)"
                                 target="_blank"
                                 v-if="getPostLink(scope.row)"
-                                ><i class="el-icon-link"></i> 点击查看
+                                ><i class="el-icon-link"></i> {{ $t("dashboard.common.clickToView") }}
                             </a>
                             <span v-else> - </span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="备注">
+                    <el-table-column :label="$t('dashboard.common.remark')">
                         <template #default="scope">{{ formatRemark(scope.row.remark) }}</template>
                     </el-table-column>
-                    <el-table-column label="时间">
+                    <el-table-column :label="$t('dashboard.common.time')">
                         <template #default="scope">
                             <span>{{ showTime(scope.row.created_at) }}</span>
                         </template>
@@ -173,7 +173,7 @@ export default {
             return getLink(item.post_type, item.article_id);
         },
         formatType: function (val) {
-            return (val && this.types[val]) || "未知";
+            return (val && this.types[val]) || this.$t("dashboard.common.unknown");
         },
         formatRemark: function (str) {
             if (str) {

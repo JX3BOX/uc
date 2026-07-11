@@ -5,9 +5,9 @@
 
             <main v-if="success == true" class="m-main">
                 <el-alert
-                    title="注册成功"
+                    :title="$t('account.register.successTitle')"
                     type="success"
-                    description="恭喜，您现在已经是「魔盒」的一员啦！"
+                    :description="$t('account.register.successDescription')"
                     show-icon
                     :closable="false"
                 >
@@ -16,8 +16,8 @@
             </main>
 
             <main v-if="success == false" class="m-main">
-                <el-alert title="注册失败" type="error" :description="errors" show-icon :closable="false"> </el-alert>
-                <a class="u-skip u-submit el-button u-button el-button--primary el-button--large" href="/account/register">返回注册</a>
+                <el-alert :title="$t('account.register.failureTitle')" type="error" :description="errors" show-icon :closable="false"> </el-alert>
+                <a class="u-skip u-submit el-button u-button el-button--primary el-button--large" href="/account/register">{{ $t("account.thirdPartyRegister.backToRegister") }}</a>
             </main>
         </el-card>
         <CommonBottom />
@@ -36,7 +36,7 @@ export default {
         return {
             from: "",
             success: null,
-            errors: "授权来源不合法或已过期",
+            errors: this.$t("account.thirdPartyRegister.invalidSource"),
         };
     },
     methods: {

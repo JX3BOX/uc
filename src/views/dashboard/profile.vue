@@ -1,7 +1,7 @@
 <template>
     <uc>
         <el-form class="m-profile-basic" ref="form" label-width="100px" :label-position="position">
-            <el-form-item class="u-name" label="昵称">
+            <el-form-item class="u-name" :label="$t('dashboard.profile.nickname')">
                 <div class="u-value">
                     {{ nickname }}
                     <a
@@ -9,24 +9,24 @@
                         href="/vip/rename?from=dashboard_profile"
                         target="_blank"
                     >
-                        <i class="el-icon-edit"></i> 修改昵称
+                        <i class="el-icon-edit"></i> {{ $t("dashboard.profile.changeNickname") }}
                     </a>
                 </div>
             </el-form-item>
 
-            <el-form-item class="u-name" label="服务器">
+            <el-form-item class="u-name" :label="$t('dashboard.role.server')">
                 <el-select
                     class="u-server"
                     v-model="form.jx3_server"
                     filterable
-                    placeholder="请输入服务器"
+                    :placeholder="$t('dashboard.role.serverInputPlaceholder')"
                     size="large"
                 >
                     <el-option v-for="item in servers" :key="item" :label="item" :value="item"></el-option>
                 </el-select>
                 <span class="u-server-tip">
                     <i class="el-icon-question"></i>
-                    部分应用将使用此服务器作为默认服务器
+                    {{ $t("dashboard.profile.defaultServerTip") }}
                 </span>
             </el-form-item>
 
@@ -35,26 +35,26 @@
                     <el-tooltip
                         class="item"
                         effect="dark"
-                        content="此项不会被公开,仅用于赛事联系或其它确认"
+                        :content="$t('dashboard.profile.qqPrivateTip')"
                         placement="left"
                     >
                         <div><i class="el-icon-lock"></i> QQ</div>
                     </el-tooltip>
                 </template>
-                <el-input v-model="form.qq_number" size="large" placeholder="请输入QQ号码"></el-input>
+                <el-input v-model="form.qq_number" size="large" :placeholder="$t('dashboard.profile.qqPlaceholder')"></el-input>
             </el-form-item>
 
             <el-form-item class="u-birthday">
                 <template #label>
-                    <el-tooltip class="item" effect="dark" content="此项不会被公开,仅用于礼品发放" placement="left">
-                        <div><i class="el-icon-lock"></i> 生日</div>
+                    <el-tooltip class="item" effect="dark" :content="$t('dashboard.profile.birthdayPrivateTip')" placement="left">
+                        <div><i class="el-icon-lock"></i> {{ $t("dashboard.profile.birthday") }}</div>
                     </el-tooltip>
                 </template>
                 <el-date-picker
                     v-model="form.birthday"
                     size="large"
                     type="date"
-                    placeholder="选择日期"
+                    :placeholder="$t('dashboard.profile.selectDate')"
                     placement="bottom-start"
                     value-format="YYYY-MM-DD"
                     :disabled-date="disabledBirthdayDate"
@@ -96,31 +96,31 @@
                 <el-input v-model="form.tuilan_id" placeholder="请输入推栏ID"></el-input>
             </el-form-item> -->
 
-            <el-form-item class="u-name" label="签名">
+            <el-form-item class="u-name" :label="$t('dashboard.profile.signature')">
                 <el-input
                     type="textarea"
                     :rows="4"
                     maxlength="80"
-                    placeholder="签名内容"
+                    :placeholder="$t('dashboard.profile.signaturePlaceholder')"
                     v-model="form.user_bio"
                     show-word-limit
                     size="large"
                 ></el-input>
             </el-form-item>
 
-            <el-form-item class="u-tv" label="直播间">
+            <el-form-item class="u-tv" :label="$t('dashboard.profile.liveRoom')">
                 <div class="u-tv-type">
-                    <el-select v-model="form.tv_type" style="width: 140px" size="large" placeholder="请选择平台">
-                        <el-option v-for="(label, val) in tvmap" :key="val" :label="label" :value="val"></el-option>
+                    <el-select v-model="form.tv_type" style="width: 140px" size="large" :placeholder="$t('dashboard.profile.platformPlaceholder')">
+                        <el-option v-for="(label, val) in tvmap" :key="val" :label="tvLabel(val, label)" :value="val"></el-option>
                     </el-select>
                 </div>
                 <div class="u-tv-id" style="margin-left: 10px;flex: 1">
-                    <el-input v-model="form.tv_id" size="large" placeholder="请输入直播间房间号"></el-input>
+                    <el-input v-model="form.tv_id" size="large" :placeholder="$t('dashboard.profile.roomIdPlaceholder')"></el-input>
                 </div>
             </el-form-item>
 
             <el-form-item class="u-btns" label>
-                <el-button type="primary" class="u-submit" @click="submit" size="large">提交</el-button>
+                <el-button type="primary" class="u-submit" @click="submit" size="large">{{ $t("dashboard.common.submit") }}</el-button>
             </el-form-item>
         </el-form>
     </uc>
@@ -160,7 +160,7 @@ export default {
         submit() {
             const birthday = this.normalizeBirthday(this.form.birthday);
             if (birthday === false) {
-                this.$message.error("生日格式不正确");
+                this.$message.error(this.$t("dashboard.profile.invalidBirthday"));
                 return;
             }
             updateProfile({
@@ -169,12 +169,12 @@ export default {
             })
                 .then((res) => {
                     this.$message({
-                        message: "资料修改成功",
+                        message: this.$t("dashboard.profile.updateSuccess"),
                         type: "success",
                     });
                 })
                 .catch((err) => {
-                    this.$message.error(this.getErrorMessage(err, "资料修改失败"));
+                    this.$message.error(this.getErrorMessage(err, this.$t("dashboard.profile.updateFailed")));
                 });
         },
         // 获取资料
@@ -222,6 +222,11 @@ export default {
         },
         getErrorMessage(err, fallback) {
             return err?.response?.data?.msg || err?.data?.msg || fallback;
+        },
+        tvLabel(value, fallback) {
+            return this.$te(`dashboard.profile.platforms.${value}`)
+                ? this.$t(`dashboard.profile.platforms.${value}`)
+                : fallback;
         },
     },
     mounted: function () {

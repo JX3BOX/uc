@@ -8,19 +8,19 @@
                     <h2 class="u-post">
                         <!-- 标题文字 -->
                         <a :href="postLink(item.id, item.client)" class="u-title" target="_blank">{{
-                            item.title || "无标题"
+                            item.title || $t("author.common.noTitle")
                         }}</a>
                     </h2>
                     <!-- 字段 -->
                     <div class="u-desc">
                         <i :class="item.client" class="u-client">{{ clientLabel(item.client) }}</i>
-                        {{ item.desc || "这个配装没有任何描述" }}
+                        {{ item.desc || $t("author.list.noBuildDescription") }}
                     </div>
 
                     <!-- 作者 -->
                     <div class="u-misc">
                         <span class="u-date">
-                            Updated on
+                            {{ $t("author.common.updatedOn") }}
                             <time>{{ dateFormat(item.updated_at) }}</time>
                         </span>
                     </div>

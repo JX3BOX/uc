@@ -34,6 +34,13 @@ export default {
             description: "Trang chủ JX3BOX: tin tức, cộng đồng và bản tin giang hồ.",
         },
     },
+    ai: {
+        editor: {
+            title: "Xem trước trình chỉnh sửa AI",
+            keywords: "JX3,JX3BOX,AI,trình chỉnh sửa,xem trước bài viết",
+            description: "Trang xem trước bài viết trong trình chỉnh sửa AI của JX3BOX.",
+        },
+    },
     account: {
         login: {
             title: "Dang nhap",

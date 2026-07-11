@@ -1,17 +1,17 @@
 <template>
     <div class="m-publish-macro">
-        <el-divider content-position="left">宏</el-divider>
+        <el-divider content-position="left">{{ $t("publish.macro.title") }}</el-divider>
         <div class="m-macro-box">
             <div class="m-macro-header">
                 <el-button class="m-macro-addbutton" icon="CirclePlus" type="primary" @click="addMacro"
-                    >添加宏</el-button
+                    >{{ $t("publish.macro.add") }}</el-button
                 >
                 <a class="m-macro-docs el-button el-button--primary is-plain" target="_blank" href="/tool/265/">
                     <i class="el-icon-s-management"></i>
-                    宏命令完整参考手册
+                    {{ $t("publish.macro.reference") }}
                 </a>
                 <a class="m-macro-help el-button el-button--success is-plain" href="/tool/14671/" target="_blank">
-                    <i class="el-icon-info"></i> 点击查看发布帮助
+                    <i class="el-icon-info"></i> {{ $t("publish.common.viewPublishHelp") }}
                 </a>
             </div>
 
@@ -20,15 +20,15 @@
                     <template #label>
                         <span class="u-tab-box">
                             <img class="u-tabicon" :src="icon(item)" />
-                            <span class="u-tab-name" :title="item.name">{{ i + 1 + "号位-" + item.name }}</span>
+                            <span class="u-tab-name" :title="item.name">{{ $t("publish.common.slotName", { index: i + 1, name: item.name }) }}</span>
                         </span>
                     </template>
                     <div class="m-macro-cloud m-macro-item">
                         <h5 class="u-title">
-                            云端宏图标/名称
+                            {{ $t("publish.macro.cloudIconName") }}
                             <a class="u-icon-links" href="/app/icons" target="_blank">
                                 <i class="el-icon-question"></i>
-                                图标大全
+                                {{ $t("publish.common.iconLibrary") }}
                             </a>
                         </h5>
                         <div class="u-group">
@@ -36,7 +36,7 @@
                             <div class="u-subblock m-macro-icon">
                                 <el-input
                                     v-model="item.icon"
-                                    placeholder="图标ID"
+                                    :placeholder="$t('publish.common.iconId')"
                                     :minlength="1"
                                     :maxlength="10"
                                     :max="1000000"
@@ -52,7 +52,7 @@
                                 <el-input
                                     v-model="item.name"
                                     size="large"
-                                    placeholder="每个宏名称请使用自己名下唯一命名"
+                                    :placeholder="$t('publish.macro.uniqueNamePlaceholder')"
                                     :minlength="1"
                                     :maxlength="maxlength"
                                     show-word-limit
@@ -66,54 +66,54 @@
                         </div>
                     </div>
                     <div class="m-macro-talent m-macro-item" v-if="client != 'origin'">
-                        <h5 class="u-title">奇穴方案</h5>
+                        <h5 class="u-title">{{ $t("publish.skill.talentBuild") }}</h5>
                         <div class="m-macro-talent-simulator">
                             <div class="qx-container"></div>
                         </div>
                         <el-input
                             v-model="item.talent"
                             size="large"
-                            placeholder="奇穴方案编码"
+                            :placeholder="$t('publish.skill.talentCode')"
                             @change="checkTalent(item)"
                         >
                             <template #prepend>
                                 <a class="u-get" target="_blank" href="/app/talent">
                                     <i class="el-icon-warning"></i>
-                                    获取编码
+                                    {{ $t("publish.skill.getCode") }}
                                 </a>
                             </template>
                         </el-input>
                     </div>
                     <div class="m-macro-talent m-macro-item" v-if="client === 'origin'">
-                        <h5 class="u-title">镇派方案</h5>
+                        <h5 class="u-title">{{ $t("publish.skill.legacyBuild") }}</h5>
                         <div class="m-macro-talent-simulator">
                             <div class="qx-container"></div>
                         </div>
                         <el-input
                             v-model="item.talent"
                             size="large"
-                            placeholder="镇派方案编码"
+                            :placeholder="$t('publish.skill.legacyCode')"
                             @change="checkTalent(item)"
                         >
                             <template #prepend>
                                 <a class="u-get" target="_blank" href="/macro/talent2">
                                     <i class="el-icon-warning"></i>
-                                    获取编码
+                                    {{ $t("publish.skill.getCode") }}
                                 </a>
                             </template>
                         </el-input>
                     </div>
                     <div class="m-macro-macro">
                         <h5 class="u-title">
-                            宏内容
+                            {{ $t("publish.macro.content") }}
                             <a class="u-icon-links" href="/macro/macroeditor" target="_blank">
                                 <i class="el-icon-question"></i>
-                                智能中文宏编辑器
+                                {{ $t("publish.macro.editor") }}
                             </a>
                         </h5>
                         <el-input
                             v-model="item.macro"
-                            placeholder="注释请写在说明中,勿写在宏内部"
+                            :placeholder="$t('publish.macro.commentHint')"
                             :minlength="1"
                             :maxlength="macroMaxLength"
                             show-word-limit
@@ -121,20 +121,20 @@
                             :rows="12"
                         ></el-input>
                     </div>
-                    <el-form-item label="其它" class="m-macro-misc">
-                        <el-input v-model="item.speed" size="large" placeholder="填写推荐的急速阈值">
+                    <el-form-item :label="$t('publish.common.other')" class="m-macro-misc">
+                        <el-input v-model="item.speed" size="large" :placeholder="$t('publish.gear.hastePlaceholder')">
                             <template #prepend>
-                                急速阈值
+                                {{ $t("publish.gear.hasteThreshold") }}
                                 <slot name="pre-prepend"></slot>
                             </template>
                         </el-input>
                     </el-form-item>
-                    <el-form-item label="说明" class="m-macro-desc">
+                    <el-form-item :label="$t('publish.common.instructions')" class="m-macro-desc">
                         <el-input
                             size="large"
                             v-model="item.desc"
                             type="textarea"
-                            placeholder="重要说明（会出现在宏第一行）"
+                            :placeholder="$t('publish.macro.instructionsPlaceholder')"
                         ></el-input>
                     </el-form-item>
                     <div class="m-macro-op">
@@ -144,7 +144,7 @@
                             type="danger"
                             plain
                             icon="Delete"
-                            >移除本宏</el-button
+                            >{{ $t("publish.macro.remove") }}</el-button
                         >
                     </div>
                 </el-tab-pane>
@@ -241,8 +241,8 @@ export default {
         // 添加宏
         addMacro: function () {
             if (this.macros.data.length > 7) {
-                this.$alert("已经达到添加上限", "消息", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("publish.message.limitReached"), this.$t("publish.common.message"), {
+                    confirmButtonText: this.$t("publish.common.confirm"),
                 });
                 return;
             }
@@ -264,14 +264,14 @@ export default {
         // 删除宏
         removeMacro: function (name) {
             if (this.macros.data.length < 2) {
-                this.$alert("必须保留1个宏", "消息", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("publish.macro.keepOne"), this.$t("publish.common.message"), {
+                    confirmButtonText: this.$t("publish.common.confirm"),
                 });
                 return;
             }
 
-            this.$alert("确定删除这个宏吗，删除后无法找回", "消息", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("publish.macro.confirmDelete"), this.$t("publish.common.message"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
                 callback: (action) => {
                     if (action == "confirm") {
                         // 删除
@@ -288,7 +288,7 @@ export default {
         check: function () {
             this.macros.data.forEach((item, i) => {
                 if (!item.name) {
-                    item.name = "未标题-" + i;
+                    item.name = this.$t("publish.common.generatedUntitled", { index: i });
                 }
             });
         },
@@ -296,8 +296,8 @@ export default {
             let name = sterilizer(data.name).removeSpace().kill().toString();
             if (!name) {
                 this.$notify.error({
-                    title: "错误",
-                    message: "宏名称不允许包含特殊字符,不能为空",
+                    title: this.$t("publish.common.error"),
+                    message: this.$t("publish.macro.invalidName"),
                 });
                 return;
             }
@@ -308,8 +308,8 @@ export default {
                 JSON.parse(data.talent);
             } catch (e) {
                 this.$notify.error({
-                    title: "错误",
-                    message: "奇穴编码格式错误",
+                    title: this.$t("publish.common.error"),
+                    message: this.$t("publish.skill.invalidTalentCode"),
                 });
             }
         },

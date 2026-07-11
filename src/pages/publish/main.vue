@@ -1,7 +1,7 @@
 <template>
     <div id="main" class="p-publish">
         <CommonHeader></CommonHeader>
-        <Breadcrumb name="创作中心" slug="publish" root="/publish" :crumbEnable="true">
+        <Breadcrumb :name="$t('publish.common.center')" slug="publish" root="/publish" :crumbEnable="true">
             <template #logo>
                 <img svg-inline src="@/assets/img/publish/publish.svg" />
             </template>

@@ -1,14 +1,14 @@
 <template>
     <div class="m-publish m-index">
         <h1 class="m-title">
-            <i class="el-icon-edit-outline"></i> 创作台<span class="u-desc">丹青著华年，墨香漫天下</span>
-            <el-tooltip content="成为签约作者，获取更多福利与权益" placement="top" v-if="!isSuperAuthor">
+            <i class="el-icon-edit-outline"></i> {{ $t("publish.nav.workbench") }}<span class="u-desc">{{ $t("publish.home.slogan") }}</span>
+            <el-tooltip :content="$t('publish.home.authorBenefits')" placement="top" v-if="!isSuperAuthor">
                 <a
                     href="/dashboard/cooperation"
                     type="primary"
                     class="el-button el-tooltip el-button--primary el-button--small u-btn"
                     target="_blank"
-                    ><el-icon><Stamp /></el-icon> 申请签约作者</a
+                    ><el-icon><Stamp /></el-icon> {{ $t("publish.home.applyAuthor") }}</a
                 >
             </el-tooltip>
         </h1>
@@ -17,9 +17,9 @@
                 <div class="m-index-warning">
                     <span
                         ><i class="el-icon-warning-outline"></i>
-                        应有关单位要求，现在需要进行账号认证后才可执行“发布”操作，</span
+                        {{ $t("publish.home.verificationRequired") }}</span
                     >
-                    <a href="/dashboard/auth"><i class="el-icon-link"></i>前往认证</a>
+                    <a href="/dashboard/auth"><i class="el-icon-link"></i>{{ $t("publish.home.verifyNow") }}</a>
                 </div>
             </template>
         </el-alert>
@@ -29,31 +29,31 @@
                 <el-col :xs="12" :span="4">
                     <router-link to="/macro">
                         <img svg-inline src="@/assets/img/publish/channel/macro.svg" />
-                        <span>剑三宏</span>
+                        <span>{{ $t("publish.types.macros") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/bps">
                         <img svg-inline src="@/assets/img/publish/channel/bps.svg" />
-                        <span>职业攻略</span>
+                        <span>{{ $t("publish.types.classGuides") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/pvp">
                         <img svg-inline class="u-icon" :src="getAppIcon('pvp')" />
-                        <span>竞技技巧</span>
+                        <span>{{ $t("publish.types.pvpTips") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/fb">
                         <img svg-inline src="@/assets/img/publish/channel/fb.svg" />
-                        <span>副本攻略</span>
+                        <span>{{ $t("publish.types.dungeonGuides") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/tool">
                         <img svg-inline src="@/assets/img/publish/channel/tool.svg" />
-                        <span>工具资源</span>
+                        <span>{{ $t("publish.types.tools") }}</span>
                     </router-link>
                 </el-col>
             </el-row>
@@ -63,31 +63,31 @@
                 <el-col :xs="12" :span="4">
                     <router-link to="/achievement">
                         <img svg-inline src="@/assets/img/publish/channel/achievement.svg" />
-                        <span>成就百科</span>
+                        <span>{{ $t("publish.types.achievementWiki") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/item">
                         <img svg-inline src="@/assets/img/publish/channel/item.svg" />
-                        <span>物品百科</span>
+                        <span>{{ $t("publish.types.itemWiki") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/quest">
                         <img svg-inline src="@/assets/img/publish/channel/quest.svg" />
-                        <span>任务百科</span>
+                        <span>{{ $t("publish.types.questWiki") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/knowledge">
                         <img svg-inline src="@/assets/img/publish/channel/knowledge.svg" />
-                        <span>通识百科</span>
+                        <span>{{ $t("publish.types.knowledgeWiki") }}</span>
                     </router-link>
                 </el-col>
                 <!-- <el-col :xs="12" :span="4">
                     <router-link to="/item_plan">
                         <i class="el-icon-folder"></i>
-                        <span>物品清单</span>
+                        <span>{{ $t("publish.types.itemList") }}</span>
                     </router-link>
                 </el-col> -->
             </el-row>
@@ -97,25 +97,25 @@
                 <el-col :xs="12" :span="4">
                     <router-link to="/face">
                         <img svg-inline src="@/assets/img/publish/channel/share.svg" />
-                        <span>捏脸数据</span>
+                        <span>{{ $t("publish.types.faceData") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/body">
                         <img svg-inline src="@/assets/img/publish/channel/body.svg" />
-                        <span>体型数据</span>
+                        <span>{{ $t("publish.types.bodyData") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/question">
                         <el-icon><Opportunity /></el-icon>
-                        <span>剑三题目</span>
+                        <span>{{ $t("publish.types.questions") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/paper">
                         <img svg-inline src="@/assets/img/publish/channel/100.svg" />
-                        <span>剑三试卷</span>
+                        <span>{{ $t("publish.types.papers") }}</span>
                     </router-link>
                 </el-col>
             </el-row>
@@ -125,42 +125,42 @@
                 <el-col :xs="12" :span="4">
                     <router-link to="/community">
                         <img svg-inline src="@/assets/img/publish/channel/community.svg" />
-                        <span>魔盒论坛</span>
+                        <span>{{ $t("publish.types.forum") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/joke">
                         <img svg-inline src="@/assets/img/publish/channel/joke.svg" />
-                        <span>剑三骚话</span>
+                        <span>{{ $t("publish.types.jokes") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/emotion">
                         <img svg-inline src="@/assets/img/publish/channel/emotion.svg" />
-                        <span>剑三表情</span>
+                        <span>{{ $t("publish.types.emotes") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/collection">
                         <el-icon><Notebook /></el-icon>
-                        <span>剑三小册</span>
+                        <span>{{ $t("publish.types.collection") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/namespace">
                         <el-icon><Postcard /></el-icon>
-                        <span>剑三铭牌</span>
+                        <span>{{ $t("publish.types.namespace") }}</span>
                     </router-link>
                 </el-col>
             </el-row>
 
             <template v-if="isAdmin">
-                <el-divider content-position="left">管理</el-divider>
+                <el-divider content-position="left">{{ $t("publish.home.management") }}</el-divider>
                 <el-row :gutter="20">
                     <el-col :xs="12" :span="4">
                         <router-link to="/notice">
                             <el-icon><Bell /></el-icon>
-                            <span>公告资讯</span>
+                            <span>{{ $t("publish.types.news") }}</span>
                         </router-link>
                     </el-col>
                 </el-row>

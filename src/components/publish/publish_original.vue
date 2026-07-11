@@ -1,6 +1,6 @@
 <template>
     <div class="m-publish-original">
-        <el-form-item label="原创">
+        <el-form-item :label="$t('publish.form.original')">
             <el-switch v-model="original" active-color="#13ce66" :active-value="1" :inactive-value="0"></el-switch>
         </el-form-item>
         <slot></slot>

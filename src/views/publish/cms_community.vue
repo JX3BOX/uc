@@ -1,20 +1,20 @@
 <template>
     <div class="m-dashboard-work m-dashboard-cms p-cms-community" v-loading="loading">
         <div class="m-dashboard-work-header">
-            <h2 class="u-title">论坛</h2>
+            <h2 class="u-title">{{ $t("publish.types.forum") }}</h2>
             <a :href="publishLink" class="u-publish el-button el-button--primary">
-                <i class="el-icon-document"></i> 发布作品
+                <i class="el-icon-document"></i> {{ $t("publish.common.publishWork") }}
             </a>
         </div>
 
         <el-tabs v-model="activeTab">
-            <el-tab-pane label="主题" name="topic"></el-tab-pane>
-            <el-tab-pane label="回帖" name="reply"></el-tab-pane>
+            <el-tab-pane :label="$t('publish.types.topic')" name="topic"></el-tab-pane>
+            <el-tab-pane :label="$t('publish.types.reply')" name="reply"></el-tab-pane>
         </el-tabs>
 
-        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search" size="large">
+        <el-input class="m-dashboard-work-search" :placeholder="$t('publish.common.searchPlaceholder')" v-model="search" size="large">
             <template #prepend>
-                <span>关键词</span>
+                <span>{{ $t("publish.common.keyword") }}</span>
             </template>
             <template #append>
                 <el-button icon="Search"></el-button>
@@ -38,12 +38,12 @@
                                 />
                             </el-tooltip>
                         </i>
-                        <span v-if="activeTab == 'topic'">{{ item.title || item.content || "无标题" }}</span>
+                        <span v-if="activeTab == 'topic'">{{ item.title || item.content || $t("publish.common.untitled") }}</span>
                         <span class="u-title_content" v-else v-html="getContent(item)"></span>
                         <!-- <div class="u-tags">
-                            <el-tag type="danger"  v-if="item.is_top == 1">置顶</el-tag>
-                            <el-tag type="danger"  v-if="item.is_star == 1">加精</el-tag>
-                            <el-tag type="danger"  v-if="item.is_hight == 1">高亮</el-tag>
+                            <el-tag type="danger" v-if="item.is_top == 1">{{ $t("publish.status.pinned") }}</el-tag>
+                            <el-tag type="danger" v-if="item.is_star == 1">{{ $t("publish.status.featured") }}</el-tag>
+                            <el-tag type="danger" v-if="item.is_hight == 1">{{ $t("publish.status.highlighted") }}</el-tag>
                         </div> -->
                     </a>
                     <div class="u-desc">
@@ -53,31 +53,31 @@
                         </span> -->
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
-                            发布 :
+                            {{ $t("publish.common.publishedAt") }} :
                             <span class="u-time">{{ dateFormat(item.created_at) }}</span>
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
-                            更新 :
+                            {{ $t("publish.common.updatedAt") }} :
                             <span class="u-time">{{ dateFormat(item.updated_at) }}</span>
                         </time>
                         <!-- <time class="u-desc-subitem">
                             <i class="el-icon-receiving"></i>
-                            状态 :
+                            {{ $t("publish.common.status") }} :
                             {{ getStatusCn(item.status) }}
                         </time> -->
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-button icon="Edit" title="编辑" @click="edit(item)"></el-button>
-                        <el-button icon="Delete" title="删除" @click="del(item)"></el-button>
+                        <el-button icon="Edit" :title="$t('publish.common.edit')" @click="edit(item)"></el-button>
+                        <el-button icon="Delete" :title="$t('publish.common.delete')" @click="del(item)"></el-button>
                     </el-button-group>
                 </li>
             </ul>
             <el-alert
                 v-else
                 class="m-dashboard-box-null"
-                title="没有找到相关条目"
+                :title="$t('publish.common.noResults')"
                 type="info"
                 center
                 show-icon
@@ -98,9 +98,7 @@
 <script>
 import { getMyList, del, getMyReplyList, deleteMyReply } from "@/service/publish/community.js";
 import dateFormat from "@/utils/dateFormat";
-import statusMap from "@/assets/data/publish/status.json";
 import { pick } from "lodash";
-import { __postType, __visibleMap } from "@/utils/config";
 export default {
     name: "work",
     props: [],
@@ -115,7 +113,6 @@ export default {
             // order: "update",
             client: "",
             search: "",
-            statusMap,
 
             activeTab: "topic",
         };
@@ -167,14 +164,14 @@ export default {
         getStatusCn: function (status) {
             switch (status) {
                 case 1:
-                    return "正常";
+                    return this.$t("publish.status.normal");
                 case 2:
-                    return "待审核";
+                    return this.$t("publish.status.pendingReview");
                 case 3:
-                    return "审核未通过";
+                    return this.$t("publish.status.rejected");
 
                 default:
-                    return "未知状态";
+                    return this.$t("publish.status.unknown");
             }
         },
         loadPosts: function () {
@@ -215,15 +212,15 @@ export default {
             window.open(path.href, "_blank");
         },
         del: function (item) {
-            this.$alert("确定要删除吗？", "确认信息", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("publish.confirm.delete"), this.$t("publish.common.confirmation"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
                 callback: (action) => {
                     if (action == "confirm") {
                         const fn = this.activeTab == "topic" ? del : deleteMyReply;
                         fn(item.id).then(() => {
                             this.$message({
                                 type: "success",
-                                message: `删除成功`,
+                                message: this.$t("publish.message.deleteSucceeded"),
                             });
 
                             this.page = 1;
@@ -239,7 +236,7 @@ export default {
             }).then((res) => {
                 this.$message({
                     type: "success",
-                    message: `操作成功`,
+                    message: this.$t("publish.message.operationSucceeded"),
                 });
                 this.data[i].post_status = "draft";
             });
@@ -250,7 +247,7 @@ export default {
             }).then((res) => {
                 this.$message({
                     type: "success",
-                    message: `操作成功`,
+                    message: this.$t("publish.message.operationSucceeded"),
                 });
                 this.data[i].post_status = "publish";
             });
@@ -268,7 +265,11 @@ export default {
         getContent(item) {
             const val = item.content;
             if (val) {
-                return `#${item.floor} 回复：${item?.topic?.title}` + val.slice(0, 12) + "...";
+                return this.$t("publish.community.replyPreview", {
+                    floor: item.floor,
+                    title: item?.topic?.title,
+                    content: val.slice(0, 12),
+                });
             }
             return "";
         },
@@ -276,10 +277,17 @@ export default {
             return dateFormat(new Date(val));
         },
         visibleFormat: function (val) {
-            return __visibleMap[~~val];
+            const key = ["public", "private", "friends", "password", "paid", "followers"][~~val];
+            return this.$t(`publish.visibility.${key || "public"}`);
         },
         statusFormat: function (val) {
-            return statusMap[val];
+            const key = {
+                publish: "published",
+                draft: "draft",
+                pending: "pendingReview",
+                dustbin: "deleted",
+            }[val];
+            return this.$t(`publish.status.${key || "unknown"}`);
         },
     },
 };

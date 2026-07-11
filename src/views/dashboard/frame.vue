@@ -1,11 +1,11 @@
 <template>
-    <uc class="m-dashboard-frame m-dashboard-skin" icon="el-icon-brush" title="主题装扮" :tab-list="tabList">
+    <uc class="m-dashboard-frame m-dashboard-skin" icon="el-icon-brush" :title="$t('dashboard.theme.title')" :tab-list="tabList">
         <template #header>
             <a
                 class="u-link el-button el-button--default el-button--small is-round is-plain"
                 href="/vip/mall?category=virtual"
                 target="_blank"
-                ><i class="el-icon-shopping-cart-2"></i> 前往获取装扮</a
+                ><i class="el-icon-shopping-cart-2"></i> {{ $t("dashboard.theme.getDecorations") }}</a
             >
         </template>
         <div class="m-frame">
@@ -15,7 +15,7 @@
                     class="u-btn el-button el-button--default el-button--small is-plain"
                     href="/dashboard/avatar"
                     target="_blank"
-                    ><i class="el-icon-picture-outline-round"></i> 修改头像</a
+                    ><i class="el-icon-picture-outline-round"></i> {{ $t("dashboard.profile.changeAvatar") }}</a
                 >
                 <div class="u-avatar-box">
                     <div class="u-avatar">
@@ -32,9 +32,9 @@
                 <div class="u-theme">
                     <div class="u-frame-list">
                         <div class="u-title">
-                            <span class="u-name"><i class="el-icon-collection-tag"></i>头像框</span>
+                            <span class="u-name"><i class="el-icon-collection-tag"></i>{{ $t("dashboard.theme.avatarFrame") }}</span>
                             <a class="u-buy" :href="`/vip/mall?category=virtual&sub_category=avatar`" target="_blank"
-                                ><i class="el-icon-shopping-cart-2"></i> 前往获取</a
+                                ><i class="el-icon-shopping-cart-2"></i> {{ $t("dashboard.theme.goGet") }}</a
                             >
                         </div>
                         <div class="u-frame-item">
@@ -55,8 +55,8 @@
             </div>
         </div>
         <div class="m-btn">
-            <el-button type="primary" @click="updateAvatarFrame" size="large">确认</el-button>
-            <el-button @click="reset" size="large">清除所有装扮</el-button>
+            <el-button type="primary" @click="updateAvatarFrame" size="large">{{ $t("dashboard.common.confirm") }}</el-button>
+            <el-button @click="reset" size="large">{{ $t("dashboard.theme.clearAll") }}</el-button>
         </div>
     </uc>
 </template>
@@ -111,7 +111,7 @@ export default {
         updateAvatarFrame() {
             updateAvatarFrame({ user_avatar_frame: this.frame }).then((res) => {
                 this.$message({
-                    message: "头像框更新成功",
+                    message: this.$t("dashboard.theme.frameUpdateSuccess"),
                     type: "success",
                 });
                 const params = this.frameList
@@ -127,7 +127,7 @@ export default {
         receiveFrame(type) {
             receive(this.uid, type).then((data) => {
                 this.$message({
-                    message: "领取成功",
+                    message: this.$t("dashboard.theme.receiveSuccess"),
                     type: "success",
                 });
                 this.loadDecoration();
@@ -189,7 +189,7 @@ export default {
         dataProcessing() {
             let avatars = this.avatars || [],
                 frames = this.frames,
-                firstRes = [{ desc: "无边框", name: "", val: "", isHave: 1, using: 1 }],
+                firstRes = [{ desc: this.$t("dashboard.theme.noFrame"), name: "", val: "", isHave: 1, using: 1 }],
                 twoRes = [],
                 threeRes = [];
             Object.keys(frames).forEach((key, i) => {

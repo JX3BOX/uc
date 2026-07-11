@@ -16,7 +16,7 @@
                     />
 
                     <div class="u-post">
-                        <div class="u-title" target="_blank">{{ item.post_title || "无标题" }}</div>
+                        <div class="u-title" target="_blank">{{ item.post_title || $t("author.common.noTitle") }}</div>
                         <time class="u-time">{{ dateFormat(item.post_modified) }}</time>
                     </div>
                 </a>

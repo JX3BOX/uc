@@ -1,5 +1,5 @@
 <template>
-    <uc icon="el-icon-shopping-bag-1" title="订单中心" :tabList="tabList">
+    <uc icon="el-icon-shopping-bag-1" :title="$t('dashboard.orders.title')" :tabList="tabList">
         <div class="m-dashboard m-dashboard-work m-dashboard-orders">
             <div class="m-dashboard-orders-cont">
                 <!-- 表单 -->
@@ -7,14 +7,14 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>兑换时间</th>
-                                <th>兑换商品</th>
-                                <th>订单号</th>
-                                <th>数量</th>
-                                <th>订单状态</th>
-                                <th>付款状态</th>
-                                <th>是否为赠送</th>
-                                <th>操作</th>
+                                <th>{{ $t("dashboard.orders.exchangeTime") }}</th>
+                                <th>{{ $t("dashboard.orders.goods") }}</th>
+                                <th>{{ $t("dashboard.orders.orderNumber") }}</th>
+                                <th>{{ $t("dashboard.common.quantity") }}</th>
+                                <th>{{ $t("dashboard.orders.orderStatus") }}</th>
+                                <th>{{ $t("dashboard.orders.paymentStatus") }}</th>
+                                <th>{{ $t("dashboard.orders.isGift") }}</th>
+                                <th>{{ $t("dashboard.common.actions") }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -29,13 +29,13 @@
                                 <td>{{ item.order.goods_num }}</td>
                                 <td>{{ orderStatus[item.order.order_status] }}</td>
                                 <td>{{ payStatus[item.order.pay_status] }}</td>
-                                <td>{{ item.order.is_vitural_gift_order ? "是" : "否" }}</td>
+                                <td>{{ item.order.is_vitural_gift_order ? $t("dashboard.common.yes") : $t("dashboard.common.no") }}</td>
                                 <td>
                                     <div class="u-op">
                                         <!-- 未支付 -->
                                         <el-tooltip
                                             effect="dark"
-                                            content="点击支付"
+                                            :content="$t('dashboard.orders.clickToPay')"
                                             placement="top"
                                             v-if="showPay(item.order)"
                                         >
@@ -51,7 +51,7 @@
 
                                         <!-- 已发货操作： 确认收货&申请退货 -->
                                         <template v-if="item.order.order_status == 3">
-                                            <el-tooltip effect="dark" content="确认收货" placement="top">
+                                            <el-tooltip effect="dark" :content="$t('dashboard.orders.confirmReceipt')" placement="top">
                                                 <el-button
                                                     link
                                                     plain
@@ -65,15 +65,15 @@
                                         <!-- 未发货允许操作： 取消订单 -->
                                         <el-tooltip
                                             effect="dark"
-                                            content="取消订单"
+                                            :content="$t('dashboard.orders.cancelOrder')"
                                             placement="top"
                                             v-if="item.order.order_status == 0"
                                         >
                                             <el-popconfirm
-                                                confirm-button-text="确定"
-                                                cancel-button-text="取消"
+                                                :confirm-button-text="$t('dashboard.common.confirm')"
+                                                :cancel-button-text="$t('dashboard.common.cancel')"
                                                 icon="InfoFilled"
-                                                title="确定取消吗？"
+                                                :title="$t('dashboard.orders.cancelConfirm')"
                                                 @confirm="cancel(item.order.id)"
                                             >
                                                 <template #reference>
@@ -89,7 +89,7 @@
 
                                         <!-- 已收货操作： 评价 -->
                                         <template v-if="item.order.order_status == 4">
-                                            <el-tooltip effect="dark" content="评价商品" placement="top">
+                                            <el-tooltip effect="dark" :content="$t('dashboard.orders.rateGoods')" placement="top">
                                                 <el-button
                                                     icon="el-icon-chat-dot-square"
                                                     @click="handleShow('comment', item.order.id)"
@@ -114,7 +114,7 @@
                         ></el-pagination>
                 </div>
                 <div class="m-mall-null" v-else>
-                    <el-alert title="还没有任何订单记录" type="info" show-icon></el-alert>
+                    <el-alert :title="$t('dashboard.orders.empty')" type="info" show-icon></el-alert>
                 </div>
             </div>
         </div>
@@ -170,8 +170,8 @@ export default {
         },
         title() {
             const data = {
-                comment: "商品评价",
-                append: "追加评价",
+                comment: this.$t("dashboard.orders.productReview"),
+                append: this.$t("dashboard.orders.appendReview"),
             };
             return data[this.type] || "";
         },
@@ -225,7 +225,7 @@ export default {
         cancel(id) {
             closeOrder(id).then(() => {
                 this.$message({
-                    message: "关闭订单成功",
+                    message: this.$t("dashboard.orders.closeSuccess"),
                     type: "success",
                 });
                 this.list = this.list.map((item) => {
@@ -239,7 +239,7 @@ export default {
             const id = row.order.id;
             toPay(id).then(() => {
                 this.$message({
-                    message: "付款成功",
+                    message: this.$t("dashboard.orders.paymentSuccess"),
                     type: "success",
                 });
                 this.list = this.list.map((item) => {
@@ -252,7 +252,7 @@ export default {
         isReceipt(id) {
             toConfirm(id).then(() => {
                 this.$message({
-                    message: "收货成功",
+                    message: this.$t("dashboard.orders.receiptSuccess"),
                     type: "success",
                 });
                 this.list = this.list.map((item) => {

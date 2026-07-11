@@ -5,9 +5,9 @@
             <CardHeader />
 
             <main v-if="step == 0" class="m-main">
-                <el-alert title="未知异常" type="error" description="非法请求或网络异常" show-icon :closable="false">
+                <el-alert :title="$t('account.common.unknownError')" type="error" :description="$t('account.common.invalidRequestOrNetwork')" show-icon :closable="false">
                 </el-alert>
-                <el-button class="u-button u-submit" type="primary" @click="reset">返回</el-button>
+                <el-button class="u-button u-submit" type="primary" @click="reset">{{ $t("account.common.back") }}</el-button>
             </main>
 
             <!-- 1.是否存在可找回 -->
@@ -18,7 +18,7 @@
                         <el-input
                             class="u-text u-account"
                             v-model.trim="form.account"
-                            placeholder="邮箱地址 / 手机号"
+                            :placeholder="$t('account.common.accountPlaceholder')"
                             minlength="3"
                             maxlength="50"
                             name="account"
@@ -39,12 +39,12 @@
                         :disabled="!available || account_checking"
                         :loading="account_checking"
                         size="large"
-                    >下一步</el-button>
+                    >{{ $t("account.passwordReset.next") }}</el-button>
                 </el-form>
                 <footer class="m-footer">
-                    <p class="u-login">已有账号? <a href="/account/login">登录 &raquo;</a></p>
+                    <p class="u-login">{{ $t("account.common.haveAccount") }} <a href="/account/login">{{ $t("account.common.login") }} &raquo;</a></p>
                     <p class="u-register">
-                        <a href="/account/register">免费注册</a>
+                        <a href="/account/register">{{ $t("account.passwordReset.registerFree") }}</a>
                     </p>
                 </footer>
             </main>
@@ -56,7 +56,7 @@
                 <el-form ref="resetForm" :model="form" :rules="resetRules" @submit.prevent="done">
                     <!-- 验证码 -->
                     <el-form-item class="u-code" prop="code">
-                        <el-input class="u-text u-code" v-model="form.code" placeholder="验证码" size="large" minlength="6" maxlength="6" name="code" autocomplete="one-time-code">
+                        <el-input class="u-text u-code" v-model="form.code" :placeholder="$t('account.common.codePlaceholder')" size="large" minlength="6" maxlength="6" name="code" autocomplete="one-time-code">
                             <template #prepend>
                                 <i class="el-icon-key"></i>
                             </template>
@@ -65,7 +65,7 @@
 
                     <!-- 新密码 -->
                     <el-form-item class="u-pass" prop="pwd1">
-                        <el-input class="u-text" placeholder="新密码" size="large" v-model="form.pwd1" show-password name="password" autocomplete="new-password">
+                        <el-input class="u-text" :placeholder="$t('account.passwordReset.newPassword')" size="large" v-model="form.pwd1" show-password name="password" autocomplete="new-password">
                             <template #prepend>
                                 <i class="el-icon-lock"></i>
                             </template>
@@ -74,14 +74,14 @@
 
                     <!-- 重复密码 -->
                     <el-form-item class="u-pass" prop="pwd2">
-                        <el-input class="u-text" placeholder="重复密码" size="large" v-model="form.pwd2" show-password name="password_confirmation" autocomplete="new-password">
+                        <el-input class="u-text" :placeholder="$t('account.passwordReset.confirmPassword')" size="large" v-model="form.pwd2" show-password name="password_confirmation" autocomplete="new-password">
                             <template #prepend>
                                 <i class="el-icon-lock"></i>
                             </template>
                         </el-input>
                     </el-form-item>
                     <!-- 提交 -->
-                    <el-button class="u-submit u-button" type="primary" native-type="submit" size="large" :disabled="!ready || submitting" :loading="submitting">提交</el-button>
+                    <el-button class="u-submit u-button" type="primary" native-type="submit" size="large" :disabled="!ready || submitting" :loading="submitting">{{ $t("account.common.submit") }}</el-button>
                 </el-form>
             </main>
 
@@ -89,16 +89,16 @@
             <main v-if="step == 3" class="m-main">
                 <!-- 成功 -->
                 <template v-if="success == true">
-                    <el-alert title="重设成功" type="success" description="您的密码已重设" show-icon :closable="false">
+                    <el-alert :title="$t('account.passwordReset.successTitle')" type="success" :description="$t('account.passwordReset.successDescription')" show-icon :closable="false">
                     </el-alert>
-                    <a class="u-skip u-submit el-button u-button el-button--primary el-button--large" href="/account/login">立即登录</a>
+                    <a class="u-skip u-submit el-button u-button el-button--primary el-button--large" href="/account/login">{{ $t("account.common.loginNow") }}</a>
                 </template>
 
                 <!-- 失败 -->
                 <template v-if="success == false">
-                    <el-alert title="操作失败" type="error" :description="failtips" show-icon :closable="false">
+                    <el-alert :title="$t('account.common.operationFailed')" type="error" :description="failtips" show-icon :closable="false">
                     </el-alert>
-                    <el-button class="u-button u-submit" type="primary" @click="reset" size="large">返回</el-button>
+                    <el-button class="u-button u-submit" type="primary" @click="reset" size="large">{{ $t("account.common.back") }}</el-button>
                 </template>
             </main>
         </el-card>
@@ -118,9 +118,6 @@ import {
     isValidEmail,
     isValidLoginPhone,
     isValidPassword,
-    validateAccountLogin,
-    validateCode,
-    validatePassword,
 } from "@/utils/account/validators.js";
 export default {
     name: "Password_Reset",
@@ -167,18 +164,24 @@ export default {
         },
         resetRules: function () {
             return {
-                code: [{ validator: validateCode, trigger: "blur" }],
-                pwd1: [{ validator: validatePassword, trigger: "blur" }],
+                code: [{ validator: this.validateResetCode, trigger: "blur" }],
+                pwd1: [{ validator: this.validateResetPassword, trigger: "blur" }],
                 pwd2: [{ validator: this.validateConfirmPassword, trigger: "blur" }],
             };
         },
         codeNotice: function () {
             return this.recoverMode === "phone"
-                ? "请填写手机收到的验证码"
-                : "请填写邮箱收到的验证码 (60分钟内有效)";
+                ? this.$t("account.passwordReset.phoneCodeNotice")
+                : this.$t("account.passwordReset.emailCodeNotice");
         },
     },
     methods: {
+        validateResetCode: function (rule, value, callback) {
+            callback(isValidCode(value) ? undefined : new Error(this.$t("account.validation.code")));
+        },
+        validateResetPassword: function (rule, value, callback) {
+            callback(isValidPassword(value) ? undefined : new Error(this.$t("account.validation.password")));
+        },
         getRecoverMode: function (value) {
             if (isValidEmail(value)) return "email";
             if (isValidLoginPhone(value)) return "phone";
@@ -190,28 +193,26 @@ export default {
             this.$refs.accountForm?.clearValidate("account");
         },
         validateRecoverableAccount: function (rule, value, callback) {
-            validateAccountLogin(rule, value, (error) => {
-                if (error) {
-                    callback(error);
-                    return;
-                }
+            if (!isValidAccountLogin(value)) {
+                callback(new Error(this.$t("account.validation.account")));
+                return;
+            }
 
-                if (this.accountValid === false) {
-                    callback(new Error("账号不存在"));
-                    return;
-                }
+            if (this.accountValid === false) {
+                callback(new Error(this.$t("account.passwordReset.accountNotFound")));
+                return;
+            }
 
-                callback();
-            });
+            callback();
         },
         validateConfirmPassword: function (rule, value, callback) {
             if (!value) {
-                callback(new Error("请再次输入密码"));
+                callback(new Error(this.$t("account.passwordReset.enterPasswordAgain")));
                 return;
             }
 
             if (value !== this.form.pwd1) {
-                callback(new Error("两次密码不一致"));
+                callback(new Error(this.$t("account.passwordReset.passwordMismatch")));
                 return;
             }
 
@@ -250,7 +251,7 @@ export default {
                         if (!res.data.code) {
                             this.step = 2;
                         } else {
-                            ElMessage.error(res.data.msg || "验证码发送失败");
+                            ElMessage.error(res.data.msg || this.$t("account.common.codeSendFailed"));
                         }
                     });
                 })
@@ -274,7 +275,7 @@ export default {
                         this.accountValid = false;
                         this.$refs.accountForm?.validateField("account").catch(() => {});
                     } else {
-                        ElMessage.error(res.data.msg || "验证码发送失败");
+                        ElMessage.error(res.data.msg || this.$t("account.common.codeSendFailed"));
                     }
                 })
                 .catch(() => {

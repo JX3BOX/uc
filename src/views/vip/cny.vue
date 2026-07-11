@@ -7,37 +7,33 @@
         <Main class="m-vip-container" :withoutRight="true" :withoutLeft="true">
             <div class="m-boxcoin">
                 <div class="m-boxcoin-box" v-if="!done">
-                    <simple-header class="m-boxcoin-title" title="充值金箔" desc="Charge your cny" />
+                    <simple-header class="m-boxcoin-title" :title="$t('vip.recharge.cnyTitle')" :desc="$t('vip.recharge.cnySubtitle')" />
                     <div class="m-boxcoin-form">
                         <div class="u-desc">
                             <i class="el-icon-question"></i>
-                            金箔可用于打赏作者/购买付费作品或魔盒商城限定商品，所有虚拟货币充值均无法退款，请知晓。
+                            {{ $t("vip.recharge.cnyNotice") }}
                         </div>
                         <el-form ref="form" label-width="80px" :label-position="position">
-                            <el-form-item label="当前拥有">
+                            <el-form-item :label="$t('vip.recharge.currentBalance')">
                                 <div class="u-current">
                                     <b>{{ total }}</b>
                                 </div>
                             </el-form-item>
-                            <el-form-item label="购买数量">
+                            <el-form-item :label="$t('vip.recharge.purchaseAmount')">
                                 <el-radio-group v-model="count">
-                                    <el-radio :value="1688" border>1688金箔</el-radio>
-                                    <el-radio :value="8888" border>8888金箔</el-radio>
-                                    <el-radio :value="12888" border>12888金箔</el-radio>
-                                    <el-radio :value="36888" border>36888金箔</el-radio>
-                                    <el-radio :value="68888" border>68888金箔</el-radio>
+                                    <el-radio v-for="amount in cnyOptions" :key="amount" :value="amount" border>{{ $t("vip.recharge.cnyAmount", { amount }) }}</el-radio>
                                 </el-radio-group>
                             </el-form-item>
-                            <el-form-item label="支付金额">
+                            <el-form-item :label="$t('vip.recharge.paymentAmount')">
                                 <div>
                                     <span>¥</span>
                                     <b class="u-price">{{ formatPrice(count) }}</b>
-                                    <span>元</span>
+                                    <span>{{ $t("vip.common.yuan") }}</span>
                                 </div>
                             </el-form-item>
                             <el-form-item>
                                 <el-button class="u-btn" type="primary" @click="buy" :disabled="!cny_enable"
-                                    >充值</el-button
+                                    >{{ $t("vip.recharge.recharge") }}</el-button
                                 >
                             </el-form-item>
                         </el-form>
@@ -45,16 +41,16 @@
                 </div>
                 <result class="m-boxcoin-result" v-else>
                     <template #title>
-                        <div class="m-boxcoin-result-title">充值成功</div>
+                        <div class="m-boxcoin-result-title">{{ $t("vip.recharge.success") }}</div>
                     </template>
                     <template #desc>
                         <div class="m-boxcoin-result-desc">
                             <p>
-                                当前剩余金箔：
+                                {{ $t("vip.recharge.remainingCny") }}
                                 <b>{{ total }}</b>
                             </p>
                         </div>
-                        <el-button class="u-back" @click="goBack" plain icon="RefreshLeft">返回</el-button>
+                        <el-button class="u-back" @click="goBack" plain icon="RefreshLeft">{{ $t("vip.common.back") }}</el-button>
                     </template>
                 </result>
             </div>
@@ -103,8 +99,11 @@ export default {
         };
     },
     computed: {
+        cnyOptions() {
+            return [1688, 8888, 12888, 36888, 68888];
+        },
         productDesc: function () {
-            return "充值金箔" + this.count;
+            return this.$t("vip.recharge.cnyProduct", { amount: this.count });
         },
     },
     methods: {

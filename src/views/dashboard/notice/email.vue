@@ -3,11 +3,15 @@
         <div class="u-notice-value">
             <span class="u-address" v-if="currentEmail">{{ blurAddress(currentEmail) }}</span>
             <el-tag class="u-notice-status" :type="currentEmail ? (verified ? 'success' : 'warning') : 'info'">{{
-                currentEmail ? (verified ? "已验证" : "未验证") : "未绑定"
+                currentEmail
+                    ? verified
+                        ? $t("dashboard.common.verified")
+                        : $t("dashboard.common.unverified")
+                    : $t("dashboard.common.unbound")
             }}</el-tag>
         </div>
         <el-button type="primary" :circle="isPhone" size="large" class="u-button" @click="visible = true" icon="Edit">{{
-            currentEmail && verified ? "修改邮箱" : "绑定邮箱"
+            currentEmail && verified ? $t("dashboard.email.change") : $t("dashboard.email.bind")
         }}</el-button>
 
         <email-dialog v-model="visible" :email="currentEmail" :verified="verified" @update="onUpdate" />

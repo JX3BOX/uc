@@ -1,10 +1,10 @@
 <template>
     <el-dialog class="m-comment-detail-dialog" v-model="show" :title="title" :before-close="close">
         <el-descriptions class="m-msg-comment-detail" direction="vertical" :column="2" border v-loading="loading">
-            <el-descriptions-item label="评论内容" :span="2">
+            <el-descriptions-item :label="$t('dashboard.message.commentContent')" :span="2">
                 <div v-html="renderContent || '-'"></div>
             </el-descriptions-item>
-            <el-descriptions-item v-if="attachments.length" label="评论附件" :span="2">
+            <el-descriptions-item v-if="attachments.length" :label="$t('dashboard.message.commentAttachments')" :span="2">
                 <el-image
                     v-for="(item, index) in attachments"
                     :key="index"
@@ -12,7 +12,7 @@
                     :preview-src-list="[item]"
                 ></el-image>
             </el-descriptions-item>
-            <el-descriptions-item label="评论人">
+            <el-descriptions-item :label="$t('dashboard.message.commenter')">
                 <div class="m-user" v-if="data.userId">
                     <a class="u-name" :href="authorLink(data.userId)" target="_blank">
                         <img class="u-avatar" :src="showAvatar(data.user_info?.avatar)" alt="" />
@@ -22,7 +22,7 @@
                 </div>
                 <span v-else>-</span>
             </el-descriptions-item>
-            <el-descriptions-item label="评论时间">
+            <el-descriptions-item :label="$t('dashboard.message.commentTime')">
                 {{ formatDate(data.commentDate) }}
             </el-descriptions-item>
         </el-descriptions>
@@ -47,7 +47,7 @@ export default {
     },
     computed: {
         title() {
-            return "消息详情";
+            return this.$t("dashboard.message.detailsTitle");
         },
     },
     watch: {

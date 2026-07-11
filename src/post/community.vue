@@ -1,7 +1,7 @@
 <template>
     <div class="m-publish-box p-community" v-loading="loading">
         <!-- 头部 -->
-        <publish-header name="魔盒论坛">
+        <publish-header :name="$t('publish.types.forum')">
             <div class="u-actions">
                 <publish-revision :enable="true" :post="post"></publish-revision>
                 <publish-reading-history v-if="id" :post-id="id" category="communicate"></publish-reading-history>
@@ -14,7 +14,7 @@
 
             <!-- 信息 -->
             <div class="m-publish-info">
-                <el-divider content-position="left">信息</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.information") }}</el-divider>
                 <!-- 客户端 -->
                 <publish-client v-model="post.client" :showMobile="true"></publish-client>
                 <!-- 类型 -->
@@ -23,15 +23,15 @@
 
             <div class="m-publish-info m-publish-extraimg">
                 <el-divider content-position="left"
-                    >魔卡
-                    <el-tooltip class="box-item" effect="dark" content="使用魔卡让你的贴贴闪闪发光!" placement="top">
+                    >{{ $t("publish.community.magicCard") }}
+                    <el-tooltip class="box-item" effect="dark" :content="$t('publish.community.magicCardHint')" placement="top">
                         <i class="el-icon-question"></i>
                     </el-tooltip>
                     <a
                         class="u-buy el-button el-button--primary el-button--small is-round"
                         href="/vip/mall/list?category=virtual&sub_category=palu"
                         target="_blank"
-                        ><i class="el-icon-shopping-cart-full"></i> 兑换魔卡</a
+                        ><i class="el-icon-shopping-cart-full"></i> {{ $t("publish.community.redeemCard") }}</a
                     >
                 </el-divider>
                 <div class="u-imgs u-skin-imgs" v-if="skins.length">
@@ -40,38 +40,38 @@
                         :class="`u-imgs-item u-skin ${post.decoration_id === item.id && 'active'}`"
                         v-for="(item, i) in skins"
                         :key="i"
-                        title="点击使用卡片皮肤，再次点击取消选择"
+                        :title="$t('publish.community.cardSelectHint')"
                     >
                         <el-image :src="item.url" fit="fill" />
-                        <div class="u-mark"><i class="el-icon-check"></i> 已选择</div>
-                        <div class="u-amount">数量 : {{ item.amount }}</div>
+                        <div class="u-mark"><i class="el-icon-check"></i> {{ $t("publish.common.selected") }}</div>
+                        <div class="u-amount">{{ $t("publish.community.quantity", { count: item.amount }) }}</div>
                     </div>
                 </div>
                 <div v-else class="u-null">
-                    你还没有任何魔卡，<a href="/vip/mall/list?category=virtual&sub_category=palu" target="_blank"
-                        >点击前往</a
-                    >使用积分兑换。
+                    {{ $t("publish.community.noCardsPrefix") }}<a href="/vip/mall/list?category=virtual&sub_category=palu" target="_blank"
+                        >{{ $t("publish.community.goNow") }}</a
+                    >{{ $t("publish.community.noCardsSuffix") }}
                 </div>
             </div>
 
             <!-- 正文 -->
             <div class="m-publish-content">
-                <el-divider content-position="left">正文</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.body") }}</el-divider>
                 <Tinymce v-model="post.content" :attachmentEnable="true" :resourceEnable="true" v-show="'tinymce'" />
             </div>
 
             <!-- 附加 -->
 
             <div class="m-publish-append">
-                <el-divider content-position="left">小册</el-divider>
+                <el-divider content-position="left">{{ $t("publish.types.collection") }}</el-divider>
                 <publish-collection v-model="post.collection_id" :defaultCollapse="post.collection_collapse">
                 </publish-collection>
             </div>
 
             <!-- 扩展 -->
             <div class="m-publish-extend">
-                <el-divider content-position="left">设置</el-divider>
-                <el-form-item label="评论开关">
+                <el-divider content-position="left">{{ $t("publish.common.settings") }}</el-divider>
+                <el-form-item :label="$t('publish.form.comments')">
                     <!-- 默认应该是可以评论，但是是开的 -->
                     <el-switch
                         v-model="post.disable_comment"
@@ -80,7 +80,7 @@
                         :inactive-value="1"
                     ></el-switch>
                 </el-form-item>
-                <el-form-item label="礼物开关">
+                <el-form-item :label="$t('publish.form.gifts')">
                     <el-switch
                         v-model="post.disable_inspire_boxcoin"
                         active-color="#13ce66"
@@ -88,7 +88,7 @@
                         :inactive-value="1"
                     ></el-switch>
                 </el-form-item>
-                <el-form-item label="匿名开关">
+                <el-form-item :label="$t('publish.form.anonymous')">
                     <el-switch
                         v-model="post.anonymous"
                         active-color="#13ce66"
@@ -97,30 +97,30 @@
                         @change="onAnonymousChange"
                     ></el-switch>
                 </el-form-item>
-                <el-form-item label="阅读权限">
+                <el-form-item :label="$t('publish.form.visibility')">
                     <el-radio-group v-model="post.visible">
-                        <el-radio :value="0">公开</el-radio>
-                        <el-radio :value="1" :disabled="!!post.anonymous">仅自己可见</el-radio>
-                        <el-radio :value="2" :disabled="!!post.anonymous">仅亲友可见</el-radio>
-                        <el-radio :value="3" :disabled="!!post.anonymous">密码可见</el-radio>
+                        <el-radio :value="0">{{ $t("publish.visibility.public") }}</el-radio>
+                        <el-radio :value="1" :disabled="!!post.anonymous">{{ $t("publish.visibility.private") }}</el-radio>
+                        <el-radio :value="2" :disabled="!!post.anonymous">{{ $t("publish.visibility.friends") }}</el-radio>
+                        <el-radio :value="3" :disabled="!!post.anonymous">{{ $t("publish.visibility.password") }}</el-radio>
                         <!-- <el-radio :value="4" disabled>付费可见</el-radio> -->
-                        <el-radio :value="5" :disabled="!!post.anonymous">粉丝可见</el-radio>
+                        <el-radio :value="5" :disabled="!!post.anonymous">{{ $t("publish.visibility.followers") }}</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="密码" v-if="post.visible == 3">
-                    <el-input v-model="post.password" placeholder="请输入密码" />
+                <el-form-item :label="$t('publish.form.password')" v-if="post.visible == 3">
+                    <el-input v-model="post.password" :placeholder="$t('publish.form.passwordPlaceholder')" />
                 </el-form-item>
             </div>
 
             <!-- 临时 -->
             <div class="m-publish-extend">
-                <el-divider content-position="left">临时</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.temporary") }}</el-divider>
                 <publish-at-authors></publish-at-authors>
             </div>
 
             <!-- 附图 -->
             <div class="m-publish-extraimg" v-show="extraImages.length">
-                <el-divider content-position="left">附图</el-divider>
+                <el-divider content-position="left">{{ $t("publish.community.images") }}</el-divider>
                 <div class="u-imgs">
                     <div :class="`u-imgs-item`" v-for="(item, i) in extraImages" :key="i">
                         <el-image
@@ -129,7 +129,7 @@
                             style="width: 148px; height: 148px"
                             :preview-src-list="[item]"
                         />
-                        <div class="u-mark">封面</div>
+                        <div class="u-mark">{{ $t("publish.community.cover") }}</div>
                     </div>
                 </div>
             </div>
@@ -146,10 +146,10 @@
                     :closable="false"
                     show-icon
                     type="error"
-                    title="检测到您的内容存在不合规，将无法发布成功，并有禁言风险。"
+                    :title="$t('publish.message.contentViolation')"
                 ></el-alert>
                 <el-checkbox v-model="hasRead" :true-value="1" :fasle-value="0"
-                    >我已阅读并了解<a href="/notice/119" @click.stop target="_blank">《创作发布规范》</a></el-checkbox
+                    >{{ $t("publish.form.readAndUnderstand") }}<a href="/notice/119" @click.stop target="_blank">{{ $t("publish.form.publishingGuidelines") }}</a></el-checkbox
                 >
             </div>
 
@@ -160,7 +160,7 @@
                     type="primary"
                     @click="publish('publish', true)"
                     :disabled="is_illegal || processing || !hasRead"
-                    >发 &nbsp;&nbsp; 布</el-button
+                    >{{ $t("publish.common.publish") }}</el-button
                 >
             </div>
         </el-form>
@@ -297,7 +297,7 @@ export default {
         setSkin(data) {
             if (data.amount <= 0 && data.id != this.currentDecorationId) {
                 this.$message({
-                    message: "该皮肤已经被使用完了",
+                    message: this.$t("publish.community.cardUsedUp"),
                     type: "warning",
                 });
                 return;
@@ -360,7 +360,7 @@ export default {
             this.loading = true;
             if (!this.post.title || !this.post.content) {
                 this.$message({
-                    message: "请完善标题和内容",
+                    message: this.$t("publish.validation.titleAndContentRequired"),
                     type: "warning",
                 });
                 this.loading = false;
@@ -377,7 +377,7 @@ export default {
                 fn(this.data.id, data)
                     .then((res) => {
                         this.$message({
-                            message: "更新成功",
+                            message: this.$t("publish.message.updateSucceeded"),
                             type: "success",
                         });
 
@@ -414,7 +414,7 @@ export default {
                     .then((res) => {
                         const result = res.data.data;
                         this.$message({
-                            message: "发布成功",
+                            message: this.$t("publish.message.publishSucceeded"),
                             type: "success",
                         });
 

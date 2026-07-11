@@ -1,7 +1,7 @@
 <template>
     <div class="m-callback m-invitation-kith">
-        <h1 class="u-title"><i class="el-icon-message"></i> 邀请</h1>
-        <p class="u-desc">你收到了一条亲友邀请。</p>
+        <h1 class="u-title"><i class="el-icon-message"></i> {{ $t("dashboard.invitationCallback.title") }}</h1>
+        <p class="u-desc">{{ $t("dashboard.invitationCallback.friendReceived") }}</p>
         <div class="u-post">
             <div class="u-post-avatar">
                 <img :src="showAvatar(userdata.user_avatar)" />
@@ -16,10 +16,10 @@
         </div>
         <div class="u-btns">
             <el-button type="primary" icon="el-icon-check" :disabled="alreadyAccept" @click="accept">{{
-                alreadyAccept ? "已接受" : "接受"
+                alreadyAccept ? $t("dashboard.common.accepted") : $t("dashboard.common.accept")
             }}</el-button>
             <el-button type="info" icon="el-icon-close" @click="confirmQuit" :disabled="alreadyAccept">{{
-                alreadyAccept ? "解除亲友关系" : "拒绝"
+                alreadyAccept ? $t("dashboard.invitationCallback.removeFriend") : $t("dashboard.common.reject")
             }}</el-button>
         </div>
     </div>
@@ -82,9 +82,9 @@ export default {
             });
         },
         confirmQuit: function () {
-            this.$confirm("确定解除亲友关系吗？", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("dashboard.invitationCallback.removeFriendConfirm"), this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
@@ -95,7 +95,7 @@ export default {
         refuse: function () {
             refuseKithInvitation(this.uid).then(() => {
                 this.$message({
-                    message: "操作成功",
+                    message: this.$t("dashboard.common.operationSuccess"),
                     type: "success",
                 });
             });
@@ -104,7 +104,7 @@ export default {
         accept: function () {
             acceptKithInvitation(this.uid).then((res) => {
                 this.$message({
-                    message: "操作成功",
+                    message: this.$t("dashboard.common.operationSuccess"),
                     type: "success",
                 });
                 this.$router.push("/privacy?tab=whitelist");

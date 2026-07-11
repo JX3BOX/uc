@@ -34,6 +34,13 @@ export default {
             description: "JX3BOX home: news, community updates, and world bulletin.",
         },
     },
+    ai: {
+        editor: {
+            title: "AI Editor Preview",
+            keywords: "JX3,JX3BOX,AI,editor,article preview",
+            description: "JX3BOX AI editor article preview page.",
+        },
+    },
     account: {
         login: {
             title: "Sign In",

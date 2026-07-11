@@ -83,7 +83,7 @@ export default {
             return dayjs(val).format("YYYY-M-DD HH:mm:ss");
         },
         cleanContent(content) {
-            return content?.replace(/<img[^>]*>/g, "#图片")?.replace(/<\/?[^>]+(>|$)/g, "");
+            return content?.replace(/<img[^>]*>/g, this.$t("author.common.imageMarker"))?.replace(/<\/?[^>]+(>|$)/g, "");
         },
         loadMore() {
             if (this.loading) return;

@@ -1,7 +1,7 @@
 <template>
     <div class="m-publish-box">
         <!-- 头部 -->
-        <publish-header name="剑三试卷" :localDraft="false">
+        <publish-header :name="$t('publish.types.papers')" :localDraft="false">
             <slot name="header"></slot>
         </publish-header>
 
@@ -9,23 +9,23 @@
         <el-form label-position="left" label-width="80px" class="m-publish-exam">
             <!-- 客户端 -->
             <publish-client v-model="primary.client"></publish-client>
-            <el-form-item label="状态" class="m-publish-exam-common">
+            <el-form-item :label="$t('publish.common.status')" class="m-publish-exam-common">
                 <el-radio-group v-model="primary.is_public">
-                    <el-radio :value="PUBLIC_VALUE">公开</el-radio>
-                    <el-radio :value="PRIVATE_VALUE">私有</el-radio>
+                    <el-radio :value="PUBLIC_VALUE">{{ $t("publish.visibility.public") }}</el-radio>
+                    <el-radio :value="PRIVATE_VALUE">{{ $t("publish.visibility.privateShort") }}</el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item label="标题" class="m-publish-exam-title">
+            <el-form-item :label="$t('publish.common.title')" class="m-publish-exam-title">
                 <el-input
                     v-model="primary.title"
                     :maxlength="120"
                     :minlength="2"
                     show-word-limit
                     required
-                    placeholder="请填写试卷标题"
+                    :placeholder="$t('publish.exam.paperTitlePlaceholder')"
                 ></el-input>
             </el-form-item>
-            <el-form-item label="描述" class="m-publish-exam-desc">
+            <el-form-item :label="$t('publish.common.description')" class="m-publish-exam-desc">
                 <el-input
                     v-model="primary.desc"
                     :maxlength="200"
@@ -34,46 +34,46 @@
                     required
                     :rows="3"
                     type="textarea"
-                    placeholder="请填写试卷描述"
+                    :placeholder="$t('publish.exam.paperDescriptionPlaceholder')"
                 ></el-input>
             </el-form-item>
-            <el-form-item label="题目" class="m-publish-exam-common">
-                <div>请设置10道题（每道题10分，满分100分），用半角逗号隔开，例如1,2,3</div>
-                <el-input v-model="list" show-word-limit required placeholder="请填写题目ID序列"></el-input>
+            <el-form-item :label="$t('publish.exam.question')" class="m-publish-exam-common">
+                <div>{{ $t("publish.exam.paperQuestionsHint") }}</div>
+                <el-input v-model="list" show-word-limit required :placeholder="$t('publish.exam.questionIdsPlaceholder')"></el-input>
             </el-form-item>
-            <el-form-item label="外链" class="m-publish-exam-common">
-                <div>如果为外链地址，则设置的题目将不会生效</div>
-                <el-input v-model="primary.iframe" show-word-limit required placeholder="请填写外链问卷地址">
+            <el-form-item :label="$t('publish.exam.externalLink')" class="m-publish-exam-common">
+                <div>{{ $t("publish.exam.externalLinkHint") }}</div>
+                <el-input v-model="primary.iframe" show-word-limit required :placeholder="$t('publish.exam.externalLinkPlaceholder')">
                 </el-input>
             </el-form-item>
-            <el-form-item label="难度" class="m-publish-exam-level">
+            <el-form-item :label="$t('publish.exam.difficulty')" class="m-publish-exam-level">
                 <el-rate
                     v-model="primary.hardStar"
                     show-score
                     text-color="#ff9900"
-                    score-template="{value} 星"
+                    :score-template="$t('publish.exam.starTemplate', { value: '{value}' })"
                 ></el-rate>
             </el-form-item>
-            <el-form-item label="风格" class="m-publish-exam-style">
-                <el-select v-model="primary.style" placeholder="请选择封面风格">
+            <el-form-item :label="$t('publish.exam.style')" class="m-publish-exam-style">
+                <el-select v-model="primary.style" :placeholder="$t('publish.exam.stylePlaceholder')">
                     <el-option
                         v-for="item in styles"
                         :key="item.value"
-                        :label="item.label"
+                        :label="$t(`publish.exam.styles.${item.value}`)"
                         :value="item.value"
                     ></el-option>
                 </el-select>
             </el-form-item>
             <exam_tags class="m-publish-exam-tags" v-model="primary.tags" />
             <!-- <el-form-item label="称谓" class="m-publish-exam-common" v-if="isSuper">
-                <el-select v-model="primary.medalAward" placeholder="试卷称谓奖励">
-                    <el-option label="无" value></el-option>
+                <el-select v-model="primary.medalAward" :placeholder="$t('publish.exam.titleReward')">
+                    <el-option :label="$t('publish.common.none')" value></el-option>
                     <el-option v-for="item in awards" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="角标" class="m-publish-exam-common" v-if="isSuper">
-                <el-select v-model="primary.corner" placeholder="试卷角标">
-                    <el-option label="无" value></el-option>
+            <el-form-item :label="$t('publish.exam.badge')" class="m-publish-exam-common" v-if="isSuper">
+                <el-select v-model="primary.corner" :placeholder="$t('publish.exam.badgePlaceholder')">
+                    <el-option :label="$t('publish.common.none')" value></el-option>
                     <el-option v-for="item in marks" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item> -->
@@ -81,7 +81,7 @@
                 <!-- <tinymce :content="primary.whyami" :height="400" />
                 <upload class="u-editor-upload" />-->
                 <el-button class="u-publish" icon="Promotion" type="primary" @click="publish" :disabled="processing"
-                    >发布试卷</el-button
+                    >{{ $t("publish.exam.publishPaper") }}</el-button
                 >
             </el-form-item>
         </el-form>
@@ -170,7 +170,7 @@ export default {
         },
         success: function (res) {
             this.$message({
-                message: res.data.msg || "提交成功",
+                message: res.data.msg || this.$t("publish.message.submitSucceeded"),
                 type: "success",
             });
             setTimeout(() => {
@@ -199,8 +199,8 @@ export default {
         checkList: function () {
             let list = this.list.split(",");
             if (list.length > 10 || !list.length) {
-                this.$alert("请设置10道题，每道题10分，满分100分", "提醒", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("publish.exam.paperCountValidation"), this.$t("publish.common.reminder"), {
+                    confirmButtonText: this.$t("publish.common.confirm"),
                     callback: () => {
                         this.processing = false;
                     },

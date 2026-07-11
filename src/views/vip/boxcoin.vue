@@ -7,51 +7,47 @@
         <Main class="m-vip-container" :withoutRight="true" :withoutLeft="true">
             <div class="m-boxcoin">
                 <div class="m-boxcoin-box" v-if="!done">
-                    <simple-header class="m-boxcoin-title" title="充值盒币" desc="Charge your boxcoin" />
+                    <simple-header class="m-boxcoin-title" :title="$t('vip.recharge.boxcoinTitle')" :desc="$t('vip.recharge.boxcoinSubtitle')" />
                     <div class="m-boxcoin-form">
                         <div class="u-desc">
                             <i class="el-icon-question"></i>
-                            盒币可用于打赏作者或魔盒商城限定商品，所有虚拟货币充值均无法退款，请知晓。
+                            {{ $t("vip.recharge.boxcoinNotice") }}
                         </div>
                         <el-form ref="form" label-width="80px" :label-position="position">
-                            <el-form-item label="当前拥有">
+                            <el-form-item :label="$t('vip.recharge.currentBalance')">
                                 <div class="u-current">
                                     <b>{{ total }}</b>
                                 </div>
                             </el-form-item>
-                            <el-form-item label="购买数量">
+                            <el-form-item :label="$t('vip.recharge.purchaseAmount')">
                                 <el-radio-group v-model="count">
-                                    <el-radio :value="15" border>1500盒币</el-radio>
-                                    <el-radio :value="30" border>3000盒币</el-radio>
-                                    <el-radio :value="50" border>5000盒币</el-radio>
-                                    <el-radio :value="100" border>10000盒币</el-radio>
-                                    <el-radio :value="500" border>50000盒币</el-radio>
+                                    <el-radio v-for="amount in boxcoinOptions" :key="amount.value" :value="amount.value" border>{{ amount.label }}</el-radio>
                                 </el-radio-group>
                             </el-form-item>
-                            <el-form-item label="支付金额">
+                            <el-form-item :label="$t('vip.recharge.paymentAmount')">
                                 <div>
                                     <span>¥</span>
                                     <b class="u-price">{{ formatPrice(count) }}</b>
-                                    <span>元</span>
+                                    <span>{{ $t("vip.common.yuan") }}</span>
                                 </div>
                             </el-form-item>
                             <el-form-item>
-                                <el-button class="u-btn" type="primary" @click="buy">充值</el-button>
+                                <el-button class="u-btn" type="primary" @click="buy">{{ $t("vip.recharge.recharge") }}</el-button>
                             </el-form-item>
                         </el-form>
                     </div>
                 </div>
                 <result class="m-boxcoin-result" v-else>
                     <template #title>
-                        <div class="m-boxcoin-result-title">充值成功</div>
+                        <div class="m-boxcoin-result-title">{{ $t("vip.recharge.success") }}</div>
                     </template>
                     <template #desc>
                         <div class="m-boxcoin-result-desc">
                             <p>
-                                当前剩余盒币：
+                                {{ $t("vip.recharge.remainingBoxcoin") }}
                                 <b>{{ total }}</b>
                             </p>
-                            <el-button class="u-back" @click="goBack" plain icon="RefreshLeft">返回</el-button>
+                            <el-button class="u-back" @click="goBack" plain icon="RefreshLeft">{{ $t("vip.common.back") }}</el-button>
                         </div>
                     </template>
                 </result>
@@ -98,8 +94,14 @@ export default {
         };
     },
     computed: {
+        boxcoinOptions() {
+            return [15, 30, 50, 100, 500].map((value) => ({
+                value,
+                label: this.$t("vip.recharge.boxcoinAmount", { amount: value * 100 }),
+            }));
+        },
         productDesc: function () {
-            return "充值盒币" + this.count * 100;
+            return this.$t("vip.recharge.boxcoinProduct", { amount: this.count * 100 });
         },
     },
     methods: {

@@ -8,13 +8,13 @@
                     <span>{{ statusText }}</span>
                 </span>
                 <p class="u-title">
-                    <span>你的作品即将在</span>
+                    <span>{{ $t("publish.headline.yourWorkWill") }}</span>
                     <span class="u-time">{{ publishTime }}</span
-                    >登上<span class="u-highlight">魔盒头条</span>
+                    >{{ $t("publish.headline.appearOn") }}<span class="u-highlight">{{ $t("publish.headline.name") }}</span>
                 </p>
             </div>
             <div class="u-right">
-                <span class="u-suffix">※ 根据实际情况可能会调整</span>
+                <span class="u-suffix">{{ $t("publish.headline.mayAdjust") }}</span>
             </div>
         </div>
     </div>
@@ -51,7 +51,7 @@ export default {
         },
         title() {
             if (!this.visible) return "";
-            return `你的作品即将在${this.publishTime}登上魔盒头条（根据实际情况可能会调整）`;
+            return this.$t("publish.headline.fullNotice", { time: this.publishTime });
         },
         publishTime() {
             if (!this.visible) return "";
@@ -59,11 +59,11 @@ export default {
         },
         statusText() {
             const map = {
-                0: "未开始",
-                1: "进行中",
-                2: "已就绪",
+                0: "pending",
+                1: "progress",
+                2: "ready",
             };
-            return map[this.task?.flow] || "未开始";
+            return this.$t(`publish.headline.status.${map[this.task?.flow] || "pending"}`);
         },
         statusClass() {
             const map = {

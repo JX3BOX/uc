@@ -1,6 +1,6 @@
 <template>
     <div class="m-oauth">
-        <el-divider class="u-title">OR</el-divider>
+        <el-divider class="u-title">{{ $t("account.oauth.or") }}</el-divider>
         <el-row :gutter="20">
             <el-col :span="span" v-if="includes.includes('qq')"
                 ><a class="u-item" :href="getUnionLink('api/cms/user/union/qqsite/')" @click="persistAuthContext">
@@ -11,13 +11,13 @@
             <el-col :span="span" v-if="includes.includes('wechat')"
                 ><a class="u-item" :href="getUnionLink('api/cms/user/union/wesite/')" @click="persistAuthContext">
                     <i class="u-oauth-logo"><img svg-inline src="@/assets/img/account/wechat.svg" /></i>
-                    <span class="u-oauth-name">微信</span>
+                    <span class="u-oauth-name">{{ $t("account.oauth.wechat") }}</span>
                 </a></el-col
             >
             <el-col :span="span" v-if="includes.includes('weibo')"
                 ><a class="u-item" :href="getUnionLink('api/cms/user/union/weibosite/')" @click="persistAuthContext">
                     <i class="u-oauth-logo"><img svg-inline src="@/assets/img/account/weibo.svg" /></i>
-                    <span class="u-oauth-name">微博</span>
+                    <span class="u-oauth-name">{{ $t("account.oauth.weibo") }}</span>
                 </a></el-col
             >
         </el-row>

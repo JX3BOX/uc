@@ -1,18 +1,15 @@
 <template>
     <div class="m-vip-namespace">
         <div class="m-vip-namespace-index" v-if="!done">
-            <simple-header title="购买铭牌" desc="剑网3.com/铭牌" />
+            <simple-header :title="$t('vip.namespace.purchaseTitle')" :desc="$t('vip.namespace.purchaseSubtitle')" />
             <div class="m-vip-namespac-cont">
                 <!-- 铭牌解释 -->
                 <div class="m-vip-namespac-info">
-                    <h3>【名词解释】</h3>
-                    <p>
-                        铭牌是通过关键词快速访问
+                    <h3>{{ $t("vip.namespace.termExplanation") }}</h3>
+                    <i18n-t keypath="vip.namespace.explanation" tag="p">
                         <a href="https://www.剑网3.com" target="_blank">剑网3.com</a>
-                        网站内容的功能，例如：您定义铭牌名称为 "某某气纯宏"，就可以通过在浏览器地址栏中输入
-                        <a href="https://剑网3.com/某某气纯宏" target="_blank">剑网3.com/某某气纯宏</a>
-                        快速访问你输入的链接。
-                    </p>
+                        <a href="https://剑网3.com/某某气纯宏" target="_blank">剑网3.com/{{ $t("vip.namespace.exampleKeyword") }}</a>
+                    </i18n-t>
                 </div>
                 <!-- 活动购买 -->
                 <div class="m-vip-namespace-buy">
@@ -37,10 +34,10 @@
                             <img :src="banner" />
                         </i>
                         <div class="u-info">
-                            <div class="u-price"><span>10.00</span>元</div>
-                            <div class="u-title">折扣活动</div>
-                            <div class="u-txt">特惠价： ¥ 10元<i>20元</i> / <b>20个铭牌</b></div>
-                            <div class="u-btn" @click="buyNamespace"><i class="el-icon-shopping-cart-2"></i> 购买</div>
+                            <div class="u-price"><span>10.00</span>{{ $t("vip.common.yuan") }}</div>
+                            <div class="u-title">{{ $t("vip.namespace.discountEvent") }}</div>
+                            <div class="u-txt">{{ $t("vip.namespace.specialOfferLine", { price: 10, original: 20, count: 20 }) }}</div>
+                            <div class="u-btn" @click="buyNamespace"><i class="el-icon-shopping-cart-2"></i> {{ $t("vip.common.purchase") }}</div>
                         </div>
                     </div>
                 </div>
@@ -49,11 +46,11 @@
         <result class="m-vip-result" v-else>
             <template title>
                 <div class="m-premium-result-title">
-                    购买成功
+                    {{ $t("vip.common.purchaseSuccess") }}
                 </div>
             </template>
             <template #desc>
-                    <div class="m-rename-result-desc">购买成功，<a :href="register_namespace_url">前往注册铭牌</a></div>
+                    <i18n-t keypath="vip.namespace.purchaseSuccessGuide" tag="div" class="m-rename-result-desc"><a :href="register_namespace_url">{{ $t("vip.namespace.goRegister") }}</a></i18n-t>
             </template>
         </result>
         <paypop v-if="will" v-model="dialog_visible" :productDesc="productDesc" :productId="productId" :returnUrl="returnUrl" @done="finish" />
@@ -124,11 +121,11 @@ export default {
             });
         },
         buyNamespacePro: function() {
-            this.productDesc = "0.99元秒杀活动";
+            this.productDesc = this.$t("vip.namespace.flashSaleProduct");
             this.doBuy("10");
         },
         buyNamespace: function() {
-            this.productDesc = "10元购买20个铭牌";
+            this.productDesc = this.$t("vip.namespace.namespaceProduct");
             this.doBuy("11");
         },
     },

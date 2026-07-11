@@ -3,12 +3,12 @@
     <el-dialog
         v-model="dialogVisible"
         @close="onClose"
-        title="添加技能"
+        :title="$t('publish.skill.add')"
         append-to-body
         class="m-publish-wujie-skill"
     >
         <pvp-martial :subtype="subtype" :platform="platform" @selectSkill="selectSkill"></pvp-martial>
-        <el-divider content-position="left">已选技能</el-divider>
+        <el-divider content-position="left">{{ $t("publish.skill.selected") }}</el-divider>
         <div class="m-selected-skills">
             <ul class="m-skills-list" ref="selectedSkill">
                 <li v-for="(skill, index) in selectedSkills" :key="skill.SkillID + '' + index" class="m-skill">
@@ -16,7 +16,7 @@
                         <img class="u-skill-icon" :src="iconLink(skill.IconID)" :alt="skill.IconID" />
                         <span class="u-name" :title="skill.Name">{{ skill.Name }}</span>
                     </div>
-                    <i class="u-remove-icon" title="移除" @click="removeSelected(index)"
+                    <i class="u-remove-icon" :title="$t('publish.common.remove')" @click="removeSelected(index)"
                         ><i class="el-icon-close"></i
                     ></i>
                 </li>
@@ -24,8 +24,8 @@
         </div>
 
         <template #footer>
-            <el-button @click="onClose">取 消</el-button>
-            <el-button type="primary" @click="onConfirm">确 定</el-button>
+            <el-button @click="onClose">{{ $t("publish.common.cancel") }}</el-button>
+            <el-button type="primary" @click="onConfirm">{{ $t("publish.common.confirm") }}</el-button>
         </template>
     </el-dialog>
 </template>
@@ -110,7 +110,7 @@ export default {
 
         selectSkill(skill) {
             if (this.selectedSkills?.length >= this.max) {
-                this.$message.warning(`最多只能选择${this.max}个技能`);
+                this.$message.warning(this.$t("publish.skill.maxSelected", { max: this.max }));
                 return;
             }
             this.selectedSkills.push(skill);

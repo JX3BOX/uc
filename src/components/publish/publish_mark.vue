@@ -4,7 +4,7 @@
             <div v-for="star in stars" class="m-publish-mark" :key="star" @click="onStarClick(star)">
                 <img :src="imgPath(star)" alt="" svg-inline />
             </div>
-            <i class="u-remove el-icon-remove-outline" title="移除标记" @click="onRemove"></i>
+            <i class="u-remove el-icon-remove-outline" :title="$t('publish.form.removeMark')" @click="onRemove"></i>
         </div>
         <template #reference>
             <div class="m-mark-content" @click="onVisibleChange">

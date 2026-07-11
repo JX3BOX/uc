@@ -1,23 +1,26 @@
 <template>
     <el-dialog v-model="isShow" :show-close="false" class="m-cart-confirm">
         <div class="content">
-            <div class="title">购物车结算</div>
-            <div class="text">
-                确认使用<span class="price boxcoin">{{ $store.getters["mallNew/all_price_boxcoin"] || 0 }}盒币</span
-                >+<span class="price points">{{ $store.getters["mallNew/all_price_points"] || 0 }}积分</span>兑换<span
-                    class="prrice"
-                    >勾选的<span class="num">{{ $store.getters["mallNew/checked_num"] || 0 }}</span
-                    >件商品</span
-                >吗？
-            </div>
+            <div class="title">{{ $t("vip.mall.cartCheckout") }}</div>
+            <i18n-t keypath="vip.mall.cartConfirmMessage" tag="div" class="text">
+                <template #boxcoin>
+                    <span class="price boxcoin">{{ $t("vip.common.boxcoinAmount", { amount: $store.getters["mallNew/all_price_boxcoin"] || 0 }) }}</span>
+                </template>
+                <template #points>
+                    <span class="price points">{{ $t("vip.common.pointsAmount", { amount: $store.getters["mallNew/all_price_points"] || 0 }) }}</span>
+                </template>
+                <template #products>
+                    <span class="prrice">{{ $t("vip.mall.productsCount", { count: $store.getters["mallNew/checked_num"] || 0 }) }}</span>
+                </template>
+            </i18n-t>
         </div>
         <div class="btn-box">
-            <el-button round @click="isShow = false" style="width: 20.5333vw; font-size: 3.2vw">再想想</el-button>
+            <el-button round @click="isShow = false" style="width: 20.5333vw; font-size: 3.2vw">{{ $t("vip.mall.thinkAgain") }}</el-button>
             <el-button
                 round
                 @click="buyGoods"
                 style="width: 20.5333vw; font-size: 3.2vw; background-color: rgba(255, 163, 43, 1); color: #fff"
-                >确认</el-button
+                >{{ $t("vip.common.confirm") }}</el-button
             >
         </div>
     </el-dialog>
@@ -40,7 +43,7 @@ export default {
     methods: {
         buyGoods() {
             if (!this.$store.getters["mallNew/checked_num"]) {
-                return this.$message.warning("请先选择要结算的商品");
+                return this.$message.warning(this.$t("vip.mall.selectCheckoutProducts"));
             }
             this.isShow = false;
             this.$router.push({ name: "mall_batch_order_web" });

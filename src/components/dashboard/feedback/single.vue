@@ -24,7 +24,7 @@
                             :disabled="closeTicketLoading"
                             @click.stop="onCancelTicket"
                         >
-                            取消工单
+                            {{ $t("dashboard.feedback.cancelTicket") }}
                         </el-button>
                         <el-button
                             v-if="canUrgeTicket"
@@ -36,7 +36,7 @@
                             :disabled="urgeTicketLoading"
                             @click.stop="onUrgeTicket"
                         >
-                            催单
+                            {{ $t("dashboard.feedback.urgeTicket") }}
                         </el-button>
                         <el-dropdown
                             v-if="isTeammate && data.status < 12"
@@ -50,18 +50,18 @@
                             <template #dropdown>
                                 <el-dropdown-menu>
                                     <el-dropdown-item @click="handleEdit">
-                                        <el-button class="u-btn" type="primary" icon="Edit">编辑</el-button>
+                                        <el-button class="u-btn" type="primary" icon="Edit">{{ $t("dashboard.common.edit") }}</el-button>
                                     </el-dropdown-item>
                                     <el-dropdown-item @click="handleTransfer">
-                                        <el-button class="u-btn" type="warning" icon="Right">转交</el-button>
+                                        <el-button class="u-btn" type="warning" icon="Right">{{ $t("dashboard.feedback.transfer") }}</el-button>
                                     </el-dropdown-item>
                                     <template v-if="data.status === 2">
                                         <el-dropdown-item @click="handleCoordination">
-                                            <el-button class="u-btn" type="success" icon="Help">协同</el-button>
+                                            <el-button class="u-btn" type="success" icon="Help">{{ $t("dashboard.feedback.coordinate") }}</el-button>
                                         </el-dropdown-item>
 
                                         <el-dropdown-item @click="handleClose">
-                                            <el-button class="u-btn" type="info" icon="CircleClose">关闭 </el-button>
+                                            <el-button class="u-btn" type="info" icon="CircleClose">{{ $t("dashboard.common.close") }} </el-button>
                                         </el-dropdown-item>
                                     </template>
                                 </el-dropdown-menu>
@@ -71,24 +71,24 @@
                 </div>
                 <div class="m-block m-user">
                     <div class="u-subblock">
-                        <span class="u-label">提交人：</span>
+                        <span class="u-label">{{ $t("dashboard.common.submitter") }}：</span>
                         <a class="u-item u-user" :href="authorLink(data.user.id)" target="_blank">
                             <img class="u-user-avatar" :src="showAvatar(data.user.avatar)" />
                             <span class="u-user-name">{{ data.user.display_name }}</span>
                         </a>
                     </div>
                     <div class="u-subblock">
-                        <span class="u-label">客户端：</span>
+                        <span class="u-label">{{ $t("dashboard.common.client") }}：</span>
                         <i class="u-client" :class="[data.client, `u-${data.client}`]">{{ client }}</i>
                     </div>
-                    <span class="u-time u-subblock">提交时间：{{ formateTime(data.created_at) }}</span>
+                    <span class="u-time u-subblock">{{ $t("dashboard.common.submittedAt") }}：{{ formateTime(data.created_at) }}</span>
                     <span class="u-time u-subblock" v-if="data.refer"
-                        >来源：<a :href="data.refer" target="_blank">{{ data.refer }}</a></span
+                        >{{ $t("dashboard.feedback.source") }}：<a :href="data.refer" target="_blank">{{ data.refer }}</a></span
                     >
                 </div>
                 <div class="m-block m-dev">
                     <div class="u-subblock">
-                        <span class="u-label">分配至：</span>
+                        <span class="u-label">{{ $t("dashboard.feedback.assignedTo") }}：</span>
                         <div class="u-list u-list-assign" v-if="data.assign_user && data.assign_user.length">
                             <a
                                 class="u-item u-assign"
@@ -112,7 +112,7 @@
                         </div>
                     </div>
                     <div class="u-subblock" v-if="data.coordination_user?.length">
-                        <span class="u-label">协同人：</span>
+                        <span class="u-label">{{ $t("dashboard.feedback.coordinators") }}：</span>
                         <div class="u-list u-list-assign">
                             <a
                                 class="u-item u-assign"
@@ -127,7 +127,7 @@
                         </div>
                     </div>
                     <div class="u-subblock">
-                        <span class="u-label">关联仓库：</span>
+                        <span class="u-label">{{ $t("dashboard.feedback.relatedRepository") }}：</span>
                         <div class="u-list u-list-repo">
                             <a
                                 class="u-repo u-item"
@@ -146,25 +146,25 @@
                     <el-step :title="step.text" v-for="step in statusList" :key="step.value" />
                 </el-steps>
                 <div class="m-content m-textarea">
-                    <el-divider content-position="left"><i class="el-icon-edit-outline"></i> 反馈内容</el-divider>
+                    <el-divider content-position="left"><i class="el-icon-edit-outline"></i> {{ $t("dashboard.feedback.content") }}</el-divider>
                     <div class="u-detail">
                         <span v-html="sanitizedHTML(data.content)"></span>
                     </div>
                 </div>
                 <div class="m-attachment m-textarea">
-                    <el-divider content-position="left"><i class="el-icon-picture-outline-round"></i> 附件内容</el-divider>
+                    <el-divider content-position="left"><i class="el-icon-picture-outline-round"></i> {{ $t("dashboard.feedback.attachments") }}</el-divider>
                     <div v-if="attachments.length" class="u-detail">
                         <div class="u-attachment-summary">
-                            共 {{ attachments.length }} 个附件
+                            {{ $t("dashboard.feedback.attachmentCount", { count: attachments.length }) }}
                             <span v-if="imageAttachments.length || videoAttachments.length">
-                                <span v-if="imageAttachments.length">，图片 {{ imageAttachments.length }} 张</span>
-                                <span v-if="videoAttachments.length">，视频 {{ videoAttachments.length }} 个</span>
+                                <span v-if="imageAttachments.length">，{{ $t("dashboard.feedback.imageCount", { count: imageAttachments.length }) }}</span>
+                                <span v-if="videoAttachments.length">，{{ $t("dashboard.feedback.videoCount", { count: videoAttachments.length }) }}</span>
                             </span>
                         </div>
                         <div class="u-media-grid">
                             <div class="u-media-card is-image" v-for="(img, index) in imageAttachments" :key="`img-${index}`">
                                 <el-image :src="img" fit="cover" lazy :preview-src-list="imageAttachments"></el-image>
-                                <div class="u-media-meta">图片 {{ index + 1 }}</div>
+                                <div class="u-media-meta">{{ $t("dashboard.feedback.imageNumber", { number: index + 1 }) }}</div>
                             </div>
                             <div
                                 class="u-media-card is-video"
@@ -172,22 +172,22 @@
                                 :key="`video-${index}`"
                             >
                                 <video class="u-media-video" :src="video" controls preload="metadata" :autoplay="false"></video>
-                                <div class="u-media-meta">视频 {{ index + 1 }}</div>
+                                <div class="u-media-meta">{{ $t("dashboard.feedback.videoNumber", { number: index + 1 }) }}</div>
                             </div>
                         </div>
                     </div>
-                    <el-empty v-else description="暂无附件"></el-empty>
+                    <el-empty v-else :description="$t('dashboard.feedback.noAttachments')"></el-empty>
                 </div>
                 <div class="m-feedback-thx">
                     <el-divider content-position="left"
-                        ><i class="el-icon-coin"></i> 反馈回馈
+                        ><i class="el-icon-coin"></i> {{ $t("dashboard.feedback.reward") }}
                         <el-button v-if="isAdmin" class="u-thx-trigger" type="success" @click="onThx" size="small"
-                            >品鉴</el-button
+                            >{{ $t("dashboard.feedback.reviewReward") }}</el-button
                         ></el-divider
                     >
                     <div class="u-thx-table">
                         <el-table stripe border :data="thxData">
-                            <el-table-column label="参与打赏" prop="ext_operate_user_info">
+                            <el-table-column :label="$t('dashboard.feedback.rewardParticipants')" prop="ext_operate_user_info">
                                 <template #default="{ row }">
                                     <div class="m-user">
                                         <img class="u-gift" svg-inline :src="giftUrl" />
@@ -207,18 +207,18 @@
                                     </div>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="盒币" prop="count">
+                            <el-table-column :label="$t('dashboard.common.boxcoin')" prop="count">
                                 <template #default="{ row }">
                                     <span class="u-count">+{{ row.count }}</span>
                                 </template>
                             </el-table-column>
-                            <el-table-column label="寄语" prop="remark"></el-table-column>
-                            <el-table-column label="时间" prop="created_at">
+                            <el-table-column :label="$t('dashboard.feedback.message')" prop="remark"></el-table-column>
+                            <el-table-column :label="$t('dashboard.common.time')" prop="created_at">
                                 <template #default="{ row, $index }">
                                     <time :datetime="row.created_at">{{ row.created_at }}</time>
 
                                     <span class="u-delete" v-if="isSuperAdmin" @click="recovery(row, $index)">
-                                        <i class="el-icon-delete"></i>撤销
+                                        <i class="el-icon-delete"></i>{{ $t("dashboard.common.revoke") }}
                                     </span>
                                 </template>
                             </el-table-column>
@@ -226,38 +226,38 @@
                     </div>
                 </div>
                 <div class="m-reply" v-if="done">
-                    <el-divider content-position="left"><i class="el-icon-chat-line-square"></i> 回复处理</el-divider>
+                    <el-divider content-position="left"><i class="el-icon-chat-line-square"></i> {{ $t("dashboard.feedback.replyHandling") }}</el-divider>
                     <CommonComment :id="id" category="feedback" order="desc" :support-video="true" />
                 </div>
             </main>
 
             <Homework
                 v-model="showThx"
-                title="反馈回馈"
+                :title="$t('dashboard.feedback.reward')"
                 :postType="postType"
                 :postId="id"
                 client="std"
                 :userId="data.user_id"
                 :article-id="~~id"
                 category="feedback"
-                placeholder="感谢！Best wishes (#^.^#)"
+                :placeholder="$t('dashboard.feedback.rewardPlaceholder')"
                 @updateRecord="loadRecord"
             ></Homework>
         </div>
         <div class="m-feed-log" v-loading="logLoading">
-            <el-divider content-position="left"> <i class="el-icon-document"></i>日志记录 </el-divider>
+            <el-divider content-position="left"> <i class="el-icon-document"></i>{{ $t("dashboard.feedback.logs") }} </el-divider>
 
             <el-timeline v-if="logs.length" :reverse="false">
                 <el-timeline-item v-for="(log, index) in logs" :key="index" :timestamp="log.created_at">
                     <div class="u-op">
-                        <span class="u-label">操作人:</span>
+                        <span class="u-label">{{ $t("dashboard.feedback.operator") }}:</span>
                         <a class="u-item u-user" :href="authorLink(log.operator.id)" target="_blank">
                             <img class="u-avatar" :src="showAvatar(log.operator.avatar)" />
                             <span class="u-name">{{ log.operator.display_name }}</span>
                         </a>
                     </div>
                     <div class="u-content" v-if="log.status === 1 || log.status === 4">
-                        将工单{{ log.status === 1 ? "指派" : "转交" }}给了
+                        {{ $t(log.status === 1 ? "dashboard.feedback.logAssigned" : "dashboard.feedback.logTransferred") }}
                         <a
                             class="u-item u-user"
                             v-for="(item, i) in log.assign_list"
@@ -270,7 +270,7 @@
                         </a>
                     </div>
                     <div class="u-content" v-else-if="log.status === 5">
-                        邀请
+                        {{ $t("dashboard.feedback.invited") }}
                         <a
                             class="u-item u-user"
                             v-for="(item, i) in log.coordination_list"
@@ -281,13 +281,13 @@
                             <img class="u-avatar" :src="showAvatar(item.avatar)" />
                             <span class="u-name">{{ item.display_name }}</span>
                         </a>
-                        进行协同
+                        {{ $t("dashboard.feedback.toCoordinate") }}
                     </div>
-                    <div class="u-content" v-else>{{ logMap(log.status) }}工单</div>
+                    <div class="u-content" v-else>{{ $t("dashboard.feedback.ticketAction", { action: logMap(log.status) }) }}</div>
                     <div class="u-remark" v-if="log.remark">{{ log.remark || "-" }}</div>
                 </el-timeline-item>
             </el-timeline>
-            <el-empty v-else description="暂无日志"></el-empty>
+            <el-empty v-else :description="$t('dashboard.feedback.noLogs')"></el-empty>
         </div>
         <assign
             v-if="assignVisible"
@@ -457,31 +457,31 @@ export default {
     },
     methods: {
         logMap(status) {
-            let str = "创建";
+            let str = this.$t("dashboard.common.create");
             if (status === 2) {
-                str = "开始处理";
+                str = this.$t("dashboard.feedback.startProcessing");
             }
             if (status === 10) {
-                str = "处理完成";
+                str = this.$t("dashboard.feedback.processingComplete");
             }
             if (status === 11) {
-                str = "关闭";
+                str = this.$t("dashboard.common.close");
             }
             if (status === 12) {
-                str = "完结";
+                str = this.$t("dashboard.feedback.finished");
             }
             return str;
         },
         statusText(status) {
-            let str = "处理";
+            let str = this.$t("dashboard.feedback.process");
             if (status === 0) {
-                str = "指派";
+                str = this.$t("dashboard.feedback.assign");
             } else if (status === 1) {
-                str = "开始处理";
+                str = this.$t("dashboard.feedback.startProcessing");
             } else if (status === 2) {
-                str = "处理完成";
+                str = this.$t("dashboard.feedback.processingComplete");
             } else if (status === 10 || status === 11) {
-                str = "结束工单";
+                str = this.$t("dashboard.feedback.endTicket");
             }
             return str;
         },
@@ -530,22 +530,22 @@ export default {
             if (!this.canCancelTicket || this.closeTicketLoading) return;
 
             try {
-                const { value } = await this.$prompt("请输入取消工单的备注", "取消工单", {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
-                    inputPlaceholder: "请输入备注",
-                    inputValidator(value) {
-                        return !!String(value || "").trim() || "请输入备注";
+                const { value } = await this.$prompt(this.$t("dashboard.feedback.cancelRemark"), this.$t("dashboard.feedback.cancelTicket"), {
+                    confirmButtonText: this.$t("dashboard.common.confirm"),
+                    cancelButtonText: this.$t("dashboard.common.cancel"),
+                    inputPlaceholder: this.$t("dashboard.common.remarkPlaceholder"),
+                    inputValidator: (value) => {
+                        return !!String(value || "").trim() || this.$t("dashboard.common.remarkPlaceholder");
                     },
                 });
                 const remark = String(value || "").trim();
                 this.closeTicketLoading = true;
                 await closeMyFeedback(this.id, { remark });
-                this.$message.success("取消成功");
+                this.$message.success(this.$t("dashboard.common.cancelSuccess"));
                 this.load();
             } catch (error) {
                 if (error !== "cancel" && error !== "close") {
-                    this.$message.error(error?.response?.data?.msg || "取消失败");
+                    this.$message.error(error?.response?.data?.msg || this.$t("dashboard.common.cancelFailed"));
                 }
             } finally {
                 this.closeTicketLoading = false;
@@ -555,18 +555,18 @@ export default {
             if (!this.canUrgeTicket || this.urgeTicketLoading) return;
 
             try {
-                await this.$confirm("每个工单只有一次催单机会，确定要催单吗？", "催单", {
-                    confirmButtonText: "确定",
-                    cancelButtonText: "取消",
+                await this.$confirm(this.$t("dashboard.feedback.urgeConfirm"), this.$t("dashboard.feedback.urgeTicket"), {
+                    confirmButtonText: this.$t("dashboard.common.confirm"),
+                    cancelButtonText: this.$t("dashboard.common.cancel"),
                     type: "warning",
                 });
                 this.urgeTicketLoading = true;
                 await urgeMyFeedback(this.id);
-                this.$message.success("催单成功");
+                this.$message.success(this.$t("dashboard.feedback.urgeSuccess"));
                 this.load();
             } catch (error) {
                 if (error !== "cancel" && error !== "close") {
-                    this.$message.error(error?.response?.data?.msg || "催单失败");
+                    this.$message.error(error?.response?.data?.msg || this.$t("dashboard.feedback.urgeFailed"));
                 }
             } finally {
                 this.urgeTicketLoading = false;
@@ -645,13 +645,13 @@ export default {
             });
         },
         recovery: function (item, i) {
-            this.$alert("是否确定撤销该评分？", "确认", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("dashboard.feedback.revokeConfirm"), this.$t("dashboard.common.confirm"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
                 callback: (action) => {
                     if (action == "confirm") {
                         recoveryBoxcoin(item.id).then(() => {
                             this.$message({
-                                message: "撤销成功",
+                                message: this.$t("dashboard.feedback.revokeSuccess"),
                                 type: "success",
                             });
                             this.thxData.splice(i, 1);

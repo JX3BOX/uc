@@ -6,9 +6,9 @@
             <main class="m-main">
                 <el-alert
                     v-if="success == null"
-                    title="未知异常"
+                    :title="$t('account.common.unknownError')"
                     type="error"
-                    description="非法请求或网络异常"
+                    :description="$t('account.common.invalidRequestOrNetwork')"
                     show-icon
                     :closable="false"
                 >
@@ -16,9 +16,9 @@
 
                 <el-alert
                     v-if="success == true"
-                    title="验证成功"
+                    :title="$t('account.emailVerify.successTitle')"
                     type="success"
-                    description="欢迎成为JX3BOX大家庭的正式一员:)"
+                    :description="$t('account.emailVerify.successDescription')"
                     show-icon
                     :closable="false"
                 >
@@ -26,15 +26,15 @@
 
                 <el-alert
                     v-if="success == false"
-                    title="验证失败"
+                    :title="$t('account.emailVerify.failureTitle')"
                     type="warning"
-                    description="无效链接 或 链接已失效"
+                    :description="$t('account.emailVerify.failureDescription')"
                     show-icon
                     :closable="false"
                 >
                 </el-alert>
 
-                <a class="u-skip el-button u-button el-button--primary" :href="homepage">返回首页</a>
+                <a class="u-skip el-button u-button el-button--primary" :href="homepage">{{ $t("account.common.backHome") }}</a>
             </main>
         </el-card>
         <CommonBottom />

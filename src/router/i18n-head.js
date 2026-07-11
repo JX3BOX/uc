@@ -15,11 +15,17 @@ function isMissingI18nValue(value, key) {
     return key ? str === String(key) : false;
 }
 
-function withSuffix(title) {
+function getTranslatedSetting(i18n, key, fallback) {
+    const i18nKey = `site.${key}`;
+    const value = i18n.global.t(i18nKey);
+    return isMissingI18nValue(value, i18nKey) ? fallback : value;
+}
+
+function withSuffix(title, suffix) {
     // 注意：suffix 由业务侧在 settings.js 中定义，可能包含刻意的前后空格
     // 这里不要对 suffix 做 trim/replace，保持原样拼接
     const base = String(title || "").trim();
-    const suffix = String(settings?.suffix ?? "");
+    suffix = String(suffix ?? "");
     if (!base) return "";
     if (!suffix) return base;
     if (base.endsWith(suffix)) return base;
@@ -47,16 +53,23 @@ function buildHeadObjFromRoute(to, i18n) {
     const rawKeywords = rawKeywordsKey ? i18n.global.t(rawKeywordsKey) : "";
     const rawDescription = rawDescriptionKey ? i18n.global.t(rawDescriptionKey) : "";
 
-    const title = isMissingI18nValue(rawTitle, rawTitleKey) ? settings?.title : rawTitle;
-    const keywords = isMissingI18nValue(rawKeywords, rawKeywordsKey) ? settings?.keywords : rawKeywords;
-    const description = isMissingI18nValue(rawDescription, rawDescriptionKey) ? settings?.description : rawDescription;
+    const title = isMissingI18nValue(rawTitle, rawTitleKey)
+        ? getTranslatedSetting(i18n, "title", settings?.title)
+        : rawTitle;
+    const keywords = isMissingI18nValue(rawKeywords, rawKeywordsKey)
+        ? getTranslatedSetting(i18n, "keywords", settings?.keywords)
+        : rawKeywords;
+    const description = isMissingI18nValue(rawDescription, rawDescriptionKey)
+        ? getTranslatedSetting(i18n, "description", settings?.description)
+        : rawDescription;
+    const suffix = getTranslatedSetting(i18n, "suffix", settings?.suffix);
 
     const meta = [];
     if (keywords) meta.push({ name: "keywords", content: String(keywords) });
     if (description) meta.push({ name: "description", content: String(description) });
 
     return {
-        title: withSuffix(title) || undefined,
+        title: withSuffix(title, suffix) || undefined,
         htmlAttrs: { lang: htmlLang },
         meta,
     };

@@ -1,13 +1,13 @@
 <template>
     <div class="m-event-item">
         <div class="u-box">
-            <div class="u-title">领取专属免费PRO会员</div>
+            <div class="u-title">{{ $t("vip.event.proTitle") }}</div>
             <div class="u-content">
-                <h3>【领取条件】</h3>
-                <p>网站前500名注册用户（UID &lt;= 500）</p>
-                <p>获赠90天PRO会员</p>
+                <h3>{{ $t("vip.event.claimConditions") }}</h3>
+                <p>{{ $t("vip.event.earlyUserCondition") }}</p>
+                <p>{{ $t("vip.event.earlyUserReward") }}</p>
                 <el-button class="u-btn" type="warning" @click="getGift" :disabled="done" icon="Present"
-                    >点击领取</el-button
+                    >{{ $t("vip.event.claim") }}</el-button
                 >
             </div>
         </div>
@@ -25,19 +25,19 @@ export default {
     methods: {
         getGift: function () {
             if (User.getInfo().uid > 500) {
-                this.$alert("很遗憾，您没有活动领取资格", "消息", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("vip.event.notEligible"), this.$t("vip.common.message"), {
+                    confirmButtonText: this.$t("vip.common.confirm"),
                 });
                 return;
             }
             getFreeVip("vizir-500").then((res) => {
                 this.done = true;
                 this.$message({
-                    message: "领取成功",
+                    message: this.$t("vip.event.claimSuccess"),
                     type: "success",
                 });
-                this.$alert("领取成功", "提醒", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("vip.event.claimSuccess"), this.$t("vip.common.notice"), {
+                    confirmButtonText: this.$t("vip.common.confirm"),
                 });
             });
         },

@@ -1,6 +1,6 @@
 <template>
     <div class="m-dashboard m-dashboard-work m-dashboard-purchases">
-        <h2 class="u-title"><i class="el-icon-shopping-cart-2"></i> 付费资源</h2>
+        <h2 class="u-title"><i class="el-icon-shopping-cart-2"></i> {{ $t("dashboard.purchases.title") }}</h2>
 
         <el-table
             class="m-table"
@@ -13,7 +13,7 @@
             header-cell-class-name="u-header-cell"
         >
             <el-table-column
-                label="购买类型"
+                :label="$t('dashboard.purchases.purchaseType')"
                 :filters="postTypeFilters"
                 :filter-multiple="false"
                 column-key="post_type"
@@ -23,16 +23,16 @@
                     <div>{{ postType(row.post_type) }}</div>
                 </template>
             </el-table-column>
-            <el-table-column label="货币类型" min-width="100">
+            <el-table-column :label="$t('dashboard.purchases.currencyType')" min-width="100">
                 <template #default="{ row }">
                     {{ priceType(row.price_type) }}
                 </template>
             </el-table-column>
-            <el-table-column label="货币数量" prop="price_count" min-width="90" />
-            <el-table-column label="购买时间" prop="created_at" min-width="160" />
-            <el-table-column label="操作" min-width="100">
+            <el-table-column :label="$t('dashboard.purchases.currencyAmount')" prop="price_count" min-width="90" />
+            <el-table-column :label="$t('dashboard.purchases.purchasedAt')" prop="created_at" min-width="160" />
+            <el-table-column :label="$t('dashboard.common.actions')" min-width="100">
                 <template #default="{ row }">
-                    <el-button class="u-detail-btn" plain @click.stop="toDetails(row)" icon="View">查看</el-button>
+                    <el-button class="u-detail-btn" plain @click.stop="toDetails(row)" icon="View">{{ $t("dashboard.common.view") }}</el-button>
                 </template>
             </el-table-column>
         </el-table>

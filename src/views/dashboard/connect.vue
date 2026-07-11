@@ -3,7 +3,7 @@
         <div class="m-profile-connect" v-loading="loading">
             <el-alert
                 class="u-tip"
-                title="通过第三方账号快速登录，如需解绑则需要先绑定一个邮箱"
+                :title="$t('dashboard.connect.tip')"
                 type="warning"
                 show-icon
             >
@@ -13,7 +13,7 @@
                     <span class="u-profile-item">
                         <img :class="'u-' + type" svg-inline :src="icon(type)" />
                         <span class="u-status">
-                            {{ types[type].name }}
+                            {{ typeName(type) }}
                         </span>
                     </span>
                     <el-button
@@ -23,7 +23,7 @@
                         size="large"
                         v-if="!checkStatus(types[type].idKey)"
                     >
-                        <i class="el-icon-connection"></i>立即绑定
+                        <i class="el-icon-connection"></i>{{ $t("dashboard.common.bindNow") }}
                     </el-button>
                     <el-button
                         v-else
@@ -32,7 +32,7 @@
                         size="large"
                         type="info"
                     >
-                        <img class="u-unbind-icon" svg-inline src="@/assets/img/dashboard/unbind.svg" alt="" />解除绑定
+                        <img class="u-unbind-icon" svg-inline src="@/assets/img/dashboard/unbind.svg" alt="" />{{ $t("dashboard.common.unbind") }}
                     </el-button>
                 </div>
                 <qqbot :data="data" @refresh="loadAuth"></qqbot>
@@ -41,19 +41,19 @@
 
         <el-dialog
             v-model="showMiniProgram"
-            title="绑定微信小程序"
+            :title="$t('dashboard.connect.bindMiniProgram')"
             :width="isPhone ? '95%' : '400px'"
             class="m-qrcode-dialog"
             :show-close="false"
         >
             <div class="m-qr-content">
                 <img class="u-login-qrcode" src="@/assets/img/dashboard/connect/loginqrcode.jpg" alt="" />
-                <i class="u-tip">打开微信扫一扫，绑定小程序</i>
-                <small class="u-tip-small">绑定之后需要重新登陆方可生效</small>
+                <i class="u-tip">{{ $t("dashboard.connect.scanTip") }}</i>
+                <small class="u-tip-small">{{ $t("dashboard.connect.reloginTip") }}</small>
             </div>
 
             <template #footer>
-                <el-button type="primary" @click="ihadBind">我已绑定</el-button>
+                <el-button type="primary" @click="ihadBind">{{ $t("dashboard.connect.alreadyBound") }}</el-button>
             </template>
         </el-dialog>
     </uc>
@@ -139,7 +139,10 @@ export default {
             return this.data[idKey];
         },
         getNickname: function (type) {
-            return this.data[type + "_name"] || "已绑定";
+            return this.data[type + "_name"] || this.$t("dashboard.common.bound");
+        },
+        typeName: function (type) {
+            return this.$t(`dashboard.connect.types.${type}`);
         },
         bind: function (type) {
             if (type == "wechat_miniprogram") {
@@ -150,8 +153,8 @@ export default {
         },
         unbind: function (type) {
             if (!this.data.user_email) {
-                this.$alert("当前账号未验证邮箱，无法解除绑定", "提示", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("dashboard.connect.emailRequired"), this.$t("dashboard.common.tip"), {
+                    confirmButtonText: this.$t("dashboard.common.confirm"),
                     type: "warning",
                 }).catch(() => {});
                 return;
@@ -161,16 +164,16 @@ export default {
                 return;
             }
             const _type = Object.entries(types).find((item) => item[1].uuid == type)[0];
-            const name = types[_type].name;
-            this.$confirm(`确定要解绑【${name}】吗？`, "解绑", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            const name = this.typeName(_type);
+            this.$confirm(this.$t("dashboard.connect.unbindConfirm", { name }), this.$t("dashboard.common.unbind"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
                     unbindOAuth(type).then((res) => {
                         this.$message({
-                            message: "解绑成功",
+                            message: this.$t("dashboard.common.unbindSuccess"),
                             type: "success",
                         });
                         this.loadAuth();
@@ -199,20 +202,16 @@ export default {
             return BASE_URL + `api/cms/user/union/${uuid}/bind?client=${client}`;
         },
         unbindApp(type) {
-            const desc = {
-                wesite: "如果取消则无法再通过微信扫一扫登录",
-                qqsite: "如果取消则无法再通过QQ登录",
-                weibosite: "如果取消则无法再通过微博登录",
-            }[type];
-            this.$confirm(desc, "确定取消绑定吗？", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            const desc = this.$t(`dashboard.connect.unbindWarnings.${type}`);
+            this.$confirm(desc, this.$t("dashboard.connect.cancelBindingConfirm"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
                     unbindApp(type).then((res) => {
                         this.$message({
-                            message: "解绑成功",
+                            message: this.$t("dashboard.common.unbindSuccess"),
                             type: "success",
                         });
                         this.loadAuth();

@@ -3,13 +3,13 @@
         <div class="m-mall-breadcrumb">
             <div class="left">
                 <i class="el-icon-arrow-left" v-if="$route.path !== '/mallWeb/list'" @click="$router.back()"></i
-                ><img class="icon" :src="imgUrl + 'mall.svg'" alt="" />积分商城
+                ><img class="icon" :src="imgUrl + 'mall.svg'" alt="" />{{ $t("vip.mall.title") }}
             </div>
             <div
                 class="right"
                 @click="$store.commit('mallNew/toState', { assetIsShow: !$store.state.mallNew.assetIsShow })"
             >
-                我的资产
+                {{ $t("vip.mall.myAssets") }}
             </div>
             <div class="asset-container" :class="{ 'is-show': $store.state.mallNew.assetIsShow }">
                 <div class="user-info">
@@ -21,11 +21,17 @@
                 </div>
                 <div class="item">
                     <img src="@/assets/img/vip/vip2/points.svg" alt="" class="icon" svg-inline />
-                    <div class="text">积分<span>（=银铛）</span>：{{ asset.points }}</div>
+                    <i18n-t keypath="vip.mall.pointsBalance" tag="div" class="text">
+                        <template #alias><span>{{ $t("vip.mall.pointsAlias") }}</span></template>
+                        <template #amount>{{ asset.points }}</template>
+                    </i18n-t>
                 </div>
                 <div class="item">
                     <img src="@/assets/img/vip/vip2/box_icon.svg" alt="" class="icon" svg-inline />
-                    <div class="text">盒币<span>（=通宝）</span>：{{ asset.box_coin }}</div>
+                    <i18n-t keypath="vip.mall.boxcoinBalance" tag="div" class="text">
+                        <template #alias><span>{{ $t("vip.mall.boxcoinAlias") }}</span></template>
+                        <template #amount>{{ asset.box_coin }}</template>
+                    </i18n-t>
                 </div>
             </div>
         </div>

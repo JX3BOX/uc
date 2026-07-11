@@ -8,7 +8,7 @@
             }"
         >
             <div class="u-header-info">
-                <CommonAvatar
+                <RetinaAvatar
                     class="u-author-avatar"
                     :uid="uid"
                     :url="avatar"
@@ -17,12 +17,12 @@
                 />
                 <div class="u-author-info">
                     <span class="u-name" :style="userDefinedStyle.userName">
-                        <span @click="copyData(data.display_name || '匿名')">{{ data.display_name || "匿名" }}</span
+                        <span @click="copyData(data.display_name || $t('author.common.anonymous'))">{{ data.display_name || $t("author.common.anonymous") }}</span
                         ><span class="u-uid" @click="copyData(data.ID || 0)">（UID : {{ data.ID || 0 }}）</span>
-                        <el-tag type="info" class="u-mute-tag" v-if="data.user_status" effect="dark">已禁言</el-tag>
+                        <el-tag type="info" class="u-mute-tag" v-if="data.user_status" effect="dark">{{ $t("author.profile.muted") }}</el-tag>
                     </span>
                     <div class="u-tips">
-                        <el-tooltip :content="`当前经验 ${data.experience || 0}`" placement="top">
+                        <el-tooltip :content="$t('author.profile.currentExperience', { count: data.experience || 0 })" placement="top">
                             <span
                                 class="u-level"
                                 :class="'lv-' + level"
@@ -35,9 +35,9 @@
                                 <i class="u-icon vip">{{ vipType }}</i>
                             </a>
                         </el-tooltip>
-                        <el-tooltip content="签约作者" v-if="isSuperAuthor" placement="top">
+                        <el-tooltip :content="$t('author.profile.signedAuthor')" v-if="isSuperAuthor" placement="top">
                             <span class="u-superauthor">
-                                <i class="u-icon superauthor">签约作者</i>
+                                <i class="u-icon superauthor">{{ $t("author.profile.signedAuthor") }}</i>
                             </span>
                         </el-tooltip>
                     </div>
@@ -54,30 +54,30 @@
                     <div class="m-focus" v-if="!isSelf && isLogin">
                         <div class="u-btn-box">
                             <el-button icon="Plus" class="u-btn-attention" v-if="!subscribed" @click="follow"
-                                >关注TA</el-button
+                                >{{ $t("author.profile.follow") }}</el-button
                             >
                             <!-- :style="userDefinedStyle.btn" -->
                             <div class="u-already-attention" v-else>
                                 <el-button
                                     class="u-btn"
-                                    @mouseenter="attentionText = '取消关注'"
-                                    @mouseleave="attentionText = '已关注'"
+                                    @mouseenter="attentionText = $t('author.profile.unfollow')"
+                                    @mouseleave="attentionText = $t('author.profile.following')"
                                     @click="unfollow"
                                     >{{ attentionText }}</el-button
                                 >
                                 <a :href="sendLink" target="_blank" v-if="canSendLetter">
                                     <el-button class="u-btn u-send-msg" :style="userDefinedStyle.sendMsg"
-                                        >发消息</el-button
+                                        >{{ $t("author.profile.sendMessage") }}</el-button
                                     ></a
                                 >
-                                <el-button class="u-btn u-btn-disabled" :disabled="true" v-else>发消息</el-button>
+                                <el-button class="u-btn u-btn-disabled" :disabled="true" v-else>{{ $t("author.profile.sendMessage") }}</el-button>
                             </div>
                         </div>
                         <div class="u-more" :style="userDefinedStyle.btn">
                             <el-popover placement="bottom-end" trigger="click" width="90" v-model="moreOperatePhone">
-                                <a href="/feedback" target="_blank"> <el-button class="u-more-btn">举报</el-button> </a
+                                <a href="/feedback" target="_blank"> <el-button class="u-more-btn">{{ $t("author.profile.report") }}</el-button> </a
                                 ><br />
-                                <el-button class="u-more-btn" @click="joinBlacklist">拉黑</el-button>
+                                <el-button class="u-more-btn" @click="joinBlacklist">{{ $t("author.profile.block") }}</el-button>
                                 <template #reference>
                                     <img
                                         src="@/assets/img/author/more.svg"
@@ -95,7 +95,7 @@
                             <i class="u-icon u-icon-join">
                                 <img svg-inline src="@/assets/img/author/join.svg" />
                             </i>
-                            <span>加入于 {{ time(data.user_registered) }}</span>
+                            <span>{{ $t("author.profile.joinedAt", { time: time(data.user_registered) }) }}</span>
                         </div>
                         <!-- <div
                             class="u-fans"
@@ -119,31 +119,31 @@
                 <div class="m-focus u-in-phone" v-if="!isSelf && isLogin">
                     <div v-if="!hadDeny" class="u-btn-box">
                         <el-button icon="Plus" class="u-btn-attention" v-if="!subscribed" @click="follow"
-                            >关注TA</el-button
+                            >{{ $t("author.profile.follow") }}</el-button
                         >
                         <!-- :style="userDefinedStyle.btn" -->
                         <div class="u-already-attention" v-else>
                             <el-button
                                 class="u-btn"
-                                @mouseenter="attentionText = '取消关注'"
-                                @mouseleave="attentionText = '已关注'"
+                                @mouseenter="attentionText = $t('author.profile.unfollow')"
+                                @mouseleave="attentionText = $t('author.profile.following')"
                                 @click="unfollow"
                                 >{{ attentionText }}</el-button
                             >
                             <a :href="sendLink" target="_blank" v-if="canSendLetter">
                                 <el-button class="u-btn u-send-msg" :style="userDefinedStyle.sendMsg"
-                                    >发消息</el-button
+                                    >{{ $t("author.profile.sendMessage") }}</el-button
                                 ></a
                             >
-                            <el-button class="u-btn u-btn-disabled" :disabled="true" v-else>发消息</el-button>
+                            <el-button class="u-btn u-btn-disabled" :disabled="true" v-else>{{ $t("author.profile.sendMessage") }}</el-button>
                         </div>
                     </div>
                     <div class="u-btn-box" v-else>
-                        <el-button type="info" class="u-btn-cancel-deny" @click="handleUnDeny">取消拉黑</el-button>
+                        <el-button type="info" class="u-btn-cancel-deny" @click="handleUnDeny">{{ $t("author.profile.unblock") }}</el-button>
                     </div>
                     <el-popover placement="bottom-end" trigger="click" width="90" v-model="moreOperate">
-                        <a href="/feedback" target="_blank"> <el-button class="u-more-btn">举报</el-button> </a><br />
-                        <el-button v-if="!hadDeny" class="u-more-btn" @click="joinBlacklist">拉黑</el-button>
+                        <a href="/feedback" target="_blank"> <el-button class="u-more-btn">{{ $t("author.profile.report") }}</el-button> </a><br />
+                        <el-button v-if="!hadDeny" class="u-more-btn" @click="joinBlacklist">{{ $t("author.profile.block") }}</el-button>
                         <template #reference>
                             <div class="u-more" :style="userDefinedStyle.btn">
                                 <img
@@ -162,7 +162,7 @@
                         <i class="u-icon u-icon-join">
                             <img svg-inline src="@/assets/img/author/join.svg" />
                         </i>
-                        <span>加入于 {{ time(data.user_registered) }}</span>
+                        <span>{{ $t("author.profile.joinedAt", { time: time(data.user_registered) }) }}</span>
                     </div>
                     <!-- <div
                         v-if="diffYearText"
@@ -194,7 +194,7 @@ import { deny, undeny, hadDenyUser } from "@/service/author/author";
 import Left from "./Left";
 import Primary from "./Primary";
 import Honor from "@jx3box/jx3box-ui/src/author/AuthorHonor.vue";
-import CommonAvatar from "@jx3box/jx3box-ui/src/author/Avatar.vue";
+import RetinaAvatar from "@/components/author/RetinaAvatar.vue";
 
 const DEFAULT_BANNER_STYLE = {
     fans: {},
@@ -212,7 +212,7 @@ export default {
         Left,
         Primary,
         Honor,
-        CommonAvatar,
+        RetinaAvatar,
     },
     props: {
         decorationMe: {
@@ -249,7 +249,7 @@ export default {
             medal_map,
             frames,
             isVIP: false,
-            attentionText: "已关注",
+            attentionText: this.$t("author.profile.following"),
             moreOperate: false,
             moreOperatePhone: false,
             authorInfo: {},
@@ -289,7 +289,7 @@ export default {
             return this.isPRO ? "PRO" : "PRE";
         },
         vipTypeTitle: function () {
-            return this.isPRO ? "专业版会员用户" : "高级版会员用户";
+            return this.isPRO ? this.$t("author.profile.proMember") : this.$t("author.profile.premiumMember");
         },
         level: function () {
             return User.getLevel(this.data?.experience || 0);
@@ -321,9 +321,9 @@ export default {
         // TODO: 后续改成图片
         diffYearText() {
             const obj = {
-                3: "三年老粉",
-                5: "五年元老",
-                10: "十年长者",
+                3: this.$t("author.profile.threeYearFan"),
+                5: this.$t("author.profile.fiveYearVeteran"),
+                10: this.$t("author.profile.tenYearVeteran"),
             };
 
             if (this.diffYear >= 10) {
@@ -346,15 +346,15 @@ export default {
             this.$copyText(String(text)).then(
                 function (e) {
                     _this.$notify({
-                        title: "复制成功",
-                        message: "复制内容：" + text,
+                        title: _this.$t("author.common.copySuccess"),
+                        message: _this.$t("author.common.copiedContent", { content: text }),
                         type: "success",
                     });
                 },
                 function (e) {
                     _this.$notify({
-                        title: "复制失败",
-                        message: "请手动复制",
+                        title: _this.$t("author.common.copyFailed"),
+                        message: _this.$t("author.common.copyManually"),
                         type: "warning",
                     });
                 }
@@ -403,7 +403,7 @@ export default {
             subscribeAuthor({ id: this.uid, data: { title: this.display_name } })
                 .then((res) => {
                     this.subscribed = true;
-                    this.$message.success("关注成功");
+                    this.$message.success(this.$t("author.profile.followSuccess"));
                 })
                 .catch((err) => {
                     console.log(err);
@@ -411,15 +411,15 @@ export default {
         },
         // 取消关注
         unfollow() {
-            this.$confirm("确定不再关注此人？", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("author.profile.unfollowConfirm"), this.$t("author.common.notice"), {
+                confirmButtonText: this.$t("author.common.confirm"),
+                cancelButtonText: this.$t("author.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
                     unsubscribeAuthor({ id: this.uid })
                         .then((res) => {
-                            this.$message.success("操作成功");
+                            this.$message.success(this.$t("author.common.operationSuccess"));
                             this.subscribed = false;
                         })
                         .catch((err) => {
@@ -435,9 +435,11 @@ export default {
         formatFansNum(num) {
             if (num < 10000) {
                 return num === 0 ? "" : num;
-            } else {
-                return (num / 10000).toFixed(1) + "万";
             }
+            return new Intl.NumberFormat(this.$i18n.locale, {
+                notation: "compact",
+                maximumFractionDigits: 1,
+            }).format(num);
         },
         loadFans() {
             if (!this.uid) {
@@ -460,16 +462,16 @@ export default {
         },
         //拉黑
         joinBlacklist() {
-            this.$confirm("确定要拉黑此人？", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("author.profile.blockConfirm"), this.$t("author.common.notice"), {
+                confirmButtonText: this.$t("author.common.confirm"),
+                cancelButtonText: this.$t("author.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
                     deny(this.uid)
                         .then(() => {
                             this.hadDeny = true;
-                            this.$message.success("拉黑成功");
+                            this.$message.success(this.$t("author.profile.blockSuccess"));
                         })
                         .catch((err) => {
                             console.log(err);
@@ -482,7 +484,7 @@ export default {
             undeny(this.uid)
                 .then(() => {
                     this.hadDeny = false;
-                    this.$message.success("操作成功");
+                    this.$message.success(this.$t("author.common.operationSuccess"));
                 })
                 .catch((err) => {
                     console.log(err);

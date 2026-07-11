@@ -7,8 +7,8 @@
 <template>
     <div class="m-credit m-feedback">
         <h2 class="u-title">
-            <i class="el-icon-phone-outline"></i> 反馈中心
-            <el-button class="u-back" plain icon="ArrowLeft" @click="goBack">返回</el-button>
+            <i class="el-icon-phone-outline"></i> {{ $t("dashboard.feedback.title") }}
+            <el-button class="u-back" plain icon="ArrowLeft" @click="goBack">{{ $t("dashboard.common.back") }}</el-button>
         </h2>
 
         <router-view></router-view>

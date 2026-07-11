@@ -1,6 +1,6 @@
 <template>
     <div class="m-publish-comment">
-        <el-form-item label="礼物开关">
+        <el-form-item :label="$t('publish.form.gifts')">
             <el-switch v-model="allow_gift" active-color="#13ce66" :active-value="1" :inactive-value="0"></el-switch>
         </el-form-item>
         <slot></slot>

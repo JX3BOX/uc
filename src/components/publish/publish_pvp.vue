@@ -1,13 +1,13 @@
 <template>
     <div class="m-publish-pvp m-publish-macro">
-        <el-divider content-position="left">技巧分享</el-divider>
+        <el-divider content-position="left">{{ $t("publish.pvp.title") }}</el-divider>
 
         <div class="m-macro-box">
             <div class="m-macro-talent m-macro-item">
-                <h5 class="u-title">技巧概述 *</h5>
+                <h5 class="u-title">{{ $t("publish.pvp.summary") }} *</h5>
                 <el-input
                     v-model="pvpData.content"
-                    placeholder="请在此处输入技巧概述，最多200个字。"
+                    :placeholder="$t('publish.pvp.summaryPlaceholder')"
                     type="textarea"
                     show-word-limit
                     maxlength="200"
@@ -17,7 +17,7 @@
                 </el-input>
             </div>
             <el-checkbox class="u-talent" v-model="pvpData.has_talent" :true-value="1" :fasle-value="0"
-                >设置奇穴</el-checkbox
+                >{{ $t("publish.pvp.configureTalent") }}</el-checkbox
             >
             <template v-if="pvpData.has_talent">
                 <div class="m-macro-talent m-macro-item" v-if="client != 'origin'">
@@ -32,25 +32,25 @@
                     <publish-qixue v-model="pvpData.talent" :subtype="subtype" :is-wujie="isWujie"></publish-qixue>
                 </div>
                 <div class="m-macro-talent m-macro-item" v-if="client === 'origin' && subtype !== '通用'">
-                    <h5 class="u-title">镇派方案</h5>
+                    <h5 class="u-title">{{ $t("publish.skill.legacyBuild") }}</h5>
                     <div class="m-macro-talent-simulator">
                         <div class="qx-container"></div>
                     </div>
-                    <el-input v-model="pvpData.talent" placeholder="镇派方案编码" @change="checkTalent(pvpData.talent)">
+                    <el-input v-model="pvpData.talent" :placeholder="$t('publish.skill.legacyCode')" @change="checkTalent(pvpData.talent)">
                         <template #prepend>
                             <a class="u-get" target="_blank" href="/macro/talent2">
                                 <i class="el-icon-warning"></i>
-                                获取编码
+                                {{ $t("publish.skill.getCode") }}
                             </a>
                         </template>
                     </el-input>
                 </div>
 
                 <div class="m-macro-talent m-macro-item" v-show="subtype !== '通用'">
-                    <h5 class="u-title">{{ client === "std" ? "奇穴" : "镇派" }}讲解</h5>
+                    <h5 class="u-title">{{ $t("publish.pvp.buildExplanation", { type: client === "std" ? $t("publish.skill.talents") : $t("publish.skill.legacy") }) }}</h5>
                     <el-input
                         v-model="pvpData.talent_desc"
-                        placeholder="输入内容（选填）"
+                        :placeholder="$t('publish.common.optionalContentPlaceholder')"
                         type="textarea"
                         show-word-limit
                         maxlength="400"
@@ -60,12 +60,12 @@
                 </div>
             </template>
         </div>
-        <el-checkbox class="u-talent" v-model="pvpData.has_sq" :true-value="1" :fasle-value="0">设置连招</el-checkbox>
+        <el-checkbox class="u-talent" v-model="pvpData.has_sq" :true-value="1" :fasle-value="0">{{ $t("publish.pvp.configureCombos") }}</el-checkbox>
         <template v-if="pvpData.has_sq">
             <div class="m-macro-box">
                 <div class="m-macro-header">
                     <el-button class="m-macro-addbutton" icon="CirclePlus" type="primary" @click="addCombo"
-                        >添加连招</el-button
+                        >{{ $t("publish.pvp.addCombo") }}</el-button
                     >
                 </div>
 
@@ -79,14 +79,14 @@
                         <template #label
                             ><span class="u-tab-box">
                                 <span class="u-tab-name" :title="item.name">{{
-                                    "连招" + zhNum[i] + " - " + item.name
+                                    $t("publish.pvp.comboTab", { index: i + 1, name: item.name })
                                 }}</span>
                             </span></template
                         >
-                        <el-form-item label="连招名称" class="m-macro-desc">
+                        <el-form-item :label="$t('publish.pvp.comboName')" class="m-macro-desc">
                             <el-input
                                 v-model="item.name"
-                                placeholder="请输入连招名称"
+                                :placeholder="$t('publish.pvp.comboNamePlaceholder')"
                                 :minlength="1"
                                 :maxlength="maxlength"
                                 show-word-limit
@@ -94,7 +94,7 @@
                             >
                             </el-input>
                         </el-form-item>
-                        <el-form-item label="技能连招">
+                        <el-form-item :label="$t('publish.pvp.skillCombo')">
                             <div class="u-skills">
                                 <template v-if="item.sq">
                                     <span
@@ -112,24 +112,24 @@
                                         <i class="u-gcd-icon" v-show="skill.WithoutGcd">
                                             <i class="el-icon-time"></i>
                                         </i>
-                                        <i class="u-remove-icon" title="移除" @click="removeSkill(index)"
+                                        <i class="u-remove-icon" :title="$t('publish.common.remove')" @click="removeSkill(index)"
                                             ><i class="el-icon-close"></i
                                         ></i>
                                     </span>
                                 </template>
                             </div>
                             <el-button type="primary" class="u-add-skill" size="medium" @click="addSkill" icon="Plus"
-                                >新增技能</el-button
+                                >{{ $t("publish.skill.add") }}</el-button
                             >
                         </el-form-item>
-                        <el-form-item label="连招说明" class="m-macro-desc">
+                        <el-form-item :label="$t('publish.pvp.comboDescription')" class="m-macro-desc">
                             <el-input
                                 v-model="item.desc"
                                 type="textarea"
                                 maxlength="200"
                                 :rows="3"
                                 show-word-limit
-                                placeholder="连招简要说明（选填）"
+                                :placeholder="$t('publish.pvp.comboDescriptionPlaceholder')"
                             ></el-input>
                         </el-form-item>
                         <div class="m-macro-op">
@@ -139,7 +139,7 @@
                                 type="danger"
                                 plain
                                 icon="Delete"
-                                >移除本连招</el-button
+                                >{{ $t("publish.pvp.removeCombo") }}</el-button
                             >
                         </div>
                     </el-tab-pane>
@@ -220,7 +220,6 @@ export default {
             activeIndex: "1",
             nickname: User.getInfo().name,
 
-            zhNum: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十"],
             showSkillDialog: false,
             tabsSortable: null,
             skillSortable: null,
@@ -287,8 +286,8 @@ export default {
         // 添加连招
         addCombo: function () {
             if (this.pvpData.data.length > 7) {
-                this.$alert("已经达到添加上限", "消息", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("publish.message.limitReached"), this.$t("publish.common.message"), {
+                    confirmButtonText: this.$t("publish.common.confirm"),
                 });
                 return;
             }
@@ -308,14 +307,14 @@ export default {
         // 删除宏
         removeCombo: function (name) {
             if (this.pvpData.data.length < 2) {
-                this.$alert("必须保留1个连招", "消息", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("publish.pvp.keepOneCombo"), this.$t("publish.common.message"), {
+                    confirmButtonText: this.$t("publish.common.confirm"),
                 });
                 return;
             }
 
-            this.$alert("确定删除这个连招吗，删除后无法找回", "消息", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("publish.pvp.confirmDeleteCombo"), this.$t("publish.common.message"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
                 callback: (action) => {
                     if (action == "confirm") {
                         // 删除
@@ -335,7 +334,7 @@ export default {
         check: function () {
             this.pvpData.data.forEach((item, i) => {
                 if (!item.name) {
-                    item.name = "未标题-" + i;
+                    item.name = this.$t("publish.common.generatedUntitled", { index: i });
                 }
             });
         },
@@ -343,8 +342,8 @@ export default {
             let name = sterilizer(data.name).removeSpace().kill().toString();
             if (!name) {
                 this.$notify.error({
-                    title: "错误",
-                    message: "宏名称不允许包含特殊字符,不能为空",
+                    title: this.$t("publish.common.error"),
+                    message: this.$t("publish.pvp.invalidComboName"),
                 });
                 return;
             }
@@ -355,8 +354,8 @@ export default {
                 JSON.parse(data);
             } catch (e) {
                 this.$notify.error({
-                    title: "错误",
-                    message: "奇穴编码格式错误",
+                    title: this.$t("publish.common.error"),
+                    message: this.$t("publish.skill.invalidTalentCode"),
                 });
             }
         },
@@ -429,7 +428,9 @@ export default {
                 y: event.y ?? event.clientY,
                 items: [
                     {
-                        label: !skill?.WithoutGcd ? "设置为无GCD技能" : "设置为有GCD技能",
+                        label: !skill?.WithoutGcd
+                            ? this.$t("publish.skill.setNoGcd")
+                            : this.$t("publish.skill.setGcd"),
                         onClick: () => {
                             skill.WithoutGcd = !skill.WithoutGcd;
                         },

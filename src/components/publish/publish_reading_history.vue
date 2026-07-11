@@ -1,10 +1,10 @@
 <template>
     <div class="m-reading-history">
-        <el-button type="primary" @click="view" icon="Document">阅读记录</el-button>
+        <el-button type="primary" @click="view" icon="Document">{{ $t("publish.history.reading") }}</el-button>
 
-        <el-drawer title="阅读记录" v-model="show" :z-index="2100" class="m-history-drawer" append-to-body>
+        <el-drawer :title="$t('publish.history.reading')" v-model="show" :z-index="2100" class="m-history-drawer" append-to-body>
             <template #header>
-                <h3 class="u-history-title">阅读记录</h3>
+                <h3 class="u-history-title">{{ $t("publish.history.reading") }}</h3>
             </template>
             <main class="m-history-container" v-loading="loading">
                 <div class="m-history-list">
@@ -16,12 +16,12 @@
                                     :href="authorLink(item.user_info.id)"
                                     class="u-creator"
                                     v-if="item.user_info"
-                                    title="创建人"
+                                    :title="$t('publish.history.creator')"
                                 >
                                     <img class="u-avatar" :src="showAvatar(item.user_info.avatar)" />
                                     {{ item.user_info.display_name }}
                                 </a>
-                                <em class="u-time">{{ item.created_at }} 访问了此帖</em>
+                                <em class="u-time">{{ $t("publish.history.visitedAt", { time: item.created_at }) }}</em>
                             </span>
                         </li>
 
@@ -36,7 +36,7 @@
                         ></el-pagination>
                     </ul>
 
-                    <el-alert class="u-null" v-else title="当前没有任何阅读记录" type="info" show-icon></el-alert>
+                    <el-alert class="u-null" v-else :title="$t('publish.history.noReading')" type="info" show-icon></el-alert>
                 </div>
             </main>
         </el-drawer>

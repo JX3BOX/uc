@@ -3,7 +3,7 @@
         <div class="m-dashboard-msg-header">
             <el-input
                 class="m-dashboard-work-search"
-                placeholder="请输入搜索内容"
+                :placeholder="$t('dashboard.common.searchPlaceholder')"
                 v-model="currentSearch"
                 @keyup.enter="handleChange"
                 clearable
@@ -11,7 +11,7 @@
                 @clear="handleChange"
             >
                 <template #prepend>
-                    <span>关键词</span>
+                    <span>{{ $t("dashboard.common.keyword") }}</span>
                 </template>
                 <template #append>
                     <el-button icon="Search" @click="handleChange"></el-button>
@@ -29,18 +29,18 @@
                     :href="
                         getLink(item.category, (item.content_meta && item.content_meta.content_id) || item.source_id)
                     "
-                    >{{ (item.content_meta && item.content_meta.title) || item.title || "无标题" }}</a
+                    >{{ (item.content_meta && item.content_meta.title) || item.title || $t("dashboard.common.untitled") }}</a
                 >
                 <div class="u-desc">
                     <span class="u-category"><i class="el-icon-folder"></i> {{ getTypeLabel(item.category) }} </span>
-                    <span><i class="el-icon-date"></i> 于 {{ dateFormat(item.created_at) }} 添加 </span>
+                    <span><i class="el-icon-date"></i> {{ $t("dashboard.favorites.addedAtSimple", { time: dateFormat(item.created_at) }) }} </span>
                 </div>
                 <el-button-group class="u-action">
-                    <el-button icon="Delete" title="删除" @click="del(item.id)"></el-button>
+                    <el-button icon="Delete" :title="$t('dashboard.common.delete')" @click="del(item.id)"></el-button>
                 </el-button-group>
             </li>
         </ul>
-        <el-alert v-else class="m-dashboard-box-null" title="没有找到相关条目" type="info" center show-icon> </el-alert>
+        <el-alert v-else class="m-dashboard-box-null" :title="$t('dashboard.common.noItems')" type="info" center show-icon> </el-alert>
         <el-pagination
             class="m-dashboard-box-pages"
             background
@@ -108,16 +108,16 @@ export default {
             return getLink(type, id);
         },
         del(id) {
-            this.$confirm("确定要删除该记录吗？", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("dashboard.common.deleteRecordConfirm"), this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 type: "warning",
                 callback: (action) => {
                     if (action == "confirm") {
                         deleteWaitWatch(id).then(() => {
                             this.$message({
                                 type: "success",
-                                message: `操作成功`,
+                                message: this.$t("dashboard.common.operationSuccess"),
                             });
                             this.loadData();
                         });

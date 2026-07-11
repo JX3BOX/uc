@@ -4,10 +4,10 @@
          <div class="m-common-box m-user-bio">
             <div class="u-label">
                 <img class="u-icon" src="@/assets/img/author/sign.svg" alt="">
-                TA的签名
+                {{ $t("author.profile.signature") }}
             </div>
             <div class="u-userBio">
-                {{ data.user_bio || "这个人太懒了~没有写签名。" }}
+                {{ data.user_bio || $t("author.profile.noBio") }}
             </div>
         </div>
 

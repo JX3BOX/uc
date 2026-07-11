@@ -1,7 +1,7 @@
 <template>
     <div class="m-dashboard-profile m-profile">
         <h2 class="u-title">
-            <i :class="icon"></i> {{ title }}
+            <i :class="icon"></i> {{ title || $t("dashboard.profile.title") }}
             <slot name="header"></slot>
         </h2>
         <tabs :tabs="tabList" :msg-change-count="msgChangeCount" />
@@ -22,7 +22,7 @@ export default {
         },
         title: {
             type: String,
-            default: "我的资料",
+            default: "",
         },
         tabList: {
             type: Array,

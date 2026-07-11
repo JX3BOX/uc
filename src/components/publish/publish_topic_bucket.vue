@@ -1,12 +1,12 @@
 <template>
     <div class="m-publish-topic-bucket">
-        <el-form-item :label="label">
+        <el-form-item :label="label || $t('publish.form.moreTopics')">
             <el-popover popper-class="m-topic-bucket__pop" placement="bottom-start">
                 <template #reference>
                     <el-button icon="Plus" trigger="click"></el-button>
                 </template>
                 <div class="m-topic_bucket__content">
-                    <el-input v-model="search" placeholder="输入关键词" prefix-icon="Search" @keypress.enter="onSearch">
+                    <el-input v-model="search" :placeholder="$t('publish.common.keywordPlaceholder')" prefix-icon="Search" @keypress.enter="onSearch">
                     </el-input>
                     <div class="m-topic-bucket__list" v-if="list && list.length">
                         <el-checkbox-group v-model="selected">
@@ -18,7 +18,7 @@
                         class="u-alert"
                         type="info"
                         show-icon
-                        :title="search ? '未找到相关条目' : '请输入关键词进行查询'"
+                        :title="search ? $t('publish.common.noResults') : $t('publish.common.searchPrompt')"
                         :closable="false"
                         center
                     ></el-alert>
@@ -42,7 +42,7 @@ export default {
     props: {
         label: {
             type: String,
-            default: "更多主题",
+            default: "",
         },
         type: {
             type: String,

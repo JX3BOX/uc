@@ -3,7 +3,7 @@
     <uc
         class="m-dashboard-frame m-dashboard-skin"
         icon="el-icon-bell"
-        title="我的消息"
+        :title="$t('dashboard.message.title')"
         :tab-list="tabList"
         :msg-change-count="msgChangeCount"
     >
@@ -11,27 +11,27 @@
             <div class="m-dashboard-msg-header">
                 <el-input
                     class="m-dashboard-work-search"
-                    placeholder="请输入搜索内容"
+                    :placeholder="$t('dashboard.common.searchPlaceholder')"
                     v-model="keyword"
                     @keyup.enter="changePage(1)"
                     size="large"
                 >
-                    <template #prepend>关键词</template>
+                    <template #prepend>{{ $t("dashboard.common.keyword") }}</template>
                     <template #append>
                         <el-button icon="Search" @click="changePage(1)"></el-button>
                     </template>
                 </el-input>
                 <el-button class="u-read-all" size="large" type="primary" @click="read(null)">
                     <i class="el-icon el-icon-check"></i>
-                    <span v-text="'全部设为已读'"></span>
+                    <span>{{ $t("dashboard.message.markAllRead") }}</span>
                 </el-button>
             </div>
             <ul class="m-dashboard-box-list" v-if="data.length">
                 <li v-for="(item, i) in data" :key="i" :class="{ on: item.read == 1 }">
                     <div class="u-primary">
                         <span class="u-content">
-                            <span class="u-label u-hasChecked" v-if="item.read == 1">已读</span>
-                            <span class="u-label u-hasNotChecked" v-else>未读</span>
+                            <span class="u-label u-hasChecked" v-if="item.read == 1">{{ $t("dashboard.message.read") }}</span>
+                            <span class="u-label u-hasNotChecked" v-else>{{ $t("dashboard.message.unread") }}</span>
                             <span v-html="item.content"></span>
                             <span
                                 class="u-msg-detail"
@@ -39,7 +39,7 @@
                                 @click="handleDetail(item.ext_type_id)"
                             >
                                 <i class="el-icon-view"></i>
-                                <span>详情</span>
+                                <span>{{ $t("dashboard.common.details") }}</span>
                             </span>
                             <a
                                 :href="msgLink(item)"
@@ -48,7 +48,7 @@
                                 @click="read(item)"
                                 target="_blank"
                             >
-                                <i class="el-icon-link"></i> 查看
+                                <i class="el-icon-link"></i> {{ $t("dashboard.common.view") }}
                             </a>
                         </span>
                         <time class="u-time">
@@ -59,18 +59,18 @@
                     <el-button-group class="u-action">
                         <el-button
                             icon="Check"
-                            title="设为已读"
+                            :title="$t('dashboard.message.markRead')"
                             @click="read(item)"
                             :disabled="item.read == 1"
                         ></el-button>
-                        <el-button icon="Delete" title="删除" @click="del(item)"></el-button>
+                        <el-button icon="Delete" :title="$t('dashboard.common.delete')" @click="del(item)"></el-button>
                     </el-button-group>
                 </li>
             </ul>
             <el-alert
                 v-else
                 class="m-dashboard-box-null"
-                title="没有找到相关条目"
+                :title="$t('dashboard.common.noItems')"
                 type="info"
                 center
                 show-icon

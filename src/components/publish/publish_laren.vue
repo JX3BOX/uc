@@ -1,6 +1,6 @@
 <template>
     <div class="m-jx3data-box">
-        <el-button class="m-jx3dat-addbutton" icon="CirclePlus" type="primary" @click="addLanren">添加数据</el-button>
+        <el-button class="m-jx3dat-addbutton" icon="CirclePlus" type="primary" @click="addLanren">{{ $t("publish.data.add") }}</el-button>
         <el-tabs v-model="activeTab" type="card" closable @tab-remove="delLanren">
             <el-tab-pane v-for="(item, i) in lanrenDat.data" :key="i" :name="i + 1 + ''">
                 <template #label
@@ -11,38 +11,38 @@
                 >
                 <!-- 数据类型 -->
                 <div class="m-jx3dat-item">
-                    <h5 class="u-title">数据类型</h5>
+                    <h5 class="u-title">{{ $t("publish.data.type") }}</h5>
                     <el-select v-model="item.key" @change="(val) => handleTypeChange(val, item)" i>
                         <el-option v-for="(type, key) in lanren_types" :key="key" :value="key" :label="type" />
                     </el-select>
                 </div>
                 <!-- 数据标题 -->
                 <div class="m-jx3dat-item">
-                    <h5 class="u-title">数据标题</h5>
-                    <el-input v-model="item.desc" placeholder="数据描述" :maxlength="50" show-word-limit></el-input>
+                    <h5 class="u-title">{{ $t("publish.data.title") }}</h5>
+                    <el-input v-model="item.desc" :placeholder="$t('publish.data.description')" :maxlength="50" show-word-limit></el-input>
                 </div>
 
                 <div class="m-jx3dat-item m-jx3data-jx3dat">
-                    <h5 class="u-title">数据文件</h5>
+                    <h5 class="u-title">{{ $t("publish.data.file") }}</h5>
                     <div class="u-warning">
                         <i class="el-icon-warning-outline"></i>
-                        当前数据文件将作为
-                        <b>{{ item.lanren_type }}</b> 的文件上传，上传完后如若重新修改版本名称则需要重新上传对应文件
+                        {{ $t("publish.data.uploadAsPrefix") }}
+                        <b>{{ item.lanren_type }}</b> {{ $t("publish.data.uploadAsSuffix") }}
                     </div>
                     <input class="u-data-input" type="file" :id="'lanren_' + i" @change="uploadLanren(item, i)" />
-                    <el-button type="primary" icon="Promotion" plain @click="selectLanren(i)">上传数据文件</el-button>
+                    <el-button type="primary" icon="Promotion" plain @click="selectLanren(i)">{{ $t("publish.data.uploadFile") }}</el-button>
                     <span class="u-data-remark">{{ item.origin_name }}</span>
                     <el-input
                         class="u-fileurl"
                         :class="{ isUploaded: item.isUploaded }"
                         @change="aniLanren(item)"
-                        placeholder="数据地址"
+                        :placeholder="$t('publish.data.url')"
                         :disabled="true"
                         :value="item.file"
                         v-if="item.file"
                     >
                         <template #prepend>
-                            <span class="u-status">当前文件地址</span>
+                            <span class="u-status">{{ $t("publish.data.currentUrl") }}</span>
                         </template>
                         <template #append>
                             <span
@@ -52,7 +52,7 @@
                                 v-clipboard:error="onError"
                             >
                                 <i class="el-icon-document-copy"></i>
-                                <span>点击复制</span>
+                                <span>{{ $t("publish.common.clickToCopy") }}</span>
                             </span>
                         </template>
                     </el-input>
@@ -186,8 +186,8 @@ export default {
             let fileInput = document.getElementById("lanren_" + i);
             let file = fileInput.files[0];
             if (!file) {
-                this.$alert("请先选择文件", "提醒", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("publish.upload.selectFileFirst"), this.$t("publish.common.reminder"), {
+                    confirmButtonText: this.$t("publish.common.confirm"),
                 });
                 return;
             }
@@ -200,7 +200,7 @@ export default {
                 if (res) {
                     item.file = res.data.download_url;
                     this.$message({
-                        message: "数据上传成功",
+                        message: this.$t("publish.message.dataUploadSucceeded"),
                         type: "success",
                     });
                     item._version = Date.now();
@@ -219,20 +219,20 @@ export default {
         },
         delLanren: function (name) {
             if (name === "1") {
-                this.$alert("✘ 必须有一个数据", "消息", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("publish.data.keepOne"), this.$t("publish.common.message"), {
+                    confirmButtonText: this.$t("publish.common.confirm"),
                 });
                 return;
             }
             if (this.lanrenDat.data.length < 2) {
-                this.$alert("✘ 必须保留默认数据", "消息", {
-                    confirmButtonText: "确定",
+                this.$alert(this.$t("publish.data.keepDefault"), this.$t("publish.common.message"), {
+                    confirmButtonText: this.$t("publish.common.confirm"),
                 });
                 return;
             }
 
-            this.$alert("确定删除这个数据吗，删除后无法找回", "消息", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("publish.data.confirmDelete"), this.$t("publish.common.message"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
                 callback: (action) => {
                     if (action == "confirm") {
                         // 删除
@@ -260,15 +260,15 @@ export default {
         },
         onCopy: function (val) {
             this.$notify({
-                title: "复制成功",
-                message: "复制成功",
+                title: this.$t("publish.message.copySucceeded"),
+                message: this.$t("publish.message.copySucceeded"),
                 type: "success",
             });
         },
         onError: function () {
             this.$notify.error({
-                title: "复制失败",
-                message: "复制失败",
+                title: this.$t("publish.message.copyFailed"),
+                message: this.$t("publish.message.copyFailed"),
             });
         },
     },

@@ -1,30 +1,30 @@
 <template>
     <div class="m-feedback-list" v-loading="loading">
         <el-table :data="data" highlight-current-row row-class-name="u-row" @row-click="viewFeedback" size="large">
-            <el-table-column label="状态" prop="status" width="100">
+            <el-table-column :label="$t('dashboard.common.status')" prop="status" width="100">
                 <template #default="{ row }">
                     <el-tag :type="statusTypes[row.status]" size="small">{{ statusMap[row.status] }}</el-tag>
                 </template>
             </el-table-column>
-            <el-table-column label="客户端" prop="client" width="100">
+            <el-table-column :label="$t('dashboard.common.client')" prop="client" width="100">
                 <template #default="{ row }">
                     <span class="u-client" :class="'i-client-' + row.client">{{ formatClient(row.client) }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="来源/类型" prop="type" width="200">
+            <el-table-column :label="$t('dashboard.feedback.sourceType')" prop="type" width="200">
                 <template #default="{ row }">
                     {{ `${types[row.type]} - ${subtypes[row.subtype]}` }}
                 </template>
             </el-table-column>
-            <el-table-column label="内容" prop="content" show-overflow-tooltip></el-table-column>
-            <el-table-column label="提交时间" prop="created_at" width="160">
+            <el-table-column :label="$t('dashboard.common.content')" prop="content" show-overflow-tooltip></el-table-column>
+            <el-table-column :label="$t('dashboard.common.submittedAt')" prop="created_at" width="160">
                 <template #default="{ row }">
                     {{ formatTime(row.created_at) }}
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="100">
+            <el-table-column :label="$t('dashboard.common.actions')" width="100">
                 <template #default>
-                    <el-button size="small" plain icon="View">查看</el-button>
+                    <el-button size="small" plain icon="View">{{ $t("dashboard.common.view") }}</el-button>
                 </template>
             </el-table-column>
         </el-table>

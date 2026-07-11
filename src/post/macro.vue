@@ -1,7 +1,7 @@
 <template>
     <div class="m-publish-box p-publish-macro" v-loading="loading">
         <!-- 头部 -->
-        <publish-header name="云端宏">
+        <publish-header :name="$t('publish.types.macros')">
             <div class="u-actions">
                 <publish-revision :enable="true" :post="post"></publish-revision>
                 <publish-reading-history v-if="id" :post-id="id" category="posts"></publish-reading-history>
@@ -15,7 +15,7 @@
 
             <!-- 信息 -->
             <div class="m-publish-info">
-                <el-divider content-position="left">信息</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.information") }}</el-divider>
                 <!-- 原创 -->
                 <publish-original v-model="post.original"></publish-original>
                 <!-- 客户端 -->
@@ -36,7 +36,7 @@
                 <publish-pz v-model="post.pz" :limit="8" :query="pz_query">
                     <template #prepend>
                         <span class="u-pz-tip">
-                            <i class="el-icon-warning-outline"></i> 展示你推荐的配装（不超过8个，非必选）
+                            <i class="el-icon-warning-outline"></i> {{ $t("publish.gear.recommendationHint") }}
                         </span>
                     </template>
                 </publish-pz>
@@ -49,9 +49,9 @@
 
             <!-- 正文 -->
             <div class="m-publish-content">
-                <el-divider content-position="left">正文</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.body") }}</el-divider>
                 <el-radio-group class="m-publish-editormode" size="large" :class="`is-${post.post_mode}`" v-model="post.post_mode">
-                    <el-radio-button value="tinymce">可视化编辑器</el-radio-button>
+                    <el-radio-button value="tinymce">{{ $t("publish.form.visualEditor") }}</el-radio-button>
                     <el-radio-button value="markdown">Markdown</el-radio-button>
                 </el-radio-group>
                 <Markdown
@@ -71,7 +71,7 @@
 
             <!-- 附加 -->
             <div class="m-publish-append">
-                <el-divider content-position="left">小册</el-divider>
+                <el-divider content-position="left">{{ $t("publish.types.collection") }}</el-divider>
                 <publish-collection v-model="post.post_collection" :defaultCollapse="post.collection_collapse">
                     <publish-collection-collapse v-model="post.collection_collapse"></publish-collection-collapse>
                 </publish-collection>
@@ -79,13 +79,13 @@
 
             <!-- 扩展 -->
             <div class="m-publish-extend">
-                <el-divider content-position="left">设置</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.settings") }}</el-divider>
                 <publish-comment v-model="post.comment">
-                    <el-checkbox v-model="visible_for_self" :true-value="1" :fasle-value="0">仅自己可见</el-checkbox>
-                    <el-checkbox v-model="open_white_list" :true-value="1" :fasle-value="0">开启评论过滤</el-checkbox>
+                    <el-checkbox v-model="visible_for_self" :true-value="1" :fasle-value="0">{{ $t("publish.visibility.onlyMe") }}</el-checkbox>
+                    <el-checkbox v-model="open_white_list" :true-value="1" :fasle-value="0">{{ $t("publish.form.commentFilter") }}</el-checkbox>
                 </publish-comment>
                 <publish-gift v-model="post.allow_gift"></publish-gift>
-                <el-form-item label="匿名开关">
+                <el-form-item :label="$t('publish.form.anonymous')">
                     <el-switch
                         v-model="post.anonymous"
                         active-color="#13ce66"
@@ -101,7 +101,7 @@
 
             <!-- 临时 -->
             <div class="m-publish-extend">
-                <el-divider content-position="left">临时</el-divider>
+                <el-divider content-position="left">{{ $t("publish.common.temporary") }}</el-divider>
                 <publish-at-authors></publish-at-authors>
             </div>
 
@@ -123,17 +123,17 @@
                     :closable="false"
                     show-icon
                     type="error"
-                    title="检测到您的内容存在不合规，将无法发布成功，并有禁言风险。"
+                    :title="$t('publish.message.contentViolation')"
                 ></el-alert>
                 <el-checkbox v-model="hasRead" :true-value="1" :fasle-value="0"
-                    >我已阅读并了解<a href="/notice/119" @click.stop target="_blank">《创作发布规范》</a></el-checkbox
+                    >{{ $t("publish.form.readAndUnderstand") }}<a href="/notice/119" @click.stop target="_blank">{{ $t("publish.form.publishingGuidelines") }}</a></el-checkbox
                 >
             </div>
 
             <!-- 按钮 -->
             <div class="m-publish-buttons">
                 <template v-if="isDraft || isRevision">
-                    <el-button type="primary" @click="useDraft" :disabled="processing">使用此版本</el-button>
+                    <el-button type="primary" @click="useDraft" :disabled="processing">{{ $t("publish.common.useThisVersion") }}</el-button>
                 </template>
                 <template v-else>
                     <el-button
@@ -141,10 +141,10 @@
                         type="primary"
                         @click="publish('publish', true)"
                         :disabled="is_illegal || processing || !hasRead"
-                        >发 &nbsp;&nbsp; 布</el-button
+                        >{{ $t("publish.common.publish") }}</el-button
                     >
                     <el-button size="large" plain @click="publish('draft', false)" :disabled="processing || !hasRead"
-                        >保存为草稿</el-button
+                        >{{ $t("publish.common.saveDraft") }}</el-button
                     >
                 </template>
             </div>
@@ -332,12 +332,12 @@ export default {
         checkMacro: function () {
             let data = this.post.post_meta.data;
             let result = true;
-            const str = this.post?.is_wujie ? "序列" : "宏";
+            const str = this.post?.is_wujie ? this.$t("publish.sequence.item") : this.$t("publish.macro.item");
             data.forEach((item, index) => {
                 if (!item.name) {
                     this.$notify({
-                        title: "提醒",
-                        message: `第${index + 1}个${str}没有填写名称`,
+                        title: this.$t("publish.common.reminder"),
+                        message: this.$t("publish.message.missingItemName", { index: index + 1, type: str }),
                         type: "warning",
                     });
                     result = false;
@@ -413,7 +413,7 @@ export default {
             if (skip) {
                 // 提醒
                 this.$message({
-                    message: "发布成功",
+                    message: this.$t("publish.message.publishSucceeded"),
                     type: "success",
                 });
                 // 跳转
@@ -423,8 +423,8 @@ export default {
             } else {
                 // 提醒
                 this.$notify({
-                    title: "保存成功",
-                    message: "云端草稿保存成功",
+                    title: this.$t("publish.message.saveSucceeded"),
+                    message: this.$t("publish.message.cloudDraftSaved"),
                     type: "success",
                 });
                 // 路由

@@ -2,13 +2,13 @@
     <div class="Anniversary" :class="{ nextStep }">
         <!-- 第一屏 -->
         <div class="m-card" v-if="!show">
-            <img :src="oneImg[0]" alt="2025魔盒周年庆" />
-            <img class="u-button" :src="oneImg[1]" alt="2025魔盒周年庆" @click="change" />
-            <img class="u-close" :src="oneImg[2]" alt="2025魔盒周年庆" @click="close" />
+            <img :src="oneImg[0]" :alt="$t('card.anniversary.alt')" />
+            <img class="u-button" :src="oneImg[1]" :alt="$t('card.anniversary.alt')" @click="change" />
+            <img class="u-close" :src="oneImg[2]" :alt="$t('card.anniversary.alt')" @click="close" />
         </div>
         <!-- 第二屏 -->
         <div class="m-anniversary" v-else>
-            <img class="u-close" v-if="nextStep" :src="oneImg[2]" alt="2025魔盒周年庆" @click="close" />
+            <img class="u-close" v-if="nextStep" :src="oneImg[2]" :alt="$t('card.anniversary.alt')" @click="close" />
             <!-- 背景 -->
             <div class="m-bg">
                 <!-- 背景 -->
@@ -19,13 +19,13 @@
                     <source :src="bg1Img[2]" type="video/mp4" />
                 </video>
                 <!-- 盒子娘小 -->
-                <img class="u-box-girl-1" :src="bg1Img[1]" alt="盒子娘（小）" />
+                <img class="u-box-girl-1" :src="bg1Img[1]" :alt="$t('card.anniversary.mascot')" />
                 <!-- 领取结算界面 -->
                 <template v-if="nextStep">
                     <!-- <img class="" :src="bg2Img[1]" alt="盒子娘（大）" /> -->
                     <div class="u-box-girl-2"></div>
-                    <img class="u-jx3box" :src="imgList[6]" alt="魔盒团队爱你" />
-                    <span class="u-tips">已领取</span>
+                    <img class="u-jx3box" :src="imgList[6]" :alt="$t('card.anniversary.teamLovesYou')" />
+                    <span class="u-tips">{{ $t("card.anniversary.claimed") }}</span>
                 </template>
             </div>
             <!-- 内容 -->
@@ -35,7 +35,7 @@
                     <img
                         :class="['u-img-title', { light: showNext }]"
                         :src="showNext ? imgList[5] : imgList[4]"
-                        :alt="showNext ? '摘下来看看' : '请依次点亮所有星星'"
+                        :alt="showNext ? $t('card.anniversary.pickToView') : $t('card.anniversary.lightAllStars')"
                     />
                     <span class="u-count">({{ starCount }}/6)</span>
                 </div>
@@ -65,16 +65,16 @@
                 <!-- 领取后内容 -->
                 <template v-else>
                     <span v-for="(item, i) in txtList" :key="i" :class="['u-title', `u-title-${i + 1}`]">
-                        {{ item.title == "魔盒积分" ? `${data.count || "20"}魔盒积分` : item.title }}
+                        {{ i === 0 ? $t("card.anniversary.points", { count: data.count || "20" }) : item.title }}
                     </span></template
                 >
             </div>
             <!-- 领取按钮 -->
             <div class="m-click" v-if="showNext && !nextStep">
-                <span class="u-circle" @click="nextStep = true">摘星</span>
+                <span class="u-circle" @click="nextStep = true">{{ $t("card.anniversary.pickStar") }}</span>
             </div>
             <!-- 手机端按钮 -->
-            <img class="u-button" :src="oneImg[1]" alt="2025魔盒周年庆" @click="close" />
+            <img class="u-button" :src="oneImg[1]" :alt="$t('card.anniversary.alt')" @click="close" />
         </div>
     </div>
 </template>
@@ -110,7 +110,11 @@ export default {
             return this.data.imgList;
         },
         txtList() {
-            return this.data.txtList;
+            const rewards = [1, 2, 3, 4, 5, 6].map((index) => ({
+                title: this.$t(`card.anniversary.rewards.reward${index}Title`),
+                desc: this.$t(`card.anniversary.rewards.reward${index}Description`),
+            }));
+            return (this.data.txtList || []).map((item, index) => rewards[index] || item);
         },
     },
     methods: {

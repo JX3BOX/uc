@@ -6,7 +6,7 @@
                     <!-- 标题 -->
                     <h2 class="u-post">
                         <!-- 标题文字 -->
-                        <a :href="postLink(item.id)" class="u-title" target="_blank">{{ item.title || "无标题" }}</a>
+                        <a :href="postLink(item.id)" class="u-title" target="_blank">{{ item.title || $t("author.common.noTitle") }}</a>
                     </h2>
                     <!-- 字段 -->
                     <div class="u-desc">
@@ -16,7 +16,7 @@
                     <!-- 日期 -->
                     <div class="u-misc">
                         <span class="u-date">
-                            Updated on
+                            {{ $t("author.common.updatedOn") }}
                             <time>{{ dateFormat(item.updated_at) }}</time>
                         </span>
                     </div>

@@ -1,6 +1,6 @@
 <template>
     <div class="m-publish-pz" v-loading="loading">
-        <el-divider content-position="left">配装</el-divider>
+        <el-divider content-position="left">{{ $t("publish.gear.title") }}</el-divider>
         <div class="m-publish-pz-header">
             <el-button
                 class="u-add u-btn"
@@ -8,7 +8,7 @@
                 type="primary"
                 @click="addItem"
                 :disabled="list.length >= limit"
-                >添加配装</el-button
+                >{{ $t("publish.gear.add") }}</el-button
             >
             <slot name="prepend" class="m-publish-pz-prepend"></slot>
         </div>
@@ -27,7 +27,7 @@
                         <div class="u-item-select">
                             <el-select
                                 v-model="element.id"
-                                placeholder="请选择配装方案"
+                                :placeholder="$t('publish.gear.selectPlaceholder')"
                                 clearable
                                 filterable
                                 remote
@@ -44,7 +44,7 @@
                                     class="m-publish-pz-select-option"
                                 >
                                     <i class="u-client i-client" :class="option.client || 'std'">{{
-                                        option.client == "origin" ? "缘起" : "剑三"
+                                        option.client == "origin" ? $t("publish.form.originServer") : $t("publish.form.standardServer")
                                     }}</i>
                                     <i class="u-level i-client" :class="option.client || 'std'"
                                         >Lv.{{ option.global_level || "-" }}</i
@@ -56,7 +56,7 @@
                         <div class="u-item-name">
                             <el-input
                                 v-model="element.name"
-                                placeholder="请输入配装简称"
+                                :placeholder="$t('publish.gear.shortNamePlaceholder')"
                                 clearable
                                 :maxlength="12"
                                 :minlength="1"
@@ -71,9 +71,9 @@
                                 v-if="element.id"
                                 target="_blank"
                             >
-                                <i class="el-icon-view"></i>预览
+                                <i class="el-icon-view"></i>{{ $t("publish.common.preview") }}
                             </a>
-                            <el-button class="delete" link icon="Delete" @click="removeItem(index)">删除</el-button>
+                            <el-button class="delete" link icon="Delete" @click="removeItem(index)">{{ $t("publish.common.delete") }}</el-button>
                         </div>
                     </div>
                 </template>

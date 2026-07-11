@@ -1,20 +1,20 @@
 <template>
     <div class="m-publish-box">
         <!-- 头部 -->
-        <publish-header name="剑三题目" :localDraft="false">
+        <publish-header :name="$t('publish.types.questions')" :localDraft="false">
             <slot name="header"></slot>
         </publish-header>
 
         <!-- <h1 class="m-publish-exam-header">贡献题目</h1> -->
         <el-form label-position="left" label-width="80px" class="m-publish-exam">
             <publish-client v-model="primary.client"></publish-client>
-            <el-form-item label="状态" class="m-publish-exam-common">
+            <el-form-item :label="$t('publish.common.status')" class="m-publish-exam-common">
                 <el-radio-group v-model="primary.is_public">
-                    <el-radio :value="PUBLIC_VALUE">公开</el-radio>
-                    <el-radio :value="PRIVATE_VALUE">私有</el-radio>
+                    <el-radio :value="PUBLIC_VALUE">{{ $t("publish.visibility.public") }}</el-radio>
+                    <el-radio :value="PRIVATE_VALUE">{{ $t("publish.visibility.privateShort") }}</el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item label="题目" class="m-publish-exam-title">
+            <el-form-item :label="$t('publish.exam.question')" class="m-publish-exam-title">
                 <el-input
                     v-model="primary.title"
                     :maxlength="500"
@@ -23,30 +23,30 @@
                     required
                     :rows="3"
                     type="textarea"
-                    placeholder="请填写题目内容 (支持html)"
+                    :placeholder="$t('publish.exam.questionPlaceholder')"
                 ></el-input>
             </el-form-item>
-            <el-form-item label="题型" class="m-publish-exam-type">
+            <el-form-item :label="$t('publish.exam.questionType')" class="m-publish-exam-type">
                 <el-radio-group v-model="primary.type">
-                    <el-radio value="radio" border>单选题</el-radio>
-                    <el-radio value="checkbox" border>多选题</el-radio>
+                    <el-radio value="radio" border>{{ $t("publish.exam.singleChoice") }}</el-radio>
+                    <el-radio value="checkbox" border>{{ $t("publish.exam.multipleChoice") }}</el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item label="选项" class="m-publish-exam-options">
-                <el-input placeholder="选项1 (支持html)" v-model="primary.options[0]">
+            <el-form-item :label="$t('publish.exam.options')" class="m-publish-exam-options">
+                <el-input :placeholder="$t('publish.exam.optionPlaceholder', { index: 1 })" v-model="primary.options[0]">
                     <template #prepend>A</template>
                 </el-input>
-                <el-input placeholder="选项2 (支持html)" v-model="primary.options[1]">
+                <el-input :placeholder="$t('publish.exam.optionPlaceholder', { index: 2 })" v-model="primary.options[1]">
                     <template #prepend>B</template>
                 </el-input>
-                <el-input placeholder="选项3 (支持html)" v-model="primary.options[2]">
+                <el-input :placeholder="$t('publish.exam.optionPlaceholder', { index: 3 })" v-model="primary.options[2]">
                     <template #prepend>C</template>
                 </el-input>
-                <el-input placeholder="选项4 (支持html)" v-model="primary.options[3]">
+                <el-input :placeholder="$t('publish.exam.optionPlaceholder', { index: 4 })" v-model="primary.options[3]">
                     <template #prepend>D</template>
                 </el-input>
             </el-form-item>
-            <el-form-item label="答案" class="m-publish-exam-answer">
+            <el-form-item :label="$t('publish.exam.answer')" class="m-publish-exam-answer">
                 <el-radio-group v-model="answer_radio" v-if="primary.type == 'radio'">
                     <el-radio :value="0">A</el-radio>
                     <el-radio :value="1">B</el-radio>
@@ -60,21 +60,21 @@
                     <el-checkbox :value="3">D</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
-            <el-form-item label="难度" class="m-publish-exam-level">
+            <el-form-item :label="$t('publish.exam.difficulty')" class="m-publish-exam-level">
                 <el-rate
                     v-model="primary.hardStar"
                     show-score
                     text-color="#ff9900"
-                    score-template="{value} 星"
+                    :score-template="$t('publish.exam.starTemplate', { value: '{value}' })"
                 ></el-rate>
             </el-form-item>
 
             <exam_tags class="m-publish-exam-tags" v-model="primary.tags" />
 
-            <el-form-item label="答案解析" class="m-publish-exam-content">
+            <el-form-item :label="$t('publish.exam.explanation')" class="m-publish-exam-content">
                 <Tinymce v-model="primary.whyami" :attachmentEnable="true" :resourceEnable="true" :height="400" />
                 <el-button class="u-publish" icon="Promotion" type="primary" @click="publish" :disabled="processing"
-                    >提交题目</el-button
+                    >{{ $t("publish.exam.submitQuestion") }}</el-button
                 >
             </el-form-item>
         </el-form>
@@ -172,7 +172,7 @@ export default {
         },
         success: function (res) {
             this.$message({
-                message: res.data.msg || "提交成功",
+                message: res.data.msg || this.$t("publish.message.submitSucceeded"),
                 type: "success",
             });
             setTimeout(() => {

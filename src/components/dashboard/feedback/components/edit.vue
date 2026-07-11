@@ -1,36 +1,36 @@
 <template>
-    <el-dialog class="w-dialog m-feedback-assign" v-model="show" title="编辑" @close="close">
+    <el-dialog class="w-dialog m-feedback-assign" v-model="show" :title="$t('dashboard.common.edit')" @close="close">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-            <el-form-item label="客户端" prop="client">
-                <el-select v-model="form.client" placeholder="请选择客户端" style="width: 100%">
+            <el-form-item :label="$t('dashboard.common.client')" prop="client">
+                <el-select v-model="form.client" :placeholder="$t('dashboard.common.clientPlaceholder')" style="width: 100%">
                     <el-option v-for="item in clients" :key="item.value" :label="item.text" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="类型" prop="type">
-                <el-select v-model="form.type" placeholder="请选择类型" style="width: 100%">
+            <el-form-item :label="$t('dashboard.common.type')" prop="type">
+                <el-select v-model="form.type" :placeholder="$t('dashboard.common.typePlaceholder')" style="width: 100%">
                     <el-option v-for="item in typeList" :key="item.value" :label="item.text" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="子类型" prop="subtype">
-                <el-select v-model="form.subtype" placeholder="请选择子类型" style="width: 100%">
+            <el-form-item :label="$t('dashboard.feedback.subtype')" prop="subtype">
+                <el-select v-model="form.subtype" :placeholder="$t('dashboard.feedback.subtypePlaceholder')" style="width: 100%">
                     <el-option v-for="item in subtypeList" :key="item.value" :label="item.text" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="项目" prop="repository">
-                <el-input v-model="form.repository" placeholder="请输入GitHub仓库" clearable></el-input>
+            <el-form-item :label="$t('dashboard.feedback.project')" prop="repository">
+                <el-input v-model="form.repository" :placeholder="$t('dashboard.feedback.repositoryPlaceholder')" clearable></el-input>
             </el-form-item>
-            <el-form-item label="备注" prop="remark">
-                <el-input v-model="form.remark" placeholder="请输入备注" clearable></el-input>
+            <el-form-item :label="$t('dashboard.common.remark')" prop="remark">
+                <el-input v-model="form.remark" :placeholder="$t('dashboard.common.remarkPlaceholder')" clearable></el-input>
             </el-form-item>
         </el-form>
         <template #footer>
             <div class="dialog-footer">
                 <div class="m-confirm">
-                    <el-button @click="close">取消</el-button>
-                    <el-button type="primary" :loading="loading" :disabled="loading" @click="submit"> 提交 </el-button>
+                    <el-button @click="close">{{ $t("dashboard.common.cancel") }}</el-button>
+                    <el-button type="primary" :loading="loading" :disabled="loading" @click="submit"> {{ $t("dashboard.common.submit") }} </el-button>
                 </div>
             </div>
         </template>
@@ -61,9 +61,9 @@ export default {
             form: { client: "", remark: "", repository: "", subtype: "", type: "" },
             clients: filterOptions.client,
             rules: {
-                client: [{ required: true, message: "请选择客户端", trigger: ["blur", "change"] }],
-                type: [{ required: true, message: "请选择类型", trigger: ["blur", "change"] }],
-                subtype: [{ required: true, message: "请选择子类型", trigger: ["blur", "change"] }],
+                client: [{ required: true, message: this.$t("dashboard.common.clientPlaceholder"), trigger: ["blur", "change"] }],
+                type: [{ required: true, message: this.$t("dashboard.common.typePlaceholder"), trigger: ["blur", "change"] }],
+                subtype: [{ required: true, message: this.$t("dashboard.feedback.subtypePlaceholder"), trigger: ["blur", "change"] }],
             },
         };
     },
@@ -113,7 +113,7 @@ export default {
                     this.loading = true;
                     updateFeedback(this.id, data)
                         .then(() => {
-                            this.$message.success("操作成功");
+                            this.$message.success(this.$t("dashboard.common.operationSuccess"));
                             this.$emit("update");
                             this.close();
                         })

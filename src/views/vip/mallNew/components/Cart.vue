@@ -3,8 +3,8 @@
     <div class="cart" :class="{ show: show }" @click.stop>
         <div class="cart-title">
             <div>
-                <div class="cart-title-text">购物车清单</div>
-                <div class="cart-title-sub">已选 {{ $store.getters["mallNew/checked_num"] }} / {{ $store.getters["mallNew/num"] }} 件</div>
+                <div class="cart-title-text">{{ $t("vip.mall.cartList") }}</div>
+                <div class="cart-title-sub">{{ $t("vip.mall.selectedCount", { selected: $store.getters["mallNew/checked_num"], total: $store.getters["mallNew/num"] }) }}</div>
             </div>
             <button class="cart-close" type="button" @click="$store.dispatch('mallNew/changeCartIsShow', false)">
                 <i class="el-icon-close"></i>
@@ -16,19 +16,19 @@
                     <i class="el-icon-check"></i>
                 </div>
                 <div class="box-text">
-                    全选&nbsp;({{ $store.getters["mallNew/checked_num"] }}/{{ $store.getters["mallNew/num"] }})
+                    {{ $t("vip.mall.selectAll") }}&nbsp;({{ $store.getters["mallNew/checked_num"] }}/{{ $store.getters["mallNew/num"] }})
                 </div>
             </div>
             <el-button type="info" plain size="small" @click="handleClear">
                 <i class="el-icon-delete"></i>
-                清空
+                {{ $t("vip.common.clear") }}
             </el-button>
         </div>
         <div class="m-cart-items">
             <div class="cart-empty" v-if="!list.length">
                 <img :src="`${imgUrl}cart.svg`" alt="" />
-                <div class="cart-empty-title">购物车还是空的</div>
-                <div class="cart-empty-desc">把想要的商品加入购物车后，可以在这里统一结算</div>
+                <div class="cart-empty-title">{{ $t("vip.mall.cartEmpty") }}</div>
+                <div class="cart-empty-desc">{{ $t("vip.mall.cartEmptyHint") }}</div>
             </div>
             <template v-else>
                 <div class="m-cart-item" v-for="item in list" :key="item.id" :class="{ cannotBuy: item.can_buy === 0 }">
@@ -86,7 +86,7 @@
             <img :src="`${imgUrl}bar-code.svg`" alt="" class="icon" svg-inline />
         </div>
         <div class="total-price">
-            <div class="total-label">合计：</div>
+            <div class="total-label">{{ $t("vip.mall.totalLabel") }}</div>
             <div class="total">
                 <div class="total-item">
                     <div class="right">
@@ -96,7 +96,7 @@
                             svg-inline
                             style="fill: rgba(56, 56, 56, 1)"
                         />
-                        <div>盒币<span>（=通宝）</span></div>
+                        <div>{{ $t("vip.mall.boxcoin") }}<span>{{ $t("vip.mall.boxcoinAlias") }}</span></div>
                     </div>
                     <div class="left">{{ $store.getters["mallNew/all_price_boxcoin"] }}</div>
                 </div>
@@ -108,12 +108,12 @@
                             svg-inline
                             style="fill: rgba(56, 56, 56, 1)"
                         />
-                        <div>银铛<span>（=积分）</span></div>
+                        <div>{{ $t("vip.mall.silverToken") }}<span>{{ $t("vip.mall.silverTokenAlias") }}</span></div>
                     </div>
                     <div class="left">{{ $store.getters["mallNew/all_price_points"] }}</div>
                 </div>
             </div>
-            <div class="total-btn" :class="{ disabled: !$store.getters['mallNew/checked_num'] }" @click="checkout">结算</div>
+            <div class="total-btn" :class="{ disabled: !$store.getters['mallNew/checked_num'] }" @click="checkout">{{ $t("vip.mall.checkout") }}</div>
         </div>
     </div>
 </template>
@@ -199,7 +199,7 @@ export default {
         checkout() {
             if (!this.requireLogin()) return;
             if (!this.$store.getters["mallNew/checked_num"]) {
-                return this.$message.warning("请先选择要结算的商品");
+                return this.$message.warning(this.$t("vip.mall.selectCheckoutProducts"));
             }
             this.$store.dispatch("mallNew/changeCartConfirmIsShow", true);
         },

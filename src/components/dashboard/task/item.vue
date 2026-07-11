@@ -7,7 +7,7 @@
                 <span class="u-desc">
                     {{ data.task.task_detail }} ∕
                     <span v-for="(attr, key) in data.attr" :key="key" class="u-attr">
-                        {{ attr_name[attr.name] }} +{{ attr.count }}
+                        {{ translatedAttrName[attr.name] || attr.name }} +{{ attr.count }}
                     </span>
                 </span>
             </div>
@@ -17,7 +17,7 @@
                     :disabled="data.hasFinish"
                     :icon="(data.hasFinish && 'Check') || 'Right'"
                     @click="checkFinish(data)"
-                    >{{ data.hasFinish ? "已完成" : "去完成" }}</el-button
+                    >{{ data.hasFinish ? $t("dashboard.common.completed") : $t("dashboard.tasks.goComplete") }}</el-button
                 >
             </div>
         </div>
@@ -30,13 +30,16 @@ export default {
     props: ["data"],
     data: function () {
         return {
-            attr_name: {
-                experience: "经验",
-                points: "积分",
-            },
+            attr_name: {},
         };
     },
     computed: {
+        translatedAttrName() {
+            return {
+                experience: this.$t("dashboard.common.experience"),
+                points: this.$t("dashboard.common.points"),
+            };
+        },
         defaultTaskIcon() {
             return __imgPath + "image/common/jx3box_black.svg";
         },

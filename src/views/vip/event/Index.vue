@@ -20,16 +20,19 @@ export default {
     name: "Index",
     props: [],
     data: function () {
-        return {
-            list: [
+        return {};
+    },
+    computed: {
+        list() {
+            return [
                 {
                     path: "rank-2",
-                    desc: "第二届秘境百强榜活动会员奖励",
+                    desc: this.$t("vip.event.rank2Card"),
                     img: "https://oss.jx3box.com/upload/post/2021/6/28/2699633.png",
                 },
                 {
                     path: "rank-1-sponsors",
-                    desc: "第一届竞速活动赞助单位领取1年PRO会员",
+                    desc: this.$t("vip.event.sponsorCard"),
                     img: "https://oss.jx3box.com/upload/post/2021/3/20/3481617.png",
                 },
                 // {
@@ -40,13 +43,12 @@ export default {
                 // },
                 {
                     path: "kol-1",
-                    desc: "KOL铭牌领取",
+                    desc: this.$t("vip.event.kolCard"),
                     img: "https://oss.jx3box.com/upload/post/2021/3/20/8189870.png",
                 },
-            ],
-        };
+            ];
+        },
     },
-    computed: {},
     methods: {
         showBanner: function (val) {
             return resolveImagePath(val);

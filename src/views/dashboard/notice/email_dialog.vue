@@ -1,6 +1,6 @@
 <template>
     <el-dialog
-        :title="email ? '更新邮箱' : '绑定邮箱'"
+        :title="email ? $t('dashboard.email.update') : $t('dashboard.email.bind')"
         v-model="visible"
         :width="isPhone ? '95%' : '600px'"
         class="m-email-dialog"
@@ -9,15 +9,15 @@
     >
         <div class="m-email-content">
             <div class="m-email-intro">
-                <span class="u-intro-tag">邮箱验证</span>
-                <h3>{{ email ? "更换绑定邮箱" : "绑定邮箱" }}</h3>
-                <p>用于账号安全验证、找回密码与重要通知提醒。</p>
+                <span class="u-intro-tag">{{ $t("dashboard.email.verification") }}</span>
+                <h3>{{ email ? $t("dashboard.email.changeBound") : $t("dashboard.email.bind") }}</h3>
+                <p>{{ $t("dashboard.email.purpose") }}</p>
                 <div class="m-current-email" :class="{ 'is-empty': !email }">
-                    <span class="u-current-label">{{ email ? "当前邮箱地址" : "当前状态" }}</span>
+                    <span class="u-current-label">{{ email ? $t("dashboard.email.current") : $t("dashboard.common.currentStatus") }}</span>
                     <strong class="u-current-value">
-                        {{ email || "未绑定邮箱" }}
+                        {{ email || $t("dashboard.email.unbound") }}
                         <el-tag v-if="email" class="u-status" :type="verified ? 'success' : 'warning'">
-                            {{ verified ? "已验证" : "未验证" }}
+                            {{ verified ? $t("dashboard.common.verified") : $t("dashboard.common.unverified") }}
                         </el-tag>
                     </strong>
                 </div>
@@ -25,14 +25,14 @@
 
             <el-form :model="form" ref="form" :rules="rules" status-icon size="large" class="m-email-form">
                 <el-form-item prop="email">
-                    <el-input v-model.trim="form.email" placeholder="请输入邮箱" clearable @input="onEmailInput">
+                    <el-input v-model.trim="form.email" :placeholder="$t('dashboard.email.placeholder')" clearable @input="onEmailInput">
                         <template #prefix>
                             <el-icon><Message /></el-icon>
                         </template>
                     </el-input>
                 </el-form-item>
                 <el-form-item prop="code" v-if="hasSendBindEmail" class="u-code-input">
-                    <el-input v-model.trim="form.code" placeholder="请输入验证码">
+                    <el-input v-model.trim="form.code" :placeholder="$t('dashboard.common.codePlaceholder')">
                         <template #prefix>
                             <el-icon><Lock /></el-icon>
                         </template>
@@ -42,13 +42,13 @@
             <el-alert
                 class="u-alert"
                 v-if="hasSendBindEmail"
-                title="邮件发送成功"
+                :title="$t('dashboard.email.sent')"
                 type="success"
-                description="一封邮箱验证的邮件已发送至您的邮箱，请注意查收"
+                :description="$t('dashboard.email.sentDescription')"
                 show-icon
                 :closable="false"
             />
-            <p class="u-submit-tip" v-if="lastSentEmail && form.email !== lastSentEmail">邮箱已变更，请重新发送验证邮件</p>
+            <p class="u-submit-tip" v-if="lastSentEmail && form.email !== lastSentEmail">{{ $t("dashboard.email.changedResend") }}</p>
             <div class="m-action">
                 <template v-if="!hasSendBindEmail">
                     <el-button
@@ -59,9 +59,9 @@
                         :loading="sendLoading"
                         @click="bind"
                     >
-                        发送验证邮件
+                        {{ $t("dashboard.email.sendVerification") }}
                     </el-button>
-                    <div class="u-tips">仅支持常见邮箱后缀，部分邮件服务商可能无法收到验证邮件</div>
+                    <div class="u-tips">{{ $t("dashboard.email.providerTip") }}</div>
                 </template>
                 <el-button
                     v-if="hasSendBindEmail"
@@ -72,7 +72,7 @@
                     @click="submit"
                     :loading="loading"
                 >
-                    确认绑定
+                    {{ $t("dashboard.email.confirmBind") }}
                 </el-button>
             </div>
         </div>
@@ -106,11 +106,11 @@ export default {
             },
             rules: {
                 email: [
-                    { required: true, message: "请输入邮箱", trigger: "blur" },
-                    { type: "email", message: "邮箱格式不正确", trigger: "blur" },
+                    { required: true, message: this.$t("dashboard.email.placeholder"), trigger: "blur" },
+                    { type: "email", message: this.$t("dashboard.email.invalid"), trigger: "blur" },
                     { validator: this.checkEmail, trigger: "blur" },
                 ],
-                code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
+                code: [{ required: true, message: this.$t("dashboard.common.codePlaceholder"), trigger: "blur" }],
             },
             loading: false,
             sendLoading: false,
@@ -173,7 +173,7 @@ export default {
                 return callback();
             }
             if (value === this.email && this.verified) {
-                return callback(new Error("不可重复验证相同邮箱"));
+                return callback(new Error(this.$t("dashboard.email.sameEmail")));
             }
             if (value === this.email && !this.verified) {
                 return callback();
@@ -181,13 +181,13 @@ export default {
             checkEmailAvailable(value)
                 .then((res) => {
                     if (res.data.data?.isExist) {
-                        callback(new Error("邮箱已被绑定"));
+                        callback(new Error(this.$t("dashboard.email.alreadyBound")));
                     } else {
                         callback();
                     }
                 })
                 .catch(() => {
-                    callback(new Error("邮箱校验失败，请稍后重试"));
+                    callback(new Error(this.$t("dashboard.email.checkFailed")));
                 });
         },
         bind() {
@@ -203,7 +203,7 @@ export default {
                             this.form.code = "";
                         })
                         .catch(() => {
-                            this.$message.error("验证邮件发送失败，请稍后重试");
+                            this.$message.error(this.$t("dashboard.email.sendFailed"));
                         })
                         .finally(() => {
                             this.sendLoading = false;
@@ -213,11 +213,11 @@ export default {
         },
         submit() {
             if (!this.form.code) {
-                this.$message.error("请输入验证码");
+                this.$message.error(this.$t("dashboard.common.codePlaceholder"));
                 return;
             }
             if (this.form.email !== this.lastSentEmail) {
-                this.$message.warning("请重新发送验证邮件");
+                this.$message.warning(this.$t("dashboard.email.resend"));
                 return;
             }
 
@@ -225,11 +225,11 @@ export default {
             sendVerifyEmail(this.form.code)
                 .then((res) => {
                     this.$emit("update");
-                    this.$message.success("邮箱绑定成功");
+                    this.$message.success(this.$t("dashboard.email.bindSuccess"));
                     this.handleClose();
                 })
                 .catch(() => {
-                    this.$message.error("邮箱绑定失败，请检查验证码后重试");
+                    this.$message.error(this.$t("dashboard.email.bindFailed"));
                 })
                 .finally(() => {
                     this.loading = false;

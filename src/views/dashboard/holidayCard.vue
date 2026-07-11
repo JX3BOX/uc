@@ -1,7 +1,7 @@
 <template>
-    <uc class="m-dashboard-frame m-dashboard-skin" icon="el-icon-magic-stick" title="魔盒藏品" :tab-list="tabList">
+    <uc class="m-dashboard-frame m-dashboard-skin" icon="el-icon-magic-stick" :title="$t('dashboard.treasure.title')" :tab-list="tabList">
         <div class="m-cert-list">
-            <el-empty v-if="!list.length" description="您还未获得过贺卡~"></el-empty>
+            <el-empty v-if="!list.length" :description="$t('dashboard.treasure.noCards')"></el-empty>
             <el-row :gutter="32" v-else>
                 <el-col v-for="(item, index) in list" :key="index" :xs="24" :sm="12" :md="8" :xl="6">
                     <a class="m-cert-item m-feast-item" :href="getCertLink(item)" target="_blank">
@@ -9,7 +9,7 @@
                         <div class="m-info">
                             <div class="u-title">{{ item.event_name }}</div>
                             <div class="u-tip">{{ item.event_wish }}</div>
-                            <div class="u-tip">获得时间：{{ formatTime(item.created_at) }}</div>
+                            <div class="u-tip">{{ $t("dashboard.common.obtainedAt") }}：{{ formatTime(item.created_at) }}</div>
                         </div>
                         <img class="u-icon" src="@/assets/img/dashboard/holidayCard/feast_icon.svg" />
                     </a>

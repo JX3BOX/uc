@@ -5,22 +5,22 @@
                 <img v-if="plan.public" svg-inline src="@/assets/img/publish/works/repo.svg" />
                 <img v-else svg-inline src="@/assets/img/publish/works/draft.svg" />
             </i>
-            <a class="u-title" target="_blank" :href="`/item/#/plan_view/${plan.id}`">{{ plan.title || "无标题" }}</a>
+            <a class="u-title" target="_blank" :href="`/item/#/plan_view/${plan.id}`">{{ plan.title || $t("publish.common.untitled") }}</a>
             <div class="u-desc">
                 <time class="u-desc-subitem">
                     <i class="el-icon-finished"></i>
-                    发布 :
+                    {{ $t("publish.common.publishedAt") }} :
                     {{ dateFormat(plan.created) }}
                 </time>
                 <time class="u-desc-subitem">
                     <i class="el-icon-refresh"></i>
-                    更新 :
+                    {{ $t("publish.common.updatedAt") }} :
                     {{ dateFormat(plan.updated) }}
                 </time>
             </div>
             <el-button-group class="u-action">
-                <el-button icon="Edit" title="编辑" @click="plan_edit(plan.id)"></el-button>
-                <el-button icon="Delete" title="删除" @click="plan_delete(plan.id)"></el-button>
+                <el-button icon="Edit" :title="$t('publish.common.edit')" @click="plan_edit(plan.id)"></el-button>
+                <el-button icon="Delete" :title="$t('publish.common.delete')" @click="plan_delete(plan.id)"></el-button>
             </el-button-group>
         </li>
     </ul>
@@ -37,15 +37,15 @@ export default {
             location.href = "/publish/#/item_plan/" + id;
         },
         plan_delete: function (id) {
-            this.$confirm("确认是否删除该物品清单？", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("publish.confirm.deleteItemList"), this.$t("publish.common.prompt"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
+                cancelButtonText: this.$t("publish.common.cancel"),
                 type: "warning",
             }).then(() => {
                 delMyPlans(id).then((res) => {
                     this.$emit("refresh");
                     this.$message({
-                        message: "删除成功",
+                        message: this.$t("publish.message.deleteSucceeded"),
                         type: "success",
                     });
                 });

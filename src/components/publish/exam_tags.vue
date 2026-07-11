@@ -1,29 +1,29 @@
 <template>
-    <el-form-item label="标签">
+    <el-form-item :label="$t('publish.common.tags')">
         <div class="m-publish-exam-tags-list">
             <el-checkbox-group v-model="list">
                 <div class="u-group">
-                    <label class="el-checkbox"><span class="el-checkbox__label u-group-label">方向</span></label>
-                    <el-checkbox :value="game" v-for="game in options.game" :key="game">{{ game }}</el-checkbox>
+                    <label class="el-checkbox"><span class="el-checkbox__label u-group-label">{{ $t("publish.exam.direction") }}</span></label>
+                    <el-checkbox :value="game" v-for="game in options.game" :key="game">{{ optionLabel(game) }}</el-checkbox>
                 </div>
                 <div class="u-group">
-                    <label class="el-checkbox"><span class="el-checkbox__label u-group-label">门派</span></label>
+                    <label class="el-checkbox"><span class="el-checkbox__label u-group-label">{{ $t("publish.exam.school") }}</span></label>
                     <el-checkbox :value="item" v-for="item in school" :key="item">{{ item }}</el-checkbox>
                 </div>
                 <div class="u-group">
-                    <label class="el-checkbox"><span class="el-checkbox__label u-group-label">玩法</span></label>
-                    <el-checkbox :value="play" v-for="play in options.play" :key="play">{{ play }}</el-checkbox>
+                    <label class="el-checkbox"><span class="el-checkbox__label u-group-label">{{ $t("publish.exam.gameplay") }}</span></label>
+                    <el-checkbox :value="play" v-for="play in options.play" :key="play">{{ optionLabel(play) }}</el-checkbox>
                 </div>
                 <div class="u-group">
-                    <label class="el-checkbox"><span class="el-checkbox__label u-group-label">学科</span></label>
+                    <label class="el-checkbox"><span class="el-checkbox__label u-group-label">{{ $t("publish.exam.subject") }}</span></label>
                     <el-checkbox :value="subject" v-for="subject in options.subject" :key="subject">{{
-                        subject
+                        optionLabel(subject)
                     }}</el-checkbox>
                 </div>
                 <div class="u-group">
-                    <label class="el-checkbox"><span class="el-checkbox__label u-group-label">领域</span></label>
+                    <label class="el-checkbox"><span class="el-checkbox__label u-group-label">{{ $t("publish.exam.field") }}</span></label>
                     <el-checkbox :value="domain" v-for="domain in options.domain" :key="domain">{{
-                        domain
+                        optionLabel(domain)
                     }}</el-checkbox>
                 </div>
             </el-checkbox-group>
@@ -47,11 +47,11 @@
             
             @keyup.enter="handleInputConfirm"
             @blur="handleInputConfirm"
-            placeholder="回车新增自定义标签"
+            :placeholder="$t('publish.form.tagsPlaceholder')"
         >
         </el-input>
         <el-button v-else class="button-new-tag"  @click="showInput"
-            >+ 添加自定义</el-button
+            >+ {{ $t("publish.exam.addCustom") }}</el-button
         >
     </div> -->
     </el-form-item>
@@ -100,6 +100,41 @@ export default {
         },
     },
     methods: {
+        optionLabel(value) {
+            const key = {
+                副本: "dungeons",
+                宠物: "pets",
+                家园: "housing",
+                奇遇: "adventures",
+                成就: "achievements",
+                阵营: "factions",
+                野外: "openWorld",
+                竞技场: "arena",
+                切磋: "duels",
+                吃鸡: "battleRoyale",
+                语文: "language",
+                数学: "mathematics",
+                外语: "foreignLanguage",
+                信息: "informationTechnology",
+                物理: "physics",
+                化学: "chemistry",
+                生物: "biology",
+                政治: "politics",
+                历史: "history",
+                地理: "geography",
+                美术: "art",
+                音乐: "music",
+                体育: "physicalEducation",
+                劳动: "labor",
+                理综: "scienceComprehensive",
+                文综: "humanitiesComprehensive",
+                美容: "beauty",
+                金融: "finance",
+                医学: "medicine",
+                法学: "law",
+            }[value];
+            return key ? this.$t(`publish.exam.options.${key}`) : value;
+        },
         // TAG
         handleClose(tag) {
             this.custom.splice(this.custom.indexOf(tag), 1);

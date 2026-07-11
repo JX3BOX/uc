@@ -12,8 +12,8 @@ function handleMallExchangeError(vm, error) {
     const { code, msg } = getMallExchangeError(error);
 
     if (code === OWNED_MALL_ITEM_CODE) {
-        return vm.$alert(msg || "用户已拥有该物品", "兑换失败", {
-            confirmButtonText: "知道了",
+        return vm.$alert(msg || vm.$t("vip.mall.alreadyOwned"), vm.$t("vip.mall.exchangeFailed"), {
+            confirmButtonText: vm.$t("vip.common.gotIt"),
             type: "warning",
         });
     }
@@ -25,40 +25,40 @@ function handleMallExchangeError(vm, error) {
     return false;
 }
 
-function getMallRequirementMessages(item = {}, canBuyInfo = {}) {
+function getMallRequirementMessages(item = {}, canBuyInfo = {}, t = (key) => key) {
     const messages = [];
 
     if (canBuyInfo.level === false) {
-        messages.push(`等级不足：需要 Lv.${canBuyInfo.user_level || "-"}`);
+        messages.push(t("vip.mall.requirementLevel", { level: canBuyInfo.user_level || "-" }));
     }
     if (canBuyInfo.vip_limit === false) {
-        messages.push("会员限制：该商品仅会员可兑换");
+        messages.push(t("vip.mall.requirementMember"));
     }
     if (canBuyInfo.box_coin === false) {
-        messages.push(`盒币不足：需要 ${item.price_boxcoin || 0} 盒币`);
+        messages.push(t("vip.mall.requirementBoxcoin", { amount: item.price_boxcoin || 0 }));
     }
     if (canBuyInfo.points === false) {
-        messages.push(`积分不足：需要 ${item.price_points || 0} 积分`);
+        messages.push(t("vip.mall.requirementPoints", { amount: item.price_points || 0 }));
     }
     if (canBuyInfo.cny === false) {
-        messages.push(`金箔不足：需要 ${item.price_cny || 0} 金箔`);
+        messages.push(t("vip.mall.requirementCny", { amount: item.price_cny || 0 }));
     }
     if (canBuyInfo.buy_time === false) {
-        messages.push("不在可兑换时间内");
+        messages.push(t("vip.mall.requirementTime"));
     }
     if (canBuyInfo.stock === false) {
-        messages.push("库存不足：当前不可兑换");
+        messages.push(t("vip.mall.requirementStock"));
     }
 
     return messages;
 }
 
 function alertMallRequirement(vm, item, canBuyInfo) {
-    const messages = getMallRequirementMessages(item, canBuyInfo);
-    const message = messages.length ? messages.join("<br />") : "当前不满足兑换条件";
+    const messages = getMallRequirementMessages(item, canBuyInfo, vm.$t.bind(vm));
+    const message = messages.length ? messages.join("<br />") : vm.$t("vip.mall.notEligible");
 
-    return vm.$alert(message, "暂不能兑换", {
-        confirmButtonText: "知道了",
+    return vm.$alert(message, vm.$t("vip.common.exchangeUnavailable"), {
+        confirmButtonText: vm.$t("vip.common.gotIt"),
         dangerouslyUseHTMLString: true,
         type: "warning",
     });

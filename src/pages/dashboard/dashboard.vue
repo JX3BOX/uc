@@ -1,6 +1,6 @@
 <template>
     <CommonHeader :key="headerKey"></CommonHeader>
-    <Breadcrumb name="个人中心" slug="dashboard" root="/dashboard" :crumbEnable="true">
+    <Breadcrumb :name="$t('dashboard.common.dashboard')" slug="dashboard" root="/dashboard" :crumbEnable="true">
         <template #logo>
             <img svg-inline src="@/assets/img/dashboard/logo.svg" />
         </template>

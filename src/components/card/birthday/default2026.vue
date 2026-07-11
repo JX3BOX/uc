@@ -31,9 +31,9 @@
                     />
                 </div>
                 <div class="u-txt">
-                    <template v-if="!reward && !once">点击旋钮开启</template>
+                    <template v-if="!reward && !once">{{ $t("card.birthday.turnKnob") }}</template>
                     <template v-if="once">
-                        <span class="u-open">点击开启</span>
+                        <span class="u-open">{{ $t("card.birthday.clickToOpen") }}</span>
                     </template>
                 </div>
             </machine>
@@ -46,7 +46,7 @@
             </div>
         </template>
         <div class="m-card" v-else>
-            <span class="u-name">祝：{{ name }} </span>
+            <span class="u-name">{{ $t("card.birthday.toName", { name }) }} </span>
             <img class="u-star" :src="`${imgPath}star/${star}/date.svg`" />
             <img :src="`${imgPath}card.png`" />
             <img class="u-girl" :src="`${imgPath}star/${star}/girl.png`" />

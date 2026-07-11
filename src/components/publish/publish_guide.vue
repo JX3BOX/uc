@@ -1,13 +1,13 @@
 <template>
     <!-- 前后引导 -->
     <div class="m-publish-guide">
-        <label class="el-form-item__label">前后引导 </label>
+        <label class="el-form-item__label">{{ $t("publish.guide.navigation") }} </label>
         <div class="u-condition u-prev" key="prev">
-            <span class="u-prepend">上一篇</span>
+            <span class="u-prepend">{{ $t("publish.guide.previous") }}</span>
             <el-select
                 filterable
                 remote
-                placeholder="输入关键词进行搜索"
+                :placeholder="$t('publish.common.searchByKeyword')"
                 :remote-method="remoteMethodPrev"
                 v-model="prevPost"
                 clearable
@@ -24,11 +24,11 @@
             </el-select>
         </div>
         <div class="u-condition u-next" key="next">
-            <span class="u-prepend">下一篇</span>
+            <span class="u-prepend">{{ $t("publish.guide.next") }}</span>
             <el-select
                 filterable
                 remote
-                placeholder="输入关键词进行搜索"
+                :placeholder="$t('publish.common.searchByKeyword')"
                 :remote-method="remoteMethodNext"
                 v-model="nextPost"
                 clearable

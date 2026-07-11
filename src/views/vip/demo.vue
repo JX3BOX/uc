@@ -1,21 +1,21 @@
 <template>
     <div >
         <CommonHeader></CommonHeader>
-        <Breadcrumb name="订购会员" slug="vip" root="/vip/premium" :publishEnable="false" :adminEnable="false" :feedbackEnable="true">
-            <img slot="logo" svg-inline src="@/assets/img/vip/logo.svg" />
+        <Breadcrumb :name="$t('vip.demo.orderMembership')" slug="vip" root="/vip/premium" :publishEnable="false" :adminEnable="false" :feedbackEnable="true">
+            <template #logo><img svg-inline src="@/assets/img/vip/logo.svg" /></template>
         </Breadcrumb>
         <Main class="m-vip-container" :withoutRight="true" :withoutLeft="true">
             <div class="m-vip-premium" v-if="!done">
-                <simple-header title="升级您的账号" desc="Upgrade your account" />
-                主体内容
+                <simple-header :title="$t('vip.demo.upgradeAccount')" :desc="$t('vip.demo.upgradeSubtitle')" />
+                {{ $t("vip.demo.content") }}
             </div>
             <result class="m-vip-result" v-else>
-                <div slot="title" class="m-premium-result-title">
-                    成功标题
-                </div>
-                <div slot="desc" class="m-rename-result-desc">
-                    成功描述
-                </div>
+                <template #title>
+                    <div class="m-premium-result-title">{{ $t("vip.demo.successTitle") }}</div>
+                </template>
+                <template #desc>
+                    <div class="m-rename-result-desc">{{ $t("vip.demo.successDescription") }}</div>
+                </template>
             </result>
         </Main>
         <paypop v-if="will" v-model="dialog_visible" :productDesc="productDesc" :productId="productId" :returnUrl="returnUrl" @done="finish" />

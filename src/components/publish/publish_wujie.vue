@@ -1,7 +1,7 @@
 <template>
     <div class="m-publish-wujie">
-        <el-form-item label="适用">
-            <el-checkbox :true-value="1" :fasle-value="0" v-model="visible">无界</el-checkbox>
+        <el-form-item :label="$t('publish.form.appliesTo')">
+            <el-checkbox :true-value="1" :fasle-value="0" v-model="visible">{{ $t("publish.form.wujie") }}</el-checkbox>
         </el-form-item>
     </div>
 </template>

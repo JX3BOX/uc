@@ -10,7 +10,7 @@ export const directMixins = {
     mounted() {
         // 其它页面带redirect跳转过来时
         let search = new URLSearchParams(location.search);
-            let redirect = search.get("redirect");
+        let redirect = search.get("redirect");
         if (redirect) {
             sessionStorage.setItem("redirect", redirect);
         }
@@ -23,10 +23,10 @@ export const directMixins = {
             const redirect = sessionStorage.getItem("redirect");
             if (redirect && redirect.startsWith("http")) {
                 this.redirect = redirect;
-                this.redirect_button = "即将跳转";
+                this.redirect_button = this.$t("account.common.redirectingSoon");
             } else {
                 this.redirect = this.homepage;
-                this.redirect_button = "返回首页";
+                this.redirect_button = this.$t("account.common.backHome");
             }
 
             this.isAlternate = sessionStorage.getItem("alternate") == 1;

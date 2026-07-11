@@ -3,22 +3,22 @@
         <h2 class="u-title">
             <span>
                 <i class="el-icon-bank-card"></i>
-                我的卡密
+                {{ $t("dashboard.cards.title") }}
             </span>
             <span class="u-only">
-                <el-switch v-model="onlyNew" active-text="仅查看未使用"></el-switch>
+                <el-switch v-model="onlyNew" :active-text="$t('dashboard.cards.unusedOnly')"></el-switch>
             </span>
         </h2>
-        <el-alert class="m-boxcoin-tip" title="请务必妥善保管，并注意过期时间。" type="warning" show-icon>
+        <el-alert class="m-boxcoin-tip" :title="$t('dashboard.cards.keepSafeTip')" type="warning" show-icon>
             <!-- <a href="https://charge.xoyo.com/pay?item=jx3&way=kcard" target="_blank">金山一卡通充值页面</a> -->
             <div class="m-boxcoin-tip__content" v-html="bread"></div>
         </el-alert>
         <div class="m-keycode-tab">
             <el-tabs type="border-card" v-model="tab" @tab-change="tabClick">
-                <el-tab-pane label="激活码(直发)" name="sn" lazy>
+                <el-tab-pane :label="$t('dashboard.cards.directCodes')" name="sn" lazy>
                     <template #label>
-                        <span class="u-tab--title">激活码</span>
-                        <span class="u-tab--desc">直发</span>
+                        <span class="u-tab--title">{{ $t("dashboard.cards.activationCode") }}</span>
+                        <span class="u-tab--desc">{{ $t("dashboard.cards.directIssue") }}</span>
                     </template>
                     <el-table
                         class="m-table"
@@ -29,16 +29,16 @@
                         header-cell-class-name="u-header-cell"
                         v-loading="loading"
                     >
-                        <el-table-column prop="type" label="类型" width="120px">
+                        <el-table-column prop="type" :label="$t('dashboard.common.type')" width="120px">
                             <template #default="scope">{{
-                                snOptions.types[scope.row.type] || scope.row.type || "其他"
+                                snOptions.types[scope.row.type] || scope.row.type || $t("dashboard.common.other")
                             }}</template>
                         </el-table-column>
-                        <el-table-column prop="subtype" label="渠道" width="100px">
-                            <template #default="scope">{{ snOptions.subtypes[scope.row.subtype] || "其他" }}</template>
+                        <el-table-column prop="subtype" :label="$t('dashboard.cards.channel')" width="100px">
+                            <template #default="scope">{{ snOptions.subtypes[scope.row.subtype] || $t("dashboard.common.other") }}</template>
                         </el-table-column>
-                        <el-table-column prop="describe" label="描述" width="160px"></el-table-column>
-                        <el-table-column label="激活码" width="280">
+                        <el-table-column prop="describe" :label="$t('dashboard.common.description')" width="160px"></el-table-column>
+                        <el-table-column :label="$t('dashboard.cards.activationCode')" width="280">
                             <template #default="scope">
                                 <div class="u-code">
                                     <span class="u-txt">{{ scope.row.code || "****************" }}</span>
@@ -49,7 +49,7 @@
                                         @click="getSn(scope.$index, scope.row)"
                                         plain
                                         size="small"
-                                        >点击查看</el-button
+                                        >{{ $t("dashboard.common.clickToView") }}</el-button
                                     >
                                     <el-button
                                         class="u-btn"
@@ -58,12 +58,12 @@
                                         icon="DocumentCopy"
                                         size="small"
                                         @click="copyToClipboard(scope.row.code)"
-                                        >复制</el-button
+                                        >{{ $t("dashboard.common.copy") }}</el-button
                                     >
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column label="过期时间" width="250">
+                        <el-table-column :label="$t('dashboard.common.expirationTime')" width="250">
                             <template #default="scope">
                                 <div class="u-time" v-if="scope.row.expire_at">
                                     <span class="u-tag" :class="compareTime(scope.row.expire_at, 'tag')">{{
@@ -74,9 +74,9 @@
                                 <span v-else>-</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="发放时间" width="200" prop="grant_at"></el-table-column>
-                        <el-table-column prop="remark" label="备注" width="200"> </el-table-column>
-                        <el-table-column prop="used_by_self" label="是否使用">
+                        <el-table-column :label="$t('dashboard.cards.issuedAt')" width="200" prop="grant_at"></el-table-column>
+                        <el-table-column prop="remark" :label="$t('dashboard.common.remark')" width="200"> </el-table-column>
+                        <el-table-column prop="used_by_self" :label="$t('dashboard.cards.isUsed')">
                             <template #default="scope">
                                 <el-icon
                                     class="u-used-icon"
@@ -88,10 +88,10 @@
                                 ></el-icon>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="activate_url" label="激活地址">
+                        <el-table-column prop="activate_url" :label="$t('dashboard.cards.activationUrl')">
                             <template #default="scope">
                                 <a :href="scope.row.activate_url" target="_blank">{{
-                                    (scope.row.activate_url && "前往激活") || ""
+                                    (scope.row.activate_url && $t("dashboard.cards.goActivate")) || ""
                                 }}</a>
                             </template>
                         </el-table-column>
@@ -99,7 +99,7 @@
                     <el-alert
                         v-else
                         class="m-credit-null m-packet-null"
-                        title="没有找到任何记录"
+                        :title="$t('dashboard.common.noRecords')"
                         type="info"
                         center
                         show-icon
@@ -116,10 +116,10 @@
                         :total="total"
                     ></el-pagination>
                 </el-tab-pane>
-                <el-tab-pane label="激活码(积分兑换|抽奖)" name="virtual" lazy>
+                <el-tab-pane :label="$t('dashboard.cards.redeemedCodes')" name="virtual" lazy>
                     <template #label>
-                        <span class="u-tab--title">激活码</span>
-                        <span class="u-tab--desc">积分兑换|抽奖</span>
+                        <span class="u-tab--title">{{ $t("dashboard.cards.activationCode") }}</span>
+                        <span class="u-tab--desc">{{ $t("dashboard.cards.pointsOrLottery") }}</span>
                     </template>
                     <el-table
                         class="m-table"
@@ -128,10 +128,10 @@
                         show-header
                         v-loading="loading"
                     >
-                        <el-table-column label="名称" width="120px">
+                        <el-table-column :label="$t('dashboard.common.name')" width="120px">
                             <template #default="scope">{{ scope.row.goods.title || "-" }}</template>
                         </el-table-column>
-                        <el-table-column label="激活码" width="330">
+                        <el-table-column :label="$t('dashboard.cards.activationCode')" width="330">
                             <template #default="scope">
                                 <div class="u-code">
                                     <span class="u-txt">{{ scope.row.code || "****************" }}</span>
@@ -142,7 +142,7 @@
                                         @click="getVirtualCode(scope.$index, scope.row)"
                                         plain
                                         size="small"
-                                        >点击查看</el-button
+                                        >{{ $t("dashboard.common.clickToView") }}</el-button
                                     >
                                     <el-button
                                         class="u-btn"
@@ -151,12 +151,12 @@
                                         icon="DocumentCopy"
                                         size="small"
                                         @click="copyToClipboard(scope.row.code)"
-                                        >复制</el-button
+                                        >{{ $t("dashboard.common.copy") }}</el-button
                                     >
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column label="过期时间" width="250">
+                        <el-table-column :label="$t('dashboard.common.expirationTime')" width="250">
                             <template #default="scope">
                                 <div class="u-time" v-if="scope.row.goods.expire_at">
                                     <span class="u-tag" :class="compareTime(scope.row.goods.expire_at, 'tag')">{{
@@ -167,12 +167,12 @@
                                 <span v-else>-</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="备注" min-width="200">
+                        <el-table-column :label="$t('dashboard.common.remark')" min-width="200">
                             <template #default="scope">
                                 {{ scope.row.goods.mark || scope.row.goods.subtitle }}
                             </template>
                         </el-table-column>
-                        <el-table-column prop="used_by_self" label="是否使用">
+                        <el-table-column prop="used_by_self" :label="$t('dashboard.cards.isUsed')">
                             <template #default="scope">
                                 <el-icon
                                     class="u-used-icon"
@@ -184,10 +184,10 @@
                                 ></el-icon>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="activate_url" label="激活地址">
+                        <el-table-column prop="activate_url" :label="$t('dashboard.cards.activationUrl')">
                             <template #default="scope">
                                 <a :href="scope.row.activate_url" target="_blank">{{
-                                    (scope.row.activate_url && "跳转激活") || "-"
+                                    (scope.row.activate_url && $t("dashboard.cards.goActivate")) || "-"
                                 }}</a>
                             </template>
                         </el-table-column>
@@ -195,7 +195,7 @@
                     <el-alert
                         v-else
                         class="m-credit-null m-packet-null"
-                        title="没有找到任何记录"
+                        :title="$t('dashboard.common.noRecords')"
                         type="info"
                         center
                         show-icon
@@ -212,7 +212,7 @@
                         :total="total"
                     ></el-pagination>
                 </el-tab-pane>
-                <el-tab-pane label="一卡通" name="keycode" lazy>
+                <el-tab-pane :label="$t('dashboard.cards.prepaidCard')" name="keycode" lazy>
                     <el-table
                         class="m-table"
                         v-if="keycodeList.length"
@@ -220,23 +220,23 @@
                         show-header
                         v-loading="loading"
                     >
-                        <el-table-column prop="type" label="类型" width="120">
-                            <template #default="scope">{{ keycodeOptions.types[scope.row.type] || "其他" }}</template>
+                        <el-table-column prop="type" :label="$t('dashboard.common.type')" width="120">
+                            <template #default="scope">{{ keycodeOptions.types[scope.row.type] || $t("dashboard.common.other") }}</template>
                         </el-table-column>
-                        <el-table-column prop="subtype" label="渠道" width="120">
+                        <el-table-column prop="subtype" :label="$t('dashboard.cards.channel')" width="120">
                             <template #default="scope">{{
-                                keycodeOptions.subtypes[scope.row.subtype] || "其他"
+                                keycodeOptions.subtypes[scope.row.subtype] || $t("dashboard.common.other")
                             }}</template>
                         </el-table-column>
-                        <el-table-column label="面额" width="120">
+                        <el-table-column :label="$t('dashboard.cards.denomination')" width="120">
                             <template #default="scope">{{ scope.row.count }}</template>
                         </el-table-column>
-                        <el-table-column label="卡密" width="360">
+                        <el-table-column :label="$t('dashboard.cards.cardCode')" width="360">
                             <template #default="scope">
                                 <div class="u-card">
                                     <div class="u-count">
                                         <div class="u-line">
-                                            <span>卡号：{{ scope.row.key || "****************" }}</span>
+                                            <span>{{ $t("dashboard.cards.cardNumber") }}：{{ scope.row.key || "****************" }}</span>
                                             <el-button
                                                 class="u-btn"
                                                 v-if="scope.row.key"
@@ -244,11 +244,11 @@
                                                 icon="DocumentCopy"
                                                 size="small"
                                                 @click="copyToClipboard(scope.row.key)"
-                                                >复制卡号</el-button
+                                                >{{ $t("dashboard.cards.copyCardNumber") }}</el-button
                                             >
                                         </div>
                                         <div class="u-line">
-                                            <span>卡密：{{ scope.row.code || "****************" }} </span>
+                                            <span>{{ $t("dashboard.cards.cardCode") }}：{{ scope.row.code || "****************" }} </span>
                                             <el-button
                                                 v-if="!scope.row.code"
                                                 type="primary"
@@ -256,7 +256,7 @@
                                                 @click="getKeycode(scope.$index, scope.row)"
                                                 plain
                                                 size="small"
-                                                >点击查看</el-button
+                                                >{{ $t("dashboard.common.clickToView") }}</el-button
                                             >
                                             <el-button
                                                 class="u-btn"
@@ -265,14 +265,14 @@
                                                 icon="DocumentCopy"
                                                 size="small"
                                                 @click="copyToClipboard(scope.row.code)"
-                                                >复制卡密</el-button
+                                                >{{ $t("dashboard.cards.copyCardCode") }}</el-button
                                             >
                                         </div>
                                     </div>
                                 </div>
                             </template>
                         </el-table-column>
-                        <el-table-column label="过期时间" width="250">
+                        <el-table-column :label="$t('dashboard.common.expirationTime')" width="250">
                             <template #default="scope">
                                 <div class="u-time" v-if="scope.row.expire_at">
                                     <span class="u-tag" :class="compareTime(scope.row.expire_at, 'tag')">{{
@@ -283,9 +283,9 @@
                                 <span v-else>-</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="发放时间" width="200" prop="grant_at"></el-table-column>
-                        <el-table-column prop="remark" label="备注" width="200"> </el-table-column>
-                        <el-table-column prop="used_by_self" label="是否使用">
+                        <el-table-column :label="$t('dashboard.cards.issuedAt')" width="200" prop="grant_at"></el-table-column>
+                        <el-table-column prop="remark" :label="$t('dashboard.common.remark')" width="200"> </el-table-column>
+                        <el-table-column prop="used_by_self" :label="$t('dashboard.cards.isUsed')">
                             <template #default="scope">
                                 <el-icon
                                     class="u-used-icon"
@@ -301,7 +301,7 @@
                     <el-alert
                         v-else
                         class="m-credit-null m-packet-null"
-                        title="没有找到任何记录"
+                        :title="$t('dashboard.common.noRecords')"
                         type="info"
                         center
                         show-icon
@@ -478,9 +478,9 @@ export default {
         },
         //  获取单个卡密
         getKeycode(index, row) {
-            this.$prompt("请输入密码", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$prompt(this.$t("dashboard.password.enterPassword"), this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 inputType: "password",
             }).then(({ value }) => {
                 activationKeycode(row.id, { password: value }).then((res) => {
@@ -493,9 +493,9 @@ export default {
         },
         //  获取单个激活码
         getSn(index, row) {
-            this.$prompt("请输入密码", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$prompt(this.$t("dashboard.password.enterPassword"), this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 inputType: "password",
             }).then(({ value }) => {
                 activationSn(row.id, { password: value }).then((res) => {
@@ -506,9 +506,9 @@ export default {
         },
         // 获取虚拟卡密
         getVirtualCode(index, row) {
-            this.$prompt("请输入密码", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$prompt(this.$t("dashboard.password.enterPassword"), this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 inputType: "password",
             }).then(({ value }) => {
                 getVirtualCode(row.goods.id, { password: value }).then((res) => {
@@ -532,8 +532,8 @@ export default {
                 1: "gray",
             };
             const _status = {
-                0: "未过期",
-                1: "已过期",
+                0: this.$t("dashboard.cards.notExpired"),
+                1: this.$t("dashboard.cards.expired"),
             };
 
             return type == "tag" ? _tag[key] : _status[key];
@@ -542,16 +542,16 @@ export default {
         // 标记使用
         onKeyCodeUsedClick(row) {
             if (row.used_by_self) return;
-            this.$confirm("确认标记为已使用吗？", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("dashboard.cards.markUsedConfirm"), this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
                     markKeycode(row.id, "used").then((res) => {
                         this.$message({
                             type: "success",
-                            message: "标记成功!",
+                            message: this.$t("dashboard.cards.markSuccess"),
                         });
                         this.loadKeycode();
                     });
@@ -560,16 +560,16 @@ export default {
         },
         onSnUsedClick(row) {
             if (row.used_by_self) return;
-            this.$confirm("确认标记为已使用吗？", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("dashboard.cards.markUsedConfirm"), this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
                     markSn(row.id, "used").then((res) => {
                         this.$message({
                             type: "success",
-                            message: "标记成功!",
+                            message: this.$t("dashboard.cards.markSuccess"),
                         });
                         this.loadSn();
                     });
@@ -578,16 +578,16 @@ export default {
         },
         onVirtualUsedClick(row) {
             if (row.owner.used_by_self) return;
-            this.$confirm("确认标记为已使用吗？", "提示", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
+            this.$confirm(this.$t("dashboard.cards.markUsedConfirm"), this.$t("dashboard.common.tip"), {
+                confirmButtonText: this.$t("dashboard.common.confirm"),
+                cancelButtonText: this.$t("dashboard.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
                     markVirtualCode(row.goods.id, 1).then((res) => {
                         this.$message({
                             type: "success",
-                            message: "标记成功!",
+                            message: this.$t("dashboard.cards.markSuccess"),
                         });
                         this.loadVirtual();
                     });
@@ -599,14 +599,14 @@ export default {
             try {
                 await navigator.clipboard.writeText(String(text));
                 this.$notify({
-                    title: "复制成功",
-                    message: "复制内容 : " + text,
+                    title: this.$t("dashboard.common.copySuccess"),
+                    message: this.$t("dashboard.cards.copiedContent", { text }),
                     type: "success",
                 });
             } catch (err) {
                 this.$notify.error({
-                    title: "复制失败",
-                    message: "请手动复制",
+                    title: this.$t("dashboard.common.copyFailed"),
+                    message: this.$t("dashboard.common.copyManually"),
                 });
             }
         },

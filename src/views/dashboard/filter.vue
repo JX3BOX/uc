@@ -1,16 +1,16 @@
 <template>
     <div class="m-dashboard m-dashboard-filter">
-        <h2 class="u-title"><i class="el-icon-odometer"></i> 敏感词测试</h2>
+        <h2 class="u-title"><i class="el-icon-odometer"></i> {{ $t("dashboard.filter.title") }}</h2>
         <div class="m-content" v-loading="loading">
-            <el-input type="textarea" :rows="6" placeholder="请输入敏感词 / 粘贴段落" v-model="textarea"> </el-input>
-            <el-button type="primary" @click="filter" size="large">提交</el-button>
+            <el-input type="textarea" :rows="6" :placeholder="$t('dashboard.filter.placeholder')" v-model="textarea"> </el-input>
+            <el-button type="primary" @click="filter" size="large">{{ $t("dashboard.common.submit") }}</el-button>
             <template v-if="content">
                 <el-card shadow="never">
-                    <el-divider content-position="left"><i class="el-icon-chat-line-round"></i> 显示内容</el-divider
+                    <el-divider content-position="left"><i class="el-icon-chat-line-round"></i> {{ $t("dashboard.filter.content") }}</el-divider
                     ><span v-html="content"></span>
                 </el-card>
                 <el-card shadow="never" v-if="reason && reason.length">
-                    <el-divider content-position="left"><i class="el-icon-warning-outline"></i> 被屏蔽原因</el-divider>
+                    <el-divider content-position="left"><i class="el-icon-warning-outline"></i> {{ $t("dashboard.filter.blockReason") }}</el-divider>
                     <div class="m-item">
                         <span v-for="(item, i) in reason" :key="i">
                             <strong>{{ i + 1 }} . </strong><span v-html="item"></span>
@@ -18,7 +18,7 @@
                     </div>
                 </el-card>
                 <span v-else>
-                    <el-tag type="success">可正常发布 <i class="el-icon-success"></i></el-tag>
+                    <el-tag type="success">{{ $t("dashboard.filter.publishable") }} <i class="el-icon-success"></i></el-tag>
                 </span>
             </template>
         </div>

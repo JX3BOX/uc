@@ -1,5 +1,5 @@
 <template>
-    <uc icon="el-icon-shopping-bag-1" title="订单中心" :tabList="tabList">
+    <uc icon="el-icon-shopping-bag-1" :title="$t('dashboard.orders.title')" :tabList="tabList">
         <div class="m-dashboard m-dashboard-work m-dashboard-orders">
             <div class="m-dashboard-orders-cont">
                 <!-- 表单 -->
@@ -7,13 +7,13 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>产品</th>
-                                <th>订单编号</th>
-                                <th>金额</th>
-                                <th>支付方式</th>
-                                <th>交易号</th>
-                                <th>交易状态</th>
-                                <th>订单创建时间</th>
+                                <th>{{ $t("dashboard.orders.product") }}</th>
+                                <th>{{ $t("dashboard.orders.orderNumber") }}</th>
+                                <th>{{ $t("dashboard.common.amount") }}</th>
+                                <th>{{ $t("dashboard.orders.paymentMethod") }}</th>
+                                <th>{{ $t("dashboard.orders.transactionNumber") }}</th>
+                                <th>{{ $t("dashboard.orders.transactionStatus") }}</th>
+                                <th>{{ $t("dashboard.orders.createdAt") }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -39,7 +39,7 @@
                     ></el-pagination>
                 </div>
                 <div class="m-order-null" v-else>
-                    <el-alert title="还有任何订单记录" type="info" show-icon></el-alert>
+                    <el-alert :title="$t('dashboard.orders.empty')" type="info" show-icon></el-alert>
                 </div>
             </div>
         </div>

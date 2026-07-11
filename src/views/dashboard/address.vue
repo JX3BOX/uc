@@ -2,33 +2,33 @@
     <uc>
         <div class="m-page-address">
             <!-- 显示地址 -->
-            <el-button type="primary" icon="Plus" @click="add">添加地址</el-button>
+            <el-button type="primary" icon="Plus" @click="add">{{ $t("dashboard.address.add") }}</el-button>
 
             <div class="m-content">
                 <el-table :data="list" v-loading="loading">
-                    <el-table-column prop="contact_name" label="姓名" width="180"> </el-table-column>
-                    <el-table-column prop="contact_phone" label="电话" width="180"> </el-table-column>
-                    <el-table-column label="默认地址" width="180">
+                    <el-table-column prop="contact_name" :label="$t('dashboard.common.name')" width="180"> </el-table-column>
+                    <el-table-column prop="contact_phone" :label="$t('dashboard.common.phone')" width="180"> </el-table-column>
+                    <el-table-column :label="$t('dashboard.address.default')" width="180">
                         <template #default="scope">
                             <el-switch v-model="scope.row.is_default" @change="change(scope.row)"> </el-switch>
                         </template>
                     </el-table-column>
-                    <el-table-column label="地址">
+                    <el-table-column :label="$t('dashboard.common.address')">
                         <template #default="scope">
                             {{ scope.row.province }}{{ scope.row.city }}{{ scope.row.area }}{{ scope.row.address }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作" width="180">
+                    <el-table-column :label="$t('dashboard.common.actions')" width="180">
                         <template #default="scope">
                             <div class="m-actions">
                                 <!--编辑-->
                                 <el-button circle @click="edit(scope.row)" icon="Edit"></el-button>
                                 <!--删除-->
                                 <el-popconfirm
-                                    confirm-button-text="确定"
-                                    cancel-button-text="取消"
+                                    :confirm-button-text="$t('dashboard.common.confirm')"
+                                    :cancel-button-text="$t('dashboard.common.cancel')"
                                     icon="InfoFilled"
-                                    title="确定删除吗？"
+                                    :title="$t('dashboard.common.deleteConfirm')"
                                     @confirm="del(scope.row.id)"
                                 >
                                     <template #reference>
@@ -44,35 +44,35 @@
             <el-dialog
                 class="m-address-dialog"
                 v-model="visible"
-                :title="form.id ? '编辑地址' : '添加地址'"
+                :title="form.id ? $t('dashboard.address.edit') : $t('dashboard.address.add')"
                 width="680px"
                 @closed="resetForm"
             >
                 <el-form :model="form" :rules="rules" ref="ruleForm" label-position="top">
-                    <el-form-item label="联系人" prop="contact_name">
-                        <el-input placeholder="请输入名称" v-model="form.contact_name"></el-input>
+                    <el-form-item :label="$t('dashboard.address.contact')" prop="contact_name">
+                        <el-input :placeholder="$t('dashboard.common.namePlaceholder')" v-model="form.contact_name"></el-input>
                     </el-form-item>
-                    <el-form-item label="手机号" prop="contact_phone">
-                        <el-input placeholder="请输入手机号" v-model="form.contact_phone"></el-input>
+                    <el-form-item :label="$t('dashboard.common.mobile')" prop="contact_phone">
+                        <el-input :placeholder="$t('dashboard.common.mobilePlaceholder')" v-model="form.contact_phone"></el-input>
                     </el-form-item>
-                    <el-form-item label="联系地址" prop="province">
+                    <el-form-item :label="$t('dashboard.address.contactAddress')" prop="province">
                         <el-cascader
                             class="u-address"
                             v-model="address"
                             :options="addressList"
-                            placeholder="请选择省 / 市 / 区"
+                            :placeholder="$t('dashboard.address.regionPlaceholder')"
                             clearable
                             filterable
                             @change="handleChange"
                         ></el-cascader>
                         <el-form-item class="m-detail-address" prop="address">
-                            <el-input placeholder="请输入详细地址" v-model="form.address"></el-input>
+                            <el-input :placeholder="$t('dashboard.address.detailPlaceholder')" v-model="form.address"></el-input>
                         </el-form-item>
                     </el-form-item>
                 </el-form>
                 <template #footer>
-                    <el-button @click="visible = false">取 消</el-button>
-                    <el-button type="primary" @click="submit('ruleForm')">确 定</el-button>
+                    <el-button @click="visible = false">{{ $t("dashboard.common.cancel") }}</el-button>
+                    <el-button type="primary" @click="submit('ruleForm')">{{ $t("dashboard.common.confirm") }}</el-button>
                 </template>
             </el-dialog>
         </div>
@@ -90,13 +90,13 @@ export default {
     data: function () {
         const checkPhone = (rule, value, callback) => {
             if (!value) {
-                callback(new Error("请输入手机号"));
+                callback(new Error(this.$t("dashboard.common.mobilePlaceholder")));
                 return;
             }
 
             const num = /^[1][3,4,5,7,8,9][0-9]{9}$/;
             if (!num.test(value)) {
-                callback(new Error("请输入正确的手机号"));
+                callback(new Error(this.$t("dashboard.address.invalidMobile")));
             } else {
                 callback();
             }
@@ -105,7 +105,7 @@ export default {
             if (value) {
                 callback();
             } else {
-                callback(new Error("请输入具体地址"));
+                callback(new Error(this.$t("dashboard.address.detailRequired")));
             }
         };
         return {
@@ -125,9 +125,9 @@ export default {
             },
 
             rules: {
-                contact_name: [{ required: true, message: "请输入联系人名称", trigger: "blur" }],
+                contact_name: [{ required: true, message: this.$t("dashboard.address.contactRequired"), trigger: "blur" }],
                 contact_phone: [{ required: true, validator: checkPhone, trigger: "blur" }],
-                province: [{ required: true, message: "请选择省市区", trigger: "change" }],
+                province: [{ required: true, message: this.$t("dashboard.address.regionRequired"), trigger: "change" }],
                 address: [{ required: true, validator: checkAddress, trigger: "blur" }],
             },
         };
@@ -179,14 +179,14 @@ export default {
                     this.form.id
                         ? updateAddress(this.form.id, form).then(() => {
                               this.$message({
-                                  message: "编辑成功",
+                                  message: this.$t("dashboard.common.editSuccess"),
                                   type: "success",
                               });
                               this.reset();
                           })
                         : addAddress(form).then(() => {
                               this.$message({
-                                  message: "添加成功",
+                                  message: this.$t("dashboard.common.addSuccess"),
                                   type: "success",
                               });
                               this.reset();
@@ -208,7 +208,7 @@ export default {
         del(id) {
             delAddress(id).then(() => {
                 this.$message({
-                    message: "删除成功",
+                    message: this.$t("dashboard.common.deleteSuccess"),
                     type: "success",
                 });
                 this.load();

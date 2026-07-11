@@ -1,58 +1,58 @@
 <template>
     <el-dialog v-model="isShow" :width="dialogWidth" :show-close="false" class="m-buy-confirm">
-        <button class="close" type="button" aria-label="关闭" @click="isShow = false">
+        <button class="close" type="button" :aria-label="$t('vip.common.close')" @click="isShow = false">
             <Close class="close-icon" />
         </button>
         <div class="content">
             <div class="header">
-                <div class="title">确认兑换</div>
-                <div class="desc">{{ needsAddress ? "确认收货信息后完成实物兑换" : "将从你的账户扣除以下资产" }}</div>
+                <div class="title">{{ $t("vip.common.confirmExchange") }}</div>
+                <div class="desc">{{ needsAddress ? $t("vip.mall.confirmPhysical") : $t("vip.mall.deductAssets") }}</div>
             </div>
             <div class="good-card">
                 <div class="cover-wrap">
-                    <img v-if="previewImage" :src="previewImage" :alt="item.title || '商品图片'" class="cover" />
-                    <div v-else class="cover cover-null">暂无图片</div>
+                    <img v-if="previewImage" :src="previewImage" :alt="item.title || $t('vip.mall.productImage')" class="cover" />
+                    <div v-else class="cover cover-null">{{ $t("vip.mall.noImage") }}</div>
                 </div>
                 <div class="good-info">
                     <div class="good-title" :title="item.title">{{ item.title }}</div>
                     <div v-if="item.subtitle" class="good-subtitle" :title="item.subtitle">{{ item.subtitle }}</div>
                     <div class="meta-line">
-                        <span>数量：{{ count }}件</span>
+                        <span>{{ $t("vip.mall.quantity", { count }) }}</span>
                         <span>{{ postageText }}</span>
                     </div>
                     <div class="cost-list">
                         <span v-if="item.price_boxcoin" class="cost">
-                            <span class="cost-label">盒币</span>
+                            <span class="cost-label">{{ $t("vip.mall.boxcoin") }}</span>
                             <span class="price">{{ item.price_boxcoin * count }}</span>
                         </span>
                         <span v-if="item.price_points" class="cost">
-                            <span class="cost-label">积分</span>
+                            <span class="cost-label">{{ $t("vip.common.points") }}</span>
                             <span class="price">{{ item.price_points * count }}</span>
                         </span>
                         <span v-if="item.price_cny" class="cost">
-                            <span class="cost-label">金箔</span>
+                            <span class="cost-label">{{ $t("vip.mall.cny") }}</span>
                             <span class="price">{{ item.price_cny * count }}</span>
                         </span>
                         <span v-if="!confirmText" class="cost">
-                            <span class="cost-label">消耗</span>
-                            <span class="price">免费兑换</span>
+                            <span class="cost-label">{{ $t("vip.mall.cost") }}</span>
+                            <span class="price">{{ $t("vip.common.freeExchange") }}</span>
                         </span>
                     </div>
                 </div>
             </div>
             <div v-if="needsAddress" class="shipping-card">
                 <div class="section-head">
-                    <span class="section-title">收货地址</span>
+                    <span class="section-title">{{ $t("vip.mall.shippingAddress") }}</span>
                     <div class="section-actions">
                         <a href="/dashboard/address" target="_blank" class="manage-address">
                             <Setting class="action-icon" />
-                            管理地址
+                            {{ $t("vip.mall.manageAddress") }}
                         </a>
                         <button
                             class="refresh-address"
                             type="button"
-                            title="刷新地址"
-                            aria-label="刷新地址"
+                            :title="$t('vip.mall.refreshAddress')"
+                            :aria-label="$t('vip.mall.refreshAddress')"
                             :class="{ loading: addressLoading }"
                             @click="refreshAddress"
                         >
@@ -65,7 +65,7 @@
                         <div class="address-main">
                             <div class="address-contact">
                                 {{ selectedAddress.contact_name }} - {{ selectedAddress.contact_phone }}
-                                <span v-if="isDefaultAddress(selectedAddress)" class="default-tag">默认地址</span>
+                                <span v-if="isDefaultAddress(selectedAddress)" class="default-tag">{{ $t("vip.mall.defaultAddress") }}</span>
                             </div>
                             <div class="address-detail">
                                 {{ formatAddress(selectedAddress) }}
@@ -77,7 +77,7 @@
                         v-if="alternativeAddressList.length"
                         class="address-expand"
                         type="button"
-                        :title="addressExpanded ? '收起地址列表' : '展开地址列表'"
+                        :title="addressExpanded ? $t('vip.mall.collapseAddresses') : $t('vip.mall.expandAddresses')"
                         @click="addressExpanded = !addressExpanded"
                     >
                         <ArrowDown class="expand-icon" :class="{ expanded: addressExpanded }" />
@@ -93,26 +93,26 @@
                             <span class="address-option-main">
                                 <span class="address-contact">
                                     {{ addressItem.contact_name }} - {{ addressItem.contact_phone }}
-                                    <span v-if="isDefaultAddress(addressItem)" class="default-tag">默认地址</span>
+                                    <span v-if="isDefaultAddress(addressItem)" class="default-tag">{{ $t("vip.mall.defaultAddress") }}</span>
                                 </span>
                                 <span class="address-detail">{{ formatAddress(addressItem) }}</span>
                             </span>
                         </button>
                     </div>
                 </template>
-                <a v-else class="address-empty" href="/dashboard/address" target="_blank">暂无收货地址，点击去添加</a>
+                <a v-else class="address-empty" href="/dashboard/address" target="_blank">{{ $t("vip.mall.addAddressHint") }}</a>
             </div>
             <div class="remark-card">
-                <div class="section-title">备注</div>
-                <el-input v-model="remark" placeholder="可填写尺码、偏好或其他补充说明" type="textarea" :rows="2" />
+                <div class="section-title">{{ $t("vip.mall.remark") }}</div>
+                <el-input v-model="remark" :placeholder="$t('vip.mall.remarkPlaceholder')" type="textarea" :rows="2" />
             </div>
-            <div class="tip">
-                确认后将兑换<span class="em">{{ item.title }}</span>
-            </div>
+            <i18n-t keypath="vip.mall.willExchangeProduct" tag="div" class="tip">
+                <template #product><span class="em">{{ item.title }}</span></template>
+            </i18n-t>
         </div>
         <div class="btn-box">
-            <el-button class="cancel-btn" round @click="isShow = false">取消</el-button>
-            <el-button class="confirm-btn" type="primary" round :loading="isSubmitting" @click="buyGoods">确定</el-button>
+            <el-button class="cancel-btn" round @click="isShow = false">{{ $t("vip.common.cancel") }}</el-button>
+            <el-button class="confirm-btn" type="primary" round :loading="isSubmitting" @click="buyGoods">{{ $t("vip.common.confirm") }}</el-button>
         </div>
     </el-dialog>
 </template>
@@ -185,20 +185,22 @@ export default {
             return this.addressList.filter((item) => item.id !== this.selectedAddress?.id);
         },
         postageText() {
-            return this.item.postage ? `邮费：${this.item.postage / 100}元` : "邮费：包邮";
+            return this.item.postage
+                ? this.$t("vip.mall.postageAmount", { amount: this.item.postage / 100 })
+                : this.$t("vip.mall.freeShipping");
         },
         confirmText() {
             if (this.item.price_points && this.item.price_boxcoin) {
-                return `${this.item.price_boxcoin}盒币和${this.item.price_points}积分`;
+                return this.$t("vip.mall.boxcoinAndPoints", { boxcoin: this.item.price_boxcoin, points: this.item.price_points });
             }
             if (this.item.price_cny) {
-                return `${this.item.price_cny}金箔`;
+                return this.$t("vip.common.cnyAmount", { amount: this.item.price_cny });
             }
             if (this.item.price_points) {
-                return `${this.item.price_points}积分`;
+                return this.$t("vip.common.pointsAmount", { amount: this.item.price_points });
             }
             if (this.item.price_boxcoin) {
-                return `${this.item.price_boxcoin}盒币`;
+                return this.$t("vip.common.boxcoinAmount", { amount: this.item.price_boxcoin });
             }
             return "";
         },
@@ -274,9 +276,9 @@ export default {
                             id,
                             item: this.item,
                         });
-                        this.$confirm("兑换成功，是否立即前往装扮？", "提示", {
-                            confirmButtonText: "确定",
-                            cancelButtonText: "取消",
+                        this.$confirm(this.$t("vip.mall.goDecoratePrompt"), this.$t("vip.common.prompt"), {
+                            confirmButtonText: this.$t("vip.common.confirm"),
+                            cancelButtonText: this.$t("vip.common.cancel"),
                             type: "warning",
                         })
                             .then(() => {
@@ -290,7 +292,7 @@ export default {
 
             const addressId = this.selectedAddress?.id || 0;
             if (this.needsAddress && !addressId) {
-                return this.$message.warning("请选择收货地址");
+                return this.$message.warning(this.$t("vip.mall.selectAddress"));
             }
             this.isSubmitting = true;
             this.$store
@@ -307,9 +309,9 @@ export default {
                         id,
                         item: this.item,
                     });
-                    this.$confirm("兑换成功，是否查看订单记录？", "提示", {
-                        confirmButtonText: "查看订单",
-                        cancelButtonText: "留在商城",
+                    this.$confirm(this.$t("vip.mall.viewOrderPrompt"), this.$t("vip.common.prompt"), {
+                        confirmButtonText: this.$t("vip.mall.viewOrders"),
+                        cancelButtonText: this.$t("vip.mall.stayInStore"),
                         type: "success",
                     })
                         .then(() => {

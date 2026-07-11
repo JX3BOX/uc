@@ -1,15 +1,15 @@
 <template>
     <div class="m-dashboard-work m-dashboard-cms" v-loading="loading">
         <div class="m-dashboard-work-header">
-            <h2 class="u-title">剑三骚话</h2>
+            <h2 class="u-title">{{ $t("publish.types.jokes") }}</h2>
             <a :href="publishLink" class="u-publish el-button el-button--primary">
-                <i class="el-icon-document"></i> 发布骚话
+                <i class="el-icon-document"></i> {{ $t("publish.joke.publish") }}
             </a>
         </div>
 
-        <el-input class="m-dashboard-work-search" placeholder="请输入搜索内容" v-model="search" size="large">
+        <el-input class="m-dashboard-work-search" :placeholder="$t('publish.common.searchPlaceholder')" v-model="search" size="large">
             <template #prepend>
-                <span>关键词</span>
+                <span>{{ $t("publish.common.keyword") }}</span>
             </template>
             <template #append>
                 <el-button icon="Search"></el-button>
@@ -21,34 +21,34 @@
                 <li v-for="(item, i) in data" :key="i">
                     <div class="u-header">
                         <i class="u-item-icon el-icon-chat-dot-round" v-if="item.status"></i>
-                        <i class="u-item-icon el-icon-lock" v-else title="待审核"></i>
+                        <i class="u-item-icon el-icon-lock" v-else :title="$t('publish.status.pendingReview')"></i>
                         <a class="u-title" target="_blank" :href="postLink(type, item.id)">{{
-                            item.desc || "未命名"
+                            item.desc || $t("publish.common.unnamed")
                         }}</a>
                     </div>
                     <div class="u-desc">
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
-                            发布 :
+                            {{ $t("publish.common.publishedAt") }} :
                             {{ dateFormat(item.created_at) }}
                         </time>
                         <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
-                            更新 :
+                            {{ $t("publish.common.updatedAt") }} :
                             {{ dateFormat(item.updated_at) }}
                         </time>
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-button icon="Edit" @click="edit(type, item.id)" title="编辑"></el-button>
-                        <el-button icon="Delete" @click="del(item.id, i)" title="删除"></el-button>
+                        <el-button icon="Edit" @click="edit(type, item.id)" :title="$t('publish.common.edit')"></el-button>
+                        <el-button icon="Delete" @click="del(item.id, i)" :title="$t('publish.common.delete')"></el-button>
                     </el-button-group>
                 </li>
             </ul>
             <el-alert
                 v-else
                 class="m-dashboard-box-null"
-                title="没有找到相关条目"
+                :title="$t('publish.common.noResults')"
                 type="info"
                 center
                 show-icon
@@ -121,14 +121,14 @@ export default {
             location.href = "/publish/#/" + type + "/" + id;
         },
         del: function (id, i) {
-            this.$alert("确定要删除吗？", "确认信息", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("publish.confirm.delete"), this.$t("publish.common.confirmation"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
                 callback: (action) => {
                     if (action == "confirm") {
                         deleteJoke(id).then((res) => {
                             this.$notify({
-                                title: "删除成功",
-                                message: "骚话删除成功",
+                                title: this.$t("publish.message.deleteSucceeded"),
+                                message: this.$t("publish.joke.deleteSucceeded"),
                                 type: "success",
                             });
                             this.data.splice(i, 1);

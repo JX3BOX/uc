@@ -49,10 +49,10 @@ export default {
     created() {
         if (User.isLogin()) {
             this.$store.dispatch("mallNew/getAsset").catch(() => {
-                this.$message.error("获取资产失败");
+                this.$message.error(this.$t("vip.mall.assetLoadFailed"));
             });
             this.$store.dispatch("mallNew/getCart").catch(() => {
-                this.$message.error("获取购物车失败");
+                this.$message.error(this.$t("vip.mall.cartLoadFailed"));
             });
         }
     },

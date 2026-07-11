@@ -9,17 +9,17 @@
                 <span class="u-profile-item">
                     <img :class="'u-' + type" svg-inline :src="icon(type)" />
                     <span class="u-status">
-                        {{ types[type].name }}
+                        {{ typeName(type) }}
                         <!-- {{ checkStatus(type) ? getNickname(type) : "未绑定" }} -->
                     </span>
                 </span>
                 <el-tooltip
                     v-if="isPhoneAuthLocked(type)"
-                    content="账号等级达到 Lv.3 后可绑定手机号认证"
+                    :content="$t('dashboard.auth.phoneLevelTip')"
                     placement="top"
                 >
                     <span class="u-phone-lock">
-                        <el-button class="u-button" type="info" size="large" disabled>Lv.3 可绑定</el-button>
+                        <el-button class="u-button" type="info" size="large" disabled>{{ $t("dashboard.auth.bindAtLevel3") }}</el-button>
                     </span>
                 </el-tooltip>
                 <template v-else>
@@ -30,7 +30,7 @@
                         v-if="!checkStatus(type)"
                         size="large"
                     >
-                        前往绑定
+                        {{ $t("dashboard.auth.goBind") }}
                     </el-button>
                     <i class="el-icon-success u-bind" v-else></i>
                 </template>
@@ -98,7 +98,10 @@ export default {
             return !!this.data[type];
         },
         getNickname: function (type) {
-            return this.data[type + "_name"] || "已绑定";
+            return this.data[type + "_name"] || this.$t("dashboard.common.bound");
+        },
+        typeName: function (type) {
+            return this.$t(`dashboard.auth.types.${type}`);
         },
         icon: function (type) {
             return __cdn + "design/user/" + types[type]["icon"] + ".png";

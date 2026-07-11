@@ -6,12 +6,12 @@
                     class="u-add el-button el-button--primary el-button--small"
                     href="/publish/#/collection"
                     target="_blank"
-                    >+ 创建小册</a
+                    >+ {{ $t("publish.collection.create") }}</a
                 >
                 <slot></slot>
             </div>
             <a class="u-help u-icon-links" href="/tool/20891" target="_blank">
-                <i class="el-icon-question"></i> 小册帮助指南
+                <i class="el-icon-question"></i> {{ $t("publish.collection.help") }}
             </a>
         </h5>
         <el-select
@@ -22,7 +22,7 @@
             :loading="loading"
             filterable
             clearable
-            placeholder="请选择一个小册（可选，非必填，可搜索）"
+            :placeholder="$t('publish.collection.placeholder')"
             @visible-change="visibleChange"
             size="large"
         >
@@ -35,15 +35,15 @@
             <template #empty>
                 <div class="u-collection-null">
                     <div>
-                        没有找到匹配结果，
-                        <a href="/publish/#/collection" target="_blank">创建小册</a>
+                        {{ $t("publish.collection.noMatch") }}
+                        <a href="/publish/#/collection" target="_blank">{{ $t("publish.collection.create") }}</a>
                     </div>
                 </div>
             </template>
         </el-select>
         <div class="u-tip" v-if="isEmpty">
-            <i class="el-icon-info"></i> 当前没有任何小册，
-            <a href="/publish/#/collection" target="_blank">创建小册</a>
+            <i class="el-icon-info"></i> {{ $t("publish.collection.empty") }}
+            <a href="/publish/#/collection" target="_blank">{{ $t("publish.collection.create") }}</a>
         </div>
     </div>
 </template>

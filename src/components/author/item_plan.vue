@@ -4,11 +4,11 @@
             <el-timeline-item v-for="(item, i) in list" :key="i" :timestamp="dateFormat(item.updated)" placement="top">
                 <h4 class="u-type">{{ showTypeLabel(item.type) }}</h4>
                 <p>
-                    <a :href="postLink(item.id)" class="u-title" target="_blank">{{ item.title || "无标题" }}</a>
+                    <a :href="postLink(item.id)" class="u-title" target="_blank">{{ item.title || $t("author.common.noTitle") }}</a>
                 </p>
             </el-timeline-item>
         </el-timeline>
-        <el-alert v-else title="没有找到相关条目" type="info" show-icon> </el-alert>
+        <el-alert v-else :title="$t('author.common.noResults')" type="info" show-icon> </el-alert>
 
         <el-pagination
             class="m-author-pages"
@@ -27,9 +27,9 @@
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
 import { getPlans } from "@/service/author/helper.js";
-const types = {
-    1: "物品清单",
-    2: "装备清单",
+const typeKeys = {
+    1: "author.list.itemList",
+    2: "author.list.equipmentList",
 };
 export default {
     props: [],
@@ -41,7 +41,7 @@ export default {
             per: 10,
             page: 1,
 
-            types,
+            typeKeys,
         };
     },
     computed: {
@@ -79,7 +79,7 @@ export default {
             return dateFormat(new Date(~~val * 1000));
         },
         showTypeLabel: function (val) {
-            return types[val];
+            return typeKeys[val] ? this.$t(typeKeys[val]) : "";
         },
     },
     watch: {

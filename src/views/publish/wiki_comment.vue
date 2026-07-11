@@ -1,18 +1,18 @@
 <template>
     <div class="m-dashboard m-dashboard-work m-dashboard-wiki" v-loading="loading">
         <div class="m-dashboard-work-header">
-            <h2 class="u-title">百科评论</h2>
+            <h2 class="u-title">{{ $t("publish.types.wikiComments") }}</h2>
         </div>
 
         <el-input
             class="m-dashboard-work-search u-source-search"
-            placeholder="请输入搜索内容"
+            :placeholder="$t('publish.common.searchPlaceholder')"
             v-model="achievement_comment.keyword"
             @change="search_comment"
             size="large"
         >
             <template #prepend>
-                <span>关键词</span>
+                <span>{{ $t("publish.common.keyword") }}</span>
             </template>
             <template #append>
                 <el-button icon="Search" @click="search_comment"></el-button>
@@ -25,11 +25,11 @@
                     <span class="u-tab" v-text="getTypeLabel(comment.type)"></span>
                     <div class="u-header">
                         <a class="u-title" target="_blank" :href="'cj/view/' + comment.source_id">{{
-                            comment.title || "无标题"
+                            comment.title || $t("publish.common.untitled")
                         }}</a>
-                        <el-tag type="warning" size="small" v-if="comment.checked == 0">等待审核</el-tag>
-                        <el-tag type="success" size="small" v-if="comment.checked == 1">审核通过</el-tag>
-                        <el-tag type="danger" size="small" v-if="comment.checked == 2">审核驳回</el-tag>
+                        <el-tag type="warning" size="small" v-if="comment.checked == 0">{{ $t("publish.status.pendingReview") }}</el-tag>
+                        <el-tag type="success" size="small" v-if="comment.checked == 1">{{ $t("publish.status.approved") }}</el-tag>
+                        <el-tag type="danger" size="small" v-if="comment.checked == 2">{{ $t("publish.status.rejected") }}</el-tag>
                     </div>
                     <div class="u-desc">
                         <span class="u-content">
@@ -38,19 +38,19 @@
                         </span>
                         <time class="u-desc-subitem">
                             <i class="el-icon-finished"></i>
-                            发布 :
+                            {{ $t("publish.common.publishedAt") }} :
                             <span class="u-time">{{ dateFormat(new Date(comment.created * 1000)) }}</span>
                         </time>
                         <!-- <time class="u-desc-subitem">
                             <i class="el-icon-refresh"></i>
-                            更新 :
+                            {{ $t("publish.common.updatedAt") }} :
                             {{ dateFormat(new Date(comment.updated * 1000)) }}
                         </time> -->
                     </div>
 
                     <el-button-group class="u-action">
-                        <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-                            <el-button icon="Delete" title="删除" @click="comment_del(comment)"></el-button>
+                        <el-tooltip class="item" effect="dark" :content="$t('publish.common.delete')" placement="top-start">
+                            <el-button icon="Delete" :title="$t('publish.common.delete')" @click="comment_del(comment)"></el-button>
                         </el-tooltip>
                     </el-button-group>
                 </li>
@@ -58,7 +58,7 @@
             <el-alert
                 v-else
                 class="m-dashboard-box-null"
-                title="没有找到相关条目"
+                :title="$t('publish.common.noResults')"
                 type="info"
                 center
                 show-icon
@@ -101,7 +101,7 @@ export default {
     },
     methods: {
         getTypeLabel: function (val) {
-            return val ? __wikiType[val] : "未知";
+            return val ? __wikiType[val] : this.$t("publish.common.unknown");
         },
         comment_page_change(i = 1) {
             this.comment_page = i;
@@ -133,18 +133,18 @@ export default {
         post_edit(type, post) {
             switch (type) {
                 case "achievement":
-                    this.$message("即将开放");
+                    this.$message(this.$t("publish.message.comingSoon"));
                     break;
             }
         },
         comment_del(comment) {
-            this.$alert("确定要删除吗？", "确认信息", {
-                confirmButtonText: "确定",
+            this.$alert(this.$t("publish.confirm.delete"), this.$t("publish.common.confirmation"), {
+                confirmButtonText: this.$t("publish.common.confirm"),
                 callback: (action) => {
                     remove_comment(comment.id).then((data) => {
                         data = data.data;
                         this.$notify({
-                            title: "删除成功",
+                            title: this.$t("publish.message.deleteSucceeded"),
                             type: "success",
                         });
                         this.comment_page_change(this.post_page);

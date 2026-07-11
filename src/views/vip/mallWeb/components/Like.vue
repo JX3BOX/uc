@@ -1,6 +1,6 @@
 <template>
     <div class="w-like2" v-if="ready">
-        <div>{{ count ? count > 99 ? "99+" : count : "" }}点赞</div>
+        <div>{{ $t("vip.mall.likes", { count: count ? count > 99 ? "99+" : count : "" }) }}</div>
     </div>
 </template>
 

@@ -1,15 +1,15 @@
 <template>
     <div class="m-publish-box m-publish-box-face" v-loading="loading">
         <!-- 头部 -->
-        <publish-header name="捏脸分享"></publish-header>
+        <publish-header :name="$t('publish.types.faceShare')"></publish-header>
 
         <el-form label-position="left" label-width="90px">
             <!-- 标题 -->
             <publish-title v-model="post.title"></publish-title>
             <!-- 信息 -->
             <div class="m-publish-info">
-                <el-divider content-position="left">信息</el-divider>
-                <el-form-item label="捏脸码">
+                <el-divider content-position="left">{{ $t("publish.common.information") }}</el-divider>
+                <el-form-item :label="$t('publish.face.code')">
                     <el-switch
                         v-model="post.code_mode"
                         :active-value="1"
@@ -17,7 +17,7 @@
                         active-color="#13ce66"
                     ></el-switch>
                 </el-form-item>
-                <el-form-item label="数据" v-if="!post.code_mode">
+                <el-form-item :label="$t('publish.common.data')" v-if="!post.code_mode">
                     <face-attachment :body="post.body_type" type="face" @update:data="handleFaceChange" />
                     <div class="u-attachment" v-for="item in faceAttachments" :key="item.id">
                         <el-button
@@ -27,14 +27,14 @@
                             circle
                             :plain="item.file === faceData.file ? false : true"
                             @click="setMain(item)"
-                            title="设为主数据"
+                            :title="$t('publish.face.setPrimary')"
                         />
                         <span class="u-attachment-text">
-                            文件名: <b>{{ item.name }}</b>
+                            {{ $t("publish.common.fileName") }}: <b>{{ item.name }}</b>
                         </span>
                         <!-- <span class="u-attachment-key">唯一标识符：<b>{{ item.file }}</b></span> -->
                         <span class="u-attachment-remark">
-                            <el-input v-model="item.describe" placeholder="备注"></el-input>
+                            <el-input v-model="item.describe" :placeholder="$t('publish.common.note')"></el-input>
                         </span>
                         <el-button
                             class="u-btn"
@@ -43,28 +43,28 @@
                             circle
                             plain
                             @click="removeFile(item.id)"
-                            title="移除"
+                            :title="$t('publish.common.remove')"
                         />
                     </div>
                 </el-form-item>
                 <el-form-item prop="code" v-else>
                     <template #label>
-                        <span>捏脸码</span>
+                        <span>{{ $t("publish.face.code") }}</span>
                         <i class="el-icon-document-copy" @click="codePaste" style="margin-left: 2px; color: #c00"></i>
                     </template>
-                    <el-input v-model="post.code" placeholder="请输入捏脸码"></el-input>
+                    <el-input v-model="post.code" :placeholder="$t('publish.face.codePlaceholder')"></el-input>
                 </el-form-item>
                 <!-- <div class="u-face-info" v-if="faceData"> -->
                 <!-- {{
                     `${maps.client[post.client]}·${maps.roleType[post.body_type]}·${
-                        post.is_new_face === 1 ? "写实" : "写意"
-                    }·${post.is_unlimited === 1 ? "可新建" : "不可新建"}`
+                        post.is_new_face === 1 ? $t("publish.face.realistic") : $t("publish.face.stylized")
+                    }·${post.is_unlimited === 1 ? $t("publish.face.canCreate") : $t("publish.face.cannotCreate")}`
                 }} -->
                 <!-- <el-button @click="editDetail = !editDetail">手动修改</el-button> -->
 
                 <!-- 自动解析 -->
                 <!-- 体型 -->
-                <el-form-item label="体型" v-if="faceData || post.code_mode">
+                <el-form-item :label="$t('publish.face.bodyShape')" v-if="faceData || post.code_mode">
                     <el-radio-group v-model="post.body_type">
                         <el-radio
                             :label="~~body_type"
@@ -81,19 +81,19 @@
                     :forbidAll="true"
                 ></publish-client>
                 <!-- 画风 -->
-                <el-form-item label="画风" v-if="(faceData || post.code_mode) && post.client === 'std'">
+                <el-form-item :label="$t('publish.face.style')" v-if="(faceData || post.code_mode) && post.client === 'std'">
                     <el-radio-group v-model="post.is_new_face">
-                        <el-radio :value="1">写实</el-radio>
-                        <el-radio :value="0">写意</el-radio>
+                        <el-radio :value="1">{{ $t("publish.face.realistic") }}</el-radio>
+                        <el-radio :value="0">{{ $t("publish.face.stylized") }}</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <!-- 可新建 -->
-                <el-form-item v-if="faceData || post.code_mode" label="可新建">
+                <el-form-item v-if="faceData || post.code_mode" :label="$t('publish.face.canCreate')">
                     <el-switch v-model="post.is_unlimited" :active-value="1" :inactive-value="0"> </el-switch>
                 </el-form-item>
 
                 <!-- 原创 -->
-                <el-form-item label="首发" prop="is_fr">
+                <el-form-item :label="$t('publish.form.firstPublished')" prop="is_fr">
                     <el-switch
                         v-model="post.is_fr"
                         active-color="#13ce66"
@@ -103,25 +103,25 @@
                 </el-form-item>
                 <publish-original v-model="post.original"></publish-original>
                 <template v-if="!post.original">
-                    <el-form-item label="原作者名称" prop="author_name">
-                        <el-input v-model="post.author_name" placeholder="输入原作者名称"></el-input>
+                    <el-form-item :label="$t('publish.form.originalAuthorName')" prop="author_name">
+                        <el-input v-model="post.author_name" :placeholder="$t('publish.form.originalAuthorNamePlaceholder')"></el-input>
                     </el-form-item>
-                    <el-form-item label="原作者链接" prop="author_link">
-                        <el-input v-model="post.author_link" placeholder="输入原作者链接"></el-input>
+                    <el-form-item :label="$t('publish.form.originalAuthorLink')" prop="author_link">
+                        <el-input v-model="post.author_link" :placeholder="$t('publish.form.originalAuthorLinkPlaceholder')"></el-input>
                     </el-form-item>
                 </template>
 
                 <el-form-item>
                     <template #label>
-                        <span>价格</span>
-                        <el-tooltip content="仅签约作者可以发布收费作品；1金箔=1分CNY">
+                        <span>{{ $t("publish.form.price") }}</span>
+                        <el-tooltip :content="$t('publish.form.paidAuthorHintWithRate')">
                             <i class="el-icon-warning-outline" style="margin-left: 2px; color: #c00"></i>
                         </el-tooltip>
                     </template>
                     <el-radio-group v-model="post.price_type" :disabled="!isSuperAuthor" @change="changePriceType">
-                        <el-radio value="0">免费</el-radio>
+                        <el-radio value="0">{{ $t("publish.form.free") }}</el-radio>
                         <!-- <el-radio value="1">盒币</el-radio> -->
-                        <el-radio v-if="isSuperAuthor && cny_enable" value="2">收费(金箔)</el-radio>
+                        <el-radio v-if="isSuperAuthor && cny_enable" value="2">{{ $t("publish.form.paidGoldLeaf") }}</el-radio>
                     </el-radio-group>
                     <el-input-number
                         class="u-price"
@@ -133,17 +133,17 @@
                     <div class="u-tip-box" v-if="post.price_type != '0' && post.price_count > 0">
                         <div class="u-warning">
                             <el-checkbox v-model="promise" disabled>
-                                我承诺该上传属于自己的原创作品或已得到原作者授权，且相关信息中不带有非授权的元素（比如贴图、字体）等，若违反法律规定我将承担全部责任，魔盒有权下架作品。
+                                {{ $t("publish.form.originalityPledge") }}
                             </el-checkbox>
                         </div>
                     </div>
                 </el-form-item>
 
-                <el-form-item label="说明">
-                    <el-input v-model="post.remark" placeholder="请填写相关说明" type="textarea" :rows="3"></el-input>
+                <el-form-item :label="$t('publish.common.instructions')">
+                    <el-input v-model="post.remark" :placeholder="$t('publish.form.instructionsPlaceholder')" type="textarea" :rows="3"></el-input>
                 </el-form-item>
-                <el-divider content-position="left">扩展</el-divider>
-                <el-form-item label="图片列表">
+                <el-divider content-position="left">{{ $t("publish.form.extension") }}</el-divider>
+                <el-form-item :label="$t('publish.form.imageList')">
                     <UploadAlbum v-model="post.images"></UploadAlbum>
                 </el-form-item>
                 <publish-banner v-model="post.banner" v-if="isSuperAuthor"></publish-banner>
@@ -151,7 +151,7 @@
 
             <!-- 按钮 -->
             <div class="m-publish-buttons">
-                <el-button type="primary" @click="publish" :disabled="processing" size="large">发 &nbsp;&nbsp; 布</el-button>
+                <el-button type="primary" @click="publish" :disabled="processing" size="large">{{ $t("publish.common.publish") }}</el-button>
             </div>
         </el-form>
     </div>
@@ -330,13 +330,13 @@ export default {
         validator(data) {
             // 必填字段 title file
             let required = ["title"];
-            let requiredMsg = ["请填写标题"];
+            let requiredMsg = [this.$t("publish.validation.titleRequired")];
             if (data.code_mode) {
                 required.push("code");
-                requiredMsg.push("请填写捏脸码");
+                requiredMsg.push(this.$t("publish.validation.faceCodeRequired"));
             } else {
                 required.push("file");
-                requiredMsg.push("请上传数据");
+                requiredMsg.push(this.$t("publish.validation.uploadDataRequired"));
             }
             let message;
             for (let i = 0; i < required.length; i++) {
@@ -384,7 +384,7 @@ export default {
             if (this.id) {
                 updateFace(this.id, data)
                     .then((res) => {
-                        this.$message.success("修改成功");
+                        this.$message.success(this.$t("publish.message.updateSucceeded"));
                         this.processing = false;
                         // 跳转
                         setTimeout(() => {
@@ -397,7 +397,7 @@ export default {
             } else {
                 addFace(data).then((res) => {
                     this.$message({
-                        message: "发布成功",
+                        message: this.$t("publish.message.publishSucceeded"),
                         type: "success",
                     });
                     this.processing = false;
@@ -429,14 +429,14 @@ export default {
                 const object = JSON.parse(item.data);
                 this.autoParse(object);
                 this.$notify({
-                    title: "设置成功",
+                    title: this.$t("publish.message.setSucceeded"),
                     type: "success",
                     duration: 2000,
                 });
             } catch (e) {
                 console.error("[文件解析失败]", e);
                 this.$notify({
-                    title: "解析失败",
+                    title: this.$t("publish.message.parseFailed"),
                     type: "error",
                     duration: 2000,
                 });
@@ -465,13 +465,13 @@ export default {
         // 警告
         showWarning() {
             this.$confirm(
-                "为保护原创作者的权益，避免他人盗卖作品盈利，我们已修改了相关规则，目前仅签约作者可使用作品收费功能。<br/><br/><span style='color:#f00;font-weight:bold;'>若您不是【签约作者】，继续编辑此作品，将会使作品变为【免费】。</span>",
-                "注意",
+                this.$t("publish.form.paidAuthorNoticeHtml"),
+                this.$t("publish.common.notice"),
                 {
                     distinguishCancelAndClose: true,
-                    confirmButtonText: "放弃修改",
+                    confirmButtonText: this.$t("publish.common.discardChanges"),
                     // confirmButtonClass: "u-btn-ok",
-                    cancelButtonText: "我已阅读并知晓",
+                    cancelButtonText: this.$t("publish.form.acknowledge"),
                     // cancelButtonClass: "u-btn-cancel",
                     dangerouslyUseHTMLString: true,
                     callback: (action) => {
