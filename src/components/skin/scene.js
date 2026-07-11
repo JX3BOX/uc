@@ -152,6 +152,13 @@ export function getSkinTypeConfigs(source, key, type) {
     return Array.isArray(configs) ? configs : [];
 }
 
+export function getSkinPartCount(source, key) {
+    return SKIN_TYPE_OPTIONS.reduce(
+        (count, option) => count + getSkinTypeConfigs(source, key, option.type).filter((item) => item?.image).length,
+        0
+    );
+}
+
 export function getSceneSourceSubtypes(subtype) {
     return SKIN_SCENE_SOURCE_SUBTYPES[subtype] || [subtype];
 }

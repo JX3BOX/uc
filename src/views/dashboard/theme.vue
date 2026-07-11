@@ -247,6 +247,7 @@ import {
     getFirstAvailableSkinSceneSubtype,
     getPreferredSkinSceneTheme,
     getSkinPreview,
+    getSkinPartCount,
     getSkinSceneAuthors,
     getSkinSceneAuthorsFromConfigs,
     getSkinSceneConfig,
@@ -446,6 +447,7 @@ export default {
                     return {
                         val: key,
                         name: title,
+                        partCount: getSkinPartCount(decorationJson, key),
                         list: options
                             .filter((option) => hasSkinType(decorationJson, key, option.type))
                             .map((option) => {
@@ -466,15 +468,19 @@ export default {
 
             return this.sortData(skins);
         },
-        // 已拥有部位越齐全的皮肤套装越靠前；数量相同保持配置原顺序。
+        // 已拥有类型越齐全的皮肤套装越靠前；类型数相同再按有效部位数排序。
         sortData(arr) {
             return arr
                 .map((item, index) => ({
                     item,
                     index,
                     ownedPartCount: item.list.filter((part) => part.isHave).length,
+                    partCount: Number(item.partCount || 0),
                 }))
-                .sort((a, b) => b.ownedPartCount - a.ownedPartCount || a.index - b.index)
+                .sort(
+                    (a, b) =>
+                        b.ownedPartCount - a.ownedPartCount || b.partCount - a.partCount || a.index - b.index
+                )
                 .map(({ item }) => item);
         },
         //设置选中/取消
