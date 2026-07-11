@@ -50,15 +50,12 @@ import User from "@jx3box/jx3box-common/js/user";
 const types = {
     wechat_mp_openid: {
         icon: "official",
-        name: "微信公众号",
     },
     wechat_miniprogram_openid: {
         icon: "app",
-        name: "微信小程序",
     },
     user_phone: {
         icon: "phone",
-        name: "手机号",
     },
 };
 

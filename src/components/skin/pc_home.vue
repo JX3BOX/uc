@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>[PC]个人主页<SkinSceneAuthors :authors="authors" /></b>
+            <b>{{ $t("dashboard.skin.scenes.pc_home") }}<SkinSceneAuthors :authors="authors" /></b>
             <span>homebg / pc_homebg + pc_homebanner</span>
         </div>
     </div>

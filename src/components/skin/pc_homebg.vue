@@ -1,5 +1,5 @@
 <template>
-    <SkinScenePreview title="PC个人主页背景" subtitle="homebg / pc_homebg" layout="pcHomeBg" />
+    <SkinScenePreview :title="$t('dashboard.skin.scenes.pc_homebg')" subtitle="homebg / pc_homebg" layout="pcHomeBg" />
 </template>
 
 <script>

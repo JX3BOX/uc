@@ -42,7 +42,7 @@
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>App个人名片<SkinSceneAuthors :authors="authors" /></b>
+            <b>{{ $t("dashboard.skin.scenes.app_authorcard") }}<SkinSceneAuthors :authors="authors" /></b>
             <span>atcard / app_authorcard</span>
         </div>
     </div>

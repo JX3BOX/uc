@@ -15,12 +15,7 @@
             <el-alert class="m-boxcoin-ac" type="error" show-icon :closable="false" v-if="breadcrumb">
                 <slot name="title"><div v-html="breadcrumb"></div></slot>
             </el-alert>
-            <el-alert
-                class="m-boxcoin-tip"
-                :title="$t('dashboard.cny.exchangeTip')"
-                type="warning"
-                show-icon
-            >
+            <el-alert class="m-boxcoin-tip" :title="$t('dashboard.cny.exchangeTip')" type="warning" show-icon>
                 <!-- <slot name="description"
                     >每个月6~31日开放提现，1~5日关闭提现渠道进行汇总。（即1月6日的兑换，和1月31日的兑换，同样在2月1~5日进行汇总）<br />
                     每笔提现收取2%手续费，最低收取0.02元。收取规则：不满1元部分按1元计算，计算手续费时向上取整。<br />
@@ -31,14 +26,26 @@
             <el-form label-position="left" label-width="80px" class="m-boxcoin-form" :model="pull">
                 <el-form-item :label="$t('dashboard.common.type')">
                     <el-select v-model="pull.pay_type" :placeholder="$t('dashboard.common.selectPlaceholder')">
-                        <el-option v-for="(label, key) in paytypes" :key="key" :label="paymentTypeLabel(key, label)" :value="key"> </el-option>
+                        <el-option
+                            v-for="(label, key) in paytypes"
+                            :key="key"
+                            :label="paymentTypeLabel(key, label)"
+                            :value="key"
+                        >
+                        </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('dashboard.common.account')">
-                    <el-input v-model="pull.account" :placeholder="$t('dashboard.common.paymentAccountPlaceholder')"></el-input>
+                    <el-input
+                        v-model="pull.account"
+                        :placeholder="$t('dashboard.common.paymentAccountPlaceholder')"
+                    ></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('dashboard.cny.confirmAccount')">
-                    <el-input v-model="pull.account_sure" :placeholder="$t('dashboard.common.paymentAccountPlaceholder')"></el-input>
+                    <el-input
+                        v-model="pull.account_sure"
+                        :placeholder="$t('dashboard.common.paymentAccountPlaceholder')"
+                    ></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('dashboard.common.name')">
                     <el-input v-model="pull.username" :placeholder="$t('dashboard.common.payeePlaceholder')"></el-input>
@@ -59,11 +66,12 @@
                     </div>
                 </el-form-item>
                 <el-form-item label>
-                    <el-button type="primary" @click="openConfirmBox" :disabled="!ready || lockStatus"
-                        >{{ $t("dashboard.common.submitApplication") }}</el-button
-                    >
+                    <el-button type="primary" @click="openConfirmBox" :disabled="!ready || lockStatus">{{
+                        $t("dashboard.common.submitApplication")
+                    }}</el-button>
                     <span class="u-tip" v-if="!isAllowDate">
-                        <i class="el-icon-warning-outline"></i> {{ $t("dashboard.cny.settlementUnavailable", { start: start_date, end: end_date }) }}
+                        <i class="el-icon-warning-outline"></i>
+                        {{ $t("dashboard.cny.settlementUnavailable", { start: start_date, end: end_date }) }}
                     </span>
                 </el-form-item>
             </el-form>
@@ -103,7 +111,11 @@
                             </thead>
                             <tr v-for="(item, i) in list" :key="i">
                                 <td>
-                                    {{ item.description || formatType(item.action_type) || $t("dashboard.common.unknown") }}
+                                    {{
+                                        item.description ||
+                                        formatType(item.action_type) ||
+                                        $t("dashboard.common.unknown")
+                                    }}
                                 </td>
                                 <td>
                                     <a class="u-user" :href="authorLink(item.pay_user.id)" v-if="item.pay_user">
@@ -371,7 +383,8 @@ export default {
             return showTime(val);
         },
         formatType: function (val) {
-            return (val && types[val]) || this.$t("dashboard.common.unknown");
+            const key = `dashboard.dataLabels.cnyTypes.${val}`;
+            return val && this.$te(key) ? this.$t(key) : types[val] || this.$t("dashboard.common.unknown");
         },
         formatRemark: function (str) {
             if (str) {

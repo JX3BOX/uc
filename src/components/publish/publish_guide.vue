@@ -151,11 +151,16 @@ export default {
             }
         },
         showPostType: function (type) {
-            const typeMap = {
-                ...__postType,
-                bbs: "茶馆",
-            };
-            return typeMap[type];
+            const key = {
+                macro: "macros",
+                bps: "classGuides",
+                pvp: "pvpTips",
+                fb: "dungeonGuides",
+                tool: "tools",
+                notice: "news",
+                bbs: "teahouse",
+            }[type];
+            return key ? this.$t(`publish.types.${key}`) : __postType[type];
         },
         async loadPosts(params) {
             return await getMyPosts(params).then((res) => {

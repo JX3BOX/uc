@@ -6,7 +6,7 @@
             <el-tabs v-model="active" @tab-change="tabChange">
                 <template v-if="relationNetTypes.length">
                     <el-tab-pane
-                        :label="item.name"
+                        :label="getRelationName(item)"
                         :name="item.relationship_type"
                         :key="i"
                         v-for="(item, i) in relationNetTypes"
@@ -205,7 +205,8 @@ export default {
             return this.relationNetTypes.find((item) => item.relationship_type === this.active);
         },
         relationActiveName() {
-            return this.relationNetTypes.find((item) => item.relationship_type === this.active)?.name;
+            const relation = this.relationNetTypes.find((item) => item.relationship_type === this.active);
+            return this.getRelationName(relation);
         },
         relationId() {
             return this.net?.id || 0;
@@ -294,6 +295,12 @@ export default {
         },
     },
     methods: {
+        getRelationName(item) {
+            if (item?.relationship_type === "lover") {
+                return this.$t("dashboard.relationship.myRelationship");
+            }
+            return item?.name || "";
+        },
         onOpen() {
             this.$confirm(this.$t("dashboard.privacy.enableConfirm"), this.$t("dashboard.common.tip"), {
                 confirmButtonText: this.$t("dashboard.common.confirm"),

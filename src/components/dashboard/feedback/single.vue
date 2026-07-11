@@ -50,18 +50,26 @@
                             <template #dropdown>
                                 <el-dropdown-menu>
                                     <el-dropdown-item @click="handleEdit">
-                                        <el-button class="u-btn" type="primary" icon="Edit">{{ $t("dashboard.common.edit") }}</el-button>
+                                        <el-button class="u-btn" type="primary" icon="Edit">{{
+                                            $t("dashboard.common.edit")
+                                        }}</el-button>
                                     </el-dropdown-item>
                                     <el-dropdown-item @click="handleTransfer">
-                                        <el-button class="u-btn" type="warning" icon="Right">{{ $t("dashboard.feedback.transfer") }}</el-button>
+                                        <el-button class="u-btn" type="warning" icon="Right">{{
+                                            $t("dashboard.feedback.transfer")
+                                        }}</el-button>
                                     </el-dropdown-item>
                                     <template v-if="data.status === 2">
                                         <el-dropdown-item @click="handleCoordination">
-                                            <el-button class="u-btn" type="success" icon="Help">{{ $t("dashboard.feedback.coordinate") }}</el-button>
+                                            <el-button class="u-btn" type="success" icon="Help">{{
+                                                $t("dashboard.feedback.coordinate")
+                                            }}</el-button>
                                         </el-dropdown-item>
 
                                         <el-dropdown-item @click="handleClose">
-                                            <el-button class="u-btn" type="info" icon="CircleClose">{{ $t("dashboard.common.close") }} </el-button>
+                                            <el-button class="u-btn" type="info" icon="CircleClose"
+                                                >{{ $t("dashboard.common.close") }}
+                                            </el-button>
                                         </el-dropdown-item>
                                     </template>
                                 </el-dropdown-menu>
@@ -81,9 +89,13 @@
                         <span class="u-label">{{ $t("dashboard.common.client") }}：</span>
                         <i class="u-client" :class="[data.client, `u-${data.client}`]">{{ client }}</i>
                     </div>
-                    <span class="u-time u-subblock">{{ $t("dashboard.common.submittedAt") }}：{{ formateTime(data.created_at) }}</span>
+                    <span class="u-time u-subblock"
+                        >{{ $t("dashboard.common.submittedAt") }}：{{ formateTime(data.created_at) }}</span
+                    >
                     <span class="u-time u-subblock" v-if="data.refer"
-                        >{{ $t("dashboard.feedback.source") }}：<a :href="data.refer" target="_blank">{{ data.refer }}</a></span
+                        >{{ $t("dashboard.feedback.source") }}：<a :href="data.refer" target="_blank">{{
+                            data.refer
+                        }}</a></span
                     >
                 </div>
                 <div class="m-block m-dev">
@@ -146,33 +158,60 @@
                     <el-step :title="step.text" v-for="step in statusList" :key="step.value" />
                 </el-steps>
                 <div class="m-content m-textarea">
-                    <el-divider content-position="left"><i class="el-icon-edit-outline"></i> {{ $t("dashboard.feedback.content") }}</el-divider>
+                    <el-divider content-position="left"
+                        ><i class="el-icon-edit-outline"></i> {{ $t("dashboard.feedback.content") }}</el-divider
+                    >
                     <div class="u-detail">
                         <span v-html="sanitizedHTML(data.content)"></span>
                     </div>
                 </div>
                 <div class="m-attachment m-textarea">
-                    <el-divider content-position="left"><i class="el-icon-picture-outline-round"></i> {{ $t("dashboard.feedback.attachments") }}</el-divider>
+                    <el-divider content-position="left"
+                        ><i class="el-icon-picture-outline-round"></i>
+                        {{ $t("dashboard.feedback.attachments") }}</el-divider
+                    >
                     <div v-if="attachments.length" class="u-detail">
                         <div class="u-attachment-summary">
                             {{ $t("dashboard.feedback.attachmentCount", { count: attachments.length }) }}
                             <span v-if="imageAttachments.length || videoAttachments.length">
-                                <span v-if="imageAttachments.length">，{{ $t("dashboard.feedback.imageCount", { count: imageAttachments.length }) }}</span>
-                                <span v-if="videoAttachments.length">，{{ $t("dashboard.feedback.videoCount", { count: videoAttachments.length }) }}</span>
+                                <span v-if="imageAttachments.length"
+                                    >，{{
+                                        $t("dashboard.feedback.imageCount", { count: imageAttachments.length })
+                                    }}</span
+                                >
+                                <span v-if="videoAttachments.length"
+                                    >，{{
+                                        $t("dashboard.feedback.videoCount", { count: videoAttachments.length })
+                                    }}</span
+                                >
                             </span>
                         </div>
                         <div class="u-media-grid">
-                            <div class="u-media-card is-image" v-for="(img, index) in imageAttachments" :key="`img-${index}`">
+                            <div
+                                class="u-media-card is-image"
+                                v-for="(img, index) in imageAttachments"
+                                :key="`img-${index}`"
+                            >
                                 <el-image :src="img" fit="cover" lazy :preview-src-list="imageAttachments"></el-image>
-                                <div class="u-media-meta">{{ $t("dashboard.feedback.imageNumber", { number: index + 1 }) }}</div>
+                                <div class="u-media-meta">
+                                    {{ $t("dashboard.feedback.imageNumber", { number: index + 1 }) }}
+                                </div>
                             </div>
                             <div
                                 class="u-media-card is-video"
                                 v-for="(video, index) in videoAttachments"
                                 :key="`video-${index}`"
                             >
-                                <video class="u-media-video" :src="video" controls preload="metadata" :autoplay="false"></video>
-                                <div class="u-media-meta">{{ $t("dashboard.feedback.videoNumber", { number: index + 1 }) }}</div>
+                                <video
+                                    class="u-media-video"
+                                    :src="video"
+                                    controls
+                                    preload="metadata"
+                                    :autoplay="false"
+                                ></video>
+                                <div class="u-media-meta">
+                                    {{ $t("dashboard.feedback.videoNumber", { number: index + 1 }) }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -181,13 +220,16 @@
                 <div class="m-feedback-thx">
                     <el-divider content-position="left"
                         ><i class="el-icon-coin"></i> {{ $t("dashboard.feedback.reward") }}
-                        <el-button v-if="isAdmin" class="u-thx-trigger" type="success" @click="onThx" size="small"
-                            >{{ $t("dashboard.feedback.reviewReward") }}</el-button
-                        ></el-divider
+                        <el-button v-if="isAdmin" class="u-thx-trigger" type="success" @click="onThx" size="small">{{
+                            $t("dashboard.feedback.reviewReward")
+                        }}</el-button></el-divider
                     >
                     <div class="u-thx-table">
                         <el-table stripe border :data="thxData">
-                            <el-table-column :label="$t('dashboard.feedback.rewardParticipants')" prop="ext_operate_user_info">
+                            <el-table-column
+                                :label="$t('dashboard.feedback.rewardParticipants')"
+                                prop="ext_operate_user_info"
+                            >
                                 <template #default="{ row }">
                                     <div class="m-user">
                                         <img class="u-gift" svg-inline :src="giftUrl" />
@@ -226,7 +268,10 @@
                     </div>
                 </div>
                 <div class="m-reply" v-if="done">
-                    <el-divider content-position="left"><i class="el-icon-chat-line-square"></i> {{ $t("dashboard.feedback.replyHandling") }}</el-divider>
+                    <el-divider content-position="left"
+                        ><i class="el-icon-chat-line-square"></i>
+                        {{ $t("dashboard.feedback.replyHandling") }}</el-divider
+                    >
                     <CommonComment :id="id" category="feedback" order="desc" :support-video="true" />
                 </div>
             </main>
@@ -245,7 +290,9 @@
             ></Homework>
         </div>
         <div class="m-feed-log" v-loading="logLoading">
-            <el-divider content-position="left"> <i class="el-icon-document"></i>{{ $t("dashboard.feedback.logs") }} </el-divider>
+            <el-divider content-position="left">
+                <i class="el-icon-document"></i>{{ $t("dashboard.feedback.logs") }}
+            </el-divider>
 
             <el-timeline v-if="logs.length" :reverse="false">
                 <el-timeline-item v-for="(log, index) in logs" :key="index" :timestamp="log.created_at">
@@ -257,7 +304,13 @@
                         </a>
                     </div>
                     <div class="u-content" v-if="log.status === 1 || log.status === 4">
-                        {{ $t(log.status === 1 ? "dashboard.feedback.logAssigned" : "dashboard.feedback.logTransferred") }}
+                        {{
+                            $t(
+                                log.status === 1
+                                    ? "dashboard.feedback.logAssigned"
+                                    : "dashboard.feedback.logTransferred"
+                            )
+                        }}
                         <a
                             class="u-item u-user"
                             v-for="(item, i) in log.assign_list"
@@ -283,7 +336,9 @@
                         </a>
                         {{ $t("dashboard.feedback.toCoordinate") }}
                     </div>
-                    <div class="u-content" v-else>{{ $t("dashboard.feedback.ticketAction", { action: logMap(log.status) }) }}</div>
+                    <div class="u-content" v-else>
+                        {{ $t("dashboard.feedback.ticketAction", { action: logMap(log.status) }) }}
+                    </div>
                     <div class="u-remark" v-if="log.remark">{{ log.remark || "-" }}</div>
                 </el-timeline-item>
             </el-timeline>
@@ -321,7 +376,7 @@ import DOMPurify from "dompurify";
 import { closeMyFeedback, getFeedback, getFeedbackLog, urgeMyFeedback } from "@/service/dashboard/feedback";
 import { getTeammates } from "@/service/dashboard/index";
 import feedbackData from "@/assets/data/dashboard/feedback.json";
-const { types, subtypes, statusMap, statusColors, statusTypes } = feedbackData;
+const { statusColors, statusTypes } = feedbackData;
 import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import moment from "moment";
 import CommonComment from "@jx3box/jx3box-ui/src/single/Comment.vue";
@@ -350,9 +405,6 @@ export default {
 
             loading: false,
 
-            types,
-            subtypes,
-            statusMap,
             statusColors,
             statusTypes,
 
@@ -379,6 +431,15 @@ export default {
         };
     },
     computed: {
+        types() {
+            return this.localizeMap(feedbackData.types, "feedbackTypes");
+        },
+        subtypes() {
+            return this.localizeMap(feedbackData.subtypes, "feedbackSubtypes");
+        },
+        statusMap() {
+            return this.localizeMap(feedbackData.statusMap, "feedbackStatuses");
+        },
         id() {
             return this.$route.params.id;
         },
@@ -392,7 +453,7 @@ export default {
             return User.isSuperAdmin();
         },
         statusList() {
-            const _list = Object.entries(statusMap).map(([key, value]) => {
+            const _list = Object.entries(this.statusMap).map(([key, value]) => {
                 return {
                     text: value,
                     value: ~~key,
@@ -407,7 +468,8 @@ export default {
             return index;
         },
         client() {
-            return __clients[this.data.client];
+            const path = `dashboard.dataLabels.clients.${this.data.client}`;
+            return this.$te(path) ? this.$t(path) : __clients[this.data.client] || this.data.client;
         },
         attachments() {
             return Array.isArray(this.data?.images) ? this.data.images.filter(Boolean) : [];
@@ -433,11 +495,7 @@ export default {
             return this.isTicketOwner && !this.isTicketFinalStatus;
         },
         canUrgeTicket() {
-            return (
-                this.isTicketOwner &&
-                ![0, 10, 11, 12].includes(Number(this.data?.status)) &&
-                !this.hasUrgedTicket
-            );
+            return this.isTicketOwner && ![0, 10, 11, 12].includes(Number(this.data?.status)) && !this.hasUrgedTicket;
         },
     },
     watch: {
@@ -456,6 +514,13 @@ export default {
         this.loadRecord();
     },
     methods: {
+        localizeMap(source, name) {
+            return Object.keys(source).reduce((result, key) => {
+                const path = `dashboard.dataLabels.${name}.${key}`;
+                result[key] = this.$te(path) ? this.$t(path) : source[key];
+                return result;
+            }, {});
+        },
         logMap(status) {
             let str = this.$t("dashboard.common.create");
             if (status === 2) {
@@ -530,14 +595,18 @@ export default {
             if (!this.canCancelTicket || this.closeTicketLoading) return;
 
             try {
-                const { value } = await this.$prompt(this.$t("dashboard.feedback.cancelRemark"), this.$t("dashboard.feedback.cancelTicket"), {
-                    confirmButtonText: this.$t("dashboard.common.confirm"),
-                    cancelButtonText: this.$t("dashboard.common.cancel"),
-                    inputPlaceholder: this.$t("dashboard.common.remarkPlaceholder"),
-                    inputValidator: (value) => {
-                        return !!String(value || "").trim() || this.$t("dashboard.common.remarkPlaceholder");
-                    },
-                });
+                const { value } = await this.$prompt(
+                    this.$t("dashboard.feedback.cancelRemark"),
+                    this.$t("dashboard.feedback.cancelTicket"),
+                    {
+                        confirmButtonText: this.$t("dashboard.common.confirm"),
+                        cancelButtonText: this.$t("dashboard.common.cancel"),
+                        inputPlaceholder: this.$t("dashboard.common.remarkPlaceholder"),
+                        inputValidator: (value) => {
+                            return !!String(value || "").trim() || this.$t("dashboard.common.remarkPlaceholder");
+                        },
+                    }
+                );
                 const remark = String(value || "").trim();
                 this.closeTicketLoading = true;
                 await closeMyFeedback(this.id, { remark });
@@ -555,11 +624,15 @@ export default {
             if (!this.canUrgeTicket || this.urgeTicketLoading) return;
 
             try {
-                await this.$confirm(this.$t("dashboard.feedback.urgeConfirm"), this.$t("dashboard.feedback.urgeTicket"), {
-                    confirmButtonText: this.$t("dashboard.common.confirm"),
-                    cancelButtonText: this.$t("dashboard.common.cancel"),
-                    type: "warning",
-                });
+                await this.$confirm(
+                    this.$t("dashboard.feedback.urgeConfirm"),
+                    this.$t("dashboard.feedback.urgeTicket"),
+                    {
+                        confirmButtonText: this.$t("dashboard.common.confirm"),
+                        cancelButtonText: this.$t("dashboard.common.cancel"),
+                        type: "warning",
+                    }
+                );
                 this.urgeTicketLoading = true;
                 await urgeMyFeedback(this.id);
                 this.$message.success(this.$t("dashboard.feedback.urgeSuccess"));

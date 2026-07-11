@@ -2,7 +2,15 @@
     <div class="m-skin-scene-preview m-app-kv-skin-scene" :class="`is-theme-${theme}`">
         <div class="m-scene-stage">
             <div class="m-phone" :style="phoneStyle">
-                <video v-if="animationUrl" class="u-animation" :src="animationUrl" autoplay muted loop playsinline></video>
+                <video
+                    v-if="animationUrl"
+                    class="u-animation"
+                    :src="animationUrl"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                ></video>
                 <div class="m-kv"></div>
                 <div class="m-content">
                     <div class="u-quick-list">
@@ -25,7 +33,7 @@
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>App首屏KV<SkinSceneAuthors :authors="authors" /></b>
+            <b>{{ $t("dashboard.skin.scenes.app_kv") }}<SkinSceneAuthors :authors="authors" /></b>
             <span>calendar / app_kv</span>
         </div>
     </div>

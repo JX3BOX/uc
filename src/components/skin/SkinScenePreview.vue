@@ -231,8 +231,7 @@ export default {
     overflow: hidden;
     border: 1px solid rgba(148, 163, 184, 0.28);
     border-radius: 8px;
-    background:
-        radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.25), transparent 36%),
+    background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.25), transparent 36%),
         linear-gradient(180deg, #07111f 0%, @stage-bg 100%);
 }
 
@@ -293,8 +292,7 @@ export default {
     right: 44px;
     height: 124px;
     border-radius: 8px;
-    background:
-        radial-gradient(circle at 42% 6%, rgba(255, 255, 255, 0.9), transparent 15%),
+    background: radial-gradient(circle at 42% 6%, rgba(255, 255, 255, 0.9), transparent 15%),
         linear-gradient(135deg, #111827, #475569);
     opacity: 0.88;
 }
@@ -407,8 +405,7 @@ export default {
 .u-comment-bg,
 .u-home-banner,
 .u-home-page-bg {
-    background:
-        radial-gradient(circle at 78% 22%, rgba(255, 255, 255, 0.45), transparent 16%),
+    background: radial-gradient(circle at 78% 22%, rgba(255, 255, 255, 0.45), transparent 16%),
         linear-gradient(135deg, #0f172a, #1d4ed8);
 }
 

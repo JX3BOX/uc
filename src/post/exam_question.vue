@@ -32,7 +32,7 @@
                     <el-radio value="checkbox" border>{{ $t("publish.exam.multipleChoice") }}</el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item :label="$t('publish.exam.options')" class="m-publish-exam-options">
+            <el-form-item :label="$t('publish.exam.optionsLabel')" class="m-publish-exam-options">
                 <el-input :placeholder="$t('publish.exam.optionPlaceholder', { index: 1 })" v-model="primary.options[0]">
                     <template #prepend>A</template>
                 </el-input>

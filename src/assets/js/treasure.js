@@ -55,19 +55,6 @@ const perfectAchievement = {
     142: { hasClass: "gsyj", zIndex: 16 },
 };
 
-let formatDateTime = (dateTimeString) => {
-    const dateTime = new Date(dateTimeString);
-    const year = dateTime.getFullYear();
-    const month = String(dateTime.getMonth() + 1).padStart(2, "0");
-    const date = String(dateTime.getDate()).padStart(2, "0");
-    const hours = String(dateTime.getHours()).padStart(2, "0");
-    const minutes = String(dateTime.getMinutes()).padStart(2, "0");
-    const seconds = String(dateTime.getSeconds()).padStart(2, "0");
-
-    const formattedDateTime = `${year}.${month}.${date} ${hours}:${minutes}:${seconds}`;
-    return formattedDateTime;
-};
-
 let getData = (id, useUid) => {
     return new Promise((resolve, reject) => {
         var returnData = {
@@ -87,11 +74,7 @@ let getData = (id, useUid) => {
                     }
                 });
                 list = newList;
-                if (res.data?.data?.updated_at) {
-                    returnData.updated_at = formatDateTime(res.data?.data?.updated_at);
-                } else {
-                    returnData.updated_at = "暂无记录";
-                }
+                returnData.updated_at = res.data?.data?.updated_at || null;
                 // 定义奇遇类型数组
                 const adventureTypes = ["pet", "normal", "perfect"];
                 // 创建 Promise 数组来存储所有奇遇数据的 Promise

@@ -16,7 +16,9 @@
                 >
             </span>
             <!-- <a class="el-button u-btn el-button--primary el-button--small" href="/vip/boxcoin" target="_blank">充值</a> -->
-            <el-button class="u-btn" type="primary" size="small" @click="togglePullBox" :disabled="!money">{{ $t("dashboard.common.exchange") }}</el-button>
+            <el-button class="u-btn" type="primary" size="small" @click="togglePullBox" :disabled="!money">{{
+                $t("dashboard.common.exchange")
+            }}</el-button>
             <el-button
                 class="u-btn"
                 type="warning"
@@ -27,7 +29,12 @@
                 >{{ $t("dashboard.common.convert") }}</el-button
             >
         </div>
-        <el-dialog v-model="showExchangeBox" :title="$t('dashboard.boxcoin.convertTitle')" width="520px" :close-on-click-modal="!exchangeLockStatus">
+        <el-dialog
+            v-model="showExchangeBox"
+            :title="$t('dashboard.boxcoin.convertTitle')"
+            width="520px"
+            :close-on-click-modal="!exchangeLockStatus"
+        >
             <el-alert
                 class="m-boxcoin-tip"
                 :title="$t('dashboard.boxcoin.convertTip')"
@@ -37,11 +44,20 @@
             ></el-alert>
             <el-form label-position="left" label-width="90px" class="m-boxcoin-form" :model="exchangeForm">
                 <el-form-item :label="$t('dashboard.boxcoin.type')">
-                    <el-select v-model="exchangeForm.boxcoin_type" :placeholder="$t('dashboard.boxcoin.typePlaceholder')" :disabled="exchangeLockStatus">
+                    <el-select
+                        v-model="exchangeForm.boxcoin_type"
+                        :placeholder="$t('dashboard.boxcoin.typePlaceholder')"
+                        :disabled="exchangeLockStatus"
+                    >
                         <el-option
                             v-for="item in exchangeTypes"
                             :key="item.value"
-                            :label="$t('dashboard.boxcoin.availableType', { type: exchangeTypeLabel(item), amount: getExchangeTypeBalance(item.value) })"
+                            :label="
+                                $t('dashboard.boxcoin.availableType', {
+                                    type: exchangeTypeLabel(item),
+                                    amount: getExchangeTypeBalance(item.value),
+                                })
+                            "
                             :value="item.value"
                         ></el-option>
                     </el-select>
@@ -56,7 +72,9 @@
                         :disabled="exchangeLockStatus"
                         :placeholder="$t('dashboard.boxcoin.amountPlaceholder')"
                     ></el-input-number>
-                    <div class="u-exchange-tip">{{ $t("dashboard.boxcoin.multipleTip", { amount: exchangeAvailableBoxcoin }) }}</div>
+                    <div class="u-exchange-tip">
+                        {{ $t("dashboard.boxcoin.multipleTip", { amount: exchangeAvailableBoxcoin }) }}
+                    </div>
                 </el-form-item>
                 <el-form-item :label="$t('dashboard.boxcoin.estimatedGain')">
                     <b class="u-exchange-point">{{ exchangePointCount }}</b>
@@ -65,8 +83,12 @@
             </el-form>
             <template #footer>
                 <span class="dialog-footer">
-                    <el-button @click="showExchangeBox = false" :disabled="exchangeLockStatus">{{ $t("dashboard.common.cancel") }}</el-button>
-                    <el-button type="primary" @click="openExchangeConfirm" :loading="exchangeLockStatus">{{ $t("dashboard.boxcoin.confirmConvert") }}</el-button>
+                    <el-button @click="showExchangeBox = false" :disabled="exchangeLockStatus">{{
+                        $t("dashboard.common.cancel")
+                    }}</el-button>
+                    <el-button type="primary" @click="openExchangeConfirm" :loading="exchangeLockStatus">{{
+                        $t("dashboard.boxcoin.confirmConvert")
+                    }}</el-button>
                 </span>
             </template>
         </el-dialog>
@@ -84,34 +106,55 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('dashboard.boxcoin.gameAccount')">
-                    <el-input v-model="pull.account" :placeholder="$t('dashboard.boxcoin.accountPlaceholder')"></el-input>
+                    <el-input
+                        v-model="pull.account"
+                        :placeholder="$t('dashboard.boxcoin.accountPlaceholder')"
+                    ></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('dashboard.boxcoin.gameAccount')">
-                    <el-input v-model="pull.accounts" :placeholder="$t('dashboard.boxcoin.accountConfirmPlaceholder')"></el-input>
+                    <el-input
+                        v-model="pull.accounts"
+                        :placeholder="$t('dashboard.boxcoin.accountConfirmPlaceholder')"
+                    ></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('dashboard.boxcoin.exchangeAmount')">
                     <el-radio-group v-model="pull.cash">
-                        <el-radio :value="1500" border :disabled="!canSelect(1500)" v-if="client == 'std'"
-                            >{{ $t("dashboard.boxcoin.tokens", { amount: 1500 }) }}</el-radio
-                        >
-                        <el-radio :value="2000" border :disabled="!canSelect(2000)" v-if="isAdmin">{{ $t("dashboard.boxcoin.tokens", { amount: 2000 }) }}</el-radio>
-                        <el-radio :value="3000" border :disabled="!canSelect(3000)">{{ $t("dashboard.boxcoin.tokens", { amount: 3000 }) }}</el-radio>
-                        <el-radio :value="5000" border :disabled="!canSelect(5000)">{{ $t("dashboard.boxcoin.tokens", { amount: 5000 }) }}</el-radio>
-                        <el-radio :value="10000" border :disabled="!canSelect(10000)">{{ $t("dashboard.boxcoin.tokens", { amount: 10000 }) }}</el-radio>
-                        <el-radio :value="50000" border :disabled="!canSelect(50000)">{{ $t("dashboard.boxcoin.tokens", { amount: 50000 }) }}</el-radio>
-                        <el-radio :value="100000" border :disabled="!canSelect(100000)">{{ $t("dashboard.boxcoin.tokens", { amount: 100000 }) }}</el-radio>
-                        <el-radio :value="200000" border :disabled="!canSelect(200000)">{{ $t("dashboard.boxcoin.tokens", { amount: 200000 }) }}</el-radio>
+                        <el-radio :value="1500" border :disabled="!canSelect(1500)" v-if="client == 'std'">{{
+                            $t("dashboard.boxcoin.tokens", { amount: 1500 })
+                        }}</el-radio>
+                        <el-radio :value="2000" border :disabled="!canSelect(2000)" v-if="isAdmin">{{
+                            $t("dashboard.boxcoin.tokens", { amount: 2000 })
+                        }}</el-radio>
+                        <el-radio :value="3000" border :disabled="!canSelect(3000)">{{
+                            $t("dashboard.boxcoin.tokens", { amount: 3000 })
+                        }}</el-radio>
+                        <el-radio :value="5000" border :disabled="!canSelect(5000)">{{
+                            $t("dashboard.boxcoin.tokens", { amount: 5000 })
+                        }}</el-radio>
+                        <el-radio :value="10000" border :disabled="!canSelect(10000)">{{
+                            $t("dashboard.boxcoin.tokens", { amount: 10000 })
+                        }}</el-radio>
+                        <el-radio :value="50000" border :disabled="!canSelect(50000)">{{
+                            $t("dashboard.boxcoin.tokens", { amount: 50000 })
+                        }}</el-radio>
+                        <el-radio :value="100000" border :disabled="!canSelect(100000)">{{
+                            $t("dashboard.boxcoin.tokens", { amount: 100000 })
+                        }}</el-radio>
+                        <el-radio :value="200000" border :disabled="!canSelect(200000)">{{
+                            $t("dashboard.boxcoin.tokens", { amount: 200000 })
+                        }}</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item :label="$t('dashboard.email.address')">
                     <el-input v-model="pull.email" :placeholder="$t('dashboard.email.correctPlaceholder')"></el-input>
                 </el-form-item>
                 <el-form-item label>
-                    <el-button type="primary" @click="openConfirmBox" :disabled="!ready || lockStatus"
-                        >{{ $t("dashboard.common.submitApplication") }}</el-button
-                    >
+                    <el-button type="primary" @click="openConfirmBox" :disabled="!ready || lockStatus">{{
+                        $t("dashboard.common.submitApplication")
+                    }}</el-button>
                     <span class="u-tip" v-if="!isAllowDate">
-                        <i class="el-icon-warning-outline"></i> {{ $t("dashboard.boxcoin.settlementUnavailable", { start: start_date, end: end_date }) }}
+                        <i class="el-icon-warning-outline"></i>
+                        {{ $t("dashboard.boxcoin.settlementUnavailable", { start: start_date, end: end_date }) }}
                     </span>
                 </el-form-item>
             </el-form>
@@ -262,20 +305,7 @@ export default {
                 boxcoin_type: "all",
                 boxcoin_count: 10,
             },
-            exchangeTypes: [
-                {
-                    label: "双端",
-                    value: "all",
-                },
-                {
-                    label: "重制",
-                    value: "std",
-                },
-                {
-                    label: "缘起",
-                    value: "origin",
-                },
-            ],
+            exchangeTypes: [{ value: "all" }, { value: "std" }, { value: "origin" }],
 
             // 记录列表
             loading: false,
@@ -494,38 +524,45 @@ export default {
             this.$confirm(
                 `<div class="m-boxcoin-msg">${this.$t("dashboard.boxcoin.type")}：<b>${this.getExchangeTypeLabel(
                     this.exchangeForm.boxcoin_type
-                )}</b> <br/> ${this.$t("dashboard.boxcoin.consumed")}：<b>${count}${this.$t("dashboard.common.boxcoin")}</b> <br/> ${this.$t("dashboard.boxcoin.estimatedGain")}：<b>${point}${this.$t("dashboard.common.points")}</b></div>`,
+                )}</b> <br/> ${this.$t("dashboard.boxcoin.consumed")}：<b>${count}${this.$t(
+                    "dashboard.common.boxcoin"
+                )}</b> <br/> ${this.$t("dashboard.boxcoin.estimatedGain")}：<b>${point}${this.$t(
+                    "dashboard.common.points"
+                )}</b></div>`,
                 this.$t("dashboard.boxcoin.confirmConvert"),
                 {
                     confirmButtonText: this.$t("dashboard.common.confirm"),
                     cancelButtonText: this.$t("dashboard.common.cancel"),
                     dangerouslyUseHTMLString: true,
                 }
-            ).then(() => {
-                this.exchangeLockStatus = true;
-                exchangeBoxcoinToPoint({
-                    boxcoin_count: count,
-                    boxcoin_type: this.exchangeForm.boxcoin_type,
-                })
-                    .then(() => {
-                        this.$message({
-                            type: "success",
-                            message: this.$t("dashboard.boxcoin.convertSuccess"),
+            )
+                .then(() => {
+                    this.exchangeLockStatus = true;
+                    exchangeBoxcoinToPoint({
+                        boxcoin_count: count,
+                        boxcoin_type: this.exchangeForm.boxcoin_type,
+                    })
+                        .then(() => {
+                            this.$message({
+                                type: "success",
+                                message: this.$t("dashboard.boxcoin.convertSuccess"),
+                            });
+                            this.showExchangeBox = false;
+                            this.resetExchangeForm();
+                            this.loadAsset();
+                            this.loadOverview();
+                            this.loadData();
+                        })
+                        .catch((err) => {
+                            const message =
+                                err?.response?.data?.msg || err?.message || this.$t("dashboard.boxcoin.convertFailed");
+                            this.$message.error(message);
+                        })
+                        .finally(() => {
+                            this.exchangeLockStatus = false;
                         });
-                        this.showExchangeBox = false;
-                        this.resetExchangeForm();
-                        this.loadAsset();
-                        this.loadOverview();
-                        this.loadData();
-                    })
-                    .catch((err) => {
-                        const message = err?.response?.data?.msg || err?.message || this.$t("dashboard.boxcoin.convertFailed");
-                        this.$message.error(message);
-                    })
-                    .finally(() => {
-                        this.exchangeLockStatus = false;
-                    });
-            }).catch(() => {});
+                })
+                .catch(() => {});
         },
         canSelect: function (val) {
             return ~~this.money >= ~~val;
@@ -540,11 +577,20 @@ export default {
             this.formStatus = true;
         },
         openConfirmBox: function () {
-            if (/[\u4e00-\u9fa5]/.test(this.pull.account)) return this.$alert(this.$t("dashboard.boxcoin.accountNotRole"));
-            if (this.pull.account !== this.pull.accounts) return this.$alert(this.$t("dashboard.boxcoin.accountMismatch"));
+            if (/[\u4e00-\u9fa5]/.test(this.pull.account))
+                return this.$alert(this.$t("dashboard.boxcoin.accountNotRole"));
+            if (this.pull.account !== this.pull.accounts)
+                return this.$alert(this.$t("dashboard.boxcoin.accountMismatch"));
 
             this.$alert(
-                `<div class="m-boxcoin-msg">${this.$t("dashboard.common.zone")}：<b>${this.pull.zone}</b> <br/> ${this.$t("dashboard.common.account")}：<b>${this.pull.account}</b> <br/> ${this.$t("dashboard.common.email")}：<b>${this.pull.email}</b> <br/> ${this.$t("dashboard.common.exchange")}：<b>${this.$t("dashboard.boxcoin.tokens", { amount: this.pull.cash })}</b></div>`,
+                `<div class="m-boxcoin-msg">${this.$t("dashboard.common.zone")}：<b>${
+                    this.pull.zone
+                }</b> <br/> ${this.$t("dashboard.common.account")}：<b>${this.pull.account}</b> <br/> ${this.$t(
+                    "dashboard.common.email"
+                )}：<b>${this.pull.email}</b> <br/> ${this.$t("dashboard.common.exchange")}：<b>${this.$t(
+                    "dashboard.boxcoin.tokens",
+                    { amount: this.pull.cash }
+                )}</b></div>`,
                 this.$t("dashboard.common.confirmInformation"),
                 {
                     confirmButtonText: this.$t("dashboard.common.confirm"),
@@ -592,7 +638,8 @@ export default {
             return showTime(val);
         },
         formatType: function (val) {
-            return (val && types[val]) || this.$t("dashboard.common.unknown");
+            const key = `dashboard.dataLabels.boxcoinTypes.${val}`;
+            return val && this.$te(key) ? this.$t(key) : types[val] || this.$t("dashboard.common.unknown");
         },
         formatRemark: function (str) {
             if (str) {

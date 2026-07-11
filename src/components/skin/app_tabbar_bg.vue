@@ -1,5 +1,10 @@
 <template>
-    <SkinScenePreview title="App底部导航背景" subtitle="sidebar / app_tabbar_bg" layout="tabbar" target-tab="app_tabbar_bg" />
+    <SkinScenePreview
+        :title="$t('dashboard.skin.scenes.app_tabbar_bg')"
+        subtitle="sidebar / app_tabbar_bg"
+        layout="tabbar"
+        target-tab="app_tabbar_bg"
+    />
 </template>
 
 <script>

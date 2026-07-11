@@ -1,5 +1,11 @@
 <template>
-    <SkinScenePreview title="App底部导航论坛图标" subtitle="sidebar / app_tabbar_icon_forum" layout="tabbar" target-tab="forum" active-tab="home" />
+    <SkinScenePreview
+        :title="$t('dashboard.skin.scenes.app_tabbar_icon_forum')"
+        subtitle="sidebar / app_tabbar_icon_forum"
+        layout="tabbar"
+        target-tab="forum"
+        active-tab="home"
+    />
 </template>
 
 <script>

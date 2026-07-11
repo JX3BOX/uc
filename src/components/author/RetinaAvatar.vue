@@ -5,7 +5,7 @@
         :class="sizeClass"
         :style="avatarStyle"
     >
-        <img :src="avatarUrl" class="c-avatar-pic" alt="" />
+        <img :src="avatarUrl" class="c-avatar-pic" :style="pictureStyle" alt="" />
         <i v-if="frame" class="c-avatar-frame" :style="frameStyle">
             <img :src="frameUrl" alt="" />
         </i>
@@ -70,6 +70,11 @@ export default {
             return `${JX3BOX.__imgPath}avatar/images/${this.frame}/${this.frame}.svg`;
         },
         avatarStyle() {
+            if (typeof this.size !== "number") return {};
+            const size = `${this.displayStyle.avatar}px`;
+            return { width: size, height: size };
+        },
+        pictureStyle() {
             const size = `${this.displayStyle.avatar}px`;
             return { width: size, height: size };
         },

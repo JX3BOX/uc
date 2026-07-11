@@ -3,12 +3,20 @@
         <div class="type-box">
             <el-form inline class="m-type-form">
                 <el-form-item :label="$t('dashboard.feedback.source')">
-                    <el-select v-model="form.type" :placeholder="$t('dashboard.feedback.sourcePlaceholder')" style="width:200px">
+                    <el-select
+                        v-model="form.type"
+                        :placeholder="$t('dashboard.feedback.sourcePlaceholder')"
+                        style="width: 200px"
+                    >
                         <el-option v-for="(value, key) in types" :key="key" :value="key" :label="value"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('dashboard.feedback.category')">
-                    <el-select v-model="form.subtype" :placeholder="$t('dashboard.feedback.categoryPlaceholder')" style="width:200px">
+                    <el-select
+                        v-model="form.subtype"
+                        :placeholder="$t('dashboard.feedback.categoryPlaceholder')"
+                        style="width: 200px"
+                    >
                         <el-option v-for="(value, key) in subtypes" :key="key" :value="key" :label="value"></el-option>
                     </el-select>
                 </el-form-item>
@@ -44,7 +52,12 @@
                 >
                     <template #file="{ file }">
                         <div class="u-upload-item" @click.stop="handlePictureCardPreview(file)">
-                            <img v-if="!isVideoFile(file)" class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                            <img
+                                v-if="!isVideoFile(file)"
+                                class="el-upload-list__item-thumbnail"
+                                :src="file.url"
+                                alt=""
+                            />
                             <div v-else class="u-upload-video">
                                 <video class="u-upload-video__player" :src="file.url" muted preload="metadata"></video>
                                 <i class="el-icon-video-play u-upload-video__icon"></i>
@@ -90,7 +103,6 @@
 <script>
 import axios from "axios";
 import feedbackData from "@/assets/data/dashboard/feedback.json";
-const { types, subtypes } = feedbackData;
 import { __cms } from "@/utils/config";
 const API_Root = __cms;
 const API = API_Root + "api/cms/upload";
@@ -107,9 +119,6 @@ export default {
     },
     data() {
         return {
-            types,
-            subtypes,
-
             form: {
                 type: "",
                 subtype: "",
@@ -126,6 +135,12 @@ export default {
         };
     },
     computed: {
+        types() {
+            return this.localizeMap(feedbackData.types, "feedbackTypes");
+        },
+        subtypes() {
+            return this.localizeMap(feedbackData.subtypes, "feedbackSubtypes");
+        },
         canSubmit() {
             return this.form.type && this.form.subtype && this.form.content;
         },
@@ -137,6 +152,13 @@ export default {
         },
     },
     methods: {
+        localizeMap(source, name) {
+            return Object.keys(source).reduce((result, key) => {
+                const path = `dashboard.dataLabels.${name}.${key}`;
+                result[key] = this.$te(path) ? this.$t(path) : source[key];
+                return result;
+            }, {});
+        },
         isVideoFile(file) {
             const type = file?.raw?.type || file?.type || "";
             if (type.startsWith("video/")) return true;
@@ -357,7 +379,7 @@ export default {
         }
     }
 }
-.m-feedback-visible{
+.m-feedback-visible {
     .fz(13px);
     .flex(y);
     justify-content: flex-end;

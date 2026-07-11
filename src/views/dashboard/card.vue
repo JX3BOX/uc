@@ -31,13 +31,19 @@
                     >
                         <el-table-column prop="type" :label="$t('dashboard.common.type')" width="120px">
                             <template #default="scope">{{
-                                snOptions.types[scope.row.type] || scope.row.type || $t("dashboard.common.other")
+                                cardTypeLabel(scope.row.type, snOptions.types[scope.row.type])
                             }}</template>
                         </el-table-column>
                         <el-table-column prop="subtype" :label="$t('dashboard.cards.channel')" width="100px">
-                            <template #default="scope">{{ snOptions.subtypes[scope.row.subtype] || $t("dashboard.common.other") }}</template>
+                            <template #default="scope">{{
+                                cardSubtypeLabel(scope.row.subtype, snOptions.subtypes[scope.row.subtype])
+                            }}</template>
                         </el-table-column>
-                        <el-table-column prop="describe" :label="$t('dashboard.common.description')" width="160px"></el-table-column>
+                        <el-table-column
+                            prop="describe"
+                            :label="$t('dashboard.common.description')"
+                            width="160px"
+                        ></el-table-column>
                         <el-table-column :label="$t('dashboard.cards.activationCode')" width="280">
                             <template #default="scope">
                                 <div class="u-code">
@@ -74,8 +80,13 @@
                                 <span v-else>-</span>
                             </template>
                         </el-table-column>
-                        <el-table-column :label="$t('dashboard.cards.issuedAt')" width="200" prop="grant_at"></el-table-column>
-                        <el-table-column prop="remark" :label="$t('dashboard.common.remark')" width="200"> </el-table-column>
+                        <el-table-column
+                            :label="$t('dashboard.cards.issuedAt')"
+                            width="200"
+                            prop="grant_at"
+                        ></el-table-column>
+                        <el-table-column prop="remark" :label="$t('dashboard.common.remark')" width="200">
+                        </el-table-column>
                         <el-table-column prop="used_by_self" :label="$t('dashboard.cards.isUsed')">
                             <template #default="scope">
                                 <el-icon
@@ -221,11 +232,13 @@
                         v-loading="loading"
                     >
                         <el-table-column prop="type" :label="$t('dashboard.common.type')" width="120">
-                            <template #default="scope">{{ keycodeOptions.types[scope.row.type] || $t("dashboard.common.other") }}</template>
+                            <template #default="scope">{{
+                                cardTypeLabel(scope.row.type, keycodeOptions.types[scope.row.type])
+                            }}</template>
                         </el-table-column>
                         <el-table-column prop="subtype" :label="$t('dashboard.cards.channel')" width="120">
                             <template #default="scope">{{
-                                keycodeOptions.subtypes[scope.row.subtype] || $t("dashboard.common.other")
+                                cardSubtypeLabel(scope.row.subtype, keycodeOptions.subtypes[scope.row.subtype])
                             }}</template>
                         </el-table-column>
                         <el-table-column :label="$t('dashboard.cards.denomination')" width="120">
@@ -236,7 +249,11 @@
                                 <div class="u-card">
                                     <div class="u-count">
                                         <div class="u-line">
-                                            <span>{{ $t("dashboard.cards.cardNumber") }}：{{ scope.row.key || "****************" }}</span>
+                                            <span
+                                                >{{ $t("dashboard.cards.cardNumber") }}：{{
+                                                    scope.row.key || "****************"
+                                                }}</span
+                                            >
                                             <el-button
                                                 class="u-btn"
                                                 v-if="scope.row.key"
@@ -248,7 +265,11 @@
                                             >
                                         </div>
                                         <div class="u-line">
-                                            <span>{{ $t("dashboard.cards.cardCode") }}：{{ scope.row.code || "****************" }} </span>
+                                            <span
+                                                >{{ $t("dashboard.cards.cardCode") }}：{{
+                                                    scope.row.code || "****************"
+                                                }}
+                                            </span>
                                             <el-button
                                                 v-if="!scope.row.code"
                                                 type="primary"
@@ -283,8 +304,13 @@
                                 <span v-else>-</span>
                             </template>
                         </el-table-column>
-                        <el-table-column :label="$t('dashboard.cards.issuedAt')" width="200" prop="grant_at"></el-table-column>
-                        <el-table-column prop="remark" :label="$t('dashboard.common.remark')" width="200"> </el-table-column>
+                        <el-table-column
+                            :label="$t('dashboard.cards.issuedAt')"
+                            width="200"
+                            prop="grant_at"
+                        ></el-table-column>
+                        <el-table-column prop="remark" :label="$t('dashboard.common.remark')" width="200">
+                        </el-table-column>
                         <el-table-column prop="used_by_self" :label="$t('dashboard.cards.isUsed')">
                             <template #default="scope">
                                 <el-icon
@@ -392,6 +418,14 @@ export default {
         },
     },
     methods: {
+        cardTypeLabel(type, fallback) {
+            const key = `dashboard.dataLabels.cardTypes.${type}`;
+            return type && this.$te(key) ? this.$t(key) : fallback || type || this.$t("dashboard.common.other");
+        },
+        cardSubtypeLabel(type, fallback) {
+            const key = `dashboard.dataLabels.cardSubtypes.${type}`;
+            return type && this.$te(key) ? this.$t(key) : fallback || type || this.$t("dashboard.common.other");
+        },
         // 获取一卡通列表
         loadKeycode() {
             this.loading = true;
@@ -482,14 +516,16 @@ export default {
                 confirmButtonText: this.$t("dashboard.common.confirm"),
                 cancelButtonText: this.$t("dashboard.common.cancel"),
                 inputType: "password",
-            }).then(({ value }) => {
-                activationKeycode(row.id, { password: value }).then((res) => {
-                    let { code, key } = res.data.data;
-                    row.code = code;
-                    row.key = key;
-                    this.list[index] = row;
-                });
-            }).catch(() => {});
+            })
+                .then(({ value }) => {
+                    activationKeycode(row.id, { password: value }).then((res) => {
+                        let { code, key } = res.data.data;
+                        row.code = code;
+                        row.key = key;
+                        this.list[index] = row;
+                    });
+                })
+                .catch(() => {});
         },
         //  获取单个激活码
         getSn(index, row) {
@@ -497,12 +533,14 @@ export default {
                 confirmButtonText: this.$t("dashboard.common.confirm"),
                 cancelButtonText: this.$t("dashboard.common.cancel"),
                 inputType: "password",
-            }).then(({ value }) => {
-                activationSn(row.id, { password: value }).then((res) => {
-                    row.code = res.data.data.sn;
-                    this.list[index] = row;
-                });
-            }).catch(() => {});
+            })
+                .then(({ value }) => {
+                    activationSn(row.id, { password: value }).then((res) => {
+                        row.code = res.data.data.sn;
+                        this.list[index] = row;
+                    });
+                })
+                .catch(() => {});
         },
         // 获取虚拟卡密
         getVirtualCode(index, row) {
@@ -510,19 +548,21 @@ export default {
                 confirmButtonText: this.$t("dashboard.common.confirm"),
                 cancelButtonText: this.$t("dashboard.common.cancel"),
                 inputType: "password",
-            }).then(({ value }) => {
-                getVirtualCode(row.goods.id, { password: value }).then((res) => {
-                    let { good_number } = res.data.data;
+            })
+                .then(({ value }) => {
+                    getVirtualCode(row.goods.id, { password: value }).then((res) => {
+                        let { good_number } = res.data.data;
 
-                    const list = cloneDeep(this.virtualList);
-                    this.virtualList = list.map((item, i) => {
-                        if (i === index) {
-                            item.code = good_number;
-                        }
-                        return item;
+                        const list = cloneDeep(this.virtualList);
+                        this.virtualList = list.map((item, i) => {
+                            if (i === index) {
+                                item.code = good_number;
+                            }
+                            return item;
+                        });
                     });
-                });
-            }).catch(() => {});
+                })
+                .catch(() => {});
         },
         // 判断过期时间
         compareTime(date, type) {

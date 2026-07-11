@@ -39,7 +39,7 @@
             </aside>
         </div>
         <div class="m-scene-caption">
-            <b>PC作者侧栏<SkinSceneAuthors :authors="authors" /></b>
+            <b>{{ $t("dashboard.skin.scenes.pc_sidebar") }}<SkinSceneAuthors :authors="authors" /></b>
             <span>sidebar / pc_sidebar</span>
         </div>
     </div>

@@ -23,7 +23,7 @@
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>PC首页日历<SkinSceneAuthors :authors="authors" /></b>
+            <b>{{ $t("dashboard.skin.scenes.pc_calendar") }}<SkinSceneAuthors :authors="authors" /></b>
             <span>calendar / pc_calendar</span>
         </div>
     </div>

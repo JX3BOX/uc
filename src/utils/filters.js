@@ -1,7 +1,7 @@
 import faceData from "@jx3box/jx3box-facedat/assets/data/index.json";
 const { bodyMap } = faceData;
-function showBodyType(val) {
-    return bodyMap[val]?.label || "未知";
+function showBodyType(val, fallback = "") {
+    return bodyMap[val]?.label || fallback;
 }
 
 import school_id_map from "@jx3box/jx3box-data/data/xf/schoolid.json";
@@ -11,20 +11,12 @@ function showSchoolIcon(val) {
     return __imgPath + "image/school/" + id + ".png";
 }
 
-function showSchoolName(val) {
+function showSchoolName(val, fallback = "") {
     let id = val || 0;
-    return (id && school_id_map[id]) || "未知";
+    return (id && school_id_map[id]) || fallback;
 }
 
 import { showTime } from "@jx3box/jx3box-common/js/moment.js";
 import { getThumbnail, authorLink, showAvatar } from "@jx3box/jx3box-common/js/utils";
 
-export {
-    showBodyType,
-    showSchoolIcon,
-    showSchoolName,
-    showTime,
-    getThumbnail,
-    authorLink,
-    showAvatar
-};
+export { showBodyType, showSchoolIcon, showSchoolName, showTime, getThumbnail, authorLink, showAvatar };

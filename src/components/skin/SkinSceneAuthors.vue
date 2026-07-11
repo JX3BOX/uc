@@ -1,6 +1,6 @@
 <template>
     <span class="m-skin-scene-authors" v-if="normalizedAuthors.length">
-        <span class="u-label">作者：</span>
+        <span class="u-label">{{ $t("dashboard.skin.authorLabel") }}</span>
         <span
             v-for="(author, index) in normalizedAuthors"
             :key="author.id || `${author.display_name}-${index}`"
@@ -14,7 +14,7 @@
                 <img v-if="author.avatar" :src="author.avatar" alt="" />
                 <em>{{ author.display_name }}</em>
             </span>
-            <i v-if="index < normalizedAuthors.length - 1">、</i>
+            <i v-if="index < normalizedAuthors.length - 1">{{ $t("dashboard.skin.authorSeparator") }}</i>
         </span>
     </span>
 </template>

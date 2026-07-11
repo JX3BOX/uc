@@ -4,9 +4,11 @@
         <div class="m-balance">
             <span class="u-label">{{ $t("dashboard.common.balance") }} : </span>
             <b :class="money > 0 ? 'u-have' : ''" class="u-num">{{ money }}</b>
-            <a class="el-button u-btn el-button--primary el-button--small" href="/vip/mall" target="_blank">{{ $t("dashboard.common.exchange") }}</a>
+            <a class="el-button u-btn el-button--primary el-button--small" href="/vip/mall" target="_blank">{{
+                $t("dashboard.common.exchange")
+            }}</a>
         </div>
-        <el-tabs class="m-tabs" type="border-card" v-model="tab_value" @tab-change="changeTab" >
+        <el-tabs class="m-tabs" type="border-card" v-model="tab_value" @tab-change="changeTab">
             <!-- 积分记录 -->
             <el-tab-pane :label="$t('dashboard.points.pointsHistory')" name="point" lazy>
                 <el-table
@@ -173,7 +175,8 @@ export default {
             return getLink(item.post_type, item.article_id);
         },
         formatType: function (val) {
-            return (val && this.types[val]) || this.$t("dashboard.common.unknown");
+            const key = `dashboard.dataLabels.pointsTypes.${val}`;
+            return val && this.$te(key) ? this.$t(key) : this.types[val] || this.$t("dashboard.common.unknown");
         },
         formatRemark: function (str) {
             if (str) {

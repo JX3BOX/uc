@@ -17,20 +17,28 @@
             <el-form label-position="left" label-width="80px">
                 <el-form-item :label="$t('dashboard.common.type')">
                     <el-select v-model="pull.pay_type" :placeholder="$t('dashboard.common.selectPlaceholder')">
-                        <el-option v-for="(label, key) in pay_types" :key="key" :label="paymentTypeLabel(key, label)" :value="key">
+                        <el-option
+                            v-for="(label, key) in pay_types"
+                            :key="key"
+                            :label="paymentTypeLabel(key, label)"
+                            :value="key"
+                        >
                         </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item :label="$t('dashboard.common.account')">
-                    <el-input v-model="pull.account" :placeholder="$t('dashboard.common.paymentAccountPlaceholder')"></el-input>
+                    <el-input
+                        v-model="pull.account"
+                        :placeholder="$t('dashboard.common.paymentAccountPlaceholder')"
+                    ></el-input>
                 </el-form-item>
                 <el-form-item :label="$t('dashboard.common.name')">
                     <el-input v-model="pull.username" :placeholder="$t('dashboard.common.payeePlaceholder')"></el-input>
                 </el-form-item>
                 <el-form-item label="">
-                    <el-button type="primary" @click="openConfirmBox" :disabled="!money || lockStatus"
-                        >{{ $t("dashboard.common.submitApplication") }}</el-button
-                    >
+                    <el-button type="primary" @click="openConfirmBox" :disabled="!money || lockStatus">{{
+                        $t("dashboard.common.submitApplication")
+                    }}</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -53,7 +61,13 @@
                                     <b>{{ formatMoney(item.money) }}</b>
                                 </td>
                                 <td>{{ formatType(item.action_type) }}</td>
-                                <td>{{ item.is_success ? $t("dashboard.common.processed") : $t("dashboard.common.unprocessed") }}</td>
+                                <td>
+                                    {{
+                                        item.is_success
+                                            ? $t("dashboard.common.processed")
+                                            : $t("dashboard.common.unprocessed")
+                                    }}
+                                </td>
                                 <td>{{ item.description || item.remark || "-" }}</td>
                                 <td>{{ formatDate(item.created_at) }}</td>
                             </tr>
@@ -300,7 +314,11 @@ export default {
         },
         openConfirmBox: function () {
             this.$alert(
-                `<div class="m-packet-msg">${this.$t("dashboard.packet.confirmPayee")} <br/> ${this.$t("dashboard.common.paymentAccount")}<b>${this.pull.account}</b> <br/> ${this.$t("dashboard.common.payee")}<b>${this.pull.username}</b></div>`,
+                `<div class="m-packet-msg">${this.$t("dashboard.packet.confirmPayee")} <br/> ${this.$t(
+                    "dashboard.common.paymentAccount"
+                )}<b>${this.pull.account}</b> <br/> ${this.$t("dashboard.common.payee")}<b>${
+                    this.pull.username
+                }</b></div>`,
                 this.$t("dashboard.common.confirmInformation"),
                 {
                     confirmButtonText: this.$t("dashboard.common.confirm"),
@@ -390,7 +408,8 @@ export default {
             return val ? this.$t("dashboard.packet.withdrawn") : this.$t("dashboard.packet.notWithdrawn");
         },
         formatHistoryStatus: function (val) {
-            return val ? paystatus[val] : this.$t("dashboard.packet.underReview");
+            const key = `dashboard.dataLabels.packetPayStatuses.${val}`;
+            return val && this.$te(key) ? this.$t(key) : val ? paystatus[val] : this.$t("dashboard.packet.underReview");
         },
         formatPaytype: function (val) {
             return val ? this.paymentTypeLabel(val, paytypes[val]) : val;
@@ -407,7 +426,8 @@ export default {
         },
         formatPayStatus: function (val) {
             val += "";
-            return val && paystatus[val];
+            const key = `dashboard.dataLabels.packetPayStatuses.${val}`;
+            return val && this.$te(key) ? this.$t(key) : paystatus[val];
         },
         authorLink,
     },

@@ -53,7 +53,7 @@
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>PC评论背景<SkinSceneAuthors :authors="authors" /></b>
+            <b>{{ $t("dashboard.skin.scenes.pc_comment") }}<SkinSceneAuthors :authors="authors" /></b>
             <span>comment / pc_comment</span>
         </div>
     </div>

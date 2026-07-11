@@ -1,5 +1,11 @@
 <template>
-    <SkinScenePreview title="App底部导航百科图标" subtitle="sidebar / app_tabbar_icon_nav" layout="tabbar" target-tab="nav" active-tab="home" />
+    <SkinScenePreview
+        :title="$t('dashboard.skin.scenes.app_tabbar_icon_nav')"
+        subtitle="sidebar / app_tabbar_icon_nav"
+        layout="tabbar"
+        target-tab="nav"
+        active-tab="home"
+    />
 </template>
 
 <script>

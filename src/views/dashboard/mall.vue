@@ -29,7 +29,13 @@
                                 <td>{{ item.order.goods_num }}</td>
                                 <td>{{ orderStatus[item.order.order_status] }}</td>
                                 <td>{{ payStatus[item.order.pay_status] }}</td>
-                                <td>{{ item.order.is_vitural_gift_order ? $t("dashboard.common.yes") : $t("dashboard.common.no") }}</td>
+                                <td>
+                                    {{
+                                        item.order.is_vitural_gift_order
+                                            ? $t("dashboard.common.yes")
+                                            : $t("dashboard.common.no")
+                                    }}
+                                </td>
                                 <td>
                                     <div class="u-op">
                                         <!-- 未支付 -->
@@ -51,7 +57,11 @@
 
                                         <!-- 已发货操作： 确认收货&申请退货 -->
                                         <template v-if="item.order.order_status == 3">
-                                            <el-tooltip effect="dark" :content="$t('dashboard.orders.confirmReceipt')" placement="top">
+                                            <el-tooltip
+                                                effect="dark"
+                                                :content="$t('dashboard.orders.confirmReceipt')"
+                                                placement="top"
+                                            >
                                                 <el-button
                                                     link
                                                     plain
@@ -89,7 +99,11 @@
 
                                         <!-- 已收货操作： 评价 -->
                                         <template v-if="item.order.order_status == 4">
-                                            <el-tooltip effect="dark" :content="$t('dashboard.orders.rateGoods')" placement="top">
+                                            <el-tooltip
+                                                effect="dark"
+                                                :content="$t('dashboard.orders.rateGoods')"
+                                                placement="top"
+                                            >
                                                 <el-button
                                                     icon="el-icon-chat-dot-square"
                                                     @click="handleShow('comment', item.order.id)"
@@ -104,14 +118,14 @@
                         </tbody>
                     </table>
                     <!-- 分页 -->
-                        <el-pagination
-                         class="m-mall-pages"
-                            background
-                            layout="total, prev, pager, next,jumper"
-                            :page-size="pageSize"
-                            :total="total"
-                            v-model:current-page="pageIndex"
-                        ></el-pagination>
+                    <el-pagination
+                        class="m-mall-pages"
+                        background
+                        layout="total, prev, pager, next,jumper"
+                        :page-size="pageSize"
+                        :total="total"
+                        v-model:current-page="pageIndex"
+                    ></el-pagination>
                 </div>
                 <div class="m-mall-null" v-else>
                     <el-alert :title="$t('dashboard.orders.empty')" type="info" show-icon></el-alert>
@@ -147,9 +161,6 @@ export default {
             pageIndex: 1,
             pageSize: 10,
 
-            payStatus,
-            orderStatus,
-
             order_id: "",
 
             tabList: mallTab,
@@ -158,6 +169,12 @@ export default {
         };
     },
     computed: {
+        payStatus() {
+            return this.localizeStatusMap("mallPayStatus", payStatus);
+        },
+        orderStatus() {
+            return this.localizeStatusMap("mallOrderStatus", orderStatus);
+        },
         params() {
             const _params = {
                 pageIndex: this.pageIndex,
@@ -191,6 +208,13 @@ export default {
         },
     },
     methods: {
+        localizeStatusMap(name, source) {
+            return Object.keys(source).reduce((result, key) => {
+                const path = `dashboard.dataLabels.${name}.${key}`;
+                result[key] = this.$te(path) ? this.$t(path) : source[key];
+                return result;
+            }, {});
+        },
         load() {
             this.loading = true;
             getOrder(this.params)
@@ -223,43 +247,49 @@ export default {
         },
         // 关闭订单
         cancel(id) {
-            closeOrder(id).then(() => {
-                this.$message({
-                    message: this.$t("dashboard.orders.closeSuccess"),
-                    type: "success",
-                });
-                this.list = this.list.map((item) => {
-                    if (item.order.id == id) item.order.order_status = 1;
-                    return item;
-                });
-            }).catch(() => {});
+            closeOrder(id)
+                .then(() => {
+                    this.$message({
+                        message: this.$t("dashboard.orders.closeSuccess"),
+                        type: "success",
+                    });
+                    this.list = this.list.map((item) => {
+                        if (item.order.id == id) item.order.order_status = 1;
+                        return item;
+                    });
+                })
+                .catch(() => {});
         },
         // 付款
         toPay(row) {
             const id = row.order.id;
-            toPay(id).then(() => {
-                this.$message({
-                    message: this.$t("dashboard.orders.paymentSuccess"),
-                    type: "success",
-                });
-                this.list = this.list.map((item) => {
-                    if (item.order.id == id) item.order.pay_status = 1;
-                    return item;
-                });
-            }).catch(() => {});
+            toPay(id)
+                .then(() => {
+                    this.$message({
+                        message: this.$t("dashboard.orders.paymentSuccess"),
+                        type: "success",
+                    });
+                    this.list = this.list.map((item) => {
+                        if (item.order.id == id) item.order.pay_status = 1;
+                        return item;
+                    });
+                })
+                .catch(() => {});
         },
         // 确认收货
         isReceipt(id) {
-            toConfirm(id).then(() => {
-                this.$message({
-                    message: this.$t("dashboard.orders.receiptSuccess"),
-                    type: "success",
-                });
-                this.list = this.list.map((item) => {
-                    if (item.order.id == id) item.order.order_status = 4;
-                    return item;
-                });
-            }).catch(() => {});
+            toConfirm(id)
+                .then(() => {
+                    this.$message({
+                        message: this.$t("dashboard.orders.receiptSuccess"),
+                        type: "success",
+                    });
+                    this.list = this.list.map((item) => {
+                        if (item.order.id == id) item.order.order_status = 4;
+                        return item;
+                    });
+                })
+                .catch(() => {});
         },
         handleShow(type, id) {
             this.type = type;

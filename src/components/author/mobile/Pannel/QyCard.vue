@@ -9,10 +9,12 @@
 
                 <div class="u-progress">
                     <div class="u-line" :style="`width: ${userAchievement.progress}%`"></div>
-                    <div class="u-text">{{ $t("author.adventure.totalProgress", { progress: userAchievement.progress }) }}</div>
+                    <div class="u-text">
+                        {{ $t("author.adventure.totalProgress", { progress: userAchievement.progress }) }}
+                    </div>
                 </div>
 
-                <div class="u-time">{{ $t("author.adventure.recordedAt", { time: userAchievement.updated_at }) }}</div>
+                <div class="u-time">{{ $t("author.adventure.recordedAt", { time: formattedUpdatedAt }) }}</div>
             </div>
 
             <div class="m-right">
@@ -200,6 +202,17 @@ export default {
         }
     },
     computed: {
+        formattedUpdatedAt() {
+            const value = this.userAchievement.updated_at;
+            if (!value) return this.$t("dashboard.common.noRecords");
+            const date = new Date(String(value).replace(" ", "T"));
+            if (Number.isNaN(date.getTime())) return value;
+            const locale = String(this.$i18n.locale || "zh-CN").replace("_", "-");
+            return new Intl.DateTimeFormat(locale, {
+                dateStyle: "medium",
+                timeStyle: "medium",
+            }).format(date);
+        },
         client: function () {
             return this.$store.state.client;
         },

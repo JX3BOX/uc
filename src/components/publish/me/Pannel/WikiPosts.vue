@@ -164,11 +164,20 @@ export default {
             return dateFormat(new Date(val * 1000));
         },
         typeFormat: function (type) {
-            return __postType[type];
+            const key = {
+                macro: "macros",
+                bps: "classGuides",
+                pvp: "pvpTips",
+                fb: "dungeonGuides",
+                tool: "tools",
+                notice: "news",
+            }[type];
+            return key ? this.$t(`publish.types.${key}`) : __postType[type];
         },
         clientLabel: function (val) {
             val = val || "std";
-            return __clients[val];
+            const key = { std: "standardServer", origin: "originServer", all: "allClients" }[val];
+            return key ? this.$t(`publish.form.${key}`) : __clients[val];
         },
     },
     mounted() {

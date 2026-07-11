@@ -18,7 +18,9 @@
                     icon="Delete"
                 >删除</el-button>
             </div>-->
-            <el-button class="u-back" plain icon="ArrowLeft" @click="goBack">{{ $t("dashboard.common.back") }}</el-button>
+            <el-button class="u-back" plain icon="ArrowLeft" @click="goBack">{{
+                $t("dashboard.common.back")
+            }}</el-button>
         </h2>
         <div class="m-role-detail" v-if="data">
             <div class="m-role-info">
@@ -42,11 +44,11 @@
                     <span class="u-school">
                         <em>{{ $t("dashboard.role.school") }}</em>
                         <img class="u-icon" :src="showSchoolIcon(data.mount)" />
-                        {{ showSchoolName(data.mount) }}
+                        {{ showSchoolName(data.mount, $t("dashboard.common.unknown")) }}
                     </span>
                     <span class="u-body">
                         <em>{{ $t("dashboard.role.bodyType") }}</em>
-                        {{ showBodyType(data.body_type) }}
+                        {{ showBodyType(data.body_type, $t("dashboard.common.unknown")) }}
                     </span>
                 </div>
                 <div class="u-meta">

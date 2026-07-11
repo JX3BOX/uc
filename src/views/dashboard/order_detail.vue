@@ -1,7 +1,9 @@
 <template>
     <uc class="m-order-detail" icon="el-icon-shopping-bag-1" :title="$t('dashboard.orders.title')" :tabList="tabList">
         <template #header>
-             <el-button @click="goBack" class="u-back"><i class="el-icon-arrow-left"></i> {{ $t("dashboard.common.back") }}</el-button>
+            <el-button @click="goBack" class="u-back"
+                ><i class="el-icon-arrow-left"></i> {{ $t("dashboard.common.back") }}</el-button
+            >
         </template>
         <div class="m-mall-detail">
             <!-- <div class="m-breadcrumb">
@@ -17,7 +19,9 @@
                 <div class="m-order el-card" v-if="goods">
                     <div class="m-img">
                         <img v-if="goods.goods_images" :src="goods.goods_images[0]" />
-                        <span class="u-link" v-if="goods.is_virtual" @click="openVirtual(goods)">{{ $t("dashboard.common.clickToView") }}</span>
+                        <span class="u-link" v-if="goods.is_virtual" @click="openVirtual(goods)">{{
+                            $t("dashboard.common.clickToView")
+                        }}</span>
                     </div>
                     <el-descriptions
                         class="m-descriptions"
@@ -26,34 +30,54 @@
                         :column="3"
                         border
                     >
-                        <el-descriptions-item :label="$t('dashboard.orders.orderedAt')">{{ order.created_at }}</el-descriptions-item>
-                        <el-descriptions-item :label="$t('dashboard.orders.orderNumber')" :span="2">{{ order.order_no }}</el-descriptions-item>
+                        <el-descriptions-item :label="$t('dashboard.orders.orderedAt')">{{
+                            order.created_at
+                        }}</el-descriptions-item>
+                        <el-descriptions-item :label="$t('dashboard.orders.orderNumber')" :span="2">{{
+                            order.order_no
+                        }}</el-descriptions-item>
 
-                        <el-descriptions-item :label="$t('dashboard.orders.purchaseQuantity')">{{ order.goods_num }}</el-descriptions-item>
+                        <el-descriptions-item :label="$t('dashboard.orders.purchaseQuantity')">{{
+                            order.goods_num
+                        }}</el-descriptions-item>
                         <el-descriptions-item :label="$t('dashboard.orders.postage')">
-                            {{ goods.postage ? $t("dashboard.common.yuanAmount", { amount: goods.postage / 100 }) : $t("dashboard.orders.freeShipping") }}
+                            {{
+                                goods.postage
+                                    ? $t("dashboard.common.yuanAmount", { amount: goods.postage / 100 })
+                                    : $t("dashboard.orders.freeShipping")
+                            }}
                         </el-descriptions-item>
-                        <el-descriptions-item :label="$t('dashboard.orders.paymentStatus')">{{ payStatus[order.pay_status] }}</el-descriptions-item>
+                        <el-descriptions-item :label="$t('dashboard.orders.paymentStatus')">{{
+                            payStatus[order.pay_status]
+                        }}</el-descriptions-item>
                         <el-descriptions-item :label="$t('dashboard.orders.orderStatus')">
                             {{ orderStatus[order.order_status] }}
                         </el-descriptions-item>
                         <el-descriptions-item :label="$t('dashboard.orders.purchaseCost')">
                             <div class="u-box">
                                 <span v-if="order.goods_price_cny">
-                                    {{ $t("dashboard.common.goldLeaf") }}：<b>{{ order.goods_price_cny * order.goods_num }}</b>
+                                    {{ $t("dashboard.common.goldLeaf") }}：<b>{{
+                                        order.goods_price_cny * order.goods_num
+                                    }}</b>
                                 </span>
                                 <span v-if="order.goods_price_boxcoin">
-                                    {{ $t("dashboard.common.boxcoin") }}：<b>{{ order.goods_price_boxcoin * order.goods_num }}</b>
+                                    {{ $t("dashboard.common.boxcoin") }}：<b>{{
+                                        order.goods_price_boxcoin * order.goods_num
+                                    }}</b>
                                 </span>
                                 <span v-if="order.goods_price_point">
-                                    {{ $t("dashboard.common.points") }}：<b>{{ order.goods_price_point * order.goods_num }}</b>
+                                    {{ $t("dashboard.common.points") }}：<b>{{
+                                        order.goods_price_point * order.goods_num
+                                    }}</b>
                                 </span>
                             </div>
                         </el-descriptions-item>
                         <el-descriptions-item :label="$t('dashboard.orders.isGift')">{{
                             order.is_vitural_gift_order ? $t("dashboard.common.yes") : $t("dashboard.common.no")
                         }}</el-descriptions-item>
-                        <el-descriptions-item :label="$t('dashboard.common.remark')">{{ order.remark || "-" }}</el-descriptions-item>
+                        <el-descriptions-item :label="$t('dashboard.common.remark')">{{
+                            order.remark || "-"
+                        }}</el-descriptions-item>
                         <el-descriptions-item :label="$t('dashboard.orders.review')" v-if="rate.comment" :span="3">
                             <div class="m-comment">
                                 <div class="m-text">
@@ -63,7 +87,9 @@
                                     >
                                     <el-input v-if="append" class="u-textarea" v-model="content">
                                         <template #append>
-                                            <span style="cursor: pointer" @click="appendComment">{{ $t("dashboard.common.confirm") }}</span>
+                                            <span style="cursor: pointer" @click="appendComment">{{
+                                                $t("dashboard.common.confirm")
+                                            }}</span>
                                         </template>
                                     </el-input>
                                 </div>
@@ -71,7 +97,11 @@
                                     <el-button @click="append = !append" link v-if="order.order_status == 5">
                                         {{ $t("dashboard.orders.appendComment") }}
                                     </el-button>
-                                    <el-popconfirm :title="$t('dashboard.orders.deleteReviewConfirm')" :width="200" @confirm="delComment(rate.id)">
+                                    <el-popconfirm
+                                        :title="$t('dashboard.orders.deleteReviewConfirm')"
+                                        :width="200"
+                                        @confirm="delComment(rate.id)"
+                                    >
                                         <template #reference>
                                             <el-button link>{{ $t("dashboard.common.delete") }}</el-button>
                                         </template>
@@ -84,25 +114,25 @@
                 <div class="m-button">
                     <template v-if="data.order.order_status == 0">
                         <el-button @click="cancel(data.order.id)">{{ $t("dashboard.orders.cancelOrder") }}</el-button>
-                        <el-button @click="open(data.order.id, 'address')">{{ $t("dashboard.orders.changeAddress") }}</el-button>
-                        <el-button @click="open(data.order.id, 'remark')">{{ $t("dashboard.orders.addRemark") }}</el-button>
+                        <el-button @click="open(data.order.id, 'address')">{{
+                            $t("dashboard.orders.changeAddress")
+                        }}</el-button>
+                        <el-button @click="open(data.order.id, 'remark')">{{
+                            $t("dashboard.orders.addRemark")
+                        }}</el-button>
                     </template>
 
                     <el-button @click="toConfirm(data.order.id)" v-if="data.order.order_status == 3">
                         {{ $t("dashboard.orders.confirmReceipt") }}
                     </el-button>
-                    <el-button @click="toPay(data)" v-if="showPay(data.order)">{{ $t("dashboard.orders.clickToPay") }}</el-button>
+                    <el-button @click="toPay(data)" v-if="showPay(data.order)">{{
+                        $t("dashboard.orders.clickToPay")
+                    }}</el-button>
                 </div>
             </div>
 
             <!-- 弹窗 -->
-            <el-dialog
-                :title="title"
-                v-model="dialogVisible"
-                width="30%"
-                :before-close="close"
-                class="m-edit-dialog"
-            >
+            <el-dialog :title="title" v-model="dialogVisible" width="30%" :before-close="close" class="m-edit-dialog">
                 <template v-if="mode == 'address'">
                     <el-form ref="address_form" :model="address_form" :rules="address_rules" class="demo-form-inline">
                         <el-form-item :label="$t('dashboard.orders.selectShippingAddress')" prop="address_id">
@@ -118,7 +148,9 @@
                         <el-form-item>
                             <div class="m-button">
                                 <el-button @click="close">{{ $t("dashboard.common.cancel") }}</el-button>
-                                <el-button type="primary" @click="submit('address_form')">{{ $t("dashboard.common.confirm") }}</el-button>
+                                <el-button type="primary" @click="submit('address_form')">{{
+                                    $t("dashboard.common.confirm")
+                                }}</el-button>
                             </div>
                         </el-form-item>
                     </el-form>
@@ -126,13 +158,20 @@
                 <template v-else>
                     <el-form ref="remark_form" :model="remark_form" :rules="remark_rules" class="demo-form-inline">
                         <el-form-item :label="$t('dashboard.common.remark')" prop="remark">
-                            <el-input type="textarea" :rows="2" :placeholder="$t('dashboard.common.remarkPlaceholder')" v-model="remark_form.remark">
+                            <el-input
+                                type="textarea"
+                                :rows="2"
+                                :placeholder="$t('dashboard.common.remarkPlaceholder')"
+                                v-model="remark_form.remark"
+                            >
                             </el-input>
                         </el-form-item>
                         <el-form-item>
                             <div class="m-button">
                                 <el-button @click="close">{{ $t("dashboard.common.cancel") }}</el-button>
-                                <el-button type="primary" @click="submit('remark_form')">{{ $t("dashboard.common.confirm") }}</el-button>
+                                <el-button type="primary" @click="submit('remark_form')">{{
+                                    $t("dashboard.common.confirm")
+                                }}</el-button>
                             </div>
                         </el-form-item>
                     </el-form>
@@ -173,7 +212,9 @@ export default {
                 address_id: "",
             },
             address_rules: {
-                address_id: [{ required: true, message: this.$t("dashboard.orders.addressRequired"), trigger: "change" }],
+                address_id: [
+                    { required: true, message: this.$t("dashboard.orders.addressRequired"), trigger: "change" },
+                ],
             },
             remark_form: {
                 remark: "",
@@ -207,16 +248,25 @@ export default {
             return this.data.rate;
         },
         payStatus() {
-            return payStatus;
+            return this.localizeStatusMap("mallPayStatus", payStatus);
         },
         orderStatus() {
-            return orderStatus;
+            return this.localizeStatusMap("mallOrderStatus", orderStatus);
         },
         title() {
-            return this.mode == "address" ? this.$t("dashboard.orders.changeShippingAddress") : this.$t("dashboard.orders.changeRemark");
+            return this.mode == "address"
+                ? this.$t("dashboard.orders.changeShippingAddress")
+                : this.$t("dashboard.orders.changeRemark");
         },
     },
     methods: {
+        localizeStatusMap(name, source) {
+            return Object.keys(source).reduce((result, key) => {
+                const path = `dashboard.dataLabels.${name}.${key}`;
+                result[key] = this.$te(path) ? this.$t(path) : source[key];
+                return result;
+            }, {});
+        },
         load() {
             getOrderId(this.id).then((res) => {
                 this.data = res.data.data;

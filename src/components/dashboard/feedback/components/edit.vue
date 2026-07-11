@@ -2,35 +2,57 @@
     <el-dialog class="w-dialog m-feedback-assign" v-model="show" :title="$t('dashboard.common.edit')" @close="close">
         <el-form ref="form" :model="form" :rules="rules" label-width="80px">
             <el-form-item :label="$t('dashboard.common.client')" prop="client">
-                <el-select v-model="form.client" :placeholder="$t('dashboard.common.clientPlaceholder')" style="width: 100%">
+                <el-select
+                    v-model="form.client"
+                    :placeholder="$t('dashboard.common.clientPlaceholder')"
+                    style="width: 100%"
+                >
                     <el-option v-for="item in clients" :key="item.value" :label="item.text" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item :label="$t('dashboard.common.type')" prop="type">
-                <el-select v-model="form.type" :placeholder="$t('dashboard.common.typePlaceholder')" style="width: 100%">
+                <el-select
+                    v-model="form.type"
+                    :placeholder="$t('dashboard.common.typePlaceholder')"
+                    style="width: 100%"
+                >
                     <el-option v-for="item in typeList" :key="item.value" :label="item.text" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item :label="$t('dashboard.feedback.subtype')" prop="subtype">
-                <el-select v-model="form.subtype" :placeholder="$t('dashboard.feedback.subtypePlaceholder')" style="width: 100%">
+                <el-select
+                    v-model="form.subtype"
+                    :placeholder="$t('dashboard.feedback.subtypePlaceholder')"
+                    style="width: 100%"
+                >
                     <el-option v-for="item in subtypeList" :key="item.value" :label="item.text" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item :label="$t('dashboard.feedback.project')" prop="repository">
-                <el-input v-model="form.repository" :placeholder="$t('dashboard.feedback.repositoryPlaceholder')" clearable></el-input>
+                <el-input
+                    v-model="form.repository"
+                    :placeholder="$t('dashboard.feedback.repositoryPlaceholder')"
+                    clearable
+                ></el-input>
             </el-form-item>
             <el-form-item :label="$t('dashboard.common.remark')" prop="remark">
-                <el-input v-model="form.remark" :placeholder="$t('dashboard.common.remarkPlaceholder')" clearable></el-input>
+                <el-input
+                    v-model="form.remark"
+                    :placeholder="$t('dashboard.common.remarkPlaceholder')"
+                    clearable
+                ></el-input>
             </el-form-item>
         </el-form>
         <template #footer>
             <div class="dialog-footer">
                 <div class="m-confirm">
                     <el-button @click="close">{{ $t("dashboard.common.cancel") }}</el-button>
-                    <el-button type="primary" :loading="loading" :disabled="loading" @click="submit"> {{ $t("dashboard.common.submit") }} </el-button>
+                    <el-button type="primary" :loading="loading" :disabled="loading" @click="submit">
+                        {{ $t("dashboard.common.submit") }}
+                    </el-button>
                 </div>
             </div>
         </template>
@@ -40,7 +62,8 @@
 <script>
 import { updateFeedback } from "@/service/dashboard/feedback";
 import { cloneDeep, throttle, pick } from "lodash";
-const { filterOptions, types, subtypes } = require("@/assets/data/dashboard/feedback.json");
+const feedbackData = require("@/assets/data/dashboard/feedback.json");
+const { filterOptions, types, subtypes } = feedbackData;
 export default {
     name: "FeedbackEdit",
     props: {
@@ -59,22 +82,45 @@ export default {
             loading: false,
             show: false,
             form: { client: "", remark: "", repository: "", subtype: "", type: "" },
-            clients: filterOptions.client,
             rules: {
-                client: [{ required: true, message: this.$t("dashboard.common.clientPlaceholder"), trigger: ["blur", "change"] }],
-                type: [{ required: true, message: this.$t("dashboard.common.typePlaceholder"), trigger: ["blur", "change"] }],
-                subtype: [{ required: true, message: this.$t("dashboard.feedback.subtypePlaceholder"), trigger: ["blur", "change"] }],
+                client: [
+                    {
+                        required: true,
+                        message: this.$t("dashboard.common.clientPlaceholder"),
+                        trigger: ["blur", "change"],
+                    },
+                ],
+                type: [
+                    {
+                        required: true,
+                        message: this.$t("dashboard.common.typePlaceholder"),
+                        trigger: ["blur", "change"],
+                    },
+                ],
+                subtype: [
+                    {
+                        required: true,
+                        message: this.$t("dashboard.feedback.subtypePlaceholder"),
+                        trigger: ["blur", "change"],
+                    },
+                ],
             },
         };
     },
     computed: {
+        clients() {
+            return filterOptions.client.map((item) => ({
+                ...item,
+                text: this.localizeValue("clients", item.value, item.text),
+            }));
+        },
         id() {
             return this.staged.id;
         },
         typeList() {
             return Object.entries(types).map(([key, value]) => {
                 return {
-                    text: value,
+                    text: this.localizeValue("feedbackTypes", key, value),
                     value: key,
                 };
             });
@@ -82,7 +128,7 @@ export default {
         subtypeList() {
             return Object.entries(subtypes).map(([key, value]) => {
                 return {
-                    text: value,
+                    text: this.localizeValue("feedbackSubtypes", key, value),
                     value: key,
                 };
             });
@@ -100,6 +146,10 @@ export default {
         this.form = pick(this.staged, Object.keys(this.form));
     },
     methods: {
+        localizeValue(name, key, fallback) {
+            const path = `dashboard.dataLabels.${name}.${key}`;
+            return this.$te(path) ? this.$t(path) : fallback;
+        },
         close() {
             this.show = false;
             this.$emit("close", false);

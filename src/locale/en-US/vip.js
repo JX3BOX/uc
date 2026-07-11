@@ -88,8 +88,8 @@ export default {
     premium: {
         title: "Membership Center",
         subtitle: "Professional Account",
-        pointsExchange: "Exchange Points for Membership",
-        pointsPerExchange: "{points} points per exchange",
+        pointsExchange: "Points for Premium",
+        pointsPerExchange: "{points} points / exchange",
         configError: "Invalid exchange configuration",
         invalidConfigMessage: "This exchange includes a non-points cost. Please contact an administrator.",
         confirmMessage: "Use {points} points to activate Premium membership?",

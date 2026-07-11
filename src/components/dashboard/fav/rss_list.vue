@@ -52,11 +52,6 @@ import { getLink, getTypeLabel } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/moment";
 import { getRssList, deleteRss } from "@/service/dashboard/fav";
 
-const categoryMap = {
-    2: "作者", // author
-    3: "论坛", // community
-};
-
 const categories = {
     2: "author",
     3: "community",
@@ -79,7 +74,7 @@ export default {
         dateFormat,
         getTypeLabel(item) {
             let type = item.rss_category;
-            if (categoryMap[type]) {
+            if (categories[type]) {
                 return this.$t(`dashboard.favorites.categories.${categories[type]}`);
             }
             type = item.post_type;

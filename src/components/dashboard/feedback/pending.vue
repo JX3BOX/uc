@@ -3,7 +3,14 @@
         <!-- tool -->
         <div class="m-feedback-tool">
             <div class="m-feedback-tool__item">
-                <el-select v-model="select" class="u-select" :placeholder="$t('dashboard.feedback.handlerPlaceholder')" filterable style="width:200px" clearable>
+                <el-select
+                    v-model="select"
+                    class="u-select"
+                    :placeholder="$t('dashboard.feedback.handlerPlaceholder')"
+                    filterable
+                    style="width: 200px"
+                    clearable
+                >
                     <el-option
                         :label="item.teammate_info.display_name"
                         v-for="(item, i) in assigns"
@@ -25,11 +32,20 @@
                 </el-select>
             </div>
             <div class="m-feedback-tool__item">
-                <el-date-picker v-model="time" type="month" :placeholder="$t('dashboard.feedback.selectMonth')" format="YYYY-MM">
+                <el-date-picker
+                    v-model="time"
+                    type="month"
+                    :placeholder="$t('dashboard.feedback.selectMonth')"
+                    format="YYYY-MM"
+                >
                 </el-date-picker>
             </div>
-            <el-checkbox v-if="showUserFilters" class="u-only-check" v-model="onlyMe"> {{ $t("dashboard.feedback.assignedToMe") }} </el-checkbox>
-            <el-checkbox v-if="showUserFilters" class="u-only-check" v-model="isSupport"> {{ $t("dashboard.feedback.coordinatedByMe") }} </el-checkbox>
+            <el-checkbox v-if="showUserFilters" class="u-only-check" v-model="onlyMe">
+                {{ $t("dashboard.feedback.assignedToMe") }}
+            </el-checkbox>
+            <el-checkbox v-if="showUserFilters" class="u-only-check" v-model="isSupport">
+                {{ $t("dashboard.feedback.coordinatedByMe") }}
+            </el-checkbox>
         </div>
         <!-- list -->
         <div class="m-feedback-list" v-loading="loading">
@@ -130,7 +146,9 @@
                         <el-tooltip :content="row.content" placement="top" popper-class="m-content-popover">
                             <el-button type="primary" link size="small">{{ $t("dashboard.common.view") }}</el-button>
                         </el-tooltip>
-                        <el-button link type="primary" @click.stop="onRemarkClick(row)" size="small">{{ $t("dashboard.common.remark") }}</el-button>
+                        <el-button link type="primary" @click.stop="onRemarkClick(row)" size="small">{{
+                            $t("dashboard.common.remark")
+                        }}</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -151,7 +169,7 @@
 <script>
 import { getMiscfeedback, getTeammates, updateFeedback } from "@/service/dashboard/feedback";
 import feedbackData from "@/assets/data/dashboard/feedback.json";
-const { types, subtypes, statusMap, statusColors, statusTypes, filterOptions } = feedbackData;
+const { statusColors, statusTypes } = feedbackData;
 import { showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
 import moment from "moment";
@@ -176,15 +194,11 @@ export default {
             page: 1,
             per: 10,
             total: 0,
-            filterOptions,
             filters: {
                 status: this.status,
                 client: "",
             },
 
-            types,
-            subtypes,
-            statusMap,
             statusColors,
             statusTypes,
 
@@ -199,6 +213,27 @@ export default {
     },
 
     computed: {
+        types() {
+            return this.localizeMap(feedbackData.types, "feedbackTypes");
+        },
+        subtypes() {
+            return this.localizeMap(feedbackData.subtypes, "feedbackSubtypes");
+        },
+        statusMap() {
+            return this.localizeMap(feedbackData.statusMap, "feedbackStatuses");
+        },
+        filterOptions() {
+            return {
+                status: feedbackData.filterOptions.status.map((item) => ({
+                    ...item,
+                    text: this.statusMap[item.value],
+                })),
+                client: feedbackData.filterOptions.client.map((item) => ({
+                    ...item,
+                    text: this.formatClient(item.value),
+                })),
+            };
+        },
         user() {
             return User.getInfo();
         },
@@ -267,6 +302,13 @@ export default {
         },
     },
     methods: {
+        localizeMap(source, name) {
+            return Object.keys(source).reduce((result, key) => {
+                const path = `dashboard.dataLabels.${name}.${key}`;
+                result[key] = this.$te(path) ? this.$t(path) : source[key];
+                return result;
+            }, {});
+        },
         showAvatar,
         authorLink,
         initQuery() {
@@ -293,7 +335,8 @@ export default {
             return moment(time).format("YYYY-MM-DD HH:mm:ss");
         },
         formatClient(client = "std") {
-            return __clients[client] || client;
+            const path = `dashboard.dataLabels.clients.${client}`;
+            return this.$te(path) ? this.$t(path) : __clients[client] || client;
         },
         handleView(row) {
             window.open(`/dashboard/feedback/${row.id}`, "_blank");

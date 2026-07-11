@@ -16,7 +16,7 @@
             </div>
         </h2>
         <div class="m-role-list-filter">
-            <el-select v-model="mount" popper-class="m-school-pop" style="width:200px;" size="large">
+            <el-select v-model="mount" popper-class="m-school-pop" style="width: 200px" size="large">
                 <el-option :label="$t('dashboard.common.all')" value=""></el-option>
                 <el-option
                     v-for="(school, school_id) in school_id_map"
@@ -65,7 +65,7 @@
                         <span class="u-mount">
                             <em>{{ $t("dashboard.role.school") }}</em>
                             <img class="u-icon" :src="showSchoolIcon(item.mount)" />
-                            {{ showSchoolName(item.mount) }}
+                            {{ showSchoolName(item.mount, $t("dashboard.common.unknown")) }}
                         </span>
                         <!-- <span class="u-team-name" v-if="item.team_relation && item.team_relation.team_id">
                             <em>{{ $t("dashboard.role.teamName") }}</em>
@@ -79,7 +79,12 @@
                             <em>{{ $t("dashboard.common.remark") }}</em>
                             {{ item.note }}
                             <span class="u-addnote" @click="addNote(item)">
-                                <el-tooltip class="item" effect="dark" :content="$t('dashboard.role.setRemark')" placement="top">
+                                <el-tooltip
+                                    class="item"
+                                    effect="dark"
+                                    :content="$t('dashboard.role.setRemark')"
+                                    placement="top"
+                                >
                                     <i class="el-icon-edit-outline"></i>
                                 </el-tooltip>
                             </span>
@@ -90,7 +95,10 @@
                         <template v-if="item.sync_achievements"
                             ><i class="el-icon-success u-success"></i>{{ $t("dashboard.role.synced") }}</template
                         >
-                        <template v-else><i class="el-icon-warning-outline u-warning"></i>{{ $t("dashboard.role.notSynced") }}</template>
+                        <template v-else
+                            ><i class="el-icon-warning-outline u-warning"></i
+                            >{{ $t("dashboard.role.notSynced") }}</template
+                        >
                     </span>
                     <div class="u-op">
                         <el-switch
@@ -110,7 +118,11 @@
                                 <el-dropdown-menu>
                                     <el-dropdown-item :command="{ item, command: 'default' }">
                                         <i class="el-icon-setting"></i>
-                                        {{ item.is_default_role ? $t("dashboard.role.unsetDefault") : $t("dashboard.role.setDefault") }}
+                                        {{
+                                            item.is_default_role
+                                                ? $t("dashboard.role.unsetDefault")
+                                                : $t("dashboard.role.setDefault")
+                                        }}
                                     </el-dropdown-item>
                                     <el-dropdown-item v-if="!item.custom" :command="{ item, command: 'unbind' }">
                                         <i class="el-icon-remove-outline"></i>
@@ -134,7 +146,14 @@
             </ul>
         </div>
         <template v-else-if="loadError">
-            <el-alert class="m-archive-null" :title="loadError" type="error" center show-icon :closable="false"></el-alert>
+            <el-alert
+                class="m-archive-null"
+                :title="loadError"
+                type="error"
+                center
+                show-icon
+                :closable="false"
+            ></el-alert>
             <div class="m-role-null">
                 <el-button type="primary" size="small" @click="loadData">
                     <i class="el-icon-refresh"></i> {{ $t("dashboard.common.reload") }}
@@ -142,7 +161,13 @@
             </div>
         </template>
         <template v-else>
-            <el-alert class="m-archive-null" :title="$t('dashboard.common.noItems')" type="info" center show-icon></el-alert>
+            <el-alert
+                class="m-archive-null"
+                :title="$t('dashboard.common.noItems')"
+                type="info"
+                center
+                show-icon
+            ></el-alert>
             <div class="m-role-null">
                 <router-link to="/role/bind" class="el-button el-button--primary el-button--small">
                     <i class="el-icon-connection"></i> {{ $t("dashboard.role.bind") }}
@@ -152,9 +177,19 @@
                 </router-link>
             </div>
         </template>
-        <el-dialog :title="$t('dashboard.role.setRemark')" v-model="noteVisible" :width="isPhone ? '95%' : '30%'" class="m-team-note-dialog">
+        <el-dialog
+            :title="$t('dashboard.role.setRemark')"
+            v-model="noteVisible"
+            :width="isPhone ? '95%' : '30%'"
+            class="m-team-note-dialog"
+        >
             <div>
-                <el-input v-model="note" :placeholder="$t('dashboard.common.contentPlaceholder')" :maxlength="20" :show-word-limit="true"></el-input>
+                <el-input
+                    v-model="note"
+                    :placeholder="$t('dashboard.common.contentPlaceholder')"
+                    :maxlength="20"
+                    :show-word-limit="true"
+                ></el-input>
             </div>
             <template #footer>
                 <span class="dialog-footer">
@@ -358,7 +393,9 @@ export default {
                 defaultRole(data.item.ID, ~~!data.item.is_default_role).then((res) => {
                     this.$message({
                         title: this.$t("dashboard.common.success"),
-                        message: ~~!data.item.is_default_role ? this.$t("dashboard.common.setSuccess") : this.$t("dashboard.common.cancelSuccess"),
+                        message: ~~!data.item.is_default_role
+                            ? this.$t("dashboard.common.setSuccess")
+                            : this.$t("dashboard.common.cancelSuccess"),
                         type: "success",
                     });
                     this.loadData();

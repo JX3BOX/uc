@@ -1,5 +1,9 @@
 <template>
-    <SkinScenePreview title="PC个人主页横幅" subtitle="homebg / pc_homebanner" layout="pcHomeBanner" />
+    <SkinScenePreview
+        :title="$t('dashboard.skin.scenes.pc_homebanner')"
+        subtitle="homebg / pc_homebanner"
+        layout="pcHomeBanner"
+    />
 </template>
 
 <script>

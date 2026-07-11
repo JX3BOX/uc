@@ -44,7 +44,7 @@
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>PC个人名片<SkinSceneAuthors :authors="authors" /></b>
+            <b>{{ $t("dashboard.skin.scenes.pc_authorcard") }}<SkinSceneAuthors :authors="authors" /></b>
             <span>atcard / pc_authorcard</span>
         </div>
     </div>
@@ -267,10 +267,7 @@ export default {
     background-repeat: no-repeat;
     background-position: top right;
     background-size: 100% auto;
-    box-shadow:
-        0 14px 34px rgba(31, 41, 55, 0.16),
-        0 2px 8px rgba(31, 41, 55, 0.08);
-
+    box-shadow: 0 14px 34px rgba(31, 41, 55, 0.16), 0 2px 8px rgba(31, 41, 55, 0.08);
 }
 
 .u-author {

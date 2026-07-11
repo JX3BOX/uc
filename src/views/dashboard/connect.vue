@@ -84,19 +84,16 @@ const types = {
     },
     weibo: {
         icon: "weibo",
-        name: "微博",
         uuid: "weibosite",
         idKey: "weibo_id",
     },
     wechat: {
         icon: "wechat",
-        name: "微信",
         uuid: "wesite",
         idKey: "wechat_openid",
     },
     wechat_miniprogram: {
         icon: "app",
-        name: "微信小程序",
         uuid: "wechat_miniprogram",
         idKey: "wechat_miniprogram_openid",
     },

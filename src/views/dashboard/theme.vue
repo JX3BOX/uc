@@ -1,5 +1,10 @@
 <template>
-    <uc class="m-dashboard-theme m-dashboard-skin" icon="el-icon-brush" :title="$t('dashboard.theme.title')" :tab-list="tabList">
+    <uc
+        class="m-dashboard-theme m-dashboard-skin"
+        icon="el-icon-brush"
+        :title="$t('dashboard.theme.title')"
+        :tab-list="tabList"
+    >
         <template #header>
             <a
                 class="u-link el-button el-button--default el-button--small is-round is-plain"
@@ -52,11 +57,11 @@
                                     v-for="mode in activeSceneModes"
                                     :key="mode.value"
                                     :class="[`is-${mode.value}`, { active: activeSceneTheme === mode.value }]"
-                                    :title="mode.label"
+                                    :title="$t(mode.label)"
                                     @click="selectSceneTheme(mode.value)"
                                 >
                                     <i :class="mode.icon"></i>
-                                    <em>{{ mode.label }}</em>
+                                    <em>{{ $t(mode.label) }}</em>
                                 </span>
                             </div>
                         </div>
@@ -93,14 +98,23 @@
                     </div>
                 </div>
                 <div class="u-btn">
-                    <el-button type="primary" @click="decorationSubmit" size="large" :loading="submitting">{{ $t("dashboard.common.confirm") }}</el-button>
-                    <el-button @click="reset" size="large" :disabled="submitting">{{ $t("dashboard.common.reset") }}</el-button>
+                    <el-button type="primary" @click="decorationSubmit" size="large" :loading="submitting">{{
+                        $t("dashboard.common.confirm")
+                    }}</el-button>
+                    <el-button @click="reset" size="large" :disabled="submitting">{{
+                        $t("dashboard.common.reset")
+                    }}</el-button>
                 </div>
             </div>
             <div class="m-theme-right">
                 <!-- 主题渲染列表 -->
                 <div class="u-skin-search">
-                    <el-input v-model="skinSearchKeyword" size="large" clearable :placeholder="$t('dashboard.theme.searchPlaceholder')">
+                    <el-input
+                        v-model="skinSearchKeyword"
+                        size="large"
+                        clearable
+                        :placeholder="$t('dashboard.theme.searchPlaceholder')"
+                    >
                         <template #prefix>
                             <el-icon><Search /></el-icon>
                         </template>
@@ -108,7 +122,13 @@
                 </div>
                 <div class="u-load-error" v-if="decorationJsonLoadError">
                     <div>{{ $t("dashboard.theme.loadFailed") }}</div>
-                    <el-button type="primary" plain size="small" :loading="decorationJsonLoading" @click="loadDecoration">
+                    <el-button
+                        type="primary"
+                        plain
+                        size="small"
+                        :loading="decorationJsonLoading"
+                        @click="loadDecoration"
+                    >
                         {{ $t("dashboard.common.retry") }}
                     </el-button>
                 </div>
@@ -116,11 +136,7 @@
                     <div class="u-decoration-list" v-for="(item, i) in filteredDecoration" :key="i + item.val">
                         <div class="u-title">
                             <span class="u-name"><i class="el-icon-collection-tag"></i> {{ item.name }}</span>
-                            <a
-                                class="u-buy"
-                                :href="getSkinMallUrl(item.name)"
-                                target="_blank"
-                                rel="noopener noreferrer"
+                            <a class="u-buy" :href="getSkinMallUrl(item.name)" target="_blank" rel="noopener noreferrer"
                                 ><i class="el-icon-shopping-cart-2"></i> {{ $t("dashboard.theme.goGet") }}</a
                             >
                         </div>
@@ -183,11 +199,11 @@
                                 v-for="mode in activeSceneModes"
                                 :key="`dialog-${mode.value}`"
                                 :class="[`is-${mode.value}`, { active: activeSceneTheme === mode.value }]"
-                                :title="mode.label"
+                                :title="$t(mode.label)"
                                 @click="selectSceneTheme(mode.value)"
                             >
                                 <i :class="mode.icon"></i>
-                                <em>{{ mode.label }}</em>
+                                <em>{{ $t(mode.label) }}</em>
                             </span>
                         </div>
                         <button
@@ -249,7 +265,6 @@ export default {
         return {
             tabList: themeTab,
             uid: User.getInfo().uid,
-            themeType: SKIN_TYPE_OPTIONS.map((item) => ({ name: item.text, type: item.type, statue: item.statue })),
             previewUrl: "",
             activePreviewType: "calendar",
             activeSceneSubtype: "pc_calendar",
@@ -266,6 +281,13 @@ export default {
         };
     },
     computed: {
+        themeType() {
+            return SKIN_TYPE_OPTIONS.map((item) => ({
+                name: this.$t(item.text),
+                type: item.type,
+                statue: item.statue,
+            }));
+        },
         filteredDecoration() {
             const keyword = this.skinSearchKeyword.trim().toLowerCase();
             if (!keyword) return this.decoration;
@@ -279,7 +301,7 @@ export default {
             return (SKIN_TYPE_SCENES[this.activePreviewType] || [])
                 .map((subtype) => ({
                     subtype,
-                    label: SKIN_SCENE_LABELS[subtype] || subtype,
+                    label: SKIN_SCENE_LABELS[subtype] ? this.$t(SKIN_SCENE_LABELS[subtype]) : subtype,
                     component: SKIN_SCENE_COMPONENTS[subtype],
                     disabled: !this.isSceneAvailable(subtype, this.activePreviewType),
                 }))
@@ -358,7 +380,9 @@ export default {
                     return getDecoration()
                         .then((res) => {
                             let typeArr = SKIN_TYPE_OPTIONS.map((item) => item.type);
-                            let arr = res.data.data.filter((item) => item.type != "" && typeArr.indexOf(item.type) != -1);
+                            let arr = res.data.data.filter(
+                                (item) => item.type != "" && typeArr.indexOf(item.type) != -1
+                            );
                             this.applyDecorationList(arr);
                         })
                         .catch(() => {});
@@ -430,7 +454,7 @@ export default {
                                     ...option,
                                     val: key,
                                     name: title,
-                                    text: option.text,
+                                    text: this.$t(option.text),
                                     isHave: userSkin ? 1 : 0,
                                     using: userSkin?.using || 0,
                                     image: getSkinPreview(decorationJson, key, option.type),

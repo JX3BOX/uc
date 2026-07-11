@@ -2,7 +2,15 @@
     <div class="m-skin-scene-preview m-app-forum-skin-scene" :class="`is-theme-${theme}`">
         <div class="m-scene-stage">
             <div class="m-phone" :style="imageStyle">
-                <video v-if="animationUrl" class="u-animation" :src="animationUrl" autoplay muted loop playsinline></video>
+                <video
+                    v-if="animationUrl"
+                    class="u-animation"
+                    :src="animationUrl"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                ></video>
                 <div class="m-forum-feed">
                     <article class="m-forum-post" v-for="post in 2" :key="post">
                         <div class="u-post-head">
@@ -20,7 +28,7 @@
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>App论坛背景<SkinSceneAuthors :authors="authors" /></b>
+            <b>{{ $t("dashboard.skin.scenes.app_forum") }}<SkinSceneAuthors :authors="authors" /></b>
             <span>comment / app_forum</span>
         </div>
     </div>

@@ -16,7 +16,11 @@
                     {{ `${types[row.type]} - ${subtypes[row.subtype]}` }}
                 </template>
             </el-table-column>
-            <el-table-column :label="$t('dashboard.common.content')" prop="content" show-overflow-tooltip></el-table-column>
+            <el-table-column
+                :label="$t('dashboard.common.content')"
+                prop="content"
+                show-overflow-tooltip
+            ></el-table-column>
             <el-table-column :label="$t('dashboard.common.submittedAt')" prop="created_at" width="160">
                 <template #default="{ row }">
                     {{ formatTime(row.created_at) }}
@@ -44,7 +48,7 @@
 <script>
 import { getFeedbackList } from "@/service/dashboard/feedback";
 import feedbackData from "@/assets/data/dashboard/feedback.json";
-const { types, subtypes, statusMap, statusColors, statusTypes } = feedbackData;
+const { statusColors, statusTypes } = feedbackData;
 import { __clients } from "@/utils/config";
 import moment from "moment";
 export default {
@@ -57,17 +61,32 @@ export default {
             per: 15,
             total: 0,
 
-            types,
-            subtypes,
-            statusMap,
             statusColors,
             statusTypes,
         };
+    },
+    computed: {
+        types() {
+            return this.localizeMap(feedbackData.types, "feedbackTypes");
+        },
+        subtypes() {
+            return this.localizeMap(feedbackData.subtypes, "feedbackSubtypes");
+        },
+        statusMap() {
+            return this.localizeMap(feedbackData.statusMap, "feedbackStatuses");
+        },
     },
     mounted() {
         this.getData();
     },
     methods: {
+        localizeMap(source, name) {
+            return Object.keys(source).reduce((result, key) => {
+                const path = `dashboard.dataLabels.${name}.${key}`;
+                result[key] = this.$te(path) ? this.$t(path) : source[key];
+                return result;
+            }, {});
+        },
         async getData() {
             try {
                 this.loading = true;
@@ -88,7 +107,8 @@ export default {
             return moment(time).format("YYYY-MM-DD HH:mm:ss");
         },
         formatClient(client = "std") {
-            return __clients[client] || client;
+            const path = `dashboard.dataLabels.clients.${client}`;
+            return this.$te(path) ? this.$t(path) : __clients[client] || client;
         },
         handleView(row) {
             this.$router.push({

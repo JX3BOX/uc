@@ -5,14 +5,21 @@
             <span>{{ $t("dashboard.nav.creationCenter") }}</span>
         </a>
 
-        <div v-for="item in navList" :key="item.group_name">
-            <h5 class="u-title">{{ translateGroup(item.group_name) }}</h5>
+        <div v-for="(item, index) in navList" :key="item.group_name">
+            <h5 class="u-title">{{ translateGroup(index, item.group_name) }}</h5>
             <div class="m-nav-group">
                 <router-link
                     v-for="child in item.children"
                     :to="child.path"
                     :key="child.path"
-                    :class="isProfile(child.path) || isTheme(child.path) || isMall(child.path) || isMsg(child.path) || isFavor(child.path) || isTreasure(child.path)"
+                    :class="
+                        isProfile(child.path) ||
+                        isTheme(child.path) ||
+                        isMall(child.path) ||
+                        isMsg(child.path) ||
+                        isFavor(child.path) ||
+                        isTreasure(child.path)
+                    "
                 >
                     <i :class="child.icon"></i>
                     <span>{{ translateItem(child) }}</span>
@@ -38,6 +45,7 @@ export default {
         return {
             feedback,
             navList,
+            groupKeys: ["repository", "benefits", "account", "service"],
         };
     },
     computed: {
@@ -46,14 +54,9 @@ export default {
         // },
     },
     methods: {
-        translateGroup: function (name) {
-            const keys = {
-                我的仓库: "repository",
-                权益中心: "benefits",
-                账号中心: "account",
-                服务中心: "service",
-            };
-            return keys[name] ? this.$t(`dashboard.nav.groups.${keys[name]}`) : name;
+        translateGroup: function (index, fallback) {
+            const key = this.groupKeys[index];
+            return key ? this.$t(`dashboard.nav.groups.${key}`) : fallback;
         },
         translateItem: function (item) {
             const key = String(item.path || "").replace(/^\//, "");

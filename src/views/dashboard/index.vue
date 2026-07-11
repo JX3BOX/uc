@@ -29,11 +29,13 @@
                                     target="_blank"
                                     >{{ vipType }}</a
                                 >
-                                <span class="u-expire">（{{ $t("dashboard.home.validUntil", { date: expire_date }) }}）</span>
+                                <span class="u-expire"
+                                    >（{{ $t("dashboard.home.validUntil", { date: expire_date }) }}）</span
+                                >
                             </template>
-                            <a class="u-upgrade" href="/vip/premium?from=dashboard_index" target="_blank" v-else
-                                >{{ $t("dashboard.home.upgradeAccount") }}</a
-                            >
+                            <a class="u-upgrade" href="/vip/premium?from=dashboard_index" target="_blank" v-else>{{
+                                $t("dashboard.home.upgradeAccount")
+                            }}</a>
                         </span>
                     </div>
                 </h1>
@@ -47,7 +49,11 @@
                         <el-tooltip
                             class="item"
                             effect="dark"
-                            :content="~~info.verify_email ? $t('dashboard.home.emailVerified') : $t('dashboard.home.emailUnverified')"
+                            :content="
+                                ~~info.verify_email
+                                    ? $t('dashboard.home.emailVerified')
+                                    : $t('dashboard.home.emailUnverified')
+                            "
                             placement="top"
                         >
                             <a href="/dashboard/email" :class="info.verify_email && 'done'"
@@ -57,7 +63,9 @@
                         <el-tooltip
                             class="item"
                             effect="dark"
-                            :content="~~info.user_phone ? $t('dashboard.home.phoneBound') : $t('dashboard.home.phoneUnbound')"
+                            :content="
+                                ~~info.user_phone ? $t('dashboard.home.phoneBound') : $t('dashboard.home.phoneUnbound')
+                            "
                             placement="top"
                         >
                             <a href="/dashboard/phone" :class="info.user_phone && 'done'">
@@ -68,7 +76,11 @@
                     <span class="u-group">
                         <em>Group</em>
                         <b>{{ showGroupName(group) }}</b>
-                        <el-tooltip v-if="~~group < 16" placement="top" :content="$t('dashboard.home.authRequiredForPublish')">
+                        <el-tooltip
+                            v-if="~~group < 16"
+                            placement="top"
+                            :content="$t('dashboard.home.authRequiredForPublish')"
+                        >
                             <span class="u-auth">
                                 <i class="u-unauth el-icon-warning"></i>
                                 <a href="/dashboard/auth" target="_blank">{{ $t("dashboard.home.goAuthenticate") }}</a>
@@ -108,7 +120,9 @@
                             :content="$t('dashboard.home.boxcoinTip')"
                             placement="top"
                         >
-                            <div class="u-credit-name"><i class="el-icon-coin"></i> {{ $t("dashboard.common.boxcoin") }}</div>
+                            <div class="u-credit-name">
+                                <i class="el-icon-coin"></i> {{ $t("dashboard.common.boxcoin") }}
+                            </div>
                         </el-tooltip>
                         <div class="u-credit-value">
                             <b>{{ asset.box_coin }}</b>
@@ -117,9 +131,9 @@
                             <!-- <a class="el-button el-button--primary el-button--small" href="/vip/boxcoin" target="_blank"
                                 >{{ $t("dashboard.common.recharge") }}</a
                             > -->
-                            <router-link class="el-button el-button--primary el-button--small" to="/boxcoin"
-                                >{{ $t("dashboard.common.exchange") }}</router-link
-                            >
+                            <router-link class="el-button el-button--primary el-button--small" to="/boxcoin">{{
+                                $t("dashboard.common.exchange")
+                            }}</router-link>
                         </div>
                     </div>
                 </el-col>
@@ -131,31 +145,35 @@
                             :content="$t('dashboard.home.pointsTip')"
                             placement="top"
                         >
-                            <div class="u-credit-name"><i class="el-icon-sugar"></i> {{ $t("dashboard.common.points") }}</div>
+                            <div class="u-credit-name">
+                                <i class="el-icon-sugar"></i> {{ $t("dashboard.common.points") }}
+                            </div>
                         </el-tooltip>
                         <div class="u-credit-value">
                             <b>{{ asset.points }}</b>
                         </div>
                         <div class="u-credit-op">
-                            <router-link class="el-button el-button--primary el-button--small" to="/points"
-                                >{{ $t("dashboard.common.records") }}</router-link
-                            >
-                            <a class="el-button el-button--primary el-button--small" href="/vip/mall" target="_blank"
-                                >{{ $t("dashboard.common.exchange") }}</a
-                            >
+                            <router-link class="el-button el-button--primary el-button--small" to="/points">{{
+                                $t("dashboard.common.records")
+                            }}</router-link>
+                            <a class="el-button el-button--primary el-button--small" href="/vip/mall" target="_blank">{{
+                                $t("dashboard.common.exchange")
+                            }}</a>
                         </div>
                     </div>
                 </el-col>
                 <el-col :span="6">
                     <div class="u-packet">
-                        <div class="u-credit-name"><i class="el-icon-bank-card"></i> {{ $t("dashboard.cards.cardCode") }}</div>
+                        <div class="u-credit-name">
+                            <i class="el-icon-bank-card"></i> {{ $t("dashboard.cards.cardCode") }}
+                        </div>
                         <div class="u-credit-value" v-if="asset.ext_info">
                             <b>{{ Number(asset.ext_info.keycode || 0) + Number(asset.ext_info.sn || 0) }}</b>
                         </div>
                         <div class="u-credit-op">
-                            <router-link class="el-button el-button--primary el-button--small" to="/card"
-                                >{{ $t("dashboard.common.view") }}</router-link
-                            >
+                            <router-link class="el-button el-button--primary el-button--small" to="/card">{{
+                                $t("dashboard.common.view")
+                            }}</router-link>
                         </div>
                     </div>
                     <!-- <div class="u-packet">
@@ -188,7 +206,9 @@
                             :content="$t('dashboard.home.goldLeafTip')"
                             placement="top"
                         >
-                            <div class="u-credit-name"><i class="el-icon-wallet"></i> {{ $t("dashboard.common.goldLeaf") }}</div>
+                            <div class="u-credit-name">
+                                <i class="el-icon-wallet"></i> {{ $t("dashboard.common.goldLeaf") }}
+                            </div>
                         </el-tooltip>
                         <div class="u-credit-value">
                             <b>{{ asset.cny }}</b>
@@ -197,9 +217,9 @@
                             <!-- <a class="el-button el-button--primary el-button--small" href="/vip/cny" target="_blank"
                                 >{{ $t("dashboard.common.recharge") }}</a
                             > -->
-                            <router-link class="el-button el-button--primary el-button--small" to="/cny"
-                                >{{ $t("dashboard.common.records") }}</router-link
-                            >
+                            <router-link class="el-button el-button--primary el-button--small" to="/cny">{{
+                                $t("dashboard.common.records")
+                            }}</router-link>
                         </div>
                     </div>
                 </el-col>
@@ -254,7 +274,8 @@
 
                     <!-- 订单 -->
                     <span class="u-order" v-if="item.type == 'order'">
-                        {{ $t("dashboard.orders.product") }}：{{ showProduct(item.data.product_id) }}， {{ $t("dashboard.common.amount") }}：¥
+                        {{ $t("dashboard.orders.product") }}：{{ showProduct(item.data.product_id) }}，
+                        {{ $t("dashboard.common.amount") }}：¥
                         <b>{{ showPrice(item.data.total_fee) }}</b>
                         ， {{ $t("dashboard.common.status") }}：{{ showPayStatus(item.data.pay_status) }}
                     </span>
@@ -286,7 +307,9 @@
                     <time class="u-time">{{ showTime(item.created_at) }}</time>
                 </li>
             </ul>
-            <div class="u-null" v-else><i class="el-icon-warning-outline"></i> {{ $t("dashboard.home.noRecordsInRange") }}</div>
+            <div class="u-null" v-else>
+                <i class="el-icon-warning-outline"></i> {{ $t("dashboard.home.noRecordsInRange") }}
+            </div>
         </div>
     </div>
 </template>
@@ -465,9 +488,12 @@ export default {
         },
         showBoxcoinType: function (item) {
             if (item.action_type == 9) {
-                return item.operate_user_id == this.uid ? this.$t("dashboard.home.workPayment") : this.$t("dashboard.home.workIncome");
+                return item.operate_user_id == this.uid
+                    ? this.$t("dashboard.home.workPayment")
+                    : this.$t("dashboard.home.workIncome");
             }
-            return boxcoin_types[item.action_type] || item.action_type;
+            const key = `dashboard.dataLabels.boxcoinTypes.${item.action_type}`;
+            return this.$te(key) ? this.$t(key) : boxcoin_types[item.action_type] || item.action_type;
         },
         countBoxCoin: function (item) {
             if (!item.ext_take_off_count) return item.count;
@@ -500,9 +526,12 @@ export default {
         },
         showCNYType: function (item) {
             if (item.action_type == "-2") {
-                return item.pay_user_id == this.uid ? this.$t("dashboard.home.goldLeafExpense") : this.$t("dashboard.home.goldLeafIncome");
+                return item.pay_user_id == this.uid
+                    ? this.$t("dashboard.home.goldLeafExpense")
+                    : this.$t("dashboard.home.goldLeafIncome");
             }
-            return cny_types[item.action_type] || item.description || item.action_type;
+            const key = `dashboard.dataLabels.cnyTypes.${item.action_type}`;
+            return this.$te(key) ? this.$t(key) : cny_types[item.action_type] || item.description || item.action_type;
         },
         showCNYOp(item) {
             if (item.action_type == "-2") {
@@ -524,7 +553,8 @@ export default {
         //     return __imgPath + "image/group/" + groupid + ".svg";
         // },
         showGroupName: function (val) {
-            return val ? __userGroup[val] : this.$t("dashboard.home.guest");
+            const key = `dashboard.dataLabels.userGroups.${val || 0}`;
+            return this.$te(key) ? this.$t(key) : val ? __userGroup[val] : this.$t("dashboard.home.guest");
         },
         formatCredit: function (val) {
             return val ? (val / 100).toFixed(2) : "0.00";
@@ -533,17 +563,20 @@ export default {
         //     return (val && getThumbnail(val, 120, true)) || getThumbnail(default_avatar, 120, true);
         // },
         showAssetType: function (val) {
-            return asset_types[val]?.["label"] || val;
+            const key = `dashboard.dataLabels.assetTypes.${val}`;
+            return this.$te(key) ? this.$t(key) : asset_types[val]?.["label"] || val;
         },
         showAssetIcon: function (val) {
             return asset_types[val]?.["icon"] || "el-icon-box";
         },
 
         showProduct: function (val) {
-            return products[val];
+            const key = `dashboard.dataLabels.orderProducts.${val}`;
+            return this.$te(key) ? this.$t(key) : products[val] || val;
         },
         showPayStatus: function (val) {
-            return pay_status[val];
+            const key = `dashboard.dataLabels.orderPayStatus.${val}`;
+            return this.$te(key) ? this.$t(key) : pay_status[val] || val;
         },
         // showPayType: function (val) {
         //     return pay_types[val];

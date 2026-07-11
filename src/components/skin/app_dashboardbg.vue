@@ -3,7 +3,15 @@
         <div class="m-scene-stage">
             <div class="m-phone">
                 <div class="m-header" :style="imageStyle">
-                    <video v-if="animationUrl" class="u-animation" :src="animationUrl" autoplay muted loop playsinline></video>
+                    <video
+                        v-if="animationUrl"
+                        class="u-animation"
+                        :src="animationUrl"
+                        autoplay
+                        muted
+                        loop
+                        playsinline
+                    ></video>
                     <div class="u-avatar"></div>
                     <div class="u-info">
                         <b></b>
@@ -22,7 +30,7 @@
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>App个人中心头部<SkinSceneAuthors :authors="authors" /></b>
+            <b>{{ $t("dashboard.skin.scenes.app_dashboardbg") }}<SkinSceneAuthors :authors="authors" /></b>
             <span>homebg / app_dashboardbg</span>
         </div>
     </div>

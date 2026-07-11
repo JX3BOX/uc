@@ -32,7 +32,9 @@
             <el-table-column :label="$t('dashboard.purchases.purchasedAt')" prop="created_at" min-width="160" />
             <el-table-column :label="$t('dashboard.common.actions')" min-width="100">
                 <template #default="{ row }">
-                    <el-button class="u-detail-btn" plain @click.stop="toDetails(row)" icon="View">{{ $t("dashboard.common.view") }}</el-button>
+                    <el-button class="u-detail-btn" plain @click.stop="toDetails(row)" icon="View">{{
+                        $t("dashboard.common.view")
+                    }}</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -77,7 +79,7 @@ export default {
         postTypeFilters() {
             return Object.keys(postType).map((key) => {
                 return {
-                    text: postType[key],
+                    text: this.postType(key),
                     value: key,
                 };
             });
@@ -130,10 +132,12 @@ export default {
 
         // filters
         priceType(type) {
-            return priceType[type];
+            const key = `dashboard.dataLabels.purchasePriceTypes.${type}`;
+            return this.$te(key) ? this.$t(key) : priceType[type] || type;
         },
         postType(type) {
-            return postType[type];
+            const key = `dashboard.dataLabels.purchasePostTypes.${type}`;
+            return this.$te(key) ? this.$t(key) : postType[type] || type;
         },
     },
 };

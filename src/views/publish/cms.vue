@@ -220,7 +220,7 @@ export default {
             return dateFormat(new Date(val));
         },
         typeFormat: function (val) {
-            return __postType[val];
+            return this.postTypeLabel(val, __postType[val]);
         },
         visibleFormat: function (val) {
             const key = ["public", "private", "friends", "password", "paid", "followers"][~~val];

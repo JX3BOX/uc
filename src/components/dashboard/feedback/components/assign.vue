@@ -18,7 +18,7 @@
                     >
                         <div class="m-assign-user">
                             <img class="u-assign-avatar" :src="item.teammate_info.user_avatar" />
-                            {{ `${item.teammate_info.display_name} ( ${item.user_id} ) - ${group[item.group]}` }}
+                            {{ `${item.teammate_info.display_name} ( ${item.user_id} ) - ${groupLabel(item.group)}` }}
                         </div>
                     </el-option>
                 </el-select>
@@ -40,23 +40,33 @@
                     >
                         <div class="m-assign-user">
                             <img class="u-assign-avatar" :src="item.teammate_info.user_avatar" />
-                            {{ `${item.teammate_info.display_name} ( ${item.user_id} ) - ${group[item.group]}` }}
+                            {{ `${item.teammate_info.display_name} ( ${item.user_id} ) - ${groupLabel(item.group)}` }}
                         </div>
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item v-if="type !== 'coordination'" :label="$t('dashboard.feedback.project')" prop="repository">
-                <el-input v-model="form.repository" :placeholder="$t('dashboard.feedback.repositoryPlaceholder')" clearable></el-input>
+                <el-input
+                    v-model="form.repository"
+                    :placeholder="$t('dashboard.feedback.repositoryPlaceholder')"
+                    clearable
+                ></el-input>
             </el-form-item>
             <el-form-item :label="$t('dashboard.common.remark')" prop="remark">
-                <el-input v-model="form.remark" :placeholder="$t('dashboard.common.remarkPlaceholder')" clearable></el-input>
+                <el-input
+                    v-model="form.remark"
+                    :placeholder="$t('dashboard.common.remarkPlaceholder')"
+                    clearable
+                ></el-input>
             </el-form-item>
         </el-form>
         <template #footer>
             <div class="dialog-footer">
                 <div class="m-confirm">
                     <el-button @click="close">{{ $t("dashboard.common.cancel") }}</el-button>
-                    <el-button type="primary" :loading="loading" :disabled="loading" @click="submit"> {{ $t("dashboard.common.submit") }} </el-button>
+                    <el-button type="primary" :loading="loading" :disabled="loading" @click="submit">
+                        {{ $t("dashboard.common.submit") }}
+                    </el-button>
                 </div>
             </div>
         </template>
@@ -101,8 +111,20 @@ export default {
             },
             group,
             rules: {
-                assign: [{ required: true, message: this.$t("dashboard.feedback.assigneeRequired"), trigger: ["blur", "change"] }],
-                coordination: [{ required: true, message: this.$t("dashboard.feedback.coordinatorRequired"), trigger: ["blur", "change"] }],
+                assign: [
+                    {
+                        required: true,
+                        message: this.$t("dashboard.feedback.assigneeRequired"),
+                        trigger: ["blur", "change"],
+                    },
+                ],
+                coordination: [
+                    {
+                        required: true,
+                        message: this.$t("dashboard.feedback.coordinatorRequired"),
+                        trigger: ["blur", "change"],
+                    },
+                ],
             },
         };
     },
@@ -142,6 +164,10 @@ export default {
         },
     },
     methods: {
+        groupLabel(key) {
+            const path = `dashboard.dataLabels.feedbackGroups.${key}`;
+            return this.$te(path) ? this.$t(path) : group[key] || key;
+        },
         close() {
             this.show = false;
             this.$emit("close", false);

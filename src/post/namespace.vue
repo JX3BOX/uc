@@ -8,7 +8,7 @@
                 <div class="u-tip">
                     {{ $t("publish.namespace.descriptionPrefix") }}
                     <a href="https://剑网3.com/某某气纯宏" target="_blank">
-                        <b>剑网3.com/某某气纯宏</b>
+                        <b>{{ $t("publish.namespace.exampleLink") }}</b>
                     </a>
                     {{ $t("publish.namespace.descriptionSuffix") }}
                 </div>

@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="m-scene-caption">
-            <b>App底部导航<SkinSceneAuthors :authors="authors" /></b>
+            <b>{{ $t("dashboard.skin.scenes.app_tabbar") }}<SkinSceneAuthors :authors="authors" /></b>
             <span>sidebar / app_tabbar</span>
         </div>
     </div>
@@ -132,10 +132,10 @@ export default {
         return {
             activeTab: "home",
             tabs: [
-                { key: "home", label: "首页", normal: "home", active: "homeActive" },
-                { key: "nav", label: "导航", normal: "nav", active: "navActive" },
-                { key: "forum", label: "论坛", normal: "forum", active: "forumActive" },
-                { key: "dashboard", label: "我的", normal: "dashboard", active: "dashboardActive" },
+                { key: "home", normal: "home", active: "homeActive" },
+                { key: "nav", normal: "nav", active: "navActive" },
+                { key: "forum", normal: "forum", active: "forumActive" },
+                { key: "dashboard", normal: "dashboard", active: "dashboardActive" },
             ],
         };
     },
@@ -205,6 +205,7 @@ export default {
                     textColor;
                 return {
                     ...item,
+                    label: this.$t(`dashboard.skin.tabbar.${item.key}`),
                     normalConfig,
                     activeConfig,
                     textColor,

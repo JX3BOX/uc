@@ -87,11 +87,18 @@
 </template>
 
 <script>
-import { getTypeLabel, getLink } from "@jx3box/jx3box-common/js/utils";
+import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { __wikiType } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki";
 const wikiTypes = { ...__wikiType };
+const wikiTypeLabels = {
+    achievement: "成就",
+    item: "物品",
+    quest: "任务",
+    knowledge: "通识",
+    skill: "技能",
+};
 export default {
     name: "wiki",
     props: [],
@@ -122,7 +129,7 @@ export default {
     },
     methods: {
         getTypeLabel: function (val) {
-            return val ? this.wikiTypeLabel(val, wikiTypes[val]) : this.$t("publish.common.unknown");
+            return wikiTypeLabels[val] || "未知";
         },
         wikiTypeLabel(type, fallback) {
             const key = {

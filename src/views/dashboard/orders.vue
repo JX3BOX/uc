@@ -85,13 +85,16 @@ export default {
             });
         },
         showProduct: function (val) {
-            return products[val];
+            const key = `dashboard.dataLabels.orderProducts.${val}`;
+            return this.$te(key) ? this.$t(key) : products[val] || val;
         },
         showPayStatus: function (val) {
-            return pay_status[val];
+            const key = `dashboard.dataLabels.orderPayStatus.${val}`;
+            return this.$te(key) ? this.$t(key) : pay_status[val] || val;
         },
         showPayType: function (val) {
-            return pay_types[val];
+            const key = `dashboard.dataLabels.orderPayTypes.${val}`;
+            return this.$te(key) ? this.$t(key) : pay_types[val] || val;
         },
         showPrice: function (val) {
             return val ? (val / 100).toFixed(2) : "0.00";
