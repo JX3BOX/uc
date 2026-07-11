@@ -7,6 +7,7 @@
                         v-if="animationUrl"
                         class="u-animation"
                         :src="animationUrl"
+                        :style="animationStyle"
                         autoplay
                         muted
                         loop
@@ -39,11 +40,40 @@
 <script>
 import { __cdn } from "@/utils/config";
 import SkinSceneAuthors from "./SkinSceneAuthors.vue";
+
+const POSITION_MAP = {
+    lt: "left top",
+    mt: "center top",
+    ct: "center top",
+    centop: "center top",
+    rt: "right top",
+    lm: "left center",
+    lc: "left center",
+    ml: "left center",
+    mm: "center center",
+    cm: "center center",
+    o: "center center",
+    cc: "center center",
+    rm: "right center",
+    mr: "right center",
+    rc: "right center",
+    lb: "left bottom",
+    mb: "center bottom",
+    cb: "center bottom",
+    rb: "right bottom",
+};
+
 const normalizeSkinUrl = (url) => {
     const raw = String(url || "").trim();
     if (!raw) return "";
     if (/^(https?:)?\/\//.test(raw)) return raw;
     return __cdn + raw.replace(/^\/+/, "");
+};
+
+const resolvePosition = (position, fallback = "right top") => {
+    const raw = String(position || "").trim();
+    if (!raw) return fallback;
+    return POSITION_MAP[raw.toLowerCase()] || raw;
 };
 export default {
     name: "AppDashboardbgSkinScene",
@@ -62,8 +92,19 @@ export default {
         animationUrl() {
             return normalizeSkinUrl(this.skinConfig?.animation);
         },
+        position() {
+            return resolvePosition(this.skinConfig?.position);
+        },
         imageStyle() {
-            return this.imageUrl ? { backgroundImage: `url(${this.imageUrl})` } : {};
+            return this.imageUrl
+                ? {
+                      backgroundImage: `url(${this.imageUrl})`,
+                      backgroundPosition: this.position,
+                  }
+                : {};
+        },
+        animationStyle() {
+            return { objectPosition: this.position };
         },
     },
 };

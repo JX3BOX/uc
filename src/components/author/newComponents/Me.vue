@@ -18,7 +18,7 @@
                 <div class="u-author-info">
                     <span class="u-name" :style="userDefinedStyle.userName">
                         <span @click="copyData(data.display_name || $t('author.common.anonymous'))">{{ data.display_name || $t("author.common.anonymous") }}</span
-                        ><span class="u-uid" @click="copyData(data.ID || 0)">（UID : {{ data.ID || 0 }}）</span>
+                        ><span class="u-uid" :style="userDefinedStyle.uid" @click="copyData(data.ID || 0)">（UID : {{ data.ID || 0 }}）</span>
                         <el-tag type="info" class="u-mute-tag" v-if="data.user_status" effect="dark">{{ $t("author.profile.muted") }}</el-tag>
                     </span>
                     <div class="u-tips">
@@ -202,6 +202,7 @@ const DEFAULT_BANNER_STYLE = {
     userName: {},
     honor: {},
     sendMsg: {},
+    uid: {},
     banner: `${__cdn}design/skin/default/pc_homebanner.png`,
     bannerPosition: "right top",
 };
@@ -363,6 +364,11 @@ export default {
         setDecorationStyle() {
             let decoration = this.decorationMe;
             this.userDefinedStyle = { ...DEFAULT_BANNER_STYLE };
+            if (decoration.uidTextcolor) {
+                this.userDefinedStyle.uid = {
+                    color: decoration.uidTextcolor,
+                };
+            }
             if (!decoration.status) return;
             if (decoration.highlightcolor) {
                 this.userDefinedStyle.fans = {

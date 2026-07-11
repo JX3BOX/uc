@@ -105,9 +105,8 @@ export default {
                     .toLowerCase();
 
             return (
-                items.find((item) => getTheme(item) === "all") ||
                 items.find((item) => getTheme(item) === currentTheme) ||
-                items.find((item) => !getTheme(item)) ||
+                items.find((item) => getTheme(item) === "all") ||
                 null
             );
         },
@@ -139,6 +138,10 @@ export default {
                 return;
             }
 
+            this.decorationMe = {
+                ...this.decorationMe,
+                uidTextcolor: skin?.textcolor,
+            };
             this.themeStyle = {
                 backgroundImage: `url(${image})`,
                 backgroundRepeat: "no-repeat",
@@ -152,6 +155,7 @@ export default {
             if (!banner) return;
 
             this.decorationMe = {
+                ...this.decorationMe,
                 status: true,
                 banner,
                 bannerPosition: this.resolveSkinPosition(skin?.position, "right top"),
