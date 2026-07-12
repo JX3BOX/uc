@@ -254,7 +254,7 @@ export default {
     },
     notice: {
         tip: "配置你的联系方式以接收魔盒通知",
-        types: { email: "邮箱", phone: "手机", wechat: "微信" },
+        types: { email: "邮箱", phone: "手机", wechat: "公众号" },
     },
     email: {
         address: "邮箱地址",
@@ -304,7 +304,7 @@ export default {
         getCodeFirst: "请先获取验证码",
     },
     wechat: {
-        bindOfficial: "绑定公众号",
+        bindOfficial: "扫码绑定",
         bindOfficialAccount: "绑定微信公众号",
         notificationTip: "关注后可通过微信接收通知告警",
         qrFailed: "二维码加载失败",
@@ -519,6 +519,7 @@ export default {
         validUntil: "有效期至：{date}",
         upgradeAccount: "升级账号类型",
         emailVerified: "邮箱已验证",
+        emailUnbound: "邮箱未绑定",
         emailUnverified: "邮箱未验证",
         phoneBound: "手机已绑定",
         phoneUnbound: "手机未绑定",

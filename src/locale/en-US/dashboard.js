@@ -543,6 +543,7 @@ export default {
         validUntil: "Valid until: {date}",
         upgradeAccount: "Upgrade account type",
         emailVerified: "Email has been verified",
+        emailUnbound: "The email is not bound",
         emailUnverified: "Email is not verified",
         phoneBound: "The mobile phone is bound",
         phoneUnbound: "The phone is not bound",

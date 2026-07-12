@@ -40,6 +40,10 @@ function getPasswordStatus() {
     return $cms().get("/api/cms/user/my/password/status");
 }
 
+function getAccountStatus() {
+    return $cms().get("/api/cms/user/my/account/status");
+}
+
 // 发送验证码
 function sendVerifyCode(data) {
     return $cms().post("/api/cms/user/account/email/forgot-password", data, {
@@ -145,6 +149,7 @@ export {
     updateAvatar,
     updatePassword,
     getPasswordStatus,
+    getAccountStatus,
     sendVerifyEmail,
     checkEmailAvailable,
     sendBindEmail,

@@ -50,13 +50,11 @@
                             class="item"
                             effect="dark"
                             :content="
-                                ~~info.verify_email
-                                    ? $t('dashboard.home.emailVerified')
-                                    : $t('dashboard.home.emailUnverified')
+                                $t(`dashboard.home.${emailStatus}`)
                             "
                             placement="top"
                         >
-                            <a href="/dashboard/email" :class="info.verify_email && 'done'"
+                            <a href="/dashboard/notice" :class="emailStatus === 'emailVerified' && 'done'"
                                 ><i class="el-icon-message"></i
                             ></a>
                         </el-tooltip>
@@ -64,11 +62,11 @@
                             class="item"
                             effect="dark"
                             :content="
-                                ~~info.user_phone ? $t('dashboard.home.phoneBound') : $t('dashboard.home.phoneUnbound')
+                                accountStatus.has_phone ? $t('dashboard.home.phoneBound') : $t('dashboard.home.phoneUnbound')
                             "
                             placement="top"
                         >
-                            <a href="/dashboard/phone" :class="info.user_phone && 'done'">
+                            <a href="/dashboard/notice" :class="accountStatus.has_phone && 'done'">
                                 <i class="el-icon-mobile-phone"></i>
                             </a>
                         </el-tooltip>
@@ -319,6 +317,7 @@ import { __userGroup, __imgPath, __userLevelColor, __userLevel, __cdn } from "@/
 import User from "@jx3box/jx3box-common/js/user";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { getMyAssetLogs, getMyInfo } from "@/service/dashboard/index.js";
+import { getAccountStatus } from "@/service/dashboard/profile";
 import { showDate } from "@jx3box/jx3box-common/js/moment";
 import asset_types from "@/assets/data/dashboard/asset_log_types.json";
 import boxcoin_types from "@/assets/data/dashboard/boxcoin_types.json";
@@ -362,6 +361,11 @@ export default {
             },
             medals: [],
             asset_logs: [],
+            accountStatus: {
+                has_email: false,
+                email_verified: false,
+                has_phone: false,
+            },
             asset_types,
             boxcoin_types,
             products,
@@ -380,6 +384,10 @@ export default {
         },
         vipType: function () {
             return this.isPRO ? "PRO" : "PRE";
+        },
+        emailStatus: function () {
+            if (!this.accountStatus.has_email) return "emailUnbound";
+            return this.accountStatus.email_verified ? "emailVerified" : "emailUnverified";
         },
         expire_date: function () {
             if (this.isPRO) {
@@ -442,6 +450,14 @@ export default {
                     if (res.data.data) {
                         this.info = res.data.data;
                     }
+                })
+                .catch(() => {});
+            getAccountStatus()
+                .then((res) => {
+                    this.accountStatus = {
+                        ...this.accountStatus,
+                        ...res.data.data,
+                    };
                 })
                 .catch(() => {});
         },

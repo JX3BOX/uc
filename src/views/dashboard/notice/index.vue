@@ -67,6 +67,8 @@ export default {
 .m-dashboard-notice {
     .u-notice-item {
         .flex;
+        flex: 0 0 150px;
+        box-sizing: border-box;
         align-items: center;
         gap: 20px;
         padding: 0 20px;
@@ -96,6 +98,7 @@ export default {
             min-width: 40px;
         }
         .u-notice-item {
+            flex-basis: auto;
             flex-direction: column;
             padding: 0;
             gap: 10px;
