@@ -28,60 +28,66 @@
             <el-row :gutter="20">
                 <el-col :xs="12" :span="4">
                     <router-link to="/macro">
-                        <img svg-inline src="@/assets/img/publish/channel/macro.svg" />
+                        <img :src="getAppLogo('macro')" :alt="$t('publish.types.macros')" />
                         <span>{{ $t("publish.types.macros") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/bps">
-                        <img svg-inline src="@/assets/img/publish/channel/bps.svg" />
+                        <img :src="getAppLogo('bps')" :alt="$t('publish.types.classGuides')" />
                         <span>{{ $t("publish.types.classGuides") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/pvp">
-                        <img svg-inline class="u-icon" :src="getAppIcon('pvp')" />
+                        <img :src="getAppLogo('pvp')" :alt="$t('publish.types.pvpTips')" />
                         <span>{{ $t("publish.types.pvpTips") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/fb">
-                        <img svg-inline src="@/assets/img/publish/channel/fb.svg" />
+                        <img :src="getAppLogo('fb')" :alt="$t('publish.types.dungeonGuides')" />
                         <span>{{ $t("publish.types.dungeonGuides") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/tool">
-                        <img svg-inline src="@/assets/img/publish/channel/tool.svg" />
+                        <img :src="getAppLogo('tool')" :alt="$t('publish.types.tools')" />
                         <span>{{ $t("publish.types.tools") }}</span>
                     </router-link>
                 </el-col>
             </el-row>
 
-            <el-divider content-position="left">PVA</el-divider>
+            <el-divider content-position="left">WIKI</el-divider>
             <el-row :gutter="20">
                 <el-col :xs="12" :span="4">
                     <router-link to="/achievement">
-                        <img svg-inline src="@/assets/img/publish/channel/achievement.svg" />
+                        <img :src="getAppLogo('cj')" :alt="$t('publish.types.achievementWiki')" />
                         <span>{{ $t("publish.types.achievementWiki") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/item">
-                        <img svg-inline src="@/assets/img/publish/channel/item.svg" />
+                        <img :src="getAppLogo('item')" :alt="$t('publish.types.itemWiki')" />
                         <span>{{ $t("publish.types.itemWiki") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/quest">
-                        <img svg-inline src="@/assets/img/publish/channel/quest.svg" />
+                        <img :src="getAppLogo('quest')" :alt="$t('publish.types.questWiki')" />
                         <span>{{ $t("publish.types.questWiki") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/knowledge">
-                        <img svg-inline src="@/assets/img/publish/channel/knowledge.svg" />
+                        <img :src="getAppLogo('knowledge')" :alt="$t('publish.types.knowledgeWiki')" />
                         <span>{{ $t("publish.types.knowledgeWiki") }}</span>
+                    </router-link>
+                </el-col>
+                <el-col :xs="12" :span="4">
+                    <router-link to="/skill">
+                        <img :src="getAppLogo('skill')" :alt="$t('publish.types.skillWiki')" />
+                        <span>{{ $t("publish.types.skillWiki") }}</span>
                     </router-link>
                 </el-col>
                 <!-- <el-col :xs="12" :span="4">
@@ -96,25 +102,25 @@
             <el-row :gutter="20">
                 <el-col :xs="12" :span="4">
                     <router-link to="/face">
-                        <img svg-inline src="@/assets/img/publish/channel/share.svg" />
+                        <img :src="getAppLogo('face')" :alt="$t('publish.types.faceData')" />
                         <span>{{ $t("publish.types.faceData") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/body">
-                        <img svg-inline src="@/assets/img/publish/channel/body.svg" />
+                        <img :src="getAppLogo('body')" :alt="$t('publish.types.bodyData')" />
                         <span>{{ $t("publish.types.bodyData") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/question">
-                        <el-icon><Opportunity /></el-icon>
+                        <img :src="getAppLogo('exam')" :alt="$t('publish.types.questions')" />
                         <span>{{ $t("publish.types.questions") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/paper">
-                        <img svg-inline src="@/assets/img/publish/channel/100.svg" />
+                        <img :src="getAppLogo('exam')" :alt="$t('publish.types.papers')" />
                         <span>{{ $t("publish.types.papers") }}</span>
                     </router-link>
                 </el-col>
@@ -124,42 +130,64 @@
             <el-row :gutter="20">
                 <el-col :xs="12" :span="4">
                     <router-link to="/community">
-                        <img svg-inline src="@/assets/img/publish/channel/community.svg" />
+                        <img :src="getAppLogo('community')" :alt="$t('publish.types.forum')" />
                         <span>{{ $t("publish.types.forum") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/joke">
-                        <img svg-inline src="@/assets/img/publish/channel/joke.svg" />
+                        <img :src="getAppLogo('joke')" :alt="$t('publish.types.jokes')" />
                         <span>{{ $t("publish.types.jokes") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/emotion">
-                        <img svg-inline src="@/assets/img/publish/channel/emotion.svg" />
+                        <img :src="getAppLogo('emotion')" :alt="$t('publish.types.emotes')" />
                         <span>{{ $t("publish.types.emotes") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/collection">
-                        <el-icon><Notebook /></el-icon>
+                        <img :src="getAppLogo('collection')" :alt="$t('publish.types.collection')" />
                         <span>{{ $t("publish.types.collection") }}</span>
                     </router-link>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <router-link to="/namespace">
-                        <el-icon><Postcard /></el-icon>
+                        <img :src="getAppLogo('namespace')" :alt="$t('publish.types.namespace')" />
                         <span>{{ $t("publish.types.namespace") }}</span>
                     </router-link>
                 </el-col>
             </el-row>
 
+            <el-divider content-position="left">DATA</el-divider>
+            <el-row :gutter="20">
+                <el-col :xs="12" :span="4">
+                    <a href="/pz/">
+                        <img :src="getAppLogo('pz')" alt="配装方案" />
+                        <span>配装方案</span>
+                    </a>
+                </el-col>
+                <el-col :xs="12" :span="4">
+                    <a href="/dbm/">
+                        <img :src="getAppLogo('dbm')" alt="插件数据" />
+                        <span>插件数据</span>
+                    </a>
+                </el-col>
+                <el-col :xs="12" :span="4">
+                    <a href="/battle">
+                        <img :src="getAppLogo('battle')" alt="战斗数据" />
+                        <span>战斗数据</span>
+                    </a>
+                </el-col>
+            </el-row>
+
             <template v-if="isAdmin">
-                <el-divider content-position="left">{{ $t("publish.home.management") }}</el-divider>
+                <el-divider content-position="left">ADMIN</el-divider>
                 <el-row :gutter="20">
                     <el-col :xs="12" :span="4">
                         <router-link to="/notice">
-                            <el-icon><Bell /></el-icon>
+                            <img :src="getAppLogo('home')" :alt="$t('publish.types.news')" />
                             <span>{{ $t("publish.types.news") }}</span>
                         </router-link>
                     </el-col>
@@ -170,16 +198,12 @@
 </template>
 
 <script>
-import User from "@jx3box/jx3box-common/js/user";
-import { getAppIcon } from "@jx3box/jx3box-common/js/utils.js";
 import {getSuperAuthorState} from "@/service/dashboard/cooperation";
 export default {
     name: "index",
     props: [],
     data: function () {
         return {
-            isAdmin: User.isAdmin(),
-
             isSuperAuthor: false, // 是否为签约作者
         };
     },
@@ -189,6 +213,9 @@ export default {
         },
         isAuth() {
             return this.profile.user_group >= 16;
+        },
+        isAdmin() {
+            return this.profile?.user_group >= 128;
         },
     },
     watch: {
@@ -200,7 +227,9 @@ export default {
         }
     },
     methods: {
-        getAppIcon,
+        getAppLogo: function (identifier) {
+            return `https://cdn.jx3box.com/logo/logo-light/${identifier}.svg`;
+        },
         // 是否为签约作者
         checkSuperUser: function () {
             this.profile?.ID && getSuperAuthorState(this.profile?.ID).then((res) => {
