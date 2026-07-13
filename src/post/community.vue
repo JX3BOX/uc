@@ -148,7 +148,7 @@
                     type="error"
                     :title="$t('publish.message.contentViolation')"
                 ></el-alert>
-                <el-checkbox v-model="hasRead" :true-value="1" :fasle-value="0"
+                <el-checkbox v-model="hasRead" :true-value="1" :false-value="0"
                     >{{ $t("publish.form.readAndUnderstand") }}<a href="/notice/119" @click.stop target="_blank">{{ $t("publish.form.publishingGuidelines") }}</a></el-checkbox
                 >
             </div>
@@ -358,12 +358,14 @@ export default {
         // 发布
         publish: function () {
             this.loading = true;
+            this.processing = true;
             if (!this.post.title || !this.post.content) {
                 this.$message({
                     message: this.$t("publish.validation.titleAndContentRequired"),
                     type: "warning",
                 });
                 this.loading = false;
+                this.processing = false;
                 return;
             }
             if (this.data.id) {
@@ -399,12 +401,13 @@ export default {
                     })
                     .finally(() => {
                         this.loading = false;
+                        this.processing = false;
                     });
             } else {
                 const data = {
                     ...this.data,
                 };
-                if (this.category == "求助") {
+                if (this.post.category == "求助") {
                     data.tags = ["未解决"];
                 }
                 if (!isMiniProgram()) {
@@ -436,6 +439,7 @@ export default {
                     })
                     .finally(() => {
                         this.loading = false;
+                        this.processing = false;
                     });
             }
 

@@ -65,12 +65,16 @@ export const AutoSaveMixin = {
                 const content_meta_id = this.$route.query.content_meta_id;
                 const version_id = this.$route.query.version_id;
                 if (version_id && content_meta_id) {
-                    return getCommitById(content_meta_id, version_id)
-                        .then((res) => {
+                    const post_id = this.$route.params.id;
+                    const postRequest = post_id ? pull(post_id) : Promise.resolve(null);
+                    return Promise.all([postRequest, getCommitById(content_meta_id, version_id)])
+                        .then(([postRes, versionRes]) => {
+                            const currentPost = postRes?.data?.data || this.post;
                             this.post = {
-                                post_content: res.data?.data?.content || "",
-                                prev_post: "",
-                                next_post: "",
+                                ...currentPost,
+                                post_content: versionRes.data?.data?.content || "",
+                                prev_post: currentPost?.prev_post || "",
+                                next_post: currentPost?.next_post || "",
                             };
                             if (isPvp && !this.post.tags) {
                                 this.post.tags = [];

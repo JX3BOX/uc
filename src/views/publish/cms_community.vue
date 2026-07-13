@@ -115,6 +115,7 @@ export default {
             search: "",
 
             activeTab: "topic",
+            requestId: 0,
         };
     },
     computed: {
@@ -175,27 +176,30 @@ export default {
             }
         },
         loadPosts: function () {
+            const requestId = ++this.requestId;
             this.loading = true;
             this.data = [];
             if (this.activeTab == "topic") {
                 getMyList(this.params)
                     .then((res) => {
+                        if (requestId !== this.requestId) return;
                         this.data = res.data.data.list;
                         this.total = res.data.data.page.total;
                     })
                     .finally(() => {
-                        this.loading = false;
+                        if (requestId === this.requestId) this.loading = false;
                     });
             } else {
                 const params = pick(this.params, ["pageSize", "index"]);
                 this.search && (params.content = this.search);
                 getMyReplyList(params)
                     .then((res) => {
+                        if (requestId !== this.requestId) return;
                         this.data = res.data.data.list;
                         this.total = res.data.data.page.total;
                     })
                     .finally(() => {
-                        this.loading = false;
+                        if (requestId === this.requestId) this.loading = false;
                     });
             }
         },

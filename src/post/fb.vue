@@ -56,8 +56,8 @@
             <div class="m-publish-extend">
                 <el-divider content-position="left">{{ $t("publish.common.settings") }}</el-divider>
                 <publish-comment v-model="post.comment">
-                    <el-checkbox v-model="visible_for_self" :true-value="1" :fasle-value="0">{{ $t("publish.visibility.onlyMe") }}</el-checkbox>
-                    <el-checkbox v-model="open_white_list" :true-value="1" :fasle-value="0">{{ $t("publish.form.commentFilter") }}</el-checkbox>
+                    <el-checkbox v-model="visible_for_self" :true-value="1" :false-value="0">{{ $t("publish.visibility.onlyMe") }}</el-checkbox>
+                    <el-checkbox v-model="open_white_list" :true-value="1" :false-value="0">{{ $t("publish.form.commentFilter") }}</el-checkbox>
                 </publish-comment>
                 <publish-gift v-model="post.allow_gift"></publish-gift>
                 <el-form-item :label="$t('publish.form.anonymous')">
@@ -100,7 +100,7 @@
                     type="error"
                     :title="$t('publish.message.contentViolation')"
                 ></el-alert>
-                <el-checkbox v-model="hasRead" :true-value="1" :fasle-value="0"
+                <el-checkbox v-model="hasRead" :true-value="1" :false-value="0"
                     >{{ $t("publish.form.readAndUnderstand") }}<a href="/notice/119" @click.stop target="_blank">{{ $t("publish.form.publishingGuidelines") }}</a></el-checkbox
                 >
             </div>

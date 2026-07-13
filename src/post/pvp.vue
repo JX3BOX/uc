@@ -82,8 +82,8 @@
             <div class="m-publish-extend">
                 <el-divider content-position="left">{{ $t("publish.common.settings") }}</el-divider>
                 <publish-comment v-model="post.comment">
-                    <el-checkbox v-model="visible_for_self" :true-value="1" :fasle-value="0">{{ $t("publish.visibility.onlyMe") }}</el-checkbox>
-                    <el-checkbox v-model="open_white_list" :true-value="1" :fasle-value="0">{{ $t("publish.form.commentFilter") }}</el-checkbox>
+                    <el-checkbox v-model="visible_for_self" :true-value="1" :false-value="0">{{ $t("publish.visibility.onlyMe") }}</el-checkbox>
+                    <el-checkbox v-model="open_white_list" :true-value="1" :false-value="0">{{ $t("publish.form.commentFilter") }}</el-checkbox>
                 </publish-comment>
                 <el-form-item :label="$t('publish.form.anonymous')">
                     <el-switch
@@ -119,7 +119,7 @@
                     type="error"
                     :title="$t('publish.message.contentViolation')"
                 ></el-alert>
-                <el-checkbox v-model="hasRead" :true-value="1" :fasle-value="0"
+                <el-checkbox v-model="hasRead" :true-value="1" :false-value="0"
                     >{{ $t("publish.form.readAndUnderstand") }}<a href="/notice/119" @click.stop target="_blank">{{ $t("publish.form.publishingGuidelines") }}</a></el-checkbox
                 >
             </div>
@@ -344,7 +344,7 @@ export default {
         // 发布
         publish: function (status, skip) {
             if (!this.post.tags?.length) return this.$message.error(this.$t("publish.validation.typeRequired"));
-            if (!this.post.post_meta.content.trim()) return this.$message.error(this.$t("publish.validation.summaryRequired"));
+            if (!this.post.post_meta?.content?.trim()) return this.$message.error(this.$t("publish.validation.summaryRequired"));
             this.post.post_status = status;
             this.processing = true;
 
@@ -353,8 +353,8 @@ export default {
 
             this.post.post_meta.talent_desc = this.post.post_meta?.talent_desc?.replace(/\n{2,}/g, "\n") || "";
             this.post.post_meta.content = this.post.post_meta?.content?.replace(/\n{2,}/g, "\n") || "";
-            this.post.post_meta?.data.forEach((item) => {
-                item.desc = item.desc.replace(/\n{2,}/g, "\n") || "";
+            this.post.post_meta?.data?.forEach((item) => {
+                item.desc = item.desc?.replace(/\n{2,}/g, "\n") || "";
             });
 
             const fn = this.from === "admin" ? pushAdmin : push;

@@ -206,6 +206,10 @@ export default {
         },
         // 发布
         publish: function (status, skip) {
+            if (status === "publish" && (!this.post.post_title?.trim() || !this.post.post_content?.trim())) {
+                this.$message.error(this.$t("publish.validation.titleAndContentRequired"));
+                return;
+            }
             this.post.post_status = status;
             this.processing = true;
             push(...this.data)

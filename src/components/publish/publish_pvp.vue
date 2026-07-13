@@ -16,7 +16,7 @@
                 >
                 </el-input>
             </div>
-            <el-checkbox class="u-talent" v-model="pvpData.has_talent" :true-value="1" :fasle-value="0"
+            <el-checkbox class="u-talent" v-model="pvpData.has_talent" :true-value="1" :false-value="0"
                 >{{ $t("publish.pvp.configureTalent") }}</el-checkbox
             >
             <template v-if="pvpData.has_talent">
@@ -60,7 +60,7 @@
                 </div>
             </template>
         </div>
-        <el-checkbox class="u-talent" v-model="pvpData.has_sq" :true-value="1" :fasle-value="0">{{ $t("publish.pvp.configureCombos") }}</el-checkbox>
+        <el-checkbox class="u-talent" v-model="pvpData.has_sq" :true-value="1" :false-value="0">{{ $t("publish.pvp.configureCombos") }}</el-checkbox>
         <template v-if="pvpData.has_sq">
             <div class="m-macro-box">
                 <div class="m-macro-header">

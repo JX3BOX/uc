@@ -98,7 +98,8 @@ export default {
             search: "",
             order: "update",
             client: "std",
-            types: Object.assign(__postType, { joke: "剑三骚话" }),
+            requestId: 0,
+            types: { ...__postType, joke: "剑三骚话" },
         };
     },
     computed: {
@@ -155,14 +156,16 @@ export default {
             return key ? this.$t(`publish.types.${key}`) : fallback;
         },
         loadPosts: function () {
+            const requestId = ++this.requestId;
             this.loading = true;
             getMyPosts(this.params)
                 .then((res) => {
+                    if (requestId !== this.requestId) return;
                     this.data = res.data.data.list;
                     this.total = res.data.data.total;
                 })
                 .finally(() => {
-                    this.loading = false;
+                    if (requestId === this.requestId) this.loading = false;
                 });
         },
         edit: function (type, id) {

@@ -1,5 +1,5 @@
 <template>
-    <el-checkbox class="u-collapse" v-model="collection_collapse" :true-value="1" :fasle-value="0"
+    <el-checkbox class="u-collapse" v-model="collection_collapse" :true-value="1" :false-value="0"
         >{{ $t("publish.form.expandedByDefault") }}</el-checkbox
     >
 </template>
