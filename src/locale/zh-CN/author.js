@@ -32,7 +32,7 @@ export default {
         namespaces: "TA 的铭牌",
         images: "TA 的趣图",
         jokes: "TA 的骚话",
-        works: "作品",
+        works: "文章",
         wiki: "百科",
         posts: "帖子",
         data: "数据",
