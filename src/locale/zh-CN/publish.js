@@ -686,7 +686,7 @@ export default {
         "faceData": "捏脸数据",
         "faceShare": "捏脸分享",
         "feedback": "反馈建议",
-        "forum": "论坛",
+        "forum": "论坛帖子",
         "forumDiscussion": "论坛主题",
         "houseShare": "家园分享",
         "itemList": "物品清单",
