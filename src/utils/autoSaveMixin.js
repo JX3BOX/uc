@@ -1,6 +1,7 @@
 import { pull } from "@/service/publish/cms";
 import settings from "@/pages/publish/setting.json";
 import { getCommitById } from "@/service/publish/version";
+import { applyRevisionPost } from "@/utils/publishRevision";
 import { cloneDeep } from "lodash";
 const { localDuration } = settings;
 
@@ -70,12 +71,7 @@ export const AutoSaveMixin = {
                     return Promise.all([postRequest, getCommitById(content_meta_id, version_id)])
                         .then(([postRes, versionRes]) => {
                             const currentPost = postRes?.data?.data || this.post;
-                            this.post = {
-                                ...currentPost,
-                                post_content: versionRes.data?.data?.content || "",
-                                prev_post: currentPost?.prev_post || "",
-                                next_post: currentPost?.next_post || "",
-                            };
+                            this.post = applyRevisionPost(currentPost, versionRes.data?.data || {});
                             if (isPvp && !this.post.tags) {
                                 this.post.tags = [];
                             }

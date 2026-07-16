@@ -62,7 +62,7 @@ export default {
         },
     },
     watch: {
-        page() {
+        index() {
             this.load();
         },
     },
@@ -78,15 +78,13 @@ export default {
             getCommitHistories(link_content_meta_id, this.pageParams)
                 .then((res) => {
                     const list = res.data?.data?.list || [];
-                    if (list.length) {
-                        this.list = list.map((item, i) => {
-                            return {
-                                ...item,
-                                version: "v" + (list.length - i),
-                            };
-                        });
-                        this.total = res.data?.data?.page?.total || 0;
-                    }
+                    this.list = list.map((item, i) => {
+                        return {
+                            ...item,
+                            version: "v" + (list.length - i),
+                        };
+                    });
+                    this.total = res.data?.data?.page?.total || 0;
                 })
                 .finally(() => {
                     this.loading = false;
@@ -94,10 +92,15 @@ export default {
         },
         use(item) {
             this.show = false;
-            const routeName = this.$route.name;
-            this.$router.push(
-                `/${routeName}/${this.postId}?mode=revision&version_id=${item.id}&content_meta_id=${item.link_content_meta_id}`
-            );
+            this.$router.push({
+                path: this.$route.path,
+                query: {
+                    ...this.$route.query,
+                    mode: "revision",
+                    version_id: item.id,
+                    content_meta_id: item.link_content_meta_id,
+                },
+            });
         },
     },
 };
