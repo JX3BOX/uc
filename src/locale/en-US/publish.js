@@ -674,6 +674,7 @@ export default {
     },
     "types": {
         "achievementWiki": "Achievement Guides",
+        "battleData": "Battle Data",
         "bodyData": "Body Data",
         "bodyShare": "Body Shape Share",
         "calendar": "Calendar Events",
@@ -683,6 +684,7 @@ export default {
         "custom": "Custom",
         "dungeonGuides": "Dungeon Guides",
         "emotes": "JX3 Emotes",
+        "equipmentPlan": "Equipment Plans",
         "faceData": "Face Data",
         "faceShare": "Face Share",
         "feedback": "Feedback",

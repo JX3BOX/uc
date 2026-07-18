@@ -674,6 +674,7 @@ export default {
     },
     "types": {
         "achievementWiki": "Hướng dẫn thành tựu",
+        "battleData": "Dữ liệu chiến đấu",
         "bodyData": "Dữ liệu dáng người",
         "bodyShare": "Chia sẻ dáng người",
         "calendar": "Sự kiện lịch",
@@ -683,6 +684,7 @@ export default {
         "custom": "Tùy chỉnh",
         "dungeonGuides": "Hướng dẫn phó bản",
         "emotes": "Biểu cảm JX3",
+        "equipmentPlan": "Phương án trang bị",
         "faceData": "Dữ liệu khuôn mặt",
         "faceShare": "Chia sẻ khuôn mặt",
         "feedback": "Phản hồi",

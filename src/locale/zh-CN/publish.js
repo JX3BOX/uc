@@ -674,6 +674,7 @@ export default {
     },
     "types": {
         "achievementWiki": "成就攻略",
+        "battleData": "战斗数据",
         "bodyData": "体型数据",
         "bodyShare": "体型分享",
         "calendar": "日历记录",
@@ -683,6 +684,7 @@ export default {
         "custom": "自定义",
         "dungeonGuides": "副本攻略",
         "emotes": "剑三表情",
+        "equipmentPlan": "配装方案",
         "faceData": "捏脸数据",
         "faceShare": "捏脸分享",
         "feedback": "反馈建议",

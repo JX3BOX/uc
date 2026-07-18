@@ -164,20 +164,20 @@
             <el-row :gutter="20">
                 <el-col :xs="12" :span="4">
                     <a href="/pz/" target="_blank" rel="noopener noreferrer">
-                        <img :src="getAppLogo('pz')" alt="配装方案" />
-                        <span>配装方案</span>
+                        <img :src="getAppLogo('pz')" :alt="$t('publish.types.equipmentPlan')" />
+                        <span>{{ $t("publish.types.equipmentPlan") }}</span>
                     </a>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <a href="/dbm/" target="_blank" rel="noopener noreferrer">
-                        <img :src="getAppLogo('dbm')" alt="插件数据" />
-                        <span>插件数据</span>
+                        <img :src="getAppLogo('dbm')" :alt="$t('publish.types.pluginData')" />
+                        <span>{{ $t("publish.types.pluginData") }}</span>
                     </a>
                 </el-col>
                 <el-col :xs="12" :span="4">
                     <a href="/battle" target="_blank" rel="noopener noreferrer">
-                        <img :src="getAppLogo('battle')" alt="战斗数据" />
-                        <span>战斗数据</span>
+                        <img :src="getAppLogo('battle')" :alt="$t('publish.types.battleData')" />
+                        <span>{{ $t("publish.types.battleData") }}</span>
                     </a>
                 </el-col>
             </el-row>
