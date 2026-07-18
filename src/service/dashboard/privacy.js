@@ -14,6 +14,14 @@ function removeKith(id) {
     return $cms().delete(`/api/cms/user/kith/${id}`);
 }
 
+function acceptKithInvitation(id) {
+    return $cms().put(`/api/cms/user/kith/${id}/invitation`);
+}
+
+function refuseKithInvitation(id) {
+    return $cms().delete(`/api/cms/user/kith/${id}/invitation`);
+}
+
 function sortKith(data) {
     return $cms().put("/api/cms/user/kith", data);
 }
@@ -108,6 +116,8 @@ export {
     getKithList,
     editKith,
     removeKith,
+    acceptKithInvitation,
+    refuseKithInvitation,
     addKith,
     searchUserById,
     sortKith,

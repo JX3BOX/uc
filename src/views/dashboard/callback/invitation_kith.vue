@@ -32,6 +32,7 @@ import {
     isExistKithInvitation,
     refuseKithInvitation,
     acceptKithInvitation,
+    removeKith,
 } from "@/service/dashboard/callback.js";
 import { getLink, showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
@@ -93,13 +94,14 @@ export default {
                 .catch(() => {});
         },
         refuse: function () {
-            refuseKithInvitation(this.uid).then(() => {
+            const request = this.alreadyAccept ? removeKith : refuseKithInvitation;
+            request(this.uid).then(() => {
                 this.$message({
                     message: this.$t("dashboard.common.operationSuccess"),
                     type: "success",
                 });
+                this.$router.push("/privacy?tab=whitelist");
             });
-            this.$router.push("/privacy?tab=whitelist");
         },
         accept: function () {
             acceptKithInvitation(this.uid).then((res) => {

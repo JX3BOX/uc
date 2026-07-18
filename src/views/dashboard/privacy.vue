@@ -49,7 +49,7 @@
 
                 <div class="m-whitelist-list u-list" v-if="list && list.length">
                     <div class="u-item" v-for="(item, i) in list" :key="itemKey(item, i)">
-                        <div class="u-item-actions">
+                        <div class="u-item-actions" v-if="!isReceivedKithInvitation(item)">
                             <el-dropdown trigger="click" placement="bottom-end">
                                 <span class="u-item-dropdown" @click.stop>
                                     <i class="el-icon-more"></i>
@@ -86,6 +86,22 @@
                                 {{ $t("dashboard.common.remark") }}：{{ item.remark || $t("dashboard.common.none") }}
                                 <i class="el-icon-edit-outline u-btn-edit" @click="edit(item.kith_id, item)"></i>
                             </span>
+                            <div class="u-item-invitation" v-else-if="isReceivedKithInvitation(item)">
+                                <span class="u-item-remark u-pending">{{ $t("dashboard.privacy.invitesYou") }}</span>
+                                <div class="u-item-invitation-actions">
+                                    <el-button
+                                        size="small"
+                                        type="primary"
+                                        :loading="invitationLoadingId === item.kith_id"
+                                        @click="handleKithInvitation(item, true)"
+                                    >{{ $t("dashboard.common.accept") }}</el-button>
+                                    <el-button
+                                        size="small"
+                                        :disabled="invitationLoadingId === item.kith_id"
+                                        @click="handleKithInvitation(item, false)"
+                                    >{{ $t("dashboard.common.reject") }}</el-button>
+                                </div>
+                            </div>
                             <span class="u-item-remark u-pending" v-else> <i class="el-icon-loading"></i> {{ $t("dashboard.privacy.awaitingConfirmation") }} </span>
                         </template>
                         <div class="u-item-time" :title="$t('dashboard.privacy.createdAtValue', { time: formatCreatedAt(item) })">
@@ -150,6 +166,8 @@ import {
     getBlackList,
     deny,
     undeny,
+    acceptKithInvitation,
+    refuseKithInvitation,
 } from "@/service/dashboard/privacy.js";
 import { getMyRss, getMySubscribers, removeRssUser, addRssUser, cancelRssUser } from "@/service/dashboard/rss";
 import { getRelationNetTypes, getRelationNetMembersByType, getWaitInvites } from "@/service/dashboard/relation.js";
@@ -170,6 +188,7 @@ export default {
             list: [],
             kithList: [],
             loading: false,
+            invitationLoadingId: 0,
 
             // 侧边栏
             uid: "",
@@ -178,9 +197,9 @@ export default {
 
             // 上限
             limit_map: {
-                member: 5,
-                vip: 20,
-                pro: 100,
+                member: 100,
+                vip: 100,
+                pro: Infinity,
             },
             identity: "member",
 
@@ -231,7 +250,10 @@ export default {
         },
         // 上限
         limit: function () {
-            return this.limit_map[this.identity] || 5;
+            return this.limit_map[this.identity] || 100;
+        },
+        displayLimit: function () {
+            return Number.isFinite(this.limit) ? this.limit : this.$t("dashboard.privacy.unlimited");
         },
         // 当前亲友总数
         total: function () {
@@ -269,7 +291,7 @@ export default {
                 : {
                       blacklist: this.$t("dashboard.privacy.block"),
                       myfollow: this.$t("dashboard.privacy.follow"),
-                      whitelist: this.$t("dashboard.privacy.addFriendCount", { total: this.total, limit: this.limit }),
+                      whitelist: this.$t("dashboard.privacy.addFriendCount", { total: this.total, limit: this.displayLimit }),
                   }[this.active];
         },
         sideTitle() {
@@ -295,6 +317,42 @@ export default {
         },
     },
     methods: {
+        isReceivedKithInvitation(item) {
+            return !item.status && !!item.invitation_received;
+        },
+        handleKithInvitation(item, accepted) {
+            const name = this.getName(item);
+            const confirmKey = accepted ? "acceptInvitationConfirm" : "rejectInvitationConfirm";
+            const successKey = accepted ? "acceptInvitationSuccess" : "rejectInvitationSuccess";
+            const request = accepted ? acceptKithInvitation : refuseKithInvitation;
+
+            this.$confirm(
+                this.$t(`dashboard.privacy.${confirmKey}`, { name }),
+                this.$t("dashboard.common.tip"),
+                {
+                    confirmButtonText: this.$t("dashboard.common.confirm"),
+                    cancelButtonText: this.$t("dashboard.common.cancel"),
+                    type: "warning",
+                }
+            )
+                .then(() => {
+                    this.invitationLoadingId = item.kith_id;
+                    return request(item.kith_id).then(() => {
+                        this.$notify({
+                            title: this.$t("dashboard.common.success"),
+                            message: this.$t(`dashboard.privacy.${successKey}`),
+                            type: "success",
+                        });
+                        this.loadList();
+                    });
+                })
+                .catch((err) => {
+                    if (err !== "cancel" && err !== "close") this.handleRequestError(err);
+                })
+                .finally(() => {
+                    this.invitationLoadingId = 0;
+                });
+        },
         getRelationName(item) {
             if (item?.relationship_type === "lover") {
                 return this.$t("dashboard.relationship.myRelationship");

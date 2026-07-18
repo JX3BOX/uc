@@ -34,6 +34,10 @@ function acceptKithInvitation(user_id) {
     return $cms().put(`/api/cms/user/kith/${user_id}/invitation`);
 }
 
+function removeKith(user_id) {
+    return $cms().delete(`/api/cms/user/kith/${user_id}`);
+}
+
 export {
     getPost,
     getUser,
@@ -43,4 +47,5 @@ export {
     isExistKithInvitation,
     refuseKithInvitation,
     acceptKithInvitation,
+    removeKith,
 };
