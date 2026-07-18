@@ -140,6 +140,7 @@ export default {
         boxcoin: "BoxCoin",
         points: "Điểm",
         experience: "Kinh nghiệm",
+        mallGoods: "Vật phẩm cửa hàng",
         goldLeaf: "Lá Vàng",
         redPacket: "Bao lì xì",
         paymentAccount: "Tài khoản nhận tiền",

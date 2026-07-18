@@ -59,6 +59,7 @@ export default {
             return {
                 experience: this.$t("dashboard.common.experience"),
                 points: this.$t("dashboard.common.points"),
+                mall_goods: this.$t("dashboard.common.mallGoods"),
             };
         },
         defaultTaskIcon() {

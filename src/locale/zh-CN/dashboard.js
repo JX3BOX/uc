@@ -140,6 +140,7 @@ export default {
         boxcoin: "盒币",
         points: "积分",
         experience: "经验",
+        mallGoods: "商城物品",
         goldLeaf: "金箔",
         redPacket: "红包",
         paymentAccount: "收款账号",

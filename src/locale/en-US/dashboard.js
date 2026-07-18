@@ -140,6 +140,7 @@ export default {
         boxcoin: "BoxCoin",
         points: "Points",
         experience: "Experience",
+        mallGoods: "Mall item",
         goldLeaf: "Gold Leaf",
         redPacket: "Red Packet",
         paymentAccount: "Payment account number",
