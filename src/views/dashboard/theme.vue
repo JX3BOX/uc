@@ -323,6 +323,11 @@ export default {
             return list.find((item) => item.type === this.activePreviewType && item.using == 1)?.val || "";
         },
         activeSkinAuthors() {
+            const skin = this.decorationJson?.[this.activePreviewSkinKey];
+            const skinAuthors = getSkinSceneAuthors(skin);
+            if (skinAuthors.length) return skinAuthors;
+
+            // 兼容尚未更新的旧构建产物：旧作者信息位于具体部位配置中。
             const authors = getSkinSceneAuthors(this.activeSceneConfig);
             if (authors.length) return authors;
             const configs =

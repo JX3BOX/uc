@@ -14,12 +14,15 @@
                 <p>{{ $t("dashboard.email.purpose") }}</p>
                 <div class="m-current-email" :class="{ 'is-empty': !email }">
                     <span class="u-current-label">{{ email ? $t("dashboard.email.current") : $t("dashboard.common.currentStatus") }}</span>
-                    <strong class="u-current-value">
-                        {{ email || $t("dashboard.email.unbound") }}
+                    <div class="m-current-email__value">
+                        <strong class="u-current-value">{{ email || $t("dashboard.email.unbound") }}</strong>
                         <el-tag v-if="email" class="u-status" :type="verified ? 'success' : 'warning'">
                             {{ verified ? $t("dashboard.common.verified") : $t("dashboard.common.unverified") }}
                         </el-tag>
-                    </strong>
+                        <el-button v-if="email" class="u-unbind-email" type="danger" link :loading="unbindLoading" @click="handleUnbind">
+                            [{{ $t("dashboard.common.unbind") }}]
+                        </el-button>
+                    </div>
                 </div>
             </div>
 
@@ -80,7 +83,7 @@
 </template>
 
 <script>
-import { sendVerifyEmail, sendBindEmail, checkEmailAvailable } from "@/service/dashboard/profile";
+import { sendVerifyEmail, sendBindEmail, checkEmailAvailable, sendUnbindEmailCode, unbindEmail } from "@/service/dashboard/profile";
 export default {
     name: "email_dialog",
     props: {
@@ -114,6 +117,7 @@ export default {
             },
             loading: false,
             sendLoading: false,
+            unbindLoading: false,
 
             hasSendBindEmail: false,
             lastSentEmail: "",
@@ -149,6 +153,7 @@ export default {
             this.lastSentEmail = "";
             this.loading = false;
             this.sendLoading = false;
+            this.unbindLoading = false;
             this.$nextTick(() => {
                 this.$refs.form?.clearValidate();
             });
@@ -234,6 +239,39 @@ export default {
                 .finally(() => {
                     this.loading = false;
                 });
+        },
+        async handleUnbind() {
+            try {
+                await this.$confirm(this.$t("dashboard.email.unbindConfirm"), this.$t("dashboard.common.tip"), {
+                    confirmButtonText: this.$t("dashboard.common.confirm"),
+                    cancelButtonText: this.$t("dashboard.common.cancel"),
+                    type: "warning",
+                });
+                this.unbindLoading = true;
+                await sendUnbindEmailCode();
+                this.unbindLoading = false;
+                const { value: code } = await this.$prompt(
+                    this.$t("dashboard.email.unbindCodeTip", { email: this.email }),
+                    this.$t("dashboard.email.unbindTitle"),
+                    {
+                        confirmButtonText: this.$t("dashboard.common.confirm"),
+                        cancelButtonText: this.$t("dashboard.common.cancel"),
+                        inputPattern: /^[A-Za-z0-9]{6}$/,
+                        inputErrorMessage: this.$t("dashboard.email.codeInvalid"),
+                    }
+                );
+                this.unbindLoading = true;
+                await unbindEmail({ code });
+                this.$emit("update");
+                this.$message.success(this.$t("dashboard.common.unbindSuccess"));
+                this.handleClose();
+            } catch (error) {
+                if (error !== "cancel" && error !== "close") {
+                    this.$message.error(error?.response?.data?.msg || this.$t("dashboard.email.unbindFailed"));
+                }
+            } finally {
+                this.unbindLoading = false;
+            }
         },
     },
 };
@@ -333,8 +371,20 @@ export default {
     }
 
     .u-status {
-        margin-left: 8px;
         vertical-align: 1px;
+    }
+
+    .m-current-email__value {
+        .flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 6px;
+        min-width: 0;
+    }
+
+    .u-unbind-email {
+        flex: none;
+        margin-left: 0;
     }
 
     .m-email-form {
@@ -408,6 +458,11 @@ export default {
 
         .u-current-value {
             text-align: left;
+        }
+
+        .m-current-email__value {
+            justify-content: flex-start;
+            flex-wrap: wrap;
         }
 
         .u-tips {

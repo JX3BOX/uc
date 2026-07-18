@@ -1,15 +1,23 @@
 <template>
     <div class="m-qqbot m-item">
-        <span class="u-profile-item">
+        <span class="u-notice-item">
             <img class="u-qqbot" svg-inline :src="icon('qqbot')" />
             <span class="u-status"> {{ $t("dashboard.qqbot.name") }} </span>
         </span>
-        <el-button type="primary" class="u-bind-btn" @click="bind" size="large" v-if="!checkStatus">
-            <i class="el-icon-connection"></i>{{ $t("dashboard.common.bindNow") }}
-        </el-button>
-        <el-button v-else class="u-unbind-btn" @click="unbind" size="large" type="info">
-            <img class="u-unbind-icon" svg-inline src="@/assets/img/dashboard/unbind.svg" alt="" />{{ $t("dashboard.common.unbind") }}
-        </el-button>
+        <div class="u-notice-box">
+            <div class="u-notice-value">
+                <span class="u-value" v-if="checkStatus">******</span>
+                <el-tag class="u-notice-status" :type="checkStatus ? 'success' : 'info'">
+                    {{ checkStatus ? $t("dashboard.common.bound") : $t("dashboard.common.unbound") }}
+                </el-tag>
+            </div>
+            <el-button type="primary" class="u-bind-btn" @click="bind" size="large" v-if="!checkStatus">
+                <i class="el-icon-connection"></i>{{ $t("dashboard.common.bindNow") }}
+            </el-button>
+            <el-button v-else class="u-unbind-btn" icon="Connection" @click="unbind" size="large" type="info">
+                {{ $t("dashboard.common.unbind") }}
+            </el-button>
+        </div>
 
         <el-dialog
             class="m-qqbot-dialog"
@@ -114,6 +122,27 @@ export default {
 </script>
 
 <style lang="less">
+.m-qqbot {
+    align-items: center;
+
+    .u-status {
+        white-space: nowrap;
+    }
+
+    .u-notice-box {
+        .flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .u-bind-btn i {
+        .mr(6px);
+        vertical-align: -1px;
+    }
+
+}
+
 .m-qqbot-dialog {
     .m-qqbot-content {
         padding: 20px;

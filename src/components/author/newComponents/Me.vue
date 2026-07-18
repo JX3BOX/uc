@@ -42,7 +42,7 @@
                         </el-tooltip>
                     </div>
 
-                    <Honor :uid="uid"></Honor>
+                    <Honor :honor="honor" />
                 </div>
             </div>
         </div>
@@ -174,7 +174,7 @@
                     </div> -->
                 </div>
 
-                <Primary @authorInfo="getAuthorInfo"></Primary>
+                <Primary :medals="medals" @authorInfo="getAuthorInfo"></Primary>
             </div>
         </div>
     </div>
@@ -222,6 +222,14 @@ export default {
                 return {};
             },
         },
+        honor: {
+            type: Object,
+            default: null,
+        },
+        medals: {
+            type: Array,
+            default: () => [],
+        },
     },
     watch: {
         decorationMe: {
@@ -246,7 +254,6 @@ export default {
     },
     data: function () {
         return {
-            medals: [],
             medal_map,
             frames,
             isVIP: false,

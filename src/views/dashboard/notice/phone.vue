@@ -24,7 +24,12 @@
                     <p>{{ $t("dashboard.phone.purpose") }}</p>
                     <div class="m-current-phone" v-if="phone">
                         <span class="u-current-label">{{ $t("dashboard.phone.currentBound") }}</span>
-                        <strong class="u-current-value">{{ phoneStr(phone) }}</strong>
+                        <div class="m-current-phone__value">
+                            <strong class="u-current-value">{{ phoneStr(phone) }}</strong>
+                            <el-button class="u-unbind-phone" type="danger" link :loading="unbindLoading" @click="handleUnbind">
+                                [{{ $t("dashboard.common.unbind") }}]
+                            </el-button>
+                        </div>
                     </div>
                     <div class="m-current-phone is-empty" v-else>
                         <span class="u-current-label">{{ $t("dashboard.common.currentStatus") }}</span>
@@ -87,7 +92,7 @@
 </template>
 
 <script>
-import { getProfile, sendPhoneCode, verifyPhone, checkPhone } from "@/service/dashboard/profile";
+import { getProfile, sendPhoneCode, verifyPhone, checkPhone, sendUnbindPhoneCode, unbindPhone } from "@/service/dashboard/profile";
 import { PHONE_COUNTRY_OPTIONS, detectPhoneCountry, maskPhone, normalizeBindPhone, normalizeStoredPhone } from "@/assets/js/phone";
 
 export default {
@@ -104,6 +109,7 @@ export default {
             loading: false,
             codeLoading: false,
             checkingPhone: false,
+            unbindLoading: false,
             form: {
                 phoneInput: "",
                 code: "",
@@ -322,6 +328,40 @@ export default {
                 this.loading = false;
             }
         },
+        async handleUnbind() {
+            try {
+                await this.$confirm(this.$t("dashboard.phone.unbindConfirm"), this.$t("dashboard.common.tip"), {
+                    confirmButtonText: this.$t("dashboard.common.confirm"),
+                    cancelButtonText: this.$t("dashboard.common.cancel"),
+                    type: "warning",
+                });
+                this.unbindLoading = true;
+                await sendUnbindPhoneCode();
+                this.unbindLoading = false;
+                const { value: code } = await this.$prompt(
+                    this.$t("dashboard.phone.unbindCodeTip", { phone: this.phoneStr(this.phone) }),
+                    this.$t("dashboard.phone.unbindTitle"),
+                    {
+                        confirmButtonText: this.$t("dashboard.common.confirm"),
+                        cancelButtonText: this.$t("dashboard.common.cancel"),
+                        inputPattern: /^\d{6}$/,
+                        inputErrorMessage: this.$t("dashboard.phone.codeInvalid"),
+                    }
+                );
+                this.unbindLoading = true;
+                await unbindPhone({ code });
+                await this.loadProfile();
+                this.visible = false;
+                this.resetForm();
+                this.$message.success(this.$t("dashboard.common.unbindSuccess"));
+            } catch (error) {
+                if (error !== "cancel" && error !== "close") {
+                    this.$message.error(error?.response?.data?.msg || this.$t("dashboard.phone.unbindFailed"));
+                }
+            } finally {
+                this.unbindLoading = false;
+            }
+        },
     },
     mounted: function () {
         this.loadProfile();
@@ -406,6 +446,18 @@ export default {
             align-items: center;
             justify-content: space-between;
             gap: 12px;
+        }
+
+        .u-unbind-phone {
+            flex: none;
+            margin-left: 0;
+        }
+
+        .m-current-phone__value {
+            .flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 4px;
         }
 
         .m-current-phone.is-empty {

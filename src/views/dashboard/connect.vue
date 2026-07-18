@@ -31,11 +31,11 @@
                         @click="unbind(types[type].uuid)"
                         size="large"
                         type="info"
+                        icon="Connection"
                     >
-                        <img class="u-unbind-icon" svg-inline src="@/assets/img/dashboard/unbind.svg" alt="" />{{ $t("dashboard.common.unbind") }}
+                        {{ $t("dashboard.common.unbind") }}
                     </el-button>
                 </div>
-                <qqbot :data="data" @refresh="loadAuth"></qqbot>
             </div>
         </div>
 
@@ -65,7 +65,6 @@ import { __imgPath, __cdn, __cms } from "@/utils/config";
 import { unbindOAuth, checkOAuth } from "@/service/dashboard/profile";
 const client = location.href.includes("origin") ? "origin" : "std";
 import { unbindApp } from "@/service/dashboard/union";
-import qqbot from "./qqbot.vue";
 
 const BASE_URL = __cms;
 
@@ -121,7 +120,12 @@ export default {
 
                 user_email: "",
             },
-            oauth: ["qq", "weibo", "wechat", "wechat_miniprogram"],
+            oauth: [
+                "qq",
+                "weibo",
+                "wechat",
+                // "wechat_miniprogram",
+            ],
             types,
 
             showMiniProgram: false,
@@ -222,7 +226,6 @@ export default {
     },
     components: {
         uc,
-        qqbot,
     },
 };
 </script>

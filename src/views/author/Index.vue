@@ -2,7 +2,7 @@
     <AppLayout>
         <div class="m-theme" :style="themeStyle">
             <div class="m-author" :class="isAdmin ? 'm-author-admin' : ''">
-                <Me :decorationMe="decorationMe" :honor="honor" />
+                <Me :decorationMe="decorationMe" :honor="honor" :medals="medals" />
             </div>
         </div>
         <CommonFooter></CommonFooter>
@@ -50,6 +50,7 @@ export default {
             themeStyle: {},
             decorationMe: { status: false },
             honor: null,
+            medals: [],
         };
     },
     computed: {
@@ -79,13 +80,17 @@ export default {
         loadSkin() {
             this.themeStyle = {};
             this.decorationMe = { status: false };
+            this.honor = null;
+            this.medals = [];
 
             getUserSkin({
                 user_id: this.uid,
-                type: HOMEBG_TYPE,
             })
                 .then((res) => {
-                    const skins = this.flattenUserSkinRows(res.data?.data);
+                    const rows = Array.isArray(res.data?.data) ? res.data.data : [];
+                    const skins = this.flattenUserSkinRows(rows.filter((item) => item?.type === HOMEBG_TYPE));
+                    this.honor = rows.find((item) => item?.type === "honor")?.honor || null;
+                    this.medals = rows.find((item) => item?.type === "medals")?.medals || [];
                     this.applyPageSkin(this.selectSkinBySubtype(skins, PC_PAGE_BG_SUBTYPE));
                     this.applyBannerSkin(this.selectSkinBySubtype(skins, PC_BANNER_SUBTYPE));
                 })

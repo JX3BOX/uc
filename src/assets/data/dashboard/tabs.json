@@ -4,7 +4,8 @@
         { "name": "theme", "icon": "el-icon-orange", "label": "主题风格" },
         { "name": "medal", "icon": "el-icon-medal", "label": "勋章" },
         { "name": "honor", "icon": "el-icon-collection-tag", "label": "称号" },
-        { "name": "emotion", "icon": "el-icon-picture-outline-round", "label": "表情包" }
+        { "name": "emotion", "icon": "el-icon-picture-outline-round", "label": "表情包" },
+        { "name": "palu", "icon": "el-icon-magic-stick", "label": "魔卡" }
     ],
     "profileTab": [
         { "name": "profile", "icon": "el-icon-user", "label": "基本资料" },

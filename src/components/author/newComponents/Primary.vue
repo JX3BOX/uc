@@ -17,7 +17,7 @@
         </div>
 
         <!--他的荣誉-->
-        <AuthorMedals :uid="uid" class="u-trophy m-common-box m-medals"></AuthorMedals>
+        <AuthorMedals :medals="medals" class="u-trophy m-common-box m-medals"></AuthorMedals>
 
         <!--粉丝团-->
         <AuthorFans :uid="Number(uid)" class="m-common-box m-fans" :fansLimit="20"></AuthorFans>
@@ -35,7 +35,7 @@
 <script>
 import AuthorFans from "@jx3box/jx3box-ui/src/author/AuthorFans";
 // import AuthorLink from "@jx3box/jx3box-ui/src/author/AuthorLink";
-import AuthorMedals from "@jx3box/jx3box-ui/src/author/AuthorMedals";
+import AuthorMedals from "./AuthorMedals.vue";
 import AuthorRole from "@jx3box/jx3box-ui/src/author/AuthorRole.vue";
 // import AuthorTeams from "@jx3box/jx3box-common-ui/src/author/AuthorTeams";
 import { getUserInfo } from "@jx3box/jx3box-ui/service/author";
@@ -45,6 +45,12 @@ import dateFormat from "@/utils/dateFormat";
 import { getNamespaces } from "@/service/author/helper.js";
 export default {
     name: "Primary",
+    props: {
+        medals: {
+            type: Array,
+            default: () => [],
+        },
+    },
     components: {
         AuthorFans,
         // AuthorLink,

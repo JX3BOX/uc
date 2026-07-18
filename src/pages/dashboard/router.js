@@ -17,6 +17,7 @@ const purchases = () => import("@/views/dashboard/purchases.vue");
 const frame = () => import("@/views/dashboard/frame.vue");
 const theme = () => import("@/views/dashboard/theme.vue");
 const emotion = () => import("@/views/dashboard/emotion.vue");
+const palu = () => import("@/views/dashboard/palu.vue");
 const honor = () => import("@/views/dashboard/honor.vue");
 const certification = () => import("@/views/dashboard/certification.vue");
 const holidayCard = () => import("@/views/dashboard/holidayCard.vue");
@@ -155,6 +156,18 @@ const routes = [
                 title: "pages.dashboard.emotion.title",
                 description: "pages.dashboard.emotion.description",
                 keywords: "pages.dashboard.emotion.keywords",
+            },
+        },
+    },
+    {
+        name: "palu",
+        path: "/palu",
+        component: palu,
+        meta: {
+            i18n: {
+                title: "pages.dashboard.theme.title",
+                description: "pages.dashboard.theme.description",
+                keywords: "pages.dashboard.theme.keywords",
             },
         },
     },

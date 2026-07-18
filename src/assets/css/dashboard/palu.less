@@ -1,0 +1,80 @@
+.m-palu { .mt(0); }
+.m-palu-summary {
+    .flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1px solid #ebeef5;
+    border-radius: 8px;
+    background: #fafbff;
+    .u-summary-icon {
+        .flex;
+        .flex(x);
+        align-items: center;
+        .size(34px);
+        flex: 0 0 34px;
+        border-radius: 50%;
+        color: @v4primary;
+        background: fade(@v4primary, 9%);
+        .fz(16px);
+    }
+    .u-summary-content {
+        min-width: 0;
+        flex: 1;
+    }
+    h3 {
+        .fz(15px, 22px);
+        margin: 0;
+        font-weight: 600;
+        color: #3d3d3d;
+    }
+    p {
+        .fz(12px, 20px);
+        margin: 1px 0 0;
+        color: #909399;
+        b {
+            color: #606266;
+            font-weight: 700;
+        }
+    }
+    .u-search {
+        width: 220px;
+        flex: 0 0 220px;
+        .el-input__wrapper {
+            border-radius: 18px;
+            box-shadow: 0 0 0 1px #e4e7ed inset;
+        }
+    }
+}
+.m-palu-list { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+.m-palu-card {
+    .pr; overflow: hidden; border: 1px solid #e6e8eb; border-radius: 10px; background: #fff; transition: 0.2s ease;
+    &:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08); }
+    &.is-owned { border-color: fade(@v4primary, 45%); }
+    .u-image { .db; width: 100%; aspect-ratio: 16 / 9; background: #f5f7fa; }
+    .u-image-error { .size(100%); .flex; .flex(x); align-items: center; color: #c0c4cc; .fz(28px); }
+    .u-info { padding: 8px 9px 9px; }
+    h4 { .fz(12px, 18px); margin: 0 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .u-owned { color: #39a46b; .fz(12px, 18px); }
+    .u-unowned { color: #999; .fz(12px, 18px); }
+    .u-redeem {
+        .pa;
+        .flex;
+        align-items: center;
+        gap: 5px;
+        right: 7px;
+        bottom: 7px;
+        padding: 6px 8px;
+    }
+}
+@media screen and (max-width: @ipad) { .m-palu-list { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media screen and (max-width: @phone) {
+    .m-palu-summary {
+        flex-wrap: wrap;
+        padding: 10px 12px;
+        .u-summary-content { flex: 1 1 calc(100% - 46px); }
+        .u-search { width: 100%; flex-basis: 100%; }
+    }
+    .m-palu-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .m-palu-card .u-redeem { position: static; margin: 0 10px 10px; }
+}

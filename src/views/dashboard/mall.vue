@@ -22,7 +22,7 @@
                                 <td>{{ item.order.created_at }}</td>
                                 <td>
                                     <span class="u-title" @click="showDetail(item)"
-                                        ><i class="el-icon-link"></i>{{ item.goods.title }}</span
+                                        ><el-icon><Link /></el-icon>{{ item.goods.title }}</span
                                     >
                                 </td>
                                 <td>{{ item.order.order_no }}</td>
@@ -46,12 +46,12 @@
                                             v-if="showPay(item.order)"
                                         >
                                             <el-button
-                                                link
+                                                class="u-action-button"
                                                 type="success"
                                                 plain
-                                                icon="el-icon-wallet"
+                                                size="small"
+                                                icon="Wallet"
                                                 @click="toPay(item)"
-                                                circle
                                             ></el-button>
                                         </el-tooltip>
 
@@ -63,11 +63,11 @@
                                                 placement="top"
                                             >
                                                 <el-button
-                                                    link
+                                                    class="u-action-button"
                                                     plain
-                                                    icon="el-icon-circle-check"
+                                                    size="small"
+                                                    icon="CircleCheck"
                                                     @click="isReceipt(item.order.id)"
-                                                    circle
                                                 ></el-button>
                                             </el-tooltip>
                                         </template>
@@ -88,10 +88,11 @@
                                             >
                                                 <template #reference>
                                                     <el-button
+                                                        class="u-action-button"
                                                         type="info"
                                                         plain
-                                                        icon="el-icon-circle-close"
-                                                        circle
+                                                        size="small"
+                                                        icon="CircleClose"
                                                     ></el-button>
                                                 </template>
                                             </el-popconfirm>
@@ -105,10 +106,11 @@
                                                 placement="top"
                                             >
                                                 <el-button
-                                                    icon="el-icon-chat-dot-square"
+                                                    class="u-action-button"
+                                                    icon="ChatDotSquare"
                                                     @click="handleShow('comment', item.order.id)"
                                                     plain
-                                                    circle
+                                                    size="small"
                                                 ></el-button>
                                             </el-tooltip>
                                         </template>
@@ -315,6 +317,39 @@ export default {
 </script>
 <style lang="less" scoped>
 @import "~@/assets/css/dashboard/record.less";
+
+.m-mall-list {
+    .u-op {
+        min-width: 72px;
+        gap: 8px;
+    }
+
+    .u-action-button {
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        margin-left: 0;
+        font-size: 14px;
+        color: #606266;
+        background: #fff;
+        border: 0;
+        border-radius: 4px;
+
+        &:hover,
+        &:focus {
+            color: #303133;
+            background: #f5f7fa;
+        }
+
+        &.el-button--success {
+            color: #67c23a;
+        }
+
+        &.el-button--info {
+            color: #909399;
+        }
+    }
+}
 
 @media screen and (max-width: @phone) {
     .m-mall-list {

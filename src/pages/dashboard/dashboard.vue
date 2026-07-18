@@ -6,9 +6,18 @@
         </template>
         <Info />
     </Breadcrumb>
-    <LeftSidebar class="m-dashboard-left">
+    <LeftSidebar class="m-dashboard-left" :open="sidebarOpen">
         <Nav />
     </LeftSidebar>
+    <button
+        class="m-dashboard-sidebar-toggle"
+        :class="{ 'is-open': sidebarOpen }"
+        :title="sidebarOpen ? $t('vip.mall.collapseSidebar') : $t('vip.mall.expandSidebar')"
+        type="button"
+        @click.stop="toggleSidebar"
+    >
+        <el-icon><ArrowLeft v-if="sidebarOpen" /><ArrowRight v-else /></el-icon>
+    </button>
     <Main :withoutRight="true" class="m-dashboard-container p-dashboard">
         <router-view />
     </Main>
@@ -24,13 +33,27 @@ export default {
     data: function () {
         return {
             headerKey: 0,
+            sidebarOpen: window.innerWidth >= 1200,
         };
     },
-    methods: {},
+    methods: {
+        toggleSidebar() {
+            this.sidebarOpen = !this.sidebarOpen;
+        },
+        closeSidebarState() {
+            if (window.innerWidth < 1200) {
+                this.sidebarOpen = false;
+            }
+        },
+    },
     mounted() {
+        document.addEventListener("click", this.closeSidebarState);
         mitt.on("refresh", () => {
             this.headerKey++;
         });
+    },
+    beforeUnmount() {
+        document.removeEventListener("click", this.closeSidebarState);
     },
     components: {
         Info,

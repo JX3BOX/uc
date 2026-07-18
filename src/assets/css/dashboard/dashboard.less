@@ -14,6 +14,42 @@
 .c-sidebar-left.m-dashboard-left {
     padding: 10px 0 0 0;
 }
+
+.m-dashboard-sidebar-toggle {
+    display: none;
+}
+
+@media screen and (max-width: 1199px) {
+    .c-sidebar-left.m-dashboard-left .c-sidebar-left-toggle {
+        display: none;
+    }
+
+    .m-dashboard-sidebar-toggle {
+        display: block;
+        position: fixed;
+        z-index: 601;
+        top: 50%;
+        left: 0;
+        width: 21px;
+        height: 40px;
+        padding: 0;
+        cursor: pointer;
+        color: #999;
+        background-color: @bg-light;
+        border: 1px solid #eee;
+        border-left: 0;
+        border-radius: 0 2px 2px 0;
+        transition: left 0.2s ease-in-out;
+
+        &.is-open {
+            left: @aside-left - 60px;
+        }
+
+        &:hover {
+            color: #222;
+        }
+    }
+}
 // .m-dashboard-person{
 //     padding:25px 35px;
 // }

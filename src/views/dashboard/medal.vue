@@ -10,7 +10,7 @@
         </template>
         <div class="m-medal-content">
             <el-divider content-position="left">{{ $t("dashboard.common.obtained") }}</el-divider>
-            <div class="u-list">
+            <div class="u-list" v-if="userMedals.length">
                 <div class="u-item is-have" v-for="item in userMedals" :key="item.id" :title="item.medal_desc">
                     <img class="u-img" :src="imgSrc(item.medal)" :alt="item.medal" />
                     <span class="u-model-name">{{ item.medal_desc }}</span>
@@ -20,19 +20,23 @@
                         :type="item.is_wear ? 'info' : 'primary'"
                         :plain="!!item.is_wear"
                         size="small"
+                        :loading="updatingMedalId === item.id"
+                        :disabled="updatingMedalId !== null"
                     >
                         <!-- <i :class="item.is_wear ? 'el-icon-help' : 'el-icon-s-help'"></i> -->
                         {{ item.is_wear ? $t("dashboard.medal.takeOff") : $t("dashboard.medal.wear") }}
                     </el-button>
                 </div>
             </div>
+            <el-empty v-else-if="!loading" :description="$t('dashboard.common.empty')" :image-size="80" />
             <el-divider content-position="left">{{ $t("dashboard.common.notObtained") }}</el-divider>
-            <div class="u-list">
+            <div class="u-list" v-if="noMedals.length">
                 <div class="u-item" v-for="item in noMedals" :key="item.id" :title="item.desc">
                     <img class="u-img" :src="imgSrc(item.name)" :alt="item.name" />
                     <span class="u-model-name">{{ item.desc }}</span>
                 </div>
             </div>
+            <el-empty v-else-if="!loading" :description="$t('dashboard.common.empty')" :image-size="80" />
         </div>
     </uc>
 </template>
@@ -60,6 +64,8 @@ export default {
             userMedals: [],
             // 未拥有
             noMedals: [],
+            loading: false,
+            updatingMedalId: null,
         };
     },
     computed: {
@@ -74,22 +80,30 @@ export default {
         dateFormat(date) {
             return moment(date).format("YYYY-MM-DD");
         },
-        load() {
+        async load() {
             const params = {
                 _no_page: 1,
                 type: "user",
             };
 
-            if (User.isLogin()) {
-                getUserMedals(this.uid, {
-                    is_wear: -1,
-                }).then(async (res) => {
-                    this.userMedals = res.data.data;
-                    const models = await getMedals(params);
-                    this.noMedals = models.data.data?.filter((item) => {
-                        return !this.userMedals.find((userItem) => userItem.medal == item.name);
-                    });
-                });
+            this.loading = true;
+            try {
+                const [userResult, medalResult] = await Promise.all([
+                    User.isLogin()
+                        ? getUserMedals()
+                        : Promise.resolve({ data: { data: [] } }),
+                    getMedals(params),
+                ]);
+                this.userMedals = Array.isArray(userResult?.data?.data) ? userResult.data.data : [];
+                const medals = Array.isArray(medalResult?.data?.data) ? medalResult.data.data : [];
+                const ownedMedals = new Set(this.userMedals.map((item) => item.medal));
+                this.noMedals = medals.filter((item) => !ownedMedals.has(item.name));
+            } catch (e) {
+                this.userMedals = [];
+                this.noMedals = [];
+                this.$message.error(this.$t("dashboard.common.requestFailed"));
+            } finally {
+                this.loading = false;
             }
         },
         imgSrc(name) {
@@ -98,27 +112,19 @@ export default {
         hasMedal(name) {
             return this.userMedals?.findIndex((item) => item.medal == name) > -1;
         },
-        onIsWearChange(item) {
-            if (item.is_wear) {
-                // 取消佩戴
-                setMedal(this.uid, item.id, 0)
-                    .then(() => {
-                        item.is_wear = 0;
-                        this.$message.success(this.$t("dashboard.common.operationSuccess"));
-                    })
-                    .catch(() => {
-                        item.is_wear = 1; // 如果取消失败，保持原状态
-                    });
-            } else {
-                // 佩戴
-                setMedal(this.uid, item.id, 1)
-                    .then(() => {
-                        item.is_wear = 1;
-                        this.$message.success(this.$t("dashboard.common.operationSuccess"));
-                    })
-                    .catch(() => {
-                        item.is_wear = 0; // 如果佩戴失败，保持原状态
-                    });
+        async onIsWearChange(item) {
+            if (this.updatingMedalId !== null) return;
+
+            const nextWearState = item.is_wear ? 0 : 1;
+            this.updatingMedalId = item.id;
+            try {
+                await setMedal(item.id, nextWearState);
+                item.is_wear = nextWearState;
+                this.$message.success(this.$t("dashboard.common.operationSuccess"));
+            } catch (e) {
+                this.$message.error(this.$t("dashboard.common.operationFailedRetry"));
+            } finally {
+                this.updatingMedalId = null;
             }
         },
     },

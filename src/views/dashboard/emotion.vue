@@ -27,11 +27,23 @@
                 :class="{ 'is-select': selectedKeys.includes(emotion.group_name) }"
                 v-for="(emotion, index) in ownedEmotions"
                 :key="index"
-                @click="toggleEmotionSelected(emotion)"
+                @click="previewEmotionPack(emotion)"
             >
-                <i class="el-icon-success u-check" v-if="selectedKeys.includes(emotion.group_name)"></i>
                 <img class="u-img" :src="emotion.cover" alt="" />
                 <span class="u-name">{{ emotion.group_name }}</span>
+                <button
+                    type="button"
+                    class="u-emotion-action"
+                    :class="selectedKeys.includes(emotion.group_name) ? 'is-cancel' : 'is-activate'"
+                    :aria-pressed="selectedKeys.includes(emotion.group_name)"
+                    @click.stop="toggleEmotionSelected(emotion)"
+                >
+                    {{
+                        selectedKeys.includes(emotion.group_name)
+                            ? $t("dashboard.emotion.cancelActivation")
+                            : $t("dashboard.emotion.selectActivation")
+                    }}
+                </button>
             </div>
         </div>
         <div class="m-actions">
@@ -46,11 +58,13 @@
                 class="m-emotion-item is-not-owned"
                 v-for="(emotion, index) in unownedEmotions"
                 :key="index"
-                @click="toggleEmotionSelected(emotion)"
+                @click="previewEmotionPack(emotion)"
             >
                 <img class="u-img" :src="emotion.cover" alt="" />
                 <span class="u-name">{{ emotion.group_name }}</span>
-                <span class="u-go-buy" @click.stop="goBuy(emotion.group_name)">{{ $t("dashboard.emotion.goExchange") }}</span>
+                <button type="button" class="u-emotion-action is-purchase" @click.stop="goBuy(emotion.group_name)">
+                    {{ $t("dashboard.emotion.goExchange") }}
+                </button>
             </div>
         </div>
     </uc>
@@ -58,7 +72,7 @@
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
-import { getDecoration, getEmotion, setDecoration } from "@/service/dashboard/decoration";
+import { getDecoration, getEmotion, setEmotion } from "@/service/dashboard/decoration";
 import { __imgPath } from "@/utils/config";
 import tabsData from "@/assets/data/dashboard/tabs.json";
 const { themeTab } = tabsData;
@@ -133,10 +147,6 @@ export default {
         },
         toggleEmotionSelected(emotion) {
             const key = emotion.group_name;
-            this.previewKey = key; // 设置预览的表情包键
-            if (!this.ownedEmotionKeys.includes(key)) {
-                return;
-            }
             if (this.selectedKeys.includes(key)) {
                 this.selectedKeys = this.selectedKeys.filter((k) => k !== key);
             } else {
@@ -147,6 +157,9 @@ export default {
                 this.selectedKeys.push(key);
             }
         },
+        previewEmotionPack(emotion) {
+            this.previewKey = emotion.group_name;
+        },
         itemImgSrc(item) {
             const filename = item.filename;
             if (filename?.startsWith("http")) return filename;
@@ -155,21 +168,13 @@ export default {
 
         onSave() {
             this.loading = true;
-            const data = this.ownedEmotionKeys.map((item) => {
-                return {
-                    type: "emotion",
-                    val: item,
-                    using: this.selectedKeys.includes(item) ? 1 : 0,
-                };
-            });
-            if (!data.length) {
-                this.loading = false;
-                return;
-            }
-            setDecoration(data).then((res) => {
-                this.$message.success(this.$t("dashboard.common.saveSuccess"));
-                this.loading = false;
-            });
+            setEmotion(this.selectedKeys)
+                .then(() => {
+                    this.$message.success(this.$t("dashboard.common.saveSuccess"));
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
     },
     mounted: function () {
@@ -203,29 +208,26 @@ export default {
         border: 1px solid rgba(229, 229, 229, 1);
         border-radius: 4px;
         width: 100px;
-        height: 82px;
+        min-height: 112px;
+        padding: 12px 8px 8px;
+        box-sizing: border-box;
         .pointer;
         .pr;
 
         &.is-select {
             background-color: lighten(@v4primary, 40%);
-            border-color:@v4primary;
-
-            // .u-name {
-            //     color: white;
-            // }
+            border-color: @v4primary;
         }
         &:hover {
-            border-color: @v4primary;
+            border-color: #c0c4cc;
 
-            &.is-not-owned .u-go-buy {
-                background-color: @v4primary;
+            &.is-select {
+                border-color: @v4primary;
             }
-        }
-        .u-check {
-            .pa;
-            .rt(12px);
-            color: @v4primary;
+
+            &.is-not-owned .u-emotion-action.is-purchase {
+                background-color: lighten(@v4primary, 38%);
+            }
         }
         .u-img {
             .size(30px);
@@ -234,27 +236,35 @@ export default {
             .fz(14px);
         }
         &.is-not-owned {
-            height: 85px;
-
-            .pb(24px);
             .u-name {
                 color: rgba(128, 128, 128, 1);
             }
-            .u-go-buy {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-bottom-left-radius: 3px;
-                border-bottom-right-radius: 3px;
-                .pa;
-                bottom: 0;
-                .size(100%, 24px);
-                color: white;
-                background-color: rgba(36, 41, 46, 1);
-                .fz(12px, 18px);
-                &:hover {
-                    filter: brightness(1.05);
-                }
+        }
+        .u-emotion-action {
+            width: 100%;
+            min-height: 26px;
+            margin-top: auto;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 18px;
+            cursor: pointer;
+
+            &.is-activate {
+                background: @v4primary;
+                color: #fff;
+            }
+            &.is-cancel {
+                border-color: #dcdfe6;
+                background: #fff;
+                color: #909399;
+            }
+            &.is-purchase {
+                background: #f1f3f5;
+                color: #606266;
+            }
+            &:hover {
+                filter: brightness(1.04);
             }
         }
     }

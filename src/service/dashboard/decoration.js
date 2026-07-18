@@ -1,4 +1,4 @@
-import { $cms, $next } from "@jx3box/jx3box-common/js/api.js";
+import { $cms } from "@jx3box/jx3box-common/js/api.js";
 import axios from "axios";
 import { __imgPath, __dataPath, __cdn } from "@/utils/config";
 
@@ -15,6 +15,10 @@ function medalCheck(params) {
 
 function setDecoration(data) {
     return $cms().post(`/api/cms/user/decoration`, data);
+}
+
+function setEmotion(keys) {
+    return $cms().post("/api/cms/user/emotion", { keys });
 }
 
 function getDecorationJson() {
@@ -41,16 +45,14 @@ function updateAvatarFrame(data) {
 }
 
 function getHonor(params) {
-    return $cms().get("/api/cms/user/config/honor", { params });
+    return $cms().get("/api/cms/config/honor", { params });
 }
 
-function getUserHonors(uid, params = {}) {
+function getUserHonors() {
     return $cms()
         .get("/api/cms/user/honor", {
             params: {
-                page: 1,
-                per: 1000,
-                ...params,
+                _no_page: 1,
             },
         })
         .then((res) => {
@@ -66,10 +68,8 @@ function cancelHonor() {
 }
 
 // 获取用户勋章
-function getUserMedals(uid, params) {
-    return $next({ mute: true }).get("/api/next2/user/" + uid + "/medals", {
-        params,
-    });
+function getUserMedals() {
+    return $cms({ mute: true }).get("/api/cms/user/medal");
 }
 // 用户领取勋章
 function medalReceive(data) {
@@ -82,8 +82,8 @@ function getMedals(params) {
 }
 
 // 用户佩戴或者取消佩戴勋章
-function setMedal(uid, medal_id, is_wear) {
-    return $next().put(`/api/next2/user/${uid}/medals/${medal_id}/wear/${is_wear}`);
+function setMedal(medal_id, is_wear) {
+    return $cms().put(`/api/cms/user/medal/${medal_id}/wear/${is_wear}`);
 }
 
 // 发放活动装扮
@@ -94,6 +94,7 @@ function decorationReceive(data) {
 export {
     getDecoration,
     setDecoration,
+    setEmotion,
     getDecorationJson,
     getUserDecoration,
     getEmotion,

@@ -1,7 +1,5 @@
 import { $cms, $_https, $next } from "@jx3box/jx3box-common/js/api.js";
 
-import axios from "axios";
-import { __imgPath } from "@/utils/config";
 import { encryptPassword } from "@/utils/pwd_encrypt";
 
 // 1.资料
@@ -22,9 +20,12 @@ function uploadAvatar(data) {
     return $cms().post("/api/cms/upload/avatar", data);
 }
 function getFrames() {
-    // let url = process.env.NODE_ENV == 'development'?'/temp/user_avatar_frame.json':(__imgPath + "avatar/index.json")
-    let url = __imgPath + "avatar/index.json";
-    return axios.get(url);
+    return $cms()
+        .get("/api/cms/config/avatar")
+        .then((res) => {
+            res.data = res.data?.data || {};
+            return res;
+        });
 }
 function getUserOverview(uid) {
     return $cms().get(`/api/cms/user/${uid}/info`, {
@@ -93,6 +94,16 @@ function sendVerifyEmail(code) {
     );
 }
 
+function sendUnbindEmailCode() {
+    return $cms().post("/api/cms/user/account/email/unbind", null, {
+        app: "jx3box",
+    });
+}
+
+function unbindEmail(data) {
+    return $cms().delete("/api/cms/user/account/email/unbind", { data });
+}
+
 // 5.互联
 function checkOAuth() {
     return $cms().get("/api/cms/account/oauth/status");
@@ -143,6 +154,16 @@ function checkPhone(params) {
     });
 }
 
+function sendUnbindPhoneCode() {
+    return $cms().post("/api/cms/account/oauth/phone/unbind", null, {
+        app: "jx3box",
+    });
+}
+
+function unbindPhone(data) {
+    return $cms().delete("/api/cms/account/oauth/phone/unbind", { data });
+}
+
 export {
     updateProfile,
     getProfile,
@@ -151,6 +172,8 @@ export {
     getPasswordStatus,
     getAccountStatus,
     sendVerifyEmail,
+    sendUnbindEmailCode,
+    unbindEmail,
     checkEmailAvailable,
     sendBindEmail,
     unbindOAuth,
@@ -164,6 +187,8 @@ export {
     sendPhoneCode,
     verifyPhone,
     checkPhone,
+    sendUnbindPhoneCode,
+    unbindPhone,
     getQQbotToken,
     unbindQQbot,
 };

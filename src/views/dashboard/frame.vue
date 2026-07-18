@@ -87,7 +87,7 @@ export default {
             frame: null,
             frames: {}, //远程json
             avatars: [], //头像筛选
-            decoration: null, //装扮筛选用于判断是否符合领取条件
+            decoration: {}, //装扮筛选用于判断是否符合领取条件
             submitting: false,
         };
     },
@@ -164,12 +164,8 @@ export default {
             });
         },
         loadDecoration() {
-            getDecoration().then((data) => {
-                let res = data.data.data;
-                let typeArr = ["atcard", "homebg", "sidebar", "calendar"];
-                let arr = res.filter((item) => item.type != "" && typeArr.indexOf(item.type) != -1);
-                this.decoration = this.formattingData(arr, "val");
-                this.avatars = res.filter((e) => e.type == "avatar");
+            getDecoration({ type: "avatar" }).then((data) => {
+                this.avatars = data.data.data;
                 this.dataProcessing();
             });
         },
@@ -187,7 +183,9 @@ export default {
         //装扮收集判断
         decorationAather(key) {
             let typeArr = ["atcard", "homebg", "sidebar", "calendar"];
-            let arr = this.decoration[key]?.filter((item) => item.type != "" && typeArr.indexOf(item.type) != -1);
+            let arr = (this.decoration?.[key] || []).filter(
+                (item) => item.type != "" && typeArr.indexOf(item.type) != -1
+            );
             if (arr?.length >= 4) return true;
             return false;
         },

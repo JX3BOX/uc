@@ -1,6 +1,6 @@
 <template>
     <uc class="m-dashboard-notice">
-        <div class="m-dashboard-content">
+        <div class="m-dashboard-content" v-loading="loading">
             <el-alert class="u-tip" :title="$t('dashboard.notice.tip')" type="warning" show-icon> </el-alert>
             <div class="m-dashboard-content-list">
                 <div class="m-item" v-for="(item, i) in list" :key="i">
@@ -10,6 +10,7 @@
                     </span>
                     <component :is="item.component" />
                 </div>
+                <qqbot :data="authData" @refresh="loadAuth" />
             </div>
         </div>
     </uc>
@@ -22,11 +23,17 @@ import { __imgPath } from "@/utils/config";
 import wechat from "./wechat.vue";
 import email from "./email.vue";
 import phone from "./phone.vue";
+import qqbot from "../qqbot.vue";
+import { checkOAuth } from "@/service/dashboard/profile";
 export default {
     name: "notice",
-    components: { uc, wechat: markRaw(wechat), email: markRaw(email), phone: markRaw(phone) },
+    components: { uc, wechat: markRaw(wechat), email: markRaw(email), phone: markRaw(phone), qqbot },
     data: function () {
         return {
+            loading: false,
+            authData: {
+                qqbot: "",
+            },
             list: [
                 { key: "email", component: email },
                 { key: "phone", component: phone },
@@ -38,33 +45,49 @@ export default {
         icon: function (type) {
             return __imgPath + "image/connect/" + type + ".svg";
         },
+        loadAuth: function () {
+            this.loading = true;
+            checkOAuth()
+                .then((res) => {
+                    this.authData = res.data.data;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
     },
-    mounted: function () {},
+    mounted: function () {
+        this.loadAuth();
+    },
 };
 </script>
 
 <style lang="less">
-.m-dashboard-content-list {
-    .flex;
-    box-sizing: border-box;
-    flex-direction: column;
-    gap: 20px;
-    .m-item {
+.m-dashboard-notice {
+    .m-dashboard-content-list {
         .flex;
-        padding: 30px 10px 10px 10px;
         box-sizing: border-box;
-        gap: 60px;
-        border-top: 1px dashed #ddd;
-        &:first-child {
-            border: 0;
+        flex-direction: column;
+        gap: 20px;
+
+        .m-item {
+            .flex;
+            padding: 30px 10px 10px 10px;
+            box-sizing: border-box;
+            gap: 60px;
+            border-top: 1px dashed #ddd;
+
+            &:first-child {
+                border: 0;
+            }
+        }
+
+        img,
+        svg {
+            .size(48px);
         }
     }
-    img,
-    svg {
-        .size(40px);
-    }
-}
-.m-dashboard-notice {
+
     .u-notice-item {
         .flex;
         flex: 0 0 150px;
@@ -88,14 +111,13 @@ export default {
 }
 
 @media screen and (max-width: @phone) {
-    .m-dashboard-content-list {
-        .m-item {
+    .m-dashboard-notice {
+        .m-dashboard-content-list .m-item {
             gap: 20px;
         }
-    }
-    .m-dashboard-notice {
+
         img {
-            min-width: 40px;
+            min-width: 48px;
         }
         .u-notice-item {
             flex-basis: auto;
