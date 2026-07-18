@@ -18,5 +18,10 @@ assert.match(
     /getSkinSceneAuthorsFromConfigs\(configs, this\.activeSceneSubtypeForPreview, this\.activeSceneTheme\)/,
     "theme preview authors should retain compatibility with old part-level author data"
 );
+assert.match(
+    source,
+    /getDecoration\(\{ type: "calendar,sidebar,comment,homebg,atcard" \}\)/,
+    "theme ownership request should only load the five supported skin types"
+);
 
 console.log("dashboard theme skin contract tests passed");

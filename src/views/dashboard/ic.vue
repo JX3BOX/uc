@@ -1,8 +1,9 @@
 <template>
     <div class="m-credit m-ic">
         <h2 class="u-title"><i class="el-icon-coin"></i> {{ $t("dashboard.invitation.title") }}</h2>
-        <div class="m-credit-table m-packet-table" v-loading="loading">
-            <el-tabs v-model="tab" type="border-card">
+        <div class="m-credit-table m-packet-table">
+            <ContentSkeleton v-if="loading" variant="table" :rows="6" :columns="3" />
+            <el-tabs v-else v-model="tab" type="border-card">
                 <el-tab-pane :label="$t('dashboard.invitation.registrationCode')" name="first" lazy>
                     <div class="m-tip-box">
                         <el-button class="u-btn" type="primary" @click="createCode"> {{ $t("dashboard.invitation.generate") }} </el-button>
@@ -87,7 +88,10 @@ export default {
             this.loading = true;
             getMyInvitation()
                 .then((res) => {
-                    this.list = res.data.data;
+                    this.list = res.data.data || [];
+                })
+                .catch(() => {
+                    this.list = [];
                 })
                 .finally(() => {
                     this.loading = false;

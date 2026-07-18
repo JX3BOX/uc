@@ -17,13 +17,15 @@
                 <router-link :to="item.path" v-for="(item, key) in cms" :key="key" @click="closeSidebar">
                     <i class="el-icon-collection"></i>
                     <span>{{ item.name }}</span>
-                    <span class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
+                    <span v-if="countLoading" class="u-count-skeleton" aria-hidden="true"></span>
+                    <span v-else class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
                 </router-link>
                 <template v-if="isAdmin">
                     <router-link :to="item.path" v-for="(item, key) in ads" :key="key" @click="closeSidebar">
                         <i class="el-icon-collection"></i>
                         <span>{{ item.name }}</span>
-                        <span class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
+                        <span v-if="countLoading" class="u-count-skeleton" aria-hidden="true"></span>
+                        <span v-else class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
                     </router-link>
                 </template>
             </el-collapse-item>
@@ -49,7 +51,8 @@
                 <router-link :to="item.path" v-for="(item, key) in wiki" :key="key" @click="closeSidebar">
                     <i class="el-icon-collection"></i>
                     <span>{{ item.name }}</span>
-                    <span class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
+                    <span v-if="countLoading" class="u-count-skeleton" aria-hidden="true"></span>
+                    <span v-else class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
                 </router-link>
             </el-collapse-item>
             <el-collapse-item :title="$t('publish.nav.otherCreation')" name="app">
@@ -59,7 +62,8 @@
                 <router-link :to="item.path" v-for="(item, key) in app" :key="key" @click="closeSidebar">
                     <i class="el-icon-collection"></i>
                     <span>{{ item.name }}</span>
-                    <span class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
+                    <span v-if="countLoading" class="u-count-skeleton" aria-hidden="true"></span>
+                    <span v-else class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
                 </router-link>
             </el-collapse-item>
             <el-collapse-item :title="$t('publish.nav.comments')" name="comment">
@@ -69,7 +73,8 @@
                 <router-link :to="item.path" v-for="(item, key) in comment" :key="key" @click="closeSidebar">
                     <i class="el-icon-collection"></i>
                     <span>{{ item.name }}</span>
-                    <span class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
+                    <span v-if="countLoading" class="u-count-skeleton" aria-hidden="true"></span>
+                    <span v-else class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
                 </router-link>
             </el-collapse-item>
         </el-collapse>
@@ -86,6 +91,7 @@ export default {
     data: function () {
         return {
             group: [],
+            countLoading: true,
             cms: {
                 macro: { path: "/cms/macro", name: this.$t("publish.types.macros"), count: 0 },
                 bps: { path: "/cms/bps", name: this.$t("publish.types.classGuides"), count: 0 },
@@ -187,7 +193,7 @@ export default {
             }
         },
         loadMyCount: function () {
-            getMyPostsCount().then((res) => {
+            return getMyPostsCount().then((res) => {
                 let count = res.data.data;
                 for (let key in count) {
                     if (this.cms[key]) {
@@ -209,7 +215,7 @@ export default {
             });
         },
         loadNextCount() {
-            getNextStat().then((res) => {
+            return getNextStat().then((res) => {
                 let { comment, question, paper, face, pvxbody, community_topic, community_topic_reply } = res.data.data;
                 this.comment.comment_cms.count = comment;
                 this.app.exam_question.count = question;
@@ -221,8 +227,11 @@ export default {
             });
         },
         init: function () {
-            this.loadMyCount();
-            this.loadNextCount();
+            this.countLoading = true;
+            const requests = [this.loadMyCount(), this.loadNextCount()].map((request) => request.catch(() => null));
+            Promise.all(requests).finally(() => {
+                this.countLoading = false;
+            });
         },
     },
     created: function () {

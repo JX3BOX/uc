@@ -1,5 +1,6 @@
 <template>
-    <div class="m-notice-phone u-notice-box">
+    <ContentSkeleton v-if="profileLoading" variant="list" :rows="1" compact />
+    <div v-else class="m-notice-phone u-notice-box">
         <div class="u-notice-value">
             <span class="u-address" v-if="phone">{{ phoneStr(phone) }}</span>
             <el-tag class="u-notice-status" :type="phone ? 'success' : 'info'">{{
@@ -99,6 +100,7 @@ export default {
     name: "phone",
     data: function () {
         return {
+            profileLoading: true,
             visible: false,
             phone: "",
             currentPhone: "",
@@ -168,13 +170,18 @@ export default {
             }
         },
         async loadProfile() {
-            const res = await getProfile();
-            const rawPhone = res?.data?.data?.user_phone || "";
-            this.phone = rawPhone;
-            this.currentPhone = normalizeStoredPhone(rawPhone);
-            this.currentCountryCode = detectPhoneCountry(rawPhone);
-            if (!this.visible) {
-                this.selectedCountryCode = this.currentCountryCode || "CN";
+            this.profileLoading = true;
+            try {
+                const res = await getProfile();
+                const rawPhone = res?.data?.data?.user_phone || "";
+                this.phone = rawPhone;
+                this.currentPhone = normalizeStoredPhone(rawPhone);
+                this.currentCountryCode = detectPhoneCountry(rawPhone);
+                if (!this.visible) {
+                    this.selectedCountryCode = this.currentCountryCode || "CN";
+                }
+            } finally {
+                this.profileLoading = false;
             }
         },
         clearTimer() {

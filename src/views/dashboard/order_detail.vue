@@ -5,7 +5,8 @@
                 ><i class="el-icon-arrow-left"></i> {{ $t("dashboard.common.back") }}</el-button
             >
         </template>
-        <div class="m-mall-detail">
+        <ContentSkeleton v-if="loading" variant="form" :rows="6" />
+        <div v-else class="m-mall-detail">
             <!-- <div class="m-breadcrumb">
                 <span @click="goBack" class="u-back"><i class="el-icon-arrow-left"></i> {{ $t("dashboard.common.back") }}</span>
             </div> -->
@@ -205,6 +206,7 @@ export default {
     components: { uc },
     data: function () {
         return {
+            loading: true,
             data: {},
             mode: "",
             dialogVisible: false,
@@ -270,9 +272,14 @@ export default {
             }, {});
         },
         load() {
-            getOrderId(this.id).then((res) => {
-                this.data = res.data.data;
-            });
+            this.loading = true;
+            return getOrderId(this.id)
+                .then((res) => {
+                    this.data = res.data.data;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         loadAddress() {
             getAddress().then((res) => {
@@ -434,7 +441,11 @@ export default {
         },
     },
     mounted() {
-        if (this.id) this.load();
+        if (this.id) {
+            this.load();
+        } else {
+            this.loading = false;
+        }
     },
 };
 </script>

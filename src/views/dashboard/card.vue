@@ -20,14 +20,14 @@
                         <span class="u-tab--title">{{ $t("dashboard.cards.activationCode") }}</span>
                         <span class="u-tab--desc">{{ $t("dashboard.cards.directIssue") }}</span>
                     </template>
+                    <ContentSkeleton v-if="loading" variant="table" :rows="per" :columns="6" />
                     <el-table
                         class="m-table"
-                        v-if="codeList.length"
+                        v-else-if="codeList.length"
                         :data="codeList"
                         show-header
                         cell-class-name="u-table-cell"
                         header-cell-class-name="u-header-cell"
-                        v-loading="loading"
                     >
                         <el-table-column prop="type" :label="$t('dashboard.common.type')" width="120px">
                             <template #default="scope">{{
@@ -116,7 +116,7 @@
                         show-icon
                     ></el-alert>
                     <el-pagination
-                        v-if="showPagination"
+                        v-if="showPagination && !loading"
                         @current-change="currentChange"
                         class="m-credit-pages"
                         background
@@ -132,12 +132,12 @@
                         <span class="u-tab--title">{{ $t("dashboard.cards.activationCode") }}</span>
                         <span class="u-tab--desc">{{ $t("dashboard.cards.pointsOrLottery") }}</span>
                     </template>
+                    <ContentSkeleton v-if="loading" variant="table" :rows="per" :columns="6" />
                     <el-table
                         class="m-table"
-                        v-if="virtualList.length"
+                        v-else-if="virtualList.length"
                         :data="virtualList"
                         show-header
-                        v-loading="loading"
                     >
                         <el-table-column :label="$t('dashboard.common.name')" width="120px">
                             <template #default="scope">{{ scope.row.goods.title || "-" }}</template>
@@ -212,7 +212,7 @@
                         show-icon
                     ></el-alert>
                     <el-pagination
-                        v-if="showPagination"
+                        v-if="showPagination && !loading"
                         @current-change="currentChange"
                         class="m-credit-pages"
                         background
@@ -224,12 +224,12 @@
                     ></el-pagination>
                 </el-tab-pane>
                 <el-tab-pane :label="$t('dashboard.cards.prepaidCard')" name="keycode" lazy>
+                    <ContentSkeleton v-if="loading" variant="table" :rows="per" :columns="6" />
                     <el-table
                         class="m-table"
-                        v-if="keycodeList.length"
+                        v-else-if="keycodeList.length"
                         :data="keycodeList"
                         show-header
-                        v-loading="loading"
                     >
                         <el-table-column prop="type" :label="$t('dashboard.common.type')" width="120">
                             <template #default="scope">{{
@@ -333,7 +333,7 @@
                         show-icon
                     ></el-alert>
                     <el-pagination
-                        v-if="showPagination"
+                        v-if="showPagination && !loading"
                         @current-change="currentChange"
                         class="m-credit-pages"
                         background
@@ -370,7 +370,7 @@ export default {
     name: "card",
     data: function () {
         return {
-            loading: false,
+            loading: true,
             per: 10,
             page: 1,
             total: 0,

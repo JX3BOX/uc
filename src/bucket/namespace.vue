@@ -7,8 +7,9 @@
             </a>
         </div>
 
-        <div class="m-namespace-box" v-loading="loading">
-            <el-row class="m-namespace-list" :gutter="20" v-if="list && list.length">
+        <div class="m-namespace-box">
+            <ContentSkeleton v-if="loading" variant="cards" :rows="8" :columns="4" compact />
+            <el-row v-else-if="list && list.length" class="m-namespace-list" :gutter="20">
                 <el-col :span="6" :xs="24" v-for="(item, i) in list" :key="i">
                     <div class="u-namespace-item">
                         <div class="u-item">
@@ -46,7 +47,7 @@
                 center
                 show-icon
             ></el-alert>
-            <div class="m-namespace-pages">
+            <div v-if="!loading" class="m-namespace-pages">
                 <el-pagination
                     background
                     layout="total, prev, pager, next,jumper"
@@ -68,7 +69,7 @@ export default {
     props: ["data"],
     data: function () {
         return {
-            loading: false,
+            loading: true,
             list: [],
             per: 16,
             total: 1,
@@ -115,9 +116,6 @@ export default {
         dateFormat: function (val) {
             return dateFormat(new Date(~~val * 1000));
         },
-    },
-    mounted: function () {
-        this.loadData();
     },
     watch: {
         params: {

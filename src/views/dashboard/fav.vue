@@ -13,7 +13,7 @@
         <el-tabs v-model="favChangeCount" @tab-change="loadData">
             <el-tab-pane :label="$t('dashboard.favorites.favorites')" name="fav">
                 <template #label> <i class="el-icon-star-off"></i> {{ $t("dashboard.favorites.favorites") }} </template>
-                <div v-if="favChangeCount === 'fav'" class="m-dashboard-box" v-loading="loading">
+                <div v-if="favChangeCount === 'fav'" class="m-dashboard-box">
                     <div class="m-dashboard-msg-header">
                         <el-input
                             class="m-dashboard-work-search"
@@ -28,7 +28,8 @@
                             </template>
                         </el-input>
                     </div>
-                    <ul class="m-dashboard-box-list" v-if="data.length">
+                    <ContentSkeleton v-if="loading" variant="list" :rows="per" />
+                    <ul class="m-dashboard-box-list" v-else-if="data.length">
                         <li v-for="(item, i) in data" :key="i">
                             <i class="u-icon">
                                 <img svg-inline src="@/assets/img/dashboard/works/repo.svg" />
@@ -50,7 +51,7 @@
                     <el-alert v-else class="m-dashboard-box-null" :title="$t('dashboard.common.noItems')" type="info" center show-icon>
                     </el-alert>
                     <el-pagination
-                        v-if="showPagination"
+                        v-if="!loading && showPagination"
                         class="m-dashboard-box-pages"
                         background
                         :hide-on-single-page="true"
@@ -103,7 +104,7 @@ export default {
     props: [],
     data: function () {
         return {
-            loading: false,
+            loading: true,
             data: [],
             total: 1,
             page: 1,

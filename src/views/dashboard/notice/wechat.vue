@@ -1,5 +1,6 @@
 <template>
-    <div class="m-notice-wechat u-notice-box">
+    <ContentSkeleton v-if="profileLoading" variant="list" :rows="1" compact />
+    <div v-else class="m-notice-wechat u-notice-box">
         <div class="u-notice-value">
             <span class="u-value" v-if="isWechatVerified">******</span>
             <el-tag class="u-notice-status" :type="isWechatVerified ? 'success' : 'info'">{{
@@ -86,6 +87,7 @@ export default {
             sse: null,
             profile: null,
             success: false,
+            profileLoading: true,
             loading: false,
             bindCloseTimer: null,
 
@@ -111,9 +113,14 @@ export default {
     },
     methods: {
         loadUser() {
-            getMyInfo().then((res) => {
-                this.profile = res.data.data;
-            });
+            this.profileLoading = true;
+            return getMyInfo()
+                .then((res) => {
+                    this.profile = res.data.data;
+                })
+                .finally(() => {
+                    this.profileLoading = false;
+                });
         },
         open() {
             this.clearBindCloseTimer();

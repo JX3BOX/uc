@@ -76,8 +76,9 @@
                 </el-form-item>
             </el-form>
         </div>
-        <div class="m-credit-table m-packet-table" v-loading="loading">
-            <el-tabs type="border-card" v-model="tab">
+        <div class="m-credit-table m-packet-table">
+            <ContentSkeleton v-if="loading" variant="table" :rows="6" :columns="6" />
+            <el-tabs v-else type="border-card" v-model="tab">
                 <el-tab-pane :label="$t('dashboard.cny.changeHistory')" name="list">
                     <div class="m-packet-table" v-if="list && list.length">
                         <table class="m-boxcoin-in-list m-packet-in-list">

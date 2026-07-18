@@ -1,7 +1,9 @@
 <template>
-    <div class="m-feed-single" v-if="data">
+    <div class="m-feed-single">
+        <ContentSkeleton v-if="loading" variant="form" :rows="8" />
+        <template v-else-if="data">
         <div class="m-feed-content">
-            <main class="m-single-content" v-loading="loading">
+            <main class="m-single-content">
                 <div class="m-type">
                     <div class="u-title">
                         <!-- <span class="u-status" :style="{ backgroundColor: statusColors[data.status] }">{{
@@ -289,12 +291,13 @@
                 @updateRecord="loadRecord"
             ></Homework>
         </div>
-        <div class="m-feed-log" v-loading="logLoading">
+        <div class="m-feed-log">
             <el-divider content-position="left">
                 <i class="el-icon-document"></i>{{ $t("dashboard.feedback.logs") }}
             </el-divider>
 
-            <el-timeline v-if="logs.length" :reverse="false">
+            <ContentSkeleton v-if="logLoading" variant="list" :rows="4" compact />
+            <el-timeline v-else-if="logs.length" :reverse="false">
                 <el-timeline-item v-for="(log, index) in logs" :key="index" :timestamp="log.created_at">
                     <div class="u-op">
                         <span class="u-label">{{ $t("dashboard.feedback.operator") }}:</span>
@@ -368,6 +371,7 @@
             @update="load"
             @close="statusVisible = false"
         ></status>
+        </template>
     </div>
 </template>
 

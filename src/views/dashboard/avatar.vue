@@ -1,5 +1,7 @@
 <template>
     <uc class="m-dashboard-avatar">
+        <ContentSkeleton v-if="loading" variant="cards" :rows="4" :columns="3" />
+        <template v-else>
         <div class="m-profile-avatar">
             <div class="m-profile-box m-profile-avatar-primary">
                 <img class="u-avatar u-avatar-l" :src="showAvatar(avatar)" />
@@ -38,6 +40,7 @@
             <el-button type="primary" @click="submit" size="large">{{ $t("dashboard.common.confirm") }}</el-button>
             <el-button @click="reset" size="large">{{ $t("dashboard.common.reset") }}</el-button>
         </div>
+        </template>
     </uc>
 </template>
 
@@ -54,6 +57,7 @@ export default {
     props: [],
     data: function () {
         return {
+            loading: true,
             // 备份
             bak: "",
             // 数据
@@ -127,15 +131,24 @@ export default {
         },
         init: function () {
             this.avatar = this.bak = User.getInfo().avatar_origin;
-            getUserOverview(this.uid).then((res) => {
-                this.frame = res.data.data.user_avatar_frame || "";
+            this.loading = true;
+            const overviewRequest = getUserOverview(this.uid)
+                .then((res) => {
+                    this.frame = res.data.data.user_avatar_frame || "";
+                })
+                .catch(() => {});
+            return Promise.allSettled([overviewRequest, this.loadAvatar()]).finally(() => {
+                this.loading = false;
             });
-            this.loadAvatar();
         },
         loadAvatar() {
-            getBreadcrumb("dashboard-default-avatar").then((res) => {
-                this.avatarList = res ? res.split(",") : [];
-            });
+            return getBreadcrumb("dashboard-default-avatar")
+                .then((res) => {
+                    this.avatarList = res ? res.split(",") : [];
+                })
+                .catch(() => {
+                    this.avatarList = [];
+                });
         },
         changeAvatar(link) {
             this.avatar = link;

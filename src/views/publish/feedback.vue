@@ -1,5 +1,5 @@
 <template>
-    <div class="m-dashboard-work m-dashboard-cms" v-loading="loading">
+    <div class="m-dashboard-work m-dashboard-cms">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">{{ $t("publish.types.feedback") }}</h2>
         </div>
@@ -15,7 +15,8 @@
         </div>
 
         <div class="m-dashboard-box">
-            <ul class="m-dashboard-box-list" v-if="data && data.length">
+            <ContentSkeleton v-if="loading" variant="list" :rows="per" compact />
+            <ul class="m-dashboard-box-list" v-else-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
                     <i class="u-icon">
                         <img
@@ -50,6 +51,7 @@
                 show-icon
             ></el-alert>
             <el-pagination
+                v-if="!loading"
                 class="m-dashboard-box-pages"
                 background
                 :page-size="per"
@@ -72,7 +74,7 @@ export default {
     props: [],
     data: function () {
         return {
-            loading: false,
+            loading: true,
             data: [],
             total: 1,
             page: 1,

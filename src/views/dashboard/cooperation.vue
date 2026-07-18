@@ -10,6 +10,8 @@
             </span>
             <el-button class="u-unlock-btn" type="primary" @click="openPage" v-if="isSuperAuthor" icon="Unlock"> {{ $t("dashboard.filter.title") }} </el-button>
         </h2>
+        <ContentSkeleton v-if="loading" variant="form" :rows="6" />
+        <template v-else>
         <div class="m-cooperation-ac m-block" v-html="data"></div>
         <div class="m-cooperation-form m-block">
             <h3>{{ $t("dashboard.cooperation.instructionsTitle") }}</h3>
@@ -99,6 +101,7 @@
                 </el-form-item>
             </el-form>
         </div>
+        </template>
     </div>
 </template>
 <script>
@@ -117,6 +120,7 @@ export default {
     props: [],
     data: function () {
         return {
+            loading: true,
             position: window.innerWidth < 768 ? "top" : "left",
             form: {
                 nickname: "",
@@ -235,18 +239,18 @@ export default {
         },
         // 是否为签约作者
         checkSuperUser: function () {
-            this.user?.profile?.uid &&
-                getSuperAuthorState(this.user?.profile?.uid)
-                    .then((res) => {
-                        this.isSuperAuthor = res.data.data;
-                    })
-                    .catch(() => {
-                        this.isSuperAuthor = false;
-                    });
+            if (!this.user?.profile?.uid) return Promise.resolve();
+            return getSuperAuthorState(this.user.profile.uid)
+                .then((res) => {
+                    this.isSuperAuthor = res.data.data;
+                })
+                .catch(() => {
+                    this.isSuperAuthor = false;
+                });
         },
         // 加载申请记录
         loadContractAuthorLogs: function () {
-            getContractAuthorLogs()
+            return getContractAuthorLogs()
                 .then((res) => {
                     this.logs = res.data.data?.list || [];
                     if (this.logs && this.logs.length) {
@@ -262,7 +266,7 @@ export default {
                 });
         },
         loadAc() {
-            getBreadcrumb("sign-ac")
+            return getBreadcrumb("sign-ac")
                 .then((data) => {
                     this.data = data;
                 })
@@ -272,16 +276,21 @@ export default {
         },
         // 初始化
         init: function () {
-            this.loadContractAuthorLogs();
-            this.checkSuperUser();
-            this.loadAc();
-            this.loadLastLog();
+            this.loading = true;
+            return Promise.allSettled([
+                this.loadContractAuthorLogs(),
+                this.checkSuperUser(),
+                this.loadAc(),
+                this.loadLastLog(),
+            ]).finally(() => {
+                this.loading = false;
+            });
         },
         openPage() {
             this.$router.push({ name: "filter" });
         },
         loadLastLog() {
-            getLastContractAuthorLog()
+            return getLastContractAuthorLog()
                 .then((res) => {
                     this.last = res.data.data || {};
                 })

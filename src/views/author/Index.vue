@@ -2,7 +2,10 @@
     <AppLayout>
         <div class="m-theme" :style="themeStyle">
             <div class="m-author" :class="isAdmin ? 'm-author-admin' : ''">
-                <Me :decorationMe="decorationMe" :honor="honor" :medals="medals" />
+                <div v-show="pageLoading" class="m-author-page-skeleton">
+                    <ContentSkeleton variant="dashboard" :rows="6" :columns="3" />
+                </div>
+                <Me v-show="!pageLoading" :decorationMe="decorationMe" :honor="honor" :medals="medals" />
             </div>
         </div>
         <CommonFooter></CommonFooter>
@@ -51,6 +54,7 @@ export default {
             decorationMe: { status: false },
             honor: null,
             medals: [],
+            pageLoading: true,
         };
     },
     computed: {
@@ -70,20 +74,34 @@ export default {
     created: function () {
         if (this.uid) {
             this.$store.state.uid = ~~this.uid;
-            getUserInfo(this.uid).then((res) => {
-                this.$store.state.userdata = res.data.data;
-            });
-            this.loadSkin();
+            this.init();
+        } else {
+            this.pageLoading = false;
         }
     },
     methods: {
+        init() {
+            this.pageLoading = true;
+            Promise.allSettled([this.loadUser(), this.loadSkin()]).finally(() => {
+                this.pageLoading = false;
+            });
+        },
+        loadUser() {
+            return getUserInfo(this.uid)
+                .then((res) => {
+                    this.$store.state.userdata = res.data.data || {};
+                })
+                .catch(() => {
+                    this.$store.state.userdata = {};
+                });
+        },
         loadSkin() {
             this.themeStyle = {};
             this.decorationMe = { status: false };
             this.honor = null;
             this.medals = [];
 
-            getUserSkin({
+            return getUserSkin({
                 user_id: this.uid,
             })
                 .then((res) => {
@@ -179,5 +197,19 @@ export default {
 @import "~@/assets/css/author/post.less";
 .m-theme {
     min-height: calc(100vh - @header-height);
+}
+.m-author-page-skeleton {
+    min-height: 720px;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    background: #fff;
+}
+
+@media screen and (max-width: @phone) {
+    .m-author-page-skeleton {
+        min-height: 560px;
+        padding: 12px;
+    }
 }
 </style>

@@ -1,6 +1,7 @@
 <template>
-    <div class="m-post" v-loading="loading">
-        <el-timeline class="m-post-list" v-if="list && list.length">
+    <div class="m-post">
+        <ContentSkeleton v-if="loading" variant="list" :rows="6" compact />
+        <el-timeline class="m-post-list" v-else-if="list && list.length">
             <el-timeline-item v-for="(item, i) in list" :key="i" :timestamp="dateFormat(item.updated)" placement="top">
                 <h4 class="u-type">{{ showTypeLabel(item.type) }}</h4>
                 <p>
@@ -11,6 +12,7 @@
         <el-alert v-else :title="$t('author.common.noResults')" type="info" show-icon> </el-alert>
 
         <el-pagination
+            v-if="!loading"
             class="m-author-pages"
             background
             :hide-on-single-page="true"
@@ -35,7 +37,7 @@ export default {
     props: [],
     data: function () {
         return {
-            loading: false,
+            loading: true,
             list: [],
             total: 1,
             per: 10,
@@ -61,7 +63,10 @@ export default {
     },
     methods: {
         loadData: function () {
-            if (!this.uid) return;
+            if (!this.uid) {
+                this.loading = false;
+                return;
+            }
             this.loading = true;
             getPlans(this.params)
                 .then((res) => {

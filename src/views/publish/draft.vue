@@ -24,7 +24,8 @@
                 </el-dropdown>
             </div>
         </div>
-        <template v-if="isSupported">
+        <ContentSkeleton v-if="loading" variant="list" :rows="5" compact />
+        <template v-else-if="isSupported">
             <div class="m-draft-list" v-if="isNotNull">
                 <ul class="u-list">
                     <li class="u-item" v-for="(item, i) in data" :key="i">
@@ -71,6 +72,7 @@ export default {
     data: function () {
         return {
             data: [],
+            loading: true,
         };
     },
     computed: {
@@ -93,20 +95,25 @@ export default {
     methods: {
         // 加载
         loadDrafts: async function () {
-            let len = await this.db.length();
-            const data = [];
-            for (let i = 0; i < len; i++) {
-                let key = await this.db.key(i);
-                // if (key.startsWith(DRAFT_PREFIX)) {
-                data.push({
-                    key,
-                    data: await this.db.getItem(key),
-                    checked: false,
-                });
-                // }
-            }
+            this.loading = true;
+            try {
+                let len = await this.db.length();
+                const data = [];
+                for (let i = 0; i < len; i++) {
+                    let key = await this.db.key(i);
+                    // if (key.startsWith(DRAFT_PREFIX)) {
+                    data.push({
+                        key,
+                        data: await this.db.getItem(key),
+                        checked: false,
+                    });
+                    // }
+                }
 
-            this.data = data;
+                this.data = data;
+            } finally {
+                this.loading = false;
+            }
         },
         // 清空
         clean: function () {

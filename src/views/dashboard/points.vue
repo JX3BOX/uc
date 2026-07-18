@@ -1,5 +1,5 @@
 <template>
-    <div class="m-points" v-loading="loading">
+    <div class="m-points">
         <h2><i class="el-icon-sugar"></i> {{ $t("dashboard.points.title") }}</h2>
         <div class="m-balance">
             <span class="u-label">{{ $t("dashboard.common.balance") }} : </span>
@@ -8,7 +8,8 @@
                 $t("dashboard.common.exchange")
             }}</a>
         </div>
-        <el-tabs class="m-tabs" type="border-card" v-model="tab_value" @tab-change="changeTab">
+        <ContentSkeleton v-if="loading" variant="table" :rows="per" :columns="5" />
+        <el-tabs v-else class="m-tabs" type="border-card" v-model="tab_value" @tab-change="changeTab">
             <!-- 积分记录 -->
             <el-tab-pane :label="$t('dashboard.points.pointsHistory')" name="point" lazy>
                 <el-table
@@ -164,8 +165,12 @@ export default {
             const fn = this.tab_value === "point" ? getPointsHistory : getExperienceHistory;
             fn(this.params)
                 .then((res) => {
-                    this.list = res.list;
-                    this.total = res.page.total;
+                    this.list = res.list || [];
+                    this.total = res.page.total || 0;
+                })
+                .catch(() => {
+                    this.list = [];
+                    this.total = 0;
                 })
                 .finally(() => {
                     this.loading = false;

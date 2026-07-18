@@ -8,7 +8,8 @@
                 ><i class="el-icon-shopping-cart-2"></i> {{ $t("dashboard.theme.getDecorations") }}</a
             >
         </template>
-        <div class="m-frame">
+        <ContentSkeleton v-if="loading" variant="cards" :rows="8" :columns="4" />
+        <div v-else class="m-frame">
             <!-- 左右两侧 -->
             <div class="m-frame-left">
                 <a
@@ -54,7 +55,7 @@
                 </div>
             </div>
         </div>
-        <div class="m-btn">
+        <div v-if="!loading" class="m-btn">
             <el-button type="primary" @click="updateAvatarFrame" size="large" :loading="submitting">{{
                 $t("dashboard.common.confirm")
             }}</el-button>
@@ -88,6 +89,7 @@ export default {
             frames: {}, //远程json
             avatars: [], //头像筛选
             decoration: {}, //装扮筛选用于判断是否符合领取条件
+            loading: true,
             submitting: false,
         };
     },
@@ -152,16 +154,29 @@ export default {
             item.using = 1;
             this.frame = item.name;
         },
-        load: function () {
-            getUserOverview(this.uid).then((res) => {
-                this.frame = res.data.data.user_avatar_frame || "";
-                this.framebak = res.data.data.user_avatar_frame || "";
+        async load() {
+            this.loading = true;
+            try {
+                const [overviewResult, framesResult, decorationResult] = await Promise.allSettled([
+                    getUserOverview(this.uid),
+                    getFrames(),
+                    getDecoration({ type: "avatar" }),
+                ]);
+                if (overviewResult.status === "fulfilled") {
+                    this.frame = overviewResult.value.data.data.user_avatar_frame || "";
+                    this.framebak = overviewResult.value.data.data.user_avatar_frame || "";
+                }
+                this.frames = framesResult.status === "fulfilled" ? framesResult.value.data || {} : {};
+                this.avatars =
+                    decorationResult.status === "fulfilled" ? decorationResult.value.data.data || [] : [];
                 this.dataProcessing();
-            });
-            getFrames().then((res) => {
-                this.frames = res.data;
-                this.loadDecoration();
-            });
+                if (framesResult.status === "rejected") throw framesResult.reason;
+            } catch (err) {
+                this.frameList = [];
+                this.$message.error(err?.response?.data?.msg || this.$t("dashboard.common.requestFailed"));
+            } finally {
+                this.loading = false;
+            }
         },
         loadDecoration() {
             getDecoration({ type: "avatar" }).then((data) => {

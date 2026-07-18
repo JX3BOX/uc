@@ -1,5 +1,5 @@
 <template>
-    <div class="m-dashboard-box" v-loading="loading">
+    <div class="m-dashboard-box">
         <div class="m-dashboard-msg-header">
             <el-input
                 class="m-dashboard-work-search"
@@ -17,7 +17,8 @@
                 </template>
             </el-input>
         </div>
-        <ul class="m-dashboard-box-list" v-if="filterData.length">
+        <ContentSkeleton v-if="loading" variant="list" :rows="6" />
+        <ul class="m-dashboard-box-list" v-else-if="filterData.length">
             <li v-for="(item, i) in filterData" :key="i">
                 <i class="u-icon">
                     <img svg-inline src="@/assets/img/dashboard/works/repo.svg" />
@@ -62,7 +63,7 @@ export default {
         return {
             currentSearch: this.search,
             data: [],
-            loading: false,
+            loading: true,
             total: 0,
         };
     },

@@ -1,5 +1,7 @@
 <template>
-    <div class="m-letter-contacts" v-loading="loading">
+    <div class="m-letter-contacts">
+        <ContentSkeleton v-if="loading" variant="list" :rows="5" compact />
+        <template v-else>
         <div
             class="m-letter-contact"
             v-for="(item, index) in contacts"
@@ -21,6 +23,7 @@
                 </div>
             </div>
         </div>
+        </template>
     </div>
 </template>
 
@@ -40,7 +43,7 @@ export default {
     data() {
         return {
             active: "",
-            loading: false,
+            loading: true,
             isInit: true,
             contacts: [],
         };
@@ -72,7 +75,8 @@ export default {
     methods: {
         addContact(uid) {
             if (!uid) return;
-            createRecentContact(uid)
+            if (this.isInit) this.loading = true;
+            return createRecentContact(uid)
                 .then(() => {
                     this.getContacts();
                 })

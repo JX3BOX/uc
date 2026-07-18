@@ -1,5 +1,5 @@
 <template>
-    <div class="v-role-list" v-loading="loading">
+    <div class="v-role-list">
         <h2 class="u-title">
             <i class="el-icon-coordinate"></i> {{ $t("dashboard.role.myRoles") }}
             <!-- <goback /> -->
@@ -33,7 +33,8 @@
                 <template #prepend> <i class="el-icon-search"></i>&nbsp;{{ $t("dashboard.common.search") }} </template>
             </el-input>
         </div>
-        <div class="m-team-rolelist" v-if="data && data.length">
+        <ContentSkeleton v-if="loading" variant="list" :rows="6" />
+        <div class="m-team-rolelist" v-else-if="data && data.length">
             <ul class="u-list">
                 <li class="u-item" v-for="item in data" :key="item.ID" :class="{ auth: !item.custom }">
                     <router-link :to="'/role/' + item.ID" class="u-avatar">

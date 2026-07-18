@@ -1,7 +1,8 @@
 <template>
     <div class="c-author">
+        <ContentSkeleton v-show="loading" variant="cards" :rows="3" :columns="1" compact />
         <!-- 签名 -->
-         <div class="m-common-box m-user-bio">
+         <div v-show="!loading" class="m-common-box m-user-bio">
             <div class="u-label">
                 <img class="u-icon" src="@/assets/img/author/sign.svg" alt="">
                 {{ $t("author.profile.signature") }}
@@ -12,15 +13,15 @@
         </div>
 
         <!--作者角色-->
-        <div class="m-common-box m-role" v-if="hasAuthorRoles">
+        <div class="m-common-box m-role" v-if="!loading && hasAuthorRoles">
             <AuthorRole :data="data"></AuthorRole>
         </div>
 
         <!--他的荣誉-->
-        <AuthorMedals :medals="medals" class="u-trophy m-common-box m-medals"></AuthorMedals>
+        <AuthorMedals v-show="!loading" :medals="medals" class="u-trophy m-common-box m-medals"></AuthorMedals>
 
         <!--粉丝团-->
-        <AuthorFans :uid="Number(uid)" class="m-common-box m-fans" :fansLimit="20"></AuthorFans>
+        <AuthorFans v-show="!loading" :uid="Number(uid)" class="m-common-box m-fans" :fansLimit="20"></AuthorFans>
 
         <!-- <div class="m-common-box m-links" v-if="data != '' && (data.weibo_id || data.github_id || data.tv_id)">
             <div class="u-label"><i class="el-icon-user"></i><span>TA的信息</span></div>
@@ -63,6 +64,7 @@ export default {
             data: {},
             namespaceList: [],
             defult_link: "https://www.jx3box.com",
+            loading: true,
         };
     },
     computed: {
@@ -84,17 +86,20 @@ export default {
     },
     mounted() {
         if (!this.uid) {
+            this.loading = false;
             return;
         }
-        this.installModules();
         this.getNamespacesList();
+        Promise.allSettled([this.installModules()]).finally(() => {
+            this.loading = false;
+        });
     },
     methods: {
         dateFormat: function (val) {
             return dateFormat(new Date(~~val * 1000));
         },
         installModules: function () {
-            getUserInfo(this.uid).then((data) => {
+            return getUserInfo(this.uid).then((data) => {
                 if (data) {
                     this.data = data;
                     this.$emit("authorInfo", data);
@@ -102,11 +107,13 @@ export default {
             });
         },
         getNamespacesList: function () {
-            getNamespaces(this.params)
+            return getNamespaces(this.params)
                 .then((res) => {
                     this.namespaceList = res.data.data.list;
                 })
-                .finally(() => {});
+                .catch(() => {
+                    this.namespaceList = [];
+                });
         },
     },
 };

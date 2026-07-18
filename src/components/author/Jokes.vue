@@ -1,7 +1,8 @@
 <template>
-    <div class="m-post" v-loading="loading">
+    <div class="m-post">
+        <ContentSkeleton v-if="loading" variant="list" :rows="6" compact />
         <!-- 列表 -->
-        <div v-if="list && list.length" class="m-archive-list">
+        <div v-else-if="list && list.length" class="m-archive-list">
             <ul class="u-list">
                 <li v-for="(item, i) in list" :key="i + item" class="u-item">
                     <!-- 标题 -->
@@ -25,6 +26,7 @@
         </div>
 
         <el-pagination
+            v-if="!loading"
             class="m-author-pages"
             background
             :hide-on-single-page="true"
@@ -45,7 +47,7 @@ export default {
     props: [],
     data: function () {
         return {
-            loading: false,
+            loading: true,
             list: [],
             total: 1,
             per: 6,
@@ -67,6 +69,7 @@ export default {
     methods: {
         loadData: function () {
             if (!this.uid) {
+                this.loading = false;
                 return;
             }
             this.loading = true;

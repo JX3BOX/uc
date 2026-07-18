@@ -1,7 +1,8 @@
 <template>
     <div class="m-dashboard m-dashboard-config">
         <h2 class="u-title"><i class="el-icon-setting"></i> {{ $t("dashboard.config.title") }}</h2>
-        <el-form class="m-config-form" label-position="left" label-width="160px">
+        <ContentSkeleton v-if="loading" variant="form" :rows="8" />
+        <el-form v-else class="m-config-form" label-position="left" label-width="160px">
             <el-form-item :label="$t('dashboard.config.theme')">
                 <template #label>
                     <span>{{ $t("dashboard.config.theme") }}</span>
@@ -180,6 +181,7 @@ export default {
     props: [],
     data: function () {
         return {
+            loading: true,
             conf: {
                 theme: "light",
                 cmt_email: 0,
@@ -219,14 +221,19 @@ export default {
     computed: {},
     methods: {
         loadData: function () {
-            getUserConf().then((res) => {
-                this.conf = {
-                    ...(res?.data?.data || {}),
-                    theme: res?.data?.data?.theme || "light",
-                };
+            this.loading = true;
+            return getUserConf()
+                .then((res) => {
+                    this.conf = {
+                        ...(res?.data?.data || {}),
+                        theme: res?.data?.data?.theme || "light",
+                    };
 
-                this.oldLang = this.conf.default_lang;
-            });
+                    this.oldLang = this.conf.default_lang;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         submit: function () {
             setUserConf(this.conf).then((res) => {

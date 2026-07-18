@@ -42,8 +42,9 @@
                 </el-form-item>
             </el-form>
         </div>
-        <div class="m-credit-table m-packet-table" v-loading="loading">
-            <el-tabs v-model="activeName" @tab-change="changeType" type="border-card">
+        <div class="m-credit-table m-packet-table">
+            <ContentSkeleton v-if="loading" variant="table" :rows="6" :columns="5" />
+            <el-tabs v-else v-model="activeName" @tab-change="changeType" type="border-card">
                 <el-tab-pane :label="$t('dashboard.packet.history')" name="my_packet_list">
                     <div class="m-packet-table" v-if="my_packet_list && my_packet_list.length">
                         <table class="m-packet-in-list">

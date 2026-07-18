@@ -4,7 +4,8 @@
             <div v-html="content"></div>
         </div>
 
-        <div class="m-dashboard-content-list" v-loading="loading">
+        <ContentSkeleton v-if="loading" variant="list" :rows="2" />
+        <div v-else class="m-dashboard-content-list">
             <div class="m-item" v-for="type in oauth" :key="type">
                 <span class="u-profile-item">
                     <img :class="'u-' + type" svg-inline :src="icon(type)" />
@@ -75,12 +76,16 @@ export default {
             ],
 
             types,
-            loading: false,
+            authLoading: true,
+            userLoading: true,
 
             info: {},
         };
     },
     computed: {
+        loading: function () {
+            return this.authLoading || this.userLoading;
+        },
         level: function () {
             return User.getLevel(this.info?.experience || 0);
         },
@@ -108,13 +113,13 @@ export default {
             return __cdn + "design/user/" + types[type]["icon"] + ".png";
         },
         loadAuth() {
-            this.loading = true;
-            checkOAuth()
+            this.authLoading = true;
+            return checkOAuth()
                 .then((res) => {
                     this.data = res.data.data;
                 })
                 .finally(() => {
-                    this.loading = false;
+                    this.authLoading = false;
                 });
         },
         toBind(type) {
@@ -130,9 +135,14 @@ export default {
             return type === "user_phone" && !this.checkStatus(type) && this.level < 3;
         },
         loadUserInfo: function () {
-            getMyInfo().then((res) => {
-                this.info = res.data.data || {};
-            });
+            this.userLoading = true;
+            return getMyInfo()
+                .then((res) => {
+                    this.info = res.data.data || {};
+                })
+                .finally(() => {
+                    this.userLoading = false;
+                });
         },
     },
 };

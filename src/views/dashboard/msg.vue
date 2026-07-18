@@ -26,7 +26,8 @@
                     <span>{{ $t("dashboard.message.markAllRead") }}</span>
                 </el-button>
             </div>
-            <ul class="m-dashboard-box-list" v-if="data.length">
+            <ContentSkeleton v-if="loading" variant="list" :rows="limit" />
+            <ul class="m-dashboard-box-list" v-else-if="data.length">
                 <li v-for="(item, i) in data" :key="i" :class="{ on: item.read == 1 }">
                     <div class="u-primary">
                         <span class="u-content">
@@ -76,7 +77,7 @@
                 show-icon
             ></el-alert>
             <el-pagination
-                v-if="paginationShow"
+                v-if="!loading && paginationShow"
                 class="m-dashboard-box-pages"
                 background
                 :hide-on-single-page="true"
@@ -126,6 +127,7 @@ export default {
             page: 1,
             limit: 15,
             paginationShow: true,
+            loading: true,
 
             tabList: msgTab,
 
@@ -153,6 +155,7 @@ export default {
             });
             this.page = i;
             this.paginationShow = false;
+            this.loading = true;
             getMsgs({
                 content: this.keyword,
                 index: i,
@@ -162,12 +165,16 @@ export default {
                     this.unread_total = res.data.data.unread_count;
                     this.total = res.data.data.page.total;
                     this.data = res.data.data.list || [];
-                    this.paginationShow = true;
                 })
                 .catch((err) => {
                     if (err?.message) {
                         this.$message.error(err.message);
                     }
+                    this.data = [];
+                    this.total = 0;
+                })
+                .finally(() => {
+                    this.loading = false;
                     this.paginationShow = true;
                 });
         },

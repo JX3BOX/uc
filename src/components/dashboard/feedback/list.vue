@@ -1,6 +1,14 @@
 <template>
-    <div class="m-feedback-list" v-loading="loading">
-        <el-table :data="data" highlight-current-row row-class-name="u-row" @row-click="viewFeedback" size="large">
+    <div class="m-feedback-list">
+        <ContentSkeleton v-if="loading" variant="table" :rows="per" :columns="6" />
+        <el-table
+            v-else-if="data.length"
+            :data="data"
+            highlight-current-row
+            row-class-name="u-row"
+            @row-click="viewFeedback"
+            size="large"
+        >
             <el-table-column :label="$t('dashboard.common.status')" prop="status" width="100">
                 <template #default="{ row }">
                     <el-tag :type="statusTypes[row.status]" size="small">{{ statusMap[row.status] }}</el-tag>
@@ -32,7 +40,9 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-empty v-else :description="$t('dashboard.common.noItems')" />
         <el-pagination
+            v-if="!loading && total"
             class="m-credit-pages m-packet-pages"
             background
             :page-size="per"
@@ -56,7 +66,7 @@ export default {
     data() {
         return {
             data: [],
-            loading: false,
+            loading: true,
             page: 1,
             per: 15,
             total: 0,
@@ -98,6 +108,8 @@ export default {
                 this.data = res.data.data.list || [];
                 this.total = res.data.data.page.total;
             } catch (e) {
+                this.data = [];
+                this.total = 0;
                 console.log(e);
             } finally {
                 this.loading = false;

@@ -1,6 +1,7 @@
 <template>
     <el-dialog class="m-comment-detail-dialog" v-model="show" :title="title" :before-close="close">
-        <el-descriptions class="m-msg-comment-detail" direction="vertical" :column="2" border v-loading="loading">
+        <ContentSkeleton v-if="loading" variant="form" :rows="4" />
+        <el-descriptions v-else class="m-msg-comment-detail" direction="vertical" :column="2" border>
             <el-descriptions-item :label="$t('dashboard.message.commentContent')" :span="2">
                 <div v-html="renderContent || '-'"></div>
             </el-descriptions-item>

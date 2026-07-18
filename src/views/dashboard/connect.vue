@@ -1,6 +1,7 @@
 <template>
     <uc class="m-dashboard-connect">
-        <div class="m-profile-connect" v-loading="loading">
+        <ContentSkeleton v-if="loading" variant="list" :rows="3" />
+        <div v-else class="m-profile-connect">
             <el-alert
                 class="u-tip"
                 :title="$t('dashboard.connect.tip')"
@@ -131,7 +132,7 @@ export default {
             showMiniProgram: false,
             isPhone: window.innerWidth < 768,
 
-            loading: false,
+            loading: true,
         };
     },
     computed: {},

@@ -4,7 +4,8 @@
             <i class="el-icon-setting"></i> {{ $t("dashboard.role.edit") }}
             <el-button class="u-back" plain icon="ArrowLeft" @click="goBack">{{ $t("dashboard.common.back") }}</el-button>
         </h2>
-        <roleform :data="form" @submit="submit" :btn_txt="$t('dashboard.common.update')" :processing="processing" />
+        <ContentSkeleton v-if="loading" variant="form" :rows="6" />
+        <roleform v-else :data="form" @submit="submit" :btn_txt="$t('dashboard.common.update')" :processing="processing" />
     </div>
 </template>
 
@@ -17,6 +18,7 @@ export default {
     props: [],
     data: function () {
         return {
+            loading: true,
             form: {
                 ID: "",
                 name: "",
@@ -37,15 +39,19 @@ export default {
     },
     methods: {
         loadData: function () {
-            getRole(this.id).then((res) => {
-                let hasRight = res.data.data.uid == User.getInfo().uid || User.isSuperAdmin();
-                if (!hasRight) {
-                    this.$message.error(this.$t("dashboard.common.noPermission"));
-                    return;
-                } else {
+            this.loading = true;
+            return getRole(this.id)
+                .then((res) => {
+                    let hasRight = res.data.data.uid == User.getInfo().uid || User.isSuperAdmin();
+                    if (!hasRight) {
+                        this.$message.error(this.$t("dashboard.common.noPermission"));
+                        return;
+                    }
                     this.form = res.data.data;
-                }
-            });
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         submit: function () {
             // 如果是绑定的角色不能改

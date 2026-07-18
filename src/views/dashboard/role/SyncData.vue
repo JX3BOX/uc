@@ -4,7 +4,8 @@
             <i class="el-icon-connection"></i> {{ $t("dashboard.role.syncData") }}
             <el-button class="u-back" icon="ArrowLeft" @click="goBack">{{ $t("dashboard.common.back") }}</el-button>
         </h2>
-        <div class="m-tutorial" v-html="notice"></div>
+        <ContentSkeleton v-if="loading" variant="form" :rows="4" />
+        <div v-else class="m-tutorial" v-html="notice"></div>
     </div>
 </template>
 
@@ -14,6 +15,7 @@ export default {
     name: "SyncData",
     data() {
         return {
+            loading: true,
             notice: "",
         };
     },
@@ -22,9 +24,14 @@ export default {
             this.$router.push("/role");
         },
         loadBreadCrumb() {
-            getBreadcrumb("user-sync-game-data").then((res) => {
-                this.notice = res;
-            });
+            this.loading = true;
+            return getBreadcrumb("user-sync-game-data")
+                .then((res) => {
+                    this.notice = res;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
     },
     mounted() {

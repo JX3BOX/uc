@@ -1,6 +1,6 @@
 <template>
     <div class="m-dashboard m-dashboard-profile m-dashboard-work m-dashboard-whitelist m-whitelist">
-        <div class="m-whitelist-primary" v-loading="loading">
+        <div class="m-whitelist-primary">
             <h2 class="m-whitelist-title u-title"><i class="el-icon-ship"></i> {{ $t("dashboard.privacy.title") }}</h2>
 
             <el-tabs v-model="active" @tab-change="tabChange">
@@ -11,15 +11,21 @@
                         :key="i"
                         v-for="(item, i) in relationNetTypes"
                     >
+                        <ContentSkeleton
+                            v-if="loading && active === item.relationship_type"
+                            variant="cards"
+                            :rows="4"
+                            :columns="2"
+                        />
                         <lover
-                            v-if="active === 'lover' && isRelationNet && !showOpen"
+                            v-else-if="active === 'lover' && isRelationNet && !showOpen"
                             :list="members"
                             :waitList="waitList"
                             :relationId="relationId"
                             :relation-active-name="relationActiveName"
                             @refresh="onRefresh"
                         ></lover>
-                        <div class="m-fun-open" v-if="showOpen">
+                        <div class="m-fun-open" v-else-if="showOpen">
                             <el-empty :description="$t('dashboard.privacy.notEnabled')"></el-empty>
                             <el-button type="success" @click="onOpen">{{ $t("dashboard.privacy.enableNow") }}</el-button>
                         </div>
@@ -32,95 +38,99 @@
             </el-tabs>
 
             <template v-if="!isRelationNet">
-                <el-input
-                    class="m-privacy-search"
-                    size="large"
-                    :placeholder="$t('dashboard.common.searchPlaceholder')"
-                    v-model="keyword"
-                    @keyup.enter="handleChange"
-                    clearable
-                    @clear="handleChange"
-                >
-                    <template #prepend>{{ $t("dashboard.common.keyword") }}</template>
-                    <template #append>
-                        <el-button icon="Search" @click="handleChange"></el-button>
-                    </template>
-                </el-input>
-
-                <div class="m-whitelist-list u-list" v-if="list && list.length">
-                    <div class="u-item" v-for="(item, i) in list" :key="itemKey(item, i)">
-                        <div class="u-item-actions" v-if="!isReceivedKithInvitation(item)">
-                            <el-dropdown trigger="click" placement="bottom-end">
-                                <span class="u-item-dropdown" @click.stop>
-                                    <i class="el-icon-more"></i>
-                                </span>
-                                <template #dropdown>
-                                    <el-dropdown-menu>
-                                        <el-dropdown-item v-if="active === 'whitelist'" class="u-item-dropdown-menu">
-                                            <el-popconfirm
-                                                :title="$t('dashboard.privacy.deleteFriendConfirm')"
-                                                @confirm="remove(item.kith_id, i)"
-                                            >
-                                                <template #reference>
-                                                    <span class="u-item-dropdown-action" @click.stop>{{ $t("dashboard.common.remove") }}</span>
-                                                </template>
-                                            </el-popconfirm>
-                                        </el-dropdown-item>
-                                        <el-dropdown-item
-                                            v-else
-                                            class="u-item-dropdown-menu"
-                                            @click="removeOther(item)"
-                                        >
-                                            {{ $t("dashboard.common.remove") }}
-                                        </el-dropdown-item>
-                                    </el-dropdown-menu>
-                                </template>
-                            </el-dropdown>
-                        </div>
-                        <a class="u-item-pic" :href="userLink(item)" target="_blank">
-                            <img class="u-item-avatar" :src="showAvatar(getAvatar(item))" />
-                        </a>
-                        <a class="u-item-name" :href="userLink(item)" target="_blank">{{ getName(item) }}</a>
-                        <template v-if="active === 'whitelist'">
-                            <span class="u-item-remark" v-if="item.status">
-                                {{ $t("dashboard.common.remark") }}：{{ item.remark || $t("dashboard.common.none") }}
-                                <i class="el-icon-edit-outline u-btn-edit" @click="edit(item.kith_id, item)"></i>
-                            </span>
-                            <div class="u-item-invitation" v-else-if="isReceivedKithInvitation(item)">
-                                <span class="u-item-remark u-pending">{{ $t("dashboard.privacy.invitesYou") }}</span>
-                                <div class="u-item-invitation-actions">
-                                    <el-button
-                                        size="small"
-                                        type="primary"
-                                        :loading="invitationLoadingId === item.kith_id"
-                                        @click="handleKithInvitation(item, true)"
-                                    >{{ $t("dashboard.common.accept") }}</el-button>
-                                    <el-button
-                                        size="small"
-                                        :disabled="invitationLoadingId === item.kith_id"
-                                        @click="handleKithInvitation(item, false)"
-                                    >{{ $t("dashboard.common.reject") }}</el-button>
-                                </div>
-                            </div>
-                            <span class="u-item-remark u-pending" v-else> <i class="el-icon-loading"></i> {{ $t("dashboard.privacy.awaitingConfirmation") }} </span>
+                <ContentSkeleton v-if="loading" variant="cards" :rows="6" :columns="3" />
+                <template v-else>
+                    <el-input
+                        class="m-privacy-search"
+                        size="large"
+                        :placeholder="$t('dashboard.common.searchPlaceholder')"
+                        v-model="keyword"
+                        @keyup.enter="handleChange"
+                        clearable
+                        @clear="handleChange"
+                    >
+                        <template #prepend>{{ $t("dashboard.common.keyword") }}</template>
+                        <template #append>
+                            <el-button icon="Search" @click="handleChange"></el-button>
                         </template>
-                        <div class="u-item-time" :title="$t('dashboard.privacy.createdAtValue', { time: formatCreatedAt(item) })">
-                            {{ $t("dashboard.privacy.createdAt") }}：{{ formatCreatedAt(item) }}
+                    </el-input>
+
+                    <div class="m-whitelist-list u-list" v-if="list && list.length">
+                        <div class="u-item" v-for="(item, i) in list" :key="itemKey(item, i)">
+                            <div class="u-item-actions" v-if="!isReceivedKithInvitation(item)">
+                                <el-dropdown trigger="click" placement="bottom-end">
+                                    <span class="u-item-dropdown" @click.stop>
+                                        <i class="el-icon-more"></i>
+                                    </span>
+                                    <template #dropdown>
+                                        <el-dropdown-menu>
+                                            <el-dropdown-item v-if="active === 'whitelist'" class="u-item-dropdown-menu">
+                                                <el-popconfirm
+                                                    :title="$t('dashboard.privacy.deleteFriendConfirm')"
+                                                    @confirm="remove(item.kith_id, i)"
+                                                >
+                                                    <template #reference>
+                                                        <span class="u-item-dropdown-action" @click.stop>{{ $t("dashboard.common.remove") }}</span>
+                                                    </template>
+                                                </el-popconfirm>
+                                            </el-dropdown-item>
+                                            <el-dropdown-item
+                                                v-else
+                                                class="u-item-dropdown-menu"
+                                                @click="removeOther(item)"
+                                            >
+                                                {{ $t("dashboard.common.remove") }}
+                                            </el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </template>
+                                </el-dropdown>
+                            </div>
+                            <a class="u-item-pic" :href="userLink(item)" target="_blank">
+                                <img class="u-item-avatar" :src="showAvatar(getAvatar(item))" />
+                            </a>
+                            <a class="u-item-name" :href="userLink(item)" target="_blank">{{ getName(item) }}</a>
+                            <template v-if="active === 'whitelist'">
+                                <span class="u-item-remark" v-if="item.status">
+                                    {{ $t("dashboard.common.remark") }}：{{ item.remark || $t("dashboard.common.none") }}
+                                    <i class="el-icon-edit-outline u-btn-edit" @click="edit(item.kith_id, item)"></i>
+                                </span>
+                                <div class="u-item-invitation" v-else-if="isReceivedKithInvitation(item)">
+                                    <span class="u-item-remark u-pending">{{ $t("dashboard.privacy.invitesYou") }}</span>
+                                    <div class="u-item-invitation-actions">
+                                        <el-button
+                                            size="small"
+                                            type="primary"
+                                            :loading="invitationLoadingId === item.kith_id"
+                                            @click="handleKithInvitation(item, true)"
+                                        >{{ $t("dashboard.common.accept") }}</el-button>
+                                        <el-button
+                                            size="small"
+                                            :disabled="invitationLoadingId === item.kith_id"
+                                            @click="handleKithInvitation(item, false)"
+                                        >{{ $t("dashboard.common.reject") }}</el-button>
+                                    </div>
+                                </div>
+                                <span class="u-item-remark u-pending" v-else> <i class="el-icon-loading"></i> {{ $t("dashboard.privacy.awaitingConfirmation") }} </span>
+                            </template>
+                            <div class="u-item-time" :title="$t('dashboard.privacy.createdAtValue', { time: formatCreatedAt(item) })">
+                                {{ $t("dashboard.privacy.createdAt") }}：{{ formatCreatedAt(item) }}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <el-pagination
-                    class="m-whitelist-pagination"
-                    background
-                    v-if="active !== 'whitelist'"
-                    :page-sizes="[10, 20, 50]"
-                    v-model:current-page="pagination.pageIndex"
-                    v-model:page-size="pagination.pageSize"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    @current-change="currentChange"
-                    @size-change="handleSizeChange"
-                    :total="pagination.total"
-                ></el-pagination>
+                    <el-empty v-else :description="$t('dashboard.common.noItems')" />
+                    <el-pagination
+                        class="m-whitelist-pagination"
+                        background
+                        v-if="active !== 'whitelist' && pagination.total"
+                        :page-sizes="[10, 20, 50]"
+                        v-model:current-page="pagination.pageIndex"
+                        v-model:page-size="pagination.pageSize"
+                        layout="total, sizes, prev, pager, next, jumper"
+                        @current-change="currentChange"
+                        @size-change="handleSizeChange"
+                        :total="pagination.total"
+                    ></el-pagination>
+                </template>
             </template>
         </div>
         <div class="m-whitelist-sidebar" v-if="active !== 'myfans' && !isRelationNet">
@@ -187,7 +197,8 @@ export default {
             // 列表区
             list: [],
             kithList: [],
-            loading: false,
+            loading: true,
+            loadingCount: 0,
             invitationLoadingId: 0,
 
             // 侧边栏
@@ -317,6 +328,14 @@ export default {
         },
     },
     methods: {
+        beginLoading() {
+            this.loadingCount += 1;
+            this.loading = true;
+        },
+        endLoading() {
+            this.loadingCount = Math.max(0, this.loadingCount - 1);
+            this.loading = this.loadingCount > 0;
+        },
         isReceivedKithInvitation(item) {
             return !item.status && !!item.invitation_received;
         },
@@ -507,10 +526,11 @@ export default {
                     this.handleRequestError(err);
                 })
                 .finally(() => {
-                    this.loading = false;
+                    this.endLoading();
                 });
         },
         loadConf() {
+            this.beginLoading();
             getUserConf()
                 .then((res) => {
                     this.isAllowLover = !!res?.data?.data?.accept_lover_request;
@@ -518,7 +538,8 @@ export default {
                         this.loadRelationNetMembersByType();
                     }
                 })
-                .catch((err) => this.handleRequestError(err));
+                .catch((err) => this.handleRequestError(err))
+                .finally(() => this.endLoading());
         },
         onRefresh(fn) {
             this?.[fn]();
@@ -571,7 +592,7 @@ export default {
             // 加载关系网成员
             // 官方关系网类型且唯一
             const type = this.active;
-            this.loading = true;
+            this.beginLoading();
             getRelationNetMembersByType(type)
                 .then((res) => {
                     this.members = res.data.data?.members || [];
@@ -583,12 +604,12 @@ export default {
                     this.handleRequestError(err);
                 })
                 .finally(() => {
-                    this.loading = false;
+                    this.endLoading();
                 });
         },
         // 获取待处理的关系邀请
         loadWaitInvites() {
-            this.loading = true;
+            this.beginLoading();
             getWaitInvites()
                 .then((res) => {
                     this.waitList =
@@ -599,7 +620,7 @@ export default {
                     this.handleRequestError(err);
                 })
                 .finally(() => {
-                    this.loading = false;
+                    this.endLoading();
                 });
         },
         tabChange() {
@@ -686,7 +707,7 @@ export default {
             if (!this.isNormalTab(this.active)) {
                 this.active = "whitelist";
             }
-            this.loading = true;
+            this.beginLoading();
             this.syncRoute();
             if (this.active === "whitelist") {
                 this.runListRequest(getKithList(), (res) => {
@@ -808,9 +829,12 @@ export default {
         authorLink,
     },
     mounted: function () {
-        this.loadRelationNetTypes().then(() => {
-            this.setActiveTab(this.$route.query.tab);
-        });
+        this.beginLoading();
+        this.loadRelationNetTypes()
+            .then(() => {
+                this.setActiveTab(this.$route.query.tab);
+            })
+            .finally(() => this.endLoading());
         User.getAsset()
             .then((asset) => {
                 if (User._isPRO(asset)) {

@@ -1,5 +1,5 @@
 <template>
-    <div class="m-dashboard m-dashboard-work m-dashboard-wiki" v-loading="loading">
+    <div class="m-dashboard m-dashboard-work m-dashboard-wiki">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">{{ $t("publish.types.wikiComments") }}</h2>
         </div>
@@ -20,7 +20,11 @@
         </el-input>
 
         <div class="m-dashboard-box">
-            <ul class="m-dashboard-box-list" v-if="achievement_comment.data && achievement_comment.data.length">
+            <ContentSkeleton v-if="loading" variant="list" :rows="length" compact />
+            <ul
+                v-else-if="achievement_comment.data && achievement_comment.data.length"
+                class="m-dashboard-box-list"
+            >
                 <li class="u-wiki" v-for="(comment, key) in achievement_comment.data" :key="key">
                     <span class="u-tab" v-text="getTypeLabel(comment.type)"></span>
                     <div class="u-header">
@@ -64,6 +68,7 @@
                 show-icon
             ></el-alert>
             <el-pagination
+                v-if="!loading"
                 class="m-dashboard-box-pages"
                 background
                 :total="achievement_comment.total"
@@ -87,7 +92,7 @@ export default {
     props: [],
     data: function () {
         return {
-            loading: false,
+            loading: true,
 
             active_name: this.$route.query.type ? this.$route.query.type : "wiki_post",
             achievement_comment: {

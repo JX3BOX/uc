@@ -9,6 +9,8 @@
             >
         </template>
         <div class="m-medal-content">
+            <ContentSkeleton v-if="loading" variant="cards" :rows="8" :columns="4" />
+            <template v-else>
             <el-divider content-position="left">{{ $t("dashboard.common.obtained") }}</el-divider>
             <div class="u-list" v-if="userMedals.length">
                 <div class="u-item is-have" v-for="item in userMedals" :key="item.id" :title="item.medal_desc">
@@ -37,6 +39,7 @@
                 </div>
             </div>
             <el-empty v-else-if="!loading" :description="$t('dashboard.common.empty')" :image-size="80" />
+            </template>
         </div>
     </uc>
 </template>
@@ -64,7 +67,7 @@ export default {
             userMedals: [],
             // 未拥有
             noMedals: [],
-            loading: false,
+            loading: true,
             updatingMedalId: null,
         };
     },

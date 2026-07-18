@@ -78,6 +78,8 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
         app.component(key, component);
     }
 }
+import ContentSkeleton from "@/components/ContentSkeleton.vue";
+app.component("ContentSkeleton", ContentSkeleton);
 import PublishDesignTask from "@/components/publish/publish_design_task.vue";
 app.component("publish-design-task", PublishDesignTask);
 import cms_banner from "@/components/publish/cms_banner.vue";

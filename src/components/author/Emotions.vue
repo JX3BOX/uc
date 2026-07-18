@@ -1,7 +1,8 @@
 <template>
-    <div class="m-post" v-loading="loading">
+    <div class="m-post">
+        <ContentSkeleton v-if="loading" variant="cards" :rows="8" :columns="4" compact />
         <!-- 列表 -->
-        <div v-if="list && list.length" class="m-emotions-list">
+        <div v-else-if="list && list.length" class="m-emotions-list">
             <div v-for="(item, i) in list" :key="i + item" class="u-list">
                 <a class="u-pic" :href="postLink(item.id)" target="_blank">
                     <img :src="showEmotion(item.url)" :alt="item.desc" :key="item.url" class="u-img" />
@@ -16,6 +17,7 @@
         </div>
 
         <el-pagination
+            v-if="!loading"
             class="m-author-pages"
             background
             :hide-on-single-page="true"
@@ -36,7 +38,7 @@ export default {
     props: [],
     data: function () {
         return {
-            loading: false,
+            loading: true,
             list: [],
             total: 1,
             per: 25,
@@ -58,6 +60,7 @@ export default {
     methods: {
         loadData: function () {
             if (!this.uid) {
+                this.loading = false;
                 return;
             }
             this.loading = true;

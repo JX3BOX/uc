@@ -1,5 +1,7 @@
 <template>
     <div class="m-dashboard m-dashboard-index">
+        <ContentSkeleton v-if="pageLoading" variant="dashboard" :rows="4" />
+        <template v-else>
         <div class="m-basicinfo">
             <CommonAvatar
                 class="u-avatar"
@@ -233,7 +235,8 @@
                     </el-radio-group>
                 </div>
             </h2>
-            <ul class="u-list" v-if="asset_logs && asset_logs.length">
+            <ContentSkeleton v-if="assetLogsLoading" variant="list" :rows="4" compact />
+            <ul class="u-list" v-else-if="asset_logs && asset_logs.length">
                 <li class="u-item" v-for="(item, i) in asset_logs" :key="i">
                     <i :class="showAssetIcon(item.type)"></i>
 
@@ -309,6 +312,7 @@
                 <i class="el-icon-warning-outline"></i> {{ $t("dashboard.home.noRecordsInRange") }}
             </div>
         </div>
+        </template>
     </div>
 </template>
 
@@ -333,6 +337,8 @@ export default {
     props: [],
     data: function () {
         return {
+            pageLoading: true,
+            assetLogsLoading: true,
             uid: User.getInfo().uid,
             group: User.getInfo().group,
             info: {
@@ -444,15 +450,15 @@ export default {
             return `${this.info?.experience || 0} / ${this.currentLevelMaxExp}`;
         },
         loadUserInfo: function () {
-            if (!User.isLogin()) return;
-            getMyInfo({ mute: true })
+            if (!User.isLogin()) return Promise.resolve();
+            const userInfoRequest = getMyInfo({ mute: true })
                 .then((res) => {
                     if (res.data.data) {
                         this.info = res.data.data;
                     }
                 })
                 .catch(() => {});
-            getAccountStatus()
+            const accountStatusRequest = getAccountStatus()
                 .then((res) => {
                     this.accountStatus = {
                         ...this.accountStatus,
@@ -460,9 +466,10 @@ export default {
                     };
                 })
                 .catch(() => {});
+            return Promise.allSettled([userInfoRequest, accountStatusRequest]);
         },
         loadAsset: function () {
-            User.getAsset()
+            return User.getAsset()
                 .then((data) => {
                     this.asset = {
                         ext_info: {},
@@ -479,22 +486,28 @@ export default {
             });
         },
         loadAssetLogs: function () {
+            this.assetLogsLoading = true;
             if (!User.isLogin()) {
                 this.asset_logs = [];
-                return;
+                this.assetLogsLoading = false;
+                return Promise.resolve();
             }
-            getMyAssetLogs(this.date, { mute: true })
+            return getMyAssetLogs(this.date, { mute: true })
                 .then((res) => {
                     this.asset_logs = res.data.data.list || [];
                 })
                 .catch(() => {
                     this.asset_logs = [];
+                })
+                .finally(() => {
+                    this.assetLogsLoading = false;
                 });
         },
         init: function () {
-            this.loadUserInfo();
-            this.loadAsset();
-            this.loadAssetLogs();
+            this.pageLoading = true;
+            return Promise.allSettled([this.loadUserInfo(), this.loadAsset(), this.loadAssetLogs()]).finally(() => {
+                this.pageLoading = false;
+            });
         },
         getPostLink: function (post_type, post_id) {
             return post_type == "mall_order" ? `/vip/mall/${post_id}` : getLink(post_type, post_id);

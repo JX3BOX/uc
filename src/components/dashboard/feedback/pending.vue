@@ -48,8 +48,10 @@
             </el-checkbox>
         </div>
         <!-- list -->
-        <div class="m-feedback-list" v-loading="loading">
+        <div class="m-feedback-list">
+            <ContentSkeleton v-if="loading" variant="table" :rows="per" :columns="6" />
             <el-table
+                v-else-if="data.length"
                 :data="data"
                 highlight-current-row
                 @row-click="viewFeedback"
@@ -152,7 +154,9 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <el-empty v-else :description="$t('dashboard.common.noItems')" />
             <el-pagination
+                v-if="!loading && total"
                 class="m-credit-pages m-packet-pages"
                 background
                 :page-size="per"
@@ -190,7 +194,7 @@ export default {
     data() {
         return {
             data: [],
-            loading: false,
+            loading: true,
             page: 1,
             per: 10,
             total: 0,
@@ -326,6 +330,8 @@ export default {
                 this.data = res.data.data.list || [];
                 this.total = res.data.data.page.total;
             } catch (e) {
+                this.data = [];
+                this.total = 0;
                 console.log(e);
             } finally {
                 this.loading = false;

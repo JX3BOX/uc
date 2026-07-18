@@ -8,6 +8,8 @@
                 ><i class="el-icon-shopping-cart-2"></i> {{ $t("dashboard.theme.getDecorations") }}</a
             >
         </template>
+        <ContentSkeleton v-if="initialLoading" variant="cards" :rows="8" :columns="5" />
+        <template v-else>
         <div class="m-emotion-content-preview">
             <div class="m-title">
                 <span>{{ $t("dashboard.emotion.previewTitle") }}</span>
@@ -47,7 +49,7 @@
             </div>
         </div>
         <div class="m-actions">
-            <el-button icon="CircleCheck" type="primary" @click="onSave" :loading="loading" size="large"
+            <el-button icon="CircleCheck" type="primary" @click="onSave" :loading="submitting" size="large"
                 >{{ $t("dashboard.emotion.confirmActivation", { count: selectedKeys.length }) }}</el-button
             >
             <div class="u-tip">{{ $t("dashboard.emotion.limitTip") }}</div>
@@ -67,6 +69,7 @@
                 </button>
             </div>
         </div>
+        </template>
     </uc>
 </template>
 
@@ -85,7 +88,8 @@ export default {
 
             emotions: [],
             active: [],
-            loading: false,
+            initialLoading: true,
+            submitting: false,
 
             allEmotions: [], // 所有表情包
             ownedEmotionKeys: [], // 已拥有的表情包键
@@ -123,7 +127,7 @@ export default {
             return key.replace(/^\#\w+/, "");
         },
         loadDecoration() {
-            getDecoration({ type: "emotion" }).then((res) => {
+            return getDecoration({ type: "emotion" }).then((res) => {
                 this.ownedEmotionKeys = res.data.data.map((item) => item.val);
                 this.selectedKeys = res.data.data.filter((item) => item.using).map((item) => item.val);
             });
@@ -134,16 +138,28 @@ export default {
 
                 if (_emotions) {
                     this.emotions = _emotions;
-                    return;
+                    return Promise.resolve();
                 } else {
-                    getEmotion().then((res) => {
+                    return getEmotion().then((res) => {
                         this.emotions = res.data;
                         sessionStorage.setItem("jx3_emotion", JSON.stringify(res.data));
                     });
                 }
             } catch (e) {
                 this.allEmotions = [];
+                return Promise.resolve();
             }
+        },
+        async load() {
+            this.initialLoading = true;
+            const results = await Promise.allSettled([this.getEmotion(), this.loadDecoration()]);
+            const failed = results.find((result) => result.status === "rejected");
+            if (failed) {
+                this.$message.error(
+                    failed.reason?.response?.data?.msg || this.$t("dashboard.common.requestFailed")
+                );
+            }
+            this.initialLoading = false;
         },
         toggleEmotionSelected(emotion) {
             const key = emotion.group_name;
@@ -167,19 +183,18 @@ export default {
         },
 
         onSave() {
-            this.loading = true;
+            this.submitting = true;
             setEmotion(this.selectedKeys)
                 .then(() => {
                     this.$message.success(this.$t("dashboard.common.saveSuccess"));
                 })
                 .finally(() => {
-                    this.loading = false;
+                    this.submitting = false;
                 });
         },
     },
     mounted: function () {
-        this.getEmotion();
-        this.loadDecoration();
+        this.load();
     },
     components: {
         uc,

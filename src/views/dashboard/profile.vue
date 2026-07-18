@@ -1,6 +1,7 @@
 <template>
     <uc>
-        <el-form class="m-profile-basic" ref="form" label-width="100px" :label-position="position">
+        <ContentSkeleton v-if="loading" variant="form" :rows="7" />
+        <el-form v-else class="m-profile-basic" ref="form" label-width="100px" :label-position="position">
             <el-form-item class="u-name" :label="$t('dashboard.profile.nickname')">
                 <div class="u-value">
                     {{ nickname }}
@@ -137,6 +138,7 @@ export default {
     props: [],
     data: function () {
         return {
+            loading: true,
             nickname: User.getInfo().name,
             servers,
             form: {
@@ -179,7 +181,8 @@ export default {
         },
         // 获取资料
         getProfile() {
-            getProfile()
+            this.loading = true;
+            return getProfile()
                 .then((res) => {
                     let data = res.data.data;
                     this.form.jx3_server = data.jx3_server;
@@ -192,7 +195,10 @@ export default {
                     this.form.tuilan_id = data.tuilan_id;
                     this.form.birthday = this.formatBirthday(data.birthday);
                 })
-                .catch(() => {});
+                .catch(() => {})
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         formatBirthday(value) {
             if (!value) return "";

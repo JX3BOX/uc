@@ -9,7 +9,8 @@
             </div> -->
             <el-button class="u-back" icon="ArrowLeft" @click="goBack">{{ $t("dashboard.common.back") }}</el-button>
         </h2>
-        <div class="m-bind-login" v-if="!isLogin">
+        <ContentSkeleton v-if="pageLoading" variant="form" :rows="4" />
+        <div class="m-bind-login" v-else-if="!isLogin">
             <el-alert :title="$t('dashboard.role.loginFirst')" type="warning" center show-icon :closable="false"></el-alert>
             <el-button type="primary" @click="toLogin">{{ $t("dashboard.common.loginNow") }}</el-button>
         </div>
@@ -104,6 +105,7 @@ export default {
     props: [],
     data: function () {
         return {
+            pageLoading: true,
             token: "",
             tokenLoading: false,
             tokenError: "",
@@ -126,27 +128,28 @@ export default {
     watch: {},
     created() {},
     mounted() {
-        this.loadBreadCrumb();
-        if (this.isLogin) {
-            this.loadRoles();
-            this.loadToken();
-        }
+        const requests = [this.loadBreadCrumb()];
+        if (this.isLogin) requests.push(this.loadRoles(), this.loadToken());
+        Promise.allSettled(requests).finally(() => {
+            this.pageLoading = false;
+        });
     },
     methods: {
         loadBreadCrumb: function () {
-            getBreadcrumb("bind_role").then((res) => {
+            const bindNoticeRequest = getBreadcrumb("bind_role").then((res) => {
                 this.notice = res;
             });
-            getBreadcrumb("sync_data").then((res) => {
+            const syncNoticeRequest = getBreadcrumb("sync_data").then((res) => {
                 this.sync_notice = res;
             });
+            return Promise.allSettled([bindNoticeRequest, syncNoticeRequest]);
         },
         loadRoles() {
             const params = {
                 _no_page: 1,
             };
             this.rolesError = "";
-            getRoles(params)
+            return getRoles(params)
                 .then((res) => {
                     this.roles = res.data.data.list?.slice(0, 5) || [];
                 })
@@ -158,7 +161,7 @@ export default {
         loadToken() {
             this.tokenLoading = true;
             this.tokenError = "";
-            getToken()
+            return getToken()
                 .then((res) => {
                     this.token = res.data.data.token || "";
                     if (!this.token) this.tokenError = this.$t("dashboard.role.tokenLoadFailed");

@@ -13,7 +13,8 @@
                 ><i class="el-icon-shopping-cart-2"></i> {{ $t("dashboard.theme.getDecorations") }}</a
             >
         </template>
-        <div class="m-theme-box">
+        <ContentSkeleton v-if="decorationJsonLoading" variant="cards" :rows="8" :columns="4" />
+        <div v-else class="m-theme-box">
             <!-- 左右两侧 -->
             <div class="m-theme-left">
                 <div class="u-top">
@@ -274,7 +275,7 @@ export default {
             decorationJson: [], //远程json
             skinSearchKeyword: "",
             scenePreviewDialogVisible: false,
-            decorationJsonLoading: false,
+            decorationJsonLoading: true,
             decorationJsonLoadError: false,
             submitting: false,
             originalActivateName: null,
@@ -383,7 +384,7 @@ export default {
                     sessionStorage.setItem("decoration_json", JSON.stringify(res.data));
                     this.decorationJson = res.data;
                     this.applyDecorationList([]);
-                    return getDecoration()
+                    return getDecoration({ type: "calendar,sidebar,comment,homebg,atcard" })
                         .then((res) => {
                             let typeArr = SKIN_TYPE_OPTIONS.map((item) => item.type);
                             let arr = res.data.data.filter(

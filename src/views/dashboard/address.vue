@@ -5,7 +5,8 @@
             <el-button type="primary" icon="Plus" @click="add">{{ $t("dashboard.address.add") }}</el-button>
 
             <div class="m-content">
-                <el-table :data="list" v-loading="loading">
+                <ContentSkeleton v-if="loading" variant="table" :rows="5" :columns="5" />
+                <el-table v-else :data="list">
                     <el-table-column prop="contact_name" :label="$t('dashboard.common.name')" width="180"> </el-table-column>
                     <el-table-column prop="contact_phone" :label="$t('dashboard.common.phone')" width="180"> </el-table-column>
                     <el-table-column :label="$t('dashboard.address.default')" width="180">

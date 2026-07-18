@@ -159,8 +159,9 @@
                 </el-form-item>
             </el-form>
         </div>
-        <div class="m-credit-table m-packet-table" v-loading="loading">
-            <el-tabs v-model="tab" @tab-change="changeType" type="border-card">
+        <div class="m-credit-table m-packet-table">
+            <ContentSkeleton v-if="loading" variant="table" :rows="per" :columns="tab === 'out' ? 6 : 5" />
+            <el-tabs v-else v-model="tab" @tab-change="changeType" type="border-card">
                 <el-tab-pane :label="$t('dashboard.boxcoin.history')" name="in" lazy>
                     <div class="m-packet-table" v-if="list && list.length">
                         <table class="m-boxcoin-in-list m-packet-in-list">
@@ -442,8 +443,12 @@ export default {
             });
             fn[this.tab](this.params)
                 .then((res) => {
-                    this.list = res.data.data.list;
-                    this.total = res.data.data.page.total;
+                    this.list = res.data.data.list || [];
+                    this.total = res.data.data.page.total || 0;
+                })
+                .catch(() => {
+                    this.list = [];
+                    this.total = 0;
                 })
                 .finally(() => {
                     this.loading = false;

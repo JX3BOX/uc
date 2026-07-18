@@ -1,5 +1,5 @@
 <template>
-    <div class="m-dashboard-work m-dashboard-cms m-dashboard-union" v-loading="loading">
+    <div class="m-dashboard-work m-dashboard-cms m-dashboard-union">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">
                 {{ $t("publish.nav.collaboration") }}
@@ -11,7 +11,8 @@
         </div>
 
         <div class="m-dashboard-box">
-            <ul class="m-dashboard-box-list" v-if="data && data.length">
+            <ContentSkeleton v-if="loading" variant="list" :rows="per" compact />
+            <ul class="m-dashboard-box-list" v-else-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
                     <template v-if="item.union_post_raw">
                         <a
@@ -85,6 +86,7 @@
                 show-icon
             ></el-alert>
             <el-pagination
+                v-if="!loading"
                 class="m-dashboard-box-pages"
                 background
                 :page-size="per"
@@ -107,7 +109,7 @@ export default {
     props: [],
     data: function () {
         return {
-            loading: false,
+            loading: true,
             data: [],
             total: 1,
             page: 1,

@@ -1,5 +1,6 @@
 <template>
-    <div class="m-notice-email u-notice-box">
+    <ContentSkeleton v-if="loading" variant="list" :rows="1" compact />
+    <div v-else class="m-notice-email u-notice-box">
         <div class="u-notice-value">
             <span class="u-address" v-if="currentEmail">{{ blurAddress(currentEmail) }}</span>
             <el-tag class="u-notice-status" :type="currentEmail ? (verified ? 'success' : 'warning') : 'info'">{{
@@ -28,6 +29,7 @@ export default {
     },
     data: function () {
         return {
+            loading: true,
             visible: false,
             verified: false,
 
@@ -45,11 +47,16 @@ export default {
             return String(text || "").replace(/(.{2}).*(.{0}@.*)/, "$1****$2");
         },
         load() {
-            getProfile().then((res) => {
-                const data = res.data.data;
-                this.currentEmail = data?.user_email || "";
-                this.verified = !!data?.verify_email;
-            });
+            this.loading = true;
+            return getProfile()
+                .then((res) => {
+                    const data = res.data.data;
+                    this.currentEmail = data?.user_email || "";
+                    this.verified = !!data?.verify_email;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         onUpdate() {
             this.load();

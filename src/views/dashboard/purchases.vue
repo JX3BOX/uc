@@ -2,10 +2,11 @@
     <div class="m-dashboard m-dashboard-work m-dashboard-purchases">
         <h2 class="u-title"><i class="el-icon-shopping-cart-2"></i> {{ $t("dashboard.purchases.title") }}</h2>
 
+        <ContentSkeleton v-if="loading" variant="table" :rows="limit" :columns="5" />
         <el-table
+            v-else-if="list.length"
             class="m-table"
             :data="list"
-            v-loading="loading"
             @row-click="rowClick"
             @filter-change="filterChange"
             show-header
@@ -39,7 +40,10 @@
             </el-table-column>
         </el-table>
 
+        <el-empty v-else :description="$t('dashboard.common.noItems')" />
+
         <el-pagination
+            v-if="!loading && total"
             class="m-pagination"
             background
             :page-size="limit"

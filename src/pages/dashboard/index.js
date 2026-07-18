@@ -78,6 +78,8 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
         app.component(key, component);
     }
 }
+import ContentSkeleton from "@/components/ContentSkeleton.vue";
+app.component("ContentSkeleton", ContentSkeleton);
 
 // 6.3 Tailwind
 import "@/assets/css/tailwind.css";

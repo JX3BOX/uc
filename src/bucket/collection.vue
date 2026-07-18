@@ -16,8 +16,9 @@
             </template>
         </el-input>
 
-        <div class="m-dashboard-box" v-loading="loading">
-            <template v-if="data && data.length">
+        <div class="m-dashboard-box">
+            <ContentSkeleton v-if="loading" variant="list" :rows="per" compact />
+            <template v-else-if="data && data.length">
                 <ul class="m-dashboard-box-list">
                     <li v-for="(item, i) in data" :key="i">
                         <a class="u-title" target="_blank" :href="getCollectionLink(item.id)">
@@ -54,6 +55,7 @@
                 show-icon
             ></el-alert>
             <el-pagination
+                v-if="!loading"
                 class="m-dashboard-box-pages"
                 background
                 :page-size="per"
@@ -75,7 +77,7 @@ export default {
     props: [],
     data: function () {
         return {
-            loading: false,
+            loading: true,
             data: [],
             total: 1,
             page: 1,

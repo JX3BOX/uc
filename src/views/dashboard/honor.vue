@@ -9,7 +9,8 @@
                 ><i class="el-icon-shopping-cart-2"></i> {{ $t("dashboard.theme.getDecorations") }}</a
             >
         </template>
-        <div class="m-honor">
+        <ContentSkeleton v-if="loading" variant="cards" :rows="8" :columns="4" />
+        <div v-else class="m-honor">
             <div class="m-honor-left">
                 <div class="u-header-info">
                     <div class="u-user-summary">
@@ -79,7 +80,7 @@
                 </div>
             </div>
         </div>
-        <div class="m-btn">
+        <div v-if="!loading" class="m-btn">
             <el-button type="primary" :loading="submitting" @click="submit" size="large">{{ $t("dashboard.common.confirm") }}</el-button>
             <el-button @click="reset" size="large">{{ $t("dashboard.common.reset") }}</el-button>
         </div>
@@ -115,6 +116,7 @@ export default {
             honorList: [],
             list: [],
             isSelectBak: {},
+            loading: true,
             submitting: false,
         };
     },
@@ -164,11 +166,22 @@ export default {
             }
         },
         loadUserInfo: function () {
-            getMyInfo().then((res) => {
+            return getMyInfo().then((res) => {
                 if (res.data.data) {
                     this.info = res.data.data;
                 }
             });
+        },
+        async load() {
+            this.loading = true;
+            const results = await Promise.allSettled([this.loadUserInfo(), this.loadHonor()]);
+            const failed = results.find((result) => result.status === "rejected");
+            if (failed) {
+                this.$message.error(
+                    failed.reason?.response?.data?.msg || this.$t("dashboard.common.requestFailed")
+                );
+            }
+            this.loading = false;
         },
         disposeHonor(honor) {
             const data = honor || {};
@@ -315,8 +328,7 @@ export default {
         },
     },
     mounted: function () {
-        this.loadUserInfo();
-        this.loadHonor();
+        this.load();
     },
     components: {
         uc,

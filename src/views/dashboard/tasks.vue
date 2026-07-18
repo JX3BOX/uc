@@ -1,53 +1,56 @@
 <template>
     <div class="m-credit m-tasks">
         <h2 class="u-title"><i class="el-icon-coffee-cup"></i> {{ $t("dashboard.tasks.title") }}</h2>
-        <div class="m-tasks-list" v-loading="loading">
-            <taskItem
-                v-for="(item, index) in list"
-                :key="index"
-                :data="item"
-                :claiming="claimingTaskId === item.task.id"
-                :claim-disabled="claimingTaskId !== null"
-                @claim="claimReward"
-            />
-            <!-- 任务组 -->
-            <template v-if="groupedTasks.length">
-                <div
-                    class="u-item u-group"
-                    v-for="groupItem in groupedTasks"
-                    :key="groupItem.key"
-                    :class="groupItem.info.open ? 'open' : 'close'"
-                >
-                    <div class="u-parent u-item">
-                        <img class="u-img" :src="groupItem.info.img" :alt="groupItem.info.name" />
-                        <div class="u-box">
-                            <a
-                                v-if="groupItem.info.url"
-                                class="u-title"
-                                :href="groupItem.info.url"
-                                target="_blank"
-                                >{{ groupItem.info.name }}</a
-                            >
-                            <span v-else class="u-title">{{ groupItem.info.name }}</span>
-                            <el-button
-                                :type="groupItem.info.open ? 'primary' : ''"
-                                @click="toggleGroup(groupItem.key)"
-                                >{{ groupItem.info.open ? $t("dashboard.tasks.collapse") : $t("dashboard.tasks.expand")
-                                }}<i :class="groupItem.info.open ? 'el-icon-caret-top' : 'el-icon-caret-right'"></i
-                            ></el-button>
+        <div class="m-tasks-list">
+            <ContentSkeleton v-if="loading" variant="list" :rows="6" />
+            <template v-else>
+                <taskItem
+                    v-for="(item, index) in list"
+                    :key="index"
+                    :data="item"
+                    :claiming="claimingTaskId === item.task.id"
+                    :claim-disabled="claimingTaskId !== null"
+                    @claim="claimReward"
+                />
+                <!-- 任务组 -->
+                <template v-if="groupedTasks.length">
+                    <div
+                        class="u-item u-group"
+                        v-for="groupItem in groupedTasks"
+                        :key="groupItem.key"
+                        :class="groupItem.info.open ? 'open' : 'close'"
+                    >
+                        <div class="u-parent u-item">
+                            <img class="u-img" :src="groupItem.info.img" :alt="groupItem.info.name" />
+                            <div class="u-box">
+                                <a
+                                    v-if="groupItem.info.url"
+                                    class="u-title"
+                                    :href="groupItem.info.url"
+                                    target="_blank"
+                                    >{{ groupItem.info.name }}</a
+                                >
+                                <span v-else class="u-title">{{ groupItem.info.name }}</span>
+                                <el-button
+                                    :type="groupItem.info.open ? 'primary' : ''"
+                                    @click="toggleGroup(groupItem.key)"
+                                    >{{ groupItem.info.open ? $t("dashboard.tasks.collapse") : $t("dashboard.tasks.expand")
+                                    }}<i :class="groupItem.info.open ? 'el-icon-caret-top' : 'el-icon-caret-right'"></i
+                                ></el-button>
+                            </div>
                         </div>
+                        <taskItem
+                            v-for="item in groupItem.tasks"
+                            :key="item?.task?.id || item?.id"
+                            :data="item"
+                            :claiming="claimingTaskId === item.task.id"
+                            :claim-disabled="claimingTaskId !== null"
+                            @claim="claimReward"
+                        />
                     </div>
-                    <taskItem
-                        v-for="item in groupItem.tasks"
-                        :key="item?.task?.id || item?.id"
-                        :data="item"
-                        :claiming="claimingTaskId === item.task.id"
-                        :claim-disabled="claimingTaskId !== null"
-                        @claim="claimReward"
-                    />
-                </div>
+                </template>
+                <el-empty v-if="!list.length && !groupedTasks.length" :description="$t('dashboard.tasks.empty')"></el-empty>
             </template>
-            <el-empty v-if="!loading && !list.length && !groupedTasks.length" :description="$t('dashboard.tasks.empty')"></el-empty>
         </div>
     </div>
 </template>
@@ -63,7 +66,7 @@ export default {
     },
     data: function () {
         return {
-            loading: false,
+            loading: true,
             list: [],
             group: {},
             groupInfo: {},

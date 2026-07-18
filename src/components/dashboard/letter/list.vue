@@ -1,7 +1,9 @@
 <template>
     <div v-if="contact" class="m-letter-box">
         <div class="u-chat-name" v-if="hasData">{{ contact.receiver_info.display_name }}</div>
-        <div class="m-letter-list" v-loading="loading" element-loading-spinner="el-icon-loading" ref="letterList">
+        <div class="m-letter-list" ref="letterList">
+            <ContentSkeleton v-if="loading" variant="list" :rows="6" compact />
+            <template v-else>
             <div class="u-letter-more">
                 <span class="u-load-more" v-show="hasHistory" @click.stop="getHistory"
                     ><i class="el-icon-d-arrow-right u-more-icon"></i>{{ $t("dashboard.message.viewHistory") }}</span
@@ -35,6 +37,7 @@
                     </div>
                 </div>
             </div>
+            </template>
         </div>
         <div class="u-letter-new" v-show="newMessage">
             <div class="u-text" @click="toBottom">{{ $t("dashboard.message.newMessage") }}</div>

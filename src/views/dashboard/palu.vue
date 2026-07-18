@@ -6,7 +6,9 @@
             </a>
         </template>
 
-        <section class="m-palu" v-loading="loading">
+        <section class="m-palu">
+            <ContentSkeleton v-if="loading" variant="cards" :rows="8" :columns="4" />
+            <template v-else>
             <header class="m-palu-summary">
                 <span class="u-summary-icon"><i class="el-icon-magic-stick"></i></span>
                 <div class="u-summary-content">
@@ -42,7 +44,8 @@
                     </a>
                 </article>
             </div>
-            <el-empty v-else-if="!loading" :description="$t('dashboard.palu.empty')" />
+            <el-empty v-else :description="$t('dashboard.palu.empty')" />
+            </template>
         </section>
     </uc>
 </template>
@@ -61,7 +64,7 @@ export default {
     name: "palu",
     components: { uc },
     data() {
-        return { tabList: themeTab, mallUrl: MALL_URL, cards: [], keyword: "", loading: false };
+        return { tabList: themeTab, mallUrl: MALL_URL, cards: [], keyword: "", loading: true };
     },
     computed: {
         filteredCards() {

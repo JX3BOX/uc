@@ -1,5 +1,5 @@
 <template>
-    <div class="m-dashboard-box" v-loading="loading">
+    <div class="m-dashboard-box">
         <div class="m-dashboard-msg-header">
             <el-input
                 class="m-dashboard-work-search"
@@ -18,7 +18,8 @@
                 </template>
             </el-input>
         </div>
-        <ul class="m-dashboard-box-list" v-if="data.length">
+        <ContentSkeleton v-if="loading" variant="list" :rows="pageSize" />
+        <ul class="m-dashboard-box-list" v-else-if="data.length">
             <li v-for="(item, i) in data" :key="i">
                 <i class="u-icon">
                     <img svg-inline src="@/assets/img/dashboard/works/repo.svg" />
@@ -35,6 +36,7 @@
         </ul>
         <el-alert v-else class="m-dashboard-box-null" :title="$t('dashboard.common.noItems')" type="info" center show-icon> </el-alert>
         <el-pagination
+            v-if="!loading && total"
             class="m-dashboard-box-pages"
             background
             :hide-on-single-page="true"
@@ -63,7 +65,7 @@ export default {
         return {
             search: "",
             data: [],
-            loading: false,
+            loading: true,
             total: 0,
 
             index: 1,

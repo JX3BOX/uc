@@ -1,6 +1,7 @@
 <template>
     <uc class="m-dashboard-pwd">
-        <div class="m-profile-pwd">
+        <ContentSkeleton v-if="loading" variant="form" :rows="3" />
+        <div v-else class="m-profile-pwd">
             <form v-if="status" class="m-dashboard-pwd-doing" @submit.prevent="done">
                 <img
                     class="u-pic"
@@ -121,6 +122,7 @@ export default {
             pass_validate_tip: this.$t("dashboard.password.lengthTip"),
             pass_accordance_tip: this.$t("dashboard.password.mismatch"),
             status: true,
+            loading: true,
             submitting: false,
             hasPassword: null,
         };
@@ -146,19 +148,24 @@ export default {
             return null;
         },
         loadPasswordStatus: function() {
+            this.loading = true;
             const mockStatus = this.getPasswordStatusMock();
             if (mockStatus !== null) {
                 this.hasPassword = mockStatus;
+                this.loading = false;
                 return;
             }
 
-            getPasswordStatus()
+            return getPasswordStatus()
                 .then((res) => {
                     const hasPassword = res?.data?.data?.has_password;
                     this.hasPassword = typeof hasPassword === "boolean" ? hasPassword : null;
                 })
                 .catch(() => {
                     this.hasPassword = null;
+                })
+                .finally(() => {
+                    this.loading = false;
                 });
         },
         checkPass: function() {

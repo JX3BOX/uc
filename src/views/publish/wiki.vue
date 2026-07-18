@@ -1,5 +1,5 @@
 <template>
-    <div class="m-dashboard m-dashboard-work m-dashboard-wiki" v-loading="loading">
+    <div class="m-dashboard m-dashboard-work m-dashboard-wiki">
         <div class="m-dashboard-work-header">
             <h2 class="u-title">{{ $t("publish.types.wikiTitle", { type: typeLabel }) }}</h2>
             <a :href="publishLink" class="u-publish el-button el-button--primary"
@@ -23,7 +23,11 @@
         </el-input>
 
         <div class="m-dashboard-box">
-            <ul class="m-dashboard-box-list" v-if="achievement_post.data && achievement_post.data.length">
+            <ContentSkeleton v-if="loading" variant="list" :rows="length" compact />
+            <ul
+                v-else-if="achievement_post.data && achievement_post.data.length"
+                class="m-dashboard-box-list"
+            >
                 <li class="u-wiki" v-for="(post, key) in achievement_post.data" :key="key">
                     <span class="u-tab" v-text="getTypeLabel(post.type)"></span>
                     <div class="u-header">
@@ -73,6 +77,7 @@
                 show-icon
             ></el-alert>
             <el-pagination
+                v-if="!loading"
                 class="m-dashboard-box-pages"
                 background
                 :total="achievement_post.total"
@@ -104,7 +109,7 @@ export default {
     props: [],
     data: function () {
         return {
-            loading: false,
+            loading: true,
 
             active_name: this.$route.query.type ? this.$route.query.type : "wiki_post",
             achievement_post: {

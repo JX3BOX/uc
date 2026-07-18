@@ -3,7 +3,8 @@
         <div class="m-dashboard m-dashboard-work m-dashboard-orders">
             <div class="m-dashboard-orders-cont">
                 <!-- 表单 -->
-                <div class="m-order-list" v-if="list && list.length">
+                <ContentSkeleton v-if="loading" variant="table" :rows="per" :columns="6" />
+                <div class="m-order-list" v-else-if="list && list.length">
                     <table>
                         <thead>
                             <tr>
@@ -65,6 +66,7 @@ export default {
             per: 10,
             total: 1,
             page: 1,
+            loading: false,
 
             tabList: mallTab,
         };
@@ -79,10 +81,19 @@ export default {
     },
     methods: {
         loadData() {
-            getOrderList(this.params).then((res) => {
-                this.list = res.data.data.list;
-                this.total = res.data.data.page.total;
-            });
+            this.loading = true;
+            getOrderList(this.params)
+                .then((res) => {
+                    this.list = res.data.data.list || [];
+                    this.total = res.data.data.page.total || 0;
+                })
+                .catch(() => {
+                    this.list = [];
+                    this.total = 0;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         showProduct: function (val) {
             const key = `dashboard.dataLabels.orderProducts.${val}`;

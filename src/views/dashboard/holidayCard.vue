@@ -1,8 +1,8 @@
 <template>
     <uc class="m-dashboard-frame m-dashboard-skin" icon="el-icon-magic-stick" :title="$t('dashboard.treasure.title')" :tab-list="tabList">
         <div class="m-cert-list">
-            <el-empty v-if="!list.length" :description="$t('dashboard.treasure.noCards')"></el-empty>
-            <el-row :gutter="32" v-else>
+            <ContentSkeleton v-if="loading" variant="cards" :rows="pageSize" :columns="4" />
+            <el-row :gutter="32" v-else-if="list.length">
                 <el-col v-for="(item, index) in list" :key="index" :xs="24" :sm="12" :md="8" :xl="6">
                     <a class="m-cert-item m-feast-item" :href="getCertLink(item)" target="_blank">
                         <div class="u-img u-card"></div>
@@ -15,9 +15,11 @@
                     </a>
                 </el-col>
             </el-row>
+            <el-empty v-else :description="$t('dashboard.treasure.noCards')"></el-empty>
         </div>
 
         <el-pagination
+            v-if="!loading && total"
             class="m-pagination"
             background
             :hide-on-single-page="true"
@@ -46,6 +48,7 @@ export default {
         return {
             tabList: antiqueTab,
             list: [],
+            loading: true,
 
             pageSize: 10,
             pageIndex: 1,
@@ -62,10 +65,19 @@ export default {
                 pageIndex: this.pageIndex,
                 pageSize: this.pageSize,
             };
-            getHolidayCard(params).then((res) => {
-                this.list = res.data.data.list;
-                this.total = res.data.data.page.total;
-            });
+            this.loading = true;
+            getHolidayCard(params)
+                .then((res) => {
+                    this.list = res.data.data.list || [];
+                    this.total = res.data.data.page.total || 0;
+                })
+                .catch(() => {
+                    this.list = [];
+                    this.total = 0;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         formatTime(time) {
             let date = new Date(time);

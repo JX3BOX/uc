@@ -1,8 +1,8 @@
 <template>
     <uc class="m-dashboard-frame m-dashboard-skin" icon="el-icon-magic-stick" :title="$t('dashboard.treasure.title')" :tab-list="tabList">
         <div class="m-cert-list">
-            <el-empty v-if="!loading && !list.length" :description="emptyText"></el-empty>
-            <el-row :gutter="32">
+            <ContentSkeleton v-if="loading" variant="cards" :rows="per" :columns="4" />
+            <el-row v-else-if="list.length" :gutter="32">
                 <el-col v-for="(item, index) in list" :key="index" :xs="24" :sm="12" :md="8" :xl="6">
                     <a
                         class="m-cert-item"
@@ -56,8 +56,10 @@
                     </a>
                 </el-col>
             </el-row>
+            <el-empty v-else :description="emptyText"></el-empty>
 
             <el-pagination
+                v-if="!loading && total"
                 class="m-cert-pages"
                 background
                 @current-change="handleCurrentChange"
@@ -94,7 +96,7 @@ export default {
             per: 12,
             total: 0,
             list: [],
-            loading: false,
+            loading: true,
             loadError: false,
             tianTuanCertificateCode,
         };

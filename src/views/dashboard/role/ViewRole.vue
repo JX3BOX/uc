@@ -22,7 +22,8 @@
                 $t("dashboard.common.back")
             }}</el-button>
         </h2>
-        <div class="m-role-detail" v-if="data">
+        <ContentSkeleton v-if="loading" variant="form" :rows="5" />
+        <div class="m-role-detail" v-else-if="data">
             <div class="m-role-info">
                 <RoleAvatar class="u-avatar" :mount="data.mount" :body_type="data.body_type" />
                 <div class="u-meta u-name">
@@ -137,6 +138,7 @@ export default {
     props: [],
     data: function () {
         return {
+            loading: true,
             data: "",
             warning_visible: false,
             teams: [],
@@ -179,14 +181,23 @@ export default {
             });
         },
         loadData: function () {
-            getRole(this.id).then((res) => {
-                this.data = res.data.data;
-                if (this.hasRight) {
-                    getRoleBelongTeams(this.id).then((res) => {
-                        this.teams = res.data.data;
-                    });
-                }
-            });
+            this.loading = true;
+            return getRole(this.id)
+                .then((res) => {
+                    this.data = res.data.data;
+                    if (this.hasRight) {
+                        return getRoleBelongTeams(this.id).then((teamRes) => {
+                            this.teams = teamRes.data.data;
+                        });
+                    }
+                })
+                .catch(() => {
+                    this.data = "";
+                    this.warning_visible = true;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         goBack: function () {
             this.$router.push("/role");

@@ -1,6 +1,7 @@
 <template>
     <uc class="m-dashboard-notice">
-        <div class="m-dashboard-content" v-loading="loading">
+        <ContentSkeleton v-show="loading" variant="list" :rows="4" />
+        <div v-show="!loading" class="m-dashboard-content">
             <el-alert class="u-tip" :title="$t('dashboard.notice.tip')" type="warning" show-icon> </el-alert>
             <div class="m-dashboard-content-list">
                 <div class="m-item" v-for="(item, i) in list" :key="i">
@@ -30,7 +31,7 @@ export default {
     components: { uc, wechat: markRaw(wechat), email: markRaw(email), phone: markRaw(phone), qqbot },
     data: function () {
         return {
-            loading: false,
+            loading: true,
             authData: {
                 qqbot: "",
             },

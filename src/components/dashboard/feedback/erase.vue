@@ -5,7 +5,9 @@
  * @Description:
 -->
 <template>
-    <div class="m-feedback-erase" v-loading="loading">
+    <div class="m-feedback-erase">
+        <ContentSkeleton v-if="loading" variant="form" :rows="6" />
+        <template v-else>
         <div class="m-feedback-article">
             <h1 class="u-title">{{ $t("dashboard.feedback.accountDeletion") }}</h1>
             <common-article :content="article"></common-article>
@@ -16,6 +18,7 @@
                 <el-button type="danger" :disabled="!agree" @click="handleConfirm">{{ $t("dashboard.feedback.confirmDeletion") }}</el-button>
             </div>
         </div>
+        </template>
     </div>
 </template>
 
@@ -33,7 +36,7 @@ export default {
     data() {
         return {
             agree: false,
-            loading: false,
+            loading: true,
 
             article: "",
         };

@@ -3,7 +3,8 @@
         <div class="m-dashboard m-dashboard-work m-dashboard-orders">
             <div class="m-dashboard-orders-cont">
                 <!-- 表单 -->
-                <div class="m-mall-list" v-loading="loading" v-if="list && list.length">
+                <ContentSkeleton v-if="loading" variant="table" :rows="pageSize" :columns="6" />
+                <div class="m-mall-list" v-else-if="list && list.length">
                     <table>
                         <thead>
                             <tr>
@@ -157,7 +158,7 @@ export default {
     data: function () {
         return {
             list: [],
-            loading: false,
+            loading: true,
 
             total: 0,
             pageIndex: 1,

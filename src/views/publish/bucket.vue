@@ -1,5 +1,5 @@
 <template>
-    <div class="m-dashboard-work m-dashboard-bucket" v-loading="loading">
+    <div class="m-dashboard-work m-dashboard-bucket">
         <!-- 标题 -->
         <div class="m-dashboard-work-header">
             <h2 class="u-title">{{ title }}</h2>
@@ -20,7 +20,8 @@
 
         <!-- 列表 -->
         <div class="m-dashboard-box">
-            <template v-if="data && data.length">
+            <ContentSkeleton v-if="loading" variant="list" :rows="per" compact />
+            <template v-else-if="data && data.length">
                 <component
                     class="m-dashboard-box-list"
                     :data="data"
@@ -30,7 +31,7 @@
             </template>
 
             <el-alert
-                v-else-if="!loading"
+                v-else
                 class="m-dashboard-box-null"
                 :title="$t('publish.common.noResults')"
                 type="info"
@@ -39,6 +40,7 @@
             ></el-alert>
 
             <el-pagination
+                v-if="!loading"
                 class="m-dashboard-box-pages"
                 background
                 :page-size="per"
@@ -69,7 +71,7 @@ export default {
     },
     data: function () {
         return {
-            loading: false,
+            loading: true,
             data: "",
             total: 1,
             page: 1,
