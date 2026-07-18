@@ -488,7 +488,7 @@ export default {
         getDecorations: "Nhận thêm giao diện",
         goGet: "Nhận",
         avatarFrame: "Khung hình đại diện",
-        clearAll: "Xóa tất cả chủ đề",
+        reset: "Đặt lại",
         frameUpdateSuccess: "Khung Avatar được cập nhật thành công",
         receiveSuccess: "Đã nhận thành công",
         noFrame: "Không có khung",

@@ -488,7 +488,7 @@ export default {
         getDecorations: "Get More Themes",
         goGet: "Get",
         avatarFrame: "Avatar frame",
-        clearAll: "Clear All Themes",
+        reset: "Reset",
         frameUpdateSuccess: "Avatar frame updated successfully",
         receiveSuccess: "Received successfully",
         noFrame: "No Frame",

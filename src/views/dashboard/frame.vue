@@ -55,8 +55,10 @@
             </div>
         </div>
         <div class="m-btn">
-            <el-button type="primary" @click="updateAvatarFrame" size="large">{{ $t("dashboard.common.confirm") }}</el-button>
-            <el-button @click="reset" size="large">{{ $t("dashboard.theme.clearAll") }}</el-button>
+            <el-button type="primary" @click="updateAvatarFrame" size="large" :loading="submitting">{{
+                $t("dashboard.common.confirm")
+            }}</el-button>
+            <el-button @click="reset" size="large">{{ $t("dashboard.theme.reset") }}</el-button>
         </div>
     </uc>
 </template>
@@ -69,7 +71,7 @@ import User from "@jx3box/jx3box-common/js/user";
 import { showAvatar } from "@jx3box/jx3box-common/js/utils";
 import { __imgPath } from "@/utils/config";
 import { getFrames, getUserOverview } from "@/service/dashboard/profile";
-import { updateAvatarFrame, getDecoration, receive, setDecoration } from "@/service/dashboard/decoration";
+import { updateAvatarFrame, getDecoration, receive } from "@/service/dashboard/decoration";
 export default {
     name: "frame",
     props: [],
@@ -80,20 +82,19 @@ export default {
             frameList: [],
             //头像框备份
             framebak: "",
-            framesBak: {},
             // 数据
             avatar: User.getInfo().avatar_origin,
             frame: null,
             frames: {}, //远程json
             avatars: [], //头像筛选
             decoration: null, //装扮筛选用于判断是否符合领取条件
+            submitting: false,
         };
     },
     computed: {},
     methods: {
         reset() {
             this.frame = this.framebak;
-            this.frames = this.framesBak;
             this.dataProcessing();
         },
         frameUrl: function (name) {
@@ -108,21 +109,25 @@ export default {
             if (!item.isHave) return "noHave";
             if (item.using) return "select";
         },
-        updateAvatarFrame() {
-            updateAvatarFrame({ user_avatar_frame: this.frame }).then((res) => {
+        async updateAvatarFrame() {
+            if (this.submitting) return;
+            this.submitting = true;
+            try {
+                await updateAvatarFrame({ user_avatar_frame: this.frame });
+                this.framebak = this.frame;
+                this.dataProcessing();
                 this.$message({
                     message: this.$t("dashboard.theme.frameUpdateSuccess"),
                     type: "success",
                 });
-                const params = this.frameList
-                    .filter((item) => item.name && item.isHave)
-                    .map((item) => {
-                        return { val: item.name, using: item.using ? 1 : 0, type: "avatar" };
-                    });
-                if (params.length) {
-                    setDecoration(params);
-                }
-            });
+            } catch (err) {
+                this.$message({
+                    message: err?.response?.data?.msg || err?.message || this.$t("dashboard.theme.updateFailed"),
+                    type: "error",
+                });
+            } finally {
+                this.submitting = false;
+            }
         },
         receiveFrame(type) {
             receive(this.uid, type).then((data) => {
@@ -141,20 +146,20 @@ export default {
                 return;
             }
             if (!item.isHave) return;
-            let list = this.frameList;
-            let find = list.find((e) => e.using == 1);
-            if (find) find.using = 0;
-            item.using == 1 ? (item.using = 0) : (item.using = 1);
+            this.frameList.forEach((frame) => {
+                frame.using = 0;
+            });
+            item.using = 1;
             this.frame = item.name;
         },
         load: function () {
             getUserOverview(this.uid).then((res) => {
                 this.frame = res.data.data.user_avatar_frame || "";
                 this.framebak = res.data.data.user_avatar_frame || "";
+                this.dataProcessing();
             });
             getFrames().then((res) => {
                 this.frames = res.data;
-                this.framesBak = res.data;
                 this.loadDecoration();
             });
         },
@@ -196,7 +201,7 @@ export default {
                 let item = { ...frames[key], ...{ isHave: 0, using: 0, receive: false } };
                 let find = avatars.find((e) => e.val == key);
                 if (find) {
-                    item.using = find.using;
+                    item.using = this.frame === key ? 1 : 0;
                     item.isHave = 1;
                     if (item.using) {
                         firstRes[0].using = 0;
@@ -215,6 +220,7 @@ export default {
                     threeRes.push(item);
                 }
             });
+            firstRes[0].using = this.frame ? 0 : 1;
             this.frameList = [...firstRes, ...twoRes, ...threeRes];
         },
     },

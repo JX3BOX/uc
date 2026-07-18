@@ -484,7 +484,7 @@ export default {
         getDecorations: "前往取得裝扮",
         goGet: "前往獲取",
         avatarFrame: "頭像框",
-        clearAll: "清除所有裝扮",
+        reset: "重置",
         frameUpdateSuccess: "頭像框更新成功",
         receiveSuccess: "領取成功",
         noFrame: "無邊框",
