@@ -87,6 +87,9 @@
                 <publish-authors :id="id" :uid="post.post_author"></publish-authors>
             </div>
 
+            <!-- 魔卡 -->
+            <publish-palu ref="palu" :post-id="id" :disabled="processing"></publish-palu>
+
             <!-- 临时 -->
             <div class="m-publish-extend">
                 <el-divider content-position="left">{{ $t("publish.common.temporary") }}</el-divider>
@@ -169,6 +172,7 @@ import publish_tool_source from "@/components/publish/publish_tool_source.vue";
 import publish_guide from "@/components/publish/publish_guide.vue";
 import publish_reading_history from "@/components/publish/publish_reading_history.vue";
 import publish_headline_notice from "@/components/publish/publish_headline_notice.vue";
+import publish_palu from "@/components/publish/publish_palu.vue";
 
 // 数据逻辑
 import { push, pushAdmin } from "@/service/publish/cms.js";
@@ -202,6 +206,7 @@ export default {
         "publish-guide": publish_guide,
         "publish-reading-history": publish_reading_history,
         "publish-headline-notice": publish_headline_notice,
+        "publish-palu": publish_palu,
     },
     data: function () {
         return {
@@ -315,6 +320,9 @@ export default {
                     return result;
                 })
                 .then((result) => {
+                    return this.syncPalu(result).then(() => result);
+                })
+                .then((result) => {
                     this.afterPublish({ ...result, ID: result.ID || this.id, post_type: "tool" }).finally(() => {
                         this.done(skip, { ...result, ID: result.ID || this.id, post_type: "tool" });
                     });
@@ -324,6 +332,17 @@ export default {
                 .finally(() => {
                     this.processing = false;
                 });
+        },
+        // 文章先完成保存，再独立同步魔卡；同步失败不改变文章保存结果。
+        syncPalu: function (result) {
+            const postId = result.ID || this.id;
+            if (!postId || !this.$refs.palu) return Promise.resolve();
+
+            return this.$refs.palu.save(postId).catch((error) => {
+                const reason = error?.data?.msg || error?.response?.data?.msg || error?.message || "";
+                const message = this.$t("publish.palu.saveFailed");
+                this.$message.warning(reason ? `${message}：${reason}` : message);
+            });
         },
         // 完成
         done: function (skip, result) {

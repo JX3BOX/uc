@@ -21,121 +21,20 @@
                 <publish-category v-model="post.category" :options="tags"></publish-category>
             </div>
 
-            <div class="m-publish-info m-publish-extraimg">
-                <el-divider content-position="left"
-                    >{{ $t("publish.community.magicCard") }}
-                    <el-tooltip class="box-item" effect="dark" :content="$t('publish.community.magicCardHint')" placement="top">
-                        <i class="el-icon-question"></i>
-                    </el-tooltip>
-                </el-divider>
-                <div class="m-palu-picker">
-                    <section class="m-palu-section m-palu-current" :class="{ 'is-empty': !selectedSkin }">
-                        <header class="m-palu-section-header">
-                            <div class="u-section-title">
-                                <span class="u-step">1</span>
-                                <div>
-                                    <strong>{{ $t("publish.community.currentDecoration") }}</strong>
-                                </div>
-                            </div>
-                            <div v-if="selectedSkin" class="u-current-actions">
-                                <button v-if="hasReplacedDecoration" type="button" class="u-reset" @click="resetDecoration">
-                                    <el-icon><RefreshLeft /></el-icon>
-                                    {{ $t("publish.common.reset") }}
-                                </button>
-                                <button type="button" class="u-remove" @click="setSkin(selectedSkin)">
-                                    <i class="el-icon-close"></i>
-                                    {{ $t("publish.community.removeDecoration") }}
-                                </button>
-                            </div>
-                        </header>
-
-                        <div v-if="selectedSkin" class="m-palu-current-body">
-                            <div class="u-palu-card is-current">
-                                <el-image :src="selectedSkin.url" fit="fill" />
-                                <span class="u-current-badge">
-                                    <i class="el-icon-check"></i>
-                                    <template v-if="isOriginalDecoration(selectedSkin)">
-                                        {{ $t("publish.community.decorated") }}
-                                    </template>
-                                    <template v-else>{{ $t("publish.common.selected") }}</template>
-                                </span>
-                            </div>
-                            <div class="u-current-status">
-                                <i class="el-icon-circle-check"></i>
-                                <span v-if="isOriginalDecoration(selectedSkin)">{{ $t("publish.community.currentApplied") }}</span>
-                                <span v-else>{{ $t("publish.community.useOnPublish") }}</span>
-                            </div>
-                        </div>
-                        <div v-else class="u-current-empty">
-                            <i class="el-icon-magic-stick"></i>
-                            <div>
-                                <strong>
-                                    {{ $t("publish.community.noCurrentDecoration") }}
-                                    <small class="u-section-summary">{{ $t("publish.community.chooseBelow") }}</small>
-                                </strong>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section class="m-palu-section m-palu-available">
-                        <header class="m-palu-section-header">
-                            <div class="u-section-title">
-                                <span class="u-step">2</span>
-                                <div>
-                                    <strong>
-                                        {{ $t("publish.community.currentOwned") }}
-                                        <small class="u-section-summary">
-                                            {{
-                                                $t("publish.community.ownedSummary", {
-                                                    types: ownedSkinCount,
-                                                    count: ownedCardAmount,
-                                                })
-                                            }}
-                                        </small>
-                                    </strong>
-                                </div>
-                            </div>
-                        </header>
-
-                        <div v-if="displaySkins.length" class="u-palu-grid">
-                            <button
-                                v-for="item in displaySkins"
-                                :key="item.id"
-                                type="button"
-                                class="u-palu-card"
-                                @click="setSkin(item)"
-                            >
-                                <el-image :src="item.url" fit="fill" />
-                                <span class="u-use">{{ $t("publish.community.useThisCard") }}</span>
-                                <span v-if="isOriginalDecoration(item) && item.amount <= 0" class="u-amount u-restore">
-                                    {{ $t("publish.community.restoreDecoration") }}
-                                </span>
-                                <span v-else class="u-amount">{{ $t("publish.community.remaining", { count: item.amount }) }}</span>
-                            </button>
-                        </div>
-                        <div v-else class="u-available-empty">
-                            <i class="el-icon-box"></i>
-                            {{ $t("publish.community.noAvailableCards") }}
-                        </div>
-                    </section>
-
-                    <a
-                        class="m-palu-more"
-                        href="/vip/mall/list?category=virtual&sub_category=palu"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <span class="u-more-icon"><i class="el-icon-shopping-cart-full"></i></span>
-                        <span class="u-more-content">
-                            <strong>{{ $t("publish.community.getMoreCards") }}</strong>
-                            <small>{{ $t("publish.community.getMoreCardsHint") }}</small>
-                        </span>
-                        <span class="u-more-action">
-                            {{ $t("publish.community.goRedeem") }}
-                            <i class="el-icon-arrow-right"></i>
-                        </span>
-                    </a>
-                </div>
+            <div class="m-publish-info">
+                <publish-palu-picker
+                    v-model="post.decoration_id"
+                    :cards="paluCards"
+                    :current-value="currentDecorationId"
+                    :loading="decorationLoading"
+                    :load-failed="decorationLoadFailed"
+                    :disabled="processing"
+                    :hint="$t('publish.community.magicCardHint')"
+                    :consume-hint="$t('publish.community.useOnPublish')"
+                    :remove-hint="$t('publish.community.removeOnPublish')"
+                    test-id="community-palu"
+                    @retry="getDecoration"
+                ></publish-palu-picker>
             </div>
 
             <!-- 正文 -->
@@ -252,11 +151,11 @@
 </template>
 
 <script>
-import { __imgPath, __cdn } from "@/utils/config";
+import { __cdn } from "@/utils/config";
 // 公共模块
 import community_types from "@/assets/data/publish/community.json";
 
-import { push, pull, update, setVisibility, pullAdmin, updateAdmin } from "@/service/publish/community.js";
+import { push, pull, update, pullAdmin, updateAdmin } from "@/service/publish/community.js";
 
 // 本地模块
 import Tinymce from "@jx3box/jx3box-editor/src/Tinymce";
@@ -270,6 +169,7 @@ import publish_at_authors from "@/components/publish/publish_at_authors.vue";
 import publish_reading_history from "@/components/publish/publish_reading_history.vue";
 import publish_client from "@/components/publish/publish_client.vue";
 import publish_headline_notice from "@/components/publish/publish_headline_notice.vue";
+import publish_palu_picker from "@/components/publish/publish_palu_picker.vue";
 
 // 数据逻辑
 import { cmsMetaMixin } from "@/utils/cmsMetaMixin";
@@ -277,14 +177,12 @@ import { atAuthorMixin } from "@/utils/atAuthorMixin";
 import { getDecoration } from "@jx3box/jx3box-ui/service/cms";
 import { appendToCollection } from "@/service/publish/collection.js";
 import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
-import { RefreshLeft } from "@element-plus/icons-vue";
 
 export default {
     name: "community",
     mixins: [cmsMetaMixin, atAuthorMixin],
     components: {
         Tinymce,
-        RefreshLeft,
         "publish-header": publish_header,
         "publish-title": publish_title,
         "publish-collection": publish_collection,
@@ -294,10 +192,13 @@ export default {
         "publish-at-authors": publish_at_authors,
         "publish-reading-history": publish_reading_history,
         "publish-headline-notice": publish_headline_notice,
+        "publish-palu-picker": publish_palu_picker,
     },
     data: function () {
         return {
             skins: [],
+            decorationLoading: false,
+            decorationLoadFailed: false,
             // 加载状态
             loading: false,
             // 发布状态
@@ -349,30 +250,12 @@ export default {
         id: function () {
             return ~~this.post.id || ~~this.$route.params.id;
         },
-        selectedSkin: function () {
-            return this.skins.find((item) => this.isSameSkin(item.id, this.post.decoration_id)) || null;
-        },
-        hasReplacedDecoration: function () {
-            return (
-                !!this.id &&
-                !!this.currentDecorationId &&
-                !!this.post.decoration_id &&
-                !this.isSameSkin(this.post.decoration_id, this.currentDecorationId)
-            );
-        },
-        displaySkins: function () {
-            return this.skins.filter((item) => {
-                const hasStock = Number(item.amount) > 0;
-                const canRestoreOriginal =
-                    this.isOriginalDecoration(item) && !this.isSameSkin(item.id, this.post.decoration_id);
-                return hasStock || canRestoreOriginal;
-            });
-        },
-        ownedSkinCount: function () {
-            return this.skins.filter((item) => Number(item.amount) > 0).length;
-        },
-        ownedCardAmount: function () {
-            return this.skins.reduce((total, item) => total + Math.max(Number(item.amount) || 0, 0), 0);
+        paluCards: function () {
+            return this.skins.map((item) => ({
+                value: item.id,
+                amount: item.amount,
+                url: item.url,
+            }));
         },
         data: function () {
             return {
@@ -400,31 +283,10 @@ export default {
         }
     },
     methods: {
-        isSameSkin(left, right) {
-            return String(left || "") === String(right || "");
-        },
-        isOriginalDecoration(item) {
-            return !!item && this.isSameSkin(item.id, this.currentDecorationId);
-        },
-        resetDecoration() {
-            this.post.decoration_id = this.currentDecorationId;
-        },
-        setSkin(data) {
-            if (data.amount <= 0 && data.id != this.currentDecorationId) {
-                this.$message({
-                    message: this.$t("publish.community.cardUsedUp"),
-                    type: "warning",
-                });
-                return;
-            }
-            if (this.post.decoration_id == data.id) {
-                this.post.decoration_id = "";
-            } else {
-                this.post.decoration_id = data.id;
-            }
-        },
         getDecoration() {
-            getDecoration({ type: "palu" })
+            this.decorationLoading = true;
+            this.decorationLoadFailed = false;
+            return getDecoration({ type: "palu" })
                 .then((res) => {
                     const list = res.data.data || [];
                     const skins = list.filter((item) => item.amount > 0 || item.id == this.currentDecorationId);
@@ -439,6 +301,10 @@ export default {
                 })
                 .catch(() => {
                     this.skins = [];
+                    this.decorationLoadFailed = true;
+                })
+                .finally(() => {
+                    this.decorationLoading = false;
                 });
         },
         getIntroduction(str) {
@@ -616,12 +482,14 @@ export default {
         gap: 10px;
     }
 }
+
 .m-publish-extraimg {
     .u-imgs {
         display: flex;
         overflow-x: auto;
         gap: 8px;
     }
+
     .u-imgs-item {
         position: relative;
         min-width: 148px;
@@ -638,12 +506,15 @@ export default {
         &.active {
             border-color: @v4primary;
         }
+
         &.active .u-mark {
             display: block;
         }
+
         img {
             width: 100%;
         }
+
         .u-mark {
             position: absolute;
             top: 2px;
@@ -654,336 +525,6 @@ export default {
             background-color: @v4primary;
             color: white;
             font-size: 10px;
-        }
-    }
-    .m-palu-picker {
-        margin-top: 4px;
-        overflow: hidden;
-        border: 1px solid #e4e7ed;
-        border-radius: 10px;
-        background-color: #f8f9fb;
-
-        .u-step {
-            display: inline-flex;
-            flex: 0 0 24px;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background-color: fade(@v4primary, 12%);
-            color: @v4primary;
-            font-size: 12px;
-            font-weight: 700;
-        }
-        .u-section-summary {
-            margin-left: 6px;
-            color: #909399;
-            font-size: 12px;
-            font-weight: 400;
-        }
-    }
-    .m-palu-section {
-        padding: 16px 18px;
-    }
-    .m-palu-section-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-
-        .u-section-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        strong {
-            display: block;
-            color: #303133;
-            font-size: 14px;
-            line-height: 20px;
-        }
-        p {
-            margin: 2px 0 0;
-            color: #909399;
-            font-size: 12px;
-            line-height: 18px;
-        }
-    }
-    .m-palu-current {
-        border-bottom: 1px solid #ebeef5;
-        background: linear-gradient(135deg, fade(@v4primary, 8%) 0%, #ffffff 62%);
-
-        &.is-empty {
-            background: #ffffff;
-        }
-        .u-current-actions {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .u-current-actions button {
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            padding: 5px 0;
-            border: 0;
-            background: none;
-            cursor: pointer;
-            font-size: 12px;
-            transition: color 0.2s ease;
-        }
-        .u-reset {
-            color: @v4primary;
-
-            &:hover {
-                color: darken(@v4primary, 10%);
-            }
-        }
-        .u-remove {
-            color: #909399;
-
-            &:hover {
-                color: #f56c6c;
-            }
-        }
-    }
-    .m-palu-current-body {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-top: 14px;
-    }
-    .u-palu-card {
-        position: relative;
-        display: block;
-        width: 100%;
-        height: 58px;
-        overflow: hidden;
-        padding: 0;
-        border: 2px solid #dcdfe6;
-        border-radius: 7px;
-        box-sizing: border-box;
-        background-color: @bg-light;
-        box-shadow: 0 2px 7px rgba(31, 35, 41, 0.08);
-        cursor: pointer;
-        text-align: left;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-
-        .el-image {
-            width: 100%;
-            height: 100%;
-        }
-        .u-amount,
-        .u-use,
-        .u-current-badge {
-            position: absolute;
-            font-size: 12px;
-            line-height: 20px;
-        }
-        .u-amount {
-            right: 5px;
-            bottom: 5px;
-            z-index: 2;
-            padding: 0 8px;
-            border: 1px solid rgba(255, 255, 255, 0.55);
-            border-radius: 10px;
-            background-color: rgba(255, 255, 255, 0.86);
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-            color: #303133;
-            font-weight: 600;
-            -webkit-backdrop-filter: blur(4px);
-            backdrop-filter: blur(4px);
-        }
-        .u-restore {
-            background-color: @v4primary;
-            border-color: @v4primary;
-            color: #ffffff;
-        }
-        .u-use {
-            top: 50%;
-            left: 50%;
-            z-index: 3;
-            padding: 2px 12px;
-            border-radius: 13px;
-            background-color: @v4primary;
-            box-shadow: 0 3px 10px fade(@v4primary, 35%);
-            color: #ffffff;
-            font-weight: 600;
-            opacity: 0;
-            transform: translate(-50%, -42%);
-            transition: opacity 0.2s ease, transform 0.2s ease;
-            white-space: nowrap;
-        }
-        .u-current-badge {
-            top: 4px;
-            left: 4px;
-            z-index: 2;
-            padding: 0 8px;
-            border-radius: 4px;
-            background-color: @v4primary;
-            color: #ffffff;
-        }
-        &:not(.is-current)::after {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 1;
-            background-color: rgba(20, 24, 31, 0.12);
-            content: "";
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-        }
-        &:not(.is-current):hover {
-            border-color: @v4primary;
-            box-shadow: 0 5px 14px fade(@v4primary, 16%);
-            transform: translateY(-1px);
-
-            .u-use {
-                opacity: 1;
-                transform: translate(-50%, -50%);
-            }
-            &::after {
-                opacity: 1;
-            }
-        }
-        &:focus-visible {
-            outline: 2px solid fade(@v4primary, 35%);
-            outline-offset: 2px;
-        }
-        &.is-current {
-            width: 420px;
-            max-width: 100%;
-            height: 72px;
-            border-color: @v4primary;
-            box-shadow: 0 5px 16px fade(@v4primary, 18%);
-            cursor: default;
-        }
-    }
-    .u-current-status {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 7px 10px;
-        border-radius: 6px;
-        background-color: fade(#67c23a, 10%);
-        color: #529b2e;
-        font-size: 12px;
-        white-space: nowrap;
-    }
-    .u-current-empty {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-top: 14px;
-        padding: 13px 14px;
-        border: 1px dashed #dcdfe6;
-        border-radius: 7px;
-        background-color: #fafafa;
-        color: #909399;
-
-        > i {
-            color: #c0c4cc;
-            font-size: 22px;
-        }
-        strong {
-            display: block;
-            color: #606266;
-            font-size: 13px;
-        }
-    }
-    .m-palu-available .m-palu-section-header {
-        margin-bottom: 12px;
-    }
-    .u-palu-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 10px;
-    }
-    .u-available-empty {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        min-height: 54px;
-        border: 1px dashed #dcdfe6;
-        border-radius: 7px;
-        background-color: #ffffff;
-        color: #a8abb2;
-        font-size: 12px;
-    }
-    .m-palu-more {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin: 0 18px 18px;
-        padding: 12px 14px;
-        border: 1px dashed #c6ccd5;
-        border-radius: 8px;
-        box-sizing: border-box;
-        background-color: #ffffff;
-        color: #606266;
-        text-decoration: none;
-        transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-
-        .u-more-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background-color: fade(@v4primary, 10%);
-            color: @v4primary;
-            font-size: 18px;
-        }
-        .u-more-content {
-            display: flex;
-            flex: 1;
-            flex-direction: column;
-            min-width: 0;
-
-            strong {
-                color: #303133;
-                font-size: 13px;
-                line-height: 20px;
-            }
-            small {
-                color: #909399;
-                font-size: 12px;
-                line-height: 18px;
-            }
-        }
-        .u-more-action {
-            color: @v4primary;
-            font-size: 13px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-        &:hover {
-            border-color: @v4primary;
-            background-color: fade(@v4primary, 4%);
-            box-shadow: 0 4px 12px fade(@v4primary, 10%);
-        }
-    }
-
-    @media screen and (max-width: 768px) {
-        .m-palu-section {
-            padding: 14px;
-        }
-        .m-palu-current-body {
-            align-items: stretch;
-            flex-direction: column;
-        }
-        .u-palu-grid {
-            grid-template-columns: 1fr;
-        }
-        .m-palu-more {
-            flex-wrap: wrap;
-            margin: 0 14px 14px;
         }
     }
 }

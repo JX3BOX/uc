@@ -151,6 +151,7 @@ export default {
         "remaining": "剩 {count} 張",
         "redeemCard": "兌換魔卡",
         "removeDecoration": "取消裝扮",
+        "removeOnPublish": "發佈時將取消目前魔卡（不會返還庫存）",
         "restoreDecoration": "恢復本帖裝扮",
         "replyContent": "回覆內容",
         "replyPreview": "#{floor} 回覆：{title} {content}...",
@@ -164,6 +165,14 @@ export default {
             "sharing": "交流分享",
             "help": "求助尋覓"
         }
+    },
+    "palu": {
+        "consumeOnSave": "儲存文章時將消耗 1 張魔卡",
+        "loadFailed": "魔卡載入失敗，請稍後重試",
+        "removeOnSave": "儲存文章時將取消目前魔卡（不會返還庫存）",
+        "retry": "重試",
+        "saveFailed": "文章已儲存，但魔卡設定失敗",
+        "settingsHint": "選擇文章展示時使用的魔卡；首次使用或更換會消耗 1 張，未變更不消耗"
     },
     "confirm": {
         "delete": "確定要刪除嗎？",

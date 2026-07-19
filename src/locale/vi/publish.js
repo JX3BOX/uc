@@ -151,6 +151,7 @@ export default {
         "remaining": "Còn {count} thẻ",
         "redeemCard": "Đổi thẻ ma thuật",
         "removeDecoration": "Bỏ trang trí",
+        "removeOnPublish": "Đăng bài sẽ gỡ thẻ hiện tại và không hoàn lại vào kho",
         "restoreDecoration": "Khôi phục trang trí bài viết",
         "replyContent": "Nội dung trả lời",
         "replyPreview": "#{floor} Trả lời: {title} {content}...",
@@ -164,6 +165,14 @@ export default {
             "sharing": "Thảo luận và chia sẻ",
             "help": "Hỏi đáp và tìm kiếm"
         }
+    },
+    "palu": {
+        "consumeOnSave": "Lưu bài viết sẽ tiêu hao 1 thẻ ma thuật",
+        "loadFailed": "Không thể tải thẻ ma thuật. Vui lòng thử lại sau.",
+        "removeOnSave": "Lưu bài viết sẽ gỡ thẻ hiện tại và không hoàn lại vào kho",
+        "retry": "Thử lại",
+        "saveFailed": "Bài viết đã được lưu nhưng thiết lập thẻ ma thuật thất bại",
+        "settingsHint": "Chọn thẻ cho bài viết. Dùng mới hoặc thay thẻ sẽ tiêu hao 1 thẻ; không thay đổi sẽ không tiêu hao."
     },
     "confirm": {
         "delete": "Bạn có chắc muốn xóa không?",

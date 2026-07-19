@@ -99,6 +99,21 @@ function getUpcomingDesignTask(params) {
     return $cms().get(`/api/cms/design/task/upcoming`, { params });
 }
 
+// 获取当前用户的装扮库存
+function getOwnedDecorations(params) {
+    return $cms({ mute: true }).get(`/api/cms/user/decoration`, { params });
+}
+
+// 获取文章当前装扮
+function getPostDecoration(postId, decorationType) {
+    return $cms({ mute: true }).get(`/api/cms/post/${postId}/decoration/${decorationType}`);
+}
+
+// 独立设置文章装扮，不参与文章保存事务
+function setPostDecoration(postId, decorationType, slug) {
+    return $cms({ mute: true }).put(`/api/cms/post/${postId}/decoration/${decorationType}`, { slug });
+}
+
 export {
     pull,
     push,
@@ -116,5 +131,8 @@ export {
     getConfig,
     getDesignTask,
     getUpcomingDesignTask,
+    getOwnedDecorations,
+    getPostDecoration,
+    setPostDecoration,
     pushAdmin,
 };

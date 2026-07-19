@@ -151,6 +151,7 @@ export default {
         "remaining": "{count} left",
         "redeemCard": "Redeem Magic Cards",
         "removeDecoration": "Remove Decoration",
+        "removeOnPublish": "Publishing will remove the current card without returning it to inventory",
         "restoreDecoration": "Restore Post Decoration",
         "replyContent": "Reply Content",
         "replyPreview": "#{floor} Reply: {title} {content}...",
@@ -164,6 +165,14 @@ export default {
             "sharing": "Discussion & Sharing",
             "help": "Help & Requests"
         }
+    },
+    "palu": {
+        "consumeOnSave": "Saving the article will consume 1 magic card",
+        "loadFailed": "Failed to load magic cards. Please try again later.",
+        "removeOnSave": "Saving the article will remove the current card without returning it to inventory",
+        "retry": "Retry",
+        "saveFailed": "The article was saved, but the magic card setting failed",
+        "settingsHint": "Choose a card for this article. Applying or replacing one consumes 1 card; no change consumes nothing."
     },
     "confirm": {
         "delete": "Are you sure you want to delete this?",
