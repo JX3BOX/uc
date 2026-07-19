@@ -260,10 +260,14 @@ export default {
     },
     notice: {
         tip: "Định cấu hình chi tiết liên hệ của bạn để nhận thông báo JX3BOX",
+        bind: "Liên kết",
         types: {
             email: "Email",
             phone: "Điện thoại",
             wechat: "WeChat",
+            wecom: "WeCom",
+            feishu: "Feishu",
+            dingtalk: "DingTalk",
         },
     },
     email: {

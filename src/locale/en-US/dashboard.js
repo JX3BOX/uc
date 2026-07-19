@@ -260,10 +260,14 @@ export default {
     },
     notice: {
         tip: "Configure your contact details to receive JX3BOX notifications",
+        bind: "Bind",
         types: {
             email: "Email",
             phone: "Phone",
             wechat: "WeChat",
+            wecom: "WeCom",
+            feishu: "Feishu",
+            dingtalk: "DingTalk",
         },
     },
     email: {
@@ -301,7 +305,7 @@ export default {
     },
     phone: {
         bind: "Bind mobile phone",
-        change: "Modify mobile phone",
+        change: "Modify phone",
         bindMobile: "Bind mobile phone number",
         changeBound: "Change bound mobile phone number",
         securityVerification: "Security verification",

@@ -6,10 +6,10 @@
             <div class="m-dashboard-content-list">
                 <div class="m-item" v-for="(item, i) in list" :key="i">
                     <span class="u-notice-item">
-                        <img class="u-icon" svg-inline :src="icon(item.key)" />
+                        <img class="u-icon" :src="icon(item.key)" />
                         <span class="u-label">{{ $t(`dashboard.notice.types.${item.key}`) }}</span>
                     </span>
-                    <component :is="item.component" />
+                    <component :is="item.component" v-bind="item.props" />
                 </div>
                 <qqbot :data="authData" @refresh="loadAuth" />
             </div>
@@ -20,15 +20,23 @@
 <script>
 import { markRaw } from "vue";
 import uc from "@/components/dashboard/uc.vue";
-import { __imgPath } from "@/utils/config";
+import { __cdn } from "@/utils/config";
 import wechat from "./wechat.vue";
 import email from "./email.vue";
 import phone from "./phone.vue";
+import thirdParty from "./third_party.vue";
 import qqbot from "../qqbot.vue";
 import { checkOAuth } from "@/service/dashboard/profile";
 export default {
     name: "notice",
-    components: { uc, wechat: markRaw(wechat), email: markRaw(email), phone: markRaw(phone), qqbot },
+    components: {
+        uc,
+        wechat: markRaw(wechat),
+        email: markRaw(email),
+        phone: markRaw(phone),
+        thirdParty: markRaw(thirdParty),
+        qqbot,
+    },
     data: function () {
         return {
             loading: true,
@@ -39,12 +47,15 @@ export default {
                 { key: "email", component: email },
                 { key: "phone", component: phone },
                 { key: "wechat", component: wechat },
+                { key: "wecom", component: thirdParty, props: { bound: false } },
+                { key: "feishu", component: thirdParty, props: { bound: false } },
+                { key: "dingtalk", component: thirdParty, props: { bound: false } },
             ],
         };
     },
     methods: {
         icon: function (type) {
-            return __imgPath + "image/connect/" + type + ".svg";
+            return __cdn + "design/user/" + type + ".png";
         },
         loadAuth: function () {
             this.loading = true;

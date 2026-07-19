@@ -256,7 +256,8 @@ export default {
     },
     notice: {
         tip: "配置你的联系方式以接收魔盒通知",
-        types: { email: "邮箱", phone: "手机", wechat: "公众号" },
+        bind: "绑定",
+        types: { email: "邮箱", phone: "手机", wechat: "公众号", wecom: "企业微信", feishu: "飞书", dingtalk: "钉钉" },
     },
     email: {
         address: "邮箱地址",

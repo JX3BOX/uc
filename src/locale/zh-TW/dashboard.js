@@ -260,10 +260,14 @@ export default {
     },
     notice: {
         tip: "設定你的聯絡方式以接收魔盒通知",
+        bind: "綁定",
         types: {
             email: "電子郵件",
             phone: "手機",
             wechat: "微信",
+            wecom: "企業微信",
+            feishu: "飛書",
+            dingtalk: "釘釘",
         },
     },
     email: {
