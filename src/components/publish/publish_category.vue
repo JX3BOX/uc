@@ -1,12 +1,11 @@
 <template>
-    <div class="m-category-list">
-        <span class="u-category">{{ $t("publish.common.category") }}</span>
+    <el-form-item class="m-category-list" :label="$t('publish.common.category')">
         <el-radio-group v-model="category" @change="updateCategory">
             <!-- <el-tooltip v-for="item in options" :key="item.name" effect="dark" :content="item.remark" placement="top-start"> -->
             <el-radio v-for="item in options" :key="item.name" border :value="item.name">{{ optionLabel(item) }}</el-radio>
             <!-- </el-tooltip> -->
         </el-radio-group>
-    </div>
+    </el-form-item>
 </template>
 
 <script>
@@ -77,12 +76,6 @@ export default {
 
 <style lang="less">
 .m-category-list {
-    .flex;
-    .u-category {
-        min-width: 80px;
-        .fz(14px);
-        align-items: center;
-    }
     .el-radio-group {
         flex: 1;
         // gap: 12px; /* 设置网格项之间的间隔 */

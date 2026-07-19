@@ -27,30 +27,114 @@
                     <el-tooltip class="box-item" effect="dark" :content="$t('publish.community.magicCardHint')" placement="top">
                         <i class="el-icon-question"></i>
                     </el-tooltip>
+                </el-divider>
+                <div class="m-palu-picker">
+                    <section class="m-palu-section m-palu-current" :class="{ 'is-empty': !selectedSkin }">
+                        <header class="m-palu-section-header">
+                            <div class="u-section-title">
+                                <span class="u-step">1</span>
+                                <div>
+                                    <strong>{{ $t("publish.community.currentDecoration") }}</strong>
+                                </div>
+                            </div>
+                            <div v-if="selectedSkin" class="u-current-actions">
+                                <button v-if="hasReplacedDecoration" type="button" class="u-reset" @click="resetDecoration">
+                                    <el-icon><RefreshLeft /></el-icon>
+                                    {{ $t("publish.common.reset") }}
+                                </button>
+                                <button type="button" class="u-remove" @click="setSkin(selectedSkin)">
+                                    <i class="el-icon-close"></i>
+                                    {{ $t("publish.community.removeDecoration") }}
+                                </button>
+                            </div>
+                        </header>
+
+                        <div v-if="selectedSkin" class="m-palu-current-body">
+                            <div class="u-palu-card is-current">
+                                <el-image :src="selectedSkin.url" fit="fill" />
+                                <span class="u-current-badge">
+                                    <i class="el-icon-check"></i>
+                                    <template v-if="isOriginalDecoration(selectedSkin)">
+                                        {{ $t("publish.community.decorated") }}
+                                    </template>
+                                    <template v-else>{{ $t("publish.common.selected") }}</template>
+                                </span>
+                            </div>
+                            <div class="u-current-status">
+                                <i class="el-icon-circle-check"></i>
+                                <span v-if="isOriginalDecoration(selectedSkin)">{{ $t("publish.community.currentApplied") }}</span>
+                                <span v-else>{{ $t("publish.community.useOnPublish") }}</span>
+                            </div>
+                        </div>
+                        <div v-else class="u-current-empty">
+                            <i class="el-icon-magic-stick"></i>
+                            <div>
+                                <strong>
+                                    {{ $t("publish.community.noCurrentDecoration") }}
+                                    <small class="u-section-summary">{{ $t("publish.community.chooseBelow") }}</small>
+                                </strong>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="m-palu-section m-palu-available">
+                        <header class="m-palu-section-header">
+                            <div class="u-section-title">
+                                <span class="u-step">2</span>
+                                <div>
+                                    <strong>
+                                        {{ $t("publish.community.currentOwned") }}
+                                        <small class="u-section-summary">
+                                            {{
+                                                $t("publish.community.ownedSummary", {
+                                                    types: ownedSkinCount,
+                                                    count: ownedCardAmount,
+                                                })
+                                            }}
+                                        </small>
+                                    </strong>
+                                </div>
+                            </div>
+                        </header>
+
+                        <div v-if="displaySkins.length" class="u-palu-grid">
+                            <button
+                                v-for="item in displaySkins"
+                                :key="item.id"
+                                type="button"
+                                class="u-palu-card"
+                                @click="setSkin(item)"
+                            >
+                                <el-image :src="item.url" fit="fill" />
+                                <span class="u-use">{{ $t("publish.community.useThisCard") }}</span>
+                                <span v-if="isOriginalDecoration(item) && item.amount <= 0" class="u-amount u-restore">
+                                    {{ $t("publish.community.restoreDecoration") }}
+                                </span>
+                                <span v-else class="u-amount">{{ $t("publish.community.remaining", { count: item.amount }) }}</span>
+                            </button>
+                        </div>
+                        <div v-else class="u-available-empty">
+                            <i class="el-icon-box"></i>
+                            {{ $t("publish.community.noAvailableCards") }}
+                        </div>
+                    </section>
+
                     <a
-                        class="u-buy el-button el-button--primary el-button--small is-round"
+                        class="m-palu-more"
                         href="/vip/mall/list?category=virtual&sub_category=palu"
                         target="_blank"
-                        ><i class="el-icon-shopping-cart-full"></i> {{ $t("publish.community.redeemCard") }}</a
+                        rel="noopener noreferrer"
                     >
-                </el-divider>
-                <div class="u-imgs u-skin-imgs" v-if="skins.length">
-                    <div
-                        @click="setSkin(item)"
-                        :class="`u-imgs-item u-skin ${post.decoration_id === item.id && 'active'}`"
-                        v-for="(item, i) in skins"
-                        :key="i"
-                        :title="$t('publish.community.cardSelectHint')"
-                    >
-                        <el-image :src="item.url" fit="fill" />
-                        <div class="u-mark"><i class="el-icon-check"></i> {{ $t("publish.common.selected") }}</div>
-                        <div class="u-amount">{{ $t("publish.community.quantity", { count: item.amount }) }}</div>
-                    </div>
-                </div>
-                <div v-else class="u-null">
-                    {{ $t("publish.community.noCardsPrefix") }}<a href="/vip/mall/list?category=virtual&sub_category=palu" target="_blank"
-                        >{{ $t("publish.community.goNow") }}</a
-                    >{{ $t("publish.community.noCardsSuffix") }}
+                        <span class="u-more-icon"><i class="el-icon-shopping-cart-full"></i></span>
+                        <span class="u-more-content">
+                            <strong>{{ $t("publish.community.getMoreCards") }}</strong>
+                            <small>{{ $t("publish.community.getMoreCardsHint") }}</small>
+                        </span>
+                        <span class="u-more-action">
+                            {{ $t("publish.community.goRedeem") }}
+                            <i class="el-icon-arrow-right"></i>
+                        </span>
+                    </a>
                 </div>
             </div>
 
@@ -193,12 +277,14 @@ import { atAuthorMixin } from "@/utils/atAuthorMixin";
 import { getDecoration } from "@jx3box/jx3box-ui/service/cms";
 import { appendToCollection } from "@/service/publish/collection.js";
 import { isMiniProgram } from "@jx3box/jx3box-common/js/utils";
+import { RefreshLeft } from "@element-plus/icons-vue";
 
 export default {
     name: "community",
     mixins: [cmsMetaMixin, atAuthorMixin],
     components: {
         Tinymce,
+        RefreshLeft,
         "publish-header": publish_header,
         "publish-title": publish_title,
         "publish-collection": publish_collection,
@@ -263,6 +349,31 @@ export default {
         id: function () {
             return ~~this.post.id || ~~this.$route.params.id;
         },
+        selectedSkin: function () {
+            return this.skins.find((item) => this.isSameSkin(item.id, this.post.decoration_id)) || null;
+        },
+        hasReplacedDecoration: function () {
+            return (
+                !!this.id &&
+                !!this.currentDecorationId &&
+                !!this.post.decoration_id &&
+                !this.isSameSkin(this.post.decoration_id, this.currentDecorationId)
+            );
+        },
+        displaySkins: function () {
+            return this.skins.filter((item) => {
+                const hasStock = Number(item.amount) > 0;
+                const canRestoreOriginal =
+                    this.isOriginalDecoration(item) && !this.isSameSkin(item.id, this.post.decoration_id);
+                return hasStock || canRestoreOriginal;
+            });
+        },
+        ownedSkinCount: function () {
+            return this.skins.filter((item) => Number(item.amount) > 0).length;
+        },
+        ownedCardAmount: function () {
+            return this.skins.reduce((total, item) => total + Math.max(Number(item.amount) || 0, 0), 0);
+        },
         data: function () {
             return {
                 ...this.post,
@@ -289,10 +400,14 @@ export default {
         }
     },
     methods: {
-        goShopping(e) {
-            window.open("/vip/mall/list?category=virtual&sub_category=palu", "_blank");
-            e.preventDefault();
-            e.stopPropagation();
+        isSameSkin(left, right) {
+            return String(left || "") === String(right || "");
+        },
+        isOriginalDecoration(item) {
+            return !!item && this.isSameSkin(item.id, this.currentDecorationId);
+        },
+        resetDecoration() {
+            this.post.decoration_id = this.currentDecorationId;
         },
         setSkin(data) {
             if (data.amount <= 0 && data.id != this.currentDecorationId) {
@@ -502,84 +617,373 @@ export default {
     }
 }
 .m-publish-extraimg {
-    .u-buy {
-        margin-left: 10px;
-        padding: 5px 8px;
-        background-color: #444;
-        border-color: #444;
-    }
-    .u-null {
-        .fz(12px);
-        color: #999;
-        a {
-            text-decoration: underline;
-        }
-    }
     .u-imgs {
         display: flex;
         overflow-x: auto;
         gap: 8px;
     }
     .u-imgs-item {
+        position: relative;
         min-width: 148px;
+        height: 148px;
         overflow: hidden;
+        border: 2px solid transparent;
         border-radius: 6px;
         box-sizing: border-box;
-        height: 148px;
-        cursor: pointer;
-        position: relative;
-        border: 2px solid transparent;
-        transition: 0.35s;
         background-color: @bg-light;
-        &:hover {
-            border-color: @v4primary;
-        }
+        cursor: pointer;
+        transition: 0.35s;
+
+        &:hover,
         &.active {
             border-color: @v4primary;
-            .u-mark {
-                display: block;
-            }
+        }
+        &.active .u-mark {
+            display: block;
         }
         img {
             width: 100%;
         }
         .u-mark {
-            display: none;
             position: absolute;
             top: 2px;
             right: 2px;
+            display: none;
             padding: 2px 8px;
-            font-size: 10px;
+            border-radius: 4px;
             background-color: @v4primary;
             color: white;
-            border-radius: 4px;
+            font-size: 10px;
         }
     }
-    .u-skin-imgs {
-        overflow-x: scroll;
-        padding-bottom: 20px;
-        .u-imgs-item {
-            position: relative;
-            width: 260px;
-            height: 50px;
-            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-            .el-image {
-                width: 100%;
-                height: 100%;
-            }
-            .u-mark {
-                left: 2px;
-                right: initial !important;
+    .m-palu-picker {
+        margin-top: 4px;
+        overflow: hidden;
+        border: 1px solid #e4e7ed;
+        border-radius: 10px;
+        background-color: #f8f9fb;
+
+        .u-step {
+            display: inline-flex;
+            flex: 0 0 24px;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: fade(@v4primary, 12%);
+            color: @v4primary;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .u-section-summary {
+            margin-left: 6px;
+            color: #909399;
+            font-size: 12px;
+            font-weight: 400;
+        }
+    }
+    .m-palu-section {
+        padding: 16px 18px;
+    }
+    .m-palu-section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+
+        .u-section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        strong {
+            display: block;
+            color: #303133;
+            font-size: 14px;
+            line-height: 20px;
+        }
+        p {
+            margin: 2px 0 0;
+            color: #909399;
+            font-size: 12px;
+            line-height: 18px;
+        }
+    }
+    .m-palu-current {
+        border-bottom: 1px solid #ebeef5;
+        background: linear-gradient(135deg, fade(@v4primary, 8%) 0%, #ffffff 62%);
+
+        &.is-empty {
+            background: #ffffff;
+        }
+        .u-current-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .u-current-actions button {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 5px 0;
+            border: 0;
+            background: none;
+            cursor: pointer;
+            font-size: 12px;
+            transition: color 0.2s ease;
+        }
+        .u-reset {
+            color: @v4primary;
+
+            &:hover {
+                color: darken(@v4primary, 10%);
             }
         }
-        .u-amount {
-            font-size: 12px;
+        .u-remove {
+            color: #909399;
+
+            &:hover {
+                color: #f56c6c;
+            }
+        }
+    }
+    .m-palu-current-body {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 14px;
+    }
+    .u-palu-card {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 58px;
+        overflow: hidden;
+        padding: 0;
+        border: 2px solid #dcdfe6;
+        border-radius: 7px;
+        box-sizing: border-box;
+        background-color: @bg-light;
+        box-shadow: 0 2px 7px rgba(31, 35, 41, 0.08);
+        cursor: pointer;
+        text-align: left;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+
+        .el-image {
+            width: 100%;
+            height: 100%;
+        }
+        .u-amount,
+        .u-use,
+        .u-current-badge {
             position: absolute;
-            .rb(0);
-            background-color: rgba(0, 0, 0, 0.6);
-            color: #fff;
-            padding: 2px 2px 2px 6px;
-            border-bottom-right-radius: 2px;
+            font-size: 12px;
+            line-height: 20px;
+        }
+        .u-amount {
+            right: 5px;
+            bottom: 5px;
+            z-index: 2;
+            padding: 0 8px;
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.86);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+            color: #303133;
+            font-weight: 600;
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+        }
+        .u-restore {
+            background-color: @v4primary;
+            border-color: @v4primary;
+            color: #ffffff;
+        }
+        .u-use {
+            top: 50%;
+            left: 50%;
+            z-index: 3;
+            padding: 2px 12px;
+            border-radius: 13px;
+            background-color: @v4primary;
+            box-shadow: 0 3px 10px fade(@v4primary, 35%);
+            color: #ffffff;
+            font-weight: 600;
+            opacity: 0;
+            transform: translate(-50%, -42%);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            white-space: nowrap;
+        }
+        .u-current-badge {
+            top: 4px;
+            left: 4px;
+            z-index: 2;
+            padding: 0 8px;
+            border-radius: 4px;
+            background-color: @v4primary;
+            color: #ffffff;
+        }
+        &:not(.is-current)::after {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1;
+            background-color: rgba(20, 24, 31, 0.12);
+            content: "";
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        &:not(.is-current):hover {
+            border-color: @v4primary;
+            box-shadow: 0 5px 14px fade(@v4primary, 16%);
+            transform: translateY(-1px);
+
+            .u-use {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+            &::after {
+                opacity: 1;
+            }
+        }
+        &:focus-visible {
+            outline: 2px solid fade(@v4primary, 35%);
+            outline-offset: 2px;
+        }
+        &.is-current {
+            width: 420px;
+            max-width: 100%;
+            height: 72px;
+            border-color: @v4primary;
+            box-shadow: 0 5px 16px fade(@v4primary, 18%);
+            cursor: default;
+        }
+    }
+    .u-current-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 7px 10px;
+        border-radius: 6px;
+        background-color: fade(#67c23a, 10%);
+        color: #529b2e;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+    .u-current-empty {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 14px;
+        padding: 13px 14px;
+        border: 1px dashed #dcdfe6;
+        border-radius: 7px;
+        background-color: #fafafa;
+        color: #909399;
+
+        > i {
+            color: #c0c4cc;
+            font-size: 22px;
+        }
+        strong {
+            display: block;
+            color: #606266;
+            font-size: 13px;
+        }
+    }
+    .m-palu-available .m-palu-section-header {
+        margin-bottom: 12px;
+    }
+    .u-palu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 10px;
+    }
+    .u-available-empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 54px;
+        border: 1px dashed #dcdfe6;
+        border-radius: 7px;
+        background-color: #ffffff;
+        color: #a8abb2;
+        font-size: 12px;
+    }
+    .m-palu-more {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 18px 18px;
+        padding: 12px 14px;
+        border: 1px dashed #c6ccd5;
+        border-radius: 8px;
+        box-sizing: border-box;
+        background-color: #ffffff;
+        color: #606266;
+        text-decoration: none;
+        transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+
+        .u-more-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background-color: fade(@v4primary, 10%);
+            color: @v4primary;
+            font-size: 18px;
+        }
+        .u-more-content {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            min-width: 0;
+
+            strong {
+                color: #303133;
+                font-size: 13px;
+                line-height: 20px;
+            }
+            small {
+                color: #909399;
+                font-size: 12px;
+                line-height: 18px;
+            }
+        }
+        .u-more-action {
+            color: @v4primary;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        &:hover {
+            border-color: @v4primary;
+            background-color: fade(@v4primary, 4%);
+            box-shadow: 0 4px 12px fade(@v4primary, 10%);
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .m-palu-section {
+            padding: 14px;
+        }
+        .m-palu-current-body {
+            align-items: stretch;
+            flex-direction: column;
+        }
+        .u-palu-grid {
+            grid-template-columns: 1fr;
+        }
+        .m-palu-more {
+            flex-wrap: wrap;
+            margin: 0 14px 14px;
         }
     }
 }

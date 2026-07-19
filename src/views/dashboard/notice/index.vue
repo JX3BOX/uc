@@ -4,12 +4,12 @@
         <div v-show="!loading" class="m-dashboard-content">
             <el-alert class="u-tip" :title="$t('dashboard.notice.tip')" type="warning" show-icon> </el-alert>
             <div class="m-dashboard-content-list">
-                <div class="m-item" v-for="(item, i) in list" :key="i">
+                <div class="m-item" v-for="item in list" :key="item.key">
                     <span class="u-notice-item">
                         <img class="u-icon" :src="icon(item.key)" />
                         <span class="u-label">{{ $t(`dashboard.notice.types.${item.key}`) }}</span>
                     </span>
-                    <component :is="item.component" v-bind="item.props" />
+                    <component :is="item.component" v-bind="item.props" @refresh="loadWebhooks" />
                 </div>
                 <qqbot :data="authData" @refresh="loadAuth" />
             </div>
@@ -27,6 +27,7 @@ import phone from "./phone.vue";
 import thirdParty from "./third_party.vue";
 import qqbot from "../qqbot.vue";
 import { checkOAuth } from "@/service/dashboard/profile";
+import { getUserWebhooks } from "@/service/dashboard/webhook";
 export default {
     name: "notice",
     components: {
@@ -47,9 +48,21 @@ export default {
                 { key: "email", component: email },
                 { key: "phone", component: phone },
                 { key: "wechat", component: wechat },
-                { key: "wecom", component: thirdParty, props: { bound: false } },
-                { key: "feishu", component: thirdParty, props: { bound: false } },
-                { key: "dingtalk", component: thirdParty, props: { bound: false } },
+                {
+                    key: "wecom",
+                    component: thirdParty,
+                    props: { type: "wecom", webhook: null, loading: true, loadError: false },
+                },
+                {
+                    key: "feishu",
+                    component: thirdParty,
+                    props: { type: "feishu", webhook: null, loading: true, loadError: false },
+                },
+                {
+                    key: "dingtalk",
+                    component: thirdParty,
+                    props: { type: "dingtalk", webhook: null, loading: true, loadError: false },
+                },
             ],
         };
     },
@@ -57,19 +70,53 @@ export default {
         icon: function (type) {
             return __cdn + "design/user/" + type + ".svg";
         },
-        loadAuth: function () {
-            this.loading = true;
-            checkOAuth()
+        loadAuth: function ({ showLoading = true } = {}) {
+            if (showLoading) this.loading = true;
+            return checkOAuth()
                 .then((res) => {
-                    this.authData = res.data.data;
+                    this.authData = res.data.data || {};
                 })
                 .finally(() => {
-                    this.loading = false;
+                    if (showLoading) this.loading = false;
                 });
+        },
+        loadWebhooks: function () {
+            const webhookItems = this.list.filter((item) => item.props?.type);
+            webhookItems.forEach((item) => {
+                item.props.loading = true;
+            });
+
+            return getUserWebhooks()
+                .then((res) => {
+                    const data = res?.data?.data;
+                    const records = Array.isArray(data) ? data : Array.isArray(data?.list) ? data.list : [];
+                    const recordMap = Object.fromEntries(records.map((item) => [item.type, item]));
+
+                    webhookItems.forEach((item) => {
+                        item.props.webhook = recordMap[item.key] || null;
+                        item.props.loadError = false;
+                    });
+                })
+                .catch(() => {
+                    webhookItems.forEach((item) => {
+                        item.props.loadError = true;
+                    });
+                })
+                .finally(() => {
+                    webhookItems.forEach((item) => {
+                        item.props.loading = false;
+                    });
+                });
+        },
+        loadPage: function () {
+            this.loading = true;
+            return Promise.allSettled([this.loadAuth({ showLoading: false }), this.loadWebhooks()]).finally(() => {
+                this.loading = false;
+            });
         },
     },
     mounted: function () {
-        this.loadAuth();
+        this.loadPage();
     },
 };
 </script>
