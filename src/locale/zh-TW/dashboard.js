@@ -272,7 +272,7 @@ export default {
         webhook: {
             bindTitle: "綁定{name}機器人",
             editTitle: "編輯{name}機器人",
-            securityTip: "Webhook 和密鑰屬於敏感憑據，請勿公開分享。系統只會顯示脫敏資訊。",
+            securityTip: "Webhook 和密鑰屬於敏感憑據，請勿公開分享。",
             currentConfig: "目前設定",
             loadFailed: "載入失敗",
             secretNotConfigured: "未設定密鑰",

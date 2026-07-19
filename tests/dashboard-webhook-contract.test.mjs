@@ -43,6 +43,19 @@ test("editor only renders masked credentials and preserves omitted fields", () =
     assert.match(editor, /this\.type === "feishu" && this\.form\.clearSecret[\s\S]*payload\.secret = ""/);
 });
 
+test("editor can copy the complete masked Webhook value", () => {
+    assert.match(editor, /import \{ copyText \} from "@\/utils\/index"/);
+    assert.match(editor, /icon="DocumentCopy"/);
+    assert.match(editor, /copyText\(this\.maskedWebhook\)/);
+    assert.match(editor, /dashboard\.common\.copySuccess/);
+});
+
+test("notice row shows four stars and the Webhook token suffix", () => {
+    assert.ok(editor.includes("{{ webhookSummary }}"));
+    assert.ok(editor.includes('replace(/^\\*+/, "").slice(-4)'));
+    assert.ok(editor.includes('return suffix ? `****${suffix}` : "****";'));
+});
+
 test("DingTalk requires a secret when none is stored", () => {
     assert.match(editor, /required: this\.type === "dingtalk" && !this\.hasSecret/);
     assert.match(editor, /type="password"/);

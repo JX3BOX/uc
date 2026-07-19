@@ -272,8 +272,7 @@ export default {
         webhook: {
             bindTitle: "Liên kết bot {name}",
             editTitle: "Chỉnh sửa bot {name}",
-            securityTip:
-                "URL Webhook và khóa bí mật là thông tin nhạy cảm. Không chia sẻ công khai. Hệ thống chỉ hiển thị giá trị đã che.",
+            securityTip: "URL Webhook và khóa bí mật là thông tin nhạy cảm. Không chia sẻ công khai.",
             currentConfig: "Cấu hình hiện tại",
             loadFailed: "Tải thất bại",
             secretNotConfigured: "Chưa cấu hình khóa bí mật",

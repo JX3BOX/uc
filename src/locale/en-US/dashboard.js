@@ -272,8 +272,7 @@ export default {
         webhook: {
             bindTitle: "Bind {name} bot",
             editTitle: "Edit {name} bot",
-            securityTip:
-                "Webhook URLs and secrets are sensitive credentials. Do not share them publicly. Only masked values are displayed.",
+            securityTip: "Webhook URLs and secrets are sensitive credentials. Do not share them publicly.",
             currentConfig: "Current configuration",
             loadFailed: "Failed to load",
             secretNotConfigured: "No secret configured",

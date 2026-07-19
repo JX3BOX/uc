@@ -1,7 +1,9 @@
 <template>
     <div class="m-notice-third-party u-notice-box">
         <div class="u-notice-value">
-            <span v-if="bound && !loadError" class="u-webhook-mask" :title="maskedWebhook">{{ maskedWebhook }}</span>
+            <span v-if="bound && !loadError" class="u-webhook-mask" :title="maskedWebhook">
+                {{ webhookSummary }}
+            </span>
             <el-tag class="u-notice-status" :type="loadError ? 'danger' : bound ? 'success' : 'info'">
                 {{ statusText }}
             </el-tag>
@@ -42,7 +44,20 @@
                 <span class="u-current-label">{{ $t("dashboard.notice.webhook.currentConfig") }}</span>
                 <div class="m-current-webhook__row">
                     <span>Webhook</span>
-                    <code>{{ maskedWebhook }}</code>
+                    <div class="m-current-webhook__value">
+                        <code :title="maskedWebhook">{{ maskedWebhook }}</code>
+                        <el-tooltip :content="$t('dashboard.common.clickToCopy')" placement="top">
+                            <el-button
+                                class="u-copy-webhook"
+                                text
+                                circle
+                                size="small"
+                                icon="DocumentCopy"
+                                :aria-label="$t('dashboard.common.copy')"
+                                @click="copyWebhook"
+                            />
+                        </el-tooltip>
+                    </div>
                 </div>
                 <div v-if="supportsSecret" class="m-current-webhook__row">
                     <span>{{ $t("dashboard.notice.webhook.secret") }}</span>
@@ -132,6 +147,7 @@
 
 <script>
 import { saveUserWebhook, removeUserWebhook } from "@/service/dashboard/webhook";
+import { copyText } from "@/utils/index";
 
 const GUIDE_URLS = {
     wecom: "https://developer.work.weixin.qq.com/document/path/91770",
@@ -190,6 +206,19 @@ export default {
         maskedWebhook: function () {
             return this.webhook?.webhook_masked || "******";
         },
+        webhookSummary: function () {
+            try {
+                const url = new URL(this.maskedWebhook);
+                let token = "";
+                if (this.type === "wecom") token = url.searchParams.get("key");
+                if (this.type === "dingtalk") token = url.searchParams.get("access_token");
+                if (this.type === "feishu") token = url.pathname.split("/").filter(Boolean).pop();
+                const suffix = String(token || "").replace(/^\*+/, "").slice(-4);
+                return suffix ? `****${suffix}` : "****";
+            } catch (e) {
+                return "****";
+            }
+        },
         maskedSecret: function () {
             return this.webhook?.secret_masked || "******";
         },
@@ -242,6 +271,15 @@ export default {
         },
     },
     methods: {
+        copyWebhook: function () {
+            copyText(this.maskedWebhook)
+                .then(() => {
+                    this.$message.success(this.$t("dashboard.common.copySuccess"));
+                })
+                .catch(() => {
+                    this.$message.error(this.$t("dashboard.common.copyFailed"));
+                });
+        },
         validateWebhook: function (rule, value, callback) {
             if (!value) return callback();
 
@@ -398,11 +436,29 @@ export default {
         }
 
         code {
+            flex: 1;
             min-width: 0;
             overflow: hidden;
             color: #303133;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+
+        .m-current-webhook__value {
+            .flex;
+            flex: 1;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .u-copy-webhook {
+            flex: 0 0 auto;
+            color: #909399;
+
+            &:hover {
+                color: @color-link;
+            }
         }
     }
 

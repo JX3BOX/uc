@@ -261,7 +261,7 @@ export default {
         webhook: {
             bindTitle: "绑定{name}机器人",
             editTitle: "编辑{name}机器人",
-            securityTip: "Webhook 和密钥属于敏感凭据，请勿公开分享。系统只会展示脱敏信息。",
+            securityTip: "Webhook 和密钥属于敏感凭据，请勿公开分享。",
             currentConfig: "当前配置",
             loadFailed: "加载失败",
             secretNotConfigured: "未配置密钥",
