@@ -21,6 +21,7 @@
 
         <div class="m-dashboard-box">
             <ContentSkeleton v-if="loading" variant="list" :rows="length" compact />
+            <PublishListError v-else-if="loadError" @retry="comment_page_change(comment_page)" />
             <ul
                 v-else-if="achievement_comment.data && achievement_comment.data.length"
                 class="m-dashboard-box-list"
@@ -28,7 +29,7 @@
                 <li class="u-wiki" v-for="(comment, key) in achievement_comment.data" :key="key">
                     <span class="u-tab" v-text="getTypeLabel(comment.type)"></span>
                     <div class="u-header">
-                        <a class="u-title" target="_blank" :href="'cj/view/' + comment.source_id">{{
+                        <a class="u-title" target="_blank" :href="commentLink(comment)">{{
                             comment.title || $t("publish.common.untitled")
                         }}</a>
                         <el-tag type="warning" size="small" v-if="comment.checked == 0">{{ $t("publish.status.pendingReview") }}</el-tag>
@@ -68,7 +69,7 @@
                 show-icon
             ></el-alert>
             <el-pagination
-                v-if="!loading"
+                v-if="!loading && !loadError"
                 class="m-dashboard-box-pages"
                 background
                 :total="achievement_comment.total"
@@ -83,7 +84,7 @@
 </template>
 
 <script>
-import { getTypeLabel } from "@jx3box/jx3box-common/js/utils";
+import { getLink } from "@jx3box/jx3box-common/js/utils";
 import { __wikiType } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 import { get_comments, remove_comment } from "@/service/publish/wiki";
@@ -93,6 +94,7 @@ export default {
     data: function () {
         return {
             loading: true,
+            loadError: false,
 
             active_name: this.$route.query.type ? this.$route.query.type : "wiki_post",
             achievement_comment: {
@@ -108,9 +110,13 @@ export default {
         getTypeLabel: function (val) {
             return val ? __wikiType[val] : this.$t("publish.common.unknown");
         },
+        commentLink(comment) {
+            return getLink(comment?.type, comment?.source_id);
+        },
         comment_page_change(i = 1) {
             this.comment_page = i;
             this.loading = true;
+            this.loadError = false;
             const params = {
                 page: i,
                 per: this.length,
@@ -119,15 +125,14 @@ export default {
                 params.keyword = this.achievement_comment.keyword;
             }
             get_comments(params)
-                .then(
-                    (res) => {
-                        this.achievement_comment.data = res.data.data.list;
-                        this.achievement_comment.total = res.data.data.total;
-                    },
-                    () => {
-                        this.achievement_comment.data = false;
-                    }
-                )
+                .then((res) => {
+                    this.achievement_comment.data = res.data.data.list;
+                    this.achievement_comment.total = res.data.data.total;
+                })
+                .catch(() => {
+                    this.achievement_comment.data = false;
+                    this.loadError = true;
+                })
                 .finally(() => {
                     this.loading = false;
                 });

@@ -56,7 +56,7 @@
                 <!-- 客户端 -->
                 <el-form-item :label="$t('publish.form.client')">
                     <el-radio-group v-model="post.client">
-                        <el-radio label="std">{{ $t("publish.form.standardServer") }}</el-radio>
+                        <el-radio value="std">{{ $t("publish.form.standardServer") }}</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <!-- <publish-client v-model="post.client" :forbidAll="true"></publish-client> -->

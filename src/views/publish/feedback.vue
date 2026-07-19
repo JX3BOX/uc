@@ -16,6 +16,7 @@
 
         <div class="m-dashboard-box">
             <ContentSkeleton v-if="loading" variant="list" :rows="per" compact />
+            <PublishListError v-else-if="loadError" @retry="loadPosts" />
             <ul class="m-dashboard-box-list" v-else-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
                     <i class="u-icon">
@@ -51,7 +52,7 @@
                 show-icon
             ></el-alert>
             <el-pagination
-                v-if="!loading"
+                v-if="!loading && !loadError"
                 class="m-dashboard-box-pages"
                 background
                 :page-size="per"
@@ -75,6 +76,7 @@ export default {
     data: function () {
         return {
             loading: true,
+            loadError: false,
             data: [],
             total: 1,
             page: 1,
@@ -114,10 +116,14 @@ export default {
     methods: {
         loadPosts: function () {
             this.loading = true;
+            this.loadError = false;
             getMyPosts(this.params)
                 .then((res) => {
                     this.data = res.data.data.list;
                     this.total = res.data.data.total;
+                })
+                .catch(() => {
+                    this.loadError = true;
                 })
                 .finally(() => {
                     this.loading = false;

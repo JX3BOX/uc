@@ -30,7 +30,7 @@
                 <ul class="u-list">
                     <li class="u-item" v-for="(item, i) in data" :key="i">
                         <div class="u-label" :class="{ on: !!item.active }">
-                            <el-checkbox class="u-checkbox" label="" v-model="item.checked"></el-checkbox>
+                            <el-checkbox class="u-checkbox" v-model="item.checked"></el-checkbox>
                             <!-- <i class="u-item-icon" :class="!!item.active ? 'el-icon-folder-opened' : 'el-icon-folder'"></i> -->
                             <i class="u-item-icon el-icon-document"></i>
                             <span class="u-item-key"

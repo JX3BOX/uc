@@ -21,8 +21,8 @@
             <div class="m-publish-primary">
                 <div class="m-publish-primary-block">
                     <el-divider content-position="left">{{ $t("publish.form.visibility") }}</el-divider>
-                    <el-radio v-model.number="collection.public" :label="this.public.PUBLIC">{{ $t("publish.visibility.public") }}</el-radio>
-                    <el-radio v-model.number="collection.public" :label="this.public.PRIVATE">{{ $t("publish.visibility.privateShort") }}<el-tooltip :content="$t('publish.collection.privateHint')" placement="top">
+                    <el-radio v-model.number="collection.public" :value="this.public.PUBLIC">{{ $t("publish.visibility.public") }}</el-radio>
+                    <el-radio v-model.number="collection.public" :value="this.public.PRIVATE">{{ $t("publish.visibility.privateShort") }}<el-tooltip :content="$t('publish.collection.privateHint')" placement="top">
                         <i class="el-icon-info"></i>
                     </el-tooltip></el-radio>
                     

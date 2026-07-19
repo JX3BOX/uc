@@ -534,6 +534,7 @@ export default {
         "parseFailed": "Parsing failed",
         "publishSucceeded": "Published successfully",
         "requestFailed": "Request failed",
+        "retry": "Try Again",
         "saveSucceeded": "Saved successfully",
         "setSucceeded": "Set successfully",
         "submitSucceeded": "Submitted successfully",

@@ -29,7 +29,7 @@
                 <div class="m-publish-type">
                     <el-form-item :label="$t('publish.common.type')">
                         <el-checkbox-group v-model="post.tags">
-                            <el-checkbox :label="tag" :value="tag" v-for="tag in tagList" :key="tag">{{ tagLabel(tag) }}</el-checkbox>
+                            <el-checkbox :value="tag" v-for="tag in tagList" :key="tag">{{ tagLabel(tag) }}</el-checkbox>
                         </el-checkbox-group>
                     </el-form-item>
                 </div>

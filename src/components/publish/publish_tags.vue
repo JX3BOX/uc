@@ -3,7 +3,7 @@
         <el-form-item :label="label || $t('publish.common.tags')">
             <template v-if="tags && tags.length">
                 <el-checkbox-group v-model="tag">
-                    <el-checkbox v-for="item in tags" :label="item" :key="item">{{ optionLabel(item) }}</el-checkbox>
+                    <el-checkbox v-for="item in tags" :value="item" :key="item">{{ optionLabel(item) }}</el-checkbox>
                 </el-checkbox-group>
             </template>
             <span v-else>{{ $t("publish.common.none") }}</span>

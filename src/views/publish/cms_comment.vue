@@ -20,6 +20,7 @@
 
         <div class="m-dashboard-box">
             <ContentSkeleton v-if="loading" variant="list" :rows="per" compact />
+            <PublishListError v-else-if="loadError" @retry="loadData" />
             <ul class="m-dashboard-box-list" v-else-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
                     <a class="u-title" target="_blank" :href="postLink(item.category, item.postID)">
@@ -50,7 +51,7 @@
                 show-icon
             ></el-alert>
             <el-pagination
-                v-if="!loading"
+                v-if="!loading && !loadError"
                 class="m-dashboard-box-pages"
                 background
                 :page-size="per"
@@ -67,12 +68,15 @@
 import dateFormat from "@/utils/dateFormat";
 import { getMyComments, deleteComment } from "@/service/publish/next";
 import { getLink } from "@jx3box/jx3box-common/js/utils.js";
+import publishListSearch from "@/mixins/publishListSearch";
 export default {
     name: "comments",
     props: [],
+    mixins: [publishListSearch],
     data: function () {
         return {
             loading: true,
+            loadError: false,
             data: [],
             total: 1,
             page: 1,
@@ -85,17 +89,21 @@ export default {
             return {
                 per: this.per,
                 page: this.page,
-                search: this.search,
+                search: this.requestSearch,
             };
         },
     },
     methods: {
         loadData: function () {
             this.loading = true;
+            this.loadError = false;
             getMyComments(this.params)
                 .then((res) => {
                     this.data = res.data.data.list;
                     this.total = res.data.data.page.total;
+                })
+                .catch(() => {
+                    this.loadError = true;
                 })
                 .finally(() => {
                     this.loading = false;

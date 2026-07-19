@@ -534,6 +534,7 @@ export default {
         "parseFailed": "Phân tích thất bại",
         "publishSucceeded": "Đã đăng thành công",
         "requestFailed": "Yêu cầu thất bại",
+        "retry": "Tải lại",
         "saveSucceeded": "Đã lưu thành công",
         "setSucceeded": "Đã đặt thành công",
         "submitSucceeded": "Đã gửi thành công",

@@ -10,7 +10,7 @@
                     </el-input>
                     <div class="m-topic-bucket__list" v-if="list && list.length">
                         <el-checkbox-group v-model="selected">
-                            <el-checkbox v-for="item in list" :label="item" :key="item"></el-checkbox>
+                            <el-checkbox v-for="item in list" :value="item" :key="item"></el-checkbox>
                         </el-checkbox-group>
                     </div>
                     <el-alert

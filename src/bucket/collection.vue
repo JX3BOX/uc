@@ -18,6 +18,7 @@
 
         <div class="m-dashboard-box">
             <ContentSkeleton v-if="loading" variant="list" :rows="per" compact />
+            <PublishListError v-else-if="loadError" @retry="loadPosts" />
             <template v-else-if="data && data.length">
                 <ul class="m-dashboard-box-list">
                     <li v-for="(item, i) in data" :key="i">
@@ -55,7 +56,7 @@
                 show-icon
             ></el-alert>
             <el-pagination
-                v-if="!loading"
+                v-if="!loading && !loadError"
                 class="m-dashboard-box-pages"
                 background
                 :page-size="per"
@@ -72,12 +73,15 @@
 import { remove_collection, get_my_collections } from "@/service/publish/collection";
 import { getLink } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
+import publishListSearch from "@/mixins/publishListSearch";
 export default {
     name: "collection",
     props: [],
+    mixins: [publishListSearch],
     data: function () {
         return {
             loading: true,
+            loadError: false,
             data: [],
             total: 1,
             page: 1,
@@ -90,7 +94,7 @@ export default {
         params: function () {
             return {
                 page: this.page,
-                keyword: this.search,
+                keyword: this.requestSearch,
                 per: this.per,
             };
         },
@@ -109,10 +113,14 @@ export default {
     methods: {
         loadPosts: function () {
             this.loading = true;
+            this.loadError = false;
             get_my_collections(this.params)
                 .then((res) => {
                     this.data = res.data.data.list;
                     this.total = res.data.data.total;
+                })
+                .catch(() => {
+                    this.loadError = true;
                 })
                 .finally(() => {
                     this.loading = false;

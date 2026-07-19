@@ -24,6 +24,7 @@
 
         <div class="m-dashboard-box">
             <ContentSkeleton v-if="loading" variant="list" :rows="length" compact />
+            <PublishListError v-else-if="loadError" @retry="post_page_change(post_page)" />
             <ul
                 v-else-if="achievement_post.data && achievement_post.data.length"
                 class="m-dashboard-box-list"
@@ -77,7 +78,7 @@
                 show-icon
             ></el-alert>
             <el-pagination
-                v-if="!loading"
+                v-if="!loading && !loadError"
                 class="m-dashboard-box-pages"
                 background
                 :total="achievement_post.total"
@@ -110,6 +111,7 @@ export default {
     data: function () {
         return {
             loading: true,
+            loadError: false,
 
             active_name: this.$route.query.type ? this.$route.query.type : "wiki_post",
             achievement_post: {
@@ -149,6 +151,7 @@ export default {
         post_page_change(i = 1) {
             this.post_page = i;
             this.loading = true;
+            this.loadError = false;
             wiki.mine({
                 type: this.type,
                 _search: this.achievement_post.keyword,
@@ -158,6 +161,9 @@ export default {
                 .then((res) => {
                     this.achievement_post.data = res.data.data.list || [];
                     this.achievement_post.total = res.data.data.total || 0;
+                })
+                .catch(() => {
+                    this.loadError = true;
                 })
                 .finally(() => {
                     this.loading = false;

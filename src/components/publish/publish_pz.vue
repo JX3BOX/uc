@@ -124,8 +124,10 @@ export default {
             // 选项列表
             options: [],
             search_loading: false,
+            optionsRequestId: 0,
 
             selectedOptions: [],
+            selectedRequestId: 0,
         };
     },
     emits: ["update", "update:modelValue"],
@@ -180,10 +182,17 @@ export default {
     },
     methods: {
         // 获取选项
-        loadOptions: function () {
-            getMyPzList(this.params).then((res) => {
-                this.options = res.data.data.list || [];
-            });
+        loadOptions: function (params = this.params) {
+            const requestId = ++this.optionsRequestId;
+            this.search_loading = true;
+            return getMyPzList(params)
+                .then((res) => {
+                    if (requestId !== this.optionsRequestId) return;
+                    this.options = res.data.data.list || [];
+                })
+                .finally(() => {
+                    if (requestId === this.optionsRequestId) this.search_loading = false;
+                });
         },
         // 展开下拉
         listOptions: function (status) {
@@ -193,15 +202,27 @@ export default {
         },
         // 搜索
         searchOptions: function (keywords) {
-            let _params = Object.assign(this.params, { search: keywords });
-            this.loadOptions();
+            this.loadOptions({ ...this.params, search: keywords || undefined });
         },
         // 获取已选取的选项
         getSelectedOptions: function () {
-            const ids = this.list.map((item) => item.id)?.join(",");
-            getMyPzList({ ids }).then((res) => {
-                this.selectedOptions = res.data.data.list || [];
-            });
+            const ids = this.list.map((item) => item.id).filter(Boolean);
+            const requestId = ++this.selectedRequestId;
+            if (!ids.length) {
+                this.selectedOptions = [];
+                this.loading = false;
+                return;
+            }
+
+            this.loading = true;
+            return getMyPzList({ ids: ids.join(",") })
+                .then((res) => {
+                    if (requestId !== this.selectedRequestId) return;
+                    this.selectedOptions = res.data.data.list || [];
+                })
+                .finally(() => {
+                    if (requestId === this.selectedRequestId) this.loading = false;
+                });
         },
         // 添加
         addItem: function () {

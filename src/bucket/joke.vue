@@ -18,6 +18,7 @@
 
         <div class="m-dashboard-box">
             <ContentSkeleton v-if="loading" variant="list" :rows="per" compact />
+            <PublishListError v-else-if="loadError" @retry="loadPosts" />
             <ul class="m-dashboard-box-list" v-else-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
                     <div class="u-header">
@@ -55,7 +56,7 @@
                 show-icon
             ></el-alert>
             <el-pagination
-                v-if="!loading"
+                v-if="!loading && !loadError"
                 class="m-dashboard-box-pages"
                 background
                 :page-size="per"
@@ -72,12 +73,15 @@
 import { getMyJokes, deleteJoke } from "@/service/publish/pvx.js";
 import { editLink, getLink } from "@jx3box/jx3box-common/js/utils.js";
 import dateFormat from "@/utils/dateFormat";
+import publishListSearch from "@/mixins/publishListSearch";
 export default {
     name: "joke",
     props: [],
+    mixins: [publishListSearch],
     data: function () {
         return {
             loading: true,
+            loadError: false,
             data: [],
             total: 1,
             page: 1,
@@ -91,7 +95,7 @@ export default {
             return {
                 page: this.page,
                 per: this.per,
-                search: this.search,
+                search: this.requestSearch,
             };
         },
         publishLink: function () {
@@ -110,10 +114,14 @@ export default {
     methods: {
         loadPosts: function () {
             this.loading = true;
+            this.loadError = false;
             getMyJokes(this.params)
                 .then((res) => {
                     this.data = res.data.data.list;
                     this.total = res.data.data.total;
+                })
+                .catch(() => {
+                    this.loadError = true;
                 })
                 .finally(() => {
                     this.loading = false;

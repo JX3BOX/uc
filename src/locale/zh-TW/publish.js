@@ -534,6 +534,7 @@ export default {
         "parseFailed": "解析失敗",
         "publishSucceeded": "發佈成功",
         "requestFailed": "請求失敗",
+        "retry": "重新載入",
         "saveSucceeded": "儲存成功",
         "setSucceeded": "設定成功",
         "submitSucceeded": "送出成功",

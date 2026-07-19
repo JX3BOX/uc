@@ -28,6 +28,7 @@
 
         <div class="m-dashboard-box">
             <ContentSkeleton v-if="loading" variant="list" :rows="per" compact />
+            <PublishListError v-else-if="loadError" @retry="loadPosts" />
             <ul class="m-dashboard-box-list" v-else-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
                     <a class="u-title" target="_blank" :href="postLink(item)">
@@ -84,7 +85,7 @@
                 show-icon
             ></el-alert>
             <el-pagination
-                v-if="!loading"
+                v-if="!loading && !loadError"
                 class="m-dashboard-box-pages"
                 background
                 :page-size="per"
@@ -101,12 +102,15 @@
 import { getMyList, del, getMyReplyList, deleteMyReply } from "@/service/publish/community.js";
 import dateFormat from "@/utils/dateFormat";
 import { pick } from "lodash";
+import publishListSearch from "@/mixins/publishListSearch";
 export default {
     name: "work",
     props: [],
+    mixins: [publishListSearch],
     data: function () {
         return {
             loading: true,
+            loadError: false,
             data: [],
             total: 1,
             page: 1,
@@ -127,7 +131,7 @@ export default {
         params: function () {
             return {
                 type: this.type,
-                title: this.search || undefined,
+                title: this.requestSearch || undefined,
                 // order: this.order,
                 pageSize: this.per,
                 index: this.page,
@@ -180,6 +184,7 @@ export default {
         loadPosts: function () {
             const requestId = ++this.requestId;
             this.loading = true;
+            this.loadError = false;
             this.data = [];
             if (this.activeTab == "topic") {
                 getMyList(this.params)
@@ -188,17 +193,23 @@ export default {
                         this.data = res.data.data.list;
                         this.total = res.data.data.page.total;
                     })
+                    .catch(() => {
+                        if (requestId === this.requestId) this.loadError = true;
+                    })
                     .finally(() => {
                         if (requestId === this.requestId) this.loading = false;
                     });
             } else {
                 const params = pick(this.params, ["pageSize", "index"]);
-                this.search && (params.content = this.search);
+                this.requestSearch && (params.content = this.requestSearch);
                 getMyReplyList(params)
                     .then((res) => {
                         if (requestId !== this.requestId) return;
                         this.data = res.data.data.list;
                         this.total = res.data.data.page.total;
+                    })
+                    .catch(() => {
+                        if (requestId === this.requestId) this.loadError = true;
                     })
                     .finally(() => {
                         if (requestId === this.requestId) this.loading = false;

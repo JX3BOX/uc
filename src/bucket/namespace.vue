@@ -9,6 +9,7 @@
 
         <div class="m-namespace-box">
             <ContentSkeleton v-if="loading" variant="cards" :rows="8" :columns="4" compact />
+            <PublishListError v-else-if="loadError" @retry="loadData" />
             <el-row v-else-if="list && list.length" class="m-namespace-list" :gutter="20">
                 <el-col :span="6" :xs="24" v-for="(item, i) in list" :key="i">
                     <div class="u-namespace-item">
@@ -47,7 +48,7 @@
                 center
                 show-icon
             ></el-alert>
-            <div v-if="!loading" class="m-namespace-pages">
+            <div v-if="!loading && !loadError" class="m-namespace-pages">
                 <el-pagination
                     background
                     layout="total, prev, pager, next,jumper"
@@ -70,6 +71,7 @@ export default {
     data: function () {
         return {
             loading: true,
+            loadError: false,
             list: [],
             per: 16,
             total: 1,
@@ -104,10 +106,14 @@ export default {
         },
         loadData: function () {
             this.loading = true;
+            this.loadError = false;
             getNamespace(this.params)
                 .then((res) => {
                     this.list = res.data.data.list;
                     this.total = res.data.data.total;
+                })
+                .catch(() => {
+                    this.loadError = true;
                 })
                 .finally(() => {
                     this.loading = false;

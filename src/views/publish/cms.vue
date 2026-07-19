@@ -23,6 +23,7 @@
 
         <div class="m-dashboard-box">
             <ContentSkeleton v-if="loading" variant="list" :rows="per" compact />
+            <PublishListError v-else-if="loadError" @retry="loadPosts" />
             <ul class="m-dashboard-box-list" v-else-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
                     <a class="u-title" target="_blank" :href="postLink(item.post_type, item.ID)">
@@ -69,7 +70,7 @@
                 show-icon
             ></el-alert>
             <el-pagination
-                v-if="!loading"
+                v-if="!loading && !loadError"
                 class="m-dashboard-box-pages"
                 background
                 :page-size="per"
@@ -87,12 +88,15 @@ import { getMyPosts, push, del } from "@/service/publish/cms.js";
 import { editLink, getLink } from "@jx3box/jx3box-common/js/utils.js";
 import { __postType } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
+import publishListSearch from "@/mixins/publishListSearch";
 export default {
     name: "work",
     props: [],
+    mixins: [publishListSearch],
     data: function () {
         return {
             loading: true,
+            loadError: false,
             data: [],
             total: 1,
             page: 1,
@@ -116,7 +120,7 @@ export default {
                 type: this.type,
                 page: this.page,
                 per: this.per,
-                title: this.search,
+                title: this.requestSearch,
                 order: this.order,
                 client: this.client == 'all' ? '' : this.client,
             };
@@ -160,11 +164,15 @@ export default {
         loadPosts: function () {
             const requestId = ++this.requestId;
             this.loading = true;
+            this.loadError = false;
             getMyPosts(this.params)
                 .then((res) => {
                     if (requestId !== this.requestId) return;
                     this.data = res.data.data.list;
                     this.total = res.data.data.total;
+                })
+                .catch(() => {
+                    if (requestId === this.requestId) this.loadError = true;
                 })
                 .finally(() => {
                     if (requestId === this.requestId) this.loading = false;

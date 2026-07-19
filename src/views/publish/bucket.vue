@@ -21,6 +21,7 @@
         <!-- 列表 -->
         <div class="m-dashboard-box">
             <ContentSkeleton v-if="loading" variant="list" :rows="per" compact />
+            <PublishListError v-else-if="loadError" @retry="loadPosts" />
             <template v-else-if="data && data.length">
                 <component
                     class="m-dashboard-box-list"
@@ -40,7 +41,7 @@
             ></el-alert>
 
             <el-pagination
-                v-if="!loading"
+                v-if="!loading && !loadError"
                 class="m-dashboard-box-pages"
                 background
                 :page-size="per"
@@ -60,10 +61,12 @@ import { getMyPlans } from "@/service/publish/item_plan";
 import question from "@/bucket/question.vue";
 import paper from "@/bucket/paper.vue";
 import item_plan from "@/bucket/item_plan.vue";
+import publishListSearch from "@/mixins/publishListSearch";
 
 export default {
     name: "bucket",
     props: [],
+    mixins: [publishListSearch],
     components: {
         question,
         item_plan,
@@ -72,6 +75,7 @@ export default {
     data: function () {
         return {
             loading: true,
+            loadError: false,
             data: "",
             total: 1,
             page: 1,
@@ -100,7 +104,7 @@ export default {
         },
         params() {
             let params = { page: this.page, limit: this.per };
-            this.type == "item_plan" ? (params.search = this.search) : (params.title = this.search);
+            this.type == "item_plan" ? (params.search = this.requestSearch) : (params.title = this.requestSearch);
             if (this.type == "paper" || this.type == "question") params.is_public = -1;
             return params;
         },
@@ -122,6 +126,7 @@ export default {
         // 判断获取数据
         loadPosts: function () {
             this.loading = true;
+            this.loadError = false;
             this.type == "item_plan"
                 ? this.getMyPlan()
                 : this.type == "paper"
@@ -135,6 +140,9 @@ export default {
                     this.data = res.list;
                     this.total = res.total;
                 })
+                .catch(() => {
+                    this.loadError = true;
+                })
                 .finally(() => {
                     this.loading = false;
                 });
@@ -146,6 +154,9 @@ export default {
                     this.data = res.data.data;
                     this.total = res.data.page.total;
                 })
+                .catch(() => {
+                    this.loadError = true;
+                })
                 .finally(() => {
                     this.loading = false;
                 });
@@ -156,6 +167,9 @@ export default {
                 .then((res) => {
                     this.data = res.data.data;
                     this.total = res.data.page.total;
+                })
+                .catch(() => {
+                    this.loadError = true;
                 })
                 .finally(() => {
                     this.loading = false;
