@@ -781,13 +781,17 @@ export default {
     },
     tasks: {
         title: "Task Center",
+        progress: "Task progress: {finished}/{total} completed",
         goComplete: "Complete Task",
         claimReward: "Claim Reward",
         collapse: "Collapse",
         expand: "Expand",
         empty: "No tasks yet",
+        loadFailed: "Failed to load tasks",
+        loadFailedDesc: "Check your sign-in status or network connection, then try again.",
+        retry: "Try Again",
         completedReward: "Reward claimed successfully",
-        notCompleted: "You didn't complete the task",
+        notCompleted: "The task condition has not been met, or some rewards are still incomplete",
         checkFailed: "Task status check failed, please try again later",
     },
     filter: {

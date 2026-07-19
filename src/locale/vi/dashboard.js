@@ -780,13 +780,17 @@ export default {
     },
     tasks: {
         title: "Trung tâm nhiệm vụ",
+        progress: "Tiến độ nhiệm vụ: đã hoàn thành {finished}/{total}",
         goComplete: "Đi hoàn thành nhiệm vụ",
         claimReward: "Nhận phần thưởng",
         collapse: "Thu gọn",
         expand: "Mở rộng",
         empty: "Chưa có nhiệm vụ nào",
+        loadFailed: "Không thể tải danh sách nhiệm vụ",
+        loadFailedDesc: "Hãy kiểm tra trạng thái đăng nhập hoặc kết nối mạng rồi thử lại.",
+        retry: "Tải lại",
         completedReward: "Đã nhận phần thưởng thành công",
-        notCompleted: "Bạn chưa hoàn thành nhiệm vụ",
+        notCompleted: "Điều kiện nhiệm vụ chưa đạt hoặc một số phần thưởng chưa hoàn tất",
         checkFailed: "Kiểm tra trạng thái tác vụ không thành công, vui lòng thử lại sau",
     },
     filter: {

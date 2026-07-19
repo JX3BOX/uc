@@ -739,13 +739,17 @@ export default {
     },
     tasks: {
         title: "任务中心",
+        progress: "任务进度：已完成 {finished}/{total}",
         goComplete: "去完成任务",
         claimReward: "领取奖励",
         collapse: "折叠",
         expand: "展开",
         empty: "暂无任务",
+        loadFailed: "任务列表加载失败",
+        loadFailedDesc: "请检查登录状态或网络连接后重试。",
+        retry: "重新加载",
         completedReward: "奖励领取成功",
-        notCompleted: "您没有完成任务",
+        notCompleted: "任务条件尚未达成，或仍有奖励尚未完成",
         checkFailed: "任务状态检查失败，请稍后再试",
     },
     filter: {

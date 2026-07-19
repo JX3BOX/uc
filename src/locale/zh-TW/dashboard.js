@@ -768,13 +768,17 @@ export default {
     },
     tasks: {
         title: "任務中心",
+        progress: "任務進度：已完成 {finished}/{total}",
         goComplete: "去完成任務",
         claimReward: "領取獎勵",
         collapse: "折疊",
         expand: "展開",
         empty: "暫無任務",
+        loadFailed: "任務列表載入失敗",
+        loadFailedDesc: "請檢查登入狀態或網路連線後重試。",
+        retry: "重新載入",
         completedReward: "獎勵領取成功",
-        notCompleted: "您沒有完成任務",
+        notCompleted: "任務條件尚未達成，或仍有獎勵尚未完成",
         checkFailed: "任務狀態檢查失敗，請稍後再試",
     },
     filter: {
