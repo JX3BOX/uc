@@ -79,7 +79,7 @@ export default {
             if (categories[type]) {
                 return this.$t(`dashboard.favorites.categories.${categories[type]}`);
             }
-            type = item.post_type;
+            type = item.post_type === "none" ? item.rss_category_desc : item.post_type;
             return getTypeLabel(type);
         },
         getLink(item) {
@@ -87,7 +87,7 @@ export default {
             if (categories[type]) {
                 return `/${categories[type]}/${~~item.post_id || ~~item.author_id}`;
             }
-            type = item.post_type;
+            type = item.post_type === "none" ? item.rss_category_desc : item.post_type;
             return getLink(type, item.post_id);
         },
         del(id) {
