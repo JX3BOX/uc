@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const source = fs.readFileSync(path.resolve(__dirname, "../src/views/dashboard/palu.vue"), "utf8");
+const mallService = fs.readFileSync(path.resolve(__dirname, "../src/service/vip/mall.js"), "utf8");
 const router = fs.readFileSync(path.resolve(__dirname, "../src/pages/dashboard/router.js"), "utf8");
 const tabs = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../src/assets/data/dashboard/tabs.json"), "utf8"));
 
@@ -14,20 +15,19 @@ test("magic card dashboard exposes the palu tab and route", () => {
     assert.match(router, /name: "palu",\s*path: "\/palu"/);
 });
 
-test("magic card dashboard merges the full mall catalog with owned quantities", () => {
-    assert.match(source, /getItemList\(\{ category: "virtual", sub_category: "palu", _no_page: 1 \}\)/);
+test("magic card dashboard merges the CDN skin catalog with owned quantities", () => {
+    assert.match(source, /getSkinJson\(\)/);
+    assert.match(mallService, /design\/decoration\/community_skin\.json/);
     assert.match(source, /getDecoration\(\{ type: "palu" \}\)/);
-    assert.match(source, /Promise\.allSettled/, "the public catalog should still render when the owned-card request is unavailable");
+    assert.match(source, /Object\.entries\(skinMap \|\| \{\}\)/);
+    assert.match(source, /Promise\.allSettled/, "the CDN catalog should still render when the owned-card request is unavailable");
     assert.match(source, /current\.amount \+= Math\.max\(0, Number\(item\.amount\) \|\| 0\)/);
     assert.match(source, /ownedMap\.forEach/);
 });
 
-test("unowned magic cards link to their mall detail", () => {
+test("unowned magic cards link to the filtered mall list", () => {
     assert.match(source, /v-if="!item\.amount"/);
-    assert.match(
-        source,
-        /`\/vip\/mall\/\$\{item\.id\}\?category=virtual&sub_category=palu&search=\$\{encodeURIComponent\(title\)\}`/
-    );
+    assert.match(source, /`\$\{MALL_URL\}&search=\$\{encodeURIComponent\(title\)\}`/);
 });
 
 test("magic cards can be searched by title or value", () => {

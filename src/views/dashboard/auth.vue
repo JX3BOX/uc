@@ -110,7 +110,7 @@ export default {
             return this.$t(`dashboard.auth.types.${type}`);
         },
         icon: function (type) {
-            return __cdn + "design/user/" + types[type]["icon"] + ".png";
+            return __cdn + "design/user/" + types[type]["icon"] + ".svg";
         },
         loadAuth() {
             this.authLoading = true;

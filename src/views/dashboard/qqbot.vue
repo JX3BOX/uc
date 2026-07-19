@@ -76,7 +76,7 @@ export default {
     },
     methods: {
         icon: function (type) {
-            return __cdn + "design/user/" + "qqbot.png";
+            return __cdn + "design/user/" + "qqbot.svg";
         },
         bind: function () {
             getQQbotToken().then((res) => {

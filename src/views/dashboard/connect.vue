@@ -184,7 +184,7 @@ export default {
                 .catch(() => {});
         },
         icon: function (type) {
-            return __cdn + "design/user/" + types[type]["icon"] + ".png";
+            return __cdn + "design/user/" + types[type]["icon"] + ".svg";
         },
         loadAuth() {
             this.loading = true;

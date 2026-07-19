@@ -55,7 +55,7 @@ export default {
     },
     methods: {
         icon: function (type) {
-            return __cdn + "design/user/" + type + ".png";
+            return __cdn + "design/user/" + type + ".svg";
         },
         loadAuth: function () {
             this.loading = true;
@@ -102,7 +102,7 @@ export default {
 
     .u-notice-item {
         .flex;
-        flex: 0 0 150px;
+        flex: 0 0 180px;
         box-sizing: border-box;
         align-items: center;
         gap: 20px;

@@ -54,7 +54,7 @@
 import uc from "@/components/dashboard/uc.vue";
 import tabsData from "@/assets/data/dashboard/tabs.json";
 import { getDecoration } from "@/service/dashboard/decoration";
-import { getItemList } from "@/service/vip/mall";
+import { getSkinJson } from "@/service/vip/mall";
 import { __cdn } from "@/utils/config";
 
 const { themeTab } = tabsData;
@@ -80,7 +80,7 @@ export default {
         },
     },
     methods: {
-        buildCards(goodsList, decorations) {
+        buildCards(skinMap, decorations) {
             const ownedMap = new Map();
             decorations.forEach((item) => {
                 const val = String(item?.val || "").trim();
@@ -90,11 +90,11 @@ export default {
                 ownedMap.set(val, current);
             });
 
-            const cards = goodsList
-                .filter((item) => item?.remark)
-                .map((item) => {
-                    const val = String(item.remark);
-                    const title = item.title || val;
+            const cards = Object.entries(skinMap || {})
+                .map(([key, item]) => {
+                    const val = String(item?.name || key).trim();
+                    if (!val) return null;
+                    const title = item?.desc || val;
                     const owned = ownedMap.get(val);
                     ownedMap.delete(val);
                     return {
@@ -102,9 +102,10 @@ export default {
                         title,
                         amount: owned?.amount || 0,
                         image: `${__cdn}design/decoration/palu/${val}.png`,
-                        mallUrl: `/vip/mall/${item.id}?category=virtual&sub_category=palu&search=${encodeURIComponent(title)}`,
+                        mallUrl: `${MALL_URL}&search=${encodeURIComponent(title)}`,
                     };
-                });
+                })
+                .filter(Boolean);
 
             ownedMap.forEach(({ amount }, val) => {
                 cards.push({ val, title: val, amount, image: `${__cdn}design/decoration/palu/${val}.png`, mallUrl: MALL_URL });
@@ -114,14 +115,14 @@ export default {
         async load() {
             this.loading = true;
             try {
-                const [goodsResult, decorationResult] = await Promise.allSettled([
-                    getItemList({ category: "virtual", sub_category: "palu", _no_page: 1 }),
+                const [skinResult, decorationResult] = await Promise.allSettled([
+                    getSkinJson(),
                     getDecoration({ type: "palu" }),
                 ]);
-                if (goodsResult.status === "rejected") throw goodsResult.reason;
-                const goods = goodsResult.value.data?.data?.list || [];
+                if (skinResult.status === "rejected") throw skinResult.reason;
+                const skins = skinResult.value.data || {};
                 const decorations = decorationResult.status === "fulfilled" ? decorationResult.value.data?.data || [] : [];
-                this.cards = this.buildCards(goods, decorations);
+                this.cards = this.buildCards(skins, decorations);
             } catch (err) {
                 this.cards = [];
                 this.$message.error(err?.response?.data?.msg || this.$t("dashboard.palu.loadFailed"));
