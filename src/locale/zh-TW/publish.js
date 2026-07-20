@@ -257,7 +257,7 @@ export default {
         "optionsLabel": "選項",
         "paperCountValidation": "每份試卷需包含 10 至 100 道題。",
         "paperDescriptionPlaceholder": "請輸入試卷說明",
-        "paperQuestionsHint": "請輸入題目編號，多個編號用逗號分隔。",
+        "paperQuestionsHint": "請輸入 10 至 100 個題目編號，多個編號用半形逗號（,）分隔。",
         "paperTitlePlaceholder": "請輸入試卷標題",
         "publishPaper": "發佈試卷",
         "question": "題目",

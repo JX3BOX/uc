@@ -257,7 +257,7 @@ export default {
         "optionsLabel": "Options",
         "paperCountValidation": "A paper must contain 10 to 100 questions.",
         "paperDescriptionPlaceholder": "Enter a paper description",
-        "paperQuestionsHint": "Enter question IDs separated by commas.",
+        "paperQuestionsHint": "Enter 10 to 100 question IDs separated by commas (,).",
         "paperTitlePlaceholder": "Enter a paper title",
         "publishPaper": "Publish Paper",
         "question": "Question",
