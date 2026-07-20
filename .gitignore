@@ -1,6 +1,6 @@
 .DS_Store
 .playwright-cli
-
+artifacts
 node_modules
 /dist
 /tmp

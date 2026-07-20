@@ -10,8 +10,12 @@ function quitUnionPost(post_id) {
     return $cms().delete(`/api/cms/post/${post_id}/authors/quit`);
 }
 
+function acceptUnionInvitation(post_id) {
+    return $cms().put(`/api/cms/post/${post_id}/author/my`);
+}
+
 function getUnionAuthors(post_id) {
-    return $cms().get(`/api/cms/post/${post_id}/authors`);
+    return $cms().get(`/api/cms/post/${post_id}/authors/manage`);
 }
 
 function addUnionAuthor(post_id, author_id) {
@@ -29,4 +33,12 @@ function removeUnionAuthor(post_id, author_id) {
     return $cms().delete(`/api/cms/post/${post_id}/author/${author_id}`);
 }
 
-export { getUnionPosts, quitUnionPost, addUnionAuthor, getUnionAuthors, updateUnionAuthor, removeUnionAuthor };
+export {
+    getUnionPosts,
+    quitUnionPost,
+    acceptUnionInvitation,
+    addUnionAuthor,
+    getUnionAuthors,
+    updateUnionAuthor,
+    removeUnionAuthor,
+};

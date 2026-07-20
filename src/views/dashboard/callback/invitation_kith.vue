@@ -1,28 +1,24 @@
 <template>
-    <div class="m-callback m-invitation-kith">
-        <h1 class="u-title"><i class="el-icon-message"></i> {{ $t("dashboard.invitationCallback.title") }}</h1>
-        <p class="u-desc">{{ $t("dashboard.invitationCallback.friendReceived") }}</p>
-        <div class="u-post">
-            <div class="u-post-avatar">
-                <img :src="showAvatar(userdata.user_avatar)" />
-            </div>
-            <div class="u-post-info">
-                <a class="u-post-title" :href="authorLink(uid)" target="_blank">{{ userdata.display_name }}</a>
-                <div class="u-post-desc">
-                    <i class="el-icon-date"></i>
-                    <time class="u-post-time">{{ dateFormat(info.updated) }}</time>
-                </div>
-            </div>
-        </div>
-        <div class="u-btns">
-            <el-button type="primary" icon="el-icon-check" :disabled="alreadyAccept" @click="accept">{{
+    <InvitationCard
+        type="kith"
+        icon="el-icon-user"
+        :title="$t('dashboard.invitationCallback.friendTitle')"
+        :description="$t('dashboard.invitationCallback.friendReceived')"
+        :avatar="avatarSrc"
+        :user-name="userdata.display_name || `UID ${uid}`"
+        :user-link="authorLink(uid)"
+        :time="dateFormat(info.created || info.updated)"
+        :loading="loading"
+        :valid="!!record"
+        :finished="alreadyAccept"
+    >
+            <el-button type="primary" :disabled="alreadyAccept" @click="accept">{{
                 alreadyAccept ? $t("dashboard.common.accepted") : $t("dashboard.common.accept")
             }}</el-button>
-            <el-button type="info" icon="el-icon-close" @click="confirmQuit" :disabled="alreadyAccept">{{
+            <el-button type="info" @click="confirmQuit" :disabled="alreadyAccept">{{
                 alreadyAccept ? $t("dashboard.invitationCallback.removeFriend") : $t("dashboard.common.reject")
             }}</el-button>
-        </div>
-    </div>
+    </InvitationCard>
 </template>
 
 <script>
@@ -36,19 +32,29 @@ import {
 } from "@/service/dashboard/callback.js";
 import { getLink, showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils";
 import dateFormat from "@/utils/dateFormat";
+import InvitationCard from "@/components/dashboard/callback/InvitationCard.vue";
 export default {
     name: "InvitationKith",
     props: [],
-    components: {},
+    components: { InvitationCard },
     data: function () {
         return {
             userdata: "",
             record: null,
+            loading: true,
         };
     },
     computed: {
         info: function () {
-            return JSON.parse(Base64.decode(decodeURIComponent(this.$route.query.info)));
+            if (this.isMock) return { source_id: 168, created: 1784512800 };
+            try {
+                return JSON.parse(Base64.decode(decodeURIComponent(this.$route.query.info || "")));
+            } catch (e) {
+                return {};
+            }
+        },
+        isMock: function () {
+            return process.env.NODE_ENV === "development" && this.$route.query.mock === "1";
         },
         uid: function () {
             return this.info?.source_id;
@@ -58,6 +64,9 @@ export default {
         },
         alreadyAccept: function () {
             return !!(this.record && this.record.status);
+        },
+        avatarSrc: function () {
+            return this.isMock ? require("@/assets/img/author/null.png") : showAvatar(this.userdata.user_avatar);
         },
     },
     watch: {
@@ -73,14 +82,30 @@ export default {
     },
     methods: {
         loadData: function () {
+            if (this.isMock) {
+                this.userdata = {
+                    display_name: "凌雪阁的小信使",
+                    user_avatar: "https://cdn.jx3box.com/upload/avatar/2024/4/168.png",
+                };
+                return;
+            }
             getUser(this.uid).then((res) => {
                 this.userdata = res.data?.data;
             });
         },
         check: function () {
-            isExistKithInvitation(this.uid).then((res) => {
-                this.record = res.data?.data;
-            });
+            if (this.isMock) {
+                this.record = { status: 0 };
+                this.loading = false;
+                return;
+            }
+            isExistKithInvitation(this.uid)
+                .then((res) => {
+                    this.record = res.data?.data;
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
         },
         confirmQuit: function () {
             this.$confirm(this.$t("dashboard.invitationCallback.removeFriendConfirm"), this.$t("dashboard.common.tip"), {
@@ -115,77 +140,12 @@ export default {
         authorLink,
         showAvatar,
         dateFormat: function (val) {
-            return dateFormat(new Date(~~val * 1000));
+            const timestamp = Number(val);
+            if (!Number.isFinite(timestamp) || timestamp <= 0) return "-";
+            return dateFormat(new Date(timestamp > 1e12 ? timestamp : timestamp * 1000));
         },
     },
     created: function () {},
     mounted: function () {},
 };
 </script>
-
-<style scoped lang="less">
-.m-invitation-kith {
-    padding: 100px 0;
-    max-width: 1280px;
-    .auto(x);
-    .u-title {
-        font-weight: 400;
-        i {
-            .fz(38px);
-            .y(-3px);
-        }
-        .x;
-        // color: @primary;
-    }
-    .u-desc {
-        .fz(24px);
-        .x;
-    }
-    .u-post {
-        display: flex;
-        border: 1px solid #ddd;
-        .r(6px);
-        max-width: 800px;
-        .auto(x);
-        background-color: @bg-light;
-    }
-    .u-post-avatar {
-        flex-shrink: 0;
-        img {
-            .size(68px);
-            padding: 10px;
-        }
-    }
-    .u-post-info {
-        padding: 10px;
-        flex-grow: 1;
-        overflow: hidden;
-    }
-    .u-post-title {
-        .fz(15px,2.5);
-        .db;
-        .bold;
-        &:hover {
-            text-decoration: underline;
-            color: @pink;
-        }
-        .nobreak;
-    }
-    .u-post-desc {
-        .fz(13px,2);
-        .db;
-        color: #555;
-        &:hover {
-            color: @pink;
-        }
-    }
-    .u-post-time {
-        .ml(10px);
-        color: #888 !important;
-    }
-    .u-btns {
-        .x;
-        .mt(20px);
-    }
-}
-</style>
