@@ -27,7 +27,7 @@
                 ></el-input>
             </el-form-item>
             <el-form-item :label="$t('publish.exam.questionType')" class="m-publish-exam-type">
-                <el-radio-group v-model="primary.type">
+                <el-radio-group v-model="primary.type" @change="handleTypeChange">
                     <el-radio value="radio" border>{{ $t("publish.exam.singleChoice") }}</el-radio>
                     <el-radio value="checkbox" border>{{ $t("publish.exam.multipleChoice") }}</el-radio>
                 </el-radio-group>
@@ -157,9 +157,30 @@ export default {
         },
     },
     methods: {
+        handleTypeChange: function () {
+            this.primary.answer = [];
+            this.answer_radio = "";
+            this.answer_checkbox = [];
+        },
+        validate: function (data) {
+            const title = data.title.trim();
+            const options = data.options.map((option) => option.trim());
+            data.answer = data.answer.map(Number);
+            const hasValidAnswer =
+                data.answer.length > 0 && data.answer.every((index) => Number.isInteger(index) && options[index]);
+
+            if (title.length < 2 || options.some((option) => !option) || !hasValidAnswer) {
+                this.$message.warning(this.$t("publish.validation.completeRequired"));
+                return false;
+            }
+            data.title = title;
+            data.options = options;
+            return true;
+        },
         publish: function () {
-            this.processing = true;
             const data = getSubmitData(this.primary);
+            if (!this.validate(data)) return;
+            this.processing = true;
             const request = this.id ? updateQuestion(this.id, data) : createQuestion(data);
             request
                 .then((res) => {

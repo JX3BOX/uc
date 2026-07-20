@@ -98,13 +98,6 @@ import { __wikiType } from "@/utils/config";
 import dateFormat from "@/utils/dateFormat";
 import { wiki } from "@jx3box/jx3box-common/js/wiki";
 const wikiTypes = { ...__wikiType };
-const wikiTypeLabels = {
-    achievement: "成就",
-    item: "物品",
-    quest: "任务",
-    knowledge: "通识",
-    skill: "技能",
-};
 export default {
     name: "wiki",
     props: [],
@@ -113,7 +106,6 @@ export default {
             loading: true,
             loadError: false,
 
-            active_name: this.$route.query.type ? this.$route.query.type : "wiki_post",
             achievement_post: {
                 data: null,
                 total: 0,
@@ -121,6 +113,7 @@ export default {
             },
             post_page: 1,
             length: 10,
+            requestId: 0,
         };
     },
     computed: {
@@ -136,7 +129,7 @@ export default {
     },
     methods: {
         getTypeLabel: function (val) {
-            return wikiTypeLabels[val] || "未知";
+            return this.wikiTypeLabel(val, wikiTypes[val]);
         },
         wikiTypeLabel(type, fallback) {
             const key = {
@@ -149,6 +142,7 @@ export default {
             return key ? this.$t(`publish.mobile.${key}`) : fallback;
         },
         post_page_change(i = 1) {
+            const requestId = ++this.requestId;
             this.post_page = i;
             this.loading = true;
             this.loadError = false;
@@ -159,13 +153,16 @@ export default {
                 per: this.length,
             })
                 .then((res) => {
+                    if (requestId !== this.requestId) return;
                     this.achievement_post.data = res.data.data.list || [];
                     this.achievement_post.total = res.data.data.total || 0;
                 })
                 .catch(() => {
+                    if (requestId !== this.requestId) return;
                     this.loadError = true;
                 })
                 .finally(() => {
+                    if (requestId !== this.requestId) return;
                     this.loading = false;
                 });
         },
@@ -184,11 +181,15 @@ export default {
                 type: "warning",
                 beforeClose: (action, instance, done) => {
                     if (action === "confirm") {
-                        wiki.remove(post.id).then(() => {
-                            this.$message.success(this.$t("publish.message.deleteSucceeded"));
-                            this.post_page_change();
-                            done();
-                        });
+                        wiki.remove(post.id)
+                            .then(() => {
+                                this.$message.success(this.$t("publish.message.deleteSucceeded"));
+                                this.post_page_change();
+                            })
+                            .catch(() => {
+                                this.$message.error(this.$t("publish.message.requestFailed"));
+                            })
+                            .finally(done);
                     } else {
                         done();
                     }
@@ -203,30 +204,12 @@ export default {
         },
     },
     watch: {
-        $route: {
+        "$route.params.type": {
             immediate: true,
-            handler() {
-                if (this.$route.params.type) {
-                    switch (this.$route.query.type) {
-                        case "wiki_post":
-                            this.achievement_post.keyword = this.$route.params.type;
-                            break;
-                        case "wiki_comment":
-                            this.achievement_comment.keyword = this.$route.params.type;
-                            break;
-                    }
-
-                    // 置空输入框ID
-                    this.$nextTick(() => {
-                        let input_doms = document.querySelectorAll(".u-source-search input");
-                        for (let i = 0; i < input_doms.length; i++) input_doms[i].value = "";
-                    });
-                } else {
+            handler(type, previousType) {
+                if (previousType && type !== previousType) {
                     this.achievement_post.keyword = "";
-                    this.achievement_comment.keyword = "";
                 }
-
-                // 列表获取
                 this.post_page_change();
             },
         },

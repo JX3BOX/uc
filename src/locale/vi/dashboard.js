@@ -600,6 +600,7 @@ export default {
         validUntil: "Có giá trị đến: {date}",
         upgradeAccount: "Nâng cấp loại tài khoản",
         emailVerified: "Email đã được xác minh",
+        emailUnbound: "Email chưa được liên kết",
         emailUnverified: "Email chưa được xác minh",
         phoneBound: "Điện thoại di động bị ràng buộc",
         phoneUnbound: "Điện thoại không bị ràng buộc",

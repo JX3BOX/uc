@@ -207,10 +207,6 @@ export default {
 
             let str = this.data.content.trim();
 
-            const regex_1 = /(#[\u4e00-\u9fa5]{1})/g;
-            const regex_2 = /(#[\u4e00-\u9fa5]{2})/g;
-            const regex_3 = /(#[\u4e00-\u9fa5]{3})/g;
-
             if (!str.length) {
                 this.$notify({
                     title: this.$t("publish.common.error"),
@@ -220,28 +216,15 @@ export default {
                 return false;
             }
 
-            /**
-             * 依次判定表情字符为1，2，3个的情况
-             */
-            const emotion_1 = str.match(regex_1)
-                ? str.match(regex_1).filter((emotion) => emotionKeys.includes(emotion))
-                : [];
-
-            emotion_1.forEach((emotion) => str.replace(emotion, ""));
-
-            const emotion_2 = str.match(regex_2)
-                ? str.match(regex_2).filter((emotion) => emotionKeys.includes(emotion))
-                : [];
-
-            emotion_2.forEach((emotion) => str.replace(emotion, ""));
-
-            const emotion_3 = str.match(regex_3)
-                ? str.match(regex_3).filter((emotion) => emotionKeys.includes(emotion))
-                : [];
-
-            emotion_3.forEach((emotion) => str.replace(emotion, ""));
-
-            const emotionLength = emotion_1.length + emotion_2.length + emotion_3.length;
+            // 优先移除较长的表情 key，避免短 key 与长 key 重叠计数。
+            let emotionLength = 0;
+            emotionKeys
+                .sort((a, b) => b.length - a.length)
+                .forEach((key) => {
+                    const parts = str.split(key);
+                    emotionLength += parts.length - 1;
+                    str = parts.join("");
+                });
 
             this.contentLength = emotionLength;
 

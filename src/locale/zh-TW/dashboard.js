@@ -594,6 +594,7 @@ export default {
         validUntil: "有效期限至：{date}",
         upgradeAccount: "升級帳號類型",
         emailVerified: "郵箱已驗證",
+        emailUnbound: "郵箱未綁定",
         emailUnverified: "郵箱未驗證",
         phoneBound: "手機已綁定",
         phoneUnbound: "手機未綁定",

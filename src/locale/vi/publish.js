@@ -219,7 +219,8 @@ export default {
         "copySucceeded": "Đã sao chép mã nguồn bản nháp",
         "deletedCount": "Đã xóa {count} bản nháp",
         "description": "Các bản nháp dưới đây là mã HTML tạm thời do trình soạn thảo tạo trong trình duyệt này. Chúng không được lưu trên máy chủ và chỉ dùng để khôi phục khi mất mạng hoặc cửa sổ đóng bất thường.",
-        "help": "Trợ giúp"
+        "help": "Trợ giúp",
+        "notFound": "Bản nháp cục bộ không tồn tại hoặc đã hết hạn"
     },
     "dungeon": {
         "bossName": "Tên thủ lĩnh",

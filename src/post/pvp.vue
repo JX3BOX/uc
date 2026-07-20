@@ -366,10 +366,10 @@ export default {
                     return result;
                 })
                 .then((result) => {
-                    this.afterPublish({ ...result, ID: result.ID || this.id, post_type: "pvp" }).finally(() => {
+                    this.setCommentConfig("post", result.ID || this.id);
+                    return this.afterPublish({ ...result, ID: result.ID || this.id, post_type: "pvp" }).then(() => {
                         this.done(skip, { ...result, ID: result.ID || this.id, post_type: "pvp" });
                     });
-                    this.setCommentConfig("post", result.ID || this.id);
                 })
                 .finally(() => {
                     this.processing = false;

@@ -154,10 +154,16 @@ export default {
     watch: {},
     methods: {
         publish: function () {
-            this.processing = true;
             const data = getSubmitData(this.primary);
             data.questionList = this.checkList();
             if (!data.questionList) return;
+            data.title = data.title.trim();
+            data.desc = data.desc.trim();
+            if (data.title.length < 2 || data.desc.length < 2) {
+                this.$message.warning(this.$t("publish.validation.completeRequired"));
+                return;
+            }
+            this.processing = true;
             const request = this.id ? updatePaper(this.id, data) : createPaper(data);
             request
                 .then((res) => {
@@ -197,19 +203,19 @@ export default {
                 });
         },
         checkList: function () {
-            let list = this.list.split(",");
-            if (list.length > 10 || !list.length) {
+            const list = this.list
+                .split(",")
+                .map((val) => val.trim())
+                .filter(Boolean);
+            const isValid =
+                list.length >= 10 && list.length <= 100 && list.every((val) => /^\d+$/.test(val) && Number(val) > 0);
+            if (!isValid) {
                 this.$alert(this.$t("publish.exam.paperCountValidation"), this.$t("publish.common.reminder"), {
                     confirmButtonText: this.$t("publish.common.confirm"),
-                    callback: () => {
-                        this.processing = false;
-                    },
                 });
                 return false;
             } else {
-                return list.map((val) => {
-                    return ~~val;
-                });
+                return list.map(Number);
             }
         },
     },

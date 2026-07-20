@@ -323,11 +323,10 @@ export default {
                     return this.syncPalu(result).then(() => result);
                 })
                 .then((result) => {
-                    this.afterPublish({ ...result, ID: result.ID || this.id, post_type: "tool" }).finally(() => {
+                    this.setCommentConfig("post", result.ID || this.id);
+                    return this.afterPublish({ ...result, ID: result.ID || this.id, post_type: "tool" }).then(() => {
                         this.done(skip, { ...result, ID: result.ID || this.id, post_type: "tool" });
                     });
-
-                    this.setCommentConfig("post", result.ID || this.id);
                 })
                 .finally(() => {
                     this.processing = false;

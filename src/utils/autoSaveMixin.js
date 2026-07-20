@@ -52,6 +52,10 @@ export const AutoSaveMixin = {
                 return this.db
                     .getItem(key)
                     .then((res) => {
+                        if (!res) {
+                            this.$message.error(this.$t("publish.draft.notFound"));
+                            return;
+                        }
                         this.post = res;
                         if (isPvp && !this.post.tags) {
                             this.post.tags = [];

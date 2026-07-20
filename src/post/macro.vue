@@ -381,11 +381,10 @@ export default {
                     return result;
                 })
                 .then((result) => {
-                    this.afterPublish({ ...result, ID: result.ID || this.id, post_type: "macro" }).finally(() => {
+                    this.setCommentConfig("post", result.ID || this.id);
+                    return this.afterPublish({ ...result, ID: result.ID || this.id, post_type: "macro" }).then(() => {
                         this.done(skip, { ...result, ID: result.ID || this.id, post_type: "macro" });
                     });
-
-                    this.setCommentConfig("post", result.ID || this.id);
                 })
                 .finally(() => {
                     this.processing = false;

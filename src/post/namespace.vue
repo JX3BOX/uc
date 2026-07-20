@@ -169,7 +169,7 @@ export default {
         onSubmit: function () {
             if (this.form.desc == "") {
                 let profile = User.getInfo();
-                this.data.desc = this.$t("publish.namespace.createdBy", { name: profile.name });
+                this.form.desc = this.$t("publish.namespace.createdBy", { name: profile.name });
             }
             this.processing = true;
             if (this.isEditMode) {

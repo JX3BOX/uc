@@ -16,6 +16,20 @@ test("wiki comments link to the matching wiki type", () => {
     assert.doesNotMatch(source, /'cj\/view\/' \+ comment\.source_id/);
 });
 
+test("wiki management guards routes and stale asynchronous work", () => {
+    const router = read("src/pages/publish/router.js");
+    const list = read("src/views/publish/wiki.vue");
+    const knowledge = read("src/post/knowledge.vue");
+
+    assert.match(router, /\/wiki\/:type\(achievement\|item\|quest\|knowledge\|skill\)/);
+    assert.doesNotMatch(list, /achievement_comment/);
+    assert.match(list, /const requestId = \+\+this\.requestId/);
+    assert.match(list, /if \(requestId !== this\.requestId\) return/);
+    assert.match(list, /\.finally\(done\)/);
+    assert.match(knowledge, /this\.id[\s\S]*wiki\.update\(this\.id/);
+    assert.match(knowledge, /: wiki\.post\(\{ type: "knowledge"/);
+});
+
 test("publish gear selector skips empty IDs and forwards remote search", () => {
     const source = read("src/components/publish/publish_pz.vue");
 

@@ -140,7 +140,7 @@
                     </div>
                     <!-- 按钮 -->
                     <div class="m-publish-buttons">
-                        <el-button type="primary" @click="publish" :disabled="processing">{{ $t("publish.common.publish") }}</el-button>
+                        <el-button type="primary" @click="publish" :disabled="processing || !list.length">{{ $t("publish.common.publish") }}</el-button>
                     </div>
                 </div>
             </div>
@@ -242,6 +242,13 @@ export default {
         },
         // 发布
         publish: function () {
+            if (!this.list.length) {
+                this.$message({
+                    message: this.$t("publish.validation.imageRequired"),
+                    type: "warning",
+                });
+                return;
+            }
             this.processing = true;
             postEmotions(this.list)
                 .then((res) => {

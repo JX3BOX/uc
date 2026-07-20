@@ -124,16 +124,21 @@
 
             <!-- 按钮 -->
             <div class="m-publish-buttons">
-                <el-button
-                    size="large"
-                    type="primary"
-                    @click="publish('publish', true)"
-                    :disabled="is_illegal || processing || !hasRead"
-                    >{{ $t("publish.common.publish") }}</el-button
-                >
-                <el-button size="large" plain @click="publish('draft', false)" :disabled="processing || !hasRead"
-                    >{{ $t("publish.common.saveDraft") }}</el-button
-                >
+                <template v-if="isDraft || isRevision">
+                    <el-button type="primary" @click="useDraft" :disabled="processing">{{ $t("publish.common.useThisVersion") }}</el-button>
+                </template>
+                <template v-else>
+                    <el-button
+                        size="large"
+                        type="primary"
+                        @click="publish('publish', true)"
+                        :disabled="is_illegal || processing || !hasRead"
+                        >{{ $t("publish.common.publish") }}</el-button
+                    >
+                    <el-button size="large" plain @click="publish('draft', false)" :disabled="processing || !hasRead"
+                        >{{ $t("publish.common.saveDraft") }}</el-button
+                    >
+                </template>
             </div>
         </el-form>
     </div>
@@ -313,6 +318,9 @@ export default {
             sessionStorage.removeItem("atAuthor");
             // 尝试加载
             return this.loadData().then(() => {
+                if (!this.post.tags || !this.post.tags.length) {
+                    this.post.tags = [];
+                }
                 // 加载成功后执行自动保存逻辑（含本地草稿、本地缓存、云端历史版本）
                 this.autoSave();
             });
@@ -337,10 +345,10 @@ export default {
                     return result;
                 })
                 .then((result) => {
-                    this.afterPublish({ ...result, ID: result.ID || this.id, post_type: "bps" }).finally(() => {
+                    this.setCommentConfig("post", result.ID || this.id);
+                    return this.afterPublish({ ...result, ID: result.ID || this.id, post_type: "bps" }).then(() => {
                         this.done(skip, { ...result, ID: result.ID || this.id, post_type: "bps" });
                     });
-                    this.setCommentConfig("post", result.ID || this.id);
                 })
                 .finally(() => {
                     this.processing = false;
@@ -400,12 +408,6 @@ export default {
         if (topics) {
             this.post.topics = topics.split(",");
         }
-        this.init().then((data) => {
-            if (!data) return;
-            if (!this.post.tags || !this.post.tags.length) {
-                this.post.tags = [];
-            }
-        });
     },
 };
 </script>

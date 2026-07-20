@@ -394,8 +394,10 @@ export default {
             }
 
             // 校验posts
-            let message = "";
+            collection.title = collection.title?.trim() || "";
+            let message = collection.title ? "" : this.$t("publish.validation.titleRequired");
             for (const i in collection.posts) {
+                if (message) break;
                 const item = collection.posts[i];
                 if (!item.type) {
                     message = this.$t("publish.validation.articleTypeRequired");

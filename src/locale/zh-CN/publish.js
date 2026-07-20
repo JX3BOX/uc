@@ -219,7 +219,8 @@ export default {
         "copySucceeded": "草稿源码复制成功",
         "deletedCount": "成功删除 {count} 个草稿",
         "description": "以下草稿是编辑器在当前浏览器中产生的临时本地草稿 HTML 源码，不会保存到服务器，仅用于断网或窗口异常关闭时恢复。",
-        "help": "使用帮助"
+        "help": "使用帮助",
+        "notFound": "本地草稿不存在或已失效"
     },
     "dungeon": {
         "bossName": "首领名称",

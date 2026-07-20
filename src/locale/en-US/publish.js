@@ -16,7 +16,7 @@ export default {
     "collection": {
         "addWork": "Add Work",
         "coverHint": "Recommended size: 640×360; JPG and PNG supported",
-        "create": "Create Collection",
+        "create": "New Collection",
         "customTitle": "Custom Title",
         "customTitlePlaceholder": "Enter a custom title",
         "empty": "No collections",
@@ -25,7 +25,7 @@ export default {
         "noWorks": "No works added",
         "onlyOwnWorks": "Only select my works",
         "optionalDescription": "Collection Description (Optional)",
-        "placeholder": "Select a collection",
+        "placeholder": "Select collection",
         "privateHint": "Private collections are visible only to you",
         "titlePlaceholder": "Enter a collection title",
         "unavailable": "This work is unavailable",
@@ -219,7 +219,8 @@ export default {
         "copySucceeded": "Draft source copied",
         "deletedCount": "Deleted {count} drafts",
         "description": "These drafts are temporary local HTML source created by the editor in this browser. They are not stored on the server and are only used for recovery after a network loss or unexpected window close.",
-        "help": "Help"
+        "help": "Help",
+        "notFound": "The local draft does not exist or has expired"
     },
     "dungeon": {
         "bossName": "Boss Name",
@@ -347,8 +348,8 @@ export default {
         "banner": "Banner",
         "bannerHint": "A landscape banner is recommended.",
         "client": "Client",
-        "cmsBannerHint": "Only contracted creators and administrators can set a banner.",
-        "commentFilter": "Comment Filter",
+        "cmsBannerHint": "Contracted creators and admins only.",
+        "commentFilter": "Filter Comments",
         "comments": "Comments",
         "containsVideo": "Contains Video",
         "contentPlaceholder": "Enter the content",
@@ -357,7 +358,7 @@ export default {
         "enterToAdd": "Press Enter to Add",
         "excerpt": "Excerpt",
         "excerptPlaceholder": "Enter an excerpt",
-        "expandedByDefault": "Expanded by Default",
+        "expandedByDefault": "Auto-expand",
         "expansion": "Expansion",
         "expansionPlaceholder": "Select an expansion",
         "extension": "Extensions",
@@ -370,7 +371,7 @@ export default {
         "instructionsPlaceholder": "Enter instructions",
         "isPaid": "Paid Content",
         "language": "Language",
-        "mentionAuthors": "Mention Creators",
+        "mentionAuthors": "Mention",
         "moreTopics": "More Topics",
         "newTag": "New Tag",
         "originServer": "Origin Server",
@@ -415,7 +416,7 @@ export default {
         "title": "Gear Build"
     },
     "guide": {
-        "navigation": "Adjacent Articles",
+        "navigation": "Navigation",
         "next": "Next",
         "previous": "Previous"
     },
@@ -783,8 +784,8 @@ export default {
         "followersOnlyContent": "This content is visible to followers only",
         "friends": "Friends",
         "onlyMe": "Only Me",
-        "paid": "Paid Access",
-        "password": "Password Protected",
+        "paid": "Paid",
+        "password": "Password",
         "passwordLockedContent": "This content requires a password",
         "private": "Private",
         "privateShort": "Private",

@@ -361,7 +361,15 @@ export default {
                 remark: this.post.remark,
                 tags: this.post.tags.join(","),
             };
-            wiki.post({ type: "knowledge", ...data, client: "all" })
+            const request = this.id
+                ? wiki.update(this.id, {
+                      content: data.content,
+                      remark: data.remark,
+                      tags: data.tags,
+                      client: "all",
+                  })
+                : wiki.post({ type: "knowledge", ...data, client: "all" });
+            request
                 .then(() => {
                     this.$message({ message: this.$t("publish.message.submittedForReview"), type: "success" });
                     setTimeout(() => {

@@ -369,7 +369,7 @@ export default {
                         // setVisibility(this.data.id, this.post.is_self_visit);
                     })
                     .then(() => {
-                        this.afterPublish({
+                        return this.afterPublish({
                             id: this.data.id,
                             collection_id: this.data.collection_id,
                             title: this.data.title,
@@ -412,7 +412,7 @@ export default {
                         // 跳转
                     })
                     .then((result) => {
-                        this.afterPublish(result).then(() => {
+                        return this.afterPublish(result).then(() => {
                             setTimeout(() => {
                                 location.href = `/community/${result.id}`;
                             }, 500);

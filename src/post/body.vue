@@ -318,7 +318,7 @@ export default {
                 // 如果第一个附件有data，证明这个附件是新上传的，那么更新body使用这个data
                 // 如果第一个附件没有data，那么表示第一个附件是以前的，是通过init()获取的，那么更新body使用原来的data
                 if (this.bodyData.data) {
-                    data.data = JSON.stringify(this.bodyData.data);
+                    data.data = this.bodyData.data;
                 }
                 data.body_type = this.bodyData.body_type || this.post.body_type;
                 data.file = this.bodyData.file;
@@ -343,17 +343,20 @@ export default {
                         this.processing = false;
                     });
             } else {
-                addBody(data).then((res) => {
-                    this.$message({
-                        message: this.$t("publish.message.publishSucceeded"),
-                        type: "success",
+                addBody(data)
+                    .then((res) => {
+                        this.$message({
+                            message: this.$t("publish.message.publishSucceeded"),
+                            type: "success",
+                        });
+                        // 跳转
+                        setTimeout(() => {
+                            location.href = `/body/${res.data.data.id}`;
+                        }, 500);
+                    })
+                    .finally(() => {
+                        this.processing = false;
                     });
-                    this.processing = false;
-                    // 跳转
-                    setTimeout(() => {
-                        location.href = `/body/${res.data.data.id}`;
-                    }, 500);
-                });
             }
         },
         // 移除文件标识
