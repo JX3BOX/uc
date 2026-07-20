@@ -14,7 +14,10 @@
             <ContentSkeleton v-if="loading" variant="list" :rows="per" compact />
             <PublishListError v-else-if="loadError" @retry="loadPosts" />
             <ul class="m-dashboard-box-list" v-else-if="data && data.length">
-                <li v-for="(item, i) in data" :key="i">
+                <li
+                    v-for="(item, i) in data"
+                    :key="`${isActive ? 'active' : 'passive'}-${item.union_post_raw ? item.union_post_raw.ID : i}`"
+                >
                     <template v-if="item.union_post_raw">
                         <a
                             class="u-title"
@@ -116,6 +119,7 @@ export default {
             total: 1,
             page: 1,
             per: 10,
+            requestId: 0,
         };
     },
     computed: {
@@ -146,18 +150,20 @@ export default {
     },
     methods: {
         loadPosts: function () {
+            const requestId = ++this.requestId;
             this.loading = true;
             this.loadError = false;
             getUnionPosts(this.params)
                 .then((res) => {
+                    if (requestId !== this.requestId) return;
                     this.data = res.data.data.list || [];
                     this.total = res.data.data.total;
                 })
                 .catch(() => {
-                    this.loadError = true;
+                    if (requestId === this.requestId) this.loadError = true;
                 })
                 .finally(() => {
-                    this.loading = false;
+                    if (requestId === this.requestId) this.loading = false;
                 });
         },
         edit: function (type, id) {
@@ -199,6 +205,15 @@ export default {
         visibleFormat: function (val) {
             const key = ["public", "private", "friends", "password", "paid", "followers"][~~val];
             return this.$t(`publish.visibility.${key || "public"}`);
+        },
+        statusFormat: function (val) {
+            const key = {
+                publish: "published",
+                draft: "draft",
+                pending: "pendingReview",
+                dustbin: "deleted",
+            }[val];
+            return this.$t(`publish.status.${key || "unknown"}`);
         },
     },
 };
