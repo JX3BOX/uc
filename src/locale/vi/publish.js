@@ -278,7 +278,7 @@ export default {
         "optionsLabel": "Các lựa chọn",
         "paperCountValidation": "Mỗi đề thi phải có từ 10 đến 100 câu hỏi.",
         "paperDescriptionPlaceholder": "Nhập mô tả đề thi",
-        "paperQuestionsHint": "Nhập mã câu hỏi, phân cách bằng dấu phẩy.",
+        "paperQuestionsHint": "Nhập từ 10 đến 100 mã câu hỏi, phân cách bằng dấu phẩy (,).",
         "paperTitlePlaceholder": "Nhập tiêu đề đề thi",
         "publishPaper": "Đăng đề thi",
         "question": "Câu hỏi",

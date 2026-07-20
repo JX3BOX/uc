@@ -38,11 +38,11 @@
                 ></el-input>
             </el-form-item>
             <el-form-item :label="$t('publish.exam.question')" class="m-publish-exam-common">
-                <div>{{ $t("publish.exam.paperQuestionsHint") }}</div>
+                <div class="u-form-tip">{{ $t("publish.exam.paperQuestionsHint") }}</div>
                 <el-input v-model="list" show-word-limit required :placeholder="$t('publish.exam.questionIdsPlaceholder')"></el-input>
             </el-form-item>
             <el-form-item :label="$t('publish.exam.externalLink')" class="m-publish-exam-common">
-                <div>{{ $t("publish.exam.externalLinkHint") }}</div>
+                <div class="u-form-tip">{{ $t("publish.exam.externalLinkHint") }}</div>
                 <el-input v-model="primary.iframe" show-word-limit required :placeholder="$t('publish.exam.externalLinkPlaceholder')">
                 </el-input>
             </el-form-item>
@@ -95,7 +95,6 @@ import exam_tags from "@/components/publish/exam_tags.vue";
 import User from "@jx3box/jx3box-common/js/user";
 import { getPaper, createPaper, updatePaper } from "@/service/publish/exam";
 import examData from "@/assets/data/publish/exam.json";
-import { getLink } from "@jx3box/jx3box-common/js/utils";
 const { awards, marks, styles } = examData;
 const DEFAULT_CLIENT = "std";
 const PUBLIC_VALUE = 1;
@@ -166,21 +165,23 @@ export default {
             this.processing = true;
             const request = this.id ? updatePaper(this.id, data) : createPaper(data);
             request
-                .then((res) => {
-                    this.success(res);
+                .then(() => {
+                    this.success();
                 })
                 .catch(() => {})
                 .finally(() => {
                     this.processing = false;
                 });
         },
-        success: function (res) {
+        success: function () {
             this.$message({
-                message: res.data.msg || this.$t("publish.message.submitSucceeded"),
+                message: this.$t(
+                    this.id ? "publish.message.updatedForReview" : "publish.message.submittedForReview"
+                ),
                 type: "success",
             });
             setTimeout(() => {
-                location.href = getLink("paper", this.id || res.data.data.id);
+                this.$router.go(-1);
             }, 500);
         },
         loadData: function () {

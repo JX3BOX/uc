@@ -118,7 +118,10 @@
             <ContentSkeleton v-if="loading" variant="list" :rows="per" compact />
             <PublishListError v-else-if="loadError" @retry="loadPosts" />
             <ul class="m-dashboard-box-list" v-else-if="data && data.length">
-                <li v-for="(item, i) in data" :key="item.post_id">
+                <li
+                    v-for="(item, i) in data"
+                    :key="`${isActive ? 'active' : 'passive'}-${item.union_post_raw ? item.union_post_raw.ID : i}`"
+                >
                     <template v-if="item.union_post_raw">
                         <div class="u-title-row">
                             <a
@@ -242,7 +245,7 @@ export default {
             total: 1,
             page: 1,
             per: 10,
-            requestSerial: 0,
+            requestId: 0,
             actionPostId: 0,
             pendingLoading: false,
             pendingError: false,
@@ -294,22 +297,20 @@ export default {
     },
     methods: {
         loadPosts: function () {
-            const requestSerial = ++this.requestSerial;
+            const requestId = ++this.requestId;
             this.loading = true;
             this.loadError = false;
             getUnionPosts(this.params)
                 .then((res) => {
-                    if (requestSerial !== this.requestSerial) return;
+                    if (requestId !== this.requestId) return;
                     this.data = res.data.data.list || [];
                     this.total = res.data.data.total;
                 })
                 .catch(() => {
-                    if (requestSerial !== this.requestSerial) return;
-                    this.loadError = true;
+                    if (requestId === this.requestId) this.loadError = true;
                 })
                 .finally(() => {
-                    if (requestSerial !== this.requestSerial) return;
-                    this.loading = false;
+                    if (requestId === this.requestId) this.loading = false;
                 });
         },
         loadPendingInvitations: function () {

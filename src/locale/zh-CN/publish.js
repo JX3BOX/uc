@@ -278,7 +278,7 @@ export default {
         "optionsLabel": "选项",
         "paperCountValidation": "每份试卷需包含 10 至 100 道题。",
         "paperDescriptionPlaceholder": "请输入试卷说明",
-        "paperQuestionsHint": "请输入题目编号，多个编号用逗号分隔。",
+        "paperQuestionsHint": "请输入 10 至 100 个题目编号，多个编号用英文逗号（,）分隔。",
         "paperTitlePlaceholder": "请输入试卷标题",
         "publishPaper": "发布试卷",
         "question": "题目",

@@ -126,3 +126,22 @@ test("publish API lists expose a shared failure state and retry action", () => {
         assert.match(source, /!loading && !loadError/, `${file} leaves pagination visible after a failure`);
     }
 });
+
+test("union publish list defines the status formatter used by its template", () => {
+    const source = read("src/views/publish/union.vue");
+
+    assert.match(source, /:title="statusFormat\(item\.union_post_raw\.post_status\)"/);
+    assert.match(source, /statusFormat:\s*function\s*\(val\)/);
+    assert.match(source, /publish:\s*"published"/);
+    assert.match(source, /pending:\s*"pendingReview"/);
+    assert.match(source, /publish\.status\.\$\{key \|\| "unknown"\}/);
+});
+
+test("union routes do not reuse list vnodes or accept stale responses", () => {
+    const source = read("src/views/publish/union.vue");
+
+    assert.match(source, /:key="`\$\{isActive \? 'active' : 'passive'\}-\$\{/);
+    assert.match(source, /const requestId = \+\+this\.requestId/);
+    assert.match(source, /if \(requestId !== this\.requestId\) return/);
+    assert.match(source, /if \(requestId === this\.requestId\) this\.loading = false/);
+});
