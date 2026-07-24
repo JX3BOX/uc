@@ -809,6 +809,7 @@ export default {
         completedReward: "獎勵領取成功",
         notCompleted: "任務條件尚未達成，或仍有獎勵尚未完成",
         checkFailed: "任務狀態檢查失敗，請稍後再試",
+        dailyLimit: "日上限：{limit}",
     },
     filter: {
         title: "敏感詞測試",

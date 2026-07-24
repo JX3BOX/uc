@@ -779,6 +779,7 @@ export default {
         completedReward: "奖励领取成功",
         notCompleted: "任务条件尚未达成，或仍有奖励尚未完成",
         checkFailed: "任务状态检查失败，请稍后再试",
+        dailyLimit: "日上限：{limit}",
     },
     filter: {
         title: "敏感词测试",

@@ -822,6 +822,7 @@ export default {
         completedReward: "Đã nhận phần thưởng thành công",
         notCompleted: "Điều kiện nhiệm vụ chưa đạt hoặc một số phần thưởng chưa hoàn tất",
         checkFailed: "Kiểm tra trạng thái tác vụ không thành công, vui lòng thử lại sau",
+        dailyLimit: "Giới hạn hàng ngày: {limit}",
     },
     filter: {
         title: "Kiểm tra từ nhạy cảm",

@@ -13,12 +13,21 @@
                     {{ task.action_type_desc }}
                 </a>
                 <span v-else class="u-title">{{ task.action_type_desc }}</span>
-                <span class="u-desc">
+                <span v-if="!hasMallGoods" class="u-desc">
                     <template v-if="task.task_detail">{{ task.task_detail }} ∕ </template>
-                    <span v-for="reward in rewards" :key="reward.key" class="u-attr">
+                    <span
+                        v-for="(reward, index) in rewards"
+                        :key="reward.key"
+                        class="u-attr"
+                        :class="{ 'is-last': index === rewards.length - 1 }"
+                    >
                         {{ reward.label }} {{ reward.amount }}
                     </span>
+                    <span v-if="isDailyTask" class="u-daily-limit">
+                        ∕ {{ $t("dashboard.tasks.dailyLimit", { limit: task.max_limit }) }}
+                    </span>
                 </span>
+                <span v-if="hasMallGoods && task.task_detail" class="u-task-detail">{{ task.task_detail }}</span>
             </div>
             <div class="u-actions">
                 <el-button v-if="!isFinished" :disabled="!taskUrl" icon="Right" @click="goComplete">
@@ -68,6 +77,12 @@ export default {
         isFinished() {
             return !!this.data?.hasFinish;
         },
+        hasMallGoods() {
+            return this.data?.attr?.some((reward) => reward?.name === "mall_goods") || false;
+        },
+        isDailyTask() {
+            return Number(this.task?.is_limit_everyday) === 1;
+        },
         translatedAttrName() {
             return {
                 experience: this.$t("dashboard.common.experience"),
@@ -77,16 +92,22 @@ export default {
         },
         rewards() {
             if (!Array.isArray(this.data?.attr)) return [];
-            return this.data.attr.map((reward, index) => {
-                const name = reward?.name || "unknown";
-                const count = Number(reward?.count) || 0;
-                return {
-                    key: `${name}-${index}`,
-                    name,
-                    label: this.translatedAttrName[name] || name,
-                    amount: name === "mall_goods" ? `×${count}` : `+${count}`,
-                };
-            });
+            return this.data.attr
+                .map((reward, index) => ({
+                    reward,
+                    index,
+                }))
+                .sort((a, b) => Number(b.reward?.name === "experience") - Number(a.reward?.name === "experience"))
+                .map(({ reward, index }) => {
+                    const name = reward?.name || "unknown";
+                    const count = Number(reward?.count) || 0;
+                    return {
+                        key: `${name}-${index}`,
+                        name,
+                        label: this.translatedAttrName[name] || name,
+                        amount: name === "mall_goods" ? `×${count}` : `+${count}`,
+                    };
+                });
         },
         defaultTaskIcon() {
             return __imgPath + "image/common/jx3box_black.svg";

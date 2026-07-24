@@ -82,7 +82,7 @@
 
 <script>
 import { getCheckTasks, getTasks } from "@/service/dashboard/tasks.js";
-import { __imgPath } from "@/utils/config";
+import { __cdn, __imgPath } from "@/utils/config";
 import taskItem from "@/components/dashboard/task/item.vue";
 import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
 
@@ -105,6 +105,12 @@ export default {
     computed: {
         defaultGroupIcon() {
             return __imgPath + "image/common/jx3box_black.svg";
+        },
+        dailyGroupIcon() {
+            return __cdn + "design/task/quest.svg";
+        },
+        specialGroupIcon() {
+            return __cdn + "design/task/quest-pro.svg";
         },
         groupedTasks() {
             return Object.keys(this.group).map((key) => ({
@@ -131,7 +137,7 @@ export default {
             if (showSkeleton) this.loading = true;
             this.loadError = false;
 
-            return getTasks({ is_limit_everyday: 0, os_visible: 1 })
+            return getTasks({ os_visible: 1 })
                 .then((res) => {
                     const list = res?.data?.data?.list;
                     if (!Array.isArray(list)) throw new Error("Invalid task list response");
@@ -203,14 +209,16 @@ export default {
             return Number.isFinite(order) ? order : Number.MAX_SAFE_INTEGER;
         },
         getGroupInfo(key) {
-            return (
+            const info =
                 this.groupInfo[key] || {
                     name: key,
                     img: this.defaultGroupIcon,
                     url: "",
                     open: false,
-                }
-            );
+                };
+            if (key === "jx3box_daily_task") return { ...info, img: this.dailyGroupIcon };
+            if (key === "jx3box_special_task") return { ...info, img: this.specialGroupIcon };
+            return info;
         },
         syncGroupInfo() {
             const next = { ...this.groupInfo };
