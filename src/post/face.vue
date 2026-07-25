@@ -9,13 +9,11 @@
             <!-- 信息 -->
             <div class="m-publish-info">
                 <el-divider content-position="left">{{ $t("publish.common.information") }}</el-divider>
-                <el-form-item :label="$t('publish.face.code')">
-                    <el-switch
-                        v-model="post.code_mode"
-                        :active-value="1"
-                        :inactive-value="0"
-                        active-color="#13ce66"
-                    ></el-switch>
+                <el-form-item :label="$t('publish.face.mode')">
+                    <el-radio-group v-model="post.code_mode">
+                        <el-radio :value="0">{{ $t("publish.face.dataFile") }}</el-radio>
+                        <el-radio :value="1">{{ $t("publish.face.code") }}</el-radio>
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item :label="$t('publish.common.data')" v-if="!post.code_mode">
                     <face-attachment :body="post.body_type" type="face" @update:data="handleFaceChange" />
@@ -64,7 +62,7 @@
 
                 <!-- 自动解析 -->
                 <!-- 体型 -->
-                <el-form-item :label="$t('publish.face.bodyShape')" v-if="faceData || post.code_mode">
+                <el-form-item :label="$t('publish.face.bodyShape')">
                     <el-radio-group v-model="post.body_type">
                         <el-radio
                             :label="~~body_type"
@@ -74,25 +72,27 @@
                         >
                     </el-radio-group>
                 </el-form-item>
-                <!-- 客户端 -->
-                <publish-client
-                    v-if="faceData || post.code_mode"
-                    v-model="post.client"
-                    :forbidAll="true"
-                ></publish-client>
                 <!-- 画风 -->
-                <el-form-item :label="$t('publish.face.style')" v-if="(faceData || post.code_mode) && post.client === 'std'">
+                <el-form-item :label="$t('publish.face.style')" v-if="post.client === 'std'">
                     <el-radio-group v-model="post.is_new_face">
                         <el-radio :value="1">{{ $t("publish.face.realistic") }}</el-radio>
                         <el-radio :value="0">{{ $t("publish.face.stylized") }}</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <!-- 可新建 -->
-                <el-form-item v-if="faceData || post.code_mode" :label="$t('publish.face.canCreate')">
+                <el-form-item :label="$t('publish.face.canCreate')">
                     <el-switch v-model="post.is_unlimited" :active-value="1" :inactive-value="0"> </el-switch>
                 </el-form-item>
 
-                <!-- 原创 -->
+                <el-form-item :label="$t('publish.common.image')">
+                    <UploadAlbum v-model="post.images"></UploadAlbum>
+                </el-form-item>
+                <el-form-item :label="$t('publish.common.instructions')">
+                    <el-input v-model="post.remark" :placeholder="$t('publish.form.instructionsPlaceholder')" type="textarea" :rows="3"></el-input>
+                </el-form-item>
+
+                <el-divider content-position="left">{{ $t("publish.form.extension") }}</el-divider>
+                <!-- 首发 -->
                 <el-form-item :label="$t('publish.form.firstPublished')" prop="is_fr">
                     <el-switch
                         v-model="post.is_fr"
@@ -138,15 +138,7 @@
                         </div>
                     </div>
                 </el-form-item>
-
-                <el-form-item :label="$t('publish.common.instructions')">
-                    <el-input v-model="post.remark" :placeholder="$t('publish.form.instructionsPlaceholder')" type="textarea" :rows="3"></el-input>
-                </el-form-item>
-                <el-divider content-position="left">{{ $t("publish.form.extension") }}</el-divider>
-                <el-form-item :label="$t('publish.form.imageList')">
-                    <UploadAlbum v-model="post.images"></UploadAlbum>
-                </el-form-item>
-                <publish-banner v-model="post.banner" v-if="isSuperAuthor"></publish-banner>
+                <cms-banner v-model="post.banner" v-if="isSuperAuthor"></cms-banner>
             </div>
 
             <!-- 按钮 -->
@@ -163,16 +155,14 @@ import { getAttachmentOfPost, addFace, getFace, updateFace } from "@/service/pub
 import publishHeader from "@/components/publish/publish_header.vue";
 import publishTitle from "@/components/publish/publish_title.vue";
 import publishOriginal from "@/components/publish/publish_original.vue";
-import publishClient from "@/components/publish/publish_client.vue";
 import faceAttachment from "@/components/publish/face_attachment.vue";
 import UploadAlbum from "@jx3box/jx3box-editor/src/UploadAlbum.vue";
-import publishBanner from "@/components/publish/publish_banner.vue";
+import cmsBanner from "@/components/publish/cms_banner.vue";
 import { DecalDatabase } from "@jx3box/jx3box-facedat/src/DecalDatabase";
 import User from "@jx3box/jx3box-common/js/user.js";
 import cloneDeep from "lodash/cloneDeep";
-import { __clients } from "@/utils/config";
 import faceData from "@jx3box/jx3box-facedat/assets/data/index.json";
-const { bodyMap, majorMap, faceSubtype } = faceData;
+const { bodyMap } = faceData;
 import { getConfig } from "@/service/publish/cms";
 export default {
     name: "face",
@@ -180,10 +170,9 @@ export default {
         publishHeader,
         publishTitle,
         publishOriginal,
-        publishClient,
         faceAttachment,
         UploadAlbum,
-        publishBanner,
+        cmsBanner,
     },
     data() {
         return {
@@ -218,9 +207,6 @@ export default {
             },
             options: {
                 bodyMap,
-                majorMap,
-                faceSubtype,
-                clients: __clients,
             },
             editDetail: false,
             loading: false,
@@ -372,7 +358,6 @@ export default {
                 if (this.faceData.data) {
                     data.data = this.faceData.data;
                 }
-                data.body_type = this.faceData.body_type || this.post.body_type;
                 data.file = this.faceData.file;
             }
 
@@ -447,7 +432,6 @@ export default {
         },
         // 自动解析数据
         autoParse(object) {
-            this.post.client = majorMap[object.nMajorVersion];
             this.post.is_new_face = object.bNewFace ? 1 : 0;
             this.post.body_type = object["nRoleType"];
             this.decalDb = new DecalDatabase(this.post.client, object.bNewFace);

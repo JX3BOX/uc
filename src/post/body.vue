@@ -9,13 +9,11 @@
             <!-- 信息 -->
             <div class="m-publish-info">
                 <el-divider content-position="left">{{ $t("publish.common.information") }}</el-divider>
-                <el-form-item :label="$t('publish.face.bodyCode')">
-                    <el-switch
-                        v-model="post.code_mode"
-                        :active-value="1"
-                        :inactive-value="0"
-                        active-color="#13ce66"
-                    ></el-switch>
+                <el-form-item :label="$t('publish.face.mode')">
+                    <el-radio-group v-model="post.code_mode">
+                        <el-radio :value="0">{{ $t("publish.face.dataFile") }}</el-radio>
+                        <el-radio :value="1">{{ $t("publish.face.bodyCode") }}</el-radio>
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item :label="$t('publish.common.data')" v-if="!post.code_mode">
                     <face-attachment :body="post.body_type" type="body" @update:data="handleBodyChange" />
@@ -53,13 +51,21 @@
                     </template>
                     <el-input v-model="post.code" :placeholder="$t('publish.face.bodyCodePlaceholder')"></el-input>
                 </el-form-item>
-                <!-- 客户端 -->
-                <el-form-item :label="$t('publish.form.client')">
-                    <el-radio-group v-model="post.client">
-                        <el-radio value="std">{{ $t("publish.form.standardServer") }}</el-radio>
+                <el-form-item :label="$t('publish.face.bodyShape')">
+                    <el-radio-group v-model="post.body_type">
+                        <el-radio :value="~~body_type" v-for="(body_label, body_type) in bodyMap" :key="body_type">
+                            {{ body_label.label }}
+                        </el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <!-- <publish-client v-model="post.client" :forbidAll="true"></publish-client> -->
+                <el-form-item :label="$t('publish.common.image')">
+                    <UploadAlbum v-model="post.images"></UploadAlbum>
+                </el-form-item>
+                <el-form-item :label="$t('publish.common.instructions')">
+                    <el-input v-model="post.remark" :placeholder="$t('publish.form.descriptionPlaceholder')" type="textarea" :rows="3"></el-input>
+                </el-form-item>
+
+                <el-divider content-position="left">{{ $t("publish.form.extension") }}</el-divider>
                 <!-- 原创 -->
                 <publish-original v-model="post.original"></publish-original>
                 <el-form-item :label="$t('publish.form.firstPublished')" prop="is_fr">
@@ -107,21 +113,6 @@
                     </div>
                 </el-form-item>
 
-                <el-form-item :label="$t('publish.face.bodyShape')">
-                    <el-radio-group v-model="post.body_type">
-                        <el-radio :value="~~body_type" v-for="(body_label, body_type) in bodyMap" :key="body_type">
-                            {{ body_label.label }}
-                        </el-radio>
-                    </el-radio-group>
-                </el-form-item>
-
-                <el-form-item :label="$t('publish.common.description')">
-                    <el-input v-model="post.remark" :placeholder="$t('publish.form.descriptionPlaceholder')" type="textarea" :rows="3"></el-input>
-                </el-form-item>
-                <el-divider content-position="left">{{ $t("publish.form.extension") }}</el-divider>
-                <el-form-item :label="$t('publish.form.imageList')">
-                    <UploadAlbum v-model="post.images"></UploadAlbum>
-                </el-form-item>
                 <publish-banner v-model="post.banner" v-if="isSuperAuthor"></publish-banner>
             </div>
 

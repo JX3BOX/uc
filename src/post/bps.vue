@@ -17,8 +17,6 @@
                 <el-divider content-position="left">{{ $t("publish.common.information") }}</el-divider>
                 <!-- 原创 -->
                 <publish-original v-model="post.original"></publish-original>
-                <!-- 客户端 -->
-                <publish-client v-model="post.client" :showMobile="true" :forbid-all="true"></publish-client>
                 <!-- 是否适用无界 -->
                 <publish-wujie v-if="post.client == 'std'" v-model="post.is_wujie"></publish-wujie>
                 <!-- 资料片 -->
@@ -156,7 +154,6 @@ import Markdown from "@jx3box/jx3box-editor/src/Markdown";
 import publish_header from "@/components/publish/publish_header.vue";
 import publish_title from "@/components/publish/publish_title.vue";
 import publish_original from "@/components/publish/publish_original.vue";
-import publish_client from "@/components/publish/publish_client.vue";
 import publish_zlp from "@/components/publish/publish_zlp";
 import publish_xf from "@/components/publish/publish_xf";
 import publish_collection from "@/components/publish/publish_collection";
@@ -192,7 +189,6 @@ export default {
         "publish-header": publish_header,
         "publish-title": publish_title,
         "publish-original": publish_original,
-        "publish-client": publish_client,
         "publish-zlp": publish_zlp,
         "publish-xf": publish_xf,
         "publish-collection": publish_collection,
@@ -318,6 +314,7 @@ export default {
             sessionStorage.removeItem("atAuthor");
             // 尝试加载
             return this.loadData().then(() => {
+                this.post.client = this.$store.state.client;
                 if (!this.post.tags || !this.post.tags.length) {
                     this.post.tags = [];
                 }

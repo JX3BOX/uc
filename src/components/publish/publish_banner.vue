@@ -1,6 +1,6 @@
 <template>
     <div class="m-publish-banner">
-        <el-divider content-position="left">{{ $t("publish.form.banner") }}</el-divider>
+        <el-divider content-position="left">{{ title || $t("publish.form.banner") }}</el-divider>
         <uploadImage
             v-model="banner"
             :info="info || $t('publish.form.bannerHint')"
@@ -32,6 +32,10 @@ export default {
             default: 148,
         },
         info: {
+            type: String,
+            default: "",
+        },
+        title: {
             type: String,
             default: "",
         },

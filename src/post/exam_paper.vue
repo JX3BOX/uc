@@ -7,14 +7,7 @@
 
         <!-- <h1 class="m-publish-exam-header">制作试卷</h1> -->
         <el-form label-position="left" label-width="80px" class="m-publish-exam">
-            <!-- 客户端 -->
-            <publish-client v-model="primary.client"></publish-client>
-            <el-form-item :label="$t('publish.common.status')" class="m-publish-exam-common">
-                <el-radio-group v-model="primary.is_public">
-                    <el-radio :value="PUBLIC_VALUE">{{ $t("publish.visibility.public") }}</el-radio>
-                    <el-radio :value="PRIVATE_VALUE">{{ $t("publish.visibility.privateShort") }}</el-radio>
-                </el-radio-group>
-            </el-form-item>
+            <el-divider content-position="left">{{ $t("publish.exam.basicInformation") }}</el-divider>
             <el-form-item :label="$t('publish.common.title')" class="m-publish-exam-title">
                 <el-input
                     v-model="primary.title"
@@ -41,11 +34,14 @@
                 <div class="u-form-tip">{{ $t("publish.exam.paperQuestionsHint") }}</div>
                 <el-input v-model="list" show-word-limit required :placeholder="$t('publish.exam.questionIdsPlaceholder')"></el-input>
             </el-form-item>
+
             <el-form-item :label="$t('publish.exam.externalLink')" class="m-publish-exam-common">
                 <div class="u-form-tip">{{ $t("publish.exam.externalLinkHint") }}</div>
                 <el-input v-model="primary.iframe" show-word-limit required :placeholder="$t('publish.exam.externalLinkPlaceholder')">
                 </el-input>
             </el-form-item>
+
+            <el-divider content-position="left">{{ $t("publish.exam.extendedInformation") }}</el-divider>
             <el-form-item :label="$t('publish.exam.difficulty')" class="m-publish-exam-level">
                 <el-rate
                     v-model="primary.hardStar"
@@ -54,6 +50,9 @@
                     :score-template="$t('publish.exam.starTemplate', { value: '{value}' })"
                 ></el-rate>
             </el-form-item>
+            <exam_tags class="m-publish-exam-tags" v-model="primary.tags" />
+
+            <el-divider content-position="left">{{ $t("publish.common.settings") }}</el-divider>
             <el-form-item :label="$t('publish.exam.style')" class="m-publish-exam-style">
                 <el-select v-model="primary.style" :placeholder="$t('publish.exam.stylePlaceholder')">
                     <el-option
@@ -64,7 +63,13 @@
                     ></el-option>
                 </el-select>
             </el-form-item>
-            <exam_tags class="m-publish-exam-tags" v-model="primary.tags" />
+            <publish-client v-model="primary.client"></publish-client>
+            <el-form-item :label="$t('publish.common.status')" class="m-publish-exam-common">
+                <el-radio-group v-model="primary.is_public">
+                    <el-radio :value="PUBLIC_VALUE">{{ $t("publish.visibility.public") }}</el-radio>
+                    <el-radio :value="PRIVATE_VALUE">{{ $t("publish.visibility.privateShort") }}</el-radio>
+                </el-radio-group>
+            </el-form-item>
             <!-- <el-form-item label="称谓" class="m-publish-exam-common" v-if="isSuper">
                 <el-select v-model="primary.medalAward" :placeholder="$t('publish.exam.titleReward')">
                     <el-option :label="$t('publish.common.none')" value></el-option>
@@ -77,13 +82,19 @@
                     <el-option v-for="item in marks" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item> -->
-            <el-form-item label class="m-publish-exam-content">
+            <div class="m-publish-exam-submit">
                 <!-- <tinymce :content="primary.whyami" :height="400" />
                 <upload class="u-editor-upload" />-->
-                <el-button class="u-publish" icon="Promotion" type="primary" @click="publish" :disabled="processing"
+                <el-button
+                    class="u-publish"
+                    icon="Promotion"
+                    type="primary"
+                    size="large"
+                    @click="publish"
+                    :disabled="processing"
                     >{{ $t("publish.exam.publishPaper") }}</el-button
                 >
-            </el-form-item>
+            </div>
         </el-form>
     </div>
 </template>

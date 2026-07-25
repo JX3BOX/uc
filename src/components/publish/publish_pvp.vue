@@ -16,9 +16,17 @@
                 >
                 </el-input>
             </div>
-            <el-checkbox class="u-talent" v-model="pvpData.has_talent" :true-value="1" :false-value="0"
+            <el-checkbox
+                class="u-talent"
+                v-model="pvpData.has_talent"
+                :true-value="1"
+                :false-value="0"
+                :disabled="subtype === '通用'"
                 >{{ $t("publish.pvp.configureTalent") }}</el-checkbox
             >
+            <span v-if="subtype === '通用'" class="u-talent-tip">{{
+                $t("publish.pvp.selectSpecificSpecialization")
+            }}</span>
             <template v-if="pvpData.has_talent">
                 <div class="m-macro-talent m-macro-item" v-if="client != 'origin'">
                     <!-- <el-input v-model="pvpData.talent" placeholder="奇穴方案编码" @change="checkTalent(pvpData.talent)">
@@ -237,6 +245,9 @@ export default {
                     } else {
                         this.pvpData = newval;
                     }
+                    if (this.subtype === "通用") {
+                        this.pvpData.has_talent = 0;
+                    }
                 }
             },
         },
@@ -249,6 +260,9 @@ export default {
                         this.pvpData = cloneDeep(default_meta);
                     } else {
                         this.pvpData = newval;
+                    }
+                    if (this.subtype === "通用") {
+                        this.pvpData.has_talent = 0;
                     }
                 }
             },
@@ -279,6 +293,14 @@ export default {
                     this.initTabsSort();
                     this.initSkillSort();
                 });
+            },
+        },
+        subtype: {
+            immediate: true,
+            handler(val) {
+                if (val === "通用") {
+                    this.pvpData.has_talent = 0;
+                }
             },
         },
     },
@@ -462,6 +484,11 @@ export default {
     }
     .u-add-skill {
         margin-left: 10px;
+    }
+    .u-talent-tip {
+        margin-left: 8px;
+        color: #a8abb2;
+        font-size: 12px;
     }
 }
 </style>

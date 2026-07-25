@@ -7,13 +7,7 @@
 
         <!-- <h1 class="m-publish-exam-header">贡献题目</h1> -->
         <el-form label-position="left" label-width="80px" class="m-publish-exam">
-            <publish-client v-model="primary.client"></publish-client>
-            <el-form-item :label="$t('publish.common.status')" class="m-publish-exam-common">
-                <el-radio-group v-model="primary.is_public">
-                    <el-radio :value="PUBLIC_VALUE">{{ $t("publish.visibility.public") }}</el-radio>
-                    <el-radio :value="PRIVATE_VALUE">{{ $t("publish.visibility.privateShort") }}</el-radio>
-                </el-radio-group>
-            </el-form-item>
+            <el-divider content-position="left">{{ $t("publish.exam.basicInformation") }}</el-divider>
             <el-form-item :label="$t('publish.exam.question')" class="m-publish-exam-title">
                 <el-input
                     v-model="primary.title"
@@ -60,6 +54,8 @@
                     <el-checkbox :value="3">D</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
+
+            <el-divider content-position="left">{{ $t("publish.exam.extendedInformation") }}</el-divider>
             <el-form-item :label="$t('publish.exam.difficulty')" class="m-publish-exam-level">
                 <el-rate
                     v-model="primary.hardStar"
@@ -73,10 +69,27 @@
 
             <el-form-item :label="$t('publish.exam.explanation')" class="m-publish-exam-content">
                 <Tinymce v-model="primary.whyami" :attachmentEnable="true" :resourceEnable="true" :height="400" />
-                <el-button class="u-publish" icon="Promotion" type="primary" @click="publish" :disabled="processing"
+            </el-form-item>
+
+            <el-divider content-position="left">{{ $t("publish.common.settings") }}</el-divider>
+            <publish-client v-model="primary.client"></publish-client>
+            <el-form-item :label="$t('publish.common.status')" class="m-publish-exam-common">
+                <el-radio-group v-model="primary.is_public">
+                    <el-radio :value="PUBLIC_VALUE">{{ $t("publish.visibility.public") }}</el-radio>
+                    <el-radio :value="PRIVATE_VALUE">{{ $t("publish.visibility.privateShort") }}</el-radio>
+                </el-radio-group>
+            </el-form-item>
+            <div class="m-publish-exam-submit">
+                <el-button
+                    class="u-publish"
+                    icon="Promotion"
+                    type="primary"
+                    size="large"
+                    @click="publish"
+                    :disabled="processing"
                     >{{ $t("publish.exam.submitQuestion") }}</el-button
                 >
-            </el-form-item>
+            </div>
         </el-form>
     </div>
 </template>

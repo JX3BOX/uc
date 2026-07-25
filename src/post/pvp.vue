@@ -17,8 +17,6 @@
                 <el-divider content-position="left">{{ $t("publish.common.information") }}</el-divider>
                 <!-- 原创 -->
                 <publish-original v-model="post.original"></publish-original>
-                <!-- 客户端 -->
-                <publish-client v-model="post.client" :forbidAll="true" :showMobile="true"></publish-client>
                 <!-- 是否适用无界 -->
                 <publish-wujie v-if="post.client == 'std'" v-model="post.is_wujie"></publish-wujie>
                 <!-- 资料片 -->
@@ -78,6 +76,14 @@
                 />
             </div>
 
+            <!-- 附加 -->
+            <div class="m-publish-append">
+                <el-divider content-position="left">{{ $t("publish.types.collection") }}</el-divider>
+                <publish-collection v-model="post.post_collection" :defaultCollapse="post.collection_collapse">
+                    <publish-collection-collapse v-model="post.collection_collapse"></publish-collection-collapse>
+                </publish-collection>
+            </div>
+
             <!-- 扩展 -->
             <div class="m-publish-extend">
                 <el-divider content-position="left">{{ $t("publish.common.settings") }}</el-divider>
@@ -85,6 +91,7 @@
                     <el-checkbox v-model="visible_for_self" :true-value="1" :false-value="0">{{ $t("publish.visibility.onlyMe") }}</el-checkbox>
                     <el-checkbox v-model="open_white_list" :true-value="1" :false-value="0">{{ $t("publish.form.commentFilter") }}</el-checkbox>
                 </publish-comment>
+                <publish-gift v-model="post.allow_gift"></publish-gift>
                 <el-form-item :label="$t('publish.form.anonymous')">
                     <el-switch
                         v-model="post.anonymous"
@@ -97,6 +104,12 @@
                 <publish-visible v-model="post.visible" :disabled="!!post.anonymous"></publish-visible>
                 <publish-guide v-model:data="post"></publish-guide>
                 <publish-authors :id="id" :uid="post.post_author"></publish-authors>
+            </div>
+
+            <!-- 临时 -->
+            <div class="m-publish-extend">
+                <el-divider content-position="left">{{ $t("publish.common.temporary") }}</el-divider>
+                <publish-at-authors></publish-at-authors>
             </div>
 
             <!-- 其它 -->
@@ -158,15 +171,18 @@ import Markdown from "@jx3box/jx3box-editor/src/Markdown";
 import publish_header from "@/components/publish/publish_header.vue";
 import publish_title from "@/components/publish/publish_title.vue";
 import publish_original from "@/components/publish/publish_original.vue";
-import publish_client from "@/components/publish/publish_client.vue";
 import publish_zlp from "@/components/publish/publish_zlp";
 import publish_xf from "@/components/publish/publish_xf";
 import publish_pvp from "@/components/publish/publish_pvp";
+import publish_collection from "@/components/publish/publish_collection";
+import publish_collection_collapse from "@/components/publish/publish_collection_collapse";
 import publish_banner from "@/components/publish/publish_banner";
 import publish_comment from "@/components/publish/publish_comment";
+import publish_gift from "@/components/publish/publish_gift";
 import publish_visible from "@/components/publish/publish_visible";
 import publish_authors from "@/components/publish/publish_authors";
 import publish_revision from "@/components/publish/publish_revision.vue";
+import publish_at_authors from "@/components/publish/publish_at_authors.vue";
 import publish_extend from "@/components/publish/publish_extend.vue";
 import publish_guide from "@/components/publish/publish_guide.vue";
 import publish_mix_subtype from "@/components/publish/publish_mix_subtype.vue";
@@ -193,12 +209,15 @@ export default {
         "publish-zlp": publish_zlp,
         "publish-xf": publish_xf,
         "publish-pvp": publish_pvp,
+        "publish-collection": publish_collection,
+        "publish-collection-collapse": publish_collection_collapse,
         // "publish-banner": publish_banner,
         "publish-comment": publish_comment,
+        "publish-gift": publish_gift,
         "publish-visible": publish_visible,
         "publish-authors": publish_authors,
         "publish-revision": publish_revision,
-        "publish-client": publish_client,
+        "publish-at-authors": publish_at_authors,
         "publish-extend": publish_extend,
         "publish-guide": publish_guide,
         "publish-mix-subtype": publish_mix_subtype,
@@ -337,6 +356,7 @@ export default {
             sessionStorage.removeItem("atAuthor");
             // 尝试加载
             return this.loadData().then(() => {
+                this.post.client = this.$store.state.client;
                 // 加载成功后执行自动保存逻辑（含本地草稿、本地缓存、云端历史版本）
                 this.autoSave();
             });

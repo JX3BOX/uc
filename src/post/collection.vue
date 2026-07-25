@@ -19,14 +19,6 @@
             </div>
 
             <div class="m-publish-primary">
-                <div class="m-publish-primary-block">
-                    <el-divider content-position="left">{{ $t("publish.form.visibility") }}</el-divider>
-                    <el-radio v-model.number="collection.public" :value="this.public.PUBLIC">{{ $t("publish.visibility.public") }}</el-radio>
-                    <el-radio v-model.number="collection.public" :value="this.public.PRIVATE">{{ $t("publish.visibility.privateShort") }}<el-tooltip :content="$t('publish.collection.privateHint')" placement="top">
-                        <i class="el-icon-info"></i>
-                    </el-tooltip></el-radio>
-                    
-                </div>
                 <div class="m-publish-primary-block m-publish-collection-posts">
                     <el-divider content-position="left"
                         >{{ $t("publish.common.content") }}
@@ -160,11 +152,24 @@
                     />
                 </div>
 
+                <div class="m-publish-primary-block">
+                    <el-divider content-position="left">{{ $t("publish.common.settings") }}</el-divider>
+                    <el-radio v-model.number="collection.public" :value="this.public.PUBLIC">{{
+                        $t("publish.visibility.public")
+                    }}</el-radio>
+                    <el-radio v-model.number="collection.public" :value="this.public.PRIVATE"
+                        >{{ $t("publish.visibility.privateShort")
+                        }}<el-tooltip :content="$t('publish.collection.privateHint')" placement="top">
+                            <i class="el-icon-info"></i> </el-tooltip
+                    ></el-radio>
+                </div>
+
                 <!-- 其它 -->
                 <div class="m-publish-other">
                     <publish-banner
                         v-model="collection.image"
                         :size="[128, 168]"
+                        :title="$t('publish.collection.coverTitle')"
                         :info="$t('publish.collection.coverHint')"
                     ></publish-banner>
                 </div>
