@@ -82,6 +82,9 @@
                                     {{ $t("publish.skill.getCode") }}
                                 </a>
                             </template>
+                            <template #append>
+                                <el-button @click="openTalentPresets(i)">{{ $t("publish.skill.choosePreset") }}</el-button>
+                            </template>
                         </el-input>
                     </div>
                     <div class="m-macro-talent m-macro-item" v-if="client === 'origin'">
@@ -100,6 +103,9 @@
                                     <i class="el-icon-warning"></i>
                                     {{ $t("publish.skill.getCode") }}
                                 </a>
+                            </template>
+                            <template #append>
+                                <el-button @click="openTalentPresets(i)">{{ $t("publish.skill.choosePreset") }}</el-button>
                             </template>
                         </el-input>
                     </div>
@@ -134,6 +140,7 @@
                             size="large"
                             v-model="item.desc"
                             type="textarea"
+                            :rows="3"
                             :placeholder="$t('publish.macro.instructionsPlaceholder')"
                         ></el-input>
                     </el-form-item>
@@ -151,6 +158,11 @@
             </el-tabs>
         </div>
         <slot></slot>
+        <talent-preset-dialog
+            v-model="showTalentPresetDialog"
+            :client="client"
+            @select="selectTalentPreset"
+        ></talent-preset-dialog>
     </div>
 </template>
 
@@ -162,6 +174,7 @@ import { __iconPath } from "@/utils/config";
 import isEmptyMeta from "@/utils/isEmptyMeta.js";
 import cloneDeep from "lodash/cloneDeep";
 import publish_mark from "./publish_mark.vue";
+import talent_preset_dialog from "./talent_preset_dialog.vue";
 
 import Sortable from "sortablejs";
 // META空模板
@@ -196,6 +209,7 @@ export default {
     },
     components: {
         "publish-mark": publish_mark,
+        "talent-preset-dialog": talent_preset_dialog,
     },
     data: function () {
         return {
@@ -207,6 +221,8 @@ export default {
                 // tuilan: "推栏",
                 // j3pz: "胖叔配装器",
             },
+            showTalentPresetDialog: false,
+            talentPresetTargetIndex: 0,
         };
     },
     emits: ["update:modelValue"],
@@ -312,6 +328,14 @@ export default {
                     message: this.$t("publish.skill.invalidTalentCode"),
                 });
             }
+        },
+        openTalentPresets: function (index) {
+            this.talentPresetTargetIndex = index;
+            this.showTalentPresetDialog = true;
+        },
+        selectTalentPreset: function (code) {
+            const item = this.macros.data[this.talentPresetTargetIndex];
+            if (item) item.talent = code;
         },
 
         // 图标

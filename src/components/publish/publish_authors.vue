@@ -56,12 +56,19 @@ export default {
     watch: {
         id: {
             immediate: true,
-            handler: function (val) {
-                val && this.loadAuthors();
-            },
+            handler: "tryLoadAuthors",
+        },
+        uid: {
+            immediate: true,
+            handler: "tryLoadAuthors",
         },
     },
     methods: {
+        tryLoadAuthors: function () {
+            if (this.id && this.isSuper) {
+                this.loadAuthors();
+            }
+        },
         openPop: function () {
             this.visible = true;
         },

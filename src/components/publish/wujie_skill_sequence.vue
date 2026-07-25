@@ -6,13 +6,13 @@
                 <el-button class="m-macro-addbutton" icon="CirclePlus" type="primary" @click="addMacro"
                     >{{ $t("publish.sequence.add") }}</el-button
                 >
-                <!-- <a
-                    class="m-macro-help el-button el-button--success is-plain "
-                    href="/tool/14671/"
-                    target="_blank"
-                >
-                    <i class="el-icon-info"></i> 点击查看发布帮助
-                </a> -->
+                <a class="m-macro-docs el-button el-button--primary is-plain" target="_blank" href="/tool/265/">
+                    <i class="el-icon-s-management"></i>
+                    {{ $t("publish.macro.reference") }}
+                </a>
+                <a class="m-macro-help el-button el-button--success is-plain" href="/tool/14671/" target="_blank">
+                    <i class="el-icon-info"></i> {{ $t("publish.common.viewPublishHelp") }}
+                </a>
             </div>
 
             <el-tabs class="tabs-sort" v-model="activeIndex" type="card" closable @tab-remove="removeMacro">
@@ -32,9 +32,11 @@
                             </a>
                         </h5>
                         <div class="u-group">
+                            <publish-mark :value="item.mark" @change="onMarkChange"></publish-mark>
                             <div class="u-subblock m-macro-icon">
                                 <el-input
                                     v-model="item.icon"
+                                    size="large"
                                     :placeholder="$t('publish.common.iconId')"
                                     :minlength="1"
                                     :maxlength="10"
@@ -48,6 +50,7 @@
                             <div class="u-subblock m-macro-name">
                                 <el-input
                                     v-model="item.name"
+                                    size="large"
                                     :placeholder="$t('publish.sequence.uniqueNamePlaceholder')"
                                     :minlength="1"
                                     :maxlength="maxlength"
@@ -61,26 +64,30 @@
                             </div>
                         </div>
                     </div>
-                    <!-- TODO: 无界端奇穴方案 -->
-                    <!-- <div class="m-macro-talent m-macro-item">
-                        <h5 class="u-title">奇穴方案</h5>
+                    <div class="m-macro-talent m-macro-item">
+                        <h5 class="u-title">{{ $t("publish.skill.talentBuild") }}</h5>
                         <div class="m-macro-talent-simulator">
                             <div class="qx-container"></div>
                         </div>
                         <el-input
                             v-model="item.talent"
-                            placeholder="奇穴方案编码"
+                            size="large"
+                            :placeholder="$t('publish.skill.talentCode')"
                             @change="checkTalent(item)"
                         >
                             <template #prepend>
                                 <a class="u-get" target="_blank" href="/app/talent">
                                     <i class="el-icon-warning"></i>
-                                    获取编码
+                                    {{ $t("publish.skill.getCode") }}
                                 </a>
                             </template>
+                            <template #append>
+                                <el-button @click="openTalentPresets(i)">{{ $t("publish.skill.choosePreset") }}</el-button>
+                            </template>
                         </el-input>
-                    </div> -->
+                    </div>
                     <div class="m-macro-macro">
+                        <h5 class="u-title">{{ $t("publish.skill.sequence") }}</h5>
                         <div class="m-macro-header">
                             <el-button class="m-macro-addbutton" icon="CirclePlus" type="primary" @click="addSkill"
                                 >{{ $t("publish.skill.add") }}</el-button
@@ -88,16 +95,23 @@
                         </div>
 
                         <div class="m-selected-skills" :class="{ 'is-empty': !item.sq || !item.sq.length }">
-                            <draggable v-model="item.sq" class="m-skills-list" v-show="item.sq && item.sq.length">
-                                <li v-for="(skill, index) in item.sq" :key="skill.SkillID + '' + index" class="m-skill">
-                                    <div class="u-skill" v-if="skill && skill.IconID">
-                                        <img class="u-skill-icon" :src="iconLink(skill.IconID)" :alt="skill.IconID" />
-                                        <span class="u-name" :title="skill.Name">{{ skill.Name }}</span>
-                                    </div>
-                                    <i class="u-remove-icon" :title="$t('publish.common.remove')" @click="removeSelected(index)"
-                                        ><i class="el-icon-close"></i
-                                    ></i>
-                                </li>
+                            <draggable
+                                v-model="item.sq"
+                                class="m-skills-list"
+                                item-key="SkillID"
+                                v-show="item.sq && item.sq.length"
+                            >
+                                <template #item="{ element: skill, index }">
+                                    <li class="m-skill">
+                                        <div class="u-skill" v-if="skill && skill.IconID">
+                                            <img class="u-skill-icon" :src="iconLink(skill.IconID)" :alt="skill.IconID" />
+                                            <span class="u-name" :title="skill.Name">{{ skill.Name }}</span>
+                                        </div>
+                                        <i class="u-remove-icon" :title="$t('publish.common.remove')" @click="removeSelected(index)"
+                                            ><i class="el-icon-close"></i
+                                        ></i>
+                                    </li>
+                                </template>
                             </draggable>
                             <el-alert
                                 show-icon
@@ -109,22 +123,23 @@
                         </div>
                     </div>
                     <el-form-item :label="$t('publish.common.other')" class="m-macro-misc">
-                        <el-row>
-                            <el-col :span="8" class="u-speed">
-                                <el-input v-model="item.speed" :placeholder="$t('publish.gear.hastePlaceholder')">
-                                    <template #prepend
-                                        >{{ $t("publish.gear.hasteThreshold") }}
-                                        <slot name="pre-prepend"></slot>
-                                    </template>
-                                </el-input>
-                            </el-col>
-                            <el-col :span="8"></el-col>
-                        </el-row>
+                        <el-input
+                            v-model="item.speed"
+                            size="large"
+                            :placeholder="$t('publish.gear.hastePlaceholder')"
+                        >
+                            <template #prepend
+                                >{{ $t("publish.gear.hasteThreshold") }}
+                                <slot name="pre-prepend"></slot>
+                            </template>
+                        </el-input>
                     </el-form-item>
                     <el-form-item :label="$t('publish.common.instructions')" class="m-macro-desc">
                         <el-input
                             v-model="item.desc"
+                            size="large"
                             type="textarea"
+                            :rows="3"
                             :placeholder="$t('publish.sequence.instructionsPlaceholder')"
                         ></el-input>
                     </el-form-item>
@@ -149,6 +164,11 @@
             platform="wujie"
             @selected="onSelected"
         ></publish-wujie-skill>
+        <talent-preset-dialog
+            v-model="showTalentPresetDialog"
+            :client="client"
+            @select="selectTalentPreset"
+        ></talent-preset-dialog>
     </div>
 </template>
 
@@ -159,6 +179,8 @@ import { __iconPath } from "@/utils/config";
 import isEmptyMeta from "@/utils/isEmptyMeta.js";
 import { cloneDeep } from "lodash";
 import publish_wujie_skill from "@/components/publish/publish_wujie_skill.vue";
+import publish_mark from "@/components/publish/publish_mark.vue";
+import talent_preset_dialog from "@/components/publish/talent_preset_dialog.vue";
 import { iconLink } from "@jx3box/jx3box-common/js/utils";
 
 import Sortable from "sortablejs";
@@ -173,6 +195,7 @@ const default_meta = {
             sq: [],
             speed: "",
             desc: "",
+            mark: "",
         },
     ],
 };
@@ -191,9 +214,15 @@ export default {
             type: String,
             default: "",
         },
+        client: {
+            type: String,
+            default: "std",
+        },
     },
     components: {
         "publish-wujie-skill": publish_wujie_skill,
+        "publish-mark": publish_mark,
+        "talent-preset-dialog": talent_preset_dialog,
         draggable,
     },
     data: function () {
@@ -203,6 +232,8 @@ export default {
             nickname: User.getInfo().name,
 
             showSkillDialog: false,
+            showTalentPresetDialog: false,
+            talentPresetTargetIndex: 0,
         };
     },
     emits: ["update", "update:modelValue"],
@@ -268,6 +299,7 @@ export default {
                 sq: [],
                 speed: "",
                 desc: "",
+                mark: "",
             });
             this.activeIndex = index;
         },
@@ -323,6 +355,14 @@ export default {
                 });
             }
         },
+        openTalentPresets: function (index) {
+            this.talentPresetTargetIndex = index;
+            this.showTalentPresetDialog = true;
+        },
+        selectTalentPreset: function (code) {
+            const item = this.macros.data[this.talentPresetTargetIndex];
+            if (item) item.talent = code;
+        },
 
         // 图标
         icon: function (item) {
@@ -330,6 +370,10 @@ export default {
             // id = Math.max(0, Math.min(id, 30000));
             item.icon = id;
             return __iconPath + "icon/" + id + ".png";
+        },
+        // 标记
+        onMarkChange: function (val) {
+            this.macros.data[this.activeIndex - 1].mark = val;
         },
 
         // 新增技能

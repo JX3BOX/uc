@@ -244,17 +244,30 @@ export default {
     .mt(10px);
     .u-item {
         display: flex;
-        // line-height: 40px;
+        align-items: center;
+        min-height: 40px;
+
+        & + .u-item {
+            .mt(10px);
+        }
     }
     .u-item-order {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: none;
+        .w(24px);
         .fz(12px);
         color: #888;
     }
     .u-item-drag {
-        .fz(24px,40px);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: none;
+        .fz(24px);
         color: #aaa;
         cursor: move;
-        .y(top);
         .mr(5px);
         padding: 0 10px;
     }
@@ -283,8 +296,8 @@ export default {
         .ml(10px);
     }
     .u-item-op {
-    .flex;
-    align-items: center;
+        .flex;
+        align-items: center;
         .ml(20px);
         .preview {
             .mr(10px);

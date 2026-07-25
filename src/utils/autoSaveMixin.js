@@ -1,4 +1,4 @@
-import { pull } from "@/service/publish/cms";
+import { pull, pullAdmin } from "@/service/publish/cms";
 import settings from "@/pages/publish/setting.json";
 import { getCommitById } from "@/service/publish/version";
 import { applyRevisionPost } from "@/utils/publishRevision";
@@ -109,7 +109,8 @@ export const AutoSaveMixin = {
             } else {
                 let post_id = this.$route.params.id;
                 if (post_id) {
-                    return pull(this.$route.params.id)
+                    const loadPost = this.from === "admin" ? pullAdmin : pull;
+                    return loadPost(post_id)
                         .then((res) => {
                             this.post = {
                                 ...res.data.data,

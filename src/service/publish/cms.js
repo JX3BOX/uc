@@ -5,6 +5,11 @@ function pull(id) {
     return $cms().get(`/api/cms/post/${id}/query`);
 }
 
+// 管理加载
+function pullAdmin(id) {
+    return $cms().get(`/api/cms/manage/post/${id}`);
+}
+
 // 发布
 function push(kw1, kw2) {
     if (arguments.length > 1) {
@@ -116,6 +121,7 @@ function setPostDecoration(postId, decorationType, slug) {
 
 export {
     pull,
+    pullAdmin,
     push,
     del,
     getMyPostsCount,

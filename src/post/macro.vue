@@ -9,7 +9,15 @@
         </publish-header>
         <span v-html="macro_publish_ac" v-if="macro_publish_ac"></span>
 
-        <el-form label-position="left" label-width="80px">
+        <el-alert
+            v-if="loadError"
+            :title="loadError"
+            type="error"
+            :closable="false"
+            show-icon
+        ></el-alert>
+
+        <el-form v-show="!loadError" label-position="left" label-width="80px">
             <!-- 标题 -->
             <publish-title v-model="post.post_title"></publish-title>
 
@@ -32,20 +40,30 @@
 
             <!-- 宏区域 -->
             <publish-macro v-if="!post.is_wujie" v-model="post.post_meta" :client="post.client">
-                <!-- 配装 -->
-                <publish-pz v-model="post.pz" :limit="8" :query="pz_query">
-                    <template #prepend>
-                        <span class="u-pz-tip">
-                            <i class="el-icon-warning-outline"></i> {{ $t("publish.gear.recommendationHint") }}
-                        </span>
-                    </template>
-                </publish-pz>
                 <template #pre-prepend v-if="pz_query && pz_query.mount">
                     <pz-haste :client="post.client" :mount="pz_query.mount"></pz-haste>
                 </template>
             </publish-macro>
 
-            <wujie-skill-sequence v-model="post.post_meta" :subtype="post.post_subtype" v-else></wujie-skill-sequence>
+            <wujie-skill-sequence
+                v-model="post.post_meta"
+                :subtype="post.post_subtype"
+                :client="post.client"
+                v-else
+            >
+                <template #pre-prepend v-if="pz_query && pz_query.mount">
+                    <pz-haste :client="post.client" :mount="pz_query.mount"></pz-haste>
+                </template>
+            </wujie-skill-sequence>
+
+            <!-- 配装 -->
+            <publish-pz v-model="post.pz" :limit="8" :query="pz_query">
+                <template #prepend>
+                    <span class="u-pz-tip">
+                        <i class="el-icon-warning-outline"></i> {{ $t("publish.gear.recommendationHint") }}
+                    </span>
+                </template>
+            </publish-pz>
 
             <!-- 正文 -->
             <div class="m-publish-content">
@@ -301,6 +319,7 @@ export default {
                 is_wujie: 0,
             },
             macro_publish_ac: "",
+            loadError: "",
         };
     },
     computed: {
@@ -322,11 +341,35 @@ export default {
         // 初始化
         init: function () {
             sessionStorage.removeItem("atAuthor");
+            this.loadError = "";
+            this.applyDevelopmentClient();
             // 尝试加载
-            return this.loadData().then(() => {
-                // 加载成功后执行自动保存逻辑（含本地草稿、本地缓存、云端历史版本）
-                this.autoSave();
-            });
+            return this.loadData()
+                .then(() => {
+                    // 加载成功后执行自动保存逻辑（含本地草稿、本地缓存、云端历史版本）
+                    this.autoSave();
+                })
+                .catch((err) => {
+                    this.loadError = err?.data?.msg || err?.message || this.$t("publish.common.loadFailed");
+                });
+        },
+        applyDevelopmentClient: function () {
+            if (
+                process.env.NODE_ENV !== "development" ||
+                this.$route.params.id ||
+                this.isDraft ||
+                this.isRevision
+            ) {
+                return;
+            }
+
+            const client = this.$route.query?.client;
+            if (!["std", "origin"].includes(client)) return;
+
+            this.post.client = client;
+            if (client === "origin") {
+                this.post.is_wujie = 0;
+            }
         },
         // 宏数据验证
         checkMacro: function () {
