@@ -10,19 +10,19 @@
                         ><i class="el-icon-info"></i
                     ></el-tooltip>
                 </template>
-                <el-radio-group v-model="conf.theme" size="small">
+                <el-radio-group v-model="conf.theme">
                     <el-radio-button value="light">{{ $t("dashboard.config.light") }}</el-radio-button>
                     <el-radio-button value="dark">{{ $t("dashboard.config.dark") }}</el-radio-button>
                 </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('dashboard.config.editorMode')">
-                <el-radio-group v-model="conf.editor_mode" size="small">
+                <el-radio-group v-model="conf.editor_mode">
                     <el-radio-button value="tinymce">{{ $t("dashboard.config.visual") }}</el-radio-button>
                     <el-radio-button value="markdown">Markdown</el-radio-button>
                 </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('dashboard.config.commentOrder')">
-                <el-radio-group v-model="conf.cmt_order" size="small">
+                <el-radio-group v-model="conf.cmt_order">
                     <el-radio-button value="DESC">{{ $t("dashboard.config.newestFirst") }}</el-radio-button>
                     <el-radio-button value="ASC">{{ $t("dashboard.config.oldestFirst") }}</el-radio-button>
                 </el-radio-group>

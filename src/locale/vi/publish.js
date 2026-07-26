@@ -423,6 +423,7 @@ export default {
         "price": "Giá",
         "publishingGuidelines": "Quy tắc đăng bài JX3BOX",
         "readAndUnderstand": "Tôi đã đọc và hiểu",
+        "filterTest": "Kiểm tra từ nhạy cảm",
         "related": "Tác phẩm liên quan",
         "removeMark": "Xóa dấu",
         "revisionNotes": "Ghi chú chỉnh sửa",
@@ -480,6 +481,7 @@ export default {
         "applyAuthor": "Đăng ký tác giả ký hợp đồng",
         "authorBenefits": "Tìm hiểu quyền lợi tác giả",
         "management": "Quản lý tác phẩm",
+        "sensitiveWordFilter": "Bộ lọc từ nhạy cảm",
         "slogan": "Ghi lại và chia sẻ hành trình của bạn",
         "verificationRequired": "Hoàn tất xác minh danh tính để đăng tác phẩm.",
         "verifyNow": "Xác minh ngay"

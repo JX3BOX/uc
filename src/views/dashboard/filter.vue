@@ -9,7 +9,7 @@
                     <el-divider content-position="left"><i class="el-icon-chat-line-round"></i> {{ $t("dashboard.filter.content") }}</el-divider
                     ><span v-html="content"></span>
                 </el-card>
-                <el-card shadow="never" v-if="reason && reason.length">
+                <el-card shadow="never" v-if="isSuperAuthor && reason.length">
                     <el-divider content-position="left"><i class="el-icon-warning-outline"></i> {{ $t("dashboard.filter.blockReason") }}</el-divider>
                     <div class="m-item">
                         <span v-for="(item, i) in reason" :key="i">
@@ -17,7 +17,7 @@
                         </span>
                     </div>
                 </el-card>
-                <span v-else>
+                <span v-if="resultType === 0">
                     <el-tag type="success">{{ $t("dashboard.filter.publishable") }} <i class="el-icon-success"></i></el-tag>
                 </span>
             </template>
@@ -26,7 +26,8 @@
 </template>
 
 <script>
-import { filterSeaSun } from "@/service/dashboard/cooperation";
+import User from "@jx3box/jx3box-common/js/user";
+import { filterSeaSun, getSuperAuthorState } from "@/service/dashboard/cooperation";
 export default {
     name: "filter",
     props: [],
@@ -36,7 +37,20 @@ export default {
             textarea: "",
             content: "",
             reason: [],
+            resultType: null,
+            isSuperAuthor: false,
         };
+    },
+    mounted: function () {
+        const uid = User.getInfo().uid;
+        if (!uid) return;
+        getSuperAuthorState(uid)
+            .then((res) => {
+                this.isSuperAuthor = !!res.data.data;
+            })
+            .catch(() => {
+                this.isSuperAuthor = false;
+            });
     },
     methods: {
         filter() {
@@ -45,7 +59,8 @@ export default {
             filterSeaSun({ text: this.textarea })
                 .then((res) => {
                     this.content = res.data.data.content || "";
-                    this.reason = res.data.data.reason.split(",").filter(Boolean) || [];
+                    this.resultType = res.data.data.resultType;
+                    this.reason = (res.data.data.reason || "").split(",").filter(Boolean);
                 })
                 .finally(() => {
                     this.loading = false;

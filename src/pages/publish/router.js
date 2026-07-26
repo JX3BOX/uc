@@ -69,6 +69,13 @@ const routes = [
         component: main,
         children: [
             {
+                path: "/filter",
+                beforeEnter: () => {
+                    window.location.replace("/dashboard/filter");
+                    return false;
+                },
+            },
+            {
                 path: "/",
                 component: index,
                 meta: {

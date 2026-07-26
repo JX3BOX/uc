@@ -423,6 +423,7 @@ export default {
         "price": "價格",
         "publishingGuidelines": "《魔盒創作規範》",
         "readAndUnderstand": "我已閱讀並理解",
+        "filterTest": "前往敏感詞過濾測試",
         "related": "相關作品",
         "removeMark": "移除標記",
         "revisionNotes": "修訂說明",
@@ -480,6 +481,7 @@ export default {
         "applyAuthor": "申請簽約作者",
         "authorBenefits": "瞭解簽約作者權益",
         "management": "作品管理",
+        "sensitiveWordFilter": "敏感詞過濾",
         "slogan": "記錄與分享你的江湖",
         "verificationRequired": "完成實名認證後即可發佈作品。",
         "verifyNow": "立即認證"

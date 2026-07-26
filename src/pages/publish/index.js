@@ -93,4 +93,9 @@ import "@/assets/css/tailwind.css";
 // 7. 其它扩展
 
 // Final.Mount DOM
-app.mount("#app");
+const __publishPath = window.location.pathname.replace(/\/+$/, "");
+if (__publishPath === "/publish/filter") {
+    window.location.replace("/dashboard/filter");
+} else {
+    app.mount("#app");
+}

@@ -148,6 +148,13 @@
                 >
             </div>
 
+            <div class="m-publish-filter-tip">
+                <el-icon class="u-filter-icon"><Search /></el-icon>
+                <div class="u-filter-content">
+                    <a href="/dashboard/filter" target="_blank" rel="noopener noreferrer">{{ $t("publish.form.filterTest") }} →</a>
+                </div>
+            </div>
+
             <!-- 按钮 -->
             <div class="m-publish-buttons">
                 <template v-if="isDraft || isRevision">

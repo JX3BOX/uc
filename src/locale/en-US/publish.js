@@ -423,6 +423,7 @@ export default {
         "price": "Price",
         "publishingGuidelines": "JX3BOX Publishing Guidelines",
         "readAndUnderstand": "I have read and understood",
+        "filterTest": "Test for sensitive words",
         "related": "Related Works",
         "removeMark": "Remove Mark",
         "revisionNotes": "Revision Notes",
@@ -480,6 +481,7 @@ export default {
         "applyAuthor": "Apply to Become a Contracted Creator",
         "authorBenefits": "Learn About Creator Benefits",
         "management": "Work Management",
+        "sensitiveWordFilter": "Sensitive Word Filter",
         "slogan": "Record and share your adventures",
         "verificationRequired": "Complete identity verification to publish works.",
         "verifyNow": "Verify Now"

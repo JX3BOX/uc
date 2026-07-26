@@ -17,6 +17,6 @@ function getSuperAuthorState(userId) {
 }
 
 function filterSeaSun(data) {
-    return $cms().post("/api/cms/system/seasun/filter", data);
+    return $cms().post("/api/cms/system/seasun/filter/level4", data);
 }
 export { contractAuthorApply, getSuperAuthorState, getContractAuthorLogs, filterSeaSun, getLastContractAuthorLog };

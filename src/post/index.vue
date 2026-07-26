@@ -2,7 +2,7 @@
     <div class="m-publish m-index">
         <h1 class="m-title">
             <i class="el-icon-edit-outline"></i> {{ $t("publish.nav.workbench") }}<span class="u-desc">{{ $t("publish.home.slogan") }}</span>
-            <el-tooltip :content="$t('publish.home.authorBenefits')" placement="top" v-if="!isSuperAuthor">
+            <el-tooltip :content="$t('publish.home.authorBenefits')" placement="top">
                 <a
                     href="/dashboard/cooperation"
                     type="primary"
@@ -11,6 +11,17 @@
                     ><el-icon><Stamp /></el-icon> {{ $t("publish.home.applyAuthor") }}</a
                 >
             </el-tooltip>
+            <el-button
+                v-if="canUseSensitiveWordFilter"
+                tag="a"
+                href="/dashboard/filter"
+                type="warning"
+                size="small"
+                class="u-btn u-filter-btn"
+                target="_blank"
+                rel="noopener noreferrer"
+                ><el-icon><WarningFilled /></el-icon><span>{{ $t("publish.home.sensitiveWordFilter") }}</span></el-button
+            >
         </h1>
         <el-alert type="warning" v-if="!isAuth">
             <template #title>
@@ -198,15 +209,11 @@
 </template>
 
 <script>
-import {getSuperAuthorState} from "@/service/dashboard/cooperation";
+import User from "@jx3box/jx3box-common/js/user.js";
+
 export default {
     name: "index",
     props: [],
-    data: function () {
-        return {
-            isSuperAuthor: false, // 是否为签约作者
-        };
-    },
     computed: {
         profile() {
             return this.$store.state.profile;
@@ -217,24 +224,13 @@ export default {
         isAdmin() {
             return this.profile?.user_group >= 128;
         },
-    },
-    watch: {
-        profile: {
-            handler(newVal) {
-                this.checkSuperUser();
-            },
-            immediate: true,
-        }
+        canUseSensitiveWordFilter() {
+            return User.getLevel(this.profile?.experience || 0) >= 4;
+        },
     },
     methods: {
         getAppLogo: function (identifier) {
             return `https://cdn.jx3box.com/logo/logo-light/${identifier}.svg`;
-        },
-        // 是否为签约作者
-        checkSuperUser: function () {
-            this.profile?.ID && getSuperAuthorState(this.profile?.ID).then((res) => {
-                this.isSuperAuthor = res.data.data;
-            });
         },
     },
 };
