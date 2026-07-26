@@ -43,11 +43,10 @@ test("editor only renders masked credentials and preserves omitted fields", () =
     assert.match(editor, /this\.type === "feishu" && this\.form\.clearSecret[\s\S]*payload\.secret = ""/);
 });
 
-test("editor can copy the complete masked Webhook value", () => {
-    assert.match(editor, /import \{ copyText \} from "@\/utils\/index"/);
-    assert.match(editor, /icon="DocumentCopy"/);
-    assert.match(editor, /copyText\(this\.maskedWebhook\)/);
-    assert.match(editor, /dashboard\.common\.copySuccess/);
+test("editor does not expose copy actions for masked credentials", () => {
+    assert.doesNotMatch(editor, /copyWebhook/);
+    assert.doesNotMatch(editor, /icon="DocumentCopy"/);
+    assert.doesNotMatch(editor, /u-copy-webhook/);
 });
 
 test("notice row shows four stars and the Webhook token suffix", () => {
