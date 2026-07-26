@@ -68,6 +68,23 @@
                     :inactive-value="0"
                 ></el-switch>
             </el-form-item>
+            <el-form-item v-if="Number(conf.feed_message) === 1" :label="$t('dashboard.config.subscriptionMethod')">
+                <template #label>
+                    <span>{{ $t("dashboard.config.subscriptionMethod") }}</span>
+                    <el-tooltip
+                        class="item"
+                        effect="dark"
+                        :content="$t('dashboard.config.subscriptionMethodTip')"
+                        placement="top"
+                        ><i class="el-icon-info"></i
+                    ></el-tooltip>
+                </template>
+                <el-checkbox-group v-model="selectedFeedMessageTypes">
+                    <el-checkbox v-for="item in feedMessageTypeOptions" :key="item" :value="item">
+                        {{ feedMessageTypeLabel(item) }}
+                    </el-checkbox>
+                </el-checkbox-group>
+            </el-form-item>
             <el-form-item :label="$t('dashboard.config.loverFeature')">
                 <template #label>
                     <span>{{ $t("dashboard.config.loverFeature") }}</span>
@@ -176,6 +193,15 @@
 import { getUserConf, setUserConf } from "@/service/dashboard/conf";
 import lang from "@/assets/data/dashboard/lang.json";
 
+const FEED_MESSAGE_TYPE_OPTIONS = ["wxmp", "feishu", "dingtalk", "wecom"];
+
+function normalizeFeedMessageType(value = "") {
+    const values = String(value)
+        .split(",")
+        .map((item) => item.trim());
+    return FEED_MESSAGE_TYPE_OPTIONS.filter((item) => values.includes(item)).join(",");
+}
+
 export default {
     name: "config",
     props: [],
@@ -190,6 +216,7 @@ export default {
                 allow_cny: 1,
                 allow_gift_of_mall_virtual_goods: 1,
                 feed_message: 1,
+                feed_message_type: "",
                 accept_lover_request: 1,
                 // hotkey: false,
                 // game_setting: false,
@@ -218,8 +245,23 @@ export default {
             oldLang: "",
         };
     },
-    computed: {},
+    computed: {
+        feedMessageTypeOptions() {
+            return FEED_MESSAGE_TYPE_OPTIONS;
+        },
+        selectedFeedMessageTypes: {
+            get() {
+                return normalizeFeedMessageType(this.conf.feed_message_type).split(",").filter(Boolean);
+            },
+            set(value) {
+                this.conf.feed_message_type = normalizeFeedMessageType(Array.isArray(value) ? value.join(",") : "");
+            },
+        },
+    },
     methods: {
+        feedMessageTypeLabel(type) {
+            return this.$t(`dashboard.config.subscriptionMethods.${type}`);
+        },
         loadData: function () {
             this.loading = true;
             return getUserConf()
@@ -227,6 +269,7 @@ export default {
                     this.conf = {
                         ...(res?.data?.data || {}),
                         theme: res?.data?.data?.theme || "light",
+                        feed_message_type: normalizeFeedMessageType(res?.data?.data?.feed_message_type),
                     };
 
                     this.oldLang = this.conf.default_lang;
