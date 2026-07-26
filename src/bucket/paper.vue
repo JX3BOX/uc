@@ -2,10 +2,10 @@
     <ul class="m-publish__paper-list">
         <li v-for="(item, i) in list" :key="i">
             <a class="u-title" target="_blank" :href="postLink(item.id)">
-                <!-- [{{ item.type | typeFormat }}]  -->
-                <el-tag v-if="isPrivate(item)" class="u-private-tag" size="small" effect="plain">
-                    {{ $t("publish.visibility.privateShort") }}
-                </el-tag>
+                <i class="u-icon">
+                    <img src="@/assets/img/publish/works/repo.svg" v-if="item.status == 1" />
+                    <img v-else src="@/assets/img/publish/works/draft.svg" :title="$t('publish.status.offline')" />
+                </i>
                 {{ item.title || $t("publish.common.untitled") }}
             </a>
             <div class="u-desc">
@@ -82,9 +82,6 @@ export default {
         typeFormat: function (type) {
             return this.$t(`publish.exam.types.${type}`);
         },
-        isPrivate: function (item) {
-            return item.is_public === 0;
-        },
         statusFormat: function (item) {
             const key = {
                 "-2": "deleted",
@@ -115,16 +112,6 @@ export default {
     .u-title{
         padding:4px 0;
         gap: 4px;
-    }
-    .u-private-tag {
-        --el-tag-bg-color: fade(@v4primary, 8%);
-        --el-tag-border-color: fade(@v4primary, 35%);
-        --el-tag-text-color: @v4primary;
-        height: 18px;
-        padding: 0 5px;
-        font-size: 11px;
-        line-height: 16px;
-        vertical-align: 1px;
     }
 }
 </style>

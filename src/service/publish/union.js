@@ -33,6 +33,10 @@ function removeUnionAuthor(post_id, author_id) {
     return $cms().delete(`/api/cms/post/${post_id}/author/${author_id}`);
 }
 
+function closeUnionPost(post_id) {
+    return $cms().delete(`/api/cms/post/${post_id}/authors`);
+}
+
 export {
     getUnionPosts,
     quitUnionPost,
@@ -41,4 +45,5 @@ export {
     getUnionAuthors,
     updateUnionAuthor,
     removeUnionAuthor,
+    closeUnionPost,
 };

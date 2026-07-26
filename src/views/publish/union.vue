@@ -20,7 +20,7 @@
             v-model="pendingDialogVisible"
             class="m-union-pending-dialog"
             :title="$t('publish.collaboration.pendingInvitations')"
-            width="760px"
+            width="700px"
             append-to-body
             destroy-on-close
         >
@@ -36,13 +36,17 @@
                         </span>
                     </a>
                     <div class="u-invitation-work">
-                        <b>{{ item.union_post_raw.post_title || $t("publish.common.untitled") }}</b>
+                        <a
+                            :href="postLink(item.union_post_raw.post_type, item.union_post_raw.ID)"
+                            target="_blank"
+                            class="u-invitation-title"
+                        >{{ item.union_post_raw.post_title || $t("publish.common.untitled") }}</a>
                         <time>{{ dateFormat(item.created_at) }}</time>
                     </div>
                     <div class="u-invitation-actions">
                         <el-button
                             type="primary"
-                            size="small"
+                            icon="Check"
                             :loading="actionPostId === item.post_id"
                             @click="acceptInvitation(item)"
                         >{{ $t("publish.collaboration.acceptInvitation") }}</el-button>
@@ -51,7 +55,7 @@
                             @confirm="rejectInvitation(item)"
                         >
                             <template #reference>
-                                <el-button size="small" :disabled="actionPostId === item.post_id">{{
+                                <el-button icon="Close" :disabled="actionPostId === item.post_id">{{
                                     $t("publish.collaboration.rejectInvitation")
                                 }}</el-button>
                             </template>
@@ -75,11 +79,11 @@
         <el-dialog
             v-model="memberDialogVisible"
             class="m-union-member-dialog"
-            :title="$t('publish.collaboration.manageMembers')"
-            width="560px"
+            :title="$t(isActive ? 'publish.collaboration.manageMembers' : 'publish.collaboration.viewMembers')"
+            width="660px"
             append-to-body
         >
-            <div v-if="selectedUnionPost" class="m-union-member-panel">
+            <div v-if="selectedUnionPost" class="m-union-member-panel" :class="{ 'is-readonly': !isActive }">
                 <div class="u-work-title">{{ selectedUnionPost.union_post_raw.post_title || $t("publish.common.untitled") }}</div>
                 <div v-if="selectedUnionPost.union_authors.length" class="u-member-list">
                     <div v-for="author in selectedUnionPost.union_authors" :key="author.author_id" class="u-member-item">
@@ -95,14 +99,27 @@
                             <img :src="showAvatar(author.post_author_info?.user_avatar)" />
                             <span>{{ author.post_author_info?.display_name || `UID ${author.author_id}` }}</span>
                         </a>
+                        <div class="u-member-role">
+                            <span class="u-role-label">{{ $t("publish.collaboration.roleLabel") }}</span>
+                            <span class="u-role-value">{{ author.label || $t("publish.collaboration.writer") }}</span>
+                            <el-button
+                                v-if="isActive"
+                                text
+                                icon="Edit"
+                                :loading="roleActionId === author.author_id"
+                                :title="$t('publish.collaboration.editRole')"
+                                @click="updateMemberRole(author)"
+                            ></el-button>
+                        </div>
                         <el-popconfirm
+                            v-if="isActive"
                             :title="author.status ? $t('publish.collaboration.removeMemberConfirm') : $t('publish.collaboration.cancelInvitationConfirm')"
                             @confirm="removeMember(author)"
                         >
                             <template #reference>
                                 <el-button
+                                    class="u-member-remove"
                                     plain
-                                    size="small"
                                     icon="Close"
                                     :loading="memberActionId === author.author_id"
                                 >{{ author.status ? $t("publish.collaboration.removeMember") : $t("publish.collaboration.cancelInvitation") }}</el-button>
@@ -144,7 +161,7 @@
                                 </i>
                                 {{ item.union_post_raw.post_title || $t("publish.common.untitled") }}
                             </a>
-                            <div v-if="isActive" class="u-member-counters">
+                            <div class="u-member-counters">
                                 <button
                                     type="button"
                                     class="u-member-counter"
@@ -177,20 +194,26 @@
 
                         <el-button-group class="u-action">
                             <el-button
-                                v-if="isActive || item.r_edit"
+                                v-if="isActive"
+                                icon="Setting"
+                                :title="$t('publish.collaboration.manageMembers')"
+                                @click="openMemberDialog(item)"
+                            ></el-button>
+                            <el-button
+                                v-if="isActive"
+                                icon="Close"
+                                :loading="actionPostId === item.union_post_raw.ID"
+                                :title="$t('publish.collaboration.closeCollaboration')"
+                                @click="closeCollaboration(item.union_post_raw.ID, i)"
+                            ></el-button>
+                            <el-button
+                                v-if="!isActive && item.r_edit"
                                 icon="Edit"
                                 :title="$t('publish.common.edit')"
                                 @click="edit(item.union_post_raw.post_type, item.union_post_raw.ID)"
                             ></el-button>
-                            <el-button
-                                v-if="isActive"
-                                icon="Delete"
-                                :loading="actionPostId === item.union_post_raw.ID"
-                                :title="$t('publish.common.deleteWork')"
-                                @click="del(item.union_post_raw.ID, i)"
-                            ></el-button>
                             <el-popconfirm
-                                v-else
+                                v-if="!isActive"
                                 :title="$t('publish.confirm.leaveCollaboration')"
                                 @confirm="quit(item.union_post_raw.ID, i)"
                             >
@@ -230,8 +253,14 @@
 </template>
 
 <script>
-import { del } from "@/service/publish/cms.js";
-import { getUnionPosts, quitUnionPost, acceptUnionInvitation, removeUnionAuthor } from "@/service/publish/union.js";
+import {
+    getUnionPosts,
+    quitUnionPost,
+    acceptUnionInvitation,
+    removeUnionAuthor,
+    updateUnionAuthor,
+    closeUnionPost,
+} from "@/service/publish/union.js";
 import { getLink, showAvatar, authorLink } from "@jx3box/jx3box-common/js/utils.js";
 import dateFormat from "@/utils/dateFormat";
 export default {
@@ -257,6 +286,7 @@ export default {
             memberDialogVisible: false,
             selectedUnionPost: null,
             memberActionId: 0,
+            roleActionId: 0,
         };
     },
     computed: {
@@ -409,6 +439,33 @@ export default {
                     this.memberActionId = 0;
                 });
         },
+        updateMemberRole: function (author) {
+            if (!this.selectedUnionPost) return;
+            this.$prompt(this.$t("publish.collaboration.rolePlaceholder"), this.$t("publish.collaboration.editRole"), {
+                inputValue: author.label || this.$t("publish.collaboration.writer"),
+                confirmButtonText: this.$t("publish.common.confirm"),
+                cancelButtonText: this.$t("publish.common.cancel"),
+                inputValidator: (value) => !!value?.trim(),
+                inputErrorMessage: this.$t("publish.collaboration.rolePlaceholder"),
+            })
+                .then(({ value }) => {
+                    this.roleActionId = author.author_id;
+                    return updateUnionAuthor(this.selectedUnionPost.post_id, author.author_id, {
+                        label: value.trim(),
+                    }).then(() => {
+                        author.label = value.trim();
+                        this.$notify({
+                            title: this.$t("publish.message.updateSucceeded"),
+                            message: this.$t("publish.collaboration.roleUpdated"),
+                            type: "success",
+                        });
+                    });
+                })
+                .catch(() => {})
+                .finally(() => {
+                    this.roleActionId = 0;
+                });
+        },
         inviter: function (item) {
             return (
                 item.inviter_info || {
@@ -436,27 +493,34 @@ export default {
                     this.actionPostId = 0;
                 });
         },
-        del: function (id, i) {
-            this.$alert(this.$t("publish.confirm.deleteWork"), this.$t("publish.common.confirmation"), {
-                confirmButtonText: this.$t("publish.common.confirm"),
-                callback: (action) => {
-                    if (action == "confirm") {
-                        this.actionPostId = id;
-                        del(id)
-                            .then(() => {
-                                this.$notify({
-                                    title: this.$t("publish.message.deleteSucceeded"),
-                                    message: this.$t("publish.message.workDeleted"),
-                                    type: "success",
-                                });
-                                this.removeRow(i);
-                            })
-                            .finally(() => {
-                                this.actionPostId = 0;
-                            });
-                    }
-                },
-            });
+        closeCollaboration: function (id, i) {
+            this.$confirm(
+                this.$t("publish.collaboration.closeCollaborationConfirm"),
+                this.$t("publish.collaboration.closeCollaboration"),
+                {
+                    type: "warning",
+                    confirmButtonText: this.$t("publish.common.confirm"),
+                    cancelButtonText: this.$t("publish.common.cancel"),
+                }
+            ).then(
+                () => this.performCloseCollaboration(id, i),
+                () => {}
+            );
+        },
+        performCloseCollaboration: function (id, i) {
+            this.actionPostId = id;
+            closeUnionPost(id)
+                .then(() => {
+                    this.$notify({
+                        title: this.$t("publish.message.operationSucceeded"),
+                        message: this.$t("publish.collaboration.collaborationClosed"),
+                        type: "success",
+                    });
+                    this.removeRow(i);
+                })
+                .finally(() => {
+                    this.actionPostId = 0;
+                });
         },
         removeRow: function (index) {
             this.data.splice(index, 1);
@@ -544,74 +608,251 @@ export default {
     }
 }
 .m-union-member-dialog {
-    .el-dialog__body { padding-top: 4px; }
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 18px 48px rgba(31, 35, 41, 0.16);
+    .el-dialog__header {
+        margin-right: 0;
+        padding: 20px 22px 16px;
+        border-bottom: 1px solid #ebeef5;
+    }
+    .el-dialog__title {
+        color: #303133;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .el-dialog__headerbtn {
+        top: 12px;
+        right: 12px;
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        &:hover { background: #f5f7fa; }
+    }
+    .el-dialog__body { padding: 16px 22px 22px; }
     .u-work-title {
-        margin-bottom: 12px;
+        margin-bottom: 14px;
         overflow: hidden;
-        color: #606266;
-        font-size: 13px;
+        color: #303133;
+        font-size: 14px;
+        font-weight: 600;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
-    .u-member-list { border-top: 1px solid #ebeef5; }
+    .u-member-list {
+        overflow: hidden;
+        border: 1px solid #ebeef5;
+        border-radius: 8px;
+    }
     .u-member-item {
         display: grid;
-        grid-template-columns: 56px minmax(0, 1fr) 84px;
+        grid-template-columns: 52px minmax(120px, 1fr) 170px auto;
         align-items: center;
         gap: 12px;
-        min-height: 56px;
+        min-height: 66px;
+        padding: 0 12px;
         border-bottom: 1px solid #ebeef5;
+        transition: background-color 0.2s ease;
+        &:last-child { border-bottom: 0; }
+        &:hover { background: #fafbfc; }
+    }
+    .m-union-member-panel.is-readonly .u-member-item {
+        grid-template-columns: 52px minmax(140px, 1fr) minmax(170px, 220px);
     }
     .u-member-user {
         display: flex;
         align-items: center;
         min-width: 0;
-        color: #606266;
-        img { width: 28px; height: 28px; margin-right: 8px; object-fit: cover; border-radius: 50%; }
+        color: #303133;
+        font-weight: 500;
+        img {
+            width: 34px;
+            height: 34px;
+            margin-right: 10px;
+            object-fit: cover;
+            border: 1px solid #ebeef5;
+            border-radius: 50%;
+        }
         span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        &:hover { color: #409eff; }
     }
-    .u-member-status { justify-self: start; }
+    .u-member-role {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        height: 32px;
+        padding: 0 4px 0 10px;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        background: #f5f7fa;
+        transition: border-color 0.2s ease, background-color 0.2s ease;
+        .u-role-label { flex: none; color: #909399; font-size: 12px; }
+        .u-role-value {
+            flex: 1;
+            min-width: 0;
+            margin-left: 6px;
+            overflow: hidden;
+            color: #303133;
+            font-size: 13px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .el-button {
+            flex: none;
+            width: 26px;
+            height: 26px;
+            margin-left: 2px;
+            padding: 0;
+            color: #909399;
+            &:hover { color: #409eff; }
+        }
+        &:hover {
+            border-color: #dcdfe6;
+            background: #fff;
+        }
+    }
+    .u-member-status {
+        justify-self: start;
+        height: auto;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        font-size: 12px;
+        line-height: 20px;
+        &::before {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            margin-right: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            content: "";
+            vertical-align: 1px;
+        }
+    }
+    .u-member-remove {
+        height: 32px;
+        padding: 0 8px;
+        border-color: transparent;
+        background: transparent;
+        color: #606266;
+        font-size: 12px;
+        font-weight: 400;
+        .el-icon { font-size: 12px; }
+        &:hover,
+        &:focus {
+            border-color: #fbc4c4;
+            background: #fef0f0;
+            color: #f56c6c;
+        }
+    }
     @media screen and (max-width: 768px) {
         width: 92% !important;
+        .el-dialog__header { padding: 18px 18px 14px; }
+        .el-dialog__body { padding: 14px 18px 18px; }
+        .u-member-item {
+            grid-template-columns: 52px minmax(0, 1fr) auto;
+            padding: 12px;
+        }
+        .m-union-member-panel.is-readonly .u-member-item {
+            grid-template-columns: 52px minmax(0, 1fr);
+        }
+        .u-member-role { grid-column: 1 / -1; width: 100%; box-sizing: border-box; }
     }
 }
 .m-union-pending-dialog {
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 18px 48px rgba(31, 35, 41, 0.16);
+    .el-dialog__header {
+        margin-right: 0;
+        padding: 20px 22px 16px;
+        border-bottom: 1px solid #ebeef5;
+    }
+    .el-dialog__title {
+        color: #303133;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .el-dialog__headerbtn {
+        top: 12px;
+        right: 12px;
+        width: 36px;
+        height: 36px;
+        border-radius: 6px;
+        &:hover { background: #f5f7fa; }
+    }
     .el-dialog__body {
         box-sizing: border-box;
-        height: 390px;
+        max-height: 430px;
         overflow-y: auto;
-        padding-top: 4px;
+        padding: 18px 22px 22px;
+    }
+    .m-union-invitation-list {
+        overflow: hidden;
+        border: 1px solid #ebeef5;
+        border-radius: 8px;
     }
     .m-union-invitation-item {
         display: grid;
-        grid-template-columns: 180px minmax(0, 1fr) auto;
+        grid-template-columns: 150px minmax(0, 1fr) auto;
         align-items: center;
-        gap: 16px;
-        padding: 12px 8px;
+        gap: 18px;
+        min-height: 72px;
+        padding: 0 14px;
         border-bottom: 1px solid #ebeef5;
-        &:first-child { border-top: 1px solid #ebeef5; }
-        &:hover { background: #f5f7fa; }
+        transition: background-color 0.2s ease;
+        &:last-of-type { border-bottom: 0; }
+        &:hover { background: #fafbfc; }
         .u-inviter {
-            display: flex; align-items: center; min-width: 0; color: #606266;
-            img { width: 32px; height: 32px; margin-right: 9px; object-fit: cover; border-radius: 50%; }
+            display: flex; align-items: center; min-width: 0; color: #303133;
+            img {
+                width: 36px;
+                height: 36px;
+                margin-right: 10px;
+                object-fit: cover;
+                border: 1px solid #ebeef5;
+                border-radius: 50%;
+            }
             span { min-width: 0; }
             small { display: block; color: #909399; font-size: 11px; }
-            b { display: block; overflow: hidden; color: #606266; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+            b { display: block; margin-top: 3px; overflow: hidden; color: #303133; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+            &:hover b { color: #409eff; }
         }
         .u-invitation-work {
             min-width: 0;
-            b { display: block; overflow: hidden; color: #303133; font-size: 13px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
-            time { display: block; margin-top: 5px; color: #a8abb2; font-size: 11px; }
+            .u-invitation-title {
+                display: block;
+                overflow: hidden;
+                color: #303133;
+                font-size: 14px;
+                font-weight: 600;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                &:hover { color: #409eff; }
+            }
+            time { display: block; margin-top: 6px; color: #a8abb2; font-size: 11px; }
         }
-        .u-invitation-actions { display: flex; justify-content: flex-end; white-space: nowrap; }
+        .u-invitation-actions {
+            display: flex;
+            justify-content: flex-end;
+            white-space: nowrap;
+            .el-button { min-width: 64px; }
+        }
     }
     .m-union-pending-pages {
         justify-content: center;
-        padding: 16px 0;
+        padding: 16px 0 2px;
     }
     @media screen and (max-width: 768px) {
         width: 92% !important;
-        .m-union-invitation-item { grid-template-columns: 1fr; }
+        .el-dialog__header { padding: 18px 18px 14px; }
+        .el-dialog__body { padding: 14px 18px 18px; }
+        .m-union-invitation-item {
+            grid-template-columns: 1fr;
+            gap: 12px;
+            padding: 14px;
+        }
         .m-union-invitation-item .u-invitation-actions { justify-content: flex-start; }
     }
 }

@@ -22,11 +22,11 @@
             <ul class="m-dashboard-box-list" v-else-if="data && data.length">
                 <li v-for="(item, i) in data" :key="i">
                     <div class="u-header">
-                        <i class="u-item-icon el-icon-chat-dot-round" v-if="item.status"></i>
-                        <i class="u-item-icon el-icon-lock" v-else :title="$t('publish.status.pendingReview')"></i>
-                        <a class="u-title" target="_blank" :href="postLink(type, item.id)">{{
-                            item.desc || $t("publish.common.unnamed")
-                        }}</a>
+                        <i class="u-item-icon el-icon-chat-dot-round" v-if="item.status == 1"></i>
+                        <i class="u-item-icon u-icon" v-else>
+                            <img src="@/assets/img/publish/works/draft.svg" :title="$t('publish.status.pendingReview')" />
+                        </i>
+                        <a class="u-title" target="_blank" :href="postLink(type, item.id)">{{ item.content }}</a>
                     </div>
                     <div class="u-desc">
                         <time class="u-desc-subitem">

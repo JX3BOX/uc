@@ -14,18 +14,22 @@
                 <template #title>
                     <span class="u-title">{{ $t("publish.nav.independent") }}</span>
                 </template>
-                <router-link :to="item.path" v-for="(item, key) in cms" :key="key" @click="closeSidebar">
-                    <i class="el-icon-collection"></i>
-                    <span>{{ item.name }}</span>
-                    <span v-if="countLoading" class="u-count-skeleton" aria-hidden="true"></span>
-                    <span v-else class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
-                </router-link>
-                <template v-if="isAdmin">
-                    <router-link :to="item.path" v-for="(item, key) in ads" :key="key" @click="closeSidebar">
+                <template v-for="(item, key) in cms" :key="key">
+                    <router-link :to="item.path" @click="closeSidebar">
                         <i class="el-icon-collection"></i>
                         <span>{{ item.name }}</span>
                         <span v-if="countLoading" class="u-count-skeleton" aria-hidden="true"></span>
                         <span v-else class="u-count" :class="{ isNull: !item.count }">{{ item.count }}</span>
+                    </router-link>
+                    <router-link
+                        v-if="key === 'tool' && isAdmin"
+                        :to="ads.notice.path"
+                        @click="closeSidebar"
+                    >
+                        <i class="el-icon-collection"></i>
+                        <span>{{ ads.notice.name }}</span>
+                        <span v-if="countLoading" class="u-count-skeleton" aria-hidden="true"></span>
+                        <span v-else class="u-count" :class="{ isNull: !ads.notice.count }">{{ ads.notice.count }}</span>
                     </router-link>
                 </template>
             </el-collapse-item>
