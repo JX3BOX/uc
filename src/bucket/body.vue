@@ -47,13 +47,7 @@
 
                     <el-button-group class="u-action">
                         <el-button icon="Edit" @click="edit(item.id)" :title="$t('publish.common.edit')"></el-button>
-                        <el-button
-                            v-if="item.status == 1"
-                            icon="Download"
-                            @click="handleOffline(item.id)"
-                            :title="$t('publish.common.takeOffline')"
-                        ></el-button>
-                        <el-button v-else icon="Upload" @click="handleOnline(item.id)" :title="$t('publish.common.putOnline')"></el-button>
+                        <el-button icon="Delete" @click="del(item.id)" :title="$t('publish.common.delete')"></el-button>
                     </el-button-group>
                 </li>
             </ul>
@@ -80,7 +74,7 @@
 </template>
 
 <script>
-import { getBodyList, bodyOnline, bodyOffline } from "@/service/publish/body.js";
+import { delBody, getBodyList } from "@/service/publish/body.js";
 import publishListSearch from "@/mixins/publishListSearch";
 export default {
     name: "pvxBody",
@@ -143,20 +137,14 @@ export default {
         postLink: function (id) {
             return "/body/" + id;
         },
-        handleOnline: function (id) {
-            bodyOnline(id).then((res) => {
-                this.$message.success(this.$t("publish.message.onlineSucceeded"));
-                this.loadPosts();
-            });
-        },
-        handleOffline: function (id) {
-            this.$confirm(this.$t("publish.confirm.takeOffline"), this.$t("publish.common.prompt"), {
+        del(id) {
+            this.$confirm(this.$t("publish.confirm.permanentDelete"), this.$t("publish.common.prompt"), {
                 confirmButtonText: this.$t("publish.common.confirm"),
                 cancelButtonText: this.$t("publish.common.cancel"),
                 type: "warning",
             }).then(() => {
-                bodyOffline(id).then((res) => {
-                    this.$message.success(this.$t("publish.message.offlineSucceeded"));
+                delBody(id).then(() => {
+                    this.$message.success(this.$t("publish.message.deleteSucceeded"));
                     this.loadPosts();
                 });
             });

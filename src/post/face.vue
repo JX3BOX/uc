@@ -92,6 +92,12 @@
                 </el-form-item>
 
                 <el-divider content-position="left">{{ $t("publish.form.extension") }}</el-divider>
+                <el-form-item :label="$t('publish.form.visibility')">
+                    <el-radio-group v-model="post.status">
+                        <el-radio :value="1">{{ $t("publish.visibility.public") }}</el-radio>
+                        <el-radio :value="0">{{ $t("publish.visibility.privateShort") }}</el-radio>
+                    </el-radio-group>
+                </el-form-item>
                 <!-- 首发 -->
                 <el-form-item :label="$t('publish.form.firstPublished')" prop="is_fr">
                     <el-switch
@@ -204,6 +210,7 @@ export default {
                 // 捏脸码
                 code_mode: 0, // 是否是捏脸码
                 code: "", // 捏脸码
+                status: 1, // 1公开，0私有
             },
             options: {
                 bodyMap,

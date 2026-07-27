@@ -1052,7 +1052,7 @@ export default {
         acceptGiftsTip: "Cho phép người dùng khác tặng quà ảo cho trung tâm mua sắm của bạn",
         normalSubscription: "Đăng ký thông thường",
         subscriptionTip: "Nhận tin nhắn trực tiếp khi tác giả bạn theo dõi hoặc tác phẩm bạn đăng ký được cập nhật.",
-        advancedSubscription: "Đăng ký nâng cao",
+        advancedSubscription: "Đăng ký kịp thời",
         subscriptionMethodTip: "Nhận thông báo qua nền tảng tương ứng khi tác phẩm ưu tiên được cập nhật. Tài khoản chính thức WeChat giới hạn 20 thông báo mỗi ngày.",
         subscriptionMethods: { wxmp: "Tài khoản chính thức WeChat", feishu: "Feishu", dingtalk: "DingTalk", wecom: "WeCom" },
         loverFeature: "Chức năng Duyên",

@@ -1033,7 +1033,7 @@ export default {
         acceptGiftsTip: "允許其他用戶贈送你商城虛擬商品",
         normalSubscription: "普通訂閱",
         subscriptionTip: "你關注的作者或訂閱的作品更新時，將收到短訊息通知。",
-        advancedSubscription: "高級訂閱",
+        advancedSubscription: "即時訂閱",
         subscriptionMethodTip: "你重點關注的作品更新時，將收到對應平台通知。微信公眾號一天上限20則。",
         subscriptionMethods: { wxmp: "微信公眾號", feishu: "飛書", dingtalk: "釘釘", wecom: "企業微信" },
         loverFeature: "情緣功能",

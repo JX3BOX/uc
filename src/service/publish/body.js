@@ -16,12 +16,17 @@ export function uploadBodyFile(data) {
 
 // 添加体型
 export function addBody(data) {
-    return $next().post("/api/pvxbody", data);
+    return $next().post("/api/next2/pvxbody", data);
 }
 
 // 更新体型
 export function updateBody(id, data) {
-    return $next().put(`/api/pvxbody/${id}`, data);
+    return $next().put(`/api/next2/pvxbody/${id}`, data);
+}
+
+// 删除体型
+export function delBody(id) {
+    return $next().delete(`/api/next2/pvxbody/${id}`);
 }
 
 // 上架

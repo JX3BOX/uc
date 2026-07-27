@@ -1003,7 +1003,7 @@ export default {
         acceptGiftsTip: "允许其他用户向你赠送商城虚拟商品",
         normalSubscription: "普通订阅",
         subscriptionTip: "你关注的作者或订阅的作品更新时，将收到短消息通知。",
-        advancedSubscription: "高级订阅",
+        advancedSubscription: "及时订阅",
         subscriptionMethodTip: "你重点关注的作品更新时，将收到对应平台通知。微信公众号一天上限20条。",
         subscriptionMethods: { wxmp: "微信公众号", feishu: "飞书", dingtalk: "钉钉", wecom: "企微" },
         loverFeature: "情缘功能",

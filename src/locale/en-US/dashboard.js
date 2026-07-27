@@ -1053,7 +1053,7 @@ export default {
         acceptGiftsTip: "Allow other users to gift you mall virtual goods",
         normalSubscription: "Standard Subscription",
         subscriptionTip: "Receive a direct message when an author you follow or a work you subscribe to is updated.",
-        advancedSubscription: "Advanced Subscription",
+        advancedSubscription: "Timely Subscription",
         subscriptionMethodTip: "Receive notifications through the selected platforms when a priority work is updated. WeChat Official Accounts are limited to 20 notifications per day.",
         subscriptionMethods: { wxmp: "WeChat Official Account", feishu: "Feishu", dingtalk: "DingTalk", wecom: "WeCom" },
         loverFeature: "Bond function",

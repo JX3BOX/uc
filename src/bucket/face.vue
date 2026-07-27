@@ -47,13 +47,7 @@
 
                     <el-button-group class="u-action">
                         <el-button icon="Edit" @click="edit(item.id)" :title="$t('publish.common.edit')"></el-button>
-                        <el-button
-                            v-if="item.status == 1"
-                            icon="Download"
-                            @click="handleOffline(item.id)"
-                            :title="$t('publish.common.takeOffline')"
-                        ></el-button>
-                        <el-button v-else icon="Upload" @click="handleOnline(item.id)" :title="$t('publish.common.putOnline')"></el-button>
+                        <el-button icon="Delete" @click="del(item.id)" :title="$t('publish.common.delete')"></el-button>
                     </el-button-group>
                 </li>
             </ul>
@@ -80,7 +74,7 @@
 </template>
 
 <script>
-import { getFaceList, faceOnline, faceOffline, delFace } from "@/service/publish/face.js";
+import { getFaceList, delFace } from "@/service/publish/face.js";
 export default {
     name: "face",
     props: [],
@@ -140,24 +134,6 @@ export default {
         },
         postLink: function (id) {
             return "/face/" + id;
-        },
-        handleOnline: function (id) {
-            faceOnline(id).then((res) => {
-                this.$message.success(this.$t("publish.message.onlineSucceeded"));
-                this.loadPosts();
-            });
-        },
-        handleOffline: function (id) {
-            this.$confirm(this.$t("publish.confirm.takeOffline"), this.$t("publish.common.prompt"), {
-                confirmButtonText: this.$t("publish.common.confirm"),
-                cancelButtonText: this.$t("publish.common.cancel"),
-                type: "warning",
-            }).then(() => {
-                faceOffline(id).then((res) => {
-                    this.$message.success(this.$t("publish.message.offlineSucceeded"));
-                    this.loadPosts();
-                });
-            });
         },
         del(id) {
             this.$confirm(this.$t("publish.confirm.permanentDelete"), this.$t("publish.common.prompt"), {

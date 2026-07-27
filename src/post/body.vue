@@ -66,6 +66,12 @@
                 </el-form-item>
 
                 <el-divider content-position="left">{{ $t("publish.form.extension") }}</el-divider>
+                <el-form-item :label="$t('publish.form.visibility')">
+                    <el-radio-group v-model="post.status">
+                        <el-radio :value="1">{{ $t("publish.visibility.public") }}</el-radio>
+                        <el-radio :value="0">{{ $t("publish.visibility.privateShort") }}</el-radio>
+                    </el-radio-group>
+                </el-form-item>
                 <!-- 原创 -->
                 <publish-original v-model="post.original"></publish-original>
                 <el-form-item :label="$t('publish.form.firstPublished')" prop="is_fr">
@@ -174,6 +180,7 @@ export default {
                 // 体型码
                 code_mode: 0, // 是否是体型码
                 code: "", // 体型码
+                status: 1, // 1公开，0私有
             },
 
             loading: false,

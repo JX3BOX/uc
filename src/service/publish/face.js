@@ -1,7 +1,7 @@
 import { $next } from "@jx3box/jx3box-common/js/api";
 
 export function delFace(id) {
-    return $next().delete(`/api/face/${id}`);
+    return $next().delete(`/api/next2/face/${id}`);
 }
 
 /**
@@ -17,7 +17,7 @@ export function uploadFaceFile(data) {
  * @params {Object} data
  */
 export function addFace(data) {
-    return $next().post("/api/face", data);
+    return $next().post("/api/next2/face", data);
 }
 
 /**
@@ -34,7 +34,7 @@ export function getFace(id) {
  * @params {*} data
  */
 export function updateFace(id, data) {
-    return $next().put(`/api/face/${id}`, data);
+    return $next().put(`/api/next2/face/${id}`, data);
 }
 
 /**

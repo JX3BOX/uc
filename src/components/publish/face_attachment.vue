@@ -109,19 +109,19 @@ export default {
                     const result = load(e.target.result);
                     if (!result)
                         return vm.$notify.error({
-                            title: this.$t("publish.common.error"),
-                            message: this.$t("publish.face.parseTypeFailed"),
+                            title: vm.$t("publish.common.error"),
+                            message: vm.$t("publish.face.parseTypeFailed"),
                         });
                     if (vm.type === "body" && result.type.startsWith("face")) {
                         return vm.$notify.error({
-                            title: this.$t("publish.common.error"),
-                            message: this.$t("publish.face.importBodyData"),
+                            title: vm.$t("publish.common.error"),
+                            message: vm.$t("publish.face.importBodyData"),
                         });
                     }
                     if (vm.type === "face" && result.type === "body") {
                         return vm.$notify.error({
-                            title: this.$t("publish.common.error"),
-                            message: this.$t("publish.face.importFaceData"),
+                            title: vm.$t("publish.common.error"),
+                            message: vm.$t("publish.face.importFaceData"),
                         });
                     }
                     object = result.data;
@@ -132,8 +132,8 @@ export default {
                 } catch (ex) {
                     console.log(ex);
                     vm.$notify.error({
-                        title: this.$t("publish.common.error"),
-                        message: this.$t("publish.upload.cannotReadData"),
+                        title: vm.$t("publish.common.error"),
+                        message: vm.$t("publish.upload.cannotReadData"),
                     });
                     return;
                 }
@@ -143,8 +143,8 @@ export default {
                     setTimeout(
                         () =>
                             vm.$notify({
-                                title: this.$t("publish.common.success"),
-                                message: this.$t("publish.upload.readSucceeded"),
+                                title: vm.$t("publish.common.success"),
+                                message: vm.$t("publish.upload.readSucceeded"),
                                 type: "success",
                             }),
                         0
@@ -156,8 +156,8 @@ export default {
             };
             fr.onerror = function (e) {
                 vm.$notify.error({
-                    title: this.$t("publish.common.error"),
-                    message: this.$t("publish.upload.readFailed"),
+                    title: vm.$t("publish.common.error"),
+                    message: vm.$t("publish.upload.readFailed"),
                 });
             };
             fr.readAsArrayBuffer(file);
