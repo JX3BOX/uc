@@ -49,9 +49,9 @@
                     :inactive-value="0"
                 ></el-switch>
             </el-form-item>
-            <el-form-item :label="$t('dashboard.config.subscriptionNotifications')">
+            <el-form-item :label="$t('dashboard.config.normalSubscription')">
                 <template #label>
-                    <span>{{ $t("dashboard.config.subscriptionNotifications") }}</span>
+                    <span>{{ $t("dashboard.config.normalSubscription") }}</span>
                     <el-tooltip
                         class="item"
                         effect="dark"
@@ -68,9 +68,9 @@
                     :inactive-value="0"
                 ></el-switch>
             </el-form-item>
-            <el-form-item v-if="Number(conf.feed_message) === 1" :label="$t('dashboard.config.subscriptionMethod')">
+            <el-form-item :label="$t('dashboard.config.advancedSubscription')">
                 <template #label>
-                    <span>{{ $t("dashboard.config.subscriptionMethod") }}</span>
+                    <span>{{ $t("dashboard.config.advancedSubscription") }}</span>
                     <el-tooltip
                         class="item"
                         effect="dark"
