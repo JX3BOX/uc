@@ -1004,7 +1004,7 @@ export default {
         subscriptionNotifications: "订阅通知",
         subscriptionTip: "接收已订阅内容的更新通知",
         subscriptionMethod: "订阅方式",
-        subscriptionMethodTip: "绑定对应平台后，才能通过该平台接收订阅通知",
+        subscriptionMethodTip: "绑定对应平台后，才能通过该平台接收订阅通知；微信公众号每天最多接收20条通知",
         subscriptionMethods: { wxmp: "微信公众号", feishu: "飞书", dingtalk: "钉钉", wecom: "企微" },
         loverFeature: "情缘功能",
         loverTip: "允许其他用户向你发送情缘绑定邀请",

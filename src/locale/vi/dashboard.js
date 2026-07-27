@@ -1053,7 +1053,7 @@ export default {
         subscriptionNotifications: "Đăng ký nhận thông báo",
         subscriptionTip: "Nhận thông báo về các cập nhật cho nội dung đã đăng ký của bạn",
         subscriptionMethod: "Phương thức đăng ký",
-        subscriptionMethodTip: "Bạn cần liên kết nền tảng trước khi nhận thông báo đăng ký qua nền tảng đó",
+        subscriptionMethodTip: "Bạn cần liên kết nền tảng trước khi nhận thông báo đăng ký qua nền tảng đó. Tài khoản chính thức WeChat có thể nhận tối đa 20 thông báo mỗi ngày",
         subscriptionMethods: { wxmp: "Tài khoản chính thức WeChat", feishu: "Feishu", dingtalk: "DingTalk", wecom: "WeCom" },
         loverFeature: "Chức năng Duyên",
         loverTip: "Cho phép người dùng khác gửi cho bạn lời mời ràng buộc Duyên",

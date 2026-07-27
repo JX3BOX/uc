@@ -1034,7 +1034,7 @@ export default {
         subscriptionNotifications: "訂閱通知",
         subscriptionTip: "接收已訂閱內容的更新通知",
         subscriptionMethod: "訂閱方式",
-        subscriptionMethodTip: "綁定對應平台後，才能透過該平台接收訂閱通知",
+        subscriptionMethodTip: "綁定對應平台後，才能透過該平台接收訂閱通知；微信公眾號每天最多接收20則通知",
         subscriptionMethods: { wxmp: "微信公眾號", feishu: "飛書", dingtalk: "釘釘", wecom: "企業微信" },
         loverFeature: "情緣功能",
         loverTip: "允許其他使用者向你發送情緣綁定邀請",

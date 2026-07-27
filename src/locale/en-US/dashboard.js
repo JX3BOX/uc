@@ -1054,7 +1054,7 @@ export default {
         subscriptionNotifications: "Subscribe to notifications",
         subscriptionTip: "Receive notifications about updates to your subscribed content",
         subscriptionMethod: "Subscription Methods",
-        subscriptionMethodTip: "Bind a platform before receiving subscription notifications through it",
+        subscriptionMethodTip: "Bind a platform before receiving subscription notifications through it. WeChat Official Accounts can receive up to 20 notifications per day",
         subscriptionMethods: { wxmp: "WeChat Official Account", feishu: "Feishu", dingtalk: "DingTalk", wecom: "WeCom" },
         loverFeature: "Bond function",
         loverTip: "Allow other users to send you Bond binding invitations",
