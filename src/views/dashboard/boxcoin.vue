@@ -143,6 +143,9 @@
                         <el-radio :value="200000" border :disabled="!canSelect(200000)">{{
                             $t("dashboard.boxcoin.tokens", { amount: 200000 })
                         }}</el-radio>
+                        <el-radio :value="300000" border :disabled="!canSelect(300000)">{{
+                            $t("dashboard.boxcoin.tokens", { amount: 300000 })
+                        }}</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item :label="$t('dashboard.email.address')">
