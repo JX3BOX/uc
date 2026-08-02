@@ -14,27 +14,16 @@
                         <!-- {{ checkStatus(type) ? getNickname(type) : "未绑定" }} -->
                     </span>
                 </span>
-                <el-tooltip
-                    v-if="isPhoneAuthLocked(type)"
-                    :content="$t('dashboard.auth.phoneLevelTip')"
-                    placement="top"
+                <el-button
+                    class="u-button"
+                    :type="!checkStatus(type) ? 'primary' : 'danger'"
+                    @click="toBind(type)"
+                    v-if="!checkStatus(type)"
+                    size="large"
                 >
-                    <span class="u-phone-lock">
-                        <el-button class="u-button" type="info" size="large" disabled>{{ $t("dashboard.auth.bindAtLevel3") }}</el-button>
-                    </span>
-                </el-tooltip>
-                <template v-else>
-                    <el-button
-                        class="u-button"
-                        :type="!checkStatus(type) ? 'primary' : 'danger'"
-                        @click="toBind(type)"
-                        v-if="!checkStatus(type)"
-                        size="large"
-                    >
-                        {{ $t("dashboard.auth.goBind") }}
-                    </el-button>
-                    <i class="el-icon-success u-bind" v-else></i>
-                </template>
+                    {{ $t("dashboard.auth.goBind") }}
+                </el-button>
+                <i class="el-icon-success u-bind" v-else></i>
             </div>
         </div>
     </uc>
@@ -43,10 +32,8 @@
 <script>
 import { getBreadcrumb } from "@jx3box/jx3box-common/js/system";
 import { checkOAuth } from "@/service/dashboard/profile";
-import { getMyInfo } from "@/service/dashboard/index.js";
 import uc from "@/components/dashboard/uc.vue";
 import { __imgPath, __cdn } from "@/utils/config";
-import User from "@jx3box/jx3box-common/js/user";
 
 const types = {
     wechat_mp_openid: {
@@ -77,17 +64,11 @@ export default {
 
             types,
             authLoading: true,
-            userLoading: true,
-
-            info: {},
         };
     },
     computed: {
         loading: function () {
-            return this.authLoading || this.userLoading;
-        },
-        level: function () {
-            return User.getLevel(this.info?.experience || 0);
+            return this.authLoading;
         },
     },
     mounted() {
@@ -96,8 +77,6 @@ export default {
         });
 
         this.loadAuth();
-
-        this.loadUserInfo();
     },
     methods: {
         checkStatus: function (type) {
@@ -130,19 +109,6 @@ export default {
             }[type];
 
             this.$router.push({ name: routeName });
-        },
-        isPhoneAuthLocked(type) {
-            return type === "user_phone" && !this.checkStatus(type) && this.level < 3;
-        },
-        loadUserInfo: function () {
-            this.userLoading = true;
-            return getMyInfo()
-                .then((res) => {
-                    this.info = res.data.data || {};
-                })
-                .finally(() => {
-                    this.userLoading = false;
-                });
         },
     },
 };
@@ -205,10 +171,6 @@ export default {
 
     .u-button {
         .w(auto) !important;
-    }
-
-    .u-phone-lock {
-        display: inline-flex;
     }
 
     .u-status {
