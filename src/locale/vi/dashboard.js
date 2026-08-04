@@ -823,6 +823,10 @@ export default {
         notCompleted: "Điều kiện nhiệm vụ chưa đạt hoặc một số phần thưởng chưa hoàn tất",
         checkFailed: "Kiểm tra trạng thái tác vụ không thành công, vui lòng thử lại sau",
         dailyLimit: "Giới hạn hàng ngày: {limit}",
+        groups: {
+            daily: "Nhiệm vụ hằng ngày",
+            special: "Nhiệm vụ đặc biệt",
+        },
     },
     filter: {
         title: "Kiểm tra từ nhạy cảm",

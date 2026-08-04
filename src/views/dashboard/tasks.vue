@@ -216,8 +216,20 @@ export default {
                     url: "",
                     open: false,
                 };
-            if (key === "jx3box_daily_task") return { ...info, img: this.dailyGroupIcon };
-            if (key === "jx3box_special_task") return { ...info, img: this.specialGroupIcon };
+            if (key === "jx3box_daily_task") {
+                return {
+                    ...info,
+                    name: this.$t("dashboard.tasks.groups.daily"),
+                    img: this.dailyGroupIcon,
+                };
+            }
+            if (key === "jx3box_special_task") {
+                return {
+                    ...info,
+                    name: this.$t("dashboard.tasks.groups.special"),
+                    img: this.specialGroupIcon,
+                };
+            }
             return info;
         },
         syncGroupInfo() {

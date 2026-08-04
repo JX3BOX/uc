@@ -823,6 +823,10 @@ export default {
         notCompleted: "The task condition has not been met, or some rewards are still incomplete",
         checkFailed: "Task status check failed, please try again later",
         dailyLimit: "Daily limit: {limit}",
+        groups: {
+            daily: "Daily Tasks",
+            special: "Special Tasks",
+        },
     },
     filter: {
         title: "Sensitive word test",
