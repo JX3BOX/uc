@@ -1,6 +1,6 @@
 <template>
     <div class="m-publish-collection-relation">
-        <h5 class="u-schema">
+        <h5 v-if="!readonly" class="u-schema">
             <div>
                 <a
                     class="u-add el-button el-button--primary el-button--small"
@@ -17,12 +17,13 @@
         <el-select
             class="u-collection"
             v-model="post_collection"
-            remote
+            :remote="!readonly"
             :remote-method="remoteMethod"
             :loading="loading"
-            filterable
-            clearable
-            :placeholder="$t('publish.collection.placeholder')"
+            :filterable="!readonly"
+            :clearable="!readonly"
+            :disabled="readonly"
+            :placeholder="$t(readonly ? 'publish.collection.unbound' : 'publish.collection.placeholder')"
             @visible-change="visibleChange"
             size="large"
         >
@@ -41,14 +42,14 @@
                 </div>
             </template>
         </el-select>
-        <div class="u-tip" v-if="isEmpty">
+        <div class="u-tip" v-if="!readonly && isEmpty">
             <i class="el-icon-info"></i> {{ $t("publish.collection.empty") }}
             <a href="/publish/#/collection" target="_blank">{{ $t("publish.collection.create") }}</a>
         </div>
     </div>
 </template>
 <script>
-import { get_my_collections } from "@/service/publish/collection";
+import { get_my_collections, getCollectionRaw } from "@/service/publish/collection";
 import cloneDeep from "lodash/cloneDeep";
 export default {
     name: "publish_collection",
@@ -60,6 +61,10 @@ export default {
         data: {
             type: [String, Number],
             default: "",
+        },
+        readonly: {
+            type: Boolean,
+            default: false,
         },
     },
     data: function () {
@@ -86,6 +91,7 @@ export default {
             handler(newval) {
                 if (newval !== undefined) {
                     this.post_collection = Number(newval) || "";
+                    if (this.readonly) this.loadReadonlyCollection();
                 }
             },
         },
@@ -94,14 +100,23 @@ export default {
             handler(newval) {
                 if (this.modelValue === undefined) {
                     this.post_collection = Number(newval) || "";
+                    if (this.readonly) this.loadReadonlyCollection();
                 }
             },
         },
         post_collection: {
             handler: function (newval) {
+                if (this.readonly) return;
                 this.$emit("update:modelValue", newval);
                 this.$emit("update", newval);
             },
+        },
+        readonly: function (value) {
+            if (value) {
+                this.loadReadonlyCollection();
+            } else {
+                this.loadCollections();
+            }
         },
     },
     methods: {
@@ -118,7 +133,21 @@ export default {
                 }
             });
         },
+        loadReadonlyCollection: function () {
+            const id = Number(this.post_collection);
+            this.loading = false;
+            this.collections = id ? [{ id, title: `#${id}` }] : [];
+            if (!id) return Promise.resolve();
+
+            return getCollectionRaw(id)
+                .then((res) => {
+                    const collection = res.data?.data;
+                    if (collection) this.collections = [collection];
+                })
+                .catch(() => {});
+        },
         remoteMethod: function (keyword = "") {
+            if (this.readonly) return;
             this.search = keyword;
             this.loading = true;
             if (keyword !== "") {
@@ -135,6 +164,7 @@ export default {
             }
         },
         visibleChange: function (val) {
+            if (this.readonly) return;
             if (val) {
                 // 下拉框打开时，如果还没有初始化数据，则加载
                 if (this.copyCollections.length === 0) {
@@ -146,7 +176,11 @@ export default {
         },
     },
     mounted: function () {
-        this.loadCollections();
+        if (this.readonly) {
+            this.loadReadonlyCollection();
+        } else {
+            this.loadCollections();
+        }
     },
     components: {},
 };

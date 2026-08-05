@@ -51,6 +51,7 @@ export default {
         "onlyOwnWorks": "僅選擇自己的作品",
         "optionalDescription": "小冊簡介（選填）",
         "placeholder": "請選擇小冊",
+        "unbound": "未綁定小冊",
         "privateHint": "私有小冊僅自己可見",
         "titlePlaceholder": "請輸入小冊標題",
         "unavailable": "該作品已不可用",

@@ -51,6 +51,7 @@ export default {
         "onlyOwnWorks": "Only select my works",
         "optionalDescription": "Collection Description (Optional)",
         "placeholder": "Select collection",
+        "unbound": "No collection linked",
         "privateHint": "Private collections are visible only to you",
         "titlePlaceholder": "Enter a collection title",
         "unavailable": "This work is unavailable",

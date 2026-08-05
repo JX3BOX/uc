@@ -59,6 +59,43 @@ test("publish form controls use Element Plus 3 value semantics", () => {
     }
 });
 
+test("admin and collaborator edits keep collection binding read-only and skip append requests", () => {
+    const metaMixin = read("src/utils/cmsMetaMixin.js");
+    const collection = read("src/components/publish/publish_collection.vue");
+    const collectionPages = [
+        "src/post/macro.vue",
+        "src/post/bps.vue",
+        "src/post/pvp.vue",
+        "src/post/fb.vue",
+        "src/post/tool.vue",
+        "src/post/bbs.vue",
+        "src/post/jx3dat.vue",
+        "src/post/community.vue",
+    ];
+
+    assert.match(metaMixin, /canManagePostCollection\(\)/);
+    assert.match(metaMixin, /if \(!this\.id\) return true/);
+    assert.match(metaMixin, /if \(this\.from === "admin"\) return false/);
+    assert.match(metaMixin, /this\.post\?\.post_author \?\? this\.post\?\.user_id/);
+    assert.match(metaMixin, /authorId === Number\(User\.getInfo\(\)\.uid\)/);
+
+    assert.match(collection, /readonly:\s*\{/);
+    assert.match(collection, /:disabled="readonly"/);
+    assert.match(collection, /getCollectionRaw\(id\)/);
+    assert.match(collection, /if \(this\.readonly\) return;/);
+    assert.match(collection, /<h5 v-if="!readonly" class="u-schema">/);
+
+    for (const file of collectionPages) {
+        const source = read(file);
+        assert.match(source, /:readonly="!canManagePostCollection"/, `${file} leaves collection editing enabled`);
+        assert.match(
+            source,
+            /if \(!this\.canManagePostCollection \|\| !~~result\.(?:post_collection|collection_id)\)/,
+            `${file} still appends a collection for admin or collaborator edits`
+        );
+    }
+});
+
 test("live publish-list searches share a 300ms debounce", () => {
     const mixin = read("src/mixins/publishListSearch.js");
     const liveSearchRoutes = [

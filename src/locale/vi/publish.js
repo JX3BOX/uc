@@ -51,6 +51,7 @@ export default {
         "onlyOwnWorks": "Chỉ chọn tác phẩm của tôi",
         "optionalDescription": "Mô tả tuyển tập (không bắt buộc)",
         "placeholder": "Chọn tuyển tập",
+        "unbound": "Chưa liên kết tuyển tập",
         "privateHint": "Tuyển tập riêng tư chỉ mình bạn xem được",
         "titlePlaceholder": "Nhập tiêu đề tuyển tập",
         "unavailable": "Tác phẩm này không còn khả dụng",

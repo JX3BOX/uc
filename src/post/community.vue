@@ -47,7 +47,11 @@
 
             <div class="m-publish-append">
                 <el-divider content-position="left">{{ $t("publish.types.collection") }}</el-divider>
-                <publish-collection v-model="post.collection_id" :defaultCollapse="post.collection_collapse">
+                <publish-collection
+                    v-model="post.collection_id"
+                    :defaultCollapse="post.collection_collapse"
+                    :readonly="!canManagePostCollection"
+                >
                 </publish-collection>
             </div>
 
@@ -449,7 +453,7 @@ export default {
         },
         // 跳转前操作
         afterPublish: function (result) {
-            if (!~~result.collection_id) {
+            if (!this.canManagePostCollection || !~~result.collection_id) {
                 return new Promise((resolve, reject) => {
                     resolve(true);
                 });

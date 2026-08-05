@@ -22,6 +22,13 @@ export const cmsMetaMixin = {
         },
         level() {
             return User.getLevel(this.profile?.experience)
+        },
+        canManagePostCollection() {
+            if (!this.id) return true;
+            if (this.from === "admin") return false;
+
+            const authorId = Number(this.post?.post_author ?? this.post?.user_id);
+            return authorId > 0 && authorId === Number(User.getInfo().uid);
         }
     },
     methods: {
