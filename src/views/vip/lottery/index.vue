@@ -1,5 +1,6 @@
 <template>
-    <div :class="theme" v-loading="loading">
+    <IndexApp v-if="!isApp" />
+    <div v-else :class="theme" v-loading="loading">
         <CommonHeader></CommonHeader>
         <div class="p-event-blindbox">
             <!-- 模糊背景 -->
@@ -239,6 +240,7 @@
 const COMPLETE_STATUS = [2, 3];
 import bindWechat from "./bindWechat.vue";
 import History from "./history.vue";
+import IndexApp from "./index-app.vue";
 import User from "@jx3box/jx3box-common/js/user";
 import { getBreadcrumb, getConfig } from "@/service/vip/cms";
 import { getBlindBox, goodLucky, getMyLucky, getLuckyConfig, getMyInfo } from "@/service/vip/lottery";
@@ -295,14 +297,17 @@ export default {
     components: {
         History,
         bindWechat,
+        IndexApp,
     },
     computed: {
         data: function () {
             let _data = {};
-            this.raw.forEach((item) => {
-                if (!_data[item.subtype]) _data[item.subtype] = [];
-                _data[item.subtype].push(item);
-            });
+            if (Array.isArray(this.raw)) {
+                this.raw.forEach((item) => {
+                    if (!_data[item.subtype]) _data[item.subtype] = [];
+                    _data[item.subtype].push(item);
+                });
+            }
             return _data;
         },
         isLogin() {
@@ -344,6 +349,10 @@ export default {
             };
             return data[this.theme];
         },
+        // 判断是否从 app 过来
+        isApp() {
+            return this.$route.query.__evn === "app";
+        },
     },
     watch: {
         isLogin: {
@@ -382,6 +391,7 @@ export default {
         },
         // 初始化，获取活动ID,并获取活动详情
         init() {
+            if (this.isApp) return;
             getLuckyConfig().then((res) => {
                 const status = !!~~res.data?.data?.val || 0;
                 if (status) {
@@ -417,6 +427,7 @@ export default {
             });
         },
         load() {
+            if (this.isApp) return;
             getBlindBox(this.ID)
                 .then((res) => {
                     const data = res.data.data;
@@ -481,6 +492,7 @@ export default {
         },
         // 滚动
         scroll(count) {
+            if (!this.$refs.scroll) return;
             setTimeout(() => {
                 const rule = `
             @keyframes scroll_prize {
