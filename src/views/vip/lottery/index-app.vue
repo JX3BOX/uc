@@ -199,8 +199,8 @@
                             :style="{ backgroundImage: `url(${__appImgRoot}card-mini.jpg)` }"
                         ></div>
                         <div class="u-result" v-else>
-                            <img :src="item.img" />
-                            <span>{{ item.name }}</span>
+                            <img :src="item ? item.img : `${__appImgRoot}miss.jpg`" />
+                            <span>{{ item ? item.name : "谢谢惠顾" }}</span>
                         </div>
                     </div>
                 </div>
@@ -903,12 +903,12 @@ export default {
         },
         revealBatch() {
             if (this.batchRevealed) return;
+            // 未中奖的空位兜底为「谢谢惠顾」，避免渲染 null.img 报错
+            this.batchPrizes = this.batchPrizes.map((item) => item || this.thanksPrize());
             this.batchRevealed = true;
         },
         claimBatch() {
             this.showBatchScratch = false;
-            this.resultPrizes = this.batchPrizes.filter(Boolean);
-            this.showResult = true;
             this.remainingCount = Math.max(0, this.remainingCount - this.batchPrizes.length);
             this.isDrawing = false;
             this.refreshCards();
