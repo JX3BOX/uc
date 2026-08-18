@@ -347,12 +347,83 @@ export default {
 }
 @media screen and (max-width: @phone) {
     .m-block {
-        margin: 10px 0;
+        margin: 12px 0;
+        padding: 16px;
+
+        p {
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+        img,
+        video,
+        iframe {
+            max-width: 100% !important;
+            height: auto !important;
+        }
     }
 
-    .u-unlock-btn {
-        .pa;
-        right: -10px;
+    .m-cooperation {
+        .u-title {
+            align-items: stretch;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .u-title-text {
+            flex-wrap: wrap;
+            gap: 6px 8px;
+        }
+
+        .u-sign {
+            margin-left: 0;
+        }
+
+        .u-unlock-btn {
+            position: static;
+            width: 100%;
+            min-height: 40px;
+            margin: 0;
+        }
+
+        .m-cooperation-ac {
+            overflow-wrap: anywhere;
+        }
+
+        .m-cooperation-form {
+            h3 {
+                margin: 14px 0 10px;
+                font-size: 14px;
+            }
+
+            .el-alert {
+                margin: 12px 0;
+            }
+
+            .el-form-item {
+                margin-bottom: 18px;
+            }
+
+            .el-form-item__label {
+                padding-bottom: 6px;
+                line-height: 1.5;
+            }
+
+            .el-input,
+            .el-textarea {
+                width: 100%;
+            }
+
+            .u-btns {
+                margin-bottom: 0;
+            }
+
+            .u-submit {
+                width: 100%;
+                min-height: 44px;
+                margin: 0;
+            }
+        }
     }
 }
 </style>

@@ -1,75 +1,114 @@
-.m-index{
-
-    .m-title{
+.m-index {
+    .m-title {
+        .flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
         border-bottom: none;
-        .fz(28px);
+        box-sizing: border-box;
+
+        .m-title-copy {
+            .flex;
+            align-items: baseline;
+            min-width: 0;
+            gap: 20px;
+        }
+
+        .u-heading {
+            flex: none;
+            margin: 0;
+            font-weight: 300;
+            .fz(28px, 1.4);
+        }
+
+        .u-desc {
+            min-width: 0;
+            margin: 0;
+            color: #666;
+            font-style: italic;
+            .fz(14px, 1.5);
+        }
+
+        .u-actions {
+            .flex;
+            flex: none;
+            align-items: center;
+            gap: 8px;
+        }
 
         .u-btn {
-            float: right;
-            .pr;
-            top: 8px;
+            position: static;
+            float: none;
+            gap: 4px;
+            margin: 0;
         }
 
         .u-filter-btn {
-            .mr(8px);
             column-gap: 7px;
         }
     }
-    .u-desc{
-        .fz(14px);
-        font-style: italic;
-        .ml(20px);
-    }
 
-    .u-nav{
+    .u-nav {
         .x;
-        img,svg,i {
+
+        img,
+        svg,
+        i {
             .fz(40px);
             .color(@color);
             .size(40px);
-            .db;.auto(x);
-            fill:@color;
+            .db;
+            .auto(x);
+            fill: @color;
             .mb(10px);
         }
-        span{
+
+        span {
             .fz(18px,2);
             .db;
-            font-weight:300;
-            color:@color;
+            font-weight: 300;
+            color: @color;
         }
-        a{
+
+        a {
             // .size(200px,160px);
             .db;
             // background-color:@bg-light;
             // padding:10px;
             // .r(4px);
             padding:30px 0;
+            transition: 0.1s ease-in;
 
-            transition:0.1s ease-in;
-            &:hover{
-                background-color:@bg-gray;
-                svg{fill:@bg-black;}
-                span{color:@bg-black}
+            &:hover {
+                background-color: @bg-gray;
+
+                svg {
+                    fill: @bg-black;
+                }
+
+                span {
+                    color: @bg-black;
+                }
             }
         }
-        .el-divider__text{
-            color:#999;
+
+        .el-divider__text {
+            color: #999;
             .fz(12px);
         }
-        .disabled{
+
+        .disabled {
             opacity: 0.2;
             cursor: default;
         }
     }
-    .el-card__body{
-        padding:0;
-    }
-    .el-col{
-        .mb(10px);
+
+    .el-card__body {
+        padding: 0;
     }
 
-    .u-btn {
-        gap: 4px;
+    .el-col {
+        .mb(10px);
     }
 }
 
@@ -89,17 +128,76 @@
     }
 }
 
-@media screen and (max-width:@phone){
-    .m-index{
-        .el-col{
-            .w(50%);
-        }
-        .u-nav {
-            img,svg,i{
-                .size(28px);
+@media screen and (max-width: @phone) {
+    .m-index {
+        padding: 16px 12px 24px;
+
+        .m-title {
+            align-items: stretch;
+            flex-direction: column;
+            gap: 12px;
+            padding-bottom: 0;
+            margin-bottom: 14px;
+
+            .m-title-copy {
+                display: block;
             }
-            span{
-                .fz(1em);
+
+            .u-heading {
+                .fz(26px, 1.3);
+            }
+
+            .u-desc {
+                display: block;
+                margin-top: 3px;
+                .fz(13px, 1.5);
+            }
+
+            .u-actions {
+                width: 100%;
+
+                .u-btn {
+                    flex: 1;
+                    justify-content: center;
+                    height: 32px;
+                    min-width: 0;
+                    padding-right: 8px;
+                    padding-left: 8px;
+                }
+            }
+        }
+
+        .el-col {
+            .w(50%);
+            margin-bottom: 4px;
+            padding-right: 4px !important;
+            padding-left: 4px !important;
+        }
+
+        .u-nav {
+            .el-row {
+                margin-right: -4px !important;
+                margin-left: -4px !important;
+            }
+
+            .el-divider {
+                margin: 18px 0 8px;
+            }
+
+            a {
+                padding: 16px 4px;
+                border-radius: 6px;
+            }
+
+            img,
+            svg,
+            i {
+                .size(28px);
+                margin-bottom: 8px;
+            }
+
+            span {
+                .fz(15px, 1.5);
             }
         }
     }

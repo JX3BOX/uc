@@ -8,6 +8,70 @@
 }
 @media screen and (max-width:@phone){
     .m-dashboard-config{
+        .m-config-form {
+            margin-top: 12px;
+
+            .el-form-item {
+                display: block;
+                margin-bottom: 0;
+                padding: 16px 0;
+                border-bottom: 1px dashed #ebeef5;
+            }
+
+            .el-form-item__label {
+                width: 100% !important;
+                height: auto;
+                min-height: 24px;
+                margin-bottom: 8px;
+                padding: 0;
+                line-height: 1.5;
+            }
+
+            .el-form-item__content {
+                width: 100%;
+                min-width: 0;
+                margin-left: 0 !important;
+                line-height: normal;
+            }
+
+            .el-select,
+            .el-input {
+                width: 100%;
+            }
+
+            .el-radio-group {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                width: 100%;
+
+                .el-radio-button,
+                .el-radio-button__inner {
+                    width: 100%;
+                }
+            }
+
+            .el-checkbox-group {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px 16px;
+
+                .el-checkbox {
+                    min-width: 0;
+                    margin-right: 0;
+                }
+            }
+
+            .u-btns {
+                border-bottom: 0;
+                padding-bottom: 0;
+            }
+        }
+
+        .u-publish {
+            width: 100%;
+            min-height: 44px;
+        }
+
         .u-btns .el-form-item__content{
             .ml(0) !important;
             .x;

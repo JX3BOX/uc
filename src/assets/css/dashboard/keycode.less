@@ -140,14 +140,73 @@
 
 @media screen and (max-width: @phone) {
     .m-table, .m-packet-null {
-        margin-top: 40px;
+        margin-top: 12px;
     }
-    .u-title{
+
+    .m-dashboard-keycode .u-title{
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+
         .u-only {
-            top: 60px;
+            flex-shrink: 0;
+            margin-left: 0;
         }
     }
+
+    .m-keycode-tab {
+        .el-tabs__nav-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .el-tabs__nav {
+            display: flex;
+            width: max-content;
+        }
+
+        .el-tabs__content {
+            padding: 12px 15px 15px;
+        }
+
+        .m-table .el-table__body-wrapper,
+        .m-table .el-table__header-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+
+    .m-boxcoin-tip {
+        margin-bottom: 12px;
+    }
+
     .m-credit-pages {
-        overflow: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        width: 100%;
+        box-sizing: border-box;
+        padding-top: 16px;
+        overflow: visible;
+
+        .el-pagination__total,
+        .el-pagination__jump {
+            display: none;
+        }
+
+        .btn-prev,
+        .btn-next,
+        .el-pager li {
+            min-width: 32px;
+            height: 36px;
+            line-height: 36px;
+            margin: 0;
+        }
+
+        .el-pager {
+            display: flex;
+            gap: 0;
+        }
     }
 }

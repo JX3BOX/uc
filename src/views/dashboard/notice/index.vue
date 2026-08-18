@@ -141,8 +141,8 @@ export default {
             }
         }
 
-        img,
-        svg {
+        .u-notice-item img,
+        .u-notice-item svg {
             .size(48px);
         }
     }
@@ -172,17 +172,81 @@ export default {
 @media screen and (max-width: @phone) {
     .m-dashboard-notice {
         .m-dashboard-content-list .m-item {
-            gap: 20px;
+            display: grid;
+            grid-template-columns: 48px minmax(0, 1fr) 40px;
+            grid-template-rows: minmax(20px, auto) minmax(24px, auto);
+            align-items: center;
+            column-gap: 12px;
+            row-gap: 2px;
+            min-width: 0;
+            padding: 16px 0;
         }
 
-        img {
-            min-width: 48px;
+        .u-notice-item img,
+        .u-notice-item svg {
+            .size(40px);
+            min-width: 40px;
         }
+
         .u-notice-item {
-            flex-basis: auto;
-            flex-direction: column;
+            display: contents;
+
+            img,
+            svg {
+                grid-column: 1;
+                grid-row: 1 / 3;
+                align-self: center;
+                justify-self: center;
+            }
+
+            .u-label,
+            .u-status {
+                grid-column: 2;
+                grid-row: 1;
+                align-self: end;
+                width: auto;
+                line-height: 1.5;
+                text-align: left;
+            }
+        }
+
+        .u-notice-box {
+            display: contents;
+        }
+
+        .u-notice-value {
+            grid-column: 2;
+            grid-row: 2;
+            display: flex;
+            width: auto;
+            min-width: 0;
+            align-items: center !important;
+            flex-direction: row !important;
+            gap: 8px;
+        }
+
+        .u-notice-status {
+            margin-left: 0;
+        }
+
+        .u-bind-button,
+        .u-button,
+        .u-bind-btn,
+        .u-unbind-btn {
+            grid-column: 3;
+            grid-row: 1 / 3;
+            align-self: center;
+            justify-self: end;
+            width: 40px;
+            min-width: 40px;
+            height: 40px;
             padding: 0;
-            gap: 10px;
+            border-radius: 50%;
+        }
+
+        .m-qqbot .u-button-label,
+        .m-qqbot .u-unbind-btn span {
+            display: none;
         }
     }
 }

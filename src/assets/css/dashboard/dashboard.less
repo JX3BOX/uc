@@ -84,3 +84,47 @@
         }
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-dashboard-tabs {
+        .el-tabs__header {
+            box-sizing: border-box;
+            margin-bottom: 16px;
+        }
+
+        .el-tabs__nav-wrap {
+            &.is-scrollable {
+                padding: 0 39px;
+            }
+        }
+
+        .el-tabs__item {
+            height: 40px;
+            padding: 0 10px;
+            line-height: 40px;
+
+            &.is-active {
+                font-weight: 600;
+            }
+        }
+
+        .el-tabs__active-bar {
+            height: 2px;
+        }
+
+        .el-tabs__nav-prev,
+        .el-tabs__nav-next {
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 40px;
+            background: transparent;
+            color: #909399;
+            font-size: 14px;
+            line-height: 40px;
+        }
+    }
+}

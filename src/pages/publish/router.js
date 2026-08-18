@@ -1,5 +1,4 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
 import main from "@/pages/publish/main.vue";
 
 // COMMON
@@ -666,20 +665,6 @@ const routes = [
         ],
     },
 ];
-
-if (isMiniProgram() || isApp()) {
-    routes.unshift({
-        path: "/me",
-        component: () => import("@/views/publish/me.vue"),
-        meta: {
-            i18n: {
-                title: "pages.publish.me.title",
-                description: "pages.publish.me.description",
-                keywords: "pages.publish.me.keywords",
-            },
-        },
-    });
-}
 
 const router = createRouter({
     history: createWebHashHistory("/publish/"),

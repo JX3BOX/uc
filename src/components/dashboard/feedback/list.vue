@@ -46,6 +46,7 @@
             class="m-credit-pages m-packet-pages"
             background
             :page-size="per"
+            :pager-count="5"
             :hide-on-single-page="true"
             v-model:current-page="page"
             @current-change="currentChange"
@@ -165,6 +166,50 @@ export default {
     .u-client {
         padding: 3px 8px;
         .r(3px);
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .m-feedback-list {
+        gap: 12px;
+
+        .el-table__header-wrapper,
+        .el-table__body-wrapper {
+            overflow-x: auto;
+        }
+
+        .el-table__header,
+        .el-table__body {
+            min-width: 780px;
+        }
+
+        .el-table .cell {
+            white-space: nowrap;
+        }
+
+        .m-credit-pages {
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            padding: 14px 0 4px;
+            margin-top: 0;
+            overflow: hidden;
+
+            .el-pagination__total,
+            .el-pagination__jump {
+                display: none;
+            }
+
+            .btn-prev,
+            .btn-next,
+            .el-pager li {
+                min-width: 32px;
+                height: 36px;
+                margin: 0 2px;
+                line-height: 36px;
+            }
+        }
     }
 }
 </style>

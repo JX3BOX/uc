@@ -207,6 +207,7 @@
                     <el-pagination
                         class="m-credit-pages m-packet-pages"
                         background
+                        :pager-count="5"
                         :page-size="per"
                         :hide-on-single-page="true"
                         v-model:current-page="page"
@@ -257,6 +258,7 @@
                     <el-pagination
                         class="m-credit-pages m-packet-pages"
                         background
+                        :pager-count="5"
                         :page-size="per"
                         :hide-on-single-page="true"
                         v-model:current-page="page"

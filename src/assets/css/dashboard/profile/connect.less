@@ -27,8 +27,8 @@
         }
     }
 
-    img,
-    svg {
+    .u-profile-item img,
+    .u-profile-item svg {
         .size(48px);
     }
 
@@ -38,8 +38,17 @@
 
     .u-bind-btn {
         i {
+            .size(16px);
             .mr(6px);
+            .fz(16px, 16px);
             vertical-align: -1px;
+        }
+    }
+
+    .u-unbind-btn {
+        .el-icon,
+        .el-icon svg {
+            .size(16px);
         }
     }
 
@@ -56,8 +65,8 @@
 @media screen and (max-width: @phone) {
     .m-profile-connect {
 
-        img,
-        svg {
+        .u-profile-item img,
+        .u-profile-item svg {
             .size(48px);
             .fl;
             .mr(10px);

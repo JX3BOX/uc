@@ -1,26 +1,30 @@
-.m-vip-index{
-    padding:20px;
-    max-width:1280px;
+.m-vip-index {
+    padding: 20px;
+    max-width: 1280px;
     .auto(x);
-    .el-col{
+    .el-col {
         .mb(20px);
     }
 
-    .u-item{
+    .u-item {
         .x;
-        .fz(24px,2);
-        i{
+        .fz(24px, 2);
+
+        i {
             .fz(48px);
             .db;
         }
-        a{
+
+        a {
             .db;
-            padding:40px 0;
-            color:@color;
+            padding: 40px 0;
+            color: @color;
         }
-        font-weight:300;
+
+        font-weight: 300;
     }
 }
+
 .m-vip-index-title {
     .fz(38px, 60px);
     font-weight: 300;
@@ -36,10 +40,76 @@
     padding-bottom: 20px;
     .mb(40px);
 }
-@media screen and (max-width:@phone){
-    .m-vip-index{
-        .el-col{
-            .w(100%);
+
+@media screen and (max-width: @phone) {
+    .m-vip-index-container {
+        margin-top: @header-height;
+        min-height: calc(100vh - @header-height);
+    }
+
+    .m-vip-index {
+        padding: 24px 16px 32px;
+
+        .el-row {
+            margin-right: -6px !important;
+            margin-left: -6px !important;
+        }
+
+        .el-col {
+            flex: 0 0 50%;
+            max-width: 50%;
+            padding-right: 6px !important;
+            padding-left: 6px !important;
+            margin-bottom: 12px;
+        }
+
+        .box-card {
+            height: 100%;
+            border: 1px solid #ebeef5;
+            border-radius: 10px;
+            box-shadow: 0 4px 14px rgba(28, 31, 35, 0.06);
+
+            .el-card__body {
+                height: 100%;
+                padding: 0;
+            }
+        }
+
+        .u-item {
+            height: 100%;
+            .fz(16px, 24px);
+            font-weight: 500;
+
+            a {
+                box-sizing: border-box;
+                min-height: 132px;
+                padding: 24px 12px 20px;
+                border-radius: 10px;
+                color: #3d454d;
+                transition: color 0.2s ease, background-color 0.2s ease;
+
+                &:active {
+                    color: @v4primary;
+                    background-color: fade(@v4primary, 6%);
+                }
+            }
+
+            i {
+                .fz(34px, 42px);
+                margin-bottom: 8px;
+                color: @v4primary;
+            }
+        }
+    }
+
+    .m-vip-index-title {
+        .fz(26px, 38px);
+        padding-bottom: 18px;
+        margin-bottom: 24px;
+
+        span {
+            .fz(14px, 24px);
+            margin-top: 2px;
         }
     }
 }

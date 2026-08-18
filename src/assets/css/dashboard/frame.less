@@ -229,10 +229,61 @@
 @media screen and (max-width: @phone) {
     .m-frame {
         flex-direction: column;
+        margin-top: 16px;
     }
     .m-frame-left,
     .m-frame-right {
         .w(auto);
         min-width: 0;
+    }
+
+    .m-frame-left {
+        height: 360px;
+
+        .u-avatar {
+            width: 160px;
+            height: 160px;
+
+            .u-avatar-frame {
+                width: 224px;
+                height: 224px;
+                left: 80px;
+                margin-left: -112px;
+                margin-top: -112px;
+            }
+        }
+    }
+
+    .m-frame-right {
+        height: 420px;
+        max-height: 60vh;
+        padding: 12px;
+        overflow-y: auto;
+
+        .u-theme .u-frame-list .u-frame-item {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+
+            .u-picbox,
+            .u-pic {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 1;
+                margin: 0;
+            }
+        }
+    }
+
+    .m-dashboard-frame .m-btn {
+        display: flex;
+        gap: 10px;
+
+        .el-button {
+            flex: 1;
+            min-height: 42px;
+            margin: 0;
+            padding: 0 12px;
+        }
     }
 }

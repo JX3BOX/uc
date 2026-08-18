@@ -1,28 +1,33 @@
 <template>
     <div class="m-publish m-index">
-        <h1 class="m-title">
-            <i class="el-icon-edit-outline"></i> {{ $t("publish.nav.workbench") }}<span class="u-desc">{{ $t("publish.home.slogan") }}</span>
-            <el-tooltip :content="$t('publish.home.authorBenefits')" placement="top">
-                <a
-                    href="/dashboard/cooperation"
-                    type="primary"
-                    class="el-button el-tooltip el-button--primary el-button--small u-btn"
+        <header class="m-title">
+            <div class="m-title-copy">
+                <h1 class="u-heading"><i class="el-icon-edit-outline"></i> {{ $t("publish.nav.workbench") }}</h1>
+                <p class="u-desc">{{ $t("publish.home.slogan") }}</p>
+            </div>
+            <div class="u-actions">
+                <el-tooltip :content="$t('publish.home.authorBenefits')" placement="top">
+                    <a
+                        href="/dashboard/cooperation"
+                        type="primary"
+                        class="el-button el-tooltip el-button--primary el-button--small u-btn"
+                        target="_blank"
+                        ><el-icon><Stamp /></el-icon> {{ $t("publish.home.applyAuthor") }}</a
+                    >
+                </el-tooltip>
+                <el-button
+                    v-if="canUseSensitiveWordFilter"
+                    tag="a"
+                    href="/dashboard/filter"
+                    type="warning"
+                    size="small"
+                    class="u-btn u-filter-btn"
                     target="_blank"
-                    ><el-icon><Stamp /></el-icon> {{ $t("publish.home.applyAuthor") }}</a
+                    rel="noopener noreferrer"
+                    ><el-icon><WarningFilled /></el-icon><span>{{ $t("publish.home.sensitiveWordFilter") }}</span></el-button
                 >
-            </el-tooltip>
-            <el-button
-                v-if="canUseSensitiveWordFilter"
-                tag="a"
-                href="/dashboard/filter"
-                type="warning"
-                size="small"
-                class="u-btn u-filter-btn"
-                target="_blank"
-                rel="noopener noreferrer"
-                ><el-icon><WarningFilled /></el-icon><span>{{ $t("publish.home.sensitiveWordFilter") }}</span></el-button
-            >
-        </h1>
+            </div>
+        </header>
         <el-alert type="warning" v-if="!isAuth">
             <template #title>
                 <div class="m-index-warning">

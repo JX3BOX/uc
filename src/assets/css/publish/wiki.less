@@ -94,3 +94,26 @@
         margin-left: 20px;
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-dashboard-wiki {
+        .u-wiki {
+            padding-left: 42px;
+        }
+
+        .u-header {
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .u-content {
+            display: block;
+            margin: 6px 0 2px;
+            line-height: 1.6;
+
+            &::after {
+                display: none;
+            }
+        }
+    }
+}

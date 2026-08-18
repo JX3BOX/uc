@@ -363,11 +363,138 @@
 
 @media screen and (max-width: @phone) {
     .m-dashboard-letter {
-        overflow: auto;
+        width: 100%;
+        height: calc(100vh - 250px);
+        min-height: 520px;
+        margin: 0;
+        overflow: hidden;
+        flex-direction: column;
+    }
+
+    .m-dashboard-letter__left {
+        width: 100%;
+        height: 116px;
+        flex: none;
+        border-right: 0;
+        border-bottom: 1px solid #e9eaec;
+
+        .u-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 36px;
+            padding: 0 12px;
+            line-height: 36px;
+        }
+
+        .u-limit {
+            float: none;
+            padding-right: 0;
+        }
+    }
+
+    .m-letter-contacts {
+        display: flex;
+        height: 80px;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .m-letter-contact {
+        align-items: center;
+        width: 112px;
+        min-width: 112px;
+        height: 80px;
+        padding: 10px 8px;
+        border-right: 1px solid #f0f1f3;
+
+        .u-avatar {
+            width: 36px;
+            height: 36px;
+            margin-right: 7px;
+        }
+
+        .m-user {
+            min-width: 0;
+        }
+
+        .u-user-name,
+        .u-latest-chat {
+            width: auto;
+            max-width: 60px;
+        }
+
+        .u-close {
+            top: 0;
+            right: 0;
+            bottom: auto;
+            left: auto;
+            width: 22px;
+            height: 22px;
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    .u-letter-unread::after {
+        top: 12px;
+        right: 8px;
     }
 
     .m-dashboard-letter__right {
-        min-width: 500px;
-        flex: unset;
+        width: 100%;
+        min-width: 0;
+        min-height: 0;
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .m-letter-box {
+        min-width: 0;
+    }
+
+    .m-letter-list-content {
+        .m-letter-item {
+            padding: 0 10px 12px;
+
+            .u-img {
+                width: 28px;
+                height: 28px;
+            }
+
+            .u-letter-content {
+                max-width: calc(100% - 52px);
+                margin: 0 6px;
+            }
+
+            .u-letter-text {
+                padding: 8px 12px;
+            }
+        }
+    }
+
+    .m-letter-sendbox {
+        height: 148px;
+        padding: 0 12px;
+        border-bottom-left-radius: 4px;
+
+        .m-send-tools {
+            height: 40px;
+        }
+
+        .u-send-content {
+            height: 56px;
+        }
+
+        .u-send-action {
+            height: 44px;
+        }
+
+        &.disabled::after {
+            left: 50%;
+            width: 100%;
+            text-align: center;
+            transform: translate(-50%, -50%);
+        }
     }
 }

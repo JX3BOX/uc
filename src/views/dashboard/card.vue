@@ -120,6 +120,7 @@
                         @current-change="currentChange"
                         class="m-credit-pages"
                         background
+                        :pager-count="5"
                         :page-size="per"
                         :hide-on-single-page="true"
                         v-model:current-page="page"
@@ -216,6 +217,7 @@
                         @current-change="currentChange"
                         class="m-credit-pages"
                         background
+                        :pager-count="5"
                         :page-size="per"
                         :hide-on-single-page="true"
                         v-model:current-page="page"
@@ -337,6 +339,7 @@
                         @current-change="currentChange"
                         class="m-credit-pages"
                         background
+                        :pager-count="5"
                         :page-size="per"
                         :hide-on-single-page="true"
                         v-model:current-page="page"

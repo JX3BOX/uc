@@ -54,6 +54,7 @@
                 <el-pagination
                     class="m-packet-pages"
                     background
+                    :pager-count="5"
                     :page-size="per"
                     :hide-on-single-page="true"
                     v-model:current-page="page"
@@ -105,6 +106,7 @@
                 <el-pagination
                     class="m-packet-pages"
                     background
+                    :pager-count="5"
                     :page-size="per"
                     :hide-on-single-page="true"
                     v-model:current-page="page"

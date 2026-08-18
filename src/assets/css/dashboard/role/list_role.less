@@ -200,8 +200,49 @@
     }
 }
 @media screen and (max-width: @phone) {
+    .m-role-list-filter {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+        padding: 12px 0 16px;
+        margin-bottom: 4px;
+
+        .el-select,
+        .u-name {
+            width: 100% !important;
+            min-width: 0;
+        }
+
+        .el-input-group__prepend {
+            padding: 0 14px;
+        }
+    }
+
     .m-team-rolelist {
         .u-item {
+            min-height: 56px;
+            margin-bottom: 0;
+            padding: 16px 0 16px 72px;
+
+            .u-avatar {
+                top: 16px;
+                width: 56px;
+                height: 56px;
+            }
+
+            .u-title {
+                min-width: 0;
+                padding-top: 0;
+                flex-wrap: wrap;
+            }
+
+            .u-rolename {
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
             .u-unbind {
                 .ps;
                 .mt(10px);
@@ -209,10 +250,12 @@
             .u-meta {
                 display: grid;
                 grid-template-columns: 1fr;
+                margin-top: 3px;
                 span {
                     .flex;
                     align-items: center;
-                    .mb(5px);
+                    min-width: 0;
+                    .mb(3px);
                     &:last-child {
                         .mb(0);
                     }
@@ -225,10 +268,42 @@
             }
             .u-op {
                 .ps;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-top: 8px;
+
+                .u-public {
+                    margin-right: 0;
+                }
+
+                .el-button {
+                    min-height: 36px;
+                }
+
                 .u-btn {
                     .mt(10px);
                 }
             }
+
+            .u-time {
+                margin-top: 4px;
+                line-height: 1.6;
+            }
+        }
+    }
+
+    .m-team-note-dialog {
+        .el-dialog {
+            margin-top: 20vh !important;
+        }
+
+        .el-dialog__body {
+            padding: 20px;
+        }
+
+        .el-dialog__footer {
+            padding: 0 20px 20px;
         }
     }
 }

@@ -513,6 +513,7 @@ export default {
 @media screen and (max-width: @phone) {
     .m-privacy-lover {
         .u-lover-panel {
+            margin-top: 0;
             padding: 16px;
             max-width: 100%;
             border-radius: 18px;

@@ -181,4 +181,46 @@ export default {
         }
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-dashboard-medal {
+        .m-medal-content .el-divider {
+            margin: 20px 0;
+        }
+
+        .u-list {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            padding: 0;
+        }
+
+        .u-item {
+            min-width: 0;
+            padding: 12px 6px;
+            border: 1px solid #ebeef5;
+            border-radius: 8px;
+            background: #fafbfc;
+
+            .u-model-name {
+                width: 100%;
+            }
+
+            .u-medal-time {
+                margin: 6px 0;
+            }
+
+            .el-button {
+                width: 100%;
+                min-height: 34px;
+                padding: 6px;
+            }
+        }
+
+        .u-img {
+            width: 48px;
+            height: 48px;
+        }
+    }
+}
 </style>

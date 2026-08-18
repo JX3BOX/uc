@@ -65,5 +65,4 @@ export default {
 <style lang="less">
 @import "~@/assets/css/dashboard/app.less";
 @import "~@/assets/css/dashboard/dashboard.less";
-@import "~@/assets/css/miniprogram.less";
 </style>

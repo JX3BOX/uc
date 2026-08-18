@@ -160,6 +160,7 @@
                 class="m-credit-pages m-packet-pages"
                 background
                 :page-size="per"
+                :pager-count="5"
                 :hide-on-single-page="true"
                 v-model:current-page="page"
                 @current-change="currentChange"
@@ -507,7 +508,28 @@ export default {
 }
 @media screen and (max-width: @phone) {
     .m-feedback-tool {
-        overflow: auto;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        overflow: visible;
+
+        .m-feedback-tool__item {
+            min-width: 0;
+            margin: 0;
+        }
+
+        .el-select,
+        .el-date-editor {
+            width: 100% !important;
+        }
+
+        .u-only-check {
+            position: static;
+            display: flex;
+            align-items: center;
+            min-height: 40px;
+            margin: 0;
+        }
     }
 }
 </style>

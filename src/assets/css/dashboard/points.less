@@ -60,3 +60,27 @@
 		justify-content: center;
 	}
 }
+
+@media screen and (max-width: @phone) {
+    .m-points {
+        .m-balance {
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 20px;
+
+            .u-label,
+            .u-num {
+                margin-right: 0;
+            }
+
+            .u-btn {
+                min-height: 36px;
+                margin-left: auto;
+            }
+        }
+
+        .m-tabs .el-tabs__content {
+            padding: 12px 15px 15px;
+        }
+    }
+}

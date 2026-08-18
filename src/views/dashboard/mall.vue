@@ -5,6 +5,7 @@
                 <!-- 表单 -->
                 <ContentSkeleton v-if="loading" variant="table" :rows="pageSize" :columns="6" />
                 <div class="m-mall-list" v-else-if="list && list.length">
+                    <div class="m-order-table-scroll">
                     <table>
                         <thead>
                             <tr>
@@ -120,10 +121,12 @@
                             </tr>
                         </tbody>
                     </table>
+                    </div>
                     <!-- 分页 -->
                     <el-pagination
                         class="m-mall-pages"
                         background
+                        :pager-count="5"
                         layout="total, prev, pager, next,jumper"
                         :page-size="pageSize"
                         :total="total"
@@ -354,8 +357,14 @@ export default {
 
 @media screen and (max-width: @phone) {
     .m-mall-list {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+        overflow: visible;
+
+        .m-order-table-scroll {
+            overflow-x: auto;
+            border: 1px solid #ebeef5;
+            border-radius: 4px;
+            -webkit-overflow-scrolling: touch;
+        }
 
         table {
             min-width: 980px;
@@ -364,6 +373,49 @@ export default {
         th,
         td {
             white-space: nowrap;
+        }
+
+        th:first-child,
+        td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 2;
+            background: #fff;
+        }
+
+        th:first-child {
+            z-index: 3;
+            background: #f5f7fa;
+        }
+
+        .m-mall-pages {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            width: 100%;
+            box-sizing: border-box;
+            padding-top: 16px;
+            overflow: visible;
+
+            :deep(.el-pagination__total),
+            :deep(.el-pagination__jump) {
+                display: none;
+            }
+
+            :deep(.btn-prev),
+            :deep(.btn-next),
+            :deep(.el-pager li) {
+                min-width: 32px;
+                height: 36px;
+                line-height: 36px;
+                margin: 0;
+            }
+
+            :deep(.el-pager) {
+                display: flex;
+                gap: 0;
+            }
         }
     }
 }

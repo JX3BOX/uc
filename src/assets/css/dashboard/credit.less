@@ -69,3 +69,34 @@
         .fz(12px);
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-credit-total {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px 10px;
+        font-size: 20px;
+        line-height: 1.6;
+
+        > b {
+            margin-right: 0;
+        }
+
+        .u-types {
+            display: flex;
+            flex: 1 1 100%;
+            flex-wrap: wrap;
+            gap: 4px 14px;
+        }
+
+        .u-btn {
+            min-height: 36px;
+            margin: 0;
+        }
+    }
+
+    .m-credit-pull {
+        padding: 14px;
+    }
+}

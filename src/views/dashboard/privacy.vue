@@ -1,5 +1,8 @@
 <template>
-    <div class="m-dashboard m-dashboard-profile m-dashboard-work m-dashboard-whitelist m-whitelist">
+    <div
+        class="m-dashboard m-dashboard-profile m-dashboard-work m-dashboard-whitelist m-whitelist"
+        :class="{ 'is-primary-only': active === 'myfans' || isRelationNet }"
+    >
         <div class="m-whitelist-primary">
             <h2 class="m-whitelist-title u-title"><i class="el-icon-ship"></i> {{ $t("dashboard.privacy.title") }}</h2>
 

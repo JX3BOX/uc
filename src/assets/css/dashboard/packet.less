@@ -42,6 +42,47 @@
             .mb(10px);
         }
     }
+
+    .m-credit-pages,
+    .m-packet-pages {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 16px 0 0;
+        overflow: visible !important;
+
+        .el-pagination__total,
+        .el-pagination__jump {
+            display: none;
+        }
+
+        .btn-prev,
+        .btn-next,
+        .el-pager li {
+            min-width: 32px;
+            height: 36px;
+            line-height: 36px;
+            margin: 0;
+        }
+
+        .el-pager {
+            display: flex;
+            gap: 0;
+        }
+    }
+
+    .m-packet-table {
+        border-radius: 4px;
+        -webkit-overflow-scrolling: touch;
+
+        td,
+        th {
+            padding: 12px 10px;
+        }
+    }
 }
 
 .m-packet-table{

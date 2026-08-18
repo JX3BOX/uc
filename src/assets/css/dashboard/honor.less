@@ -293,6 +293,8 @@
 @media screen and (max-width: @phone) {
     .m-honor {
         flex-direction: column;
+        gap: 16px;
+        margin-top: 16px;
         .m-honor-left,
         .m-honor-right {
             .min-width(0);
@@ -301,17 +303,22 @@
             .h(auto);
             .u-header-info{
                 flex-direction: column;
-                gap: 20px;
+                gap: 12px;
                 .h(auto);
-                padding: 20px 0;
+                padding: 16px 0;
                 .u-user-summary {
                     flex-direction: column;
-                    gap: 20px;
+                    gap: 12px;
                 }
             }
             .u-author-info{
                 .w(auto);
                 text-align: center;
+
+                .u-name {
+                    font-size: 20px;
+                }
+
                 .u-name,
                 .u-tips {
                     justify-content: center;
@@ -323,10 +330,32 @@
             }
         }
         .m-honor-right {
-            .mt(20px);
+            height: 420px;
+            max-height: 60vh;
+            margin-top: 0;
+            padding: 12px;
+            overflow-y: auto;
+
             .u-honor-item {
                 .flex(x);
+
+                .u-picbox {
+                    width: 100%;
+                    margin-right: 0;
+                }
             }
+        }
+    }
+
+    .m-dashboard-honor .m-btn {
+        display: flex;
+        gap: 10px;
+
+        .el-button {
+            flex: 1;
+            min-height: 42px;
+            margin: 0;
+            padding: 0 12px;
         }
     }
 }

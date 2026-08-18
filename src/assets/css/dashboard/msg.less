@@ -75,7 +75,91 @@
 }
 
 @media screen and (max-width: @phone) {
+    .m-dashboard-msg {
+        min-width: 0;
+    }
+
     .m-dashboard-msg-header {
-        flex-wrap: wrap;
+        align-items: stretch;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 10px;
+
+        .m-dashboard-work-search,
+        .u-read-all {
+            width: 100%;
+            margin-bottom: 0;
+        }
+
+        .u-read-all {
+            height: 40px;
+        }
+    }
+
+    .m-dashboard-box-list {
+        li {
+            padding: 12px;
+        }
+
+        .u-primary {
+            min-width: 0;
+        }
+
+        .u-content {
+            display: block;
+            line-height: 1.7;
+            word-break: break-word;
+        }
+
+        .u-msg-detail,
+        .u-msg-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            margin-left: 6px;
+            line-height: 1.7;
+            white-space: nowrap;
+        }
+
+        .u-time {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .u-action {
+            position: static;
+            display: flex;
+            width: 100%;
+            margin-top: 10px;
+
+            .el-button {
+                flex: 1;
+                height: 36px;
+                margin: 0;
+            }
+        }
+    }
+
+    .m-dashboard-box-pages {
+        display: flex;
+        justify-content: center;
+        overflow-x: hidden;
+
+        :deep(.el-pagination__total),
+        :deep(.el-pagination__jump) {
+            display: none;
+        }
+
+        :deep(.btn-prev),
+        :deep(.btn-next),
+        :deep(.el-pager li) {
+            width: 28px;
+            min-width: 28px;
+            height: 28px;
+            margin: 0 1px;
+            line-height: 28px;
+        }
     }
 }

@@ -137,6 +137,24 @@ export default {
     }
 }
 @media screen and (max-width: @phone) {
+    .m-feedback-index {
+        .m-feedback-box {
+            width: 100%;
+
+            :deep(.el-tabs__nav-wrap) {
+                padding: 0 2px;
+            }
+
+            :deep(.el-tabs__item) {
+                padding: 0 14px;
+            }
+
+            .u-only-check {
+                position: static;
+            }
+        }
+    }
+
     .m-feedback-aside {
         display: none;
     }

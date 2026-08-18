@@ -1,7 +1,7 @@
 <template>
-    <div >
+    <div>
         <CommonHeader></CommonHeader>
-        <div class="m-vip-container">
+        <div class="m-vip-container m-vip-index-container">
             <div class="m-vip-index">
                 <!-- <el-alert title="Nothing yet" type="warning" show-icon> </el-alert> -->
                 <h1 class="m-vip-index-title">{{ $t("vip.home.title") }}<span>{{ $t("vip.home.subtitle") }}</span></h1>

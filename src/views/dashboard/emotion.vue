@@ -342,4 +342,56 @@ export default {
         }
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-dashboard-emotion {
+        .m-emotion-content-preview {
+            margin-bottom: 24px;
+            padding: 12px;
+
+            .m-title {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 2px;
+            }
+        }
+
+        .m-emotion-list {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .m-emotion-item {
+            width: 100%;
+            min-width: 0;
+            min-height: 116px;
+            padding: 10px 6px 6px;
+
+            .u-name {
+                width: 100%;
+                overflow: hidden;
+                text-align: center;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+
+        .m-actions {
+            align-items: stretch;
+            flex-direction: column;
+            margin-bottom: 28px;
+
+            .el-button {
+                width: 100%;
+                min-height: 42px;
+                padding: 0 12px;
+            }
+        }
+
+        .el-divider {
+            margin: 24px 0;
+        }
+    }
+}
 </style>

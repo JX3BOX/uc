@@ -1,8 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { isMiniProgram, isApp } from "@jx3box/jx3box-common/js/utils";
 import { searchUser } from "@/service/author/cms";
 
-const isMini = isMiniProgram() || isApp();
 const isNumericId = (value) => /^\d+$/.test(String(value || ""));
 
 const resolveAuthorNickname = async (to) => {
@@ -28,7 +26,7 @@ const routes = [
     {
         path: "/:id",
         name: "index",
-        component: isMini ? () => import("@/views/author/mobile/Index.vue") : () => import("@/views/author/Index.vue"),
+        component: () => import("@/views/author/Index.vue"),
         beforeEnter: resolveAuthorNickname,
         meta: {
             i18n: {

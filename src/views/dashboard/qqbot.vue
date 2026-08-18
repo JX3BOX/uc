@@ -12,7 +12,7 @@
                 </el-tag>
             </div>
             <el-button type="primary" class="u-bind-btn" @click="bind" size="large" v-if="!checkStatus">
-                <i class="el-icon-connection"></i>{{ $t("dashboard.common.bindNow") }}
+                <i class="el-icon-connection"></i><span class="u-button-label">{{ $t("dashboard.common.bindNow") }}</span>
             </el-button>
             <el-button v-else class="u-unbind-btn" icon="Connection" @click="unbind" size="large" type="info">
                 {{ $t("dashboard.common.unbind") }}

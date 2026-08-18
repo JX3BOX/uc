@@ -201,3 +201,132 @@
         }
     }
 }
+
+@media screen and (max-width: @phone) {
+    .v-bind-role2 {
+        padding-bottom: 40px;
+
+        > .u-title {
+            display: flex;
+            align-items: center;
+            min-height: 40px;
+            padding-right: 96px;
+
+            .u-back {
+                top: 50%;
+                bottom: auto;
+                transform: translateY(-50%);
+            }
+        }
+
+        .m-steps {
+            width: 100%;
+            margin: 24px auto 0;
+        }
+
+        .m-step,
+        .is-2 {
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .u-step-head {
+            width: 100%;
+            text-align: center;
+        }
+
+        .u-step-img {
+            display: block;
+            width: 180px;
+            min-width: 0;
+            max-width: 55vw;
+            height: auto;
+            margin: 0 auto;
+        }
+
+        .u-step-body {
+            width: 100%;
+            min-width: 0;
+            padding: 18px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.8;
+            text-align: left;
+            overflow-wrap: anywhere;
+
+            img,
+            video,
+            iframe {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+        }
+
+        .u-line1,
+        .u-line2 {
+            display: none;
+        }
+
+        .u-notice {
+            font-size: 18px;
+        }
+
+        .u-token {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 16px 12px;
+            font-size: 16px;
+            line-height: 1.5;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .u-subtitle {
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0 0;
+            font-size: 14px;
+
+            .el-button {
+                min-height: 40px;
+                flex-shrink: 0;
+            }
+        }
+
+        .u-roles {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px 12px;
+            margin: 20px 0 0;
+        }
+
+        .u-role {
+            min-width: 0;
+        }
+
+        .u-avatar {
+            width: 56px;
+            height: 56px;
+        }
+
+        .u-name {
+            width: 100%;
+            margin-top: 8px;
+            overflow: hidden;
+            text-align: center;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .is-default::after {
+            right: 0;
+            padding: 2px 6px;
+        }
+
+        .m-bind-login {
+            margin: 32px auto;
+        }
+    }
+}

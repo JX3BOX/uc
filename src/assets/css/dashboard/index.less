@@ -215,25 +215,41 @@
 @media screen and (max-width: @phone) {
     .m-dashboard-index {
         .m-basicinfo {
-            .flex;
+            display: grid;
+            grid-template-columns: auto minmax(0, 1fr);
+            align-items: start;
+            gap: 14px;
+            padding: 16px 0 18px;
+
             .u-progress {
                 .none;
             }
             .u-avatar {
-                zoom: 0.6;
-                .mr(50px);
+                float: none;
+                margin: 0 38px 0 4px;
+                zoom: 0.62;
+            }
+            .u-info {
+                min-width: 0;
             }
             * {
                 .fz(13px);
             }
             .u-name {
-                padding-top: 0 !important;
+                min-width: 0;
+                padding-top: 4px !important;
+                margin-bottom: 8px;
+                flex-wrap: wrap;
             }
             .u-name-txt {
+                display: block;
+                max-width: 100%;
+                overflow: hidden;
                 font-size: 20px !important;
                 .bold;
                 .pr;
                 white-space: nowrap;
+                text-overflow: ellipsis;
             }
             .u-expire {
                 .none;
@@ -241,14 +257,34 @@
             .u-name-meta {
                 top: 0;
                 align-items: center;
+                padding-bottom: 0;
             }
             .u-identity {
-                span {
-                    .db;
+                padding: 3px 0;
+
+                > span {
+                    margin-right: 6px;
                 }
-                .u-group {
+
+                > .u-group {
+                    display: inline-flex;
+                    align-items: center;
+                }
+
+                > .u-group:last-child {
                     .none;
                 }
+            }
+
+            .m-level {
+                display: flex;
+            }
+
+            .u-medals {
+                max-width: 100%;
+                margin-top: 8px;
+                overflow-x: auto;
+                white-space: nowrap;
             }
 
             .u-edit-name {
@@ -271,11 +307,33 @@
             border: none;
             border-bottom: 1px solid #eee;
             background: none;
-            padding: 10px 0;
+            padding: 14px 0 18px;
             .mt(0);
 
+            .el-row {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+                margin: 0 !important;
+            }
+
             .el-col {
-                .w(25%);
+                width: 100%;
+                max-width: none;
+                padding: 0 !important;
+            }
+
+            .u-coin,
+            .u-dot,
+            .u-packet,
+            .u-cny {
+                box-sizing: border-box;
+                min-height: 90px;
+                padding: 12px;
+                text-align: left;
+                background: @bg-light;
+                border: 1px solid @border-hr;
+                .r(6px);
             }
 
             .u-credit-op {
@@ -285,9 +343,17 @@
             .u-credit-value {
                 .fz(1rem);
             }
-        }
-        .u-time {
-            .none;
+
+            .u-credit-name {
+                color: #606266;
+                line-height: 24px;
+            }
+
+            .u-credit-value {
+                margin-top: 6px;
+                font-size: 20px;
+                line-height: 28px;
+            }
         }
     }
 }
@@ -388,5 +454,73 @@
         padding: 20px 0;
         .fz(12px,2);
         color: #888;
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .m-index-asset-logs {
+        margin-top: 16px;
+
+        .u-title {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px 12px;
+        }
+
+        .u-dates {
+            position: static;
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            line-height: 28px;
+
+            .el-radio__label {
+                padding: 0 5px;
+            }
+
+            .el-radio:after {
+                margin: 0 2px;
+            }
+        }
+
+        .u-list {
+            padding: 0;
+        }
+
+        .u-item {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            padding: 10px 4px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .u-div {
+            display: none;
+        }
+
+        .u-boxcoin,
+        .u-order,
+        .u-redpack {
+            flex: 1 1 100%;
+            padding-left: 20px;
+        }
+
+        .u-boxcoin {
+            .u-boxcoin-type {
+                margin-left: 0;
+            }
+        }
+
+        .u-time {
+            display: block;
+            flex: 1 1 100%;
+            float: none;
+            margin: 2px 0 0 20px;
+        }
     }
 }

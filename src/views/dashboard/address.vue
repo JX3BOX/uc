@@ -2,44 +2,73 @@
     <uc>
         <div class="m-page-address">
             <!-- 显示地址 -->
-            <el-button type="primary" icon="Plus" @click="add">{{ $t("dashboard.address.add") }}</el-button>
+            <el-button type="primary" icon="Plus" size="large" class="u-add-address" @click="add">{{ $t("dashboard.address.add") }}</el-button>
 
             <div class="m-content">
                 <ContentSkeleton v-if="loading" variant="table" :rows="5" :columns="5" />
-                <el-table v-else :data="list">
-                    <el-table-column prop="contact_name" :label="$t('dashboard.common.name')" width="180"> </el-table-column>
-                    <el-table-column prop="contact_phone" :label="$t('dashboard.common.phone')" width="180"> </el-table-column>
-                    <el-table-column :label="$t('dashboard.address.default')" width="180">
-                        <template #default="scope">
-                            <el-switch v-model="scope.row.is_default" @change="change(scope.row)"> </el-switch>
-                        </template>
-                    </el-table-column>
-                    <el-table-column :label="$t('dashboard.common.address')">
-                        <template #default="scope">
-                            {{ scope.row.province }}{{ scope.row.city }}{{ scope.row.area }}{{ scope.row.address }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column :label="$t('dashboard.common.actions')" width="180">
-                        <template #default="scope">
+                <template v-else>
+                    <el-table class="m-address-table" :data="list">
+                        <el-table-column prop="contact_name" :label="$t('dashboard.common.name')" width="180"> </el-table-column>
+                        <el-table-column prop="contact_phone" :label="$t('dashboard.common.phone')" width="180"> </el-table-column>
+                        <el-table-column :label="$t('dashboard.address.default')" width="180">
+                            <template #default="scope">
+                                <el-switch v-model="scope.row.is_default" @change="change(scope.row)"> </el-switch>
+                            </template>
+                        </el-table-column>
+                        <el-table-column :label="$t('dashboard.common.address')">
+                            <template #default="scope">
+                                {{ scope.row.province }}{{ scope.row.city }}{{ scope.row.area }}{{ scope.row.address }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column :label="$t('dashboard.common.actions')" width="180">
+                            <template #default="scope">
+                                <div class="m-actions">
+                                    <el-button circle @click="edit(scope.row)" icon="Edit"></el-button>
+                                    <el-popconfirm
+                                        :confirm-button-text="$t('dashboard.common.confirm')"
+                                        :cancel-button-text="$t('dashboard.common.cancel')"
+                                        icon="InfoFilled"
+                                        :title="$t('dashboard.common.deleteConfirm')"
+                                        @confirm="del(scope.row.id)"
+                                    >
+                                        <template #reference>
+                                            <el-button circle icon="Delete"></el-button>
+                                        </template>
+                                    </el-popconfirm>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+
+                    <ul class="m-address-cards" v-if="list.length">
+                        <li class="m-address-card" v-for="item in list" :key="item.id">
+                            <div class="m-address-card__header">
+                                <strong>{{ item.contact_name }}</strong>
+                                <label class="u-default">
+                                    <span>{{ $t("dashboard.address.default") }}</span>
+                                    <el-switch v-model="item.is_default" @change="change(item)"></el-switch>
+                                </label>
+                            </div>
+                            <div class="u-phone"><i class="el-icon-phone-outline"></i>{{ item.contact_phone }}</div>
+                            <div class="u-address"><i class="el-icon-location-outline"></i>{{ item.province }}{{ item.city }}{{ item.area }}{{ item.address }}</div>
                             <div class="m-actions">
-                                <!--编辑-->
-                                <el-button circle @click="edit(scope.row)" icon="Edit"></el-button>
-                                <!--删除-->
+                                <el-button @click="edit(item)" icon="Edit">{{ $t("dashboard.common.edit") }}</el-button>
                                 <el-popconfirm
                                     :confirm-button-text="$t('dashboard.common.confirm')"
                                     :cancel-button-text="$t('dashboard.common.cancel')"
                                     icon="InfoFilled"
                                     :title="$t('dashboard.common.deleteConfirm')"
-                                    @confirm="del(scope.row.id)"
+                                    @confirm="del(item.id)"
                                 >
                                     <template #reference>
-                                        <el-button circle icon="Delete"></el-button>
+                                        <el-button icon="Delete">{{ $t("dashboard.common.delete") }}</el-button>
                                     </template>
                                 </el-popconfirm>
                             </div>
-                        </template>
-                    </el-table-column>
-                </el-table>
+                        </li>
+                    </ul>
+                    <el-empty v-else class="m-address-empty" :description="$t('dashboard.common.noItems')"></el-empty>
+                </template>
             </div>
             <!-- 地址表单 -->
             <el-dialog

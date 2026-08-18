@@ -871,3 +871,85 @@
 
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-dashboard-theme {
+        .m-theme-box {
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .m-theme-left {
+            .u-top {
+                height: auto;
+                min-height: 0;
+                padding: 10px;
+
+                .u-scene-tabs {
+                    justify-content: flex-start;
+                    flex-wrap: nowrap;
+                    padding: 0;
+                    overflow-x: auto;
+                }
+
+                .u-scene-item {
+                    padding: 8px;
+                }
+
+                .u-scene-item .m-scene-stage {
+                    height: 320px;
+                    min-height: 240px;
+                    padding: 10px;
+                }
+            }
+
+            .u-bottom {
+                justify-content: flex-start;
+                gap: 4px;
+                min-height: 0;
+                padding: 10px 8px;
+                overflow-x: auto;
+
+                .u-type-box {
+                    flex: 0 0 72px;
+                }
+            }
+        }
+
+        .m-theme-right {
+            height: 560px;
+            max-height: 65vh;
+            padding: 12px;
+            overflow-y: auto;
+
+            .u-skin-search {
+                position: sticky;
+                top: 0;
+                padding: 0 0 12px;
+                margin: 0;
+                background: #fff;
+
+                &::before {
+                    display: none;
+                }
+            }
+
+            .u-theme .u-decoration-list .u-decoration-item {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 10px;
+            }
+        }
+
+        .u-btn {
+            display: flex;
+            gap: 10px;
+
+            .el-button {
+                flex: 1;
+                min-height: 42px;
+                margin: 0;
+                padding: 0 12px;
+            }
+        }
+    }
+}

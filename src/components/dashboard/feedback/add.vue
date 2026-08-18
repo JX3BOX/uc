@@ -403,21 +403,83 @@ export default {
 
 @media screen and (max-width: @phone) {
     .m-add-feedback {
+        padding-bottom: 16px;
+
         .type-box {
             .el-form-item {
-                margin-bottom: 10px;
+                display: block;
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 16px;
             }
         }
+
+        :deep(.el-form-item__label) {
+            display: block;
+            width: 100%;
+            height: auto;
+            padding: 0 0 6px;
+            line-height: 24px;
+            text-align: left;
+        }
+
+        :deep(.el-form-item__content) {
+            display: block;
+            margin-left: 0 !important;
+            line-height: normal;
+        }
+
+        :deep(.el-select),
+        :deep(.el-input),
+        :deep(.el-textarea) {
+            width: 100% !important;
+        }
+
+        :deep(.el-input__wrapper) {
+            min-height: 42px;
+        }
+
+        :deep(.el-textarea__inner) {
+            min-height: 220px !important;
+            padding: 12px;
+        }
+
         .m-feedback-actions {
             .u-upload {
-                .el-upload--picture-card,
-                .el-upload-list__item {
-                    height: 64px;
-                    width: 64px;
-                    line-height: 64px;
+                :deep(.el-upload-list--picture-card) {
+                    display: grid;
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                    gap: 10px;
+                    width: 100%;
+                }
+
+                :deep(.el-upload--picture-card) {
+                    grid-column: 1 / -1;
+                    width: 100%;
+                    height: 116px;
+                    line-height: 116px;
+                }
+
+                :deep(.el-upload-list__item) {
+                    width: 100%;
+                    height: auto;
+                    margin: 0;
+                    aspect-ratio: 1;
                 }
             }
         }
+    }
+
+    .m-feedback-visible,
+    .m-feedback-btn {
+        justify-content: flex-start;
+        margin-top: 12px;
+    }
+
+    .m-feedback-btn :deep(.el-button) {
+        width: 100%;
+        min-height: 44px;
+        margin: 0;
     }
 }
 </style>
