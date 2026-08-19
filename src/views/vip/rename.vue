@@ -88,7 +88,7 @@
                 </result>
             </div>
         </div>
-        <div class="m-vip-container m-rename-page" v-else>
+        <div class="m-vip-container m-rename-page m-rename-login-required" v-else>
             <el-alert :title="$t('vip.common.loginRequired')" type="error" show-icon> </el-alert>
         </div>
         <CommonFooter></CommonFooter>

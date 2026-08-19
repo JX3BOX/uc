@@ -545,6 +545,42 @@ export default {
         .pt(120px);
     }
 }
+@media screen and (max-width: @phone) {
+    .m-main {
+        min-height: calc(100vh - @header-height);
+        min-height: calc(100dvh - @header-height);
+        padding: 24px 16px 32px;
+        box-sizing: border-box;
+        overflow-x: hidden;
+
+        .u-title {
+            .fz(22px, 30px);
+        }
+
+        .u-time {
+            .fz(13px, 20px);
+            margin-top: 6px;
+        }
+
+        .u-img {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 18px;
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.12);
+        }
+
+        .u-btn {
+            width: 100%;
+            max-width: 240px;
+            height: 44px;
+            margin-top: 28px;
+        }
+
+        .m-cert-empty {
+            padding-top: 72px;
+        }
+    }
+}
 @media print {
     .c-header {
         .none();

@@ -288,8 +288,10 @@ export default {
 </script>
 
 <style lang="less">
-.m-main {
+.m-main.m-index-popup {
     height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
     background-color: #24292e;
 }
 @import "~@/assets/css/author/pop.less";

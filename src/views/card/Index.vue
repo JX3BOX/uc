@@ -27,3 +27,30 @@ export default {
     },
 };
 </script>
+
+<style lang="less">
+.p-card {
+    width: 100%;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+@media screen and (max-width: @phone) {
+    html,
+    body,
+    #app,
+    .p-card {
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .p-card .m-index-popup {
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+    }
+}
+</style>

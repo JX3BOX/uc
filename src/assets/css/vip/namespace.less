@@ -175,15 +175,29 @@
 
 @media screen and (max-width: @phone) {
     .m-namespace-page.m-vip-container {
-        padding: 0;
-        background: none;
+        padding: 12px;
+        background: #f7f9fb;
+        min-height: calc(100vh - @header-height);
     }
 
     .m-namespace {
-        padding: 20px;
-        box-shadow: none;
-        border-radius: 0;
+        padding: 22px 18px 28px;
+        border: 1px solid #eef1f4;
+        border-radius: 10px;
+        box-shadow: 0 4px 16px #24292e0a;
         background: #fff;
+
+        .m-namespace-title {
+            margin-bottom: 22px;
+
+            span {
+                .fz(28px, 40px);
+            }
+
+            em {
+                .fz(15px, 26px);
+            }
+        }
     }
 
     .m-namespace-main {
@@ -194,8 +208,9 @@
         .r(8px);
         align-items: flex-start;
         flex-direction: column;
-        gap: 18px;
-        padding: 18px;
+        gap: 16px;
+        padding: 16px;
+        border: 1px solid #eef1f4;
         background: #f8fafc;
     }
 
@@ -217,6 +232,7 @@
 
         .el-button {
             .w(100%);
+            height: 44px;
         }
 
         > div {
@@ -224,7 +240,14 @@
         }
     }
 
-    .m-namespace-guide .u-register-link {
-        .w(100%);
+    .m-namespace-guide {
+        h3 {
+            .fz(17px, 24px);
+        }
+
+        .u-register-link {
+            .w(100%);
+            .lh(44px);
+        }
     }
 }

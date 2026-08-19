@@ -211,15 +211,29 @@
 
 @media screen and (max-width: @phone) {
     .m-rename-page.m-vip-container {
-        padding: 0;
-        background: none;
+        padding: 12px;
+        background: #f7f9fb;
+        min-height: calc(100vh - @header-height);
     }
 
     .m-vip-rename {
-        padding: 20px;
-        box-shadow: none;
-        border-radius: 0;
+        padding: 22px 18px 28px;
+        border: 1px solid #eef1f4;
+        border-radius: 10px;
+        box-shadow: 0 4px 16px #24292e0a;
         background: #fff;
+
+        .m-vip-rename-title {
+            margin-bottom: 22px;
+
+            span {
+                .fz(28px, 40px);
+            }
+
+            em {
+                .fz(15px, 26px);
+            }
+        }
 
         .el-form-item__label {
             color: #888;
@@ -237,7 +251,11 @@
 
     .m-rename-panel {
         .r(8px);
-        padding: 18px;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+        border: 1px solid #eef1f4;
         background: #f8fafc;
     }
 
@@ -246,9 +264,11 @@
         flex-direction: column;
         gap: 12px;
         flex: none;
+        width: 100%;
 
         .el-button {
             .w(100%);
+            height: 44px;
         }
 
         > div {
@@ -268,5 +288,24 @@
     .m-vip-rename-form .u-submit,
     .m-vip-rename-form .u-btns .el-button {
         .w(100%);
+    }
+
+    .m-vip-rename-form {
+        .el-input__wrapper {
+            min-height: 44px;
+        }
+
+        .el-alert {
+            line-height: 20px;
+        }
+    }
+
+    .m-rename-login-required.m-vip-container {
+        padding: 16px;
+
+        .el-alert {
+            border-radius: 8px;
+            box-shadow: 0 4px 16px #24292e0a;
+        }
     }
 }

@@ -706,14 +706,136 @@ export default {
     }
 }
 @media screen and (max-width: @phone) {
-    .Anniversary .m-click {
-        .mr(-150px);
-        top: calc(50% + 200px);
-        .size(300px);
-        .u-circle {
-            .fz(60px,300px);
-            .size(300px);
+    .Anniversary {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+
+        .m-card {
+            top: 50%;
+            left: 50%;
+            width: calc(100% - 32px);
+            max-width: 520px;
+            height: auto;
+            margin: 0;
+            transform: translate(-50%, -50%);
+
+            > img:first-child {
+                display: block;
+                width: 100%;
+                height: auto;
+            }
+
+            .u-button {
+                right: auto;
+                bottom: 10%;
+                left: 50%;
+                width: 58%;
+                max-width: 220px;
+                height: auto;
+                transform: translateX(-50%);
+                touch-action: manipulation;
+
+                &:hover {
+                    transform: translateX(-50%);
+                }
+            }
+
+            .u-close {
+                top: 8px;
+                right: 8px;
+                width: 38px;
+                height: 38px;
+            }
         }
+
+        .m-star-box {
+            height: 100%;
+            padding-top: 72px;
+
+            .m-title {
+                padding: 20px 12px 16px;
+
+                .u-img-title,
+                .u-img-title.light {
+                    width: min(84vw, 420px);
+                    height: auto;
+                }
+
+                .u-count {
+                    .fz(24px, 44px);
+                }
+            }
+
+            .m-heart {
+                width: 750px;
+                height: 560px;
+                margin: 0 auto;
+                zoom: 0.46;
+            }
+        }
+
+        .m-click {
+            top: auto;
+            right: 50%;
+            bottom: 24px;
+            width: 112px;
+            height: 112px;
+            margin-right: -56px;
+
+            .u-circle {
+                width: 112px;
+                height: 112px;
+                font-size: 18px;
+                line-height: 112px;
+            }
+        }
+    }
+
+    .Anniversary.nextStep {
+        overflow-y: auto;
+
+        .m-star-box {
+            padding: 92px 0 180px;
+            box-sizing: border-box;
+        }
+
+        .u-title {
+            display: flex;
+            width: calc(100% - 32px);
+            height: auto;
+            min-height: 48px;
+            margin: 0 16px 10px;
+            padding: 10px 14px;
+            box-sizing: border-box;
+            border-width: 1px;
+            border-radius: 8px;
+            align-items: center;
+            font-size: 14px;
+            line-height: 20px;
+            white-space: normal;
+
+            &::before {
+                width: 24px;
+                height: 24px;
+                margin-right: 8px;
+                flex-shrink: 0;
+            }
+        }
+
+        .m-anniversary .u-button {
+            right: 16px;
+            bottom: 16px;
+            left: 16px;
+            width: calc(100% - 32px);
+            height: auto;
+        }
+    }
+}
+
+@media screen and (max-width: 380px) {
+    .Anniversary .m-star-box .m-heart {
+        zoom: 0.42;
     }
 }
 </style>
