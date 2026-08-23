@@ -109,12 +109,7 @@
                 >
             </div>
 
-            <div class="m-publish-filter-tip">
-                <el-icon class="u-filter-icon"><Search /></el-icon>
-                <div class="u-filter-content">
-                    <a href="/dashboard/filter" target="_blank" rel="noopener noreferrer">{{ $t("publish.form.filterTest") }} →</a>
-                </div>
-            </div>
+            <publish-extend-tools></publish-extend-tools>
 
             <!-- 按钮 -->
             <div class="m-publish-buttons">
@@ -163,6 +158,7 @@ import publish_at_authors from "@/components/publish/publish_at_authors.vue";
 import publish_guide from "@/components/publish/publish_guide.vue";
 import publish_reading_history from "@/components/publish/publish_reading_history.vue";
 import publish_headline_notice from "@/components/publish/publish_headline_notice.vue";
+import publish_extend_tools from "@/components/publish/publish_extend_tools.vue";
 
 // 数据逻辑
 import { push, pushAdmin } from "@/service/publish/cms.js";
@@ -194,6 +190,7 @@ export default {
         "publish-guide": publish_guide,
         "publish-reading-history": publish_reading_history,
         "publish-headline-notice": publish_headline_notice,
+        "publish-extend-tools": publish_extend_tools,
     },
     data: function () {
         return {

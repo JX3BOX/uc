@@ -6,7 +6,7 @@
                 <p class="u-desc">{{ $t("publish.home.slogan") }}</p>
             </div>
             <div class="u-actions">
-                <el-tooltip :content="$t('publish.home.authorBenefits')" placement="top">
+                <el-tooltip v-if="!isSuperAuthor" :content="$t('publish.home.authorBenefits')" placement="top">
                     <a
                         href="/dashboard/cooperation"
                         type="primary"
@@ -25,6 +25,16 @@
                     target="_blank"
                     rel="noopener noreferrer"
                     ><el-icon><WarningFilled /></el-icon><span>{{ $t("publish.home.sensitiveWordFilter") }}</span></el-button
+                >
+                <el-button
+                    tag="a"
+                    href="/ai/editor"
+                    type="success"
+                    size="small"
+                    class="u-btn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    ><el-icon><Cellphone /></el-icon><span>{{ $t("publish.home.mobileAdaptationCheck") }}</span></el-button
                 >
             </div>
         </header>
@@ -215,10 +225,16 @@
 
 <script>
 import User from "@jx3box/jx3box-common/js/user.js";
+import { getSuperAuthorState } from "@/service/dashboard/cooperation";
 
 export default {
     name: "index",
     props: [],
+    data() {
+        return {
+            isSuperAuthor: false,
+        };
+    },
     computed: {
         profile() {
             return this.$store.state.profile;
@@ -232,6 +248,18 @@ export default {
         canUseSensitiveWordFilter() {
             return User.getLevel(this.profile?.experience || 0) >= 4;
         },
+    },
+    mounted() {
+        const uid = User.getInfo().uid;
+        if (!uid) return;
+
+        getSuperAuthorState(uid)
+            .then((res) => {
+                this.isSuperAuthor = !!res.data.data;
+            })
+            .catch(() => {
+                this.isSuperAuthor = false;
+            });
     },
     methods: {
         getAppLogo: function (identifier) {
