@@ -739,7 +739,7 @@ export default {
                 const params = {
                     pageIndex: this.pagination.pageIndex,
                     pageSize: this.pagination.pageSize,
-                    display_name: this.keyword,
+                    [this.active === "myfans" ? "username" : "display_name"]: this.keyword,
                 };
                 this.runListRequest(this.fns[this.active](params), (res) => {
                     this.list = this.getResponseList(res);
