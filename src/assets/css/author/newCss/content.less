@@ -2,6 +2,40 @@
 .m-author-pages {
     text-align: right;
 }
+
+@media screen and (max-width: @phone) {
+    .m-author-info .m-author-pages {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 100%;
+        padding: 16px 0 0;
+        margin: 0;
+        box-sizing: border-box;
+        white-space: nowrap;
+        overflow: hidden !important;
+
+        .btn-prev,
+        .btn-next,
+        .el-pager li {
+            width: 28px;
+            min-width: 28px;
+            height: 28px;
+            padding: 0;
+            margin: 0;
+            font-size: 12px;
+            line-height: 28px;
+        }
+
+        .el-pager {
+            display: flex;
+            flex: 0 1 auto;
+            min-width: 0;
+            gap: 0;
+        }
+    }
+}
 //趣图瀑布流
 .m-emotions-list {
     .w(100%);

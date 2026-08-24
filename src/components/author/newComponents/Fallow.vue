@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { markRaw } from "vue";
 import Face from "@/components/author/newComponents/Face";
 import Paper from "@/components/author/Paper.vue";
 import Question from "@/components/author/Question.vue";
@@ -40,25 +41,25 @@ export default {
                 {
                     label: this.$t("author.tabs.faces"),
                     value: "Face",
-                    component: Face,
+                    component: markRaw(Face),
                     icon: "el-icon-grape",
                 },
                 {
                     label: this.$t("author.tabs.bodyTypes"),
                     value: "Body",
-                    component: Body,
+                    component: markRaw(Body),
                     icon: "el-icon-watermelon",
                 },
                 {
                     label: this.$t("author.tabs.paper"),
                     value: "Paper",
-                    component: Paper,
+                    component: markRaw(Paper),
                     icon: "el-icon-ice-cream-round",
                 },
                 {
                     label: this.$t("author.tabs.question"),
                     value: "Question",
-                    component: Question,
+                    component: markRaw(Question),
                     icon: "el-icon-lollipop",
                 },
             ],

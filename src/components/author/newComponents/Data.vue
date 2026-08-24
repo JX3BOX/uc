@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { markRaw } from "vue";
 import Pz from "@/components/author/Pz";
 import Battle from "@/components/author/Battle";
 import DBM from "@/components/author/DBM";
@@ -37,19 +38,19 @@ export default {
                 {
                     label: this.$t("author.tabs.build"),
                     value: "Pz",
-                    component: Pz,
+                    component: markRaw(Pz),
                     icon: "el-icon-sugar",
                 },
                 {
                     label: this.$t("author.tabs.plugins"),
                     value: "DBM",
-                    component: DBM,
+                    component: markRaw(DBM),
                     icon: "el-icon-cold-drink",
                 },
                 {
                     label: this.$t("author.tabs.battles"),
                     value: "Battle",
-                    component: Battle,
+                    component: markRaw(Battle),
                     icon: "el-icon-ice-cream",
                 },
             ],

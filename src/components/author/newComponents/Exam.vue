@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import { markRaw } from "vue";
 import Question from "@/components/author/Question.vue";
 import Paper from "@/components/author/Paper.vue";
 
@@ -30,12 +31,12 @@ export default {
                 {
                     label: this.$t("author.tabs.question"),
                     value: "Question",
-                    component: Question,
+                    component: markRaw(Question),
                 },
                 {
                     label: this.$t("author.tabs.paper"),
                     value: "Paper",
-                    component: Paper,
+                    component: markRaw(Paper),
                 },
             ],
         };

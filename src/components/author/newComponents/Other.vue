@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { markRaw } from "vue";
 import Collection from "@/components/author/Collection";
 import Namespace from "../Namespace.vue";
 import Emotions from "@/components/author/Emotions";
@@ -39,19 +40,19 @@ export default {
                 {
                     label: this.$t("author.tabs.topics"),
                     value: "Topic",
-                    component: Topic,
+                    component: markRaw(Topic),
                     icon: "el-icon-collection",
                 },
                 {
                     label: this.$t("author.tabs.replies"),
                     value: "Reply",
-                    component: Reply,
+                    component: markRaw(Reply),
                     icon: "el-icon-tickets",
                 },
                 {
                     label: this.$t("author.tabs.booklets"),
                     value: "Collection",
-                    component: Collection,
+                    component: markRaw(Collection),
                     icon: "el-icon-orange",
                 },
                 // {
@@ -67,19 +68,19 @@ export default {
                 {
                     label: this.$t("author.tabs.namespace"),
                     value: "Namespace",
-                    component: Namespace,
+                    component: markRaw(Namespace),
                     icon: "el-icon-pear",
                 },
                 {
                     label: this.$t("author.tabs.funImages"),
                     value: "Emotions",
-                    component: Emotions,
+                    component: markRaw(Emotions),
                     icon: "el-icon-cherry",
                 },
                 {
                     label: this.$t("author.tabs.jokesShort"),
                     value: "Jokes",
-                    component: Jokes,
+                    component: markRaw(Jokes),
                     icon: "el-icon-apple",
                 },
             ],
