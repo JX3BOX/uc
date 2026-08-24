@@ -124,8 +124,26 @@ export default {
 }
 
 @media screen and (max-width: @phone) {
-    .newYearsDay-card__fontCount {
-        font-size: 18px !important;
+    .newYearsDay {
+        .newYearsDay-card {
+            .newYearsDay-card__img {
+                width: auto !important;
+                max-width: calc(100vw - 24px);
+                height: auto !important;
+                max-height: calc(100dvh - 24px);
+            }
+
+            .newYearsDay-card__fontCount {
+                font-size: 18px !important;
+            }
+        }
+
+        .newYearsDay-card__off:hover .newYearsDay-card__content {
+            top: 50%;
+            left: 50%;
+            opacity: 0;
+            transform: translate(-50%, -50%);
+        }
     }
 }
 </style>

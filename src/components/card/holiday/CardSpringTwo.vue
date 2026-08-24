@@ -130,15 +130,6 @@ export default {
             .db;
         }
     }
-    &:hover {
-        .cover,
-        .money {
-            transform: rotate(-10deg);
-        }
-        .title {
-            .db;
-        }
-    }
     .money {
         .pa;
         .lt(10px,5px);
@@ -157,6 +148,46 @@ export default {
         animation: flash 1s ease-in-out;
     }
 }
+
+@media (hover: hover) and (pointer: fine) {
+    .cardSpringTwo:hover {
+        .cover,
+        .money {
+            transform: rotate(-10deg);
+        }
+        .title {
+            .db;
+        }
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .cardSpringTwo {
+        top: 50%;
+        width: min(570px, calc(100vw - 32px));
+        margin: 0;
+        gap: clamp(32px, 10vw, 64px);
+        transform: translate(-50%, -50%);
+
+        .cover,
+        .money {
+            width: 100%;
+            height: auto;
+        }
+
+        .money {
+            top: 1%;
+            left: 1.75%;
+        }
+
+        .title {
+            max-width: 90%;
+            height: auto;
+            max-height: 30px;
+        }
+    }
+}
+
 @keyframes shootReturn {
     0% {
         transform: rotate(-10deg) translateX(0);

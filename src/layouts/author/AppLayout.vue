@@ -1,19 +1,19 @@
 <template>
-    <CommonHeader></CommonHeader>
+    <div v-show="!isAppEnv" class="m-app-layout-header">
+        <CommonHeader></CommonHeader>
+    </div>
     <slot></slot>
 </template>
 
 <script>
+import { isAppWebview } from "@/utils/app-env";
+
 export default {
     name: "AppLayout",
-    components: {},
-    props: [],
-    data: function () {
-        return {};
+    computed: {
+        isAppEnv() {
+            return isAppWebview(this.$route);
+        },
     },
-    computed: {},
-    created: function () {},
-    methods: {},
 };
-
 </script>

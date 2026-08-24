@@ -87,4 +87,23 @@ export default {
         }
     }
 }
+
+@media screen and (max-width: @phone) {
+    .cardQixi {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 420px;
+        height: 716px;
+        margin: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+        transform-origin: center;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    .cardQixi {
+        transform: translate(-50%, -50%) scale(0.76);
+    }
+}
 </style>

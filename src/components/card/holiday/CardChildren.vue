@@ -88,12 +88,15 @@ export default {
 }
 
 @media screen and (max-width: @phone) {
-    .children {
+    .cardChildren {
         padding: 0;
 
         .children-card {
             .children-card__img {
-                .size(auto, 60vh) !important;
+                width: auto !important;
+                max-width: calc(100vw - 24px);
+                height: auto !important;
+                max-height: calc(100dvh - 24px);
             }
         }
     }

@@ -82,8 +82,11 @@ export default {
 
 @media screen and (max-width: @phone) {
     .cardAutumn {
-        transform: rotate(90deg);
-        zoom: 0.5;
+        top: 50%;
+        left: 50%;
+        margin: 0;
+        transform: translate(-50%, -50%) rotate(90deg) scale(0.5);
+        transform-origin: center;
     }
 }
 </style>

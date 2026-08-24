@@ -194,6 +194,14 @@ export default {
     transition: all 1s;
 }
 @media screen and (max-width: @phone) {
+    .cardSpring {
+        .u-springFestival-card {
+            translate: -50% -50%;
+            scale: 0.9;
+            transform-origin: center;
+        }
+    }
+
     .cardSpringYear {
         .u-springFestival-card {
             .u-card-bg,
@@ -207,6 +215,12 @@ export default {
                 transform: translate(-28%, -0%) scale(0.5);
             }
         }
+    }
+}
+
+@media screen and (max-width: 380px) {
+    .cardSpring .u-springFestival-card {
+        scale: 0.87;
     }
 }
 </style>

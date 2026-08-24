@@ -93,4 +93,11 @@ export default {
         }
     }
 }
+
+@media screen and (max-width: @phone) {
+    .cardDragonBoat {
+        transform: scale(0.94);
+        transform-origin: center;
+    }
+}
 </style>

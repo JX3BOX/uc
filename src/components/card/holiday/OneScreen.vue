@@ -129,6 +129,21 @@ export default {
     animation-name: flipInX;
 }
 
+@media screen and (max-width: @phone) {
+    .OneScreen .m-card {
+        margin: 0;
+        animation: none;
+        transform: translate(-50%, -50%) scale(0.9);
+        transform-origin: center;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    .OneScreen .m-card {
+        transform: translate(-50%, -50%) scale(0.86);
+    }
+}
+
 @keyframes zoomInDown {
     0% {
         opacity: 0;

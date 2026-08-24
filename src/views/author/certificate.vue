@@ -1,16 +1,23 @@
 <template>
     <AppLayout>
-        <div class="m-main">
-            <template v-if="treasureInfo.team_certificate">
+        <div
+            class="m-main"
+            :class="{ 'is-app-webview': isAppEnv }"
+            v-loading="loading"
+            element-loading-background="rgba(36, 41, 46, 0.82)"
+        >
+            <template v-if="treasureInfo.team_certificate && treasureImg">
                 <div class="u-title m-hide">{{ treasureInfo.team_certificate.rank_name }}</div>
                 <div class="u-time m-hide">{{ $t("author.certificate.awardedAt", { time: treasureInfo.team_certificate.awardtime }) }}</div>
                 <el-image class="u-img" :fit="'contain'" :src="treasureImg" :preview-src-list="[treasureImg]">
                 </el-image>
                 <button @click="print" class="u-btn m-hide el-button el-button--primary">{{ $t("author.certificate.print") }}</button>
             </template>
-            <el-empty v-else-if="errorMessage" class="m-cert-empty" :description="errorMessage"></el-empty>
+            <el-empty v-else-if="errorMessage" class="m-cert-empty" :description="errorMessage">
+                <el-button type="primary" @click="load">{{ $t("author.certificate.retry") }}</el-button>
+            </el-empty>
 
-            <canvas id="canvas" ref="canvas"></canvas>
+            <canvas class="m-cert-canvas" ref="canvas"></canvas>
         </div>
     </AppLayout>
 </template>
@@ -20,474 +27,132 @@ import { __cdn, __Root } from "@/utils/config";
 import AppLayout from "@/layouts/author/AppLayout.vue";
 import { getCertification } from "@/service/author/cms";
 import CI from "@/assets/data/author/certificate.json";
+import { isAppWebview } from "@/utils/app-env";
+import {
+    createCertificateAssetResolver,
+    getCertificateOwnerId,
+    prepareCertificateTemplate,
+    renderCertificate,
+} from "@/utils/author/certificate";
+
 const fontMap = {
     "ALIMAMASHUHEITI-BOLD": require("@/assets/css/author/certificateFont/ALIMAMASHUHEITI-BOLD.OTF"),
 };
+
 export default {
-    name: "Author",
+    name: "AuthorCertificate",
     components: { AppLayout },
-    props: [],
     data: function () {
         return {
-            drawConfig: {},
-            drawCtx: {},
             treasureImg: "",
-            exportImgTime: "",
-            treasureInfo: false,
+            treasureInfo: {},
             errorMessage: "",
+            loading: false,
+            loadRequestId: 0,
         };
     },
     computed: {
+        uid() {
+            return this.$route.params.uid;
+        },
         id() {
             return this.$route.params.id;
         },
+        certificateViewKey() {
+            return `${this.uid}:${this.id}:${this.$i18n.locale}`;
+        },
+        isAppEnv() {
+            return isAppWebview(this.$route);
+        },
     },
     watch: {
-        id: {
+        certificateViewKey: {
             immediate: true,
-            handler: function (val) {
-                val ? this.load() : this.$router.push({ name: "index" });
+            handler: function () {
+                if (this.uid && this.id) this.load();
             },
         },
     },
+    beforeUnmount() {
+        this.loadRequestId += 1;
+    },
     methods: {
-        load() {
-            if (!this.id) return;
+        async load() {
+            if (!this.uid || !this.id) return;
+            const requestId = ++this.loadRequestId;
+            this.loading = true;
             this.errorMessage = "";
-            this.treasureInfo = false;
+            this.treasureInfo = {};
             this.treasureImg = "";
-            getCertification(this.id)
-                .then((res) => {
-                    const data = res.data.data;
-                    const { team_certificate } = data || {};
-                    if (!team_certificate) {
-                        this.errorMessage = this.$t("author.certificate.notFound");
-                        return;
-                    }
-                    this.treasureInfo = data;
-                    let {
-                        rank_id,
-                        time,
-                        team_name,
-                        sort_no,
-                        teammate,
-                        awardtime,
-                        leader,
-                        duration,
-                        team_server,
-                        rank_name,
-                    } = team_certificate;
-                    let drawConfig = this.cloneDrawConfig(CI[rank_id]);
-                    if (!drawConfig) {
-                        this.errorMessage = this.$t("author.certificate.templateNotFound");
-                        return;
-                    }
-                    let { element } = drawConfig;
-                    if (element.topTitle) {
-                        element.topTitle.content = this.$t("author.certificate.topRanking", { edition: rank_id });
-                    }
-                    if (element.qrTitle) {
-                        element.qrTitle.content = this.$t("author.certificate.dungeonRanking");
-                    }
-                    element.mapTime.content = this.$t("author.certificate.clearTime", {
-                        time: this.formatLocaleDateTime(time),
-                    });
-                    element.name.content = team_name;
-                    element.rank.content = sort_no;
-                    element.team.content = teammate;
-                    if (element.subRank) {
-                        if (element.subRank.content.includes("{{rank}}")) {
-                            element.subRank.content = element.subRank.content.replace("{{rank}}", sort_no);
-                        }
-                    }
-                    if (element.colonel) {
-                        element.colonel.content = this.$t("author.certificate.leader", { name: leader });
-                    }
-                    if (element.signTime) {
-                        element.signTime.content = this.$t("author.certificate.issueDate", {
-                            date: this.formatLocaleDate(awardtime),
-                        });
-                        if (element.signTime.addUrl) {
-                            element.signTime.content =
-                                __Root + element.signTime.addUrl + "  " + element.signTime.content;
-                        }
-                    }
-                    if (element.time) {
-                        element.time.content = this.formatDuration(duration);
-                    }
-                    if (element.server) {
-                        element.server.content = team_server;
-                    }
-                    if (element.qrSubTitle) {
-                        element.qrSubTitle.content = rank_name;
-                    } else if (element.mapName) {
-                        element.mapName.content = this.$t("author.certificate.dungeonName", { name: rank_name });
-                    }
-                    this.drawConfig = drawConfig;
-                    this.draw();
-                })
-                .catch(() => {
-                    this.errorMessage = this.$t("author.certificate.loadFailed");
-                });
-        },
-        cloneDrawConfig(config) {
-            return config ? JSON.parse(JSON.stringify(config)) : null;
-        },
-        draw() {
-            const canvas = document.getElementById("canvas");
-            const ctx = canvas.getContext("2d");
-            this.drawCtx = ctx;
-            this.loadDrawImage(this.drawConfig.key, "bg").then((img) => {
-                const targetWidth = 1280; // 目标宽度
-                const aspectRatio = img.width / img.height;
-                const targetHeight = targetWidth / aspectRatio;
-                this.$refs.canvas.width = targetWidth;
-                this.$refs.canvas.height = targetHeight;
-                this.$nextTick(() => {
-                    this.drawImg(img, 0, 0, canvas.width, canvas.height);
-                    for (const key in this.drawConfig.element) {
-                        let item = this.drawConfig.element[key];
-                        if (item.style) {
-                            if (item.type == "text") {
-                                item.key = key;
-                                this.drawText(ctx, item);
-                            } else if (item.type == "rank") {
-                                if (item.style.fontName) {
-                                    this.drawFontText(ctx, item);
-                                } else {
-                                    this.drawRank(item);
-                                }
-                            } else if (item.type == "qr") {
-                                this.drawQr(ctx, item);
-                            }
-                        }
-                    }
-                });
-            });
-        },
-        drawText(ctx, data) {
-            let style = data.style;
-            ctx.font = `${style.fontSize}px Arial`;
-            ctx.textAlign = style.textAlign;
-            ctx.fillStyle = style.color;
-            if (data.key != "team") {
-                ctx.fillText(data.content, style.left, style.top);
-            } else {
-                this.drawWrappedText(ctx, data.content, style);
-            }
-        },
-        drawFontText(ctx, data) {
-            let drawText = ``;
-            let drawStyle = data.style.otherStyle;
-            if (data.content * 1 <= 3) {
-                drawStyle = data.style.topThreeStyle;
-            }
-            if (data.content == 1) {
-                drawText = this.$t("author.certificate.firstPlace");
-            } else if (data.content == 2) {
-                drawText = this.$t("author.certificate.secondPlace");
-            } else if (data.content == 3) {
-                drawText = this.$t("author.certificate.thirdPlace");
-            } else if (drawStyle.content) {
-                drawText = drawStyle.content;
-            } else {
-                drawText = this.$t("author.certificate.place", { rank: data.content });
+            let data;
+            try {
+                const response = await getCertification(this.id);
+                data = response?.data?.data;
+            } catch (error) {
+                if (requestId === this.loadRequestId) this.errorMessage = this.$t("author.certificate.loadFailed");
+                this.finishLoading(requestId);
+                return;
             }
 
-            const fontUrl = fontMap[data.style.fontName];
-            const font = new FontFace(data.style.fontName, `url(${fontUrl})`);
-            font.load().then(() => {
-                document.fonts.add(font);
-                ctx.font = `${drawStyle.fontSize}px ${data.style.fontName}`;
-                ctx.textAlign = drawStyle.textAlign;
-                ctx.fillStyle = drawStyle.color;
-                ctx.fillText(drawText, drawStyle.left, drawStyle.top);
-                if (drawStyle.subFontStyle) {
-                    ctx.font = `${drawStyle.subFontStyle.fontSize}px ${data.style.fontName}`;
-                    ctx.textAlign = drawStyle.subFontStyle.textAlign;
-                    ctx.fillStyle = drawStyle.subFontStyle.color;
-                    ctx.fillText(
-                        drawStyle.subFontStyle.content + data.content,
-                        drawStyle.subFontStyle.left,
-                        drawStyle.subFontStyle.top
-                    );
-                }
-            });
-        },
-        drawWrappedText(ctx, text, style) {
-            let words = text.split(";");
-            let line = "";
-            for (let i = 0; i < words.length; i++) {
-                let name = words[i].split(",")[0];
-                if (this.drawConfig.element.colonel) {
-                    if (name == this.treasureInfo.team_certificate.leader) {
-                        continue;
-                    }
-                }
-                let testLine = line + name;
-                let metrics = ctx.measureText(testLine);
-                let testWidth = metrics.width;
-                if (testWidth > style.width && i > 0) {
-                    ctx.fillText(line, style.left, style.top);
-                    line = name += "，";
-                    style.top += style.height;
-                } else {
-                    testLine += "，";
-                    line = testLine;
-                }
+            if (requestId !== this.loadRequestId) return;
+            const certificate = data?.team_certificate;
+            if (!certificate) {
+                this.errorMessage = this.$t("author.certificate.notFound");
+                this.finishLoading(requestId);
+                return;
             }
-            ctx.fillText(line, style.left, style.top);
-        },
-        drawRank(data) {
-            let imgType = 1;
-            let rankSrc = "";
-            let numArray = [];
-            if (data.content == 1) {
-                rankSrc = "first";
-            } else if (data.content == 2) {
-                rankSrc = "second";
-            } else if (data.content == 3) {
-                rankSrc = "third";
-            } else if (data.content == 100) {
-                imgType = 3;
-                numArray = [1, 100];
-            } else if (data.content == null) {
-                rankSrc = "hundred";
-            } else if (data.content <= 10) {
-                imgType = 2;
-                rankSrc = data.content;
-            } else if (data.content > 10) {
-                imgType = 3;
-                numArray = data.content
-                    .toString()
-                    .split("")
-                    .map((num) => (num === "0" ? 10 : parseInt(num)));
+
+            const ownerId = getCertificateOwnerId(data);
+            if (ownerId != null && String(ownerId) !== String(this.uid)) {
+                this.errorMessage = this.$t("author.certificate.ownerMismatch");
+                this.finishLoading(requestId);
+                return;
             }
-            if (imgType == 1) {
-                this.loadDrawImage(rankSrc).then((img) => {
-                    const targetWidth = data.style.topWidth; // 目标宽度
-                    const aspectRatio = img.width / img.height;
-                    const targetHeight = targetWidth / aspectRatio;
-                    if (data.style.type == "center") {
-                        this.drawImg(img, data.style.left - targetWidth / 2, data.style.top, targetWidth, targetHeight);
-                    } else if (data.style.type == "left") {
-                        this.drawImg(img, data.style.left, data.style.top, targetWidth, targetHeight);
-                    }
+
+            const sourceTemplate = CI[certificate.rank_id];
+            if (!sourceTemplate) {
+                this.errorMessage = this.$t("author.certificate.templateNotFound");
+                this.finishLoading(requestId);
+                return;
+            }
+
+            try {
+                const template = prepareCertificateTemplate({
+                    template: sourceTemplate,
+                    certificate,
+                    translate: this.$t,
+                    locale: this.$i18n.locale,
+                    rootUrl: __Root,
                 });
-            } else if (imgType == 2) {
-                this.loadDrawImage("before").then((img) => {
-                    const targetWidth = data.style.otherWidth; // 目标宽度
-                    const aspectRatio = img.width / img.height;
-                    const targetHeight = targetWidth / aspectRatio;
-                    if (data.style.type == "center") {
-                        this.drawImg(
-                            img,
-                            data.style.left - targetWidth * 1.5 - data.style.spaceWidth,
-                            data.style.top,
-                            targetWidth,
-                            targetHeight
-                        );
-                    } else if (data.style.type == "left") {
-                        this.drawImg(img, data.style.left, data.style.top, targetWidth, targetHeight);
-                    }
+                const resolveAsset = createCertificateAssetResolver({
+                    cdn: __cdn,
+                    template,
+                    certificate,
                 });
-                this.loadDrawImage("after").then((img) => {
-                    const targetWidth = data.style.otherWidth; // 目标宽度
-                    const aspectRatio = img.width / img.height;
-                    const targetHeight = targetWidth / aspectRatio;
-                    if (data.style.type == "center") {
-                        this.drawImg(
-                            img,
-                            data.style.left + targetWidth / 2 + data.style.spaceWidth,
-                            data.style.top,
-                            targetWidth,
-                            targetHeight
-                        );
-                    } else if (data.style.type == "left") {
-                        this.drawImg(
-                            img,
-                            data.style.left + targetWidth * 2 + data.style.spaceWidth * 2,
-                            data.style.top,
-                            targetWidth,
-                            targetHeight
-                        );
-                    }
+                await this.$nextTick();
+                const image = await renderCertificate({
+                    canvas: this.$refs.canvas,
+                    template,
+                    certificate,
+                    resolveAsset,
+                    translate: this.$t,
+                    fontUrls: fontMap,
                 });
-                this.loadDrawImage(rankSrc).then((img) => {
-                    const targetWidth = data.style.otherWidth; // 目标宽度
-                    const aspectRatio = img.width / img.height;
-                    const targetHeight = targetWidth / aspectRatio;
-                    if (data.style.type == "center") {
-                        this.drawImg(img, data.style.left - targetWidth / 2, data.style.top, targetWidth, targetHeight);
-                    } else if (data.style.type == "left") {
-                        this.drawImg(
-                            img,
-                            data.style.left + targetWidth + data.style.spaceWidth,
-                            data.style.top,
-                            targetWidth,
-                            targetHeight
-                        );
-                    }
-                });
-            } else if (imgType == 3) {
-                this.loadDrawImage("before").then((img) => {
-                    const targetWidth = data.style.otherWidth; // 目标宽度
-                    const aspectRatio = img.width / img.height;
-                    const targetHeight = targetWidth / aspectRatio;
-                    if (data.style.type == "center") {
-                        this.drawImg(
-                            img,
-                            data.style.left - targetWidth * 2 - data.style.spaceWidth,
-                            data.style.top,
-                            targetWidth,
-                            targetHeight
-                        );
-                    } else if (data.style.type == "left") {
-                        this.drawImg(img, data.style.left, data.style.top, targetWidth, targetHeight);
-                    }
-                });
-                this.loadDrawImage("after").then((img) => {
-                    const targetWidth = data.style.otherWidth; // 目标宽度
-                    const aspectRatio = img.width / img.height;
-                    const targetHeight = targetWidth / aspectRatio;
-                    if (data.style.type == "center") {
-                        this.drawImg(
-                            img,
-                            data.style.left + targetWidth + data.style.spaceWidth,
-                            data.style.top,
-                            targetWidth,
-                            targetHeight
-                        );
-                    } else if (data.style.type == "left") {
-                        this.drawImg(
-                            img,
-                            data.style.left + targetWidth * 3 + data.style.spaceWidth * 3,
-                            data.style.top,
-                            targetWidth,
-                            targetHeight
-                        );
-                    }
-                });
-                numArray.map((item, index) => {
-                    this.loadDrawImage(item).then((img) => {
-                        const targetWidth = data.style.otherWidth; // 目标宽度
-                        const aspectRatio = img.width / img.height;
-                        const targetHeight = targetWidth / aspectRatio;
-                        if (data.style.type == "center") {
-                            this.drawImg(
-                                img,
-                                data.style.left -
-                                    targetWidth -
-                                    data.style.spaceWidth / 2 +
-                                    index * (targetWidth + data.style.spaceWidth / 2),
-                                data.style.top,
-                                targetWidth,
-                                targetHeight
-                            );
-                        } else if (data.style.type == "left") {
-                            this.drawImg(
-                                img,
-                                data.style.left +
-                                    targetWidth +
-                                    data.style.spaceWidth +
-                                    index * (targetWidth + data.style.spaceWidth),
-                                data.style.top,
-                                targetWidth,
-                                targetHeight
-                            );
-                        }
-                    });
-                });
+                if (requestId !== this.loadRequestId) return;
+                this.treasureInfo = data;
+                this.treasureImg = image;
+            } catch (error) {
+                console.error("[certificate] render failed", error);
+                if (requestId === this.loadRequestId) this.errorMessage = this.$t("author.certificate.renderFailed");
+            } finally {
+                this.finishLoading(requestId);
             }
         },
-        loadDrawImage(src, type = "rank") {
-            const newImg = new Image();
-            newImg.setAttribute("crossOrigin", "anonymous");
-            newImg.src = this.getImgPath(src, type);
-            return new Promise((resolve, reject) => {
-                newImg.onload = () => {
-                    resolve(newImg);
-                };
-            });
-        },
-        drawQr(ctx, data) {
-            this.loadDrawImage(null, "qr").then((img) => {
-                this.drawImg(img, 150, 1490, 100, 100);
-            });
-        },
-        drawImg(img, left, top, width, height) {
-            this.drawCtx.drawImage(img, left, top, width, height);
-            this.canvasExport();
-        },
-        getImgPath(id, type) {
-            let imgUrl = "";
-            if (type == "bg") {
-                imgUrl = `${__cdn}design/certification/CertBG_jdt${id < 10 ? "0" + id : id}.png`;
-            } else if (type == "rank") {
-                imgUrl = require(`@/assets/img/author/cert/1/rank/${id}.png`);
-            } else if (type == "qr") {
-                imgUrl = require(`@/assets/img/author/cert/${this.treasureInfo.team_certificate.rank_id}/qr.png`);
-            }
-            return imgUrl;
-        },
-        canvasExport() {
-            clearTimeout(this.exportImgTime);
-            const canvas = document.getElementById("canvas");
-            this.exportImgTime = setTimeout(() => {
-                this.treasureImg = canvas.toDataURL("image/png");
-            }, 100);
-        },
-        takeTimeCalc(timeString, seconds) {
-            let hours = Math.floor(seconds / 3600);
-            let minutes = Math.floor((seconds % 3600) / 60);
-            let remainingSeconds = seconds % 60;
-            timeString = timeString.replace(/hh/, hours).replace(/mm/, minutes).replace(/ss/, remainingSeconds);
-            return timeString;
-        },
-        formatDuration(seconds) {
-            const total = Number(seconds) || 0;
-            return this.$t("author.certificate.clearDuration", {
-                hours: Math.floor(total / 3600),
-                minutes: Math.floor((total % 3600) / 60),
-                seconds: total % 60,
-            });
-        },
-        formatLocaleDate(value) {
-            return new Intl.DateTimeFormat(this.$i18n.locale, {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-            }).format(new Date(value));
-        },
-        formatLocaleDateTime(value) {
-            return new Intl.DateTimeFormat(this.$i18n.locale, {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-            }).format(new Date(value));
-        },
-        formatTimeString(timeString, dateTimeString) {
-            const date = new Date(dateTimeString);
-            const year = date.getFullYear();
-            const month = (date.getMonth() + 1).toString().padStart(2, "0");
-            const day = date.getDate().toString().padStart(2, "0");
-            const hours = date.getHours().toString().padStart(2, "0");
-            const minutes = date.getMinutes().toString().padStart(2, "0");
-            const seconds = date.getSeconds().toString().padStart(2, "0");
-            timeString = timeString
-                .replace(/yyyy/, year)
-                .replace(/MM/, month)
-                .replace(/dd/, day)
-                .replace(/hh/, hours)
-                .replace(/mm/, minutes)
-                .replace(/ss/, seconds);
-            return timeString;
+        finishLoading(requestId) {
+            if (requestId === this.loadRequestId) this.loading = false;
         },
         print() {
-            window.print();
+            if (this.treasureImg) window.print();
         },
     },
 };
@@ -495,6 +160,9 @@ export default {
 
 <style lang="less" scoped>
 .m-main {
+    width: 848px;
+    min-height: calc(100vh - @header-height);
+    box-sizing: border-box;
     &::after {
         content: "";
         position: fixed;
@@ -505,30 +173,31 @@ export default {
         background-color: #24292e;
         z-index: -1;
     }
-    .mt(@header-height);
-    .pt(50px);
-    .pb(50px);
+    margin: @header-height auto 0;
+    padding: 36px 24px 48px;
     .x();
     .u-title {
-        .fz(28px);
+        .fz(30px, 42px);
         .bold();
         .color(#ffffff);
+        max-width: 760px;
+        margin: 0 auto;
     }
     .u-time {
-        .mt(10px);
-        .fz(14px);
+        .mt(6px);
+        .fz(14px, 22px);
         .color(#999999);
     }
     .u-img {
         .db();
-        .w(400px);
+        width: 100%;
         .pointer();
         margin: 0 auto;
-        .mt(10px);
-        box-shadow: 0 0 10px 10px rgba(255, 255, 255, 0.1);
-        .r(5px);
+        .mt(18px);
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.36), 0 0 0 1px rgba(255, 255, 255, 0.08);
+        .r(6px);
     }
-    #canvas {
+    .m-cert-canvas {
         display: block;
         position: fixed;
         left: 0;
@@ -537,16 +206,23 @@ export default {
     }
     .u-btn {
         .db();
-        .w(200px);
+        .w(220px);
+        height: 44px;
         margin: 0 auto;
-        .mt(50px);
+        .mt(32px);
     }
     .m-cert-empty {
         .pt(120px);
     }
+    &.is-app-webview {
+        min-height: 100vh;
+        min-height: 100dvh;
+        margin-top: 0;
+    }
 }
 @media screen and (max-width: @phone) {
     .m-main {
+        width: 100%;
         min-height: calc(100vh - @header-height);
         min-height: calc(100dvh - @header-height);
         padding: 24px 16px 32px;
@@ -578,6 +254,14 @@ export default {
 
         .m-cert-empty {
             padding-top: 72px;
+        }
+
+        &.is-app-webview {
+            min-height: 100vh;
+            min-height: 100dvh;
+            margin-top: 0;
+            padding-top: max(16px, env(safe-area-inset-top));
+            padding-bottom: max(24px, env(safe-area-inset-bottom));
         }
     }
 }

@@ -71,12 +71,15 @@ export default {
 }
 
 @media screen and (max-width: @phone) {
-    .christmas {
+    .cardChristmas {
         padding: 0;
 
         .christmas-card {
             .christmas-card__img {
-                .size(auto, 60vh) !important;
+                width: auto !important;
+                max-width: calc(100vw - 24px);
+                height: auto !important;
+                max-height: calc(100dvh - 24px);
             }
         }
     }

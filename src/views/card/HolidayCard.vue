@@ -1,9 +1,9 @@
 <template>
-    <HeaderLessLayout>
+    <AppLayout>
         <div class="m-main m-index-popup">
             <component :is="event_component" :data="component_data" @close="close" />
         </div>
-    </HeaderLessLayout>
+    </AppLayout>
 </template>
 
 <script>
@@ -11,7 +11,7 @@ import { some } from "lodash";
 import { __cdn } from "@/utils/config";
 import cardType from "@/assets/data/author/card.json";
 import { getHolidayCard } from "@/service/author/card";
-import HeaderLessLayout from "@/layouts/author/HeaderLessLayout.vue";
+import AppLayout from "@/layouts/author/AppLayout.vue";
 import DefaultTemplate from "@/components/card/holiday/DefaultTemplate.vue";
 import CardChildren from "@/components/card/holiday/CardChildren.vue";
 import CardSpring from "@/components/card/holiday/CardSpring.vue";
@@ -30,7 +30,7 @@ import User from "@jx3box/jx3box-common/js/user";
 export default {
     name: "holidayCard",
     components: {
-        HeaderLessLayout,
+        AppLayout,
         DefaultTemplate,
         CardChildren,
         CardSpring,

@@ -121,7 +121,13 @@ export default {
 
 @media screen and (max-width: @phone) {
     .cardLantern .u-lanternFestival-card {
-        zoom: 0.4;
+        zoom: 0.38;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    .cardLantern .u-lanternFestival-card {
+        zoom: 0.36;
     }
 }
 </style>

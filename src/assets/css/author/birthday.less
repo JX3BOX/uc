@@ -120,3 +120,33 @@ body {
         .r(0);
     }
 }
+
+@media screen and (max-width: @phone) {
+    body {
+        min-width: 0;
+    }
+
+    .m-birthday {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        min-width: 0;
+
+        .m-birthday-video {
+            height: 100vh;
+            height: 100dvh;
+        }
+
+        .m-letter {
+            margin: 0;
+            transform: translate(-50%, -50%) scale(0.22);
+            transform-origin: center;
+        }
+    }
+}
+
+@media screen and (min-width: 381px) and (max-width: @phone) {
+    .m-birthday .m-letter {
+        transform: translate(-50%, -50%) scale(0.24);
+    }
+}

@@ -131,21 +131,32 @@ export default {
     }
 }
 @media screen and (max-width: @phone) {
-    .doubleScreen .m-second {
-        .u-txt {
-            .none;
+    .doubleScreen {
+        transform: translate(-50%, -50%) scale(0.31);
+        transform-origin: center;
+
+        .m-second {
+            .u-txt {
+                .none;
+            }
+            .u-good {
+                .ml(-65px);
+            }
+            .u-boxcion {
+                top: 300px;
+                margin-left: -170px;
+            }
+            .u-close {
+                .lb(50%,120px);
+                .ml(-50px);
+            }
         }
-        .u-good {
-            .ml(-65px);
-        }
-        .u-boxcion {
-            top: 300px;
-            margin-left: -170px;
-        }
-        .u-close {
-            .lb(50%,120px);
-            .ml(-50px);
-        }
+    }
+}
+
+@media screen and (max-width: 380px) {
+    .doubleScreen {
+        transform: translate(-50%, -50%) scale(0.29);
     }
 }
 </style>

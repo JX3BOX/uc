@@ -111,6 +111,12 @@ export default {
     }
 }
 
+@media screen and (max-width: @phone) {
+    .m-machine .m-decoration {
+        display: none;
+    }
+}
+
 @keyframes balloonShake {
     0% {
         transform: translate(0, 0) rotate(0deg);

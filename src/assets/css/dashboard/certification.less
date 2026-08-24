@@ -133,3 +133,74 @@
         }
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-cert-item {
+        min-width: 0;
+        margin-top: 12px;
+        padding: 14px;
+        box-sizing: border-box;
+        align-items: center;
+
+        .u-img {
+            width: 88px;
+            height: 124px;
+            padding-bottom: 0;
+            flex: 0 0 88px;
+            background-repeat: no-repeat;
+        }
+
+        .u-img.u-card {
+            width: 88px;
+            height: 88px;
+            padding-bottom: 0;
+        }
+
+        .m-info {
+            width: auto;
+            min-width: 0;
+            padding: 0 0 0 12px;
+            flex: 1 1 auto;
+
+            .u-title {
+                min-height: 22px;
+                margin-bottom: 6px;
+                padding-right: 42px;
+                font-size: 16px;
+                line-height: 22px;
+                overflow-wrap: anywhere;
+            }
+
+            .u-tip {
+                margin-top: 1px;
+                font-size: 12px;
+                line-height: 18px;
+                overflow-wrap: anywhere;
+            }
+        }
+
+        .u-icon {
+            top: 14px;
+            right: 14px;
+            width: 36px;
+            height: 36px;
+        }
+
+        &.tt_item .u-icon {
+            top: 12px;
+            right: 12px;
+            width: 42px;
+            height: 42px;
+        }
+
+        &:hover .u-img {
+            transform: none;
+        }
+    }
+
+    .m-cert-pages,
+    .m-pagination {
+        padding-top: 16px;
+        overflow: hidden;
+    }
+}
