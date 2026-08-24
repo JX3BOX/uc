@@ -79,4 +79,60 @@ export default {
         gap: 20px;
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-goods-comment-dialog {
+        max-width: 420px;
+        margin-top: 10vh !important;
+
+        .el-dialog__header {
+            padding: 16px 16px 10px;
+        }
+
+        .el-dialog__body {
+            padding: 10px 16px 16px;
+        }
+    }
+
+    .m-goods-comment {
+        .el-form-item {
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .el-form-item__label {
+            float: none;
+            width: 100% !important;
+            height: auto;
+            padding: 0 0 6px;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        .el-form-item__content {
+            display: block;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .el-rate {
+            display: flex;
+            align-items: center;
+            height: 32px;
+        }
+
+        .el-textarea {
+            width: 100%;
+        }
+
+        .m-button {
+            gap: 10px;
+
+            .el-button {
+                flex: 1;
+                margin: 0;
+            }
+        }
+    }
+}
 </style>

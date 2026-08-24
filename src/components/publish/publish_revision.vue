@@ -2,7 +2,14 @@
     <div class="m-revision">
         <el-button type="primary" @click="view" icon="Folder">{{ $t("publish.history.revisions") }}</el-button>
 
-        <el-drawer :title="$t('publish.history.revisions')" v-model="show" :z-index="2100" class="m-revision-drawer" append-to-body>
+        <el-drawer
+            :title="$t('publish.history.revisions')"
+            v-model="show"
+            :z-index="2100"
+            size="min(420px, 100%)"
+            class="m-revision-drawer"
+            append-to-body
+        >
             <template #header>
                 <h3 class="u-revision-title">{{ $t("publish.history.revisions") }}</h3>
             </template>
@@ -108,13 +115,7 @@ export default {
 
 <style lang="less">
 .m-revision-drawer {
-    .size(100%);
-    .pf;
-    .rt(0);
-
-    .el-drawer {
-        min-width: 420px;
-    }
+    box-sizing: border-box;
 
     .u-revision-title {
         margin: 0;
@@ -172,12 +173,8 @@ export default {
     }
 }
 @media screen and (max-width: @ipad) {
-    .m-revision-drawer {
-        .el-drawer {
-            .w(100%) !important;
-            overflow-y: auto;
-            min-width: 0;
-        }
+    .m-revision-drawer.el-drawer {
+        overflow-y: auto;
     }
 }
 @media screen and (max-width: @ip5) {

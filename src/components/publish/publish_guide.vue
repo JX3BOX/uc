@@ -238,10 +238,23 @@ export default {
 @media screen and (max-width: @phone) {
     .m-publish-guide {
         flex-wrap: wrap;
+
         .el-form-item__label {
             width: 100%;
         }
+
+        .u-condition {
+            width: 100%;
+
+            .el-select {
+                flex: 1;
+                width: auto;
+                min-width: 0;
+            }
+        }
+
         .u-prev {
+            margin-right: 0;
             margin-bottom: 10px;
         }
     }

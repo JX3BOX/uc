@@ -138,7 +138,13 @@
                 </div>
             </div>
         </div>
-        <el-dialog :title="title" v-model="dialogVisible" width="30%" :before-close="handleClose">
+        <el-dialog
+            class="m-goods-comment-dialog"
+            :title="title"
+            v-model="dialogVisible"
+            :width="isPhone ? 'calc(100% - 32px)' : '30%'"
+            :before-close="handleClose"
+        >
             <GoodComment :order_id="order_id" :type="type" @close="handleClose" />
         </el-dialog>
     </uc>
@@ -172,6 +178,7 @@ export default {
             tabList: mallTab,
             dialogVisible: false,
             type: "",
+            isPhone: window.innerWidth < 768,
         };
     },
     computed: {
@@ -384,6 +391,21 @@ export default {
         }
 
         th:first-child {
+            z-index: 3;
+            background: #f5f7fa;
+        }
+
+        th:last-child,
+        td:last-child {
+            position: sticky;
+            right: 0;
+            z-index: 2;
+            min-width: 56px;
+            background: #fff;
+            box-shadow: -1px 0 0 #ebeef5;
+        }
+
+        th:last-child {
             z-index: 3;
             background: #f5f7fa;
         }

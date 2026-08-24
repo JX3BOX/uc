@@ -2,7 +2,14 @@
     <div class="m-reading-history">
         <el-button type="primary" @click="view" icon="Document">{{ $t("publish.history.reading") }}</el-button>
 
-        <el-drawer :title="$t('publish.history.reading')" v-model="show" :z-index="2100" class="m-history-drawer" append-to-body>
+        <el-drawer
+            :title="$t('publish.history.reading')"
+            v-model="show"
+            :z-index="2100"
+            size="min(420px, 100%)"
+            class="m-history-drawer"
+            append-to-body
+        >
             <template #header>
                 <h3 class="u-history-title">{{ $t("publish.history.reading") }}</h3>
             </template>
@@ -70,6 +77,7 @@ export default {
             per: 10,
 
             data: [],
+            total: 0,
             loading: false,
         };
     },
@@ -112,18 +120,8 @@ export default {
 </script>
 
 <style lang="less">
-.m-reading-history {
-    // .pa;
-    // .rt(0);
-}
 .m-history-drawer {
-    .size(100%);
-    .pf;
-    .rt(0);
-
-    .el-drawer {
-        min-width: 420px;
-    }
+    box-sizing: border-box;
 
     .u-history-title {
         margin: 0;
@@ -160,12 +158,12 @@ export default {
     .m-history-item {
         display: flex;
         justify-content: space-between;
-        height: 40px;
+        min-height: 40px;
         align-items: center;
-        padding: 5px;
+        padding: 8px 10px;
+        box-sizing: border-box;
         .fz(12px, 28px);
         border-bottom: 1px dashed #eee;
-        white-space: nowrap;
 
         .u-checkbox {
             .mr(5px);
@@ -187,8 +185,12 @@ export default {
         }
 
         .u-name {
-            .ml(10px);
+            display: flex;
+            align-items: center;
+            width: 100%;
+            min-width: 0;
             i {
+                flex: none;
                 .fz(16px);
                 color: #888;
                 .y(-2px);
@@ -197,8 +199,14 @@ export default {
         }
 
         .u-creator {
+            display: inline-flex;
+            align-items: center;
+            min-width: 0;
             margin-left: 5px;
             margin-right: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .u-avatar {
@@ -210,18 +218,52 @@ export default {
     }
 }
 @media screen and (max-width: @ipad) {
-    .m-history-drawer {
-        .el-drawer {
-            .w(100%) !important;
-            overflow-y: auto;
-            min-width: 0;
-        }
+    .m-history-drawer.el-drawer {
+        overflow-y: auto;
     }
 }
-@media screen and (max-width: @ip5) {
-    .m-history-drawer .m-history-list .m-history-item {
-        .h(auto);
-        flex-wrap: wrap;
+
+@media screen and (max-width: @phone) {
+    .m-history-drawer {
+        .el-drawer__header {
+            margin-bottom: 12px;
+        }
+
+        .m-history-container {
+            padding: 0;
+        }
+
+        .m-history-item {
+            padding: 10px 4px;
+
+            .u-name {
+                flex-wrap: wrap;
+                line-height: 24px;
+            }
+
+            .u-time {
+                display: block;
+                width: 100%;
+                margin-left: 29px;
+                line-height: 20px;
+            }
+        }
+
+        .u-null {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .u-pagination {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 4px;
+
+            .el-pagination__total {
+                display: none;
+            }
+        }
     }
 }
 </style>

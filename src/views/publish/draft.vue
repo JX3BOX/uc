@@ -2,7 +2,10 @@
     <div class="m-publish m-draft">
         <div class="m-draft-header">
             <h1 class="m-title">
-                <i class="el-icon-receiving"></i> {{ $t("publish.nav.drafts") }}
+                <span class="u-title-main">
+                    <i class="el-icon-receiving"></i>
+                    <span>{{ $t("publish.nav.drafts") }}</span>
+                </span>
                 <el-tooltip class="item" effect="dark" placement="top" popper-class="m-draft-help-tip">
                     <template #content>
                         {{ $t("publish.draft.description") }}
@@ -53,7 +56,10 @@
                     </li>
                 </ul>
             </div>
-            <div class="m-draft-null" v-else><i class="el-icon-warning-outline"></i> {{ $t("publish.common.noContent") }}</div>
+            <div class="m-draft-null" v-else>
+                <i class="el-icon-warning-outline"></i>
+                <span>{{ $t("publish.common.noContent") }}</span>
+            </div>
         </template>
         <template v-else>
             <el-alert :title="$t('publish.draft.browserUnsupported')" type="error" show-icon></el-alert>

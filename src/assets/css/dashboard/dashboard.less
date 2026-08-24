@@ -57,6 +57,43 @@
     .m-dashboard-person {
         padding: 10px 20px;
     }
+
+    .c-main.m-dashboard-container .el-pagination {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+        box-sizing: border-box;
+        white-space: nowrap;
+        overflow: hidden;
+
+        .el-pagination__total,
+        .el-pagination__sizes,
+        .el-pagination__jump {
+            display: none;
+        }
+
+        .btn-prev,
+        .btn-next,
+        .el-pager li {
+            width: 28px !important;
+            min-width: 28px !important;
+            height: 28px !important;
+            padding: 0 !important;
+            margin: 0 1px !important;
+            font-size: 12px;
+            line-height: 28px !important;
+        }
+
+        .el-pager {
+            display: flex;
+            flex: 0 1 auto;
+            min-width: 0;
+            gap: 0 !important;
+        }
+    }
 }
 .m-dashboard-tabs {
     .u-mail {

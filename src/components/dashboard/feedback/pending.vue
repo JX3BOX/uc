@@ -64,6 +64,7 @@
                     :label="$t('dashboard.common.status')"
                     prop="status"
                     column-key="status"
+                    :width="isPhone ? 90 : undefined"
                     :filters="filterOptions.status"
                     :filter-multiple="false"
                 >
@@ -78,6 +79,7 @@
                     :label="$t('dashboard.common.client')"
                     prop="client"
                     column-key="client"
+                    :width="isPhone ? 90 : undefined"
                     :filters="filterOptions.client"
                     :filter-multiple="false"
                 >
@@ -85,18 +87,36 @@
                         <span class="u-client" :class="'i-client-' + row.client">{{ formatClient(row.client) }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column v-if="!isEditor" :label="$t('dashboard.feedback.source')" prop="type">
+                <el-table-column
+                    v-if="!isEditor"
+                    :label="$t('dashboard.feedback.source')"
+                    prop="type"
+                    :width="isPhone ? 110 : undefined"
+                >
                     <template #default="{ row }">
                         {{ types[row.type] }}
                     </template>
                 </el-table-column>
-                <el-table-column :label="$t('dashboard.common.type')" prop="subtype">
+                <el-table-column
+                    :label="$t('dashboard.common.type')"
+                    prop="subtype"
+                    :width="isPhone ? 120 : undefined"
+                >
                     <template #default="{ row }">
                         {{ subtypes[row.subtype] }}
                     </template>
                 </el-table-column>
-                <el-table-column :label="$t('dashboard.common.remark')" prop="remark"></el-table-column>
-                <el-table-column v-if="isEditor" :label="$t('dashboard.common.submitter')" prop="user">
+                <el-table-column
+                    :label="$t('dashboard.common.remark')"
+                    prop="remark"
+                    :width="isPhone ? 180 : undefined"
+                ></el-table-column>
+                <el-table-column
+                    v-if="isEditor"
+                    :label="$t('dashboard.common.submitter')"
+                    prop="user"
+                    :width="isPhone ? 140 : undefined"
+                >
                     <template #default="{ row }">
                         <div class="m-assign">
                             <a class="u-assign" :href="authorLink(row.user.id)" target="_blank">
@@ -106,7 +126,7 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column :label="$t('dashboard.feedback.assignedTo')">
+                <el-table-column :label="$t('dashboard.feedback.assignedTo')" :width="isPhone ? 140 : undefined">
                     <template #default="{ row }">
                         <div class="m-assign" v-if="row.assign_user && row.assign_user.length">
                             <a
@@ -122,7 +142,7 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column :label="$t('dashboard.feedback.coordinate')">
+                <el-table-column :label="$t('dashboard.feedback.coordinate')" :width="isPhone ? 140 : undefined">
                     <template #default="{ row }">
                         <div class="m-assign" v-if="row.coordination_user && row.coordination_user.length">
                             <a
@@ -138,7 +158,11 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column :label="$t('dashboard.common.submittedAt')" prop="created_at">
+                <el-table-column
+                    :label="$t('dashboard.common.submittedAt')"
+                    prop="created_at"
+                    :width="isPhone ? 160 : undefined"
+                >
                     <template #default="{ row }">
                         {{ formatTime(row.created_at) }}
                     </template>
@@ -210,6 +234,7 @@ export default {
             isEditor: false,
             onlyMe: this.showUserFilters,
             isSupport: this.showUserFilters,
+            isPhone: window.innerWidth < 768,
 
             time: "",
             select: "",
@@ -529,6 +554,17 @@ export default {
             align-items: center;
             min-height: 40px;
             margin: 0;
+        }
+    }
+
+    .m-feedback-list {
+        .el-table__body-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .m-assign .u-assign-name {
+            white-space: nowrap;
         }
     }
 }

@@ -40,4 +40,40 @@ export default {
     justify-content: space-between;
     align-items: center;
 }
+
+@media screen and (max-width: @phone) {
+    .m-publish-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+
+        .el-page-header {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .el-page-header__content {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        > .u-actions {
+            display: flex;
+            width: 100%;
+            gap: 10px;
+
+            > * {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .el-button {
+                width: 100%;
+                margin: 0;
+            }
+        }
+    }
+}
 </style>

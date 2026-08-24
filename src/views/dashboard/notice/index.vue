@@ -173,13 +173,13 @@ export default {
     .m-dashboard-notice {
         .m-dashboard-content-list .m-item {
             display: grid;
-            grid-template-columns: 48px minmax(0, 1fr) 40px;
+            grid-template-columns: 40px minmax(0, 1fr) auto;
             grid-template-rows: minmax(20px, auto) minmax(24px, auto);
             align-items: center;
-            column-gap: 12px;
+            column-gap: 10px;
             row-gap: 2px;
             min-width: 0;
-            padding: 16px 0;
+            padding: 14px 4px;
         }
 
         .u-notice-item img,
@@ -232,21 +232,28 @@ export default {
         .u-bind-button,
         .u-button,
         .u-bind-btn,
-        .u-unbind-btn {
+        .u-unbind-btn,
+        .m-notice-third-party > .el-button {
             grid-column: 3;
             grid-row: 1 / 3;
             align-self: center;
             justify-self: end;
-            width: 40px;
-            min-width: 40px;
-            height: 40px;
-            padding: 0;
-            border-radius: 50%;
+            width: auto;
+            min-width: 64px;
+            height: 32px;
+            padding: 0 10px;
+            border-radius: 4px;
+            font-size: 12px;
         }
 
         .m-qqbot .u-button-label,
-        .m-qqbot .u-unbind-btn span {
-            display: none;
+        .m-qqbot .u-unbind-btn span,
+        .m-notice-third-party .u-button-label {
+            display: none !important;
+        }
+
+        .m-qqbot .u-bind-btn i {
+            margin-right: 0;
         }
     }
 }

@@ -1,7 +1,12 @@
 .m-draft-header {
     .pr;
-    .m-title{
+    .m-title {
         .fz(28px);
+    }
+    .u-title-main {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
     }
     .u-op {
         .pa;
@@ -12,10 +17,10 @@
         .fz(12px, 16px);
         .mr(10px);
         font-weight: normal;
-        color:@v4tip;
+        color: @v4tip;
         display: inline-flex;
         align-items: center;
-        gap:3px;
+        gap: 3px;
         i {
             .fz(16px);
         }
@@ -118,4 +123,113 @@
 
 .el-popconfirm__action {
     .x(right);
+}
+
+@media screen and (max-width: @phone) {
+    .m-draft-header {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding-bottom: 16px;
+        margin-bottom: 16px;
+        border-bottom: 1px solid #eee;
+
+        .m-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 0;
+            margin: 0;
+            border: 0;
+            font-size: 24px;
+        }
+
+        .u-title-main {
+            min-width: 0;
+        }
+
+        .u-help {
+            flex: none;
+            margin-right: 0;
+        }
+
+        > .u-op {
+            position: static;
+            display: flex;
+            width: 100%;
+            gap: 10px;
+
+            > .el-button,
+            .u-dropdown {
+                flex: 1;
+                min-width: 0;
+                margin: 0;
+            }
+
+            .u-dropdown .el-button {
+                width: 100%;
+                margin: 0;
+            }
+        }
+    }
+
+    .m-draft-null {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-height: 180px;
+        padding: 32px 16px;
+        box-sizing: border-box;
+        border: 1px dashed #dcdfe6;
+        border-radius: 6px;
+        background-color: #fafafa;
+
+        i {
+            font-size: 28px;
+            color: #c0c4cc;
+        }
+    }
+
+    .m-draft-list {
+        .u-label {
+            display: grid;
+            grid-template-columns: auto auto minmax(0, 1fr);
+            align-items: center;
+            gap: 10px 6px;
+            padding: 12px;
+            white-space: normal;
+
+            .u-checkbox,
+            .u-item-icon {
+                margin-right: 0;
+            }
+
+            .u-item-key {
+                min-width: 0;
+                overflow-wrap: anywhere;
+            }
+
+            .u-item-time {
+                display: block;
+                margin: 3px 0 0;
+            }
+
+            .u-op {
+                position: static;
+                grid-column: 1 / -1;
+                display: flex;
+                gap: 8px;
+                margin: 0;
+
+                .el-button {
+                    flex: 1;
+                    min-width: 0;
+                    margin: 0;
+                }
+            }
+        }
+    }
 }

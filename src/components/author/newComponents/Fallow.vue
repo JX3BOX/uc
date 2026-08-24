@@ -76,8 +76,75 @@ export default {
 </script>
 <style lang="less">
 .m-exam {
-    .m-segmented, .el-segmented {
+    min-width: 0;
+
+    .m-segmented,
+    .el-segmented {
         .x;
+    }
+}
+
+@media screen and (max-width: @phone) {
+    .m-exam {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
+
+        .m-segmented {
+            width: 100%;
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .el-segmented {
+            display: flex;
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            padding: 3px;
+            box-sizing: border-box;
+        }
+
+        .el-segmented__group {
+            display: flex;
+            width: 100%;
+            min-width: 0;
+        }
+
+        .el-segmented__item {
+            flex: 1 1 0;
+            min-width: 0;
+        }
+
+        .el-segmented__item-label {
+            width: 100%;
+            min-width: 0;
+        }
+
+        .el-segmented__item-label > div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            min-width: 0;
+            padding: 8px 2px;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+
+        .m-primary .m-empty {
+            display: flex;
+            min-height: 180px;
+            align-items: center;
+            justify-content: center;
+
+            img {
+                width: 100%;
+                max-width: 200px;
+                height: auto;
+            }
+        }
     }
 }
 </style>
