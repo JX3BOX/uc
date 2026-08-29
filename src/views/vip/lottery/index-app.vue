@@ -319,6 +319,10 @@
 const COMPLETE_STATUS = [2, 3];
 // 本地缓存的可刮奖次数：按「活动ID + 用户ID」维度存储
 const LOTTERY_COUNT_KEY = "jx3box_lottery_remaining_count";
+// 刮刮卡网格的卡片数量
+const CARD_SIZE = 6;
+// 刮刮卡卡号起始最大值，卡号由此递减生成
+const CARD_NO_MAX = 9999999999;
 import bindWechat from "./bindWechat.vue";
 import User from "@jx3box/jx3box-common/js/user";
 import { getBreadcrumb, getConfig } from "@/service/vip/cms";
@@ -612,8 +616,8 @@ export default {
             return local;
         },
         buildCards() {
-            this.cardList = new Array(6).fill(0).map((_, i) => ({
-                no: String(9999999999 - i),
+            this.cardList = new Array(CARD_SIZE).fill(0).map((_, i) => ({
+                no: String(CARD_NO_MAX - i),
                 scratched: false,
                 prize: null,
             }));
