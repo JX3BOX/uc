@@ -1,6 +1,5 @@
 <template>
-    <IndexApp v-if="isApp" />
-    <div v-else :class="theme" v-loading="loading">
+    <div :class="theme" v-loading="loading">
         <CommonHeader></CommonHeader>
         <div class="p-event-blindbox">
             <!-- 模糊背景 -->
@@ -240,12 +239,11 @@
 const COMPLETE_STATUS = [2, 3];
 import bindWechat from "./bindWechat.vue";
 import History from "./history.vue";
-import IndexApp from "./index-app.vue";
 import User from "@jx3box/jx3box-common/js/user";
 import { getBreadcrumb, getConfig } from "@/service/vip/cms";
 import { getBlindBox, goodLucky, getMyLucky, getLuckyConfig, getMyInfo } from "@/service/vip/lottery";
 import { cloneDeep, throttle, zip } from "lodash";
-import { resolveImagePath, isApp as checkIsApp } from "@jx3box/jx3box-common/js/utils";
+import { resolveImagePath } from "@jx3box/jx3box-common/js/utils";
 import { normalizeMallImage } from "@/utils/mallImage";
 import { __Root, __cdn } from "@/utils/config";
 import "@/assets/css/vip/lottery/hacker.less";
@@ -297,7 +295,6 @@ export default {
     components: {
         History,
         bindWechat,
-        IndexApp,
     },
     computed: {
         data: function () {
@@ -349,10 +346,6 @@ export default {
             };
             return data[this.theme];
         },
-        // 判断是否从 app 过来（复用 jx3box-common 的 isApp，统一以 __env=app 为准：query/hash/localStorage）
-        isApp() {
-            return checkIsApp();
-        },
     },
     watch: {
         isLogin: {
@@ -391,7 +384,6 @@ export default {
         },
         // 初始化，获取活动ID,并获取活动详情
         init() {
-            if (this.isApp) return;
             getLuckyConfig().then((res) => {
                 const status = !!~~res.data?.data?.val || 0;
                 if (status) {
@@ -427,7 +419,6 @@ export default {
             });
         },
         load() {
-            if (this.isApp) return;
             getBlindBox(this.ID)
                 .then((res) => {
                     const data = res.data.data;

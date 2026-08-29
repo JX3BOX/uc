@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { isApp } from "@jx3box/jx3box-common/js/utils";
 
 const routes = [
     {
@@ -41,7 +42,10 @@ const routes = [
     {
         name: "lottery",
         path: "/lottery",
-        component: () => import("@/views/vip/lottery/index.vue"),
+        // App 内打开时加载移动端专用视图（无 CommonHeader），其余端加载 H5 版
+        component: isApp()
+            ? () => import("@/views/vip/lottery/index-app.vue")
+            : () => import("@/views/vip/lottery/index.vue"),
         meta: {
             i18n: {
                 title: "pages.vip.lottery.title",

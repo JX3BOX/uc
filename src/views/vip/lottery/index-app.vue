@@ -325,6 +325,7 @@ import { getBreadcrumb, getConfig } from "@/service/vip/cms";
 import { getBlindBox, goodLucky, getMyLucky, getLuckyConfig, getMyInfo, getMyHistory } from "@/service/vip/lottery";
 import { resolveImagePath } from "@jx3box/jx3box-common/js/utils";
 import { normalizeMallImage } from "@/utils/mallImage";
+import { initAppEnv } from "@/utils/appEnv";
 import { __cdn } from "@/utils/config";
 
 export default {
@@ -449,6 +450,10 @@ export default {
         hasOverlay(val) {
             document.body.style.overflow = val ? "hidden" : "";
         },
+    },
+    created() {
+        // 本视图不挂载 CommonHeader，需自行落地 App 传入的 __env / __token
+        initAppEnv();
     },
     mounted() {
         this.init();
