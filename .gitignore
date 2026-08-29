@@ -32,3 +32,6 @@ yarn-error.log*
 .nuxt
 .history
 pve
+
+.codebuddy/
+.workbuddy/

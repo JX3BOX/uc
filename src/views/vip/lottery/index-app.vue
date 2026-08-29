@@ -7,7 +7,7 @@
             </div>
             <div class="m-title">
                 <img class="u-title-img" :src="`${__appImgRoot}title.png`" alt="签到赢大奖" />
-                <p>* 每天登录APP签到，即可领刮奖次数~</p>
+                <!-- <p>* 每天登录APP签到，即可领刮奖次数~</p> -->
             </div>
         </header>
 
@@ -23,7 +23,7 @@
             </div>
             <div class="m-actions">
                 <button
-                    class="u-btn"
+                    class="u-btn is-temp-hidden"
                     :class="isSignedIn ? 'is-signed' : 'is-unsigned'"
                     @click="handleSign"
                     :disabled="isSignedIn"
@@ -190,8 +190,14 @@
         <!-- 连刮/全部刮开弹层 -->
         <div class="m-overlay" v-if="showBatchScratch" @click.self="closeBatchScratch">
             <div class="m-batch-dialog">
-                <p class="u-batch-tip" v-if="!batchRevealed">点击任意位置刮开</p>
-                <div class="m-batch-grid" :class="{ 'is-revealed': batchRevealed }" @click="revealBatch">
+                <p class="u-batch-tip" v-if="!batchRevealed">
+                    {{ batchReady ? "点击任意位置刮开" : `抽取中(${batchDoneRounds}/${batchRounds.length})...` }}
+                </p>
+                <div
+                    class="m-batch-grid"
+                    :class="{ 'is-revealed': batchRevealed, 'is-pending': !batchReady }"
+                    @click="revealBatch"
+                >
                     <div class="m-batch-card" v-for="(item, index) in batchPrizes" :key="index">
                         <div
                             class="u-cover"
@@ -259,7 +265,7 @@
                 </div>
                 <div class="m-title">
                     <img :src="`${__appImgRoot}title.png`" class="u-title-img" />
-                    <p>* 每天登录APP签到，即可领刮奖次数~</p>
+                    <!-- <p>* 每天登录APP签到，即可领刮奖次数~</p> -->
                 </div>
             </header>
             <div class="m-prize-records">
@@ -311,6 +317,8 @@
 
 <script>
 const COMPLETE_STATUS = [2, 3];
+// 本地缓存的可刮奖次数：按「活动ID + 用户ID」维度存储
+const LOTTERY_COUNT_KEY = "jx3box_lottery_remaining_count";
 import bindWechat from "./bindWechat.vue";
 import User from "@jx3box/jx3box-common/js/user";
 import { getBreadcrumb, getConfig } from "@/service/vip/cms";
@@ -365,6 +373,10 @@ export default {
 
             batchPrizes: [],
             batchRevealed: false,
+            // 分批抽取：每批次数列表、总次数、已完成批次
+            batchRounds: [],
+            batchTotal: 0,
+            batchDoneRounds: 0,
             resultPrizes: [],
 
             myPrizeList: [],
@@ -399,6 +411,15 @@ export default {
         },
         exchangeableCount() {
             return this.costPerTime ? Math.floor(this.points / this.costPerTime) : 0;
+        },
+        // 单次可抽取的最大次数（来自后台 allow_once_try_count 配置）
+        maxDrawCount() {
+            const counts = (this.draw || []).map((item) => ~~item[0]).filter((n) => n > 0);
+            return counts.length ? Math.max(...counts) : 9;
+        },
+        // 所有批次均已返回，才允许刮开返显
+        batchReady() {
+            return this.batchRounds.length > 0 && this.batchDoneRounds >= this.batchRounds.length;
         },
         hasOverlay() {
             return !!(
@@ -486,7 +507,8 @@ export default {
                         data.allow_once_try_count_cost_points[i],
                     ]);
                     this.previewList = this.setPrizeList(data);
-                    this.remainingCount = data.max_try_count - data.has_try_count || 0;
+                    // 以服务端次数为基准，若本地缓存过（兑换/抽取后的临时态）则优先用本地值
+                    this.remainingCount = this.syncCount(data.max_try_count - data.has_try_count || 0);
                     const userLevelLimit = data.user_level_limit;
                     const userLevel = User.getLevel(this.user.experience);
                     if (userLevelLimit > userLevel) {
@@ -546,6 +568,44 @@ export default {
                 this.points = res?.points || 0;
             });
         },
+        // ===== 本地可刮奖次数存储 =====
+        countStorageKey() {
+            const uid = User.getInfo()?.uid || 0;
+            return `${LOTTERY_COUNT_KEY}_${this.ID}_${uid}`;
+        },
+        readCount() {
+            try {
+                const raw = localStorage.getItem(this.countStorageKey());
+                if (raw === null) return null;
+                const num = ~~raw;
+                return Number.isFinite(num) ? num : null;
+            } catch (e) {
+                return null;
+            }
+        },
+        // 次数为 0 时清除记录，之后重新以服务端为准
+        saveCount(count) {
+            const num = Math.max(0, ~~count);
+            try {
+                if (num <= 0) {
+                    localStorage.removeItem(this.countStorageKey());
+                } else {
+                    localStorage.setItem(this.countStorageKey(), String(num));
+                }
+            } catch (e) {
+                // 忽略隐私模式等导致的存储不可用
+            }
+        },
+        // 载入时用本地记录覆盖服务端次数（本地无记录则直接用服务端值）
+        syncCount(serverCount) {
+            const local = this.readCount();
+            if (local === null) return serverCount || 0;
+            if (local <= 0) {
+                this.saveCount(0);
+                return serverCount || 0;
+            }
+            return local;
+        },
         buildCards() {
             this.cardList = new Array(6).fill(0).map((_, i) => ({
                 no: String(9999999999 - i),
@@ -581,6 +641,8 @@ export default {
             // TODO: 接入积分兑换次数接口
             this.points -= cost;
             this.remainingCount += times;
+            // 兑换后本地留存当前可刮奖次数
+            this.saveCount(this.remainingCount);
             this.showExchange = false;
             this.$message.success(`兑换成功，获得 ${times} 次刮奖机会`);
         },
@@ -859,6 +921,8 @@ export default {
         claimSingle() {
             this.showSingleScratch = false;
             this.remainingCount = Math.max(0, this.remainingCount - 1);
+            // 抽取后本地更新已抽次数
+            this.saveCount(this.remainingCount);
             this.isDrawing = false;
             // 点击「拿下」后，列表卡片才显示奖品
             if (this.activeCardIndex !== null && this.cardList[this.activeCardIndex]) {
@@ -873,7 +937,7 @@ export default {
             this.isDrawing = false;
         },
 
-        // 批量刮卡
+        // 批量刮卡（times 支持数字或分批次数数组）
         openBatchScratch(times) {
             if (!this.isLogin) return this.toLogin();
             if (!this.isBindWechat) {
@@ -885,31 +949,67 @@ export default {
                 this.isDrawing = false;
             }
             if (this.isDrawing) return;
-            if (this.remainingCount < times) {
+            const rounds = (Array.isArray(times) ? times : [times]).map((n) => ~~n).filter((n) => n > 0);
+            const total = rounds.reduce((sum, n) => sum + n, 0);
+            if (!total) return;
+            if (this.remainingCount < total) {
                 return this.$message.warning("刮奖次数不足，可签到或使用积分兑换次数");
             }
             this.isDrawing = true;
             this.batchRevealed = false;
-            this.batchPrizes = new Array(times).fill(null);
+            this.batchRounds = rounds;
+            this.batchTotal = total;
+            this.batchDoneRounds = 0;
+            this.batchPrizes = new Array(total).fill(null);
             this.showBatchScratch = true;
-            goodLucky(this.ID, times).then((res) => {
-                const _id = res.data?.data.id;
-                this.fetchPrize(_id, (prizes) => {
-                    this.batchPrizes = prizes
-                        .concat(new Array(Math.max(0, times - prizes.length)).fill(null))
-                        .slice(0, times);
-                });
+            this.runBatchRounds(rounds);
+        },
+        // 按批次顺序抽取，上一批返显结果后再抽下一批
+        runBatchRounds(rounds) {
+            const run = (i) => {
+                if (i >= rounds.length) {
+                    this.batchDoneRounds = rounds.length;
+                    return;
+                }
+                goodLucky(this.ID, rounds[i])
+                    .then((res) => {
+                        const _id = res.data?.data.id;
+                        this.fetchPrize(_id, (prizes) => {
+                            this.writeBatchRound(i, rounds[i], prizes);
+                            run(i + 1);
+                        });
+                    })
+                    .catch(() => {
+                        // 单批失败按「谢谢惠顾」占位，不阻塞后续批次
+                        this.writeBatchRound(i, rounds[i], []);
+                        run(i + 1);
+                    });
+            };
+            run(0);
+        },
+        writeBatchRound(index, times, prizes) {
+            const offset = this.batchRounds.slice(0, index).reduce((sum, n) => sum + n, 0);
+            const list = (prizes || [])
+                .concat(new Array(Math.max(0, times - (prizes || []).length)).fill(null))
+                .slice(0, times);
+            list.forEach((item, k) => {
+                this.batchPrizes[offset + k] = item;
             });
+            this.batchDoneRounds = Math.max(this.batchDoneRounds, index + 1);
         },
         revealBatch() {
-            if (this.batchRevealed) return;
+            // 全部批次返回后才允许刮开
+            if (this.batchRevealed || !this.batchReady) return;
             // 未中奖的空位兜底为「谢谢惠顾」，避免渲染 null.img 报错
             this.batchPrizes = this.batchPrizes.map((item) => item || this.thanksPrize());
             this.batchRevealed = true;
         },
         claimBatch() {
+            if (!this.batchReady) return;
             this.showBatchScratch = false;
-            this.remainingCount = Math.max(0, this.remainingCount - this.batchPrizes.length);
+            this.remainingCount = Math.max(0, this.remainingCount - this.batchTotal);
+            // 抽取后本地更新已抽次数
+            this.saveCount(this.remainingCount);
             this.isDrawing = false;
             this.refreshCards();
         },
@@ -918,8 +1018,19 @@ export default {
             this.showBatchScratch = false;
             this.isDrawing = false;
         },
+        // 全部刮完：按「当前剩余次数 / 单次可抽最大次数」拆分为多批依次抽取
         scratchAll() {
-            this.openBatchScratch(Math.min(this.remainingCount, 9));
+            const total = Math.max(0, ~~this.remainingCount);
+            if (!total) return;
+            const per = this.maxDrawCount;
+            const rounds = [];
+            let left = total;
+            while (left > 0) {
+                const n = Math.min(per, left);
+                rounds.push(n);
+                left -= n;
+            }
+            this.openBatchScratch(rounds);
         },
 
         // 结果

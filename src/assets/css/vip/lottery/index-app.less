@@ -144,6 +144,12 @@
                     background: #ff7aa2;
                     color: #fff;
                 }
+
+                // 暂时隐藏但仍占文档流位置且不可点击
+                &.is-temp-hidden {
+                    visibility: hidden;
+                    pointer-events: none;
+                }
             }
 
             .u-btn-primary {
@@ -395,11 +401,11 @@
     // 规则栏
     .m-rules-bar {
         margin: 0 16px 12px;
-        padding: 10px 14px;
+        padding: 15px 21px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 12px;
+        font-size: 18px;
         color: #888;
         background: rgba(255, 255, 255, 0.85);
         border-radius: 20px;
@@ -683,6 +689,13 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             margin-bottom: 20px;
+            // 全部刮完时卡片较多，限高滚动避免弹窗超出屏幕
+            max-height: 50vh;
+            overflow-y: auto;
+
+            &.is-pending {
+                cursor: default;
+            }
 
             .m-batch-card {
                 aspect-ratio: 1 / 1.15;

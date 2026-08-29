@@ -1,5 +1,5 @@
 <template>
-    <IndexApp v-if="!isApp" />
+    <IndexApp v-if="isApp" />
     <div v-else :class="theme" v-loading="loading">
         <CommonHeader></CommonHeader>
         <div class="p-event-blindbox">
@@ -245,7 +245,7 @@ import User from "@jx3box/jx3box-common/js/user";
 import { getBreadcrumb, getConfig } from "@/service/vip/cms";
 import { getBlindBox, goodLucky, getMyLucky, getLuckyConfig, getMyInfo } from "@/service/vip/lottery";
 import { cloneDeep, throttle, zip } from "lodash";
-import { resolveImagePath } from "@jx3box/jx3box-common/js/utils";
+import { resolveImagePath, isApp as checkIsApp } from "@jx3box/jx3box-common/js/utils";
 import { normalizeMallImage } from "@/utils/mallImage";
 import { __Root, __cdn } from "@/utils/config";
 import "@/assets/css/vip/lottery/hacker.less";
@@ -349,9 +349,9 @@ export default {
             };
             return data[this.theme];
         },
-        // 判断是否从 app 过来
+        // 判断是否从 app 过来（复用 jx3box-common 的 isApp，统一以 __env=app 为准：query/hash/localStorage）
         isApp() {
-            return this.$route.query.__evn === "app";
+            return checkIsApp();
         },
     },
     watch: {
