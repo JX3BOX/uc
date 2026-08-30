@@ -125,6 +125,11 @@ export default {
     certificate: {
         awardedAt: "Awarded at: {time}",
         print: "Print certificate",
+        download: "Download certificate",
+        downloading: "Downloading...",
+        downloadStarted: "The Photos save dialog is open. Please confirm.",
+        downloadSuccess: "Certificate saved to Photos",
+        downloadFailed: "Failed to download the certificate. Please try again.",
         notFound: "The certificate does not exist or is temporarily unavailable",
         templateNotFound: "Certificate template not found",
         loadFailed: "Failed to load the certificate. Please try again later.",

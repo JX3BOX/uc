@@ -125,6 +125,11 @@ export default {
     certificate: {
         awardedAt: "Nhận lúc: {time}",
         print: "In chứng nhận",
+        download: "Tải chứng nhận",
+        downloading: "Đang tải...",
+        downloadStarted: "Đã mở hộp thoại lưu ảnh. Vui lòng xác nhận.",
+        downloadSuccess: "Đã lưu chứng nhận vào thư viện ảnh",
+        downloadFailed: "Không thể tải chứng nhận. Vui lòng thử lại.",
         notFound: "Chứng nhận không tồn tại hoặc tạm thời không truy cập được",
         templateNotFound: "Không tìm thấy mẫu chứng nhận",
         loadFailed: "Không thể tải chứng nhận. Vui lòng thử lại sau.",

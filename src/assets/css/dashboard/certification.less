@@ -3,47 +3,75 @@
     .mt(20px);
     .r(10px);
     .pointer();
-    padding: 24px 18px;
+    padding: clamp(16px, 3%, 24px);
+    overflow: hidden;
     border: 1px solid #cfcfcf;
     background: linear-gradient(0deg, #ffffff 28.24%, #f5f7fa 100%);
     transition: 0.2s all;
+    isolation: isolate;
     .flex();
-    align-items: flex-end;
+    align-items: center;
+    gap: clamp(12px, 3%, 20px);
     .u-img {
-        width: 34%;
-        .pb(47%);
+        .pr();
+        z-index: 1;
+        width: clamp(112px, 30%, 176px);
+        flex: 0 0 clamp(112px, 30%, 176px);
         background-size: cover;
         background-position: center;
         transition: 0.2s all;
         transform-origin: bottom left;
         border: 1px solid #cfcfcf;
 
+        &::before {
+            content: "";
+            display: block;
+            padding-bottom: 140.64%;
+        }
+
         &.u-card {
-            .pb(34%);
+            &::before {
+                padding-bottom: 100%;
+            }
         }
     }
     .m-info {
-        .w(calc(100% - 40%));
-        .pl(10px);
+        z-index: 1;
+        width: auto;
+        min-width: 0;
+        flex: 1 1 auto;
         box-sizing: border-box;
         .pr();
         .u-title {
-            .fz(22px);
+            font-size: clamp(18px, 1.15vw, 22px);
+            line-height: 1.35;
             .bold();
             .color(#6470a1);
-            .mb(10px);
+            margin-bottom: clamp(8px, 1vw, 12px);
+            overflow-wrap: anywhere;
+            text-wrap: balance;
             transition: 0.2s all;
         }
         .u-tip {
             .color(#999999);
             .fz(12px);
             .mt(2px);
+            line-height: 1.6;
+            overflow-wrap: anywhere;
         }
     }
     .u-icon {
         .pa();
-        .rt(18px,24px);
-        .size(52px);
+        z-index: 0;
+        top: clamp(12px, 1.1vw, 18px);
+        right: clamp(12px, 1.1vw, 18px);
+        width: clamp(48px, 3.8vw, 64px);
+        height: clamp(48px, 3.8vw, 64px);
+        object-fit: contain;
+        opacity: 0.14;
+        pointer-events: none;
+        user-select: none;
+        transition: opacity 0.2s ease;
     }
     &:hover {
         box-shadow: 0 0 10px 0 #e3d29a;
@@ -57,14 +85,17 @@
                 .color(#ffbe3b);
             }
         }
+        .u-icon {
+            opacity: 0.2;
+        }
     }
     &.tt_item {
         .u-title {
             .color(#A18D58);
         }
         .u-icon {
-            .size(65px);
-            .rt(18px,18px);
+            width: clamp(54px, 4.2vw, 72px);
+            height: clamp(54px, 4.2vw, 72px);
         }
     }
 
@@ -128,7 +159,7 @@
     .m-cert-item {
         .m-info {
             .u-title {
-                .fz(16px);
+                .fz(18px);
             }
         }
     }
@@ -144,28 +175,23 @@
 
         .u-img {
             width: 88px;
-            height: 124px;
-            padding-bottom: 0;
             flex: 0 0 88px;
             background-repeat: no-repeat;
         }
 
         .u-img.u-card {
             width: 88px;
-            height: 88px;
-            padding-bottom: 0;
         }
 
         .m-info {
             width: auto;
             min-width: 0;
-            padding: 0 0 0 12px;
+            padding: 0;
             flex: 1 1 auto;
 
             .u-title {
                 min-height: 22px;
                 margin-bottom: 6px;
-                padding-right: 42px;
                 font-size: 16px;
                 line-height: 22px;
                 overflow-wrap: anywhere;
@@ -180,17 +206,16 @@
         }
 
         .u-icon {
-            top: 14px;
-            right: 14px;
-            width: 36px;
-            height: 36px;
+            top: 10px;
+            right: 10px;
+            width: 42px;
+            height: 42px;
+            opacity: 0.11;
         }
 
         &.tt_item .u-icon {
-            top: 12px;
-            right: 12px;
-            width: 42px;
-            height: 42px;
+            width: 48px;
+            height: 48px;
         }
 
         &:hover .u-img {

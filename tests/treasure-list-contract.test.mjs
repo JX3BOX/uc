@@ -17,6 +17,12 @@ test("collectible lists keep stable item keys and safe new-tab links", () => {
     }
 });
 
+test("collectible lists use sidebar-aware desktop column breakpoints", () => {
+    for (const source of listSources) {
+        assert.match(source, /:sm="12" :md="12" :lg="8" :xl="6"/);
+    }
+});
+
 test("collectible lists expose retry actions and tolerate malformed list data", () => {
     for (const source of listSources) {
         assert.match(source, /v-if="loadError"/);

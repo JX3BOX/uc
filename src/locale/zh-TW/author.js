@@ -125,6 +125,11 @@ export default {
     certificate: {
         awardedAt: "獲得時間：{time}",
         print: "列印證書",
+        download: "下載證書",
+        downloading: "下載中...",
+        downloadStarted: "已開啟相簿儲存，請確認",
+        downloadSuccess: "證書已儲存到相簿",
+        downloadFailed: "證書下載失敗，請重試",
         notFound: "證書不存在或暫時無法存取",
         templateNotFound: "證書範本不存在",
         loadFailed: "證書載入失敗，請稍後重試",

@@ -3,7 +3,7 @@
         <div class="m-cert-list">
             <ContentSkeleton v-if="loading" variant="cards" :rows="per" :columns="4" />
             <el-row v-else-if="list.length" :gutter="32">
-                <el-col v-for="(item, index) in list" :key="item.id || index" :xs="24" :sm="12" :md="8" :xl="6">
+                <el-col v-for="(item, index) in list" :key="item.id || index" :xs="24" :sm="12" :md="12" :lg="8" :xl="6">
                     <a
                         class="m-cert-item"
                         :href="getCertLink(item)"
@@ -51,9 +51,10 @@
                             v-if="item.team_certificate.sort_no > 100"
                             :src="showSchoolIcon(tianTuanCertificateCode[item.team_certificate.sort_no])"
                             alt=""
+                            aria-hidden="true"
                         />
                         <!-- 百强证书 -->
-                        <img class="u-icon" v-else src="@/assets/img/dashboard/cert/CI_icon.svg" alt="" />
+                        <img class="u-icon" v-else src="@/assets/img/dashboard/cert/CI_icon.svg" alt="" aria-hidden="true" />
                     </a>
                 </el-col>
             </el-row>

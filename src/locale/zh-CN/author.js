@@ -132,6 +132,11 @@ export default {
     certificate: {
         awardedAt: "获得时间：{time}",
         print: "打印证书",
+        download: "下载证书",
+        downloading: "下载中...",
+        downloadStarted: "已打开相册保存，请确认",
+        downloadSuccess: "证书已保存到相册",
+        downloadFailed: "证书下载失败，请重试",
         notFound: "证书不存在或暂时无法访问",
         templateNotFound: "证书模板不存在",
         loadFailed: "证书加载失败，请稍后重试",

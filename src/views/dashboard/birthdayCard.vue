@@ -3,7 +3,7 @@
         <div class="m-cert-list">
             <ContentSkeleton v-if="loading" variant="cards" :rows="pageSize" :columns="4" />
             <el-row :gutter="32" v-else-if="list.length">
-                <el-col v-for="(item, index) in list" :key="item.id || index" :xs="24" :sm="12" :md="8" :xl="6">
+                <el-col v-for="(item, index) in list" :key="item.id || index" :xs="24" :sm="12" :md="12" :lg="8" :xl="6">
                     <a
                         class="m-cert-item m-bday-item"
                         :href="getCertLink(item)"
@@ -16,7 +16,7 @@
                             <div class="u-tip">{{ $t("dashboard.treasure.happyBirthday", { age: item.age }) }}</div>
                             <div class="u-tip">{{ $t("dashboard.common.obtainedAt") }}：{{ formatTime(item.created_at) }}</div>
                         </div>
-                        <img class="u-icon" src="@/assets/img/dashboard/holidayCard/bday_icon.svg" />
+                        <img class="u-icon" src="@/assets/img/dashboard/holidayCard/bday_icon.svg" alt="" aria-hidden="true" />
                     </a>
                 </el-col>
             </el-row>

@@ -11,7 +11,13 @@
                 <div class="u-time m-hide">{{ $t("author.certificate.awardedAt", { time: treasureInfo.team_certificate.awardtime }) }}</div>
                 <el-image class="u-img" :fit="'contain'" :src="treasureImg" :preview-src-list="[treasureImg]">
                 </el-image>
-                <button @click="print" class="u-btn m-hide el-button el-button--primary">{{ $t("author.certificate.print") }}</button>
+                <button
+                    class="u-btn m-hide el-button el-button--primary"
+                    :disabled="saving"
+                    @click="handleCertificateAction"
+                >
+                    {{ certificateActionText }}
+                </button>
             </template>
             <el-empty v-else-if="errorMessage" class="m-cert-empty" :description="errorMessage">
                 <el-button type="primary" @click="load">{{ $t("author.certificate.retry") }}</el-button>
@@ -27,7 +33,7 @@ import { __cdn, __Root } from "@/utils/config";
 import AppLayout from "@/layouts/author/AppLayout.vue";
 import { getCertification } from "@/service/author/cms";
 import CI from "@/assets/data/author/certificate.json";
-import { isAppWebview } from "@/utils/app-env";
+import { ElMessage } from "element-plus";
 import {
     createCertificateAssetResolver,
     getCertificateOwnerId,
@@ -38,6 +44,9 @@ import {
 const fontMap = {
     "ALIMAMASHUHEITI-BOLD": require("@/assets/css/author/certificateFont/ALIMAMASHUHEITI-BOLD.OTF"),
 };
+const WEBVIEW_SAVE_IMAGE_REQUEST = "jx3box:webview-save-image";
+const WEBVIEW_SAVE_IMAGE_RESULT = "jx3box:webview-save-image-result";
+const SAVE_RESULT_TIMEOUT = 90000;
 
 export default {
     name: "AuthorCertificate",
@@ -49,6 +58,9 @@ export default {
             errorMessage: "",
             loading: false,
             loadRequestId: 0,
+            saving: false,
+            saveRequestId: "",
+            saveResultTimer: 0,
         };
     },
     computed: {
@@ -62,7 +74,14 @@ export default {
             return `${this.uid}:${this.id}:${this.$i18n.locale}`;
         },
         isAppEnv() {
-            return isAppWebview(this.$route);
+            const env = this.$route.query?.__env;
+            return Array.isArray(env) ? env.includes("app") : env === "app";
+        },
+        certificateActionText() {
+            if (!this.isAppEnv) return this.$t("author.certificate.print");
+            return this.saving
+                ? this.$t("author.certificate.downloading")
+                : this.$t("author.certificate.download");
         },
     },
     watch: {
@@ -73,8 +92,13 @@ export default {
             },
         },
     },
+    mounted() {
+        window.addEventListener("message", this.onHostMessage);
+    },
     beforeUnmount() {
         this.loadRequestId += 1;
+        window.removeEventListener("message", this.onHostMessage);
+        this.clearSaveResultTimer();
     },
     methods: {
         async load() {
@@ -151,8 +175,115 @@ export default {
         finishLoading(requestId) {
             if (requestId === this.loadRequestId) this.loading = false;
         },
-        print() {
-            if (this.treasureImg) window.print();
+        handleCertificateAction() {
+            if (!this.treasureImg || this.saving) return;
+            if (!this.isAppEnv) {
+                window.print();
+                return;
+            }
+            this.downloadCertificate();
+        },
+        downloadCertificate() {
+            const filename = `jx3box-certificate-${this.id}.png`;
+            if (window.parent === window) {
+                this.downloadInBrowser(this.treasureImg, filename);
+                ElMessage.success(this.$t("author.certificate.downloadSuccess"));
+                return;
+            }
+
+            const harmonyBridge = this.getHarmonyPhotoBridge();
+            if (harmonyBridge) {
+                this.downloadWithHarmonyBridge(harmonyBridge, filename);
+                return;
+            }
+
+            const parentOrigin = this.getParentOrigin();
+            if (!parentOrigin) {
+                ElMessage.error(this.$t("author.certificate.downloadFailed"));
+                return;
+            }
+            this.saving = true;
+            this.saveRequestId = `certificate-${this.id}-${Date.now()}`;
+            window.parent.postMessage(
+                {
+                    type: WEBVIEW_SAVE_IMAGE_REQUEST,
+                    requestId: this.saveRequestId,
+                    dataUrl: this.treasureImg,
+                    filename,
+                },
+                parentOrigin
+            );
+            this.saveResultTimer = window.setTimeout(() => {
+                this.finishCertificateSave(false);
+            }, SAVE_RESULT_TIMEOUT);
+        },
+        downloadInBrowser(dataUrl, filename) {
+            const link = document.createElement("a");
+            link.href = dataUrl;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        },
+        getParentOrigin() {
+            const referrer = String(document.referrer || "");
+            if (/^capacitor:\/\/localhost(?:[/?#]|$)/i.test(referrer)) return "capacitor://localhost";
+            try {
+                const origin = new URL(referrer).origin;
+                if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)) return origin;
+            } catch (error) {
+            }
+            return "";
+        },
+        getHarmonyPhotoBridge() {
+            const bridge = window.JX3BOX_HARMONY_HTTP;
+            return /ArkWeb|HarmonyOS|OpenHarmony/i.test(navigator.userAgent || "") &&
+                typeof bridge?.saveImageToPhotos === "function"
+                ? bridge
+                : null;
+        },
+        downloadWithHarmonyBridge(bridge, filename) {
+            this.saving = true;
+            try {
+                const raw = bridge.saveImageToPhotos(
+                    JSON.stringify({
+                        data: this.treasureImg.split(",")[1] || "",
+                        mimeType: "image/png",
+                        filename,
+                    })
+                );
+                const response = typeof raw === "string" ? JSON.parse(raw) : raw;
+                const accepted = response?.success || (response?.status === 102 && response?.data?.requestId);
+                if (!accepted) throw new Error(response?.error || "Harmony image save failed");
+                ElMessage.success(this.$t("author.certificate.downloadStarted"));
+            } catch (error) {
+                ElMessage.error(this.$t("author.certificate.downloadFailed"));
+            } finally {
+                this.saving = false;
+            }
+        },
+        onHostMessage(event) {
+            if (event.source !== window.parent || event.data?.type !== WEBVIEW_SAVE_IMAGE_RESULT) return;
+            if (!this.saveRequestId || event.data?.requestId !== this.saveRequestId) return;
+
+            const parentOrigin = this.getParentOrigin();
+            if (!parentOrigin || event.origin !== parentOrigin) return;
+            this.finishCertificateSave(Boolean(event.data?.success));
+        },
+        finishCertificateSave(success) {
+            this.clearSaveResultTimer();
+            this.saving = false;
+            this.saveRequestId = "";
+            if (success) {
+                ElMessage.success(this.$t("author.certificate.downloadSuccess"));
+                return;
+            }
+            ElMessage.error(this.$t("author.certificate.downloadFailed"));
+        },
+        clearSaveResultTimer() {
+            if (!this.saveResultTimer) return;
+            window.clearTimeout(this.saveResultTimer);
+            this.saveResultTimer = 0;
         },
     },
 };
