@@ -1,6 +1,16 @@
 @config "../../../tailwind.config.js";
 @import "tailwindcss";
 
+/* 分页图标继承按钮宽度，使用 flex 居中 Tailwind 重置为 block 的 SVG。 */
+@media screen and (max-width: 720px) {
+    .el-pagination .btn-prev > .el-icon,
+    .el-pagination .btn-next > .el-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
 /* Tailwind v2 的 border-opacity utilities（本项目仍在用） */
 .border-opacity-60 {
     --tw-border-opacity: 0.6;
