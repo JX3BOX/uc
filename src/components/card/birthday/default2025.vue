@@ -1,6 +1,15 @@
 <template>
     <div class="p-birthday" @mousemove="handleMouseMove" @mouseleave="handleMouseLeave">
-        <video class="u-video" :src="`${imgPath}bg.mp4`" type="video/mp4" autoplay loop muted></video>
+        <video
+            class="u-video"
+            :src="`${imgPath}bg.mp4`"
+            type="video/mp4"
+            autoplay
+            loop
+            muted
+            playsinline
+            webkit-playsinline="true"
+        ></video>
         <div :class="letterClass" @click="openLetter">
             <!-- 内页背景 -->
             <img :src="`${imgPath}pack_in.png`" class="u-img u-pack-in" />
@@ -36,13 +45,15 @@
 
 <script>
 import { getBirthdayDetail } from "@/service/author/birthday";
-import User from "@jx3box/jx3box-common/js/user";
+import { getUserInfo } from "@/service/author/cms";
+import { isCardOwnedBy, leaveCardPage } from "@/utils/card-page";
 import { __cdn } from "@/utils/config";
 export default {
     name: "Default2025",
     data: function () {
         return {
             data: "",
+            profile: {},
             imgPath: __cdn + "design/card/birthday/default2025/",
             star: "SY",
             // 状态
@@ -57,23 +68,14 @@ export default {
         };
     },
     computed: {
-        isLogin() {
-            return User.isLogin();
-        },
-        user() {
-            return User.getInfo();
-        },
         id: function () {
             return this.$route.query.id;
         },
         uid: function () {
             return this.$route.query.uid || 0;
         },
-        isMine: function () {
-            return this.uid == this.user.uid;
-        },
         name: function () {
-            return this.user.name;
+            return this.profile?.display_name || this.profile?.name || this.data?.display_name || "";
         },
         date() {
             return this.data?.created_at ? this.dateFormat(this.data.created_at) : "";
@@ -97,7 +99,7 @@ export default {
     },
 
     mounted() {
-        this.isLogin ? this.loadData() : this.goBack();
+        this.loadData();
     },
     methods: {
         dateFormat: function (val) {
@@ -108,16 +110,21 @@ export default {
                 day: "2-digit",
             }).format(new Date(val));
         },
-        loadData() {
-            if (!this.isMine) return this.goBack();
-            getBirthdayDetail(this.id)
-                .then((res) => {
-                    this.data = res.data.data;
-                    this.getStar();
-                })
-                .catch(() => {
-                    this.goBack();
-                });
+        async loadData() {
+            if (!this.id || !this.uid) return this.goBack();
+            try {
+                const [detailRes, profileRes] = await Promise.all([
+                    getBirthdayDetail(this.id),
+                    getUserInfo(this.uid).catch(() => null),
+                ]);
+                const detail = detailRes?.data?.data;
+                if (!detail || !isCardOwnedBy(detail, this.uid)) return this.goBack();
+                this.data = detail;
+                this.profile = profileRes?.data?.data || {};
+                this.getStar();
+            } catch (error) {
+                this.goBack();
+            }
         },
         openLetter() {
             this.clickCount++;
@@ -143,7 +150,7 @@ export default {
             this.isMouseOver = false;
         },
         goBack() {
-            this.$router.push({ name: "index", params: { id: this.uid } });
+            leaveCardPage(this.$router, this.uid);
         },
         getStar() {
             const date = new Date(this.data.birthday);

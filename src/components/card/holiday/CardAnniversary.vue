@@ -12,10 +12,10 @@
             <!-- 背景 -->
             <div class="m-bg">
                 <!-- 背景 -->
-                <video v-if="nextStep" class="u-video" autoplay muted loop :poster="bg2Img[0]" preload="metadata">
+                <video v-if="nextStep" class="u-video" autoplay muted loop playsinline webkit-playsinline="true" :poster="bg2Img[0]" preload="metadata">
                     <source :src="bg2Img[2]" type="video/mp4" />
                 </video>
-                <video v-else class="u-video" autoplay muted loop :poster="bg1Img[0]" preload="metadata">
+                <video v-else class="u-video" autoplay muted loop playsinline webkit-playsinline="true" :poster="bg1Img[0]" preload="metadata">
                     <source :src="bg1Img[2]" type="video/mp4" />
                 </video>
                 <!-- 盒子娘小 -->

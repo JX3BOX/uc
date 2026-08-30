@@ -3,8 +3,13 @@
         <div class="m-cert-list">
             <ContentSkeleton v-if="loading" variant="cards" :rows="pageSize" :columns="4" />
             <el-row :gutter="32" v-else-if="list.length">
-                <el-col v-for="(item, index) in list" :key="index" :xs="24" :sm="12" :md="8" :xl="6">
-                    <a class="m-cert-item m-feast-item" :href="getCertLink(item)" target="_blank">
+                <el-col v-for="(item, index) in list" :key="item.id || index" :xs="24" :sm="12" :md="8" :xl="6">
+                    <a
+                        class="m-cert-item m-feast-item"
+                        :href="getCertLink(item)"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
                         <div class="u-img u-card"></div>
                         <div class="m-info">
                             <div class="u-title">{{ item.event_name }}</div>
@@ -15,7 +20,11 @@
                     </a>
                 </el-col>
             </el-row>
-            <el-empty v-else :description="$t('dashboard.treasure.noCards')"></el-empty>
+            <el-empty v-else :description="emptyText">
+                <el-button v-if="loadError" type="primary" @click="getCertificateList">
+                    {{ $t("dashboard.common.retry") }}
+                </el-button>
+            </el-empty>
         </div>
 
         <el-pagination
@@ -53,9 +62,14 @@ export default {
             pageSize: 10,
             pageIndex: 1,
             total: 0,
+            loadError: false,
         };
     },
-    computed: {},
+    computed: {
+        emptyText() {
+            return this.loadError ? this.$t("dashboard.common.requestFailed") : this.$t("dashboard.treasure.noCards");
+        },
+    },
     methods: {
         load() {
             this.getCertificateList();
@@ -66,14 +80,17 @@ export default {
                 pageSize: this.pageSize,
             };
             this.loading = true;
+            this.loadError = false;
             getHolidayCard(params)
                 .then((res) => {
-                    this.list = res.data.data.list || [];
-                    this.total = res.data.data.page.total || 0;
+                    const data = res.data.data || {};
+                    this.list = Array.isArray(data.list) ? data.list : [];
+                    this.total = data.page?.total || 0;
                 })
                 .catch(() => {
                     this.list = [];
                     this.total = 0;
+                    this.loadError = true;
                 })
                 .finally(() => {
                     this.loading = false;

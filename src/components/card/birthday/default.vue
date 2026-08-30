@@ -1,7 +1,16 @@
 <template>
     <div class="m-birthday" v-if="userdata">
         <div class="m-birthday-video">
-            <video class="u-video" :src="`${imgPath}birthbg.mp4`" type="video/mp4" autoplay loop muted></video>
+            <video
+                class="u-video"
+                :src="`${imgPath}birthbg.mp4`"
+                type="video/mp4"
+                autoplay
+                loop
+                muted
+                playsinline
+                webkit-playsinline="true"
+            ></video>
             <i class="u-mask"></i>
         </div>
         <div class="m-letter">
@@ -30,8 +39,8 @@
 import { showAvatar } from "@jx3box/jx3box-common/js/utils";
 import dayjs from "dayjs";
 import { getUserInfo } from "@/service/author/cms.js";
-import User from "@jx3box/jx3box-common/js/user";
 import { getBirthdayDetail } from "@/service/author/birthday";
+import { isCardOwnedBy, leaveCardPage } from "@/utils/card-page";
 import { __cdn } from "@/utils/config";
 export default {
     name: "Birthday",
@@ -57,21 +66,29 @@ export default {
         uid: function () {
             return this.$route.query.uid;
         },
-        isMine: function () {
-            return this.uid == User.getInfo().uid;
-        },
     },
     methods: {
         loadData: async function () {
-            if (!this.uid) return;
-            if (!this.isMine) return;
-            getUserInfo(this.uid).then((res) => {
-                this.userdata = res.data.data;
-            });
-            getBirthdayDetail(this.id).then((res) => {
-                this.zip = dayjs(res.data.data.birthday).format("YYMMDD");
-                this.age = res.data.data.age;
-            });
+            if (!this.id || !this.uid) return this.goBack();
+            try {
+                const [detailRes, profileRes] = await Promise.all([
+                    getBirthdayDetail(this.id),
+                    getUserInfo(this.uid).catch(() => null),
+                ]);
+                const detail = detailRes?.data?.data;
+                if (!detail || !isCardOwnedBy(detail, this.uid)) return this.goBack();
+                this.userdata = profileRes?.data?.data || {
+                    display_name: detail.display_name || "",
+                    user_avatar: detail.user_avatar || "",
+                };
+                this.zip = dayjs(detail.birthday).format("YYMMDD");
+                this.age = detail.age;
+            } catch (error) {
+                this.goBack();
+            }
+        },
+        goBack() {
+            leaveCardPage(this.$router, this.uid);
         },
     },
     mounted: function () {

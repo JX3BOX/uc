@@ -4,6 +4,11 @@ export default {
         heroName: "Hiệp sĩ {name}",
         zero: "Không",
         lamp: "Đèn",
+        loading: "Đang tải vật phẩm sưu tầm…",
+        loadFailed: "Không thể tải vật phẩm sưu tầm. Vui lòng thử lại.",
+        loginRequired: "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
+        notFound: "Không tìm thấy vật phẩm hoặc vật phẩm không thuộc tài khoản này.",
+        retry: "Thử lại",
     },
     birthday: {
         wish: "Chúc {name} sinh nhật vui vẻ",

@@ -3,11 +3,12 @@
         <div class="m-cert-list">
             <ContentSkeleton v-if="loading" variant="cards" :rows="per" :columns="4" />
             <el-row v-else-if="list.length" :gutter="32">
-                <el-col v-for="(item, index) in list" :key="index" :xs="24" :sm="12" :md="8" :xl="6">
+                <el-col v-for="(item, index) in list" :key="item.id || index" :xs="24" :sm="12" :md="8" :xl="6">
                     <a
                         class="m-cert-item"
                         :href="getCertLink(item)"
                         target="_blank"
+                        rel="noopener noreferrer"
                         :class="{
                             tt_item: isSuperstar(item),
                         }"
@@ -56,7 +57,11 @@
                     </a>
                 </el-col>
             </el-row>
-            <el-empty v-else :description="emptyText"></el-empty>
+            <el-empty v-else :description="emptyText">
+                <el-button v-if="loadError" type="primary" @click="getCertificateList">
+                    {{ $t("dashboard.common.retry") }}
+                </el-button>
+            </el-empty>
 
             <el-pagination
                 v-if="!loading && total"
@@ -125,7 +130,7 @@ export default {
                 .then((res) => {
                     const data = res.data.data || {};
                     this.total = data.page?.total || 0;
-                    this.list = data.list || [];
+                    this.list = Array.isArray(data.list) ? data.list : [];
                 })
                 .catch(() => {
                     this.total = 0;

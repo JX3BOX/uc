@@ -1,16 +1,23 @@
 <template>
     <AppLayout>
         <div class="m-main m-index-popup">
-            <component :is="event_component" :data="component_data" @close="close" />
+            <component v-if="ready" :is="event_component" :data="component_data" @close="close" />
+            <div v-else class="m-card-state">
+                <span v-if="loading">{{ $t("card.common.loading") }}</span>
+                <template v-else>
+                    <span>{{ errorMessage || $t("card.common.loadFailed") }}</span>
+                    <el-button type="primary" @click="load">{{ $t("card.common.retry") }}</el-button>
+                </template>
+            </div>
         </div>
     </AppLayout>
 </template>
 
 <script>
-import { some } from "lodash";
 import { __cdn } from "@/utils/config";
 import cardType from "@/assets/data/author/card.json";
 import { getHolidayCard } from "@/service/author/card";
+import { isCardOwnedBy, leaveCardPage } from "@/utils/card-page";
 import AppLayout from "@/layouts/author/AppLayout.vue";
 import DefaultTemplate from "@/components/card/holiday/DefaultTemplate.vue";
 import CardChildren from "@/components/card/holiday/CardChildren.vue";
@@ -50,6 +57,9 @@ export default {
             cardType,
             list: [],
             data: {},
+            loading: true,
+            ready: false,
+            errorMessage: "",
         };
     },
     computed: {
@@ -106,7 +116,6 @@ export default {
                 double: this.double_data,
                 one: this.one_data,
             };
-            console.log(_data[this.cardType[this.event_id]?.type]);
             return _data[this.cardType[this.event_id]?.type];
         },
         // 默认数据
@@ -251,27 +260,39 @@ export default {
     },
     methods: {
         close() {
-            // window.opener = null;
-            // window.open("", "_self");
-            // window.close();
             this.goBack();
-            window.parent.postMessage("closeHolidayCard", "*");
         },
         goBack() {
-            // window.location.href = `/author/${this.user_id}`;
+            leaveCardPage(this.$router, this.user_id);
         },
-        load() {
-            if (!User.isLogin()) return;
-            if (User.getInfo().uid != this.user_id) {
-                this.goBack();
+        async load() {
+            this.loading = true;
+            this.ready = false;
+            this.errorMessage = "";
+            this.list = [];
+
+            if (!User.isLogin()) {
+                this.loading = false;
+                this.errorMessage = this.$t("card.common.loginRequired");
+                return;
             }
-            getHolidayCard({ _no_page: 1 }).then((res) => {
+
+            try {
+                const res = await getHolidayCard({ _no_page: 1 });
                 this.list = res.data.data?.list || [];
-                // 如果用户没有对应的卡号
                 if (!this.checkMatch(this.list)) {
-                    this.goBack();
+                    this.errorMessage = this.$t("card.common.notFound");
+                    return;
                 }
-            });
+                this.ready = Boolean(this.event_component && this.active_event);
+                if (!this.ready) {
+                    this.errorMessage = this.$t("card.common.notFound");
+                }
+            } catch (error) {
+                this.errorMessage = error?.response?.data?.msg || this.$t("card.common.loadFailed");
+            } finally {
+                this.loading = false;
+            }
         },
         checkMatch(list) {
             if (!list || !Array.isArray(list)) return false;
@@ -281,7 +302,9 @@ export default {
             // 验证卡号和活动ID是否有效
             if (isNaN(cardId) || isNaN(eventId)) return false;
 
-            return some(list, { id: cardId, event_id: eventId });
+            return list.some(
+                (item) => item.id == cardId && item.event_id == eventId && isCardOwnedBy(item, this.user_id)
+            );
         },
     },
 };
@@ -293,6 +316,22 @@ export default {
     height: 100dvh;
     overflow: hidden;
     background-color: #24292e;
+}
+.m-card-state {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 24px;
+    color: #ffffff;
+    text-align: center;
+
+    .el-button {
+        margin-top: 16px;
+    }
 }
 @import "~@/assets/css/author/pop.less";
 </style>

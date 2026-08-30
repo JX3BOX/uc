@@ -1,6 +1,15 @@
 <template>
     <div class="p-birthday">
-        <video class="u-star-video" :src="`${imgPath}bg.mp4?12`" type="video/mp4" autoplay loop muted></video>
+        <video
+            class="u-star-video"
+            :src="`${imgPath}bg.mp4?12`"
+            type="video/mp4"
+            autoplay
+            loop
+            muted
+            playsinline
+            webkit-playsinline="true"
+        ></video>
         <template v-if="!card">
             <machine :imgPath="imgPath">
                 <!-- 跑马灯 -->
@@ -62,7 +71,8 @@ import machine from "./components/machine.vue";
 import ball from "./components/ball.vue";
 import lamp from "./components/lamp.vue";
 import { getBirthdayDetail } from "@/service/author/birthday";
-import User from "@jx3box/jx3box-common/js/user";
+import { getUserInfo } from "@/service/author/cms";
+import { isCardOwnedBy, leaveCardPage } from "@/utils/card-page";
 import dayjs from "dayjs";
 import { __cdn } from "@/utils/config";
 export default {
@@ -70,6 +80,7 @@ export default {
     data: function () {
         return {
             data: "",
+            profile: {},
             imgPath: __cdn + "design/card/birthday/2026/",
             star: "jinniu",
             reward: false,
@@ -84,49 +95,45 @@ export default {
         lamp,
     },
     computed: {
-        isLogin() {
-            return User.isLogin();
-        },
-        user() {
-            return User.getInfo();
-        },
         id: function () {
             return this.$route.query.id;
         },
         uid: function () {
             return this.$route.query.uid || 0;
         },
-        isMine: function () {
-            return this.uid == this.user.uid;
-        },
         name: function () {
-            return this.user.name;
+            return this.profile?.display_name || this.profile?.name || this.data?.display_name || "";
         },
         date() {
-            return this.dateFormat(this.data.birthday);
+            return this.data?.birthday ? this.dateFormat(this.data.birthday) : "";
         },
     },
 
     mounted() {
-        this.isLogin ? this.loadData() : this.goBack();
+        this.loadData();
     },
     methods: {
         dateFormat: function (val) {
             return dayjs(val).format("YYYY.MM.DD");
         },
-        loadData() {
-            if (!this.isMine) return this.goBack();
-            getBirthdayDetail(this.id)
-                .then((res) => {
-                    this.data = res.data.data;
-                    this.getStar();
-                })
-                .catch(() => {
-                    this.goBack();
-                });
+        async loadData() {
+            if (!this.id || !this.uid) return this.goBack();
+            try {
+                const [detailRes, profileRes] = await Promise.all([
+                    getBirthdayDetail(this.id),
+                    getUserInfo(this.uid).catch(() => null),
+                ]);
+                const detail = detailRes?.data?.data;
+                if (!detail || !isCardOwnedBy(detail, this.uid)) return this.goBack();
+                this.data = detail;
+                this.profile = profileRes?.data?.data || {};
+                this.getStar();
+            } catch (error) {
+                this.goBack();
+            }
         },
         goBack() {
-            this.$router.push({ name: "index", params: { id: this.uid } });
+            leaveCardPage(this.$router, this.uid);
         },
         getStar() {
             const date = new Date(this.data.birthday);

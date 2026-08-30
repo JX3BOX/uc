@@ -4,6 +4,11 @@ export default {
         heroName: "Hero {name}",
         zero: "Zero",
         lamp: "Lamp",
+        loading: "Loading collectible…",
+        loadFailed: "Unable to load this collectible. Please try again.",
+        loginRequired: "Your session has expired. Please sign in again.",
+        notFound: "This collectible was not found or does not belong to this account.",
+        retry: "Retry",
     },
     birthday: {
         wish: "Best wishes to {name}",

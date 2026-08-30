@@ -4,6 +4,11 @@ export default {
         heroName: "{name} 侠士",
         zero: "零",
         lamp: "灯",
+        loading: "正在加载藏品…",
+        loadFailed: "藏品加载失败，请稍后重试",
+        loginRequired: "登录状态已失效，请重新登录",
+        notFound: "未找到该藏品或藏品不属于当前账号",
+        retry: "重试",
     },
     birthday: {
         wish: "祝{name}侠士",

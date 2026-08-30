@@ -4,6 +4,11 @@ export default {
         heroName: "{name} 俠士",
         zero: "零",
         lamp: "燈",
+        loading: "正在載入收藏品…",
+        loadFailed: "收藏品載入失敗，請稍後重試",
+        loginRequired: "登入狀態已失效，請重新登入",
+        notFound: "找不到該收藏品，或收藏品不屬於目前帳號",
+        retry: "重試",
     },
     birthday: {
         wish: "祝{name}俠士",
