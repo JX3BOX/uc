@@ -187,4 +187,52 @@ export default {
         font-size: 32px;
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-auth {
+        min-width: 0;
+
+        .m-block {
+            margin: 12px 0 4px;
+            padding: 10px 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .m-dashboard-content-list {
+            gap: 8px;
+
+            .u-profile-item {
+                min-width: 0;
+                gap: 12px;
+                padding: 0;
+            }
+        }
+
+        .m-item {
+            justify-content: space-between;
+            gap: 12px;
+            width: 100%;
+            min-width: 0;
+            padding: 18px 0 10px;
+        }
+
+        img,
+        svg {
+            flex: none;
+            .size(40px);
+        }
+
+        .u-status {
+            width: auto;
+            min-width: 0;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+
+        .u-button {
+            flex: none;
+            margin-left: auto;
+        }
+    }
+}
 </style>

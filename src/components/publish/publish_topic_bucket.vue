@@ -143,4 +143,32 @@ export default {
         margin-top: 10px;
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-publish-topic-bucket {
+        min-width: 0;
+
+        .el-form-item__content {
+            align-items: flex-start;
+            min-width: 0;
+        }
+
+        .m-topic-bucket__selected {
+            min-width: 0;
+            margin-left: 10px;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .m-selected-item {
+            max-width: 100%;
+        }
+    }
+
+    .m-topic-bucket__pop {
+        width: calc(100vw - 24px) !important;
+        max-width: calc(100vw - 24px);
+        box-sizing: border-box;
+    }
+}
 </style>

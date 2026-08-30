@@ -91,4 +91,20 @@ export default {
         margin-left: 5px;
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-publish-extend {
+        min-width: 0;
+
+        .el-select {
+            width: 100% !important;
+            max-width: 100%;
+        }
+    }
+
+    .m-changelog-pop {
+        max-width: calc(100vw - 24px);
+        box-sizing: border-box;
+    }
+}
 </style>

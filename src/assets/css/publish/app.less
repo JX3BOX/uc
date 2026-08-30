@@ -85,6 +85,16 @@
         min-width: 0;
         padding: 12px;
         box-sizing: border-box;
+
+        .u-illegal-alert {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .u-actions {
+            flex-wrap: wrap;
+        }
     }
 
     .m-publish .el-form:not(.el-form--inline) {
@@ -119,7 +129,31 @@
         .el-date-editor,
         .el-textarea,
         .el-input {
+            width: 100%;
             max-width: 100%;
+            box-sizing: border-box;
+        }
+    }
+
+    .w-select {
+        width: 100%;
+        min-width: 0;
+
+        .u-select-label {
+            flex: none;
+            padding-right: 12px;
+            padding-left: 12px;
+        }
+
+        .el-select {
+            flex: 1;
+            min-width: 0;
+
+            .el-input__wrapper,
+            .el-select__wrapper {
+                width: 100%;
+                min-width: 0;
+            }
         }
     }
 

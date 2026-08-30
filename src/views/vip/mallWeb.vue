@@ -1,5 +1,5 @@
 <template>
-    <div >
+    <div class="p-mall-web">
         <div class="m-mall-web-header">
             <CommonHeader :key="currentKey"></CommonHeader>
             <Breadcrumb></Breadcrumb>
@@ -92,5 +92,13 @@ export default {
 }
 .no-click {
     .size(100%);
+}
+
+@media screen and (max-width: 750px) {
+    .p-mall-web {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
 }
 </style>

@@ -340,4 +340,67 @@ export default {
         }
     }
 }
+
+@media screen and (max-width: @phone) {
+    .m-publish-pz-list {
+        min-width: 0;
+
+        .u-item {
+            display: grid;
+            grid-template-columns: 24px 36px minmax(0, 1fr);
+            gap: 8px 4px;
+            width: 100%;
+            min-width: 0;
+            padding: 12px 0;
+            border-bottom: 1px dashed #e4e7ed;
+            box-sizing: border-box;
+        }
+
+        .u-item-order,
+        .u-item-drag {
+            margin: 0;
+            padding: 0;
+        }
+
+        .u-item-select {
+            width: 100%;
+            min-width: 0;
+            max-width: none;
+        }
+
+        .u-item-name {
+            grid-column: 3;
+            width: 100%;
+            min-width: 0;
+            margin-left: 0;
+        }
+
+        .u-item-op {
+            grid-column: 3;
+            min-width: 0;
+            margin-left: 0;
+            flex-wrap: wrap;
+
+            .preview {
+                margin-right: 8px;
+            }
+        }
+    }
+
+    .m-publish-pz-header {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .m-publish-pz-select-option {
+        min-width: 0;
+
+        span:last-child {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+}
 </style>
