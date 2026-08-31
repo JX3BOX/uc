@@ -77,6 +77,19 @@ export default {
         .u-desc {
             .none;
         }
+
+        .u-home {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            float: none;
+            margin-right: 0;
+
+            a {
+                padding: 5px 8px;
+                font-size: 12px;
+            }
+        }
     }
 }
 </style>
