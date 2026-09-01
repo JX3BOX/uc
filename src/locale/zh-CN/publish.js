@@ -381,7 +381,7 @@ export default {
         "banner": "头条图",
         "bannerHint": "推荐上传横向头图。",
         "client": "客户端",
-        "cmsBannerHint": "仅签约作者及管理员可设置头条图。",
+        "cmsBannerHint": "尺寸3200*560，仅签约作者及管理员可设置头条图。",
         "commentFilter": "评论筛选",
         "comments": "评论",
         "containsVideo": "包含视频",
