@@ -239,7 +239,7 @@ export default {
     }
 }
 
-@media screen and (max-width: @phone) {
+@media screen and (max-width: @phone), screen and (orientation: portrait) and (max-width: @ipad-y) {
     .m-default-template-stage {
         position: absolute;
         inset: 0;

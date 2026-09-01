@@ -353,7 +353,7 @@ export default {
         margin-top: 0;
     }
 }
-@media screen and (max-width: @phone) {
+@media screen and (max-width: @phone), screen and (orientation: portrait) and (max-width: @ipad-y) {
     .m-main {
         width: 100%;
         min-height: calc(100vh - @header-height);

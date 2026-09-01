@@ -129,7 +129,7 @@ export default {
     animation-name: flipInX;
 }
 
-@media screen and (max-width: @phone) {
+@media screen and (max-width: @phone), screen and (orientation: portrait) and (max-width: @ipad-y) {
     .OneScreen .m-card {
         margin: 0;
         animation: none;

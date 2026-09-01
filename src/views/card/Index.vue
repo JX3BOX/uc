@@ -35,7 +35,7 @@ export default {
     overflow: hidden;
 }
 
-@media screen and (max-width: @phone) {
+@media screen and (max-width: @phone), screen and (orientation: portrait) and (max-width: @ipad-y) {
     html,
     body,
     #app,

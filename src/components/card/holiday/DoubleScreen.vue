@@ -130,7 +130,7 @@ export default {
         }
     }
 }
-@media screen and (max-width: @phone) {
+@media screen and (max-width: @phone), screen and (orientation: portrait) and (max-width: @ipad-y) {
     .doubleScreen {
         transform: translate(-50%, -50%) scale(0.31);
         transform-origin: center;

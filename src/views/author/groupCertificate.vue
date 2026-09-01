@@ -276,7 +276,7 @@ export default {
         .pt(120px);
     }
 }
-@media screen and (max-width: @phone) {
+@media screen and (max-width: @phone), screen and (orientation: portrait) and (max-width: @ipad-y) {
     .m-main {
         min-height: calc(100vh - @header-height);
         min-height: calc(100dvh - @header-height);

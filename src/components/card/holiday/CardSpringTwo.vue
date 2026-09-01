@@ -161,7 +161,7 @@ export default {
     }
 }
 
-@media screen and (max-width: @phone) {
+@media screen and (max-width: @phone), screen and (orientation: portrait) and (max-width: @ipad-y) {
     .cardSpringTwo {
         top: 50%;
         width: min(570px, calc(100vw - 32px));
