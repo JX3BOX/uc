@@ -75,8 +75,34 @@ function getDBM(params) {
     });
 }
 
-function getCertification(id) {
-    return $team({ interceptor: false }).get(`/api/team/team-certification-record/item/${id}`);
+const TEAM_AUTH_PASSWORD = "next common request";
+
+function createCertificationResponseError(response) {
+    const error = new Error(response?.data?.msg || "Certificate request failed");
+    error.response = response;
+    return error;
+}
+
+function assertCertificationResponse(response) {
+    const rawCode = response?.data?.code;
+    const code = rawCode === undefined || rawCode === null || rawCode === "" ? NaN : Number(rawCode);
+    if (Number.isFinite(code) && code !== 0 && code !== 200) {
+        throw createCertificationResponseError(response);
+    }
+    return response;
+}
+
+async function getCertification(id, token = "") {
+    const config = token
+        ? {
+              auth: {
+                  username: token,
+                  password: TEAM_AUTH_PASSWORD,
+              },
+          }
+        : {};
+    const response = await $team({ interceptor: false }).get(`/api/team/team-certification-record/item/${id}`, config);
+    return assertCertificationResponse(response);
 }
 
 export {

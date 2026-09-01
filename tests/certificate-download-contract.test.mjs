@@ -11,17 +11,53 @@ function readSource(relativePath) {
     return fs.readFileSync(path.resolve(projectRoot, relativePath), "utf8");
 }
 
+async function loadSourceModule(relativePath) {
+    const source = readSource(relativePath);
+    return import(`data:text/javascript;base64,${Buffer.from(source).toString("base64")}`);
+}
+
 test("certificate keeps browser printing and delegates app image saving to the trusted host", () => {
     const source = readSource("src/views/author/certificate.vue");
+    const webviewSource = readSource("src/utils/webview.js");
 
     assert.match(source, /if \(!this\.isAppEnv\)[\s\S]*window\.print\(\)/);
     assert.match(source, /this\.\$route\.query\?\.__env/);
     assert.match(source, /jx3box:webview-save-image/);
     assert.match(source, /dataUrl: this\.treasureImg/);
     assert.match(source, /getHarmonyPhotoBridge/);
-    assert.match(source, /capacitor:\\\/\\\/localhost/);
+    assert.match(source, /parentOrigins\.forEach[\s\S]*postMessage\(message, parentOrigin\)/);
+    assert.match(webviewSource, /capacitor:\\\/\\\/localhost/);
     assert.match(source, /event\.source !== window\.parent/);
-    assert.match(source, /event\.origin !== parentOrigin/);
+    assert.match(source, /parentOrigins\.includes\(event\.origin\)/);
+    assert.match(source, /resolveAppParentOrigins/);
+});
+
+test("certificate resolves the actual App parent origin before a redirected referrer", async () => {
+    const { resolveAppParentOrigins } = await loadSourceModule("src/utils/webview.js");
+
+    assert.deepEqual(
+        resolveAppParentOrigins({
+            ancestorOrigins: ["https://localhost"],
+            referrer: "https://www.jx3box.com/author/8/certificate/14477?__token=redacted",
+            includeCapacitorDefaults: true,
+        }),
+        ["https://localhost", "capacitor://localhost"]
+    );
+    assert.deepEqual(
+        resolveAppParentOrigins({
+            referrer: "https://www.jx3box.com/author/8/certificate/14477",
+            includeCapacitorDefaults: true,
+        }),
+        ["https://localhost", "capacitor://localhost"]
+    );
+    assert.deepEqual(resolveAppParentOrigins({ referrer: "capacitor://localhost/" }), ["capacitor://localhost"]);
+    assert.deepEqual(
+        resolveAppParentOrigins({
+            ancestorOrigins: ["https://malicious.example.com"],
+            referrer: "https://www.jx3box.com/author/8/certificate/14477",
+        }),
+        []
+    );
 });
 
 test("certificate render exports the high-density source canvas without recapturing the scaled page", () => {

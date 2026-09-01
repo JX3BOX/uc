@@ -193,7 +193,7 @@ export default {
     opacity: 0;
     transition: all 1s;
 }
-@media screen and (max-width: @phone) {
+@media screen and (max-width: @phone), screen and (orientation: portrait) and (max-width: @ipad-y) {
     .cardSpring {
         .u-springFestival-card {
             translate: -50% -50%;

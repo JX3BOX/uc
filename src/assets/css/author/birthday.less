@@ -121,7 +121,7 @@ body {
     }
 }
 
-@media screen and (max-width: @phone) {
+@media screen and (max-width: @phone), screen and (orientation: portrait) and (max-width: @ipad-y) {
     body {
         min-width: 0;
     }
@@ -145,7 +145,8 @@ body {
     }
 }
 
-@media screen and (min-width: 381px) and (max-width: @phone) {
+@media screen and (min-width: 381px) and (max-width: @phone),
+    screen and (min-width: 381px) and (orientation: portrait) and (max-width: @ipad-y) {
     .m-birthday .m-letter {
         transform: translate(-50%, -50%) scale(0.24);
     }

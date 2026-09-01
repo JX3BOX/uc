@@ -302,7 +302,7 @@ body,
     }
 }
 
-@media screen and (max-width: @phone) {
+@media screen and (max-width: @phone), screen and (orientation: portrait) and (max-width: @ipad-y) {
     html,
     body,
     #app,
@@ -345,7 +345,8 @@ body,
     }
 }
 
-@media screen and (min-width: 381px) and (max-width: @phone) {
+@media screen and (min-width: 381px) and (max-width: @phone),
+    screen and (min-width: 381px) and (orientation: portrait) and (max-width: @ipad-y) {
     .p-birthday {
         .m-machine {
             transform: scale(0.65);

@@ -705,7 +705,7 @@ export default {
         }
     }
 }
-@media screen and (max-width: @phone) {
+@media screen and (max-width: @phone), screen and (orientation: portrait) and (max-width: @ipad-y) {
     .Anniversary {
         width: 100%;
         height: 100%;

@@ -8,7 +8,9 @@
         >
             <template v-if="treasureInfo.team_certificate && treasureImg">
                 <div class="u-title m-hide">{{ treasureInfo.team_certificate.rank_name }}</div>
-                <div class="u-time m-hide">{{ $t("author.certificate.awardedAt", { time: treasureInfo.team_certificate.awardtime }) }}</div>
+                <div class="u-time m-hide">
+                    {{ $t("author.certificate.awardedAt", { time: treasureInfo.team_certificate.awardtime }) }}
+                </div>
                 <el-image class="u-img" :fit="'contain'" :src="treasureImg" :preview-src-list="[treasureImg]">
                 </el-image>
                 <button
@@ -40,6 +42,8 @@ import {
     prepareCertificateTemplate,
     renderCertificate,
 } from "@/utils/author/certificate";
+import { normalizeUrlAuthToken } from "@/utils/auth-token";
+import { resolveAppParentOrigins } from "@/utils/webview";
 
 const fontMap = {
     "ALIMAMASHUHEITI-BOLD": require("@/assets/css/author/certificateFont/ALIMAMASHUHEITI-BOLD.OTF"),
@@ -70,8 +74,11 @@ export default {
         id() {
             return this.$route.params.id;
         },
+        urlAuthToken() {
+            return normalizeUrlAuthToken(this.$route.query?.__token);
+        },
         certificateViewKey() {
-            return `${this.uid}:${this.id}:${this.$i18n.locale}`;
+            return `${this.uid}:${this.id}:${this.$i18n.locale}:${this.urlAuthToken}`;
         },
         isAppEnv() {
             const env = this.$route.query?.__env;
@@ -79,9 +86,7 @@ export default {
         },
         certificateActionText() {
             if (!this.isAppEnv) return this.$t("author.certificate.print");
-            return this.saving
-                ? this.$t("author.certificate.downloading")
-                : this.$t("author.certificate.download");
+            return this.saving ? this.$t("author.certificate.downloading") : this.$t("author.certificate.download");
         },
     },
     watch: {
@@ -110,7 +115,7 @@ export default {
             this.treasureImg = "";
             let data;
             try {
-                const response = await getCertification(this.id);
+                const response = await getCertification(this.id, this.urlAuthToken);
                 data = response?.data?.data;
             } catch (error) {
                 if (requestId === this.loadRequestId) this.errorMessage = this.$t("author.certificate.loadFailed");
@@ -197,22 +202,22 @@ export default {
                 return;
             }
 
-            const parentOrigin = this.getParentOrigin();
-            if (!parentOrigin) {
+            const parentOrigins = this.getParentOrigins();
+            if (!parentOrigins.length) {
                 ElMessage.error(this.$t("author.certificate.downloadFailed"));
                 return;
             }
             this.saving = true;
             this.saveRequestId = `certificate-${this.id}-${Date.now()}`;
-            window.parent.postMessage(
-                {
-                    type: WEBVIEW_SAVE_IMAGE_REQUEST,
-                    requestId: this.saveRequestId,
-                    dataUrl: this.treasureImg,
-                    filename,
-                },
-                parentOrigin
-            );
+            const message = {
+                type: WEBVIEW_SAVE_IMAGE_REQUEST,
+                requestId: this.saveRequestId,
+                dataUrl: this.treasureImg,
+                filename,
+            };
+            parentOrigins.forEach((parentOrigin) => {
+                window.parent.postMessage(message, parentOrigin);
+            });
             this.saveResultTimer = window.setTimeout(() => {
                 this.finishCertificateSave(false);
             }, SAVE_RESULT_TIMEOUT);
@@ -225,15 +230,12 @@ export default {
             link.click();
             link.remove();
         },
-        getParentOrigin() {
-            const referrer = String(document.referrer || "");
-            if (/^capacitor:\/\/localhost(?:[/?#]|$)/i.test(referrer)) return "capacitor://localhost";
-            try {
-                const origin = new URL(referrer).origin;
-                if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin)) return origin;
-            } catch (error) {
-            }
-            return "";
+        getParentOrigins() {
+            return resolveAppParentOrigins({
+                ancestorOrigins: window.location?.ancestorOrigins,
+                referrer: document.referrer,
+                includeCapacitorDefaults: true,
+            });
         },
         getHarmonyPhotoBridge() {
             const bridge = window.JX3BOX_HARMONY_HTTP;
@@ -266,8 +268,8 @@ export default {
             if (event.source !== window.parent || event.data?.type !== WEBVIEW_SAVE_IMAGE_RESULT) return;
             if (!this.saveRequestId || event.data?.requestId !== this.saveRequestId) return;
 
-            const parentOrigin = this.getParentOrigin();
-            if (!parentOrigin || event.origin !== parentOrigin) return;
+            const parentOrigins = this.getParentOrigins();
+            if (!parentOrigins.includes(event.origin)) return;
             this.finishCertificateSave(Boolean(event.data?.success));
         },
         finishCertificateSave(success) {
@@ -351,7 +353,7 @@ export default {
         margin-top: 0;
     }
 }
-@media screen and (max-width: @phone) {
+@media screen and (max-width: @phone), screen and (orientation: portrait) and (max-width: @ipad-y) {
     .m-main {
         width: 100%;
         min-height: calc(100vh - @header-height);
