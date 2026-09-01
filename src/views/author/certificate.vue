@@ -40,6 +40,7 @@ import {
     prepareCertificateTemplate,
     renderCertificate,
 } from "@/utils/author/certificate";
+import { normalizeUrlAuthToken } from "@/utils/auth-token";
 
 const fontMap = {
     "ALIMAMASHUHEITI-BOLD": require("@/assets/css/author/certificateFont/ALIMAMASHUHEITI-BOLD.OTF"),
@@ -70,8 +71,11 @@ export default {
         id() {
             return this.$route.params.id;
         },
+        urlAuthToken() {
+            return normalizeUrlAuthToken(this.$route.query?.__token);
+        },
         certificateViewKey() {
-            return `${this.uid}:${this.id}:${this.$i18n.locale}`;
+            return `${this.uid}:${this.id}:${this.$i18n.locale}:${this.urlAuthToken}`;
         },
         isAppEnv() {
             const env = this.$route.query?.__env;
@@ -110,7 +114,7 @@ export default {
             this.treasureImg = "";
             let data;
             try {
-                const response = await getCertification(this.id);
+                const response = await getCertification(this.id, this.urlAuthToken);
                 data = response?.data?.data;
             } catch (error) {
                 if (requestId === this.loadRequestId) this.errorMessage = this.$t("author.certificate.loadFailed");

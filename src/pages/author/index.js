@@ -1,3 +1,7 @@
+// 0.Sync the token supplied by the App before shared request clients read sessionStorage.
+import { syncUrlAuthToken } from "@/utils/auth-token";
+syncUrlAuthToken();
+
 // 1.Create APP
 import { createApp } from "vue";
 import { suppressProductionConsoleLog } from "@/utils/console";
