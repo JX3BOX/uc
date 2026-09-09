@@ -9,7 +9,7 @@
         ></MallNav>
         <GoodDetail
             v-if="showMainDetail"
-            :good="selectItem || {}"
+            :good="selectedGood"
             :isShowNav="isShowNav"
             @exchanged="markGoodOwned"
         ></GoodDetail>
@@ -34,7 +34,7 @@
             <div class="right-scroll">
                 <div class="right-detail-panel" v-if="isDetailInRight && selectItem">
                     <GoodDetail
-                        :good="selectItem || {}"
+                        :good="selectedGood"
                         :isShowNav="isShowNav"
                         @exchanged="markGoodOwned"
                     ></GoodDetail>
@@ -178,6 +178,13 @@ export default {
         },
         asset() {
             return this.$store.state.mallNew.asset;
+        },
+        selectedGood() {
+            if (!this.selectItem) return {};
+            return {
+                ...this.selectItem,
+                canBuy: this.checkCanBuy(this.selectItem),
+            };
         },
         list() {
             return this.goodsList?.map((item) => {
@@ -334,7 +341,6 @@ export default {
         },
         decorateGood(item = {}) {
             const good = this.normalizeGood(item);
-            good.canBuy = this.checkCanBuy(good);
             good.isHave = good.has_owned;
             return good;
         },
