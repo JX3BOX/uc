@@ -780,6 +780,7 @@ export default {
         notCompleted: "任务条件尚未达成，或仍有奖励尚未完成",
         checkFailed: "任务状态检查失败，请稍后再试",
         dailyLimit: "日上限：{limit}",
+        expiresAt: "过期时间：{time}",
         groups: {
             daily: "日常任务",
             special: "特殊任务",

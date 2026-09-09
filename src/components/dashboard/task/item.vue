@@ -28,6 +28,9 @@
                     </span>
                 </span>
                 <span v-if="hasMallGoods && task.task_detail" class="u-task-detail">{{ task.task_detail }}</span>
+                <span v-if="expirationTime" class="u-task-expiration">
+                    {{ $t("dashboard.tasks.expiresAt", { time: expirationTime }) }}
+                </span>
             </div>
             <div class="u-actions">
                 <el-button v-if="!isFinished" :disabled="!taskUrl" icon="Right" @click="goComplete">
@@ -49,6 +52,7 @@
 
 <script>
 import { __imgPath } from "@/utils/config";
+import dayjs from "dayjs";
 
 export default {
     name: "TaskItem",
@@ -73,6 +77,12 @@ export default {
         },
         taskUrl() {
             return this.task?.task_url || "";
+        },
+        expirationTime() {
+            const value = this.task?.task_expired_at;
+            if (!value) return "";
+            const date = dayjs(value);
+            return date.isValid() ? date.format("YYYY-MM-DD HH:mm:ss") : "";
         },
         isFinished() {
             return !!this.data?.hasFinish;
