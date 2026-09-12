@@ -1,4 +1,4 @@
-const pages = {
+const allPages = {
     // root 入口：避免直接访问 `/` 时命中 public/index.html（未经过 HtmlWebpackPlugin 渲染）
     // 从而出现 `<%= BASE_URL %>` 这类占位符导致的 400 Bad Request
     index: {
@@ -51,6 +51,25 @@ const pages = {
     },
 };
 
+// 开发期可只编译指定页面，显著加快 dev 冷启动与 HMR（默认仍编译全部 8 个入口）
+// 用法：DEV_PAGE=vip npm run dev   （可逗号分隔多个，如 vip,account）
+function resolvePages() {
+    const isDev = String(process.env.NODE_ENV).toLowerCase() === "development";
+    if (isDev && process.env.DEV_PAGE) {
+        const keys = String(process.env.DEV_PAGE)
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean);
+        const filtered = {};
+        keys.forEach((k) => {
+            if (allPages[k]) filtered[k] = allPages[k];
+        });
+        return Object.keys(filtered).length ? filtered : allPages;
+    }
+    return allPages;
+}
+const pages = resolvePages();
+
 const path = require("path");
 const events = require("events");
 const webpack = require("webpack");
@@ -68,7 +87,10 @@ if (String(process.env.NODE_ENV).toLowerCase() === "development") {
 
 module.exports = {
     productionSourceMap: false,
-    transpileDependencies: true,
+    // 仅转译内部 @jx3box 包（它们只暴露 main 入口、未预编译）。
+    // 之前为 true 会转译全部 node_modules（含庞大的 element-plus），是 dev 编译慢的主因之一。
+    // 若后续其他第三方依赖在旧浏览器报错，再按需加入此数组。
+    transpileDependencies: [/[/\\]@jx3box[/\\]/],
     //❤️ define path for static files ~
     publicPath: process.env.BUILD_PREVIEW
         ? "/" + process.env.APP_NAME
@@ -191,6 +213,13 @@ module.exports = {
     },
 
     configureWebpack: {
+        // 文件系统缓存：把 loader 编译结果落到磁盘，重启 dev / 二次构建大幅提速（HMR 也受益）
+        cache: {
+            type: "filesystem",
+            buildDependencies: {
+                config: [__filename],
+            },
+        },
         // 过滤依赖包里的已知兼容性 warning（不影响运行，但会刷屏）
         stats: {
             warningsFilter: [/node_modules[\\\\/]+@jx3box[\\\\/]+jx3box-common[\\\\/]+/],

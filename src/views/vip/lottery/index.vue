@@ -299,10 +299,12 @@ export default {
     computed: {
         data: function () {
             let _data = {};
-            this.raw.forEach((item) => {
-                if (!_data[item.subtype]) _data[item.subtype] = [];
-                _data[item.subtype].push(item);
-            });
+            if (Array.isArray(this.raw)) {
+                this.raw.forEach((item) => {
+                    if (!_data[item.subtype]) _data[item.subtype] = [];
+                    _data[item.subtype].push(item);
+                });
+            }
             return _data;
         },
         isLogin() {
@@ -481,6 +483,7 @@ export default {
         },
         // 滚动
         scroll(count) {
+            if (!this.$refs.scroll) return;
             setTimeout(() => {
                 const rule = `
             @keyframes scroll_prize {
