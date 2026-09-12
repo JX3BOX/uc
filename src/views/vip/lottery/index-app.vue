@@ -7,7 +7,7 @@
             </div>
             <div class="m-title">
                 <img class="u-title-img" :src="`${__appImgRoot}title.png`" alt="签到赢大奖" />
-                <!-- <p>* 每天登录APP签到，即可领刮奖次数~</p> -->
+                <p>* 每天登录APP签到，兑换刮奖次数~</p>
             </div>
         </header>
 
@@ -23,10 +23,10 @@
             </div>
             <div class="m-actions">
                 <button
-                    class="u-btn is-temp-hidden"
+                    class="u-btn"
                     :class="isSignedIn ? 'is-signed' : 'is-unsigned'"
                     @click="handleSign"
-                    :disabled="isSignedIn"
+                    :disabled="isLogin"
                 >
                     {{ isSignedIn ? "今日已签到" : "今日未签到" }}
                 </button>
@@ -39,8 +39,8 @@
             <div class="m-section-title">
                 <span>本期奖池</span>
                 <span class="u-more" @click="showDetail = !showDetail">
-                    {{ showDetail ? "收起" : "奖池详情" }}
                     <i class="el-icon-arrow-down" :class="{ 'is-up': showDetail }"></i>
+                    奖池详情
                 </span>
             </div>
 
@@ -83,19 +83,12 @@
 
             <!-- 奖池详情列表 -->
             <div class="m-prize-detail" v-if="showDetail">
-                <div class="m-detail-item" v-for="(item, index) in previewList" :key="index">
-                    <div class="u-img-wrap"><img :src="item.img" :alt="item.name" /></div>
-                    <div class="u-info">
-                        <div class="u-row">
-                            <span class="u-name">{{ item.name }}</span>
-                            <div class="u-stars">
-                                <img v-for="n in item.stars || 1" :key="n" :src="starIcon(index)" class="u-star-icon" />
-                            </div>
-                        </div>
-                        <p class="u-rate">中奖率：{{ item.rate || "0.0" }}%</p>
-                        <p class="u-desc">{{ item.desc || "奖品介绍" }}</p>
-                    </div>
-                </div>
+                <PrizeDetailItem
+                    v-for="(item, index) in previewList"
+                    :key="index"
+                    :item="item"
+                    :is-active="index === 0"
+                />
             </div>
 
             <!-- 奖品详情弹窗 -->
@@ -112,9 +105,14 @@
 
         <!-- 规则提示 -->
         <div class="m-rules-bar">
-            <span class="u-rule" @click="showRules = true">规则说明</span>
+            <span class="u-rule" @click="showRules = true">
+                <i class="u-icon"> <img svg-inline src="@/assets/img/vip/icon/warning.svg" /> </i>规则说明</span
+            >
             <span class="u-tip">请选择一张刮刮卡</span>
-            <span class="u-refresh" @click="refreshCards"><i class="el-icon-refresh"></i> 换一批</span>
+            <span class="u-refresh" @click="refreshCards">
+                换一批
+                <i class="u-icon"> <img svg-inline src="@/assets/img/vip/icon/reset.svg" /> </i
+            ></span>
         </div>
 
         <!-- 刮卡区 -->
@@ -142,7 +140,7 @@
 
         <!-- 底部操作 -->
         <footer class="m-footer-bar">
-            <button class="u-action" :disabled="remainingCount < 9 || isDrawing" @click="openBatchScratch(9)">
+            <button class="u-action" :disabled="!canDrawNine || isDrawing" @click="openBatchScratch(9, true)">
                 连刮九次
             </button>
             <button class="u-action u-action-primary" :disabled="remainingCount < 1 || isDrawing" @click="scratchAll">
@@ -154,63 +152,69 @@
         <!-- 单点刮卡弹层 -->
         <div class="m-overlay" v-if="showSingleScratch" @click.self="closeSingleScratch">
             <div class="m-scratch-dialog">
-                <div
-                    ref="scratchStage"
+                <ScratchSurface
                     class="m-scratch-stage"
-                    @touchstart.prevent="onScratchStart"
-                    @touchmove.prevent="onScratchMove"
-                    @touchend="onScratchEnd"
-                    @mousedown.prevent="onScratchStart"
-                    @mousemove.prevent="onScratchMove"
-                    @mouseup="onScratchEnd"
-                    @mouseleave="onScratchEnd"
+                    :cover="`${__appImgRoot}card-0.jpg`"
+                    @complete="scratchFinished = true"
                 >
-                    <div
-                        class="u-cover"
-                        :class="{ 'is-hidden': scratchReady }"
-                        :style="{ backgroundImage: `url(${__appImgRoot}card-mini.jpg)` }"
-                    ></div>
-                    <canvas
-                        ref="scratchCanvas"
-                        class="u-scratch-canvas"
-                        :class="{ 'is-done': scratchFinished }"
-                    ></canvas>
-                    <div class="u-prize-reveal" v-if="currentPrize">
-                        <div class="u-prize-card">
+                    <div class="u-prize-reveal" data-scratch-card>
+                        <div class="u-prize-card" v-if="currentPrize">
                             <img :src="currentPrize.img" />
                             <span>{{ currentPrize.name }}</span>
                         </div>
+                        <div class="u-prize-card" v-else role="status">
+                            <i v-if="!drawError" class="u-prize-spinner"></i>
+                            <span>{{ drawError ? "结果暂未获取" : "奖品揭晓中…" }}</span>
+                        </div>
                     </div>
-                </div>
+                </ScratchSurface>
                 <p class="u-scratch-tip" v-if="!scratchFinished">用手刮开看看吧！</p>
-                <button class="u-confirm-btn" v-else @click="claimSingle">拿下!</button>
+                <button class="u-confirm-btn" v-else :disabled="!currentPrize" @click="claimSingle">
+                    {{ currentPrize ? "拿下!" : "奖品揭晓中…" }}
+                </button>
+                <div v-if="drawError" class="m-draw-error" role="alert">
+                    <p>{{ drawError }}</p>
+                    <button v-if="pendingRecord" class="u-confirm-btn" :disabled="retrying" @click="retryDrawResult">
+                        {{ retrying ? "查询中…" : "重新查询结果" }}
+                    </button>
+                    <button class="u-confirm-btn" :disabled="retrying" @click="dismissDrawError">稍后查看奖品</button>
+                </div>
             </div>
         </div>
 
         <!-- 连刮/全部刮开弹层 -->
         <div class="m-overlay" v-if="showBatchScratch" @click.self="closeBatchScratch">
             <div class="m-batch-dialog">
-                <p class="u-batch-tip" v-if="!batchRevealed">
-                    {{ batchReady ? "点击任意位置刮开" : `抽取中(${batchDoneRounds}/${batchRounds.length})...` }}
-                </p>
-                <div
+                <ScratchSurface
+                    :key="batchPage"
                     class="m-batch-grid"
-                    :class="{ 'is-revealed': batchRevealed, 'is-pending': !batchReady }"
-                    @click="revealBatch"
+                    :cover="`${__appImgRoot}card-mini.jpg`"
+                    @complete="batchRevealed = true"
                 >
-                    <div class="m-batch-card" v-for="(item, index) in batchPrizes" :key="index">
-                        <div
-                            class="u-cover"
-                            v-if="!batchRevealed"
-                            :style="{ backgroundImage: `url(${__appImgRoot}card-mini.jpg)` }"
-                        ></div>
-                        <div class="u-result" v-else>
-                            <img :src="item ? item.img : `${__appImgRoot}miss.jpg`" />
-                            <span>{{ item ? item.name : "谢谢惠顾" }}</span>
+                    <div class="m-batch-card" v-for="(item, index) in batchPagePrizes" :key="index" data-scratch-card>
+                        <div class="u-result">
+                            <template v-if="item">
+                                <img :src="item.img" />
+                                <span>{{ item.name }}</span>
+                            </template>
+                            <template v-else>
+                                <i v-if="!drawError" class="u-prize-spinner"></i>
+                                <span role="status">{{ drawError ? "结果暂未获取" : "奖品揭晓中…" }}</span>
+                            </template>
                         </div>
                     </div>
+                </ScratchSurface>
+                <p class="u-batch-tip" v-if="!batchRevealed">用手滑动刮开卡片</p>
+                <button class="u-confirm-btn" v-if="batchRevealed" :disabled="!batchReady" @click="claimBatch">
+                    {{ !batchReady ? "奖品揭晓中…" : hasNextBatchPage ? "继续刮下一组" : "拿下！" }}
+                </button>
+                <div v-if="drawError" class="m-draw-error" role="alert">
+                    <p>{{ drawError }}</p>
+                    <button v-if="pendingRecord" class="u-confirm-btn" :disabled="retrying" @click="retryDrawResult">
+                        {{ retrying ? "查询中…" : "重新查询结果" }}
+                    </button>
+                    <button class="u-confirm-btn" :disabled="retrying" @click="dismissDrawError">稍后查看奖品</button>
                 </div>
-                <button class="u-confirm-btn" v-if="batchRevealed" @click="claimBatch">拿下！</button>
             </div>
         </div>
 
@@ -232,6 +236,7 @@
             <div class="m-action-sheet">
                 <h3>魔盒积分兑换刮奖次数</h3>
                 <p>你拥有 {{ points }} 魔盒积分，可兑换 {{ exchangeableCount }} 次刮奖次数。</p>
+
                 <div class="m-exchange-options">
                     <button class="u-option u-option-primary" @click="exchange(1)">
                         兑换 1 次({{ costPerTime }} 积分)
@@ -254,50 +259,28 @@
         </div>
 
         <!-- 我的奖品 -->
-        <div
-            class="m-page m-page-prizes"
-            v-if="page === 'prizes'"
-            v-loading="myPrizesLoading && !myPrizeList.length"
-        >
+        <div class="m-page m-page-prizes" v-if="page === 'prizes'" v-loading="myPrizesLoading && !myPrizeList.length">
             <header class="m-header">
                 <div class="u-back" @click="page = 'home'">
                     <i class="el-icon-arrow-left"></i>
                 </div>
                 <div class="m-title">
                     <img :src="`${__appImgRoot}title.png`" class="u-title-img" />
-                    <!-- <p>* 每天登录APP签到，即可领刮奖次数~</p> -->
+                    <p>* 每天登录APP签到，兑换刮奖次数~</p>
                 </div>
             </header>
             <div class="m-prize-records">
                 <h3 class="m-section-title-2">我的奖品</h3>
-                <div class="m-record-list" @scroll="onRecordsScroll">
-                    <div
-                        class="m-record-item"
-                        :class="{ 'is-top': activeRecordIndex === index }"
+                <div class="m-prize-detail" @scroll="onRecordsScroll">
+                    <PrizeDetailItem
                         v-for="(item, index) in myPrizeList"
                         :key="index"
+                        :item="{ ...item, rate: item.rate || '0', desc: `获得时间：${item.time || ''}` }"
+                        :is-active="activeRecordIndex === index"
                         @click="activeRecordIndex = activeRecordIndex === index ? null : index"
-                    >
-                        <div class="u-img-wrap"><img :src="item.img" /></div>
-                        <div class="u-info">
-                            <div class="u-row">
-                                <span class="u-name">{{ item.name }}</span>
-                                <div class="u-stars">
-                                    <img
-                                        v-for="n in item.stars || 1"
-                                        :key="n"
-                                        :src="`${__appImgRoot}star${activeRecordIndex === index ? 2 : 1}.svg`"
-                                        class="u-star-icon"
-                                    />
-                                </div>
-                            </div>
-                            <p class="u-time">获得时间：{{ item.time }}</p>
-                        </div>
-                    </div>
+                    />
                     <div class="u-records-tip" v-if="myPrizesLoading">加载中...</div>
-                    <div class="u-records-tip" v-else-if="myPrizeList.length && !myPrizeHasMore">
-                        没有更多了
-                    </div>
+                    <div class="u-records-tip" v-else-if="myPrizeList.length && !myPrizeHasMore">没有更多了</div>
                 </div>
             </div>
         </div>
@@ -317,13 +300,15 @@
 
 <script>
 const COMPLETE_STATUS = [2, 3];
-// 本地缓存的可刮奖次数：按「活动ID + 用户ID」维度存储
-const LOTTERY_COUNT_KEY = "jx3box_lottery_remaining_count";
 // 刮刮卡网格的卡片数量
-const CARD_SIZE = 6;
-// 刮刮卡卡号起始最大值，卡号由此递减生成
-const CARD_NO_MAX = 9999999999;
+const CARD_SIZE = 4;
+// 设计稿中的固定展示卡号
+const CARD_NO_MAX = 999999999;
+import ScratchSurface from "./ScratchSurface.vue";
+import dayjs from "dayjs";
+import { userSignIn } from "@jx3box/jx3box-ui/service/author";
 import bindWechat from "./bindWechat.vue";
+import PrizeDetailItem from "./PrizeDetailItem.vue";
 import User from "@jx3box/jx3box-common/js/user";
 import { getBreadcrumb, getConfig } from "@/service/vip/cms";
 import { getBlindBox, goodLucky, getMyLucky, getLuckyConfig, getMyInfo, getMyHistory } from "@/service/vip/lottery";
@@ -367,15 +352,13 @@ export default {
             cardList: [],
             activeCardIndex: null,
             currentPrize: null,
+            drawError: "",
+            pendingRecord: null,
+            retrying: false,
             scratchFinished: false,
-            scratchReady: false,
-            lastScratchPos: null,
-            touchScratching: false,
-            scratchCtx: null,
-            isScratching: false,
-            scratchThreshold: 45,
             isRefreshing: false,
 
+            batchPage: 0,
             batchPrizes: [],
             batchRevealed: false,
             // 分批抽取：每批次数列表、总次数、已完成批次
@@ -394,7 +377,7 @@ export default {
             isDrawing: false,
         };
     },
-    components: { bindWechat },
+    components: { bindWechat, ScratchSurface, PrizeDetailItem },
     computed: {
         isLogin() {
             return User.isLogin();
@@ -415,16 +398,38 @@ export default {
             return this.draw[0] ? this.draw[0][1] : 0;
         },
         exchangeableCount() {
-            return this.costPerTime ? Math.floor(this.points / this.costPerTime) : 0;
+            return this.costPerTime ? Math.max(0, Math.floor(this.points / this.costPerTime) - this.remainingCount) : 0;
+        },
+        nineDrawCost() {
+            return this.drawCost(9);
+        },
+        canDrawNine() {
+            return this.isLogin && this.nineDrawCost > 0 && this.points >= this.nineDrawCost;
         },
         // 单次可抽取的最大次数（来自后台 allow_once_try_count 配置）
         maxDrawCount() {
             const counts = (this.draw || []).map((item) => ~~item[0]).filter((n) => n > 0);
             return counts.length ? Math.max(...counts) : 9;
         },
-        // 所有批次均已返回，才允许刮开返显
+        // 当前页独立开放刮奖，不等待后续页面的请求。
         batchReady() {
-            return this.batchRounds.length > 0 && this.batchDoneRounds >= this.batchRounds.length;
+            return this.batchReadyCards.every(Boolean);
+        },
+        batchPageHasResult() {
+            return this.batchPrizes.slice(this.batchPage * 9, (this.batchPage + 1) * 9).some(Boolean);
+        },
+        batchReadyCards() {
+            return Array.from({ length: 9 }, (_, index) => {
+                const offset = this.batchPage * 9 + index;
+                return offset >= this.batchPrizes.length || !!this.batchPrizes[offset];
+            });
+        },
+        batchPagePrizes() {
+            const items = this.batchPrizes.slice(this.batchPage * 9, (this.batchPage + 1) * 9);
+            return items.concat(Array.from({ length: 9 - items.length }, () => this.thanksPrize()));
+        },
+        hasNextBatchPage() {
+            return (this.batchPage + 1) * 9 < this.batchPrizes.length;
         },
         hasOverlay() {
             return !!(
@@ -441,7 +446,9 @@ export default {
         isLogin: {
             immediate: true,
             handler(val) {
-                val && this.myPoints();
+                this.isSignedIn = val;
+                if (val) this.myPoints();
+                else this.remainingCount = 0;
             },
         },
         ID: {
@@ -462,10 +469,15 @@ export default {
     mounted() {
         this.init();
         this.loadUser();
+        this.syncDailySignIn();
         this.buildCards();
     },
     methods: {
         normalizeMallImage,
+        drawCost(times) {
+            const option = this.draw.find(([count]) => Number(count) === times);
+            return option ? Number(option[1]) : this.costPerTime * times;
+        },
         loadUser() {
             if (this.isLogin) {
                 getMyInfo().then((res) => {
@@ -516,8 +528,7 @@ export default {
                         data.allow_once_try_count_cost_points[i],
                     ]);
                     this.previewList = this.setPrizeList(data);
-                    // 以服务端次数为基准，若本地缓存过（兑换/抽取后的临时态）则优先用本地值
-                    this.remainingCount = this.syncCount(data.max_try_count - data.has_try_count || 0);
+                    // 可刮次数仅由本次页面的积分兑换产生，不恢复历史缓存或活动总额度。
                     const userLevelLimit = data.user_level_limit;
                     const userLevel = User.getLevel(this.user.experience);
                     if (userLevelLimit > userLevel) {
@@ -577,47 +588,31 @@ export default {
                 this.points = res?.points || 0;
             });
         },
-        // ===== 本地可刮奖次数存储 =====
-        countStorageKey() {
-            const uid = User.getInfo()?.uid || 0;
-            return `${LOTTERY_COUNT_KEY}_${this.ID}_${uid}`;
-        },
-        readCount() {
+        async syncDailySignIn() {
+            if (!this.isLogin) return;
+            // 与公共头部共享每日登录签到记录，不额外赠送抽奖次数。
+            let lastLogin;
             try {
-                const raw = localStorage.getItem(this.countStorageKey());
-                if (raw === null) return null;
-                const num = ~~raw;
-                return Number.isFinite(num) ? num : null;
+                lastLogin = JSON.parse(localStorage.getItem("user_last_login") || "null");
             } catch (e) {
-                return null;
+                /* 缓存不可读时由服务端判断是否已签到 */
             }
-        },
-        // 次数为 0 时清除记录，之后重新以服务端为准
-        saveCount(count) {
-            const num = Math.max(0, ~~count);
+            if (lastLogin && dayjs(lastLogin).isSame(dayjs(), "day")) return;
             try {
-                if (num <= 0) {
-                    localStorage.removeItem(this.countStorageKey());
-                } else {
-                    localStorage.setItem(this.countStorageKey(), String(num));
+                await userSignIn();
+                try {
+                    localStorage.setItem("user_last_login", JSON.stringify(dayjs()));
+                } catch (e) {
+                    /* 不影响签到结果 */
                 }
+                this.myPoints();
             } catch (e) {
-                // 忽略隐私模式等导致的存储不可用
+                /* 已登录状态不依赖签到奖励接口是否成功 */
             }
-        },
-        // 载入时用本地记录覆盖服务端次数（本地无记录则直接用服务端值）
-        syncCount(serverCount) {
-            const local = this.readCount();
-            if (local === null) return serverCount || 0;
-            if (local <= 0) {
-                this.saveCount(0);
-                return serverCount || 0;
-            }
-            return local;
         },
         buildCards() {
-            this.cardList = new Array(CARD_SIZE).fill(0).map((_, i) => ({
-                no: String(CARD_NO_MAX - i),
+            this.cardList = new Array(CARD_SIZE).fill(0).map(() => ({
+                no: String(CARD_NO_MAX),
                 scratched: false,
                 prize: null,
             }));
@@ -632,26 +627,20 @@ export default {
         },
         handleSign() {
             if (!this.isLogin) return this.toLogin();
-            if (this.isSignedIn) return;
-            // TODO: 接入签到接口
-            this.isSignedIn = true;
-            this.remainingCount += 1;
-            this.$message.success("签到成功，获得 1 次刮奖机会");
         },
         openExchange() {
             if (!this.isLogin) return this.toLogin();
             this.showExchange = true;
         },
         exchange(times) {
-            const cost = this.costPerTime * times;
-            if (this.points < cost) {
+            if (times > this.exchangeableCount) {
                 return this.$message.error("魔盒积分不足");
             }
-            // TODO: 接入积分兑换次数接口
-            this.points -= cost;
+            if (!this.isLogin) return this.toLogin();
+            if (!Number.isInteger(times) || times <= 0 || this.costPerTime <= 0 || this.isDrawing) return;
+            // 仅预留本次页面的积分额度，实际扣积分沿用抽奖接口。
             this.remainingCount += times;
-            // 兑换后本地留存当前可刮奖次数
-            this.saveCount(this.remainingCount);
+
             this.showExchange = false;
             this.$message.success(`兑换成功，获得 ${times} 次刮奖机会`);
         },
@@ -745,38 +734,36 @@ export default {
             }
             this.activeCardIndex = index !== undefined ? index : null;
             this.scratchFinished = false;
-            this.scratchReady = false;
             this.currentPrize = null;
+            this.drawError = "";
+            this.pendingRecord = null;
             this.showSingleScratch = true;
             this.isDrawing = true;
-            goodLucky(this.ID, 1).then((res) => {
-                const _id = res.data?.data.id;
-                this.fetchPrize(_id, (prizes) => {
+            return goodLucky(this.ID, 1)
+                .then(async (res) => {
+                    this.remainingCount = Math.max(0, this.remainingCount - 1);
+                    this.points = Math.max(0, this.points - this.drawCost(1));
+                    this.pendingRecord = { id: res.data?.data.id, times: 1, index: null };
+                    const prizes = await this.fetchPrize(this.pendingRecord.id);
+                    if (this.disposed) return;
                     this.currentPrize = prizes[0] || this.thanksPrize();
-                    this.$nextTick(() => {
-                        this.initScratchCanvas();
-                    });
+                    this.pendingRecord = null;
+                })
+                .catch(() => {
+                    this.setDrawError();
                 });
-            });
         },
-        fetchPrize(id, cb) {
-            if (!id) return;
-            let count = 0;
-            const timer = setInterval(() => {
-                getMyLucky(id).then((res) => {
-                    if (count > 8) {
-                        clearInterval(timer);
-                        cb && cb([this.thanksPrize()]);
-                        return;
-                    }
-                    if (COMPLETE_STATUS.indexOf(res.data?.data.status) !== -1) {
-                        clearInterval(timer);
-                        const prizes = (res.data?.data.prizes || []).map((item) => this.formatPrize(item));
-                        cb && cb(prizes);
-                    }
-                    count++;
-                });
-            }, 800);
+        async fetchPrize(id) {
+            if (!id) throw new Error("缺少抽奖记录 ID");
+            for (let count = 0; count < 10; count++) {
+                if (this.disposed) throw new Error("页面已关闭");
+                const res = await getMyLucky(id);
+                if (COMPLETE_STATUS.includes(res.data?.data.status)) {
+                    return (res.data?.data.prizes || []).map((item) => this.formatPrize(item));
+                }
+                await new Promise((resolve) => setTimeout(resolve, 800));
+            }
+            throw new Error("抽奖结果查询超时");
         },
         formatPrize(item) {
             if (!item) return this.thanksPrize();
@@ -799,139 +786,9 @@ export default {
         thanksPrize() {
             return { img: `${this.__appImgRoot}miss.jpg`, name: "谢谢惠顾" };
         },
-        initScratchCanvas() {
-            const canvas = this.$refs.scratchCanvas;
-            if (!canvas) return;
-            let rect = canvas.getBoundingClientRect();
-            if (!rect.width || !rect.height) {
-                rect = { width: 280, height: 340 };
-            }
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = rect.width * dpr;
-            canvas.height = rect.height * dpr;
-            const ctx = canvas.getContext("2d");
-            // 统一使用物理像素坐标，不做 dpr scale，避免坐标系错乱
-
-            // 第一时间填充纯色刮层，立即可刮（起始位置即手指按下位置）
-            ctx.fillStyle = "#9c8af0";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.globalCompositeOperation = "destination-out";
-            this.scratchCtx = ctx;
-
-            const img = new Image();
-            img.crossOrigin = "anonymous";
-            img.src = `${this.__appImgRoot}card-mini.jpg`;
-            img.onload = () => {
-                // 保存当前刮痕（纯色未刮区 alpha=1，已刮区 alpha=0）作为 mask
-                const temp = document.createElement("canvas");
-                temp.width = canvas.width;
-                temp.height = canvas.height;
-                const tctx = temp.getContext("2d");
-                tctx.drawImage(canvas, 0, 0);
-
-                // 清空主 canvas
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                // 普通模式绘制完整图片（物理尺寸铺满）
-                ctx.globalCompositeOperation = "source-over";
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                // destination-in：按刮痕 alpha 裁出（已刮区域透明，露出奖品）
-                ctx.globalCompositeOperation = "destination-in";
-                ctx.drawImage(temp, 0, 0);
-
-                // 恢复刮卡擦除模式
-                ctx.globalCompositeOperation = "destination-out";
-                this.scratchCtx = ctx;
-                this.scratchReady = true;
-            };
-            img.onerror = () => {
-                // 加载失败填充纯色刮层，仍可正常刮卡
-                ctx.fillStyle = "#9c8af0";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.globalCompositeOperation = "destination-out";
-                this.scratchCtx = ctx;
-                this.scratchReady = true;
-            };
-        },
-        getScratchPos(e) {
-            const canvas = this.$refs.scratchCanvas;
-            const el = canvas || this.$refs.scratchStage;
-            if (!el) return { x: 0, y: 0 };
-            const rect = el.getBoundingClientRect();
-            // 动态比例：canvas 物理像素 / CSS 渲染像素。
-            // 不依赖固定 dpr，对页面 zoom / 非整数 dpr / transform 一律精确。
-            const scaleX = canvas && rect.width ? canvas.width / rect.width : 1;
-            const scaleY = canvas && rect.height ? canvas.height / rect.height : 1;
-            // 统一使用 clientX/clientY（触摸/鼠标都有一致的视口坐标）
-            const touch = e.touches && e.touches.length ? e.touches[0] : null;
-            const cx = touch ? touch.clientX : e.clientX;
-            const cy = touch ? touch.clientY : e.clientY;
-            return {
-                x: (cx - rect.left) * scaleX,
-                y: (cy - rect.top) * scaleY,
-            };
-        },
-        onScratchStart(e) {
-            if (this.scratchFinished) return;
-            // 触摸后浏览器会补发模拟 mousedown，忽略它避免起点被重画到错误位置
-            if (e.type === "mousedown" && this.touchScratching) return;
-            if (e.type === "touchstart") this.touchScratching = true;
-            const pos = this.getScratchPos(e);
-            this.lastScratchPos = pos;
-            this.isScratching = true;
-            if (!this.scratchCtx) return;
-            this.scratch(this.scratchCtx, pos.x, pos.y, pos.x, pos.y);
-        },
-        onScratchMove(e) {
-            if (!this.isScratching || !this.scratchCtx || this.scratchFinished) return;
-            const pos = this.getScratchPos(e);
-            const last = this.lastScratchPos || pos;
-            this.scratch(this.scratchCtx, last.x, last.y, pos.x, pos.y);
-            this.lastScratchPos = pos;
-        },
-        onScratchEnd(e) {
-            if (e.type === "touchend") this.touchScratching = false;
-            if (!this.isScratching) return;
-            this.isScratching = false;
-            this.lastScratchPos = null;
-            this.checkScratchProgress();
-        },
-        scratch(ctx, x0, y0, x1, y1) {
-            const canvas = this.$refs.scratchCanvas;
-            const rect = canvas ? canvas.getBoundingClientRect() : null;
-            const scale = canvas && rect && rect.width ? canvas.width / rect.width : 1;
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
-            ctx.strokeStyle = "#000";
-            ctx.lineWidth = 48 * scale;
-            ctx.beginPath();
-            ctx.moveTo(x0, y0);
-            ctx.lineTo(x1, y1);
-            ctx.stroke();
-        },
-        checkScratchProgress() {
-            const canvas = this.$refs.scratchCanvas;
-            if (!canvas) return;
-            const ctx = canvas.getContext("2d");
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const pixels = imageData.data;
-            let transparent = 0;
-            for (let i = 3; i < pixels.length; i += 4 * 10) {
-                if (pixels[i] === 0) transparent++;
-            }
-            const total = pixels.length / 4 / 10;
-            const percent = (transparent / total) * 100;
-            if (percent > this.scratchThreshold) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                this.scratchFinished = true;
-            }
-        },
         claimSingle() {
+            if (!this.scratchFinished || !this.currentPrize) return;
             this.showSingleScratch = false;
-            this.remainingCount = Math.max(0, this.remainingCount - 1);
-            // 抽取后本地更新已抽次数
-            this.saveCount(this.remainingCount);
             this.isDrawing = false;
             // 点击「拿下」后，列表卡片才显示奖品
             if (this.activeCardIndex !== null && this.cardList[this.activeCardIndex]) {
@@ -941,13 +798,11 @@ export default {
             this.activeCardIndex = null;
         },
         closeSingleScratch() {
-            if (this.isDrawing && !this.scratchFinished) return;
-            this.showSingleScratch = false;
-            this.isDrawing = false;
+            if (this.scratchFinished) this.claimSingle();
         },
 
         // 批量刮卡（times 支持数字或分批次数数组）
-        openBatchScratch(times) {
+        openBatchScratch(times, usePoints = false) {
             if (!this.isLogin) return this.toLogin();
             if (!this.isBindWechat) {
                 this.visible = true;
@@ -961,11 +816,15 @@ export default {
             const rounds = (Array.isArray(times) ? times : [times]).map((n) => ~~n).filter((n) => n > 0);
             const total = rounds.reduce((sum, n) => sum + n, 0);
             if (!total) return;
-            if (this.remainingCount < total) {
+            if (usePoints && !this.canDrawNine) return this.$message.warning("魔盒积分不足");
+            if (!usePoints && this.remainingCount < total) {
                 return this.$message.warning("刮奖次数不足，可签到或使用积分兑换次数");
             }
             this.isDrawing = true;
             this.batchRevealed = false;
+            this.drawError = "";
+            this.pendingRecord = null;
+            this.batchPage = 0;
             this.batchRounds = rounds;
             this.batchTotal = total;
             this.batchDoneRounds = 0;
@@ -973,28 +832,60 @@ export default {
             this.showBatchScratch = true;
             this.runBatchRounds(rounds);
         },
-        // 按批次顺序抽取，上一批返显结果后再抽下一批
-        runBatchRounds(rounds) {
-            const run = (i) => {
-                if (i >= rounds.length) {
-                    this.batchDoneRounds = rounds.length;
-                    return;
+        // 每批成功即扣除次数，查询失败不伪造未中奖结果，也不继续消耗积分。
+        async runBatchRounds(rounds, startIndex = 0) {
+            try {
+                for (let i = startIndex; i < rounds.length; i++) {
+                    if (this.disposed) return;
+                    const res = await goodLucky(this.ID, rounds[i]);
+                    this.remainingCount = Math.max(0, this.remainingCount - rounds[i]);
+                    this.points = Math.max(0, this.points - this.drawCost(rounds[i]));
+                    this.pendingRecord = { id: res.data?.data.id, times: rounds[i], index: i };
+                    const prizes = await this.fetchPrize(this.pendingRecord.id);
+                    if (this.disposed) return;
+                    this.writeBatchRound(i, rounds[i], prizes);
+                    this.pendingRecord = null;
                 }
-                goodLucky(this.ID, rounds[i])
-                    .then((res) => {
-                        const _id = res.data?.data.id;
-                        this.fetchPrize(_id, (prizes) => {
-                            this.writeBatchRound(i, rounds[i], prizes);
-                            run(i + 1);
-                        });
-                    })
-                    .catch(() => {
-                        // 单批失败按「谢谢惠顾」占位，不阻塞后续批次
-                        this.writeBatchRound(i, rounds[i], []);
-                        run(i + 1);
-                    });
-            };
-            run(0);
+            } catch (e) {
+                this.setDrawError();
+            }
+        },
+        setDrawError() {
+            if (this.disposed) return;
+            this.drawError = this.pendingRecord?.id
+                ? "结果暂未获取，请重新查询；不会重复抽奖或扣积分。"
+                : "抽奖提交状态未确认，请稍后在我的奖品中核对结果。";
+            if (!this.pendingRecord?.id) this.pendingRecord = null;
+        },
+        async retryDrawResult() {
+            if (this.retrying || !this.pendingRecord?.id) return;
+            const record = this.pendingRecord;
+            this.retrying = true;
+            try {
+                const prizes = await this.fetchPrize(record.id);
+                if (this.disposed) return;
+                this.drawError = "";
+                this.pendingRecord = null;
+                if (record.index === null) {
+                    this.currentPrize = prizes[0] || this.thanksPrize();
+                } else {
+                    this.writeBatchRound(record.index, record.times, prizes);
+                    // 只查询失败的原记录；成功后再继续尚未提交的后续批次。
+                    await this.runBatchRounds(this.batchRounds, record.index + 1);
+                }
+            } catch (e) {
+                this.setDrawError();
+            } finally {
+                this.retrying = false;
+            }
+        },
+        dismissDrawError() {
+            if (!this.drawError || this.retrying) return;
+            this.showSingleScratch = false;
+            this.showBatchScratch = false;
+            this.isDrawing = false;
+            this.pendingRecord = null;
+            this.drawError = "";
         },
         writeBatchRound(index, times, prizes) {
             const offset = this.batchRounds.slice(0, index).reduce((sum, n) => sum + n, 0);
@@ -1002,44 +893,32 @@ export default {
                 .concat(new Array(Math.max(0, times - (prizes || []).length)).fill(null))
                 .slice(0, times);
             list.forEach((item, k) => {
-                this.batchPrizes[offset + k] = item;
+                this.batchPrizes[offset + k] = item || this.thanksPrize();
             });
             this.batchDoneRounds = Math.max(this.batchDoneRounds, index + 1);
         },
-        revealBatch() {
-            // 全部批次返回后才允许刮开
-            if (this.batchRevealed || !this.batchReady) return;
-            // 未中奖的空位兜底为「谢谢惠顾」，避免渲染 null.img 报错
-            this.batchPrizes = this.batchPrizes.map((item) => item || this.thanksPrize());
-            this.batchRevealed = true;
-        },
         claimBatch() {
-            if (!this.batchReady) return;
+            if (!this.batchReady || !this.batchRevealed) return;
+            if (this.hasNextBatchPage) {
+                this.batchPage++;
+                this.batchRevealed = false;
+                return;
+            }
             this.showBatchScratch = false;
-            this.remainingCount = Math.max(0, this.remainingCount - this.batchTotal);
-            // 抽取后本地更新已抽次数
-            this.saveCount(this.remainingCount);
             this.isDrawing = false;
             this.refreshCards();
         },
         closeBatchScratch() {
-            if (this.isDrawing && !this.batchRevealed) return;
-            this.showBatchScratch = false;
-            this.isDrawing = false;
+            if (this.batchRevealed) this.claimBatch();
         },
-        // 全部刮完：按「当前剩余次数 / 单次可抽最大次数」拆分为多批依次抽取
+        // 每组最多九次，首组返回即可刮卡，后续组按顺序在后台继续。
         scratchAll() {
             const total = Math.max(0, ~~this.remainingCount);
-            if (!total) return;
-            const per = this.maxDrawCount;
             const rounds = [];
-            let left = total;
-            while (left > 0) {
-                const n = Math.min(per, left);
-                rounds.push(n);
-                left -= n;
+            for (let left = total; left > 0; left -= 9) {
+                rounds.push(Math.min(9, left));
             }
-            this.openBatchScratch(rounds);
+            if (rounds.length) this.openBatchScratch(rounds);
         },
 
         // 结果
@@ -1049,7 +928,8 @@ export default {
         },
     },
     beforeUnmount() {
-        clearInterval(this.prizesInterval);
+        this.disposed = true;
+        document.body.style.overflow = "";
     },
 };
 </script>
