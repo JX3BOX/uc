@@ -685,6 +685,11 @@ export default {
         reviewSuccess: "Đã gửi đánh giá thành công",
     },
     points: {
+        filterMode: "Cách lọc",
+        byGroup: "Theo nhóm",
+        byType: "Theo loại",
+        allTypes: "Tất cả loại",
+        retryOptions: "Không tải được bộ lọc. Thử lại",
         title: "Điểm của tôi",
         pointsHistory: "Lịch sử điểm",
         experienceHistory: "Lịch sử kinh nghiệm",

@@ -652,7 +652,16 @@ export default {
         reviewRequired: "请填写评价内容",
         reviewSuccess: "评价成功",
     },
-    points: { title: "我的银铛", pointsHistory: "积分记录", experienceHistory: "经验记录" },
+    points: {
+        filterMode: "筛选方式",
+        byGroup: "按业务分组",
+        byType: "按单个类型",
+        allTypes: "全部类型",
+        retryOptions: "筛选选项加载失败，点击重试",
+        title: "我的银铛",
+        pointsHistory: "积分记录",
+        experienceHistory: "经验记录",
+    },
     invitation: {
         title: "我的盒码",
         registrationCode: "注册邀请码",

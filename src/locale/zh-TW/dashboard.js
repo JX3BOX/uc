@@ -675,6 +675,11 @@ export default {
         reviewSuccess: "評價成功",
     },
     points: {
+        filterMode: "篩選方式",
+        byGroup: "按業務分組",
+        byType: "按單個類型",
+        allTypes: "全部類型",
+        retryOptions: "篩選選項載入失敗，點擊重試",
         title: "我的銀鐺",
         pointsHistory: "積分記錄",
         experienceHistory: "經驗記錄",

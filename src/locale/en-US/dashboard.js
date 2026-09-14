@@ -685,6 +685,11 @@ export default {
         reviewSuccess: "Review submitted successfully",
     },
     points: {
+        filterMode: "Filter mode",
+        byGroup: "By group",
+        byType: "By action type",
+        allTypes: "All types",
+        retryOptions: "Failed to load filters. Retry",
         title: "My Points",
         pointsHistory: "Points History",
         experienceHistory: "Experience History",
