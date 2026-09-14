@@ -18,7 +18,6 @@
                 <div class="u-text">
                     <span class="u-label">当前积分</span>
                     <span class="u-num">{{ points }}</span>
-                    <span class="u-unit">次</span>
                 </div>
             </div>
             <div class="m-actions">
@@ -156,8 +155,12 @@
             <button class="u-action" :disabled="!canDrawNine || isDrawing" @click="openBatchScratch(9, true)">
                 连刮九次
             </button>
-            <button class="u-action u-action-primary" :disabled="!isLogin || points < 1 || isDrawing || confirmingAll" @click="scratchAll">
-                全部刮完
+            <button
+                class="u-action u-action-primary"
+                :disabled="!isLogin || drawableCount < 1 || isDrawing"
+                @click="openDrawAll"
+            >
+                全部刮完<span class="u-count">(可刮{{ displayDrawableCount }}次)</span>
             </button>
             <button class="u-action u-action-gold" @click="goMyPrizes">我的奖品</button>
         </footer>
@@ -185,13 +188,6 @@
                 <button class="u-confirm-btn" v-else :disabled="!currentPrize" @click="claimSingle">
                     {{ currentPrize ? "拿下!" : "奖品揭晓中…" }}
                 </button>
-                <div v-if="drawError" class="m-draw-error" role="alert">
-                    <p>{{ drawError }}</p>
-                    <button v-if="pendingRecord" class="u-confirm-btn" :disabled="retrying" @click="retryDrawResult">
-                        {{ retrying ? "查询中…" : "重新查询结果" }}
-                    </button>
-                    <button class="u-confirm-btn" :disabled="retrying" @click="dismissDrawError">稍后查看奖品</button>
-                </div>
             </div>
         </div>
 
@@ -221,13 +217,6 @@
                 <button class="u-confirm-btn" v-if="batchRevealed" :disabled="!batchReady" @click="claimBatch">
                     {{ !batchReady ? "奖品揭晓中…" : hasNextBatchPage ? "继续刮下一组" : "拿下！" }}
                 </button>
-                <div v-if="drawError" class="m-draw-error" role="alert">
-                    <p>{{ drawError }}</p>
-                    <button v-if="pendingRecord" class="u-confirm-btn" :disabled="retrying" @click="retryDrawResult">
-                        {{ retrying ? "查询中…" : "重新查询结果" }}
-                    </button>
-                    <button class="u-confirm-btn" :disabled="retrying" @click="dismissDrawError">稍后查看奖品</button>
-                </div>
             </div>
         </div>
 
@@ -258,6 +247,24 @@
                         兑换 9 次({{ costPerTime * 9 }} 积分)
                     </button>
                     <button class="u-option" @click="showExchange = false">暂不兑换</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 全部刮完 Action Sheet -->
+        <div class="m-overlay" v-if="showDrawAll" @click.self="showDrawAll = false">
+            <div class="m-action-sheet">
+                <h3>积分抽奖</h3>
+                <p>您当前有 {{ points }} 积分，可抽取 {{ drawableCount }} 次。</p>
+
+                <div class="m-exchange-options">
+                    <button class="u-option u-option-primary" :disabled="!canDrawNine" @click="drawNineTimes">
+                        抽取 9 次({{ nineDrawCost }} 积分)
+                    </button>
+                    <button class="u-option u-option-primary" :disabled="drawableCount < 1" @click="drawAllTimes">
+                        全部抽取({{ points }} 积分)
+                    </button>
+                    <button class="u-option" @click="showDrawAll = false">暂不抽取</button>
                 </div>
             </div>
         </div>
@@ -303,6 +310,7 @@
                     />
                     <div class="u-records-tip" v-if="myPrizesLoading && myPrizeList.length">加载中...</div>
                     <div class="u-records-tip" v-else-if="myPrizeList.length && !myPrizeHasMore">没有更多了</div>
+                    <div class="u-records-tip" v-else-if="!myPrizesLoading && !myPrizeList.length">暂无奖品</div>
                 </div>
             </div>
         </div>
@@ -351,13 +359,15 @@ export default {
             points: 0,
 
             remainingCount: 0,
-            confirmingAll: false,
+            // 点击「全部刮完」后锁定的总次数，抽奖期间不再重算
+            lockedDrawTotal: null,
             isSignedIn: false,
             loading: false,
             user: {},
 
             showDetail: false,
             showExchange: false,
+            showDrawAll: false,
             showRules: false,
             showSingleScratch: false,
             showBatchScratch: false,
@@ -379,7 +389,6 @@ export default {
             currentPrize: null,
             drawError: "",
             pendingRecord: null,
-            retrying: false,
             scratchFinished: false,
             isRefreshing: false,
 
@@ -420,7 +429,12 @@ export default {
             return this.$route.query.id || this.blindboxID || 0;
         },
         costPerTime() {
-            return this.draw[0] ? this.draw[0][1] : 0;
+            // 单次抽奖消耗的积分：取次数最小的档位（通常是 1 次档），不依赖档位数组顺序
+            const tiers = (this.draw || [])
+                .map((item) => [~~item[0], Number(item[1])])
+                .filter(([count]) => count > 0)
+                .sort((a, b) => a[0] - b[0]);
+            return tiers.length ? tiers[0][1] : 0;
         },
         exchangeableCount() {
             return this.costPerTime ? Math.max(0, Math.floor(this.points / this.costPerTime) - this.remainingCount) : 0;
@@ -431,11 +445,20 @@ export default {
         canDrawNine() {
             return this.isLogin && this.nineDrawCost > 0 && this.points >= this.nineDrawCost;
         },
+        // 当前积分可直接抽取的次数（按「单次抽奖消耗的积分」换算，不按批量档位换算）
+        drawableCount() {
+            return this.costPerTime > 0 ? Math.floor(this.points / this.costPerTime) : 0;
+        },
+        // 全部刮完的展示次数：已锁定时用锁定值，抽奖过程中不随积分变化
+        displayDrawableCount() {
+            return this.lockedDrawTotal !== null ? this.lockedDrawTotal : this.drawableCount;
+        },
         // 单次可抽取的最大次数（来自后台 allow_once_try_count 配置）
         maxDrawCount() {
             const counts = (this.draw || []).map((item) => ~~item[0]).filter((n) => n > 0);
             return counts.length ? Math.max(...counts) : 9;
         },
+
         // 当前页独立开放刮奖，不等待后续页面的请求。
         batchReady() {
             return this.batchReadyCards.every(Boolean);
@@ -462,6 +485,7 @@ export default {
                 this.showBatchScratch ||
                 this.showResult ||
                 this.showExchange ||
+                this.showDrawAll ||
                 this.showRules ||
                 this.page === "prizes" ||
                 this.activePrize
@@ -758,46 +782,64 @@ export default {
             this.page = "prizes";
             this.loadMyPrizes(1);
         },
-        loadMyPrizes(index = 1) {
+        // 展开每条记录的全部奖品（一次连刮 = 一条记录含多个奖品），并过滤掉空奖/谢谢惠顾
+        mapMyPrizeItems(list) {
+            const items = [];
+            list.forEach((item) => {
+                const time = item.created_at ? item.created_at.replace("T", " ").slice(0, 16) : "";
+                const prizes = Array.isArray(item.prizes)
+                    ? item.prizes
+                    : item.prizes
+                    ? [item.prizes]
+                    : [];
+                prizes.forEach((prize) => {
+                    let name = "";
+                    let img = `${this.__imgRoot}thanks.png`;
+                    if (prize.prize_type === "mall_goods") {
+                        name = prize.goods?.title || "";
+                        img = normalizeMallImage(prize.goods?.goods_images?.[0]);
+                    } else if (prize.prize_type === "vip_asset") {
+                        name = prize.vip_asset_once_give + this.assetLabel(prize.vip_asset_type);
+                        img = `${this.__imgRoot}points.png`;
+                    }
+                    // 未中奖（谢谢惠顾）不进入我的奖品列表
+                    if (!name) return;
+                    items.push({
+                        name,
+                        img,
+                        stars: prize?.stars || 1,
+                        time,
+                    });
+                });
+            });
+            return items;
+        },
+        async loadMyPrizes(index = 1) {
             if (this.myPrizesLoading) return;
             this.myPrizesLoading = true;
-            getMyHistory({ index, pageSize: 20 })
-                .then((res) => {
+            try {
+                let cursor = index;
+                let hasMore = false;
+                let items = [];
+                // 过滤掉空奖后整页可能为空，继续往后取，避免出现空白列表
+                for (let attempt = 0; attempt < 5; attempt++) {
+                    const res = await getMyHistory({ index: cursor, pageSize: 20 });
                     const data = res.data?.data || {};
                     const list = data.list || [];
-                    const items = list.map((item) => {
-                        const prize = item.prizes?.[0];
-                        let name = "谢谢惠顾";
-                        let img = `${this.__imgRoot}thanks.png`;
-                        if (prize) {
-                            if (prize.prize_type === "mall_goods") {
-                                name = prize.goods.title;
-                                img = normalizeMallImage(prize.goods.goods_images[0]);
-                            } else if (prize.prize_type === "vip_asset") {
-                                name = prize.vip_asset_once_give + this.assetLabel(prize.vip_asset_type);
-                                img = `${this.__imgRoot}points.png`;
-                            }
-                        }
-                        return {
-                            name,
-                            img,
-                            stars: prize?.stars || 1,
-                            time: item.created_at ? item.created_at.replace("T", " ").slice(0, 16) : "",
-                        };
-                    });
-                    if (index === 1) {
-                        this.myPrizeList = items;
-                    } else {
-                        this.myPrizeList = this.myPrizeList.concat(items);
-                    }
-                    this.myPrizePage = index;
                     // 返回条数满一页则认为还有更多（不依赖 total 字段，接口 total 位置不稳定）
-                    this.myPrizeHasMore = list.length >= 20;
-                    this.myPrizesLoading = false;
-                })
-                .catch(() => {
-                    this.myPrizesLoading = false;
-                });
+                    hasMore = list.length >= 20;
+                    items = this.mapMyPrizeItems(list);
+                    if (items.length || !hasMore) break;
+                    cursor++;
+                }
+                this.myPrizeList = index === 1 ? items : this.myPrizeList.concat(items);
+                this.myPrizePage = cursor;
+                this.myPrizeHasMore = hasMore;
+            } catch (e) {
+                // 静默失败，保留已有列表
+            } finally {
+                this.myPrizesLoading = false;
+            }
         },
         onRecordsScroll(e) {
             const el = e.target;
@@ -822,8 +864,8 @@ export default {
                 this.isDrawing = false;
             }
             if (this.isDrawing) return;
-            if (this.remainingCount < 1) {
-                return this.$message.warning("刮奖次数不足，可签到或使用积分兑换次数");
+            if (this.points < this.costPerTime) {
+                return this.$message.warning("魔盒积分不足");
             }
             this.activeCardIndex = index !== undefined ? index : null;
             this.scratchFinished = false;
@@ -832,10 +874,11 @@ export default {
             this.pendingRecord = null;
             this.showSingleScratch = true;
             this.isDrawing = true;
+            // 单次抽取沿用 index.vue 的接口：goodLucky(ID, 1)
             return goodLucky(this.ID, 1)
                 .then(async (res) => {
-                    this.remainingCount = Math.max(0, this.remainingCount - 1);
-                    this.points = Math.max(0, this.points - this.drawCost(1));
+                    // 取消积分兑换次数后，直接用服务端积分余额
+                    this.myPoints();
                     this.pendingRecord = { id: res.data?.data.id, times: 1, index: null };
                     const prizes = await this.fetchPrize(this.pendingRecord.id);
                     if (this.disposed) return;
@@ -933,53 +976,55 @@ export default {
                     if (this.disposed) return;
                     const res = await goodLucky(this.ID, rounds[i]);
                     this.remainingCount = Math.max(0, this.remainingCount - rounds[i]);
-                    this.points = Math.max(0, this.points - this.drawCost(rounds[i]));
                     this.pendingRecord = { id: res.data?.data.id, times: rounds[i], index: i };
                     const prizes = await this.fetchPrize(this.pendingRecord.id);
                     if (this.disposed) return;
                     this.writeBatchRound(i, rounds[i], prizes);
                     this.pendingRecord = null;
+                    // 每批结束后刷新服务端积分余额（含中奖积分累加），不做本地估算
+                    this.myPoints();
                 }
+                if (this.disposed) return;
+                // 本轮次数全部抽取完毕：解除次数锁定，按最新积分重算可全部刮完的次数
+                this.lockedDrawTotal = null;
+                this.myPoints();
             } catch (e) {
                 this.setDrawError();
             }
         },
+        // 抽奖失败：不留中间态、不重试，直接关闭刮卡流程并刷新当前抽奖页面
         setDrawError() {
             if (this.disposed) return;
-            this.drawError = this.pendingRecord?.id
-                ? "结果暂未获取，请重新查询；不会重复抽奖或扣积分。"
-                : "抽奖提交状态未确认，请稍后在我的奖品中核对结果。";
-            if (!this.pendingRecord?.id) this.pendingRecord = null;
+            const hasRecord = !!this.pendingRecord?.id;
+            this.reloadDrawPage(
+                hasRecord
+                    ? "抽奖结果获取失败，页面已刷新；如已扣费请到「我的奖品」查看结果。"
+                    : "抽奖失败，页面已刷新；稍后可到「我的奖品」核对结果。"
+            );
         },
-        async retryDrawResult() {
-            if (this.retrying || !this.pendingRecord?.id) return;
-            const record = this.pendingRecord;
-            this.retrying = true;
-            try {
-                const prizes = await this.fetchPrize(record.id);
-                if (this.disposed) return;
-                this.drawError = "";
-                this.pendingRecord = null;
-                if (record.index === null) {
-                    this.currentPrize = prizes[0] || this.thanksPrize();
-                } else {
-                    this.writeBatchRound(record.index, record.times, prizes);
-                    // 只查询失败的原记录；成功后再继续尚未提交的后续批次。
-                    await this.runBatchRounds(this.batchRounds, record.index + 1);
-                }
-            } catch (e) {
-                this.setDrawError();
-            } finally {
-                this.retrying = false;
-            }
-        },
-        dismissDrawError() {
-            if (!this.drawError || this.retrying) return;
+        // 重置刮卡会话状态，并重新拉取页面数据（积分、用户信息、卡片）
+        reloadDrawPage(message) {
             this.showSingleScratch = false;
             this.showBatchScratch = false;
             this.isDrawing = false;
-            this.pendingRecord = null;
+            this.scratchFinished = false;
+            this.currentPrize = null;
             this.drawError = "";
+            this.pendingRecord = null;
+            this.activeCardIndex = null;
+            this.activeRecordIndex = null;
+            this.batchRounds = [];
+            this.batchPrizes = [];
+            this.batchRevealed = false;
+            this.batchDoneRounds = 0;
+            this.batchPage = 0;
+            // 本页预留的刮奖次数作废，可刮次数以服务端积分重新计算
+            this.remainingCount = 0;
+            this.lockedDrawTotal = null;
+            this.myPoints();
+            this.loadUser();
+            this.buildCards();
+            if (message) this.$message.error(message);
         },
         writeBatchRound(index, times, prizes) {
             const offset = this.batchRounds.slice(0, index).reduce((sum, n) => sum + n, 0);
@@ -1000,44 +1045,58 @@ export default {
             }
             this.showBatchScratch = false;
             this.isDrawing = false;
+            // 全部批次结束后再同步一次积分余额
+            this.myPoints();
             this.refreshCards();
         },
         closeBatchScratch() {
             if (this.batchRevealed) this.claimBatch();
         },
-        // 每组最多九次，首组返回即可刮卡，后续组按顺序在后台继续。
-        async scratchAll() {
-            if (this.isDrawing || this.confirmingAll) return;
+        // 底部「全部刮完」：打开抽取选择弹窗
+        openDrawAll() {
+            if (this.isDrawing) return;
             if (!this.isLogin) return this.toLogin();
             if (!this.isBindWechat) {
                 this.visible = true;
                 return;
             }
-            const total = Math.max(0, Math.floor(this.points));
-            if (!total) return;
-            this.confirmingAll = true;
-            try {
-                await this.$confirm(
-                    `将消耗全部 ${total} 积分，不可撤回。是否继续？`,
-                    "确认消耗全部积分",
-                    {
-                        confirmButtonText: "确认",
-                        cancelButtonText: "取消",
-                        type: "warning",
-                        closeOnClickModal: false,
-                    }
-                );
-            } catch {
-                return;
-            } finally {
-                this.confirmingAll = false;
-            }
-            if (this.disposed || this.isDrawing) return;
+            if (this.drawableCount < 1) return this.$message.warning("魔盒积分不足");
+            this.showDrawAll = true;
+        },
+        // 弹窗内「抽取 9 次」：提交 9 次并沿用活动档位价
+        drawNineTimes() {
+            if (this.isDrawing) return;
+            if (!this.canDrawNine) return this.$message.warning("魔盒积分不足");
+            this.showDrawAll = false;
+            this.openBatchScratch(9, true);
+        },
+        // 弹窗内「全部抽取」：次数按「单次抽奖消耗的积分」换算，提交时按活动档位分批
+        drawAllTimes() {
+            if (this.isDrawing) return;
+            const total = this.drawableCount;
+            if (!total) return this.$message.warning("魔盒积分不足");
+            const rounds = this.buildDrawRounds(total);
+            if (!rounds.length) return;
+            this.showDrawAll = false;
+            // 点击即锁定次数：抽奖过程中即使积分变化，本轮次数与档位组合也不再改变
+            this.lockedDrawTotal = total;
+            this.openBatchScratch(rounds, true);
+        },
+        // 按活动档位（如 10 / 5 / 1 次）由大到小贪心拆分总次数，保证每批提交的都是合法档位次数
+        buildDrawRounds(total) {
+            const tiers = (this.draw || [])
+                .map((item) => ~~item[0])
+                .filter((n) => n > 0)
+                .sort((a, b) => b - a);
             const rounds = [];
-            for (let left = total; left > 0; left -= 9) {
-                rounds.push(Math.min(9, left));
+            let left = total;
+            while (left > 0) {
+                // 档位配置理论上必含 1 次档，缺失时兜底为单次，避免死循环
+                const tier = tiers.find((n) => n <= left) || 1;
+                rounds.push(tier);
+                left -= tier;
             }
-            if (rounds.length) this.openBatchScratch(rounds, true);
+            return rounds;
         },
 
         // 结果
