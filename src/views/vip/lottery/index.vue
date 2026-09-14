@@ -1,7 +1,7 @@
 <template>
     <div :class="theme" v-loading="loading">
         <CommonHeader></CommonHeader>
-        <div class="p-event-blindbox">
+        <div class="p-event-blindbox" :class="{ 'is-unavailable': !activityReady }">
             <!-- 模糊背景 -->
             <div class="m-video" v-if="isVideo">
                 <video class="u-video" autoplay muted loop :poster="`${themeImg}bg.jpg`" preload="metadata">
@@ -27,7 +27,7 @@
                             </el-tooltip> 
                         </div>
                         <!-- 抽奖盒子 -->
-                        <div class="m-box" :class="{ active: allActive }">
+                        <div class="m-box" v-show="activityReady" :class="{ active: allActive }">
                             <div
                                 :class="['u-box', `u-box-${index + 1}`, { active: number === active }]"
                                 v-for="(number, index) in boxList"
@@ -48,7 +48,7 @@
                         </div>
                     </div>
                     <!-- 右侧 -->
-                    <div class="m-right">
+                    <div class="m-right" v-show="activityReady">
                         <!-- 积分现实 -->
                         <div class="m-point">{{ points }}</div>
                         <!-- 奖品 -->
@@ -195,6 +195,11 @@
                     </div>
                 </div>
             </div>
+            <section v-if="!activityReady" class="m-pc-activity-notice" role="status">
+                <div class="u-notice-star" aria-hidden="true">✦</div>
+                <h2>{{ activityState === 'ended' ? '本期活动已结束' : '活动暂未开始' }}</h2>
+                <p>{{ activityState === 'ended' ? '感谢参与，敬请期待下期活动' : '活动筹备中，请稍后再来' }}</p>
+            </section>
             <div class="m-goods" :class="{ active: hasPrize }" @click.stop="closePrize">
                 <div class="m-item">
                     <div class="u-item box" v-for="(item, i) in myPrizes" :key="i">
@@ -223,9 +228,6 @@
                     @click.stop="closePrize"
                 />
             </div>
-        </div>
-        <div class="mark" v-if="!event_status">
-            <div class="m-box"><img :src="`${__imgRoot}null.png`" :alt="$t('vip.lottery.notOpen')" /></div>
         </div>
         <div class="mark" v-if="visible" @click="visible = false">
             <div class="m-box">
@@ -256,7 +258,10 @@ export default {
         return {
             theme: "",
             raw: {},
-            draw: {},
+            draw: [],
+            activityState: "pending",
+            activityStart: null,
+            activityEnd: null,
             prizeList: [],
             previewList: [],
             points: 0,
@@ -297,6 +302,9 @@ export default {
         bindWechat,
     },
     computed: {
+        activityReady() {
+            return this.event_status && this.activityState === "ready";
+        },
         data: function () {
             let _data = {};
             if (Array.isArray(this.raw)) {
@@ -395,7 +403,7 @@ export default {
                 } else {
                     this.LoadId();
                 }
-            });
+            }).catch(() => { this.activityState = "pending"; });
         },
         LoadId() {
             getConfig({ key: "lottery_ID" }).then((res) => {
@@ -408,25 +416,29 @@ export default {
 
                 Promise.all(promises)
                     .then((res) => {
-                        console.log(res);
                         this.info = res[0];
                         this.odds = res[1];
                         this.gift_off = res[2];
                     })
+                    .catch(() => {})
                     .finally(() => {
                         this.loading = false;
                     });
+            }).catch(() => {
+                this.activityState = "pending";
+                this.loading = false;
             });
         },
         load() {
-            getBlindBox(this.ID)
+            this.activityState = "pending";
+            return getBlindBox(this.ID, { mute: true })
                 .then((res) => {
                     const data = res.data.data;
 
                     this.draw = zip(data.allow_once_try_count, data.allow_once_try_count_cost_points);
                     this.previewList = this.setPrizeList(data);
                     this.prizeList = this.setPrizeList(data).reverse();
-                    this.scroll(this.prizeList.length);
+
                     const userLevelLimit = data.user_level_limit;
                     const userLevel = User.getLevel(this.user.experience);
 
@@ -435,14 +447,36 @@ export default {
                             type: "error",
                         });
                     }
-                    this.theme = data.skin;
-                    this.refreshBox();
+                    this.theme = data.skin || "normal";
+                    this.activityStart = data.start_time;
+                    this.activityEnd = data.end_time;
+                    this.activityState = "ready";
+                    if (this.draw.length < 2) this.activityState = "pending";
+                    if (this.checkActivity()) {
+                        this.$nextTick(() => this.scroll(this.prizeList.length));
+                        this.refreshBox();
+                    }
                 })
                 .catch((e) => {
-                    this.$alert(this.$t("vip.lottery.notStartedOrEnded"), {
-                        type: "error",
-                    });
+                    this.activityState = this.activityError(e) || "pending";
+                    this.draw = [];
+                    this.previewList = [];
+                    this.prizeList = [];
                 });
+        },
+        activityError(error) {
+            const data = error?.response?.data || error?.data || {};
+            if (Number(data.code) === 61000) return "pending";
+            if (Number(data.code) === 61001 && /抽奖活动/.test(data.msg || data.message || "")) {
+                return /未上线/.test(data.msg || data.message) ? "pending" : "ended";
+            }
+            return "";
+        },
+        checkActivity() {
+            const parse = value => value ? new Date(String(value).replace(" ", "T")).getTime() : NaN;
+            if (parse(this.activityStart) > Date.now()) this.activityState = "pending";
+            else if (parse(this.activityEnd) < Date.now()) this.activityState = "ended";
+            return this.activityReady;
         },
         setPrizeList(data) {
             return data.prize.map((item) => {
@@ -509,6 +543,7 @@ export default {
         },
         // 打开盒子
         openBox: throttle(function (key) {
+            if (!this.checkActivity()) return;
             if (!this.isBindWechat) {
                 this.visible = true;
                 return;
@@ -539,6 +574,7 @@ export default {
         },
         // 选择盒子抽奖
         change(number) {
+            if (!this.checkActivity()) return;
             if (this.points < this.draw[0][1] || this.mark) return;
             this.active = number;
             this.mark = true;
@@ -551,13 +587,21 @@ export default {
         },
         // 抽奖
         hasLucky() {
+            if (!this.checkActivity()) return;
             let batch = 1;
             if (this.allActive) batch = 10;
             this.isDrawing = true;
-            goodLucky(this.ID, batch).then((res) => {
+            goodLucky(this.ID, batch, { mute: true }).then((res) => {
                 const _id = res.data?.data.id;
                 this.showPrizes(_id, true);
                 this.myPoints();
+            }).catch((error) => {
+                this.isDrawing = false;
+                this.mark = false;
+                this.allActive = false;
+                const state = this.activityError(error);
+                if (state) this.activityState = state;
+                else this.$message.error("抽奖失败，请稍后重试");
             });
         },
         // 查询中奖

@@ -2,9 +2,13 @@
     <div class="p-app-lottery" v-loading="loading">
         <!-- 头部 -->
         <header class="m-header">
-            <div class="u-back" @click="goBack">
+            <span class="u-edition">
+                <img class="u-edition-star" :src="`${__appImgRoot}star1.svg`" alt="" aria-hidden="true" />
+                {{ editionLabel }}
+            </span>
+            <!-- <div class="u-back" @click="goBack">
                 <i class="el-icon-arrow-left"></i>
-            </div>
+            </div> -->
             <div class="m-title">
                 <img class="u-title-img" :src="`${__appImgRoot}title.png`" alt="签到赢大奖" />
                 <p>* 每天登录APP签到，兑换刮奖次数~</p>
@@ -23,21 +27,24 @@
             <div class="m-actions">
                 <button
                     class="u-btn"
-                    :class="isSignedIn ? 'is-signed' : 'is-unsigned'"
-                    @click="handleSign"
-                    :disabled="isLogin"
+                    :class="showSignedIn ? 'is-signed' : 'is-unsigned'"
+                    @click="!mockUnsigned && handleSign()"
+                    :disabled="!mockUnsigned && isLogin"
                 >
-                    {{ isSignedIn ? "今日已签到" : "今日未签到" }}
+                    <span>{{ showSignedIn ? "今日已签到" : "今日未签到" }}</span>
+                    <span v-if="!showSignedIn" class="u-sign-sparkles" aria-hidden="true">
+                        <span v-for="n in 3" :key="n" class="u-sign-star">✦</span>
+                    </span>
                 </button>
             </div>
         </section>
 
         <!-- 本期奖池 -->
-        <section class="m-prize-pool">
+        <section class="m-prize-pool" v-show="canParticipate">
             <div class="m-section-title">
                 <span>本期奖池</span>
-                <span class="u-more" @click="showDetail = !showDetail">
-                    <i class="el-icon-arrow-down" :class="{ 'is-up': showDetail }"></i>
+                <span class="u-more" @click="showDetail = true">
+                    <i class="el-icon-arrow-right"></i>
                     奖池详情
                 </span>
             </div>
@@ -45,7 +52,6 @@
             <!-- 奖池缩略（走马灯） -->
             <div
                 class="m-prize-list"
-                v-if="!showDetail"
                 @pointerdown="startPrizeDrag"
                 @pointermove="movePrizeDrag"
                 @pointerup="endPrizeDrag"
@@ -90,16 +96,29 @@
                 </div>
             </div>
 
-            <!-- 奖池详情列表 -->
-            <div class="m-prize-detail" v-if="showDetail">
-                <PrizeDetailItem
-                    v-for="(item, index) in previewList"
-                    :key="index"
-                    :item="item"
-                    :is-active="index === 0"
-                    @click="selectPrize(item, index)"
-                />
-            </div>
+            <!-- 奖池详情抽屉 -->
+            <Transition name="prize-records">
+                <div class="m-overlay m-records-overlay" v-if="showDetail" @click.self="showDetail = false" @keydown.esc="showDetail = false">
+                    <div class="m-prize-records" role="dialog" aria-modal="true" aria-label="奖池详情">
+                        <div class="m-records-heading">
+                            <h3 class="m-section-title-2">奖池详情</h3>
+                            <button class="u-close-records" type="button" aria-label="关闭奖池详情" @click="showDetail = false">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+                            </button>
+                        </div>
+                        <div class="m-prize-detail m-pool-detail">
+                            <PrizeDetailItem
+                                v-for="(item, index) in previewList"
+                                :key="index"
+                                :item="item"
+                                :is-active="index === 0"
+                                hide-duplicate-description
+                                @click="selectPrize(item, index)"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </Transition>
 
             <!-- 奖品详情弹窗 -->
             <Transition name="prize-detail">
@@ -115,8 +134,17 @@
             </Transition>
         </section>
 
+        <section v-if="!canParticipate" class="m-activity-notice" role="status">
+            <div class="u-notice-emblem" aria-hidden="true">
+                <img :src="`${__appImgRoot}star1.svg`" alt="" />
+                <span>✦</span>
+            </div>
+            <h3>活动暂未开始</h3>
+            <p>活动筹备中，请稍后再来</p>
+        </section>
+
         <!-- 规则提示 -->
-        <div class="m-rules-bar">
+        <div class="m-rules-bar" v-if="canParticipate">
             <span class="u-rule" @click="showRules = true">
                 <i class="u-icon"> <img svg-inline src="@/assets/img/vip/icon/warning.svg" /> </i>规则说明</span
             >
@@ -128,7 +156,7 @@
         </div>
 
         <!-- 刮卡区 -->
-        <section class="m-card-grid" :class="{ 'is-refreshing': isRefreshing }">
+        <section v-if="canParticipate" class="m-card-grid" :class="{ 'is-refreshing': isRefreshing }">
             <div class="m-refresh-mask" v-if="isRefreshing">
                 <i class="el-icon-loading"></i>
             </div>
@@ -319,10 +347,6 @@
         </div>
         </Transition>
 
-        <!-- 未开始/结束 -->
-        <div class="mark" v-if="!event_status">
-            <div class="m-box"><img :src="`${__imgRoot}null.png`" alt="活动未开放" /></div>
-        </div>
         <!-- 绑定微信 -->
         <div class="mark" v-if="visible" @click="visible = false">
             <div class="m-box">
@@ -410,12 +434,28 @@ export default {
             odds: "",
             blindboxID: "",
             event_status: true,
+            activityMessage: "",
+            activityStart: null,
+            activityEnd: null,
             visible: false,
             isDrawing: false,
         };
     },
     components: { bindWechat, ScratchSurface, PrizeDetailItem },
     computed: {
+        mockUnsigned() {
+            return process.env.NODE_ENV === "development" && this.$route.query.mockSign === "unsigned";
+        },
+        showSignedIn() {
+            return !this.mockUnsigned && this.isSignedIn;
+        },
+        canParticipate() {
+            return this.event_status && !this.activityMessage && this.costPerTime > 0;
+        },
+        editionLabel() {
+            const now = new Date();
+            return `${now.getFullYear()}年${now.getMonth() + 1}月辑`;
+        },
         isLogin() {
             return User.isLogin();
         },
@@ -446,11 +486,11 @@ export default {
             return this.drawCost(9);
         },
         canDrawNine() {
-            return this.isLogin && this.nineDrawCost > 0 && this.points >= this.nineDrawCost;
+            return this.canParticipate && this.isLogin && this.nineDrawCost > 0 && this.points >= this.nineDrawCost;
         },
         // 当前积分可直接抽取的次数（按「单次抽奖消耗的积分」换算，不按批量档位换算）
         drawableCount() {
-            return this.costPerTime > 0 ? Math.floor(this.points / this.costPerTime) : 0;
+            return this.canParticipate ? Math.floor(this.points / this.costPerTime) : 0;
         },
         // 全部刮完的展示次数：已锁定时用锁定值，抽奖过程中不随积分变化
         displayDrawableCount() {
@@ -490,6 +530,7 @@ export default {
                 this.showExchange ||
                 this.showDrawAll ||
                 this.showRules ||
+                this.showDetail ||
                 this.page === "prizes" ||
                 this.activePrize
             );
@@ -605,49 +646,53 @@ export default {
                 });
             }
         },
-        init() {
+        async init() {
             this.loading = true;
-            getLuckyConfig().then((res) => {
-                const status = !!~~res.data?.data?.val || 0;
-                if (status) {
-                    if (User.isTeammate()) {
-                        this.LoadId();
-                    } else {
-                        this.event_status = false;
-                        this.loading = false;
-                    }
-                } else {
-                    this.LoadId();
+            try {
+                const res = await getLuckyConfig();
+                const status = !!~~res.data?.data?.val;
+                if (status && !User.isTeammate()) {
+                    this.event_status = false;
+                    this.activityMessage = "抽奖活动暂未开放";
+                    return;
                 }
-            });
+                await this.LoadId();
+            } catch {
+                this.activityMessage = "活动暂不可用，请稍后刷新重试";
+            } finally {
+                this.loading = false;
+            }
         },
-        LoadId() {
-            getConfig({ key: "lottery_ID" }).then((res) => {
-                this.blindboxID = res.val;
-                const promises = [
-                    getBreadcrumb("lottery_info"),
-                    getBreadcrumb(`lottery_odds_${this.ID}`),
-                    getBreadcrumb(`lottery_gift_status_${this.ID}`),
-                ];
-                Promise.all(promises)
-                    .then((res) => {
-                        this.info = res[0];
-                        this.odds = res[1];
-                    })
-                    .finally(() => {
-                        this.loading = false;
-                    });
-            });
+        async LoadId() {
+            const res = await getConfig({ key: "lottery_ID" });
+            this.blindboxID = res.val;
+            if (!this.ID) {
+                this.activityMessage = "抽奖活动暂未开放";
+                return;
+            }
+            const results = await Promise.allSettled([
+                getBreadcrumb("lottery_info"),
+                getBreadcrumb(`lottery_odds_${this.ID}`),
+                getBreadcrumb(`lottery_gift_status_${this.ID}`),
+            ]);
+            if (results[0].status === "fulfilled") this.info = results[0].value;
+            if (results[1].status === "fulfilled") this.odds = results[1].value;
         },
         load() {
-            getBlindBox(this.ID)
+            this.activityMessage = "活动加载中，请稍候";
+            return getBlindBox(this.ID, { mute: true })
                 .then((res) => {
                     const data = res.data.data;
+                    this.activityStart = data.start_time;
+                    this.activityEnd = data.end_time;
+                    this.activityMessage = "";
+                    this.checkActivityTime();
                     this.draw = data.allow_once_try_count.map((count, i) => [
                         count,
                         data.allow_once_try_count_cost_points[i],
                     ]);
                     this.previewList = this.setPrizeList(data);
+                    if (!this.costPerTime && !this.activityMessage) this.activityMessage = "抽奖活动暂未开放";
                     // 可刮次数仅由本次页面的积分兑换产生，不恢复历史缓存或活动总额度。
                     const userLevelLimit = data.user_level_limit;
                     const userLevel = User.getLevel(this.user.experience);
@@ -655,9 +700,26 @@ export default {
                         this.$alert("您的等级不足，无法参与活动", "活动不可用", { type: "error" });
                     }
                 })
-                .catch(() => {
-                    this.$alert("活动未开始或已结束", { type: "error" });
+                .catch((error) => {
+                    this.draw = [];
+                    this.previewList = [];
+                    this.activityMessage = this.activityErrorMessage(error) || "活动暂不可用，请稍后刷新重试";
                 });
+        },
+        activityErrorMessage(error) {
+            const data = error?.response?.data || error?.data || {};
+            if (Number(data.code) === 61000) return "抽奖活动尚未开始，敬请期待";
+            if (Number(data.code) === 61001 && /抽奖活动/.test(data.msg || data.message || "")) {
+                return /未上线/.test(data.msg || data.message) ? "抽奖活动暂未开放" : "本期抽奖活动已结束";
+            }
+            return "";
+        },
+        checkActivityTime() {
+            const now = Date.now();
+            const parseTime = (value) => value ? new Date(String(value).replace(" ", "T")).getTime() : NaN;
+            if (parseTime(this.activityStart) > now) this.activityMessage = "抽奖活动尚未开始，敬请期待";
+            else if (parseTime(this.activityEnd) < now) this.activityMessage = "本期抽奖活动已结束";
+            return this.canParticipate;
         },
         setPrizeList(data) {
             return data.prize.map((item, index) => {
@@ -863,6 +925,7 @@ export default {
         },
 
         openSingleScratch(card, index) {
+            if (!this.checkActivityTime()) return;
             if (card && card.scratched) return;
             if (!this.isLogin) return this.toLogin();
             if (!this.isBindWechat) {
@@ -885,7 +948,7 @@ export default {
             this.showSingleScratch = true;
             this.isDrawing = true;
             // 单次抽取沿用 index.vue 的接口：goodLucky(ID, 1)
-            return goodLucky(this.ID, 1)
+            return goodLucky(this.ID, 1, { mute: true })
                 .then(async (res) => {
                     // 取消积分兑换次数后，直接用服务端积分余额
                     this.myPoints();
@@ -895,8 +958,8 @@ export default {
                     this.currentPrize = prizes[0] || this.thanksPrize();
                     this.pendingRecord = null;
                 })
-                .catch(() => {
-                    this.setDrawError();
+                .catch((error) => {
+                    this.setDrawError(error);
                 });
         },
         async fetchPrize(id) {
@@ -949,6 +1012,7 @@ export default {
 
         // 批量刮卡（times 支持数字或分批次数数组）
         openBatchScratch(times, usePoints = false) {
+            if (!this.checkActivityTime()) return;
             if (!this.isLogin) return this.toLogin();
             if (!this.isBindWechat) {
                 this.visible = true;
@@ -984,7 +1048,7 @@ export default {
             try {
                 for (let i = startIndex; i < rounds.length; i++) {
                     if (this.disposed) return;
-                    const res = await goodLucky(this.ID, rounds[i]);
+                    const res = await goodLucky(this.ID, rounds[i], { mute: true });
                     this.remainingCount = Math.max(0, this.remainingCount - rounds[i]);
                     this.pendingRecord = { id: res.data?.data.id, times: rounds[i], index: i };
                     const prizes = await this.fetchPrize(this.pendingRecord.id);
@@ -999,12 +1063,19 @@ export default {
                 this.lockedDrawTotal = null;
                 this.myPoints();
             } catch (e) {
-                this.setDrawError();
+                this.setDrawError(e);
             }
         },
         // 抽奖失败：不留中间态、不重试，直接关闭刮卡流程并刷新当前抽奖页面
-        setDrawError() {
+        setDrawError(error) {
             if (this.disposed) return;
+            const activityMessage = this.activityErrorMessage(error);
+            if (activityMessage && !this.pendingRecord?.id) {
+                this.activityMessage = activityMessage;
+                this.showDrawAll = false;
+                this.reloadDrawPage();
+                return;
+            }
             const hasRecord = !!this.pendingRecord?.id;
             this.reloadDrawPage(
                 hasRecord
@@ -1064,6 +1135,7 @@ export default {
         },
         // 底部「全部刮完」：打开抽取选择弹窗
         openDrawAll() {
+            if (!this.checkActivityTime()) return;
             if (this.isDrawing) return;
             if (!this.isLogin) return this.toLogin();
             if (!this.isBindWechat) {
@@ -1082,6 +1154,7 @@ export default {
         },
         // 弹窗内「全部抽取」：二次确认后，次数按「单次抽奖消耗的积分」换算并按档位分批提交
         async drawAllTimes() {
+            if (!this.checkActivityTime()) return;
             if (this.isDrawing) return;
             const total = this.drawableCount;
             if (!total) return this.$message.warning("魔盒积分不足");

@@ -6,6 +6,7 @@ node_modules
 /tmp
 /src/mock
 .gitkeep
+/output
 
 # local env files
 .env.local

@@ -201,3 +201,58 @@ test('批次查询失败关闭会话、刷新余额，提示核对奖品且不�
     assert.equal(state.batchPrizes.length, 0);
     assert.match(errors[0], /结果获取失败.*已扣费.*我的奖品/);
 });
+
+test('未开始和已结束活动拦截所有抽奖入口，不提交请求或弹错', async () => {
+    for (const timing of [
+        { activityStart: '2999-01-01T00:00:00+08:00' },
+        { activityEnd: '2000-01-01T00:00:00+08:00' },
+    ]) {
+        let requests = 0;
+        const { state } = setup({ goodLucky: async () => { requests++; }, state: {
+            points: 100, draw: [[1, 1], [9, 9]], user: { wechat_mp_openid: 'test' }, ...timing,
+            $message: { warning() { assert.fail('不应弹出积分报错'); } },
+        } });
+        await state.openSingleScratch({});
+        state.openBatchScratch(9, true);
+        state.openDrawAll();
+        await state.drawAllTimes();
+        assert.equal(requests, 0);
+        assert.equal(state.canDrawNine, false);
+        assert.equal(state.drawableCount, 0);
+        assert.match(state.activityMessage, /尚未开始|已结束/);
+    }
+});
+
+test('详情接口失败显示页面状态，不保留旧抽奖档位', async () => {
+    const { state } = setup({ getBlindBox: async (id, options) => {
+        assert.equal(options.mute, true);
+        throw { data: { code: 61000 } };
+    }, state: { draw: [[1, 1]], previewList: [{}] } });
+    await state.load();
+    assert.equal(state.canParticipate, false);
+    assert.equal(state.previewList.length, 0);
+    assert.match(state.activityMessage, /尚未开始/);
+});
+
+test('抽奖期间服务端报告活动结束时关闭流程，仅显示页面提示', async () => {
+    let errors = 0;
+    const { state } = setup({ goodLucky: async (id, count, options) => {
+        assert.equal(options.mute, true);
+        throw { data: { code: 61001, msg: '抽奖活动已经结束' } };
+    }, state: { points: 100, draw: [[1, 1]], user: { wechat_mp_openid: 'test' },
+        $message: { error() { errors++; } },
+    } });
+    state.myPoints = () => {};
+    state.loadUser = () => {};
+    await state.openSingleScratch({});
+    assert.equal(state.showSingleScratch, false);
+    assert.equal(state.isDrawing, false);
+    assert.equal(state.canParticipate, false);
+    assert.equal(errors, 0);
+    assert.match(state.activityMessage, /已结束/);
+});
+
+test('相同错误码的非活动错误仍保留一般失败处理', () => {
+    const { state } = setup();
+    assert.equal(state.activityErrorMessage({ data: { code: 61001, msg: '用户不存在' } }), '');
+});

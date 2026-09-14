@@ -15,13 +15,13 @@ function getLuckyList(params) {
     return $pay().get(`/api/lucky-draw/public/list`, { params });
 }
 // 获取活动详情
-function getBlindBox(id) {
-    return $pay().get(`/api/lucky-draw/public/details`, { params: { id } });
+function getBlindBox(id, options = {}) {
+    return $pay(options).get(`/api/lucky-draw/public/details`, { params: { id } });
 }
 
 // 抽奖
-function goodLucky(id, batch) {
-    return $pay().post(`/api/lucky-draw/public/item/${id}/try-my-lucky?batch=${batch}`);
+function goodLucky(id, batch, options = {}) {
+    return $pay(options).post(`/api/lucky-draw/public/item/${id}/try-my-lucky?batch=${batch}`);
 }
 // 获取微信二维码
 function getWechatQrcode() {
