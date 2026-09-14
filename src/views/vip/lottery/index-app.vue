@@ -252,6 +252,7 @@
         </div>
 
         <!-- 全部刮完 Action Sheet -->
+        <Transition name="draw-options">
         <div class="m-overlay" v-if="showDrawAll" @click.self="showDrawAll = false">
             <div class="m-action-sheet">
                 <h3>积分抽奖</h3>
@@ -268,6 +269,7 @@
                 </div>
             </div>
         </div>
+        </Transition>
 
         <!-- 规则说明 -->
         <div class="m-overlay m-rules-overlay" v-if="showRules" @click.self="showRules = false">

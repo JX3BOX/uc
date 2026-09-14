@@ -523,29 +523,38 @@
     }
 
     .prize-detail-enter-active,
-    .prize-detail-leave-active {
+    .prize-detail-leave-active,
+    .draw-options-enter-active,
+    .draw-options-leave-active {
         transition: opacity 180ms ease;
 
-        .m-prize-dialog {
+        .m-prize-dialog,
+        .m-action-sheet {
             transition: transform 180ms ease;
         }
     }
 
     .prize-detail-enter-from,
-    .prize-detail-leave-to {
+    .prize-detail-leave-to,
+    .draw-options-enter-from,
+    .draw-options-leave-to {
         opacity: 0;
 
-        .m-prize-dialog {
+        .m-prize-dialog,
+        .m-action-sheet {
             transform: translateY(8px) scale(0.96);
         }
     }
 
     @media (prefers-reduced-motion: reduce) {
         .prize-detail-enter-active,
-        .prize-detail-leave-active {
+        .prize-detail-leave-active,
+        .draw-options-enter-active,
+        .draw-options-leave-active {
             transition: none;
 
-            .m-prize-dialog {
+            .m-prize-dialog,
+            .m-action-sheet {
                 transition: none;
             }
         }

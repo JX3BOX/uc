@@ -8,7 +8,9 @@ const script = source.match(/<script>([\s\S]*?)<\/script>/)[1]
     .replace(/^import .*;\s*$/gm, '').replace('export default', 'globalThis.component =');
 function setup(overrides = {}) {
     const context = { bindWechat: {}, ScratchSurface: {}, PrizeDetailItem: {}, normalizeMallImage: x => x,
-        User: { isLogin: () => true }, __cdn: '', ...overrides };
+        User: { isLogin: () => true, getAsset: async () => ({ points: 0 }) },
+        getMyInfo: async () => ({ data: { data: { wechat_mp_openid: 'test' } } }),
+        __cdn: '', ...overrides };
     vm.runInNewContext(script, context);
     const component = context.component;
     const state = { ...component.data(), $route: { query: {} },
@@ -21,10 +23,10 @@ function setup(overrides = {}) {
 
 test('全部刮完确认后使用全部积分，取消不抽奖', async () => {
     let draws = 0;
-    const { state } = setup({ state: { points: 20, user: { wechat_mp_openid: 'test' } } });
+    const { state } = setup({ state: { points: 20, draw: [[1, 1], [9, 9]], showDrawAll: true, user: { wechat_mp_openid: 'test' } } });
     state.openBatchScratch = (rounds, usePoints) => {
         draws++;
-        assert.deepEqual(Array.from(rounds), [9, 9, 2]);
+        assert.deepEqual(Array.from(rounds), [9, 9, 1, 1]);
         assert.equal(usePoints, true);
     };
     state.$confirm = async (message) => {
@@ -32,12 +34,15 @@ test('全部刮完确认后使用全部积分，取消不抽奖', async () => {
         assert.match(message, /不可撤回/);
         throw 'cancel';
     };
-    await state.scratchAll();
+    await state.drawAllTimes();
     assert.equal(draws, 0);
-    assert.equal(state.confirmingAll, false);
+    assert.equal(state.showDrawAll, true);
+    assert.equal(state.lockedDrawTotal, null);
     state.$confirm = async () => {};
-    await state.scratchAll();
+    await state.drawAllTimes();
     assert.equal(draws, 1);
+    assert.equal(state.showDrawAll, false);
+    assert.equal(state.lockedDrawTotal, 20);
 });
 
 test('积分不足九次仍可按实际次数批量抽奖', () => {
@@ -73,28 +78,30 @@ test('不足九张补相同谢谢惠顾，首页编号全部固定', () => {
     assert.ok(state.cardList.every(p => p.no === '999999999'));
 });
 
-test('全部刮完按九次拆分，末组按剩余次数请求', async () => {
-    for (const [total, expected] of [[0, []], [1, [1]], [9, [9]], [18, [9, 9]], [20, [9, 9, 2]]]) {
-        const { state } = setup({ state: { points: total, user: { wechat_mp_openid: 'test' }, $confirm: async () => {} } });
+test('全部抽取按合法活动档位拆分，余数使用单次档', async () => {
+    for (const [total, expected] of [[0, []], [1, [1]], [9, [9]], [18, [9, 9]], [20, [9, 9, 1, 1]]]) {
+        const { state } = setup({ state: { points: total, draw: [[1, 1], [9, 9]], user: { wechat_mp_openid: 'test' }, $confirm: async () => {} } });
         let rounds = [];
         state.openBatchScratch = value => { rounds = Array.from(value); };
-        await state.scratchAll();
+        await state.drawAllTimes();
         assert.deepEqual(rounds, expected);
     }
 });
 
 test('首组九张返回即可刮，下一组 batch=9 请求后台进行', async () => {
     let releaseSecond;
+    let notifySecond;
+    const secondStarted = new Promise(resolve => { notifySecond = resolve; });
     const batches = [];
     const { state } = setup({ goodLucky: async (id, batch) => {
         batches.push(batch);
-        if (batches.length === 2) await new Promise(resolve => { releaseSecond = resolve; });
+        if (batches.length === 2) await new Promise(resolve => { releaseSecond = resolve; notifySecond(); });
         return { data: { data: { id: batches.length } } };
     }, state: { remainingCount: 18, points: 180, draw: [[1, 10], [9, 90]],
         batchPrizes: new Array(18).fill(null), batchRounds: [9, 9] } });
     state.fetchPrize = async () => new Array(9).fill(state.thanksPrize());
     const running = state.runBatchRounds([9, 9]);
-    for (let i = 0; i < 6; i++) await Promise.resolve();
+    await secondStarted;
     assert.deepEqual(batches, [9, 9]);
     assert.equal(state.batchPageHasResult, true);
     assert.equal(state.batchReady, true);
@@ -109,23 +116,37 @@ test('首组九张返回即可刮，下一组 batch=9 请求后台进行', async
     assert.equal(state.points, 0);
 });
 
-test('后续提交失败保留已返回奖品和未提交次数', async () => {
+test('后续提交失败关闭会话、刷新余额，不再提交剩余批次', async () => {
     let requests = 0;
-    const { state } = setup({ goodLucky: async () => {
-        if (++requests === 2) throw new Error('network');
-        return { data: { data: { id: 1 } } };
-    }, state: { remainingCount: 2, points: 20, draw: [[1, 10]], batchPrizes: [null, null], batchRounds: [1, 1], showBatchScratch: true } });
+    let assetReads = 0;
+    let userReads = 0;
+    const errors = [];
+    const { state } = setup({
+        User: { isLogin: () => true, getAsset: async () => { assetReads++; return { points: 17 }; } },
+        getMyInfo: async () => { userReads++; return { data: { data: { wechat_mp_openid: 'test' } } }; },
+        goodLucky: async () => {
+            if (++requests === 2) throw new Error('network');
+            return { data: { data: { id: 1 } } };
+        },
+        state: { remainingCount: 3, points: 30, draw: [[1, 10]], batchPrizes: [null, null, null],
+            batchRounds: [1, 1, 1], showBatchScratch: true, isDrawing: true, lockedDrawTotal: 3,
+            $message: { error: message => errors.push(message) } }
+    });
     state.fetchPrize = async () => [{ name: '实际奖品', img: 'prize.jpg' }];
-    await state.runBatchRounds([1, 1]);
-    assert.equal(state.remainingCount, 1);
-    assert.equal(state.points, 10);
-    assert.equal(state.showBatchScratch, true);
-    assert.equal(state.batchPrizes.length, 2);
-    assert.equal(state.batchPrizes[1], null);
-    assert.ok(state.drawError);
-    assert.equal(state.batchPrizes[0].name, '实际奖品');
+    await state.runBatchRounds([1, 1, 1]);
+    assert.equal(requests, 2);
+    assert.equal(assetReads, 2);
+    assert.equal(userReads, 1);
+    assert.equal(state.points, 17);
+    assert.equal(state.remainingCount, 0);
+    assert.equal(state.showBatchScratch, false);
+    assert.equal(state.isDrawing, false);
+    assert.equal(state.batchPrizes.length, 0);
+    assert.equal(state.pendingRecord, null);
+    assert.equal(state.lockedDrawTotal, null);
+    assert.equal(state.cardList.length, 4);
+    assert.match(errors[0], /抽奖失败.*我的奖品/);
 });
-
 
 test('真实待返回卡片显示加载，只有超出次数的空位补谢谢惠顾', () => {
     const { state } = setup({ state: { batchPrizes: [null] } });
@@ -156,25 +177,27 @@ test('单卡先刮完仍不能领取，结果返回不重置刮开状态', async
     assert.equal(state.showSingleScratch, false);
 });
 
-test('批次查询失败重试原记录，不重新提交或重复扣除，保留刮痕状态', async () => {
+test('批次查询失败关闭会话、刷新余额，提示核对奖品且不重复提交', async () => {
     let submissions = 0;
     const queried = [];
+    const errors = [];
     const { state } = setup({ goodLucky: async () => {
         submissions++;
         return { data: { data: { id: 321 } } };
-    }, state: { remainingCount: 9, points: 90, draw: [[9, 90]],
-        batchPrizes: new Array(9).fill(null), batchRounds: [9], batchRevealed: true } });
+    }, state: { remainingCount: 18, points: 180, draw: [[1, 10], [9, 90]],
+        batchPrizes: new Array(18).fill(null), batchRounds: [9, 9], batchRevealed: true,
+        showBatchScratch: true, isDrawing: true,
+        $message: { error: message => errors.push(message) } } });
     state.fetchPrize = async id => { queried.push(id); throw new Error('timeout'); };
-    await state.runBatchRounds([9]);
-    assert.equal(state.pendingRecord.id, 321);
-    assert.ok(state.drawError);
-    state.fetchPrize = async id => { queried.push(id); return [state.thanksPrize()]; };
-    await state.retryDrawResult();
-    assert.deepEqual(queried, [321, 321]);
+    await state.runBatchRounds([9, 9]);
+    assert.deepEqual(queried, [321]);
     assert.equal(submissions, 1);
+    assert.equal(state.pendingRecord, null);
     assert.equal(state.remainingCount, 0);
     assert.equal(state.points, 0);
-    assert.equal(state.batchRevealed, true);
-    assert.equal(state.batchReady, true);
-    assert.equal(state.drawError, '');
+    assert.equal(state.batchRevealed, false);
+    assert.equal(state.showBatchScratch, false);
+    assert.equal(state.isDrawing, false);
+    assert.equal(state.batchPrizes.length, 0);
+    assert.match(errors[0], /结果获取失败.*已扣费.*我的奖品/);
 });
