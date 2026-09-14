@@ -57,30 +57,37 @@
     // 状态卡
     .m-status-card {
         position: relative;
-        width: 320px;
+        min-width: 0;
         z-index: 10;
         margin: -50px 16px 12px;
-        padding: 16px 18px;
+        padding: 16px clamp(12px, 4vw, 18px);
         background: #fff;
         border-radius: 12px;
         box-sizing: border-box;
         box-shadow: 0 6px 20px rgba(126, 103, 220, 0.12);
         display: flex;
         align-items: center;
+        gap: 12px;
 
         .m-count {
             display: flex;
             align-items: center;
-            flex-shrink: 0;
+            flex: 1 1 0;
+            min-width: 0;
+            gap: 8px;
 
             .u-icon {
-                width: 62px;
-                height: 62px;
+                width: clamp(40px, 14vw, 62px);
+                height: auto;
+                aspect-ratio: 1;
+                flex-shrink: 0;
                 object-fit: contain;
                 border-radius: 50%;
             }
 
             .u-text {
+                flex: 1;
+                min-width: 0;
                 display: flex;
                 flex-wrap: wrap;
                 align-items: baseline;
@@ -113,11 +120,12 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            flex-shrink: 0;
+            flex: 0 1 38%;
+            min-width: 0;
 
             .u-btn {
                 display: block;
-                width: 100px;
+                width: 100%;
                 padding: 8px 0;
                 border: none;
                 border-radius: 20px;
@@ -189,6 +197,8 @@
         }
 
         .m-prize-list {
+            touch-action: pan-y;
+            user-select: none;
             overflow: hidden;
             padding-bottom: 4px;
 
@@ -196,12 +206,8 @@
                 display: flex;
                 gap: 10px;
                 width: max-content;
-                animation: prize-scroll 30s linear infinite;
-
-                &:hover,
-                &.is-paused {
-                    animation-play-state: paused;
-                }
+                position: relative;
+                will-change: transform;
             }
 
             .m-prize-item {
@@ -262,15 +268,6 @@
                         height: 12px;
                     }
                 }
-            }
-        }
-
-        @keyframes prize-scroll {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
             }
         }
 
@@ -473,14 +470,17 @@
 
         .u-action {
             flex: 1;
+            min-width: 0;
+            padding: 0 4px;
             height: 44px;
             border: none;
             border-radius: 22px;
-            font-size: 14px;
+            font-size: clamp(11px, 3.4vw, 14px);
             color: #fff;
             background: linear-gradient(90deg, #9a8cf7, #8473ed);
             cursor: pointer;
-            letter-spacing: 0.5px;
+            letter-spacing: 0;
+            white-space: nowrap;
 
             &:disabled {
                 opacity: 0.45;
@@ -512,6 +512,35 @@
         &.m-overlay-sheet {
             align-items: flex-end;
             padding: 0;
+        }
+    }
+
+    .prize-detail-enter-active,
+    .prize-detail-leave-active {
+        transition: opacity 180ms ease;
+
+        .m-prize-dialog {
+            transition: transform 180ms ease;
+        }
+    }
+
+    .prize-detail-enter-from,
+    .prize-detail-leave-to {
+        opacity: 0;
+
+        .m-prize-dialog {
+            transform: translateY(8px) scale(0.96);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .prize-detail-enter-active,
+        .prize-detail-leave-active {
+            transition: none;
+
+            .m-prize-dialog {
+                transition: none;
+            }
         }
     }
 
@@ -769,9 +798,17 @@
     }
 
     // 规则弹窗
+    .m-overlay.m-rules-overlay {
+        overflow-y: auto;
+        align-items: flex-start;
+    }
+
     .m-rules-dialog {
-        width: 300px;
-        max-height: 70vh;
+        width: 100%;
+        max-width: 340px;
+        box-sizing: border-box;
+        flex-shrink: 0;
+        margin: auto;
         background: #fff;
         border-radius: 12px;
         padding: 20px;
@@ -785,8 +822,6 @@
         }
 
         .u-rules-content {
-            flex: 1;
-            overflow-y: auto;
             font-size: 13px;
             color: #666;
             line-height: 1.7;
@@ -796,74 +831,70 @@
         }
     }
 
-    // 我的奖品页
-    .m-page {
-        position: fixed;
-        inset: 0;
-        z-index: 50;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        background: url("https://cdn.jx3box.com/design/event/lottery/app/bg.jpg") center top no-repeat;
-        background-size: 100% auto;
-        background-color: #ededf9;
-        .m-header {
-            position: relative;
-            flex-shrink: 0;
-            display: flex;
-            align-items: flex-start;
-            padding: 0 16px;
-            min-height: 100px;
+    // 我的奖品面板
+    .m-overlay.m-records-overlay {
+        align-items: flex-end;
+        padding: 0;
+    }
 
-            .u-back {
-                position: absolute;
-                left: 16px;
-                top: 16px;
-                width: 36px;
-                height: 36px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.6);
-                color: #5e4fa2;
-                font-size: 20px;
-                z-index: 2;
-                backdrop-filter: blur(4px);
-            }
-
-            .m-title {
-                margin-top: 120px;
-                padding-left: 0;
-                color: #5e4fa2;
-
-                .u-title-img {
-                    display: block;
-                    margin: 0 0 8px;
-                }
-
-                p {
-                    margin: 0;
-                    width: 200%;
-                    font-size: 14px;
-                    color: #595479;
-                }
-            }
+    .prize-records-enter-active,
+    .prize-records-leave-active {
+        transition: opacity 200ms ease;
+        .m-prize-records { transition: transform 200ms ease; }
+    }
+    .prize-records-enter-from,
+    .prize-records-leave-to {
+        opacity: 0;
+        .m-prize-records { transform: translateY(100%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .prize-records-enter-active,
+        .prize-records-leave-active {
+            transition: none;
+            .m-prize-records { transition: none; }
         }
     }
 
     .m-prize-records {
-        flex: 1;
-        margin: 10px;
-        border-radius: 12px;
+        width: 100%;
+        max-width: 560px;
+        height: 78vh;
+        height: 78dvh;
+        min-height: 0;
+        box-sizing: border-box;
+        margin: 0 auto;
+        border-radius: 20px 20px 0 0;
         background-color: #fdfdff;
         border: 1px solid #e8e8e8;
-        padding: 8px 16px 16px;
+        padding: 8px 16px calc(16px + env(safe-area-inset-bottom));
         display: flex;
         flex-direction: column;
         overflow: hidden;
 
+        .m-records-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .u-close-records {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border: 0;
+            border-radius: 50%;
+            background: #f0edfa;
+            color: #78708f;
+            cursor: pointer;
+        }
+
         .m-section-title-2 {
+            margin: 8px 0;
+            font-weight: 700;
             flex-shrink: 0; 
             font-size: 14px; 
             line-height: 2.4; 
@@ -931,9 +962,12 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                gap: 6px;
                 margin-bottom: 4px;
 
                 .u-name {
+                    flex: 1 1 0;
+                    min-width: 0;
                     .break(1);
                     font-size: 14px;
                     color: #333;
@@ -941,10 +975,12 @@
 
                 .u-stars {
                     display: flex;
+                    flex-shrink: 0;
                     align-items: center;
                     gap: 2px;
 
                     .u-star-icon {
+                        flex-shrink: 0;
                         width: 10px;
                         height: 10px;
                     }
@@ -959,6 +995,34 @@
                 line-height: 1.5;
             }
         }
+    }
+
+    .m-prize-records .m-detail-item .u-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 60px;
+        gap: 12px;
+
+        .u-row {
+            margin-bottom: 0;
+        }
+    }
+
+    .m-record-skeleton {
+        .u-skeleton-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+        }
+        .u-info {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+        .u-skeleton-name { width: 55%; height: 16px; }
+        .u-skeleton-rate { width: 35%; height: 11px; }
+        .u-skeleton-time { width: 85%; height: 11px; }
     }
 
     // 未开始标记

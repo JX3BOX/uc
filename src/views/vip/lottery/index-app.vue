@@ -14,10 +14,10 @@
         <!-- 状态卡 -->
         <section class="m-status-card">
             <div class="m-count">
-                <img class="u-icon" :src="`${__appImgRoot}cishu.jpg`" alt="刮奖次数" />
+                <img class="u-icon" :src="`${__appImgRoot}cishu.jpg`" alt="用户积分" />
                 <div class="u-text">
-                    <span class="u-label">当前可刮奖</span>
-                    <span class="u-num">{{ remainingCount }}</span>
+                    <span class="u-label">当前积分</span>
+                    <span class="u-num">{{ points }}</span>
                     <span class="u-unit">次</span>
                 </div>
             </div>
@@ -30,7 +30,6 @@
                 >
                     {{ isSignedIn ? "今日已签到" : "今日未签到" }}
                 </button>
-                <button class="u-btn u-btn-primary" @click="openExchange">积分换次数</button>
             </div>
         </section>
 
@@ -45,8 +44,19 @@
             </div>
 
             <!-- 奖池缩略（走马灯） -->
-            <div class="m-prize-list" v-if="!showDetail">
-                <div class="m-prize-track" :class="{ 'is-paused': !!activePrize }">
+            <div
+                class="m-prize-list"
+                v-if="!showDetail"
+                @pointerdown="startPrizeDrag"
+                @pointermove="movePrizeDrag"
+                @pointerup="endPrizeDrag"
+                @pointercancel="endPrizeDrag"
+                @lostpointercapture="endPrizeDrag"
+                @wheel="scrollPrizesByWheel"
+                @dragstart.prevent
+                @click.capture="guardPrizeClick"
+            >
+                <div ref="prizeTrack" class="m-prize-track" :style="{ transform: `translateX(${-prizeOffset}px)` }">
                     <template v-for="(item, index) in previewList" :key="'a-' + index">
                         <div
                             class="m-prize-item"
@@ -88,19 +98,22 @@
                     :key="index"
                     :item="item"
                     :is-active="index === 0"
+                    @click="selectPrize(item, index)"
                 />
             </div>
 
             <!-- 奖品详情弹窗 -->
-            <div class="m-overlay" v-if="activePrize" @click.self="closePrizeDetail">
-                <div class="m-prize-dialog">
-                    <div class="u-img-wrap"><img :src="activePrize.img" :alt="activePrize.name" /></div>
-                    <h3>{{ activePrize.name }}</h3>
-                    <p class="u-rate">中奖率：{{ activePrize.rate || "0.0" }}%</p>
-                    <p class="u-desc">{{ activePrize.desc || "奖品介绍" }}</p>
-                    <button class="u-confirm-btn" @click="closePrizeDetail">知道了</button>
+            <Transition name="prize-detail">
+                <div class="m-overlay" v-if="activePrize" @click.self="closePrizeDetail">
+                    <div class="m-prize-dialog">
+                        <div class="u-img-wrap"><img :src="activePrize.img" :alt="activePrize.name" /></div>
+                        <h3>{{ activePrize.name }}</h3>
+                        <p class="u-rate">中奖率：{{ activePrize.rate || "0.0" }}%</p>
+                        <p class="u-desc">{{ activePrize.desc || "奖品介绍" }}</p>
+                        <button class="u-confirm-btn" @click="closePrizeDetail">知道了</button>
+                    </div>
                 </div>
-            </div>
+            </Transition>
         </section>
 
         <!-- 规则提示 -->
@@ -143,8 +156,8 @@
             <button class="u-action" :disabled="!canDrawNine || isDrawing" @click="openBatchScratch(9, true)">
                 连刮九次
             </button>
-            <button class="u-action u-action-primary" :disabled="remainingCount < 1 || isDrawing" @click="scratchAll">
-                全部刮完(剩{{ remainingCount }}次)
+            <button class="u-action u-action-primary" :disabled="!isLogin || points < 1 || isDrawing || confirmingAll" @click="scratchAll">
+                全部刮完
             </button>
             <button class="u-action u-action-gold" @click="goMyPrizes">我的奖品</button>
         </footer>
@@ -250,7 +263,7 @@
         </div>
 
         <!-- 规则说明 -->
-        <div class="m-overlay" v-if="showRules" @click.self="showRules = false">
+        <div class="m-overlay m-rules-overlay" v-if="showRules" @click.self="showRules = false">
             <div class="m-rules-dialog">
                 <h3>规则说明</h3>
                 <div class="u-rules-content" v-html="info || '暂无规则说明'"></div>
@@ -259,31 +272,41 @@
         </div>
 
         <!-- 我的奖品 -->
-        <div class="m-page m-page-prizes" v-if="page === 'prizes'" v-loading="myPrizesLoading && !myPrizeList.length">
-            <header class="m-header">
-                <div class="u-back" @click="page = 'home'">
-                    <i class="el-icon-arrow-left"></i>
+        <Transition name="prize-records">
+        <div class="m-overlay m-records-overlay" v-if="page === 'prizes'" @click.self="page = 'home'" @keydown.esc="page = 'home'">
+            <div class="m-prize-records" role="dialog" aria-modal="true" aria-label="我的奖品">
+                <div class="m-records-heading">
+                    <h3 class="m-section-title-2">我的奖品</h3>
+                    <button class="u-close-records" type="button" aria-label="关闭我的奖品" @click="page = 'home'">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+                    </button>
                 </div>
-                <div class="m-title">
-                    <img :src="`${__appImgRoot}title.png`" class="u-title-img" />
-                    <p>* 每天登录APP签到，兑换刮奖次数~</p>
-                </div>
-            </header>
-            <div class="m-prize-records">
-                <h3 class="m-section-title-2">我的奖品</h3>
-                <div class="m-prize-detail" @scroll="onRecordsScroll">
+                <div class="m-prize-detail" :aria-busy="myPrizesLoading" @scroll="onRecordsScroll">
+                    <el-skeleton v-if="myPrizesLoading && !myPrizeList.length" animated :count="5" aria-label="正在加载奖品">
+                        <template #template>
+                            <div class="m-detail-item m-record-skeleton">
+                                <div class="u-img-wrap"><el-skeleton-item variant="image" class="u-skeleton-image" /></div>
+                                <div class="u-info">
+                                    <el-skeleton-item variant="text" class="u-skeleton-name" />
+                                    <el-skeleton-item variant="text" class="u-skeleton-time" />
+                                </div>
+                            </div>
+                        </template>
+                    </el-skeleton>
                     <PrizeDetailItem
                         v-for="(item, index) in myPrizeList"
                         :key="index"
-                        :item="{ ...item, rate: item.rate || '0', desc: `获得时间：${item.time || ''}` }"
+                        :item="{ ...item, desc: `获得时间：${item.time || ''}` }"
+                        :show-rate="false"
                         :is-active="activeRecordIndex === index"
                         @click="activeRecordIndex = activeRecordIndex === index ? null : index"
                     />
-                    <div class="u-records-tip" v-if="myPrizesLoading">加载中...</div>
+                    <div class="u-records-tip" v-if="myPrizesLoading && myPrizeList.length">加载中...</div>
                     <div class="u-records-tip" v-else-if="myPrizeList.length && !myPrizeHasMore">没有更多了</div>
                 </div>
             </div>
         </div>
+        </Transition>
 
         <!-- 未开始/结束 -->
         <div class="mark" v-if="!event_status">
@@ -328,6 +351,7 @@ export default {
             points: 0,
 
             remainingCount: 0,
+            confirmingAll: false,
             isSignedIn: false,
             loading: false,
             user: {},
@@ -340,6 +364,7 @@ export default {
             showResult: false,
             page: "home",
 
+            prizeOffset: 0,
             activePrize: null,
             selectedIndex: null,
 
@@ -438,6 +463,7 @@ export default {
                 this.showResult ||
                 this.showExchange ||
                 this.showRules ||
+                this.page === "prizes" ||
                 this.activePrize
             );
         },
@@ -471,8 +497,75 @@ export default {
         this.loadUser();
         this.syncDailySignIn();
         this.buildCards();
+        this.startPrizeAutoScroll();
     },
     methods: {
+        prizeLoopWidth() {
+            const track = this.$refs.prizeTrack;
+            const firstCopy = track?.children[this.previewList.length];
+            return firstCopy ? firstCopy.offsetLeft - track.children[0].offsetLeft : 0;
+        },
+        shiftPrizes(distance) {
+            const width = this.prizeLoopWidth();
+            if (width) this.prizeOffset = ((this.prizeOffset + distance) % width + width) % width;
+        },
+        startPrizeAutoScroll() {
+            let previous = 0;
+            const tick = (now) => {
+                const elapsed = previous ? Math.min(now - previous, 50) : 0;
+                previous = now;
+                if (!this.prizeDrag && !this.hasOverlay && !this.showDetail && now >= (this.prizeResumeAt || 0)) {
+                    this.shiftPrizes(this.prizeLoopWidth() * elapsed / 30000);
+                }
+                this.prizeAnimationFrame = requestAnimationFrame(tick);
+            };
+            this.prizeAnimationFrame = requestAnimationFrame(tick);
+        },
+        startPrizeDrag(event) {
+            if (!event.isPrimary || event.button !== 0) return;
+            this.prizeDrag = { id: event.pointerId, x: event.clientX, y: event.clientY, lastX: event.clientX, horizontal: false };
+        },
+        movePrizeDrag(event) {
+            const drag = this.prizeDrag;
+            if (!drag || drag.id !== event.pointerId) return;
+            const dx = event.clientX - drag.x;
+            const dy = event.clientY - drag.y;
+            if (!drag.horizontal) {
+                if (Math.max(Math.abs(dx), Math.abs(dy)) < 6) return;
+                if (Math.abs(dy) >= Math.abs(dx)) {
+                    this.endPrizeDrag(event);
+                    return;
+                }
+                drag.horizontal = true;
+                event.currentTarget.setPointerCapture(event.pointerId);
+            }
+            this.shiftPrizes(drag.lastX - event.clientX);
+            drag.lastX = event.clientX;
+        },
+        endPrizeDrag(event) {
+            // Touch starts with implicit capture on the image/card. Ignore its
+            // bubbling capture-loss event when capture moves to the list.
+            if (event.type === "lostpointercapture" && event.target !== event.currentTarget) return;
+            const drag = this.prizeDrag;
+            if (!drag || drag.id !== event.pointerId) return;
+            if (drag.horizontal) this.prizeSuppressClickUntil = performance.now() + 350;
+            this.prizeDrag = null;
+            this.prizeResumeAt = performance.now() + 1000;
+        },
+        scrollPrizesByWheel(event) {
+            const delta = event.shiftKey && !event.deltaX ? event.deltaY : event.deltaX;
+            if (!delta || (!event.shiftKey && Math.abs(event.deltaY) > Math.abs(delta))) return;
+            event.preventDefault();
+            const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? event.currentTarget.clientWidth : 1;
+            this.shiftPrizes(delta * unit);
+            this.prizeResumeAt = performance.now() + 1000;
+        },
+        guardPrizeClick(event) {
+            if (performance.now() < (this.prizeSuppressClickUntil || 0)) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        },
         normalizeMallImage,
         drawCost(times) {
             const option = this.draw.find(([count]) => Number(count) === times);
@@ -816,7 +909,8 @@ export default {
             const rounds = (Array.isArray(times) ? times : [times]).map((n) => ~~n).filter((n) => n > 0);
             const total = rounds.reduce((sum, n) => sum + n, 0);
             if (!total) return;
-            if (usePoints && !this.canDrawNine) return this.$message.warning("魔盒积分不足");
+            const totalCost = rounds.reduce((sum, count) => sum + this.drawCost(count), 0);
+            if (usePoints && (totalCost <= 0 || this.points < totalCost)) return this.$message.warning("魔盒积分不足");
             if (!usePoints && this.remainingCount < total) {
                 return this.$message.warning("刮奖次数不足，可签到或使用积分兑换次数");
             }
@@ -912,13 +1006,38 @@ export default {
             if (this.batchRevealed) this.claimBatch();
         },
         // 每组最多九次，首组返回即可刮卡，后续组按顺序在后台继续。
-        scratchAll() {
-            const total = Math.max(0, ~~this.remainingCount);
+        async scratchAll() {
+            if (this.isDrawing || this.confirmingAll) return;
+            if (!this.isLogin) return this.toLogin();
+            if (!this.isBindWechat) {
+                this.visible = true;
+                return;
+            }
+            const total = Math.max(0, Math.floor(this.points));
+            if (!total) return;
+            this.confirmingAll = true;
+            try {
+                await this.$confirm(
+                    `将消耗全部 ${total} 积分，不可撤回。是否继续？`,
+                    "确认消耗全部积分",
+                    {
+                        confirmButtonText: "确认",
+                        cancelButtonText: "取消",
+                        type: "warning",
+                        closeOnClickModal: false,
+                    }
+                );
+            } catch {
+                return;
+            } finally {
+                this.confirmingAll = false;
+            }
+            if (this.disposed || this.isDrawing) return;
             const rounds = [];
             for (let left = total; left > 0; left -= 9) {
                 rounds.push(Math.min(9, left));
             }
-            if (rounds.length) this.openBatchScratch(rounds);
+            if (rounds.length) this.openBatchScratch(rounds, true);
         },
 
         // 结果
@@ -928,6 +1047,7 @@ export default {
         },
     },
     beforeUnmount() {
+        cancelAnimationFrame(this.prizeAnimationFrame);
         this.disposed = true;
         document.body.style.overflow = "";
     },

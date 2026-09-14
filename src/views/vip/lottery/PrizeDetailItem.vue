@@ -13,7 +13,7 @@
                     />
                 </div>
             </div>
-            <p class="u-rate">中奖率：{{ item.rate || "0.0" }}%</p>
+            <p v-if="showRate" class="u-rate">中奖率：{{ item.rate || "0.0" }}%</p>
             <p class="u-desc">{{ item.desc || "奖品介绍" }}</p>
         </div>
     </div>
@@ -27,6 +27,7 @@ export default {
     props: {
         item: { type: Object, required: true },
         isActive: { type: Boolean, default: false },
+        showRate: { type: Boolean, default: true },
     },
     emits: ["click"],
     computed: {

@@ -7,7 +7,7 @@ const source = readFileSync(new URL('../src/views/vip/lottery/index-app.vue', im
 const script = source.match(/<script>([\s\S]*?)<\/script>/)[1]
     .replace(/^import .*;\s*$/gm, '').replace('export default', 'globalThis.component =');
 function setup(overrides = {}) {
-    const context = { bindWechat: {}, ScratchSurface: {}, normalizeMallImage: x => x,
+    const context = { bindWechat: {}, ScratchSurface: {}, PrizeDetailItem: {}, normalizeMallImage: x => x,
         User: { isLogin: () => true }, __cdn: '', ...overrides };
     vm.runInNewContext(script, context);
     const component = context.component;
@@ -18,6 +18,36 @@ function setup(overrides = {}) {
         Object.defineProperty(state, key, { get: getter.bind(state) });
     return { state, component };
 }
+
+test('全部刮完确认后使用全部积分，取消不抽奖', async () => {
+    let draws = 0;
+    const { state } = setup({ state: { points: 20, user: { wechat_mp_openid: 'test' } } });
+    state.openBatchScratch = (rounds, usePoints) => {
+        draws++;
+        assert.deepEqual(Array.from(rounds), [9, 9, 2]);
+        assert.equal(usePoints, true);
+    };
+    state.$confirm = async (message) => {
+        assert.match(message, /全部 20 积分/);
+        assert.match(message, /不可撤回/);
+        throw 'cancel';
+    };
+    await state.scratchAll();
+    assert.equal(draws, 0);
+    assert.equal(state.confirmingAll, false);
+    state.$confirm = async () => {};
+    await state.scratchAll();
+    assert.equal(draws, 1);
+});
+
+test('积分不足九次仍可按实际次数批量抽奖', () => {
+    const { state } = setup({ state: { points: 2, draw: [[1, 1], [9, 9]], user: { wechat_mp_openid: 'test' } } });
+    let rounds;
+    state.runBatchRounds = value => { rounds = value; };
+    state.openBatchScratch([2], true);
+    assert.deepEqual(Array.from(rounds), [2]);
+    assert.equal(state.batchTotal, 2);
+});
 
 test('兑换只预留本页面次数，重新进入为零，九连抽按积分启用', () => {
     const { state } = setup({ state: { points: 90, draw: [[1, 10], [9, 90]] } });
@@ -40,15 +70,15 @@ test('不足九张补相同谢谢惠顾，首页编号全部固定', () => {
     assert.ok(state.batchPagePrizes.slice(1).every(p => p.name === '谢谢惠顾' && p.img.endsWith('miss.jpg')));
     state.buildCards();
     assert.equal(state.cardList.length, 4);
-    assert.ok(state.cardList.every(p => p.no === '9999999999'));
+    assert.ok(state.cardList.every(p => p.no === '999999999'));
 });
 
-test('全部刮完按九次拆分，末组按剩余次数请求', () => {
+test('全部刮完按九次拆分，末组按剩余次数请求', async () => {
     for (const [total, expected] of [[0, []], [1, [1]], [9, [9]], [18, [9, 9]], [20, [9, 9, 2]]]) {
-        const { state } = setup({ state: { remainingCount: total } });
+        const { state } = setup({ state: { points: total, user: { wechat_mp_openid: 'test' }, $confirm: async () => {} } });
         let rounds = [];
         state.openBatchScratch = value => { rounds = Array.from(value); };
-        state.scratchAll();
+        await state.scratchAll();
         assert.deepEqual(rounds, expected);
     }
 });
