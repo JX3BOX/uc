@@ -304,6 +304,7 @@
                         v-for="(item, index) in myPrizeList"
                         :key="index"
                         :item="{ ...item, desc: `获得时间：${item.time || ''}` }"
+                        :meta="item.meta"
                         :show-rate="false"
                         :is-active="activeRecordIndex === index"
                         @click="activeRecordIndex = activeRecordIndex === index ? null : index"
@@ -684,6 +685,11 @@ export default {
             const map = { boxcoin: "通宝", boxcoin_origin: "怀旧通宝", point: "积分" };
             return map[type] || "积分";
         },
+        // 抽奖记录状态文案（取值判定沿用 history.vue：2 视为已发放 / 3 未中奖）
+        prizeStatusText(status) {
+            const map = { 2: "已发放", 3: "未中奖" };
+            return map[Number(status)] || "处理中";
+        },
         starIcon(index) {
             // 设计图：首位大奖使用黄色星 star2，其余使用紫色星 star1
             return `${this.__appImgRoot}${index === 0 ? "star2" : "star1"}.svg`;
@@ -787,6 +793,7 @@ export default {
             const items = [];
             list.forEach((item) => {
                 const time = item.created_at ? item.created_at.replace("T", " ").slice(0, 16) : "";
+                const meta = this.prizeStatusText(item.status);
                 const prizes = Array.isArray(item.prizes)
                     ? item.prizes
                     : item.prizes
@@ -809,6 +816,7 @@ export default {
                         img,
                         stars: prize?.stars || 1,
                         time,
+                        meta,
                     });
                 });
             });
@@ -1070,13 +1078,29 @@ export default {
             this.showDrawAll = false;
             this.openBatchScratch(9, true);
         },
-        // 弹窗内「全部抽取」：次数按「单次抽奖消耗的积分」换算，提交时按活动档位分批
-        drawAllTimes() {
+        // 弹窗内「全部抽取」：二次确认后，次数按「单次抽奖消耗的积分」换算并按档位分批提交
+        async drawAllTimes() {
             if (this.isDrawing) return;
             const total = this.drawableCount;
             if (!total) return this.$message.warning("魔盒积分不足");
             const rounds = this.buildDrawRounds(total);
             if (!rounds.length) return;
+            try {
+                await this.$confirm(
+                    `将消耗全部 ${this.points} 积分，不可撤回。是否继续？`,
+                    "确认消耗全部积分",
+                    {
+                        confirmButtonText: "确认",
+                        cancelButtonText: "取消",
+                        type: "warning",
+                        closeOnClickModal: false,
+                    }
+                );
+            } catch {
+                // 取消时保留选择弹窗，可继续选择其他方式
+                return;
+            }
+            if (this.disposed || this.isDrawing) return;
             this.showDrawAll = false;
             // 点击即锁定次数：抽奖过程中即使积分变化，本轮次数与档位组合也不再改变
             this.lockedDrawTotal = total;
