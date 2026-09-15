@@ -38,6 +38,7 @@ export default {
         "writer": "Người viết"
     },
     "collection": {
+        "saveFailed": "Bài viết đã được lưu nhưng liên kết với tuyển tập thất bại. Hãy lưu lại để cập nhật cùng bài viết.",
         "addWork": "Thêm tác phẩm",
         "coverHint": "Kích thước đề xuất: 744 × 1064",
         "coverTitle": "Ảnh bìa",

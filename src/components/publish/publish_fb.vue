@@ -72,7 +72,6 @@ import isEmptyMeta from "@/utils/isEmptyMeta.js";
 import fbmap_std from "@jx3box/jx3box-data/data/fb/fb_map.json";
 import fbmap_origin from "@jx3box/jx3box-data/data/fb/fb_map_origin.json";
 import { __ossMirror, __imgPath } from "@/utils/config";
-import Bus from "@jx3box/jx3box-ui/utils/bus";
 // META空模板
 const default_meta = {
     fb_zlp: "",
@@ -112,6 +111,10 @@ export default {
     },
     emits: ["update", "update:modelValue", "updateMeta"],
     watch: {
+        selectionContext([client, meta], [previousClient, previousMeta]) {
+            // 接口回填会同时替换 meta；只重置用户在当前表单上的客户端切换。
+            if (client !== previousClient && meta === previousMeta) this.setDefaultOption();
+        },
         modelValue: {
             deep: true,
             handler: function (newval) {
@@ -155,6 +158,9 @@ export default {
         },
     },
     computed: {
+        selectionContext() {
+            return [this.client, this.modelValue !== undefined ? this.modelValue : this.data];
+        },
         fbmap: function () {
             return this.client == "origin" ? fbmap_origin : fbmap_std;
         },
@@ -192,6 +198,10 @@ export default {
         setDefaultOption: function () {
             this.fbdata.fb_name = this.default_fb;
             this.fbdata.fb_zlp = this.default_zlp;
+            this.fbdata.fb_boss = [];
+            this.fbdata.fb_level = [];
+            this.checkAll = false;
+            this.isIndeterminate = false;
         },
         // 当切换资料片时
         zlpChange: function (zlp) {
@@ -211,14 +221,7 @@ export default {
     },
     created: function () {},
     mounted: function () {
-        this.setDefaultOption();
-        // 当切换客户端版本时
-        Bus.on("changeClient", (client) => {
-            this.setDefaultOption();
-        });
-    },
-    beforeUnmount() {
-        Bus.off("changeClient");
+        if (!this.fbdata?.fb_zlp && !this.fbdata?.fb_name) this.setDefaultOption();
     },
 };
 </script>

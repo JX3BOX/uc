@@ -364,7 +364,6 @@ export default {
             sessionStorage.removeItem("atAuthor");
             // 尝试加载
             return this.loadData().then(() => {
-                this.post.client = this.$store.state.client;
                 // 加载成功后执行自动保存逻辑（含本地草稿、本地缓存、云端历史版本）
                 this.autoSave();
             });
@@ -448,6 +447,10 @@ export default {
                 post_id: result.ID,
                 post_collection: result.post_collection,
                 post_title: result.post_title,
+            }).catch((error) => {
+                // 主文章已保存，关联失败时保留身份，重试只能更新这篇文章。
+                this.retainSavedPost(result);
+                throw error;
             });
         },
     },

@@ -139,6 +139,8 @@ export const AutoSaveMixin = {
         // 间隔设置见setting.json
         // ==============================
         autoSave: function () {
+            clearInterval(this.localTimer);
+            this.localTimer = null;
             // 首次初始化时，为内容创建镜像缓存（以做后续对比功能或其他应用读取原始状态）
             if (this.id) {
                 sessionStorage.setItem(this.post.post_type + "_" + this.id, JSON.stringify(this.post));
@@ -189,7 +191,12 @@ export const AutoSaveMixin = {
             // }
 
             // 如果是全新作品且有内容，为其创建匿名本地缓存（处理网站接口异常，断网等情况）
-            if (this.isNewPost && this.post.post_content) {
+            const meta = this.post.post_meta;
+            const hasStructuredContent = ["macro", "pvp", "tool"].includes(this.post.post_type) && (
+                meta?.content || meta?.talent || meta?.talent_desc || meta?.down ||
+                (Array.isArray(meta?.data) && meta.data.some((item) => item?.name || item?.macro || item?.file || item?.remark || item?.desc || item?.talent || item?.sq?.length))
+            );
+            if (this.isNewPost && (this.post.post_content || hasStructuredContent)) {
                 let anonymous = this.$t("publish.common.generatedUntitled", { index: new Date().getTime() });
                 key = this.post.post_type + "_" + (this.post.post_title || anonymous);
             }

@@ -108,6 +108,8 @@ export default {
             activeIndex: "1",
 
             files: [],
+            uploadRequests: new WeakMap(),
+            migratedSources: new WeakSet(),
         };
     },
     watch: {
@@ -121,12 +123,7 @@ export default {
                     } else {
                         this.data = val;
 
-                        if (val?.down) {
-                            this.data.data.map((item) => {
-                                item.mode = "1";
-                                item.file = val.down || "";
-                            });
-                        }
+                        this.migrateLegacySource(val);
                     }
                 }
             },
@@ -141,24 +138,36 @@ export default {
                 } else {
                     this.data = val;
 
-                    if (val?.down) {
-                        this.data.data.map((item) => {
-                            item.mode = "1";
-                            item.file = val.down || "";
-                        });
-                    }
+                    this.migrateLegacySource(val);
                 }
             },
         },
         data: {
             deep: true,
             handler(val) {
+                // 旧版只有一个下载地址，保留字段并跟随首个资源，避免清空后再次回填旧链接。
+                if (Object.prototype.hasOwnProperty.call(val, "down") && this.migratedSources.has(val)) {
+                    val.down = val.data?.[0]?.file || "";
+                }
                 this.$emit("update:modelValue", val);
                 this.$emit("update", val);
             },
         },
     },
     methods: {
+        migrateLegacySource(value) {
+            if (!value?.down || this.migratedSources.has(value)) return;
+            // 保留旧字段；已有有效资源地址时，视为已迁移的数据。
+            this.migratedSources.add(value);
+            if (!Array.isArray(value.data) || !value.data.length) {
+                value.data = lodash.cloneDeep(default_meta.data);
+            }
+            if (value.data.some((item) => item.file)) return;
+            value.data.forEach((item) => {
+                item.mode = "1";
+                item.file = value.down;
+            });
+        },
         addSource() {
             if (this.data.data.length > 7) {
                 this.$alert(this.$t("publish.message.limitReached"), this.$t("publish.common.message"), {
@@ -190,6 +199,7 @@ export default {
                         // 删除
                         let i = ~~name - 1;
                         this.data.data.splice(i, 1);
+                        this.files.splice(i, 1);
                         // 调整focus位置
                         this.activeIndex = "1";
                     }
@@ -199,11 +209,16 @@ export default {
         uploadSource(e, i) {
             let file = e.target.files[0];
             if (!file) return;
+            const item = this.data.data[i];
+            if (!item) return;
+            const request = {};
+            this.uploadRequests.set(item, request);
             this.files[i] = file;
             const formData = new FormData();
             formData.append("file", file);
-            upload(formData).then((res) => {
-                this.data.data[i].file = res.data.data[0];
+            return upload(formData).then((res) => {
+                if (!this.data.data.includes(item) || this.uploadRequests.get(item) !== request) return;
+                item.file = res.data.data[0];
                 this.$message({
                     message: this.$t("publish.message.uploadSucceeded"),
                     type: "success",

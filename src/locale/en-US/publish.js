@@ -38,6 +38,7 @@ export default {
         "writer": "Writer"
     },
     "collection": {
+        "saveFailed": "The article was saved, but linking it to the collection failed. Retry saving to update the same article.",
         "addWork": "Add Work",
         "coverHint": "Recommended size: 744 × 1064",
         "coverTitle": "Cover Image",

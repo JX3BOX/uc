@@ -32,6 +32,16 @@ export const cmsMetaMixin = {
         }
     },
     methods: {
+        // 只在小册关联失败后调用，避免改变正常流程中的魔卡保存顺序。
+        retainSavedPost(result) {
+            const wasNew = !this.id;
+            // 仅保留身份，用户在请求期间继续输入的内容不能被响应快照覆盖。
+            this.post.ID = result.ID || this.id;
+            if (wasNew && !this.post.post_author && !this.post.user_id) {
+                this.post.post_author = result.post_author || result.user_id || User.getInfo().uid;
+            }
+            this.$message.warning(this.$t("publish.collection.saveFailed"));
+        },
         initExtend() {
             // 从localStorage中获取hasRead
             this.hasRead = ~~localStorage.getItem("jx3box_has_read") || 0;

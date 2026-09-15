@@ -38,6 +38,7 @@ export default {
         "writer": "撰稿"
     },
     "collection": {
+        "saveFailed": "文章已保存，但小册关联失败。请重试保存，不会重复创建文章。",
         "addWork": "添加作品",
         "coverHint": "推荐尺寸：744 × 1064",
         "coverTitle": "封面图",

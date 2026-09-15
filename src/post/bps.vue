@@ -322,7 +322,6 @@ export default {
             sessionStorage.removeItem("atAuthor");
             // 尝试加载
             return this.loadData().then(() => {
-                this.post.client = this.$store.state.client;
                 if (!this.post.tags || !this.post.tags.length) {
                     this.post.tags = [];
                 }
@@ -401,6 +400,10 @@ export default {
                 post_id: result.ID,
                 post_collection: result.post_collection,
                 post_title: result.post_title,
+            }).catch((error) => {
+                // 主文章已保存，关联失败时保留身份，重试只能更新这篇文章。
+                this.retainSavedPost(result);
+                throw error;
             });
         },
     },
