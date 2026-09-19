@@ -17,14 +17,16 @@
                     <div class="m-left">
                         <div class="logo">
                             <img :src="`${themeImg}logo.svg?123`" :alt="$t('vip.lottery.blindBox')" />
-                            <el-tooltip effect="light" placement="bottom-start">
+                            <el-tooltip effect="light" placement="bottom-start" popper-class="m-blindbox-info-popover">
                                 <template #content>
-                                    <div class="m-blindbox-info">
-                                        {{ info }}
+                                    <div class="m-blindbox-info m-blindbox-rules">
+                                        <p v-for="(line, index) in infoLines" :key="index" :class="{ 'is-heading': index === 0 && /[：:]$/.test(line) }">
+                                            {{ line }}
+                                        </p>
                                     </div>
                                 </template>
                                 <img class="u-info" :src="`${__imgRoot}desc.svg`" :alt="$t('vip.event.eventDetails')" />
-                            </el-tooltip> 
+                            </el-tooltip>
                         </div>
                         <!-- 抽奖盒子 -->
                         <div class="m-box" v-show="activityReady" :class="{ active: allActive }">
@@ -50,49 +52,54 @@
                     <!-- 右侧 -->
                     <div class="m-right" v-show="activityReady">
                         <!-- 积分现实 -->
-                        <div class="m-point">{{ points }}</div>
+                        <div class="m-point-balance">
+                            <span class="u-balance-icon"><img src="https://cdn.jx3box.com/design/event/redeem/bell.png" alt="" /></span>
+                            <span class="u-balance-label">{{ $t("vip.common.points") }}</span>
+                            <span class="u-balance-value">{{ points }}</span>
+                        </div>
                         <!-- 奖品 -->
                         <div class="m-prize box">
                             <div class="m-title">
-                                <div style="display: flex">
-                                    <img :src="`${__imgRoot}prize.png`" class="u-prize" :alt="$t('vip.lottery.prizeOverview')" />
-                                    <div class="u-preview" @click="preview = true">{{ $t("vip.lottery.quickView") }}</div>
+                                <div class="m-prize-heading">
+                                    <span class="u-prize-title">
+                                        <Present class="u-prize-icon" aria-hidden="true" />
+                                        <span>{{ $t("vip.lottery.prizeOverview") }}</span>
+                                    </span>
+                                    <button type="button" class="u-preview" @click="preview = true">{{ $t("vip.lottery.quickView") }}</button>
                                 </div>
                                 <el-dialog
                                     :title="$t('vip.lottery.quickViewTitle')"
                                     v-model="preview"
-                                    width="80%"
-                                    :before-close="() => (preview = false)"
+                                    width="920px"
+                                    align-center
                                     :append-to-body="true"
                                     class="m-preview-dialog"
                                 >
                                     <div class="m-preview">
                                         <a
                                             :href="aLink(item)"
-                                            v-for="(item, index) in previewList"
+                                            v-for="(item, index) in previewCards"
                                             :key="index"
                                             target="_blank"
                                             :data-index="index"
                                             class="m-preview-item"
                                         >
-                                            <div class="u-prize">
-                                                <img :src="item.img" />
-                                                <div class="u-prize-name">{{ item.name }}</div>
-                                                <span class="u-prize-count" v-if="!item.unlimited"
-                                                    >{{ $t("vip.lottery.remaining") }} <b>{{ item.prize_count - item.be_won_count }}</b
-                                                    ><el-progress
-                                                        :percentage="
-                                                            Number(
-                                                                (
-                                                                    ((item.prize_count - item.be_won_count) /
-                                                                        item.prize_count) *
-                                                                    100
-                                                                ).toFixed(1)
-                                                            )
-                                                        "
-                                                    ></el-progress
-                                                ></span>
-                                                <span v-else>{{ $t("vip.lottery.unlimited") }}</span>
+                                            <div class="u-preview-image">
+                                                <img :src="item.img" :alt="item.name" loading="lazy" />
+                                            </div>
+                                            <div class="u-preview-content">
+                                                <div class="u-prize-name" :title="item.name">{{ item.name }}</div>
+                                                <div class="u-prize-count" v-if="!item.unlimited">
+                                                    <span>{{ $t("vip.lottery.remaining") }}</span>
+                                                    <span><b>{{ item.remaining }}</b><span class="u-total"> / {{ item.total }}</span></span>
+                                                </div>
+                                                <div class="u-prize-count" v-else>{{ $t("vip.lottery.unlimited") }}</div>
+                                                <el-progress
+                                                    v-if="!item.unlimited"
+                                                    :percentage="item.percentage"
+                                                    :show-text="false"
+                                                    :stroke-width="4"
+                                                />
                                             </div>
                                         </a>
                                     </div>
@@ -119,10 +126,10 @@
                                     >
                                         <el-tooltip class="item" effect="dark" :content="item.name" placement="top">
                                             <div class="u-prize">
-                                                <img :src="item.img" />
+                                                <div class="u-cover"><img :src="item.img" :alt="item.name" /></div>
                                                 <div class="u-count" v-if="item.prize_count">
-                                                    <span>{{ $t("vip.lottery.totalQuantity", { count: item.prize_count }) }}</span>
-                                                    <span>{{ $t("vip.lottery.drawnQuantity", { count: item.be_won_count }) }}</span>
+                                                    <span><small>{{ $t("vip.lottery.totalLabel") }}</small><b>{{ item.prize_count }}</b></span>
+                                                    <span><small>{{ $t("vip.lottery.drawnLabel") }}</small><b>{{ item.be_won_count || 0 }}</b></span>
                                                 </div>
                                             </div>
                                         </el-tooltip>
@@ -137,10 +144,10 @@
                                     >
                                         <el-tooltip class="item" effect="dark" :content="item.name" placement="top">
                                             <div class="u-prize">
-                                                <img :src="item.img" />
+                                                <div class="u-cover"><img :src="item.img" :alt="item.name" /></div>
                                                 <div class="u-count" v-if="item.prize_count">
-                                                    <span>{{ $t("vip.lottery.totalQuantity", { count: item.prize_count }) }}</span>
-                                                    <span>{{ $t("vip.lottery.drawnQuantity", { count: item.be_won_count }) }}</span>
+                                                    <span><small>{{ $t("vip.lottery.totalLabel") }}</small><b>{{ item.prize_count }}</b></span>
+                                                    <span><small>{{ $t("vip.lottery.drawnLabel") }}</small><b>{{ item.be_won_count || 0 }}</b></span>
                                                 </div>
                                             </div>
                                         </el-tooltip>
@@ -152,45 +159,56 @@
                         <!-- 抽奖按钮 -->
                         <div class="m-lottery" v-if="draw.length">
                             <div class="m-mark" @click="toLogin" v-if="!isLogin"></div>
+                            <button
+                                v-if="theme === 'hacker'"
+                                type="button"
+                                class="u-img refresh u-refresh-match"
+                                :aria-label="$t('vip.lottery.refreshBlindBox')"
+                                @click="refreshBox"
+                            >
+                                <span class="u-refresh-slip">
+                                    <span class="u-slip-symbol" aria-hidden="true">☯</span>
+                                    <span class="u-slip-label" :class="{ 'is-chinese': $i18n.locale.startsWith('zh') }">{{ $t("vip.lottery.refreshBlindBox") }}</span>
+                                </span>
+                            </button>
                             <img
                                 :src="`${themeImg}refresh.svg`"
                                 class="u-img refresh"
                                 @click="refreshBox"
                                 :alt="$t('vip.lottery.refreshBlindBox')"
-                                v-if="theme !== 'weiqi'"
+                                v-if="theme !== 'weiqi' && theme !== 'hacker'"
                             />
-                            <!-- 围棋主题需要换图片所以用div的背景图代替 -->
                             <div class="u-img refresh" @click="refreshBox" v-if="theme === 'weiqi'"></div>
                             <div
                                 class="m-random u-img"
-                                :class="{ disabled: !activeList.length || points < draw[0][1] || isDrawing }"
+                                v-if="singleDrawCost !== null"
+                                :class="{ disabled: !activeList.length || points < singleDrawCost || isDrawing }"
                                 @click="openBox"
                             >
-                                <span class="u-price">{{ draw[0][1] }}</span>
+                                <span class="u-price u-random-price">
+                                    <img src="https://cdn.jx3box.com/design/event/redeem/bell.png" alt="" />
+                                    <span>× {{ singleDrawCost }}</span>
+                                </span>
                             </div>
                             <div
                                 class="m-open u-img"
-                                :class="{ disabled: points < draw[1][1] || isDrawing }"
+                                v-if="tenDrawCost !== null"
+                                :class="{ disabled: points < tenDrawCost || isDrawing }"
                                 @click="openBox('all')"
                             >
-                                <span class="u-price u-discount"> x {{ draw[1][1] }}</span>
-                                <span class="u-price"> x {{ draw[0][1] * 10 }}</span>
+                                <span class="u-price u-discount u-batch-price">
+                                    <img src="https://cdn.jx3box.com/design/event/redeem/bell.png" alt="" />
+                                    <span>× {{ tenDrawCost }}</span>
+                                </span>
+                                <span class="u-price u-batch-price u-original-price">
+                                    <img src="https://cdn.jx3box.com/design/event/redeem/bell.png" alt="" />
+                                    <del>× {{ singleDrawCost * 10 }}</del>
+                                </span>
                             </div>
                             <!-- 中奖记录 -->
-                            <div class="m-history box" :class="history ? 'history' : 'close'">
-                                <div class="m-title" @click="openHistory">
-                                    <img :src="`${__imgRoot}history.png`" class="u-history" :alt="$t('vip.lottery.history')" />
-                                    <img
-                                        :src="`${__imgRoot}close.png`"
-                                        width="42px"
-                                        class="u-close"
-                                        :alt="$t('vip.common.close')"
-                                        @click.stop="closeHistory"
-                                    />
-                                </div>
-                                <div class="m-mark" @click="toLogin" v-if="!isLogin"></div>
-                                <History :id="ID" :show="history" @update="showPrizes" />
-                            </div>
+                            <button type="button" class="u-history-entry" @click="isLogin ? openHistory() : toLogin()">
+                                <img :src="`${__imgRoot}history.png`" :alt="$t('vip.lottery.history')" />
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -200,34 +218,53 @@
                 <h2>{{ activityState === 'ended' ? '本期活动已结束' : '活动暂未开始' }}</h2>
                 <p>{{ activityState === 'ended' ? '感谢参与，敬请期待下期活动' : '活动筹备中，请稍后再来' }}</p>
             </section>
-            <div class="m-goods" :class="{ active: hasPrize }" @click.stop="closePrize">
-                <div class="m-item">
-                    <div class="u-item box" v-for="(item, i) in myPrizes" :key="i">
-                        <template v-if="item.prize_type == 'vip_asset'">
-                            <img class="u-img" :src="`${__imgRoot}points.png`" />
-                            <span>{{ item.vip_asset_once_give + assetLabels[item.vip_asset_type] }}</span>
+            <el-dialog
+                v-model="history"
+                :title="$t('vip.lottery.history')"
+                width="720px"
+                class="m-lottery-history-dialog"
+                modal-class="m-lottery-history-overlay"
+                align-center
+                append-to-body
+            >
+                <History :id="ID" :show="history" @update="showPrizes" />
+            </el-dialog>
+            <el-dialog
+                v-model="hasPrize"
+                :title="$t('vip.lottery.resultTitle')"
+                :width="myPrizes.length > 1 ? '760px' : '360px'"
+                class="m-lottery-result"
+                :class="{ 'is-single': myPrizes.length <= 1 }"
+                align-center
+                append-to-body
+                :close-on-click-modal="false"
+                @close="closePrize"
+            >
+                <div class="m-result-grid">
+                    <div class="u-result-card" v-for="(item, i) in myPrizes" :key="i" :class="{ 'is-thanks': item.prize_type === 'thanks' }">
+                        <template v-if="item.prize_type === 'vip_asset'">
+                            <img class="u-result-image" :src="item.vip_asset_type === 'point' ? 'https://cdn.jx3box.com/design/event/redeem/bell.png' : (assetImg[item.vip_asset_type] || `${__imgRoot}points.png`)" alt="" />
+                            <span class="u-result-name">{{ item.vip_asset_once_give + assetLabels[item.vip_asset_type] }}</span>
                         </template>
-                        <template v-if="item.prize_type == 'thanks'">
-                            <img class="u-img" :src="`${__imgRoot}thanks.png?123`" />
-                            <span>{{ $t("vip.lottery.thanks") }}</span>
+                        <template v-else-if="item.prize_type === 'thanks'">
+                            <img class="u-result-image" :src="`${__imgRoot}thanks.png?123`" alt="" />
+                            <span class="u-result-name">{{ $t("vip.lottery.thanks") }}</span>
                         </template>
-                        <template v-if="item.prize_type == 'mall_goods'">
-                            <img class="u-img" :src="normalizeMallImage(item.goods.goods_images[0])" />
-                            <span>{{ item.goods.title }}</span>
-                            <a :href="address" target="_blank" class="u-tips" v-if="!item.goods.is_virtual">
+                        <template v-else-if="item.prize_type === 'mall_goods'">
+                            <img class="u-result-image" :src="normalizeMallImage(item.goods.goods_images[0])" :alt="item.goods.title" />
+                            <span class="u-result-name">{{ item.goods.title }}</span>
+                            <a :href="address" target="_blank" rel="noopener" class="u-result-address" v-if="!item.goods.is_virtual">
                                 {{ $t("vip.lottery.fillAddress") }}
                             </a>
                         </template>
                     </div>
                 </div>
-                <img
-                    :src="`${themeImg}${history ? 'ok' : 'get'}.svg?123`"
-                    class="u-get"
-                    :class="{ disabled: prizesInterval !== null }"
-                    :alt="$t('vip.lottery.claimPrize')"
-                    @click.stop="closePrize"
-                />
-            </div>
+                <template #footer>
+                    <button type="button" class="u-result-confirm" :disabled="prizesInterval !== null" @click="hasPrize = false">
+                        {{ $t("vip.common.gotIt") }}
+                    </button>
+                </template>
+            </el-dialog>
         </div>
         <div class="mark" v-if="visible" @click="visible = false">
             <div class="m-box">
@@ -241,6 +278,7 @@
 const COMPLETE_STATUS = [2, 3];
 import bindWechat from "./bindWechat.vue";
 import History from "./history.vue";
+import { Present } from "@element-plus/icons-vue";
 import User from "@jx3box/jx3box-common/js/user";
 import { getBreadcrumb, getConfig } from "@/service/vip/cms";
 import { getBlindBox, goodLucky, getMyLucky, getLuckyConfig, getMyInfo } from "@/service/vip/lottery";
@@ -298,10 +336,25 @@ export default {
         };
     },
     components: {
+        Present,
         History,
         bindWechat,
     },
     computed: {
+        singleDrawCost() {
+            return this.drawCost(1);
+        },
+        tenDrawCost() {
+            return this.drawCost(10);
+        },
+        previewCards() {
+            return this.previewList.map((item) => {
+                const total = Number.isFinite(Number(item.prize_count)) ? Math.max(0, Number(item.prize_count)) : 0;
+                const drawn = Number.isFinite(Number(item.be_won_count)) ? Math.max(0, Number(item.be_won_count)) : 0;
+                const remaining = Math.max(0, total - drawn);
+                return { ...item, total, remaining, percentage: total > 0 ? Math.round((remaining / total) * 100) : 0 };
+            });
+        },
         activityReady() {
             return this.event_status && this.activityState === "ready";
         },
@@ -317,6 +370,9 @@ export default {
         },
         isLogin() {
             return User.isLogin();
+        },
+        infoLines() {
+            return (this.info || "").split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
         },
         isBindWechat() {
             return !!this.user?.wechat_mp_openid;
@@ -382,6 +438,12 @@ export default {
         this.loadUser();
     },
     methods: {
+        drawCost(count) {
+            const option = this.draw.find(([times]) => Number(times) === count);
+            if (!option || option[1] === null || option[1] === undefined || option[1] === "") return null;
+            const cost = Number(option[1]);
+            return Number.isFinite(cost) && cost >= 0 ? cost : null;
+        },
         normalizeMallImage,
         loadUser() {
             if (this.isLogin) {
@@ -519,20 +581,23 @@ export default {
         scroll(count) {
             if (!this.$refs.scroll) return;
             setTimeout(() => {
+                const track = this.$refs.scroll;
+                if (!track || !count || !track.children[count]) return;
+                const distance = track.children[count].offsetLeft - track.children[0].offsetLeft;
                 const rule = `
             @keyframes scroll_prize {
                 0% {
                     transform: translateX(0);
                 }
                 100% {
-                    transform: translateX(-${148 * count}px);
+                    transform: translateX(-${distance}px);
                 }
             }`;
                 const style = document.createElement("style");
                 style.setAttribute("type", "text/css");
                 document.head.appendChild(style);
                 style.sheet.insertRule(rule);
-                this.$refs.scroll.style.animation = `scroll_prize ${(count * 148) / 50}s linear infinite`;
+                track.style.animation = `scroll_prize ${distance / 50}s linear infinite`;
             }, 1500);
         },
         // 刷新box
@@ -544,6 +609,8 @@ export default {
         // 打开盒子
         openBox: throttle(function (key) {
             if (!this.checkActivity()) return;
+            const cost = key === "all" ? this.tenDrawCost : this.singleDrawCost;
+            if (cost === null || this.points < cost || this.isDrawing) return;
             if (!this.isBindWechat) {
                 this.visible = true;
                 return;
@@ -575,7 +642,7 @@ export default {
         // 选择盒子抽奖
         change(number) {
             if (!this.checkActivity()) return;
-            if (this.points < this.draw[0][1] || this.mark) return;
+            if (this.singleDrawCost === null || this.points < this.singleDrawCost || this.mark || this.isDrawing) return;
             this.active = number;
             this.mark = true;
             setTimeout(() => {
@@ -590,6 +657,8 @@ export default {
             if (!this.checkActivity()) return;
             let batch = 1;
             if (this.allActive) batch = 10;
+            const cost = this.drawCost(batch);
+            if (cost === null || this.points < cost || this.isDrawing) return;
             this.isDrawing = true;
             goodLucky(this.ID, batch, { mute: true }).then((res) => {
                 const _id = res.data?.data.id;

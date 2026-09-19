@@ -1,7 +1,7 @@
 <template>
     <div class="m-history-content">
         <div class="m-toolbar">
-            <el-radio-group v-model="status" fill="#000">
+            <el-radio-group v-model="status" fill="#82709e">
                 <el-radio-button value="0">{{ $t("vip.lottery.allRecords") }}</el-radio-button>
                 <el-radio-button value="2">{{ $t("vip.lottery.won") }}</el-radio-button>
                 <el-radio-button value="3">{{ $t("vip.lottery.notWon") }}</el-radio-button>
@@ -52,7 +52,7 @@ export default {
     data: function () {
         return {
             list: [],
-            index: 0,
+            index: 1,
             pageSize: 7,
             total: 0,
             loading: false,
@@ -72,7 +72,7 @@ export default {
         },
     },
     methods: {
-        load(luckyDrawId) {
+        load(luckyDrawId = this.id) {
             this.loading = true;
             const params = { luckyDrawId, pageSize: this.pageSize, index: this.index, status: this.status };
             getMyHistory(params)
@@ -80,7 +80,7 @@ export default {
                     let list = res.data.data.list || [];
                     if (this.status == "2") {
                         list = list.map((item) => {
-                            item.address = some(item.prizes, (e) => e.goods.category == "entity");
+                            item.address = some(item.prizes, (e) => e.goods?.category == "entity");
                             return item;
                         });
                     }

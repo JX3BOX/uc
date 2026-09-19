@@ -77,8 +77,9 @@ export default {
         },
         normalizePrivilege(item = {}, index) {
             const icon = item.icon || item.extend?.icon || item.meta?.icon || this.defaultList[index]?.icon || "MoreFilled";
+            const text = item.text || item.label || item.name || item.title || "";
             return {
-                text: item.text || item.label || item.name || item.title || "",
+                text: text === "签到双倍积分" ? this.$t("vip.premium.defaultPrivileges.doublePoints") : text,
                 icon: ICONS.includes(icon) ? icon : "MoreFilled",
                 tag: item.tag || item.extend?.tag || item.meta?.tag || "",
             };
@@ -89,7 +90,8 @@ export default {
 
 <style lang="less" scope>
 .m-privilege {
-    user-select: none;
+    -webkit-user-select: text;
+    user-select: text;
     color: #24292e;
     width: 100%;
     .r(8px);

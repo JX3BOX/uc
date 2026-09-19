@@ -7,7 +7,7 @@ const source = readFileSync(new URL('../src/views/vip/lottery/index.vue', import
 const script = source.match(/<script>([\s\S]*?)<\/script>/)[1]
     .replace(/^import .*;\s*$/gm, '').replace('export default', 'globalThis.component =');
 function setup(extra = {}) {
-    const context = { History: {}, bindWechat: {}, normalizeMallImage: x => x, throttle: fn => fn, ...extra };
+    const context = { Present: {}, History: {}, bindWechat: {}, normalizeMallImage: x => x, throttle: fn => fn, ...extra };
     vm.runInNewContext(script, context);
     const state = { ...context.component.data(), $route: { query: {} } };
     for (const [key, method] of Object.entries(context.component.methods)) state[key] = method.bind(state);
@@ -39,4 +39,53 @@ test('详情失败只切换页面状态，不弹窗且清空旧奖池', async ()
     assert.equal(state.activityState, 'pending');
     assert.equal(state.draw.length, 0);
     assert.equal(state.activityReady, false);
+});
+
+test('奖品速览库存处理零总量、异常值和超额抽出，不产生 NaN 进度', () => {
+    const state = setup();
+    state.previewList = [
+        { prize_count: 10, be_won_count: 3 },
+        { prize_count: 0, be_won_count: 0 },
+        { prize_count: 5, be_won_count: 8 },
+        { prize_count: 'invalid', be_won_count: null },
+        { prize_count: '20', be_won_count: '5' },
+        { unlimited: true },
+    ];
+    const expected = [[7, 70], [0, 0], [0, 0], [0, 0], [15, 75], [0, 0]];
+    state.previewCards.forEach((item, index) => {
+        assert.equal(item.remaining, expected[index][0]);
+        assert.equal(item.percentage, expected[index][1]);
+    });
+    assert.equal(state.previewCards[5].unlimited, true);
+});
+
+test('单抽和十连按次数匹配价格，不按配置下标取价', () => {
+    const state = setup();
+    state.draw = Array.from({ length: 10 }, (_, i) => [i + 1, Math.min(i + 1, 8)]);
+    assert.equal(state.singleDrawCost, 1);
+    assert.equal(state.tenDrawCost, 8);
+    state.draw.reverse();
+    assert.equal(state.singleDrawCost, 1);
+    assert.equal(state.tenDrawCost, 8);
+    state.draw = [['10', '8'], ['1', '1']];
+    assert.equal(state.singleDrawCost, 1);
+    assert.equal(state.tenDrawCost, 8);
+    state.draw = [[1, 1], [2, 2]];
+    assert.equal(state.tenDrawCost, null);
+});
+
+test('十连余额不足时不提交，余额足够时仍提交 batch=10', () => {
+    let submitted = [];
+    const state = setup({ goodLucky: (id, batch) => {
+        submitted.push(batch);
+        return Promise.resolve({ data: { data: {} } });
+    } });
+    state.draw = [[1, 1], [2, 2], [10, 8]];
+    Object.assign(state, { event_status: true, activityState: 'ready', allActive: true, points: 2 });
+    state.hasLucky();
+    assert.equal(submitted.length, 0);
+    state.points = 8;
+    state.myPoints = () => {};
+    state.hasLucky();
+    assert.deepEqual(submitted, [10]);
 });

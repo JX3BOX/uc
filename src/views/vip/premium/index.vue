@@ -12,17 +12,37 @@
                         <div class="m-premium-exchange">
                             <div>
                                 <b>{{ $t("vip.premium.pointsExchange") }}</b>
-                                <span v-if="isItemLoading">{{ $t("vip.common.loadingExchange") }}</span>
+                                <span v-if="isItemLoading || isInitializing">{{ $t("vip.common.loadingExchange") }}</span>
                                 <span v-else-if="loadError">{{ loadError }}</span>
                                 <span v-else>{{ $t("vip.premium.pointsPerExchange", { points: requiredPointsText }) }}</span>
                             </div>
-                            <el-button type="primary" @click="exchangePremium" :loading="isSubmitting" :disabled="isItemLoading">
+                            <el-button type="primary" @click="exchangePremium" :loading="isSubmitting" :disabled="isItemLoading || isInitializing">
                                 {{ exchangeButtonText }}
                             </el-button>
                         </div>
                     </div>
 
                     <Privilege class="m-premium-privilege" />
+
+                    <section class="m-premium-levels">
+                        <h3>{{ $t("vip.premium.levelDiscountTitle") }}</h3>
+                        <p>{{ $t("vip.premium.levelDiscountHint") }}</p>
+                        <div class="m-premium-level-grid">
+                            <div
+                                v-for="tier in premiumTiers"
+                                :key="tier.id"
+                                class="m-premium-level-card"
+                                :class="{ 'is-current': isLogin && assetLoaded && tier.id === premiumItemId }"
+                            >
+                                <div class="u-level-head">
+                                    <b>{{ $t(`vip.premium.${tier.label}`) }}</b>
+                                    <span v-if="isLogin && assetLoaded && tier.id === premiumItemId" class="u-current">{{ $t("vip.premium.currentTier") }}</span>
+                                </div>
+                                <div class="u-price"><strong>{{ tier.points }}</strong> {{ $t("vip.premium.pointsUnit") }}</div>
+                                <span class="u-discount">{{ $t(`vip.premium.${tier.discount}`) }}</span>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </Main>
@@ -32,6 +52,7 @@
 
 <script>
 import User from "@jx3box/jx3box-common/js/user";
+import dayjs from "dayjs";
 import Privilege from "./components/privilege.vue";
 import Premium from "./components/premium.vue";
 import simple_header from "@/components/vip/simple_header.vue";
@@ -41,7 +62,11 @@ import { setUserMeta, getConfig } from "@/service/vip/cms";
 import { getItem } from "@/service/vip/mall";
 import { alertMallRequirement, handleMallExchangeError } from "@/utils/mallExchangeError";
 
-const PREMIUM_ITEM_ID = 160;
+const PREMIUM_TIERS = [
+    { id: 160, minLevel: 1, points: 200, label: "levelOneTwo", discount: "standardPrice" },
+    { id: 387, minLevel: 3, points: 100, label: "levelThreeFour", discount: "halfPrice" },
+    { id: 388, minLevel: 5, points: 60, label: "levelFivePlus", discount: "thirtyPercentPrice" },
+];
 const ASSET_REFRESH_RETRY = 4;
 const ASSET_REFRESH_DELAY = 600;
 
@@ -49,7 +74,10 @@ export default {
     data: function () {
         return {
             currentKey: 0,
-            premiumItemId: PREMIUM_ITEM_ID,
+            premiumTiers: PREMIUM_TIERS,
+            isInitializing: true,
+            assetLoaded: false,
+            pendingExpireDate: "",
             premiumItem: {},
             isItemLoading: false,
             isSubmitting: false,
@@ -73,6 +101,12 @@ export default {
         "simple-header": simple_header,
     },
     computed: {
+        userLevel() {
+            return Number(User.getLevel(this.asset.experience)) || 1;
+        },
+        premiumItemId() {
+            return [...this.premiumTiers].reverse().find((tier) => this.userLevel >= tier.minLevel).id;
+        },
         premiumData() {
             return {
                 isLogin: this.isLogin,
@@ -108,7 +142,7 @@ export default {
                 stock: true,
             };
 
-            if (!item.id || this.configError) {
+            if (!item.id || Number(item.id) !== this.premiumItemId || !this.assetLoaded || this.configError) {
                 info.canBuy = false;
             }
             if (item.vip_limit === 1 && !User._isPRO(this.asset)) {
@@ -154,21 +188,54 @@ export default {
         },
         async loadAsset() {
             const data = await User.getAsset();
-            this.asset = data;
-            this.$store.commit("mallNew/toState", { asset: data });
+            const pending = dayjs(this.pendingExpireDate);
+            const actual = dayjs(data.pro_expire_date);
+            if (pending.isValid() && (!actual.isValid() || actual.isBefore(pending))) {
+                this.asset = { ...data, pro_expire_date: this.pendingExpireDate };
+            } else {
+                this.asset = data;
+                this.pendingExpireDate = "";
+            }
+            this.assetLoaded = true;
+            this.$store.commit("mallNew/toState", { asset: this.asset });
             return data;
         },
-        async refreshAssetAfterExchange(prevExpireDate) {
-            let latest = await this.loadAsset();
-            for (let i = 0; i < ASSET_REFRESH_RETRY && latest.pro_expire_date === prevExpireDate; i++) {
-                await this.wait(ASSET_REFRESH_DELAY);
-                latest = await this.loadAsset();
+        extendPremiumAfterExchange(prevExpireDate) {
+            const now = dayjs();
+            const previous = dayjs(prevExpireDate);
+            const base = previous.isValid() && previous.isAfter(now) ? previous : now;
+            this.pendingExpireDate = base.add(30, "day").toISOString();
+            this.asset = { ...this.asset, pro_expire_date: this.pendingExpireDate };
+            this.$store.commit("mallNew/toState", { asset: this.asset });
+        },
+        async refreshAssetAfterExchange() {
+            for (let i = 0; i <= ASSET_REFRESH_RETRY; i++) {
+                if (i) await this.wait(ASSET_REFRESH_DELAY);
+                try {
+                    await this.loadAsset();
+                    if (!this.pendingExpireDate) break;
+                } catch {
+                    // 兑换已成功，资产同步失败时保留本地更新的到期时间。
+                }
             }
-            return latest;
+            return this.asset;
+        },
+        async initializeExchange() {
+            this.isInitializing = true;
+            this.loadError = "";
+            try {
+                if (this.isLogin) await this.loadAsset();
+                await this.loadPremiumItem();
+            } catch (err) {
+                this.loadError = err?.response?.data?.msg || err?.message || this.$t("vip.common.tryLater");
+            } finally {
+                this.isInitializing = false;
+            }
         },
         loadPremiumItem() {
             this.isItemLoading = true;
             this.loadError = "";
+            this.premiumItem = {};
             return getItem(this.premiumItemId)
                 .then((res) => {
                     this.premiumItem = res.data?.data || {};
@@ -192,9 +259,11 @@ export default {
             return true;
         },
         exchangePremium() {
+            if (this.isInitializing || this.isItemLoading || this.isSubmitting) return;
             if (!this.isLogin) {
                 return User.toLogin();
             }
+            if (!this.assetLoaded) return this.initializeExchange();
             if (this.configError) {
                 return this.$alert(this.$t("vip.premium.invalidConfigMessage"), this.$t("vip.common.exchangeUnavailable"), {
                     confirmButtonText: this.$t("vip.common.gotIt"),
@@ -215,30 +284,30 @@ export default {
                 return alertMallRequirement(this, this.premiumItem, this.canBuyInfo);
             }
 
-            this.$confirm(this.$t("vip.premium.confirmMessage", { points: this.requiredPoints }), this.$t("vip.common.confirmExchange"), {
+            const itemId = this.premiumItemId;
+            this.isSubmitting = true;
+            return this.$confirm(this.$t("vip.premium.confirmMessage", { points: this.requiredPoints }), this.$t("vip.common.confirmExchange"), {
                 confirmButtonText: this.$t("vip.common.confirmExchange"),
                 cancelButtonText: this.$t("vip.common.cancel"),
                 type: "warning",
             })
                 .then(() => {
-                    this.isSubmitting = true;
                     const prevExpireDate = this.asset.pro_expire_date || "";
                     return this.$store
                         .dispatch("mallNew/buyGoods", {
-                            id: this.premiumItemId,
+                            id: itemId,
                             count: 1,
                             addressId: 0,
                             remark: "高级版会员积分兑换",
                         })
                         .then(() => {
+                            this.extendPremiumAfterExchange(prevExpireDate);
                             this.$store.commit("mallNew/toState", { pay_status: false });
-                            return Promise.all([this.refreshAssetAfterExchange(prevExpireDate), this.loadPremiumItem()]);
-                        })
-                        .then(() => {
                             this.$notify.success({
                                 title: this.$t("vip.common.exchangeSuccess"),
                                 message: this.$t("vip.premium.exchangeSuccessMessage"),
                             });
+                            return this.refreshAssetAfterExchange().then(() => this.loadPremiumItem());
                         });
                 })
                 .catch((error) => {
@@ -251,8 +320,7 @@ export default {
         },
     },
     mounted: async function () {
-        this.loadPremiumItem();
-        this.isLogin && this.loadAsset();
+        this.initializeExchange();
 
         if (User.isLogin()) {
             this.$nextTick(async () => {

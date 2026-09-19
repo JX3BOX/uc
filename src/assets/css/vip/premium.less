@@ -38,6 +38,66 @@
     margin: 0 auto;
 }
 
+.m-premium-levels {
+    padding: 20px 22px 22px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: #24292e;
+
+    h3 {
+        margin: 0;
+        font-size: 18px;
+        line-height: 26px;
+    }
+    p {
+        margin: 6px 0 18px;
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 22px;
+    }
+
+    .m-premium-level-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+    }
+    .m-premium-level-card {
+        padding: 16px;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        background: #f8fafc;
+        &.is-current {
+            border-color: fade(@v4primary, 35%);
+            background: fade(@v4primary, 5%);
+        }
+    }
+    .u-level-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+    }
+    .u-current {
+        color: @v4primary;
+        font-size: 11px;
+    }
+    .u-price {
+        margin: 12px 0 6px;
+        color: #6b7280;
+        font-size: 12px;
+    }
+    .u-price strong {
+        color: @v4primary;
+        font-size: 28px;
+        line-height: 36px;
+    }
+    .u-discount {
+        color: #6b7280;
+        font-size: 12px;
+    }
+}
+
 .m-premium-panel,
 .m-premium-privilege {
     box-sizing: border-box;
@@ -131,7 +191,6 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-
 }
 
 .m-premium-exchange {
@@ -212,6 +271,12 @@
 }
 
 @media screen and (max-width: @phone) {
+    .m-premium-levels {
+        padding: 18px;
+        .m-premium-level-grid {
+            grid-template-columns: 1fr;
+        }
+    }
     .m-premium-page.m-vip-container {
         padding: 0;
         background: none;
@@ -281,5 +346,4 @@
             align-items: flex-start;
         }
     }
-
 }
