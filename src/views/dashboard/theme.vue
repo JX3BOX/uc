@@ -629,7 +629,8 @@ export default {
                 });
         },
         getSkinMallUrl(name = "") {
-            return `/vip/mall?category=virtual&sub_category=skin&search=${encodeURIComponent(name)}`;
+            const keyword = name.includes("·") ? name.slice(name.indexOf("·") + 1).trim() : name;
+            return `/vip/mall?category=virtual&sub_category=skin&search=${encodeURIComponent(keyword)}`;
         },
         showDecoration: function (item) {
             return item.image || __cdn + `design/decoration/images/${item.val}/${item.type}_preview.png`;
