@@ -1,6 +1,6 @@
 <template>
     <div>
-        <CommonHeader :key="currentKey"></CommonHeader>
+        <CommonHeader></CommonHeader>
         <Main class="m-vip-container m-premium-page" :withoutRight="true" :withoutLeft="true">
             <div class="m-vip-premium">
                 <simple-header class="m-vip-premium-title" :title="$t('vip.premium.title')" :desc="$t('vip.premium.subtitle')" />
@@ -58,7 +58,6 @@ import Premium from "./components/premium.vue";
 import simple_header from "@/components/vip/simple_header.vue";
 
 import { showDate } from "@jx3box/jx3box-common/js/moment";
-import { setUserMeta, getConfig } from "@/service/vip/cms";
 import { getItem } from "@/service/vip/mall";
 import { alertMallRequirement, handleMallExchangeError } from "@/utils/mallExchangeError";
 
@@ -73,7 +72,6 @@ const ASSET_REFRESH_DELAY = 600;
 export default {
     data: function () {
         return {
-            currentKey: 0,
             premiumTiers: PREMIUM_TIERS,
             isInitializing: true,
             assetLoaded: false,
@@ -319,18 +317,8 @@ export default {
                 });
         },
     },
-    mounted: async function () {
+    mounted: function () {
         this.initializeExchange();
-
-        if (User.isLogin()) {
-            this.$nextTick(async () => {
-                await setUserMeta("vip_pop", { val: 0 });
-                let config = await getConfig({ key: "vip" });
-                localStorage.setItem("vip_pop", config.val);
-
-                this.currentKey++;
-            });
-        }
     },
 };
 </script>
