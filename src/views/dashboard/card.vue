@@ -499,7 +499,12 @@ export default {
                 },
             });
             this.showPagination = false;
-            getVirtual({ sub_category: "codesn", virtual_type: 1 })
+            getVirtual({
+                sub_category: "codesn",
+                virtual_type: 1,
+                pageIndex: this.page,
+                pageSize: this.per,
+            })
                 .then((res) => {
                     let list = res.data.data.list || [];
                     this.virtualList = list.map((item) => {
