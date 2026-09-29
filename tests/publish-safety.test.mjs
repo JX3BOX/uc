@@ -209,6 +209,58 @@ test("uploaded tool resource reaches the publish payload through v-model", async
     } finally { view.unmount(); }
 });
 
+for (const fails of [false, true]) {
+    test(`tool update waits for replacement upload${fails ? " and stops on upload failure" : " before submitting both download fields"}`, async () => {
+        const requests = [];
+        let resolveUpload, rejectUpload;
+        const page = load("src/post/tool.vue", {
+            push: async (id, payload) => {
+                requests.push({ id, payload: JSON.parse(JSON.stringify(payload)) });
+                return { data: { data: { ID: id } } };
+            },
+        });
+        const ctx = contextFor(page, { id: 123, removeBase64Img: (value) => value });
+        Object.assign(ctx, { atUser: noop, setHasRead: noop, syncPalu: async () => {},
+            setCommentConfig: noop, afterPublish: async () => {}, done: noop });
+        ctx.post = reactive({ ...ctx.post, ID: 123, post_meta: {
+            down: "old.zip", data: [{ name: "tool", mode: "1", file: "old.zip" }],
+        } });
+        const options = load("src/components/publish/publish_tool_source.vue", {
+            FormData: class { append() {} },
+            upload: () => new Promise((resolve, reject) => { resolveUpload = resolve; rejectUpload = reject; }),
+        });
+        const view = mount(options, () => ({ modelValue: ctx.post.post_meta,
+            "onUpdate:modelValue": (value) => ctx.post.post_meta = value }));
+        ctx.$refs = { toolSource: view.instance };
+        try {
+            const event = { target: { files: [{ name: "tool.zip" }], value: "tool.zip" } };
+            const uploading = view.instance.uploadSource(event, 0);
+            const saving = ctx.publish("publish", true);
+            const uploadResult = uploading.catch((error) => error);
+            const saveResult = saving.catch((error) => error);
+            await nextTick();
+            const earlyRequestCount = requests.length;
+            if (fails) rejectUpload(new Error("upload failed"));
+            else resolveUpload({ data: { data: ["new.zip"] } });
+            await uploadResult;
+            const result = await saveResult;
+            assert.equal(earlyRequestCount, 0, "must not send the old URL while a replacement is uploading");
+            assert.equal(ctx.processing, false);
+            assert.equal(event.target.value, "", "same file can be selected again");
+            if (fails) {
+                assert.equal(requests.length, 0);
+                assert.equal(result.message, "upload failed");
+                assert.equal(ctx.post.post_meta.data[0].file, "old.zip");
+            } else {
+                assert.equal(requests.length, 1);
+                assert.equal(requests[0].id, 123);
+                assert.equal(requests[0].payload.post_meta.data[0].file, "new.zip");
+                assert.equal(requests[0].payload.post_meta.down, "new.zip");
+            }
+        } finally { view.unmount(); }
+    });
+}
+
 test("legacy download conversion does not undo editing or overwrite modern resource data", async () => {
     const options = load("src/components/publish/publish_tool_source.vue");
     const state = reactive({ meta: { down: "old.zip", data: [{ name: "A", mode: "0", file: "" }] } });

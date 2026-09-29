@@ -42,7 +42,7 @@
                                 :id="'tool_' + i"
                                 @change="(e) => uploadSource(e, i)"
                             />
-                            <el-button type="primary" icon="Promotion" @click="selectSource(i)">{{ $t("publish.upload.file") }}</el-button>
+                            <el-button type="primary" icon="Promotion" :loading="pendingUploads.has(item)" @click="selectSource(i)">{{ $t("publish.upload.file") }}</el-button>
                             <span class="u-data-remark">{{ files[i] && files[i].name }}</span>
                             <div class="u-file" v-if="item.file">
                                 <span class="u-file__label">{{ $t("publish.resource.currentDownload") }}:</span>
@@ -109,6 +109,7 @@ export default {
 
             files: [],
             uploadRequests: new WeakMap(),
+            pendingUploads: new Map(),
             migratedSources: new WeakSet(),
         };
     },
@@ -209,6 +210,8 @@ export default {
         uploadSource(e, i) {
             let file = e.target.files[0];
             if (!file) return;
+            // 允许重选同一个文件（包括失败后的重试）。
+            e.target.value = "";
             const item = this.data.data[i];
             if (!item) return;
             // 使用不会被 Vue 响应式代理包装的标记，保证最新请求的身份比较有效。
@@ -217,14 +220,25 @@ export default {
             this.files[i] = file;
             const formData = new FormData();
             formData.append("file", file);
-            return upload(formData).then((res) => {
+            const pending = upload(formData).then((res) => {
                 if (!this.data.data.includes(item) || this.uploadRequests.get(item) !== request) return;
                 item.file = res.data.data[0];
                 this.$message({
                     message: this.$t("publish.message.uploadSucceeded"),
                     type: "success",
                 });
+            }).finally(() => {
+                if (this.pendingUploads.get(item) === pending) this.pendingUploads.delete(item);
             });
+            this.pendingUploads.set(item, pending);
+            return pending;
+        },
+        async waitForUploads() {
+            // 只等待当前表单仍保留的资源，并在等待期间出现新上传时继续等待。
+            let pending;
+            while ((pending = this.data.data.map((item) => this.pendingUploads.get(item)).filter(Boolean)).length) {
+                await Promise.all(pending);
+            }
         },
         selectSource(i) {
             document.getElementById("tool_" + i).click();

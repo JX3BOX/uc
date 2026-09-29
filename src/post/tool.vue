@@ -23,6 +23,7 @@
                 <publish-subtype v-model="post.post_subtype" :options="tool_types"></publish-subtype>
                 <!-- 资源 -->
                 <publish-tool-source
+                    ref="toolSource"
                     v-if="post.post_subtype == 1 || post.post_subtype == 2"
                     v-model="post.post_meta"
                 ></publish-tool-source>
@@ -320,7 +321,9 @@ export default {
             this.post.post_status = status;
             this.processing = true;
             const fn = this.from === "admin" ? pushAdmin : push;
-            return fn(...this.data)
+            return Promise.resolve()
+                .then(() => this.$refs?.toolSource?.waitForUploads())
+                .then(() => fn(...this.data))
                 .then((res) => {
                     let result = res.data.data;
                     this.atUser(result.ID || this.id);
