@@ -154,6 +154,44 @@ test("resource uploads stay attached to the same item and latest request", async
     } finally { view.unmount(); }
 });
 
+test("oversized tool resources warn without uploading or replacing existing upload state", async () => {
+    let uploadCount = 0;
+    let formCount = 0;
+    let resolveUpload;
+    const warnings = [];
+    const options = load("src/components/publish/publish_tool_source.vue", {
+        FormData: class { constructor() { formCount++; } append() {} },
+        upload: () => {
+            uploadCount++;
+            return new Promise((resolve) => { resolveUpload = resolve; });
+        },
+    });
+    const item = { file: "existing.zip" };
+    const ctx = contextFor(options, {
+        $t: (key, params) => ({ key, ...params }),
+        $message: { warning: (message) => warnings.push(message) },
+    });
+    ctx.data = { data: [item] };
+    const validFile = { name: "valid.zip", size: 1024 };
+    const uploading = ctx.uploadSource({ target: { files: [validFile] } }, 0);
+    const request = ctx.uploadRequests.get(item);
+    const event = { target: { files: [{ name: "oversized.zip", size: 30 * 1024 * 1024 + 1 }], value: "oversized.zip" } };
+    assert.equal(ctx.uploadSource(event, 0), undefined);
+    assert.equal(uploadCount, 1);
+    assert.equal(formCount, 1);
+    assert.equal(event.target.value, "");
+    assert.deepEqual(warnings, [{ key: "publish.upload.fileTooLarge", size: "30 MB" }]);
+    assert.equal(ctx.files[0], validFile);
+    assert.equal(item.file, "existing.zip");
+    assert.equal(ctx.uploadRequests.get(item), request);
+    assert.equal(ctx.pendingUploads.get(item), uploading);
+    resolveUpload({ data: { data: ["valid.zip"] } });
+    ctx.$message = noop;
+    await uploading;
+    assert.equal(item.file, "valid.zip");
+    assert.equal(ctx.pendingUploads.size, 0);
+});
+
 test("resource uploads remain independent and ignore replaced form data", async () => {
     const pending = [];
     const options = load("src/components/publish/publish_tool_source.vue", {

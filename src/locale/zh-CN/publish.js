@@ -798,6 +798,7 @@ export default {
         "batchHint": "每次最多上传 {max} 个文件，单个文件不超过 {size}。",
         "cannotReadData": "无法读取数据",
         "file": "上传文件",
+        "fileTooLarge": "文件大小超出限制，不能超过 {size}。",
         "fileTooLarge16K": "文件不能超过 16 KB。",
         "fileTooLarge64K": "文件不能超过 64 KB。",
         "readFailed": "读取失败",
