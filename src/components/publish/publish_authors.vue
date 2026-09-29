@@ -24,7 +24,7 @@
                         <i class="u-delete el-icon-delete" @click="remove(item, i)"></i>
                     </el-tooltip>
                 </div>
-                <el-button plain @click="openPop" type="primary" size="small">+ {{ $t("publish.collaboration.addAuthor") }}</el-button>
+                <el-button plain @click="openPop" type="primary" size="default">+ {{ $t("publish.collaboration.addAuthor") }}</el-button>
             </div>
             <UserPop :title="$t('publish.collaboration.addUser')" v-model="visible" @confirm="addAuthor" />
         </el-form-item>
@@ -143,6 +143,8 @@ export default {
             .fl;
         }
         .u-item {
+            display: flex;
+            align-items: center;
             border: 1px solid #dcdfe6;
             padding: 2px 8px;
             // background-color: #f5f7fa;
