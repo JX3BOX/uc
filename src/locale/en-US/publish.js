@@ -799,6 +799,7 @@ export default {
         "cannotReadData": "Cannot read data",
         "file": "Upload File",
         "fileTooLarge16K": "File size cannot exceed 16 KB.",
+        "fileTooLarge": "File size exceeds the limit of {size}.",
         "fileTooLarge64K": "File size cannot exceed 64 KB.",
         "readFailed": "Read failed",
         "readSucceeded": "Read successfully",

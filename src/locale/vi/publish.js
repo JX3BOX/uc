@@ -799,6 +799,7 @@ export default {
         "cannotReadData": "Không thể đọc dữ liệu",
         "file": "Tải tệp",
         "fileTooLarge16K": "Tệp không được vượt quá 16 KB.",
+        "fileTooLarge": "Kích thước tệp vượt quá giới hạn {size}.",
         "fileTooLarge64K": "Tệp không được vượt quá 64 KB.",
         "readFailed": "Đọc thất bại",
         "readSucceeded": "Đọc thành công",

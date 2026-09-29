@@ -212,6 +212,10 @@ export default {
             if (!file) return;
             // 允许重选同一个文件（包括失败后的重试）。
             e.target.value = "";
+            if (file.size > 30 * 1024 * 1024) {
+                this.$message.warning(this.$t("publish.upload.fileTooLarge", { size: "30 MB" }));
+                return;
+            }
             const item = this.data.data[i];
             if (!item) return;
             // 使用不会被 Vue 响应式代理包装的标记，保证最新请求的身份比较有效。
