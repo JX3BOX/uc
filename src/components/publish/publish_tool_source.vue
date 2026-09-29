@@ -211,7 +211,8 @@ export default {
             if (!file) return;
             const item = this.data.data[i];
             if (!item) return;
-            const request = {};
+            // 使用不会被 Vue 响应式代理包装的标记，保证最新请求的身份比较有效。
+            const request = Symbol("uploadSource");
             this.uploadRequests.set(item, request);
             this.files[i] = file;
             const formData = new FormData();

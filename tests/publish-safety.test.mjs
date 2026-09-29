@@ -133,22 +133,80 @@ test("resource uploads stay attached to the same item and latest request", async
     const options = load("src/components/publish/publish_tool_source.vue", {
         FormData: class { append() {} }, upload: () => new Promise((resolve) => pending.push(resolve)),
     });
-    const ctx = contextFor(options, { $message: noop });
-    const a = { name: "A", file: "" }, b = { name: "B", file: "" };
-    ctx.data = { data: [a, b] };
+    const view = mount(options, () => ({}));
+    const ctx = view.instance;
+    try {
+        const a = { name: "A", file: "" }, b = { name: "B", file: "" };
+        ctx.data = { data: [a, b] };
+        const event = { target: { files: [{ name: "file.zip" }] } };
+        const first = ctx.uploadSource(event, 0);
+        ctx.data.data.splice(0, 1);
+        pending.shift()({ data: { data: ["a.zip"] } }); await first;
+        await Promise.resolve(); assert.equal(b.file, "");
+        const old = ctx.uploadSource(event, 0), recent = ctx.uploadSource(event, 0);
+        pending[1]({ data: { data: ["new.zip"] } }); await recent; await Promise.resolve();
+        pending[0]({ data: { data: ["old.zip"] } }); await old; await Promise.resolve();
+        assert.equal(b.file, "new.zip");
+        pending.length = 0; ctx.data.data = [a, b];
+        const moved = ctx.uploadSource(event, 1); ctx.data.data.splice(0, 1);
+        pending[0]({ data: { data: ["moved.zip"] } }); await moved;
+        assert.equal(b.file, "moved.zip", "removing an earlier slot must not discard a valid upload");
+    } finally { view.unmount(); }
+});
+
+test("resource uploads remain independent and ignore replaced form data", async () => {
+    const pending = [];
+    const options = load("src/components/publish/publish_tool_source.vue", {
+        FormData: class { append() {} }, upload: () => new Promise((resolve) => pending.push(resolve)),
+    });
+    const state = reactive({ meta: { data: [{ file: "" }, { file: "" }] } });
+    const view = mount(options, () => ({ modelValue: state.meta, "onUpdate:modelValue": (v) => state.meta = v }));
     const event = { target: { files: [{ name: "file.zip" }] } };
-    const first = ctx.uploadSource(event, 0);
-    ctx.data.data.splice(0, 1);
-    pending.shift()({ data: { data: ["a.zip"] } }); await first;
-    await Promise.resolve(); assert.equal(b.file, "");
-    const old = ctx.uploadSource(event, 0), recent = ctx.uploadSource(event, 0);
-    pending[1]({ data: { data: ["new.zip"] } }); await recent; await Promise.resolve();
-    pending[0]({ data: { data: ["old.zip"] } }); await old; await Promise.resolve();
-    assert.equal(b.file, "new.zip");
-    pending.length = 0; ctx.data.data = [a, b];
-    const moved = ctx.uploadSource(event, 1); ctx.data.data.splice(0, 1);
-    pending[0]({ data: { data: ["moved.zip"] } }); await moved;
-    assert.equal(b.file, "moved.zip", "removing an earlier slot must not discard a valid upload");
+    try {
+        const first = view.instance.uploadSource(event, 0);
+        const second = view.instance.uploadSource(event, 1);
+        pending[1]({ data: { data: ["second.zip"] } }); await second;
+        pending[0]({ data: { data: ["first.zip"] } }); await first;
+        await nextTick();
+        assert.deepEqual(state.meta.data.map((item) => item.file), ["first.zip", "second.zip"]);
+        const stale = view.instance.uploadSource(event, 0);
+        const previous = state.meta;
+        state.meta = { data: [{ file: "loaded.zip" }] };
+        await nextTick();
+        pending[2]({ data: { data: ["stale.zip"] } }); await stale;
+        await nextTick();
+        assert.equal(state.meta.data[0].file, "loaded.zip");
+        assert.equal(previous.data[0].file, "first.zip");
+    } finally { view.unmount(); }
+});
+
+test("uploaded tool resource reaches the publish payload through v-model", async () => {
+    let submitted;
+    const page = load("src/post/tool.vue", {
+        push: async (payload) => {
+            submitted = JSON.parse(JSON.stringify(payload));
+            return { data: { data: { ID: 123 } } };
+        },
+    });
+    const ctx = contextFor(page, { id: 0, removeBase64Img: (value) => value });
+    Object.assign(ctx, { atUser: noop, setHasRead: noop, syncPalu: async () => {},
+        setCommentConfig: noop, afterPublish: async () => {}, done: noop });
+    ctx.post = reactive(ctx.post);
+    const options = load("src/components/publish/publish_tool_source.vue", {
+        FormData: class { append() {} },
+        upload: async () => ({ data: { data: ["https://example.com/tool.zip"] } }),
+    });
+    const view = mount(options, () => ({
+        modelValue: ctx.post.post_meta,
+        "onUpdate:modelValue": (value) => ctx.post.post_meta = value,
+    }));
+    try {
+        ctx.post.post_meta.data[0].mode = "1";
+        await view.instance.uploadSource({ target: { files: [{ name: "tool.zip" }] } }, 0);
+        await nextTick();
+        await ctx.publish("publish", true);
+        assert.equal(submitted.post_meta.data[0].file, "https://example.com/tool.zip");
+    } finally { view.unmount(); }
 });
 
 test("legacy download conversion does not undo editing or overwrite modern resource data", async () => {
