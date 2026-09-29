@@ -799,6 +799,7 @@ export default {
         "cannotReadData": "無法讀取資料",
         "file": "上傳檔案",
         "fileTooLarge16K": "檔案不能超過 16 KB。",
+        "fileTooLarge": "檔案大小超出限制，不能超過 {size}。",
         "fileTooLarge64K": "檔案不能超過 64 KB。",
         "readFailed": "讀取失敗",
         "readSucceeded": "讀取成功",
