@@ -89,3 +89,16 @@ test('十连余额不足时不提交，余额足够时仍提交 batch=10', () =>
     state.hasLucky();
     assert.deepEqual(submitted, [10]);
 });
+
+test('已集齐错误展示专用弹窗并解除抽奖锁，不弹通用失败', async () => {
+    const state = setup({
+        goodLucky: async () => { throw { response: { data: { code: 61011 } } }; },
+        getNoPrizeNotice: async () => 'vip.lottery.allPrizesCollected',
+    });
+    Object.assign(state, { activityState: 'ready', draw: [[1, 1]], points: 10,
+        $message: { error: () => assert.fail('不应显示抽奖失败') } });
+    state.hasLucky();
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(state.noPrizeNotice, 'vip.lottery.allPrizesCollected');
+    assert.equal(state.isDrawing, false);
+});

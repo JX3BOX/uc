@@ -172,6 +172,11 @@ export default {
         uidPlaceholder: "Nhập UID trang web",
     },
     lottery: {
+        noticeTitle: "Thông báo",
+        allPrizesCollected: "Bạn đã nhận đủ tất cả phần thưởng của đợt này.",
+        noAvailablePrizes: "Bạn đã nhận đủ tất cả phần thưởng của đợt này.",
+        noAvailablePrizesNote: "(Các phần thưởng đã hết số lượng sẽ không thể được quay trúng nữa.)",
+
         blindBox: "Hộp bí ẩn JX3BOX",
         prize: "Phần thưởng",
         prizeOverview: "Tổng quan phần thưởng",

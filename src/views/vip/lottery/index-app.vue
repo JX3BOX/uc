@@ -112,6 +112,7 @@
                                 :key="index"
                                 :item="item"
                                 :is-active="index === 0"
+                                show-stock
                                 hide-duplicate-description
                                 @click="selectPrize(item, index)"
                             />
@@ -299,6 +300,16 @@
         </div>
         </Transition>
 
+        <div class="m-overlay" v-if="noPrizeNotice" @click.self="noPrizeNotice = ''">
+            <div class="m-rules-dialog m-collected-dialog" role="dialog" aria-modal="true" :aria-label="$t('vip.lottery.noticeTitle')">
+                <span class="u-collected-icon"><Present /></span>
+                <h3>{{ $t('vip.lottery.noticeTitle') }}</h3>
+                <p>{{ $t(noPrizeNotice) }}</p>
+                <small class="u-collected-note" v-if="noPrizeNotice === 'vip.lottery.noAvailablePrizes'">{{ $t('vip.lottery.noAvailablePrizesNote') }}</small>
+                <button type="button" class="u-confirm-btn" @click="noPrizeNotice = ''">{{ $t('vip.common.gotIt') }}</button>
+            </div>
+        </div>
+
         <!-- 规则说明 -->
         <div class="m-overlay m-rules-overlay" v-if="showRules" @click.self="showRules = false">
             <div class="m-rules-dialog">
@@ -362,6 +373,7 @@ const COMPLETE_STATUS = [2, 3];
 const CARD_SIZE = 4;
 // 设计稿中的固定展示卡号
 const CARD_NO_MAX = 999999999;
+import { Present } from "@element-plus/icons-vue";
 import ScratchSurface from "./ScratchSurface.vue";
 import dayjs from "dayjs";
 import { userSignIn } from "@jx3box/jx3box-ui/service/author";
@@ -371,6 +383,7 @@ import User from "@jx3box/jx3box-common/js/user";
 import { getBreadcrumb, getConfig } from "@/service/vip/cms";
 import { getBlindBox, goodLucky, getMyLucky, getLuckyConfig, getMyInfo, getMyHistory } from "@/service/vip/lottery";
 import { resolveImagePath } from "@jx3box/jx3box-common/js/utils";
+import { getNoPrizeNotice } from "@/utils/lotteryNotice";
 import { normalizeMallImage } from "@/utils/mallImage";
 import { initAppEnv } from "@/utils/appEnv";
 import { __cdn } from "@/utils/config";
@@ -381,6 +394,7 @@ export default {
         return {
             theme: "app",
             raw: {},
+            noPrizeNotice: "",
             draw: [],
             previewList: [],
             points: 0,
@@ -441,7 +455,7 @@ export default {
             isDrawing: false,
         };
     },
-    components: { bindWechat, ScratchSurface, PrizeDetailItem },
+    components: { Present, bindWechat, ScratchSurface, PrizeDetailItem },
     computed: {
         mockUnsigned() {
             return process.env.NODE_ENV === "development" && this.$route.query.mockSign === "unsigned";
@@ -959,7 +973,7 @@ export default {
                     this.pendingRecord = null;
                 })
                 .catch((error) => {
-                    this.setDrawError(error);
+                    return this.setDrawError(error);
                 });
         },
         async fetchPrize(id) {
@@ -1063,12 +1077,24 @@ export default {
                 this.lockedDrawTotal = null;
                 this.myPoints();
             } catch (e) {
-                this.setDrawError(e);
+                await this.setDrawError(e);
             }
         },
         // 抽奖失败：不留中间态、不重试，直接关闭刮卡流程并刷新当前抽奖页面
-        setDrawError(error) {
+        async setDrawError(error) {
             if (this.disposed) return;
+            const data = error?.response?.data || error?.data || {};
+            if (Number(data.code) === 61011 && !this.pendingRecord?.id) {
+                this.showSingleScratch = false;
+                this.showBatchScratch = false;
+                this.showDrawAll = false;
+                const notice = await getNoPrizeNotice(this.ID);
+                if (this.disposed) return;
+                this.showDrawAll = false;
+                this.reloadDrawPage();
+                this.noPrizeNotice = notice;
+                return;
+            }
             const activityMessage = this.activityErrorMessage(error);
             if (activityMessage && !this.pendingRecord?.id) {
                 this.activityMessage = activityMessage;

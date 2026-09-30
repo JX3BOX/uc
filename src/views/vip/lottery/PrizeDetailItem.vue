@@ -15,6 +15,13 @@
             </div>
             <p v-if="meta" class="u-rate">{{ meta }}</p>
             <p v-else-if="showRate" class="u-rate">中奖率：{{ item.rate || "0.0" }}%</p>
+            <div v-if="showStock" class="u-stock" :class="{ 'is-empty': stock.total > 0 && stock.remaining === 0 }">
+                <span v-if="stock.unlimited">{{ $t('vip.lottery.unlimited') }}</span>
+                <template v-else>
+                    <span>{{ $t('vip.lottery.remaining') }}</span>
+                    <span><b>{{ stock.remaining }}</b><span class="u-stock-total"> / {{ stock.total }}</span></span>
+                </template>
+            </div>
             <p v-if="!hideDuplicateDescription || (item.desc && item.desc !== item.name)" class="u-desc">{{ item.desc || "奖品介绍" }}</p>
         </div>
     </div>
@@ -29,12 +36,19 @@ export default {
         item: { type: Object, required: true },
         isActive: { type: Boolean, default: false },
         showRate: { type: Boolean, default: true },
+        showStock: { type: Boolean, default: false },
         hideDuplicateDescription: { type: Boolean, default: false },
         // 替换「中奖率」位置的文案（如：活动名(活动ID)）
         meta: { type: String, default: "" },
     },
     emits: ["click"],
     computed: {
+        stock() {
+            const raw = this.item.raw || {};
+            const total = Number.isFinite(Number(raw.prize_count)) ? Math.max(0, Number(raw.prize_count)) : 0;
+            const drawn = Number.isFinite(Number(raw.be_won_count)) ? Math.max(0, Number(raw.be_won_count)) : 0;
+            return { total, remaining: Math.max(0, total - drawn), unlimited: Number(raw.prize_count) === 0 };
+        },
         starSrc() {
             const suffix = this.isActive ? "2" : "1";
             return `${__cdn}design/event/lottery/app/star${suffix}.svg`;

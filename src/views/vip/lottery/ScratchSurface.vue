@@ -24,14 +24,16 @@ export default {
     },
     beforeUnmount() {
         this.disposed = true;
+        this.drawing = false;
+        this.last = null;
         window.removeEventListener("resize", this.resize);
-        this.coverImage.onload = null;
+        if (this.coverImage) this.coverImage.onload = null;
     },
     methods: {
         resize() { this.paint(true); },
         paint(preserve = false) {
             const canvas = this.$refs.canvas;
-            if (!canvas) return;
+            if (this.disposed || !canvas || !this.$el) return;
             const previous = document.createElement("canvas");
             previous.width = canvas.width;
             previous.height = canvas.height;
@@ -71,23 +73,33 @@ export default {
         },
         position(event) {
             const canvas = this.$refs.canvas;
+            // 接口拒绝抽奖时刮卡会被卸载，触摸/鼠标事件可能仍在派发。
+            if (this.disposed || !canvas) return null;
             const rect = canvas.getBoundingClientRect();
+            if (!rect.width || !rect.height) return null;
             const point = event.touches?.[0] || event;
             return { x: (point.clientX - rect.left) * canvas.width / rect.width,
                 y: (point.clientY - rect.top) * canvas.height / rect.height };
         },
         start(event) {
+            if (this.disposed || !this.regions?.length || !this.finished) return;
             if (this.finished.size === this.regions.length) return;
             if (event.type === "touchstart") this.lastTouch = Date.now();
             if (event.type === "mousedown" && (event.button !== 0 || Date.now() - (this.lastTouch || 0) < 700)) return;
             this.last = this.position(event);
-            this.drawing = true;
+            this.drawing = !!this.last;
         },
         move(event) {
-            if (!this.drawing) return;
+            if (this.disposed || !this.drawing) return;
             const point = this.position(event);
             const canvas = this.$refs.canvas;
+            if (!point || !canvas || !this.last) {
+                this.drawing = false;
+                this.last = null;
+                return;
+            }
             const ctx = canvas.getContext("2d");
+            if (!ctx) return;
             // 刮层与结果加载独立，接口返回时保留当前画布和刮痕。
             ctx.save();
             ctx.beginPath();
@@ -106,11 +118,16 @@ export default {
             this.last = point;
         },
         end() {
-            if (!this.drawing) return;
+            if (this.disposed || !this.drawing) return;
             this.drawing = false;
-            const ctx = this.$refs.canvas.getContext("2d");
+            this.last = null;
+            const canvas = this.$refs.canvas;
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return;
             this.regions.forEach(({ x, y, width, height }, index) => {
                 if (this.finished.has(index)) return;
+                if (Math.floor(width) <= 0 || Math.floor(height) <= 0) return;
                 const pixels = ctx.getImageData(Math.ceil(x), Math.ceil(y), Math.floor(width), Math.floor(height)).data;
                 let transparent = 0, total = 0;
                 for (let i = 3; i < pixels.length; i += 40) {

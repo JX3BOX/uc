@@ -230,6 +230,24 @@
                 <History :id="ID" :show="history" @update="showPrizes" />
             </el-dialog>
             <el-dialog
+                :model-value="!!noPrizeNotice"
+                @update:model-value="noPrizeNotice = ''"
+                :title="$t('vip.lottery.noticeTitle')"
+                width="380px"
+                class="m-lottery-result is-single"
+                align-center
+                append-to-body
+            >
+                <div class="m-collected-notice">
+                    <span class="u-collected-icon"><Present /></span>
+                    <p>{{ noPrizeNotice ? $t(noPrizeNotice) : '' }}</p>
+                    <small class="u-collected-note" v-if="noPrizeNotice === 'vip.lottery.noAvailablePrizes'">{{ $t('vip.lottery.noAvailablePrizesNote') }}</small>
+                </div>
+                <template #footer>
+                    <button type="button" class="u-result-confirm" @click="noPrizeNotice = ''">{{ $t('vip.common.gotIt') }}</button>
+                </template>
+            </el-dialog>
+            <el-dialog
                 v-model="hasPrize"
                 :title="$t('vip.lottery.resultTitle')"
                 :width="myPrizes.length > 1 ? '760px' : '360px'"
@@ -284,6 +302,7 @@ import { getBreadcrumb, getConfig } from "@/service/vip/cms";
 import { getBlindBox, goodLucky, getMyLucky, getLuckyConfig, getMyInfo } from "@/service/vip/lottery";
 import { cloneDeep, throttle, zip } from "lodash";
 import { resolveImagePath } from "@jx3box/jx3box-common/js/utils";
+import { getNoPrizeNotice } from "@/utils/lotteryNotice";
 import { normalizeMallImage } from "@/utils/mallImage";
 import { __Root, __cdn } from "@/utils/config";
 import "@/assets/css/vip/lottery/hacker.less";
@@ -296,6 +315,7 @@ export default {
         return {
             theme: "",
             raw: {},
+            noPrizeNotice: "",
             draw: [],
             activityState: "pending",
             activityStart: null,
@@ -664,7 +684,15 @@ export default {
                 const _id = res.data?.data.id;
                 this.showPrizes(_id, true);
                 this.myPoints();
-            }).catch((error) => {
+            }).catch(async (error) => {
+                const data = error?.response?.data || error?.data || {};
+                if (Number(data.code) === 61011) {
+                    this.noPrizeNotice = await getNoPrizeNotice(this.ID);
+                    this.isDrawing = false;
+                    this.mark = false;
+                    this.allActive = false;
+                    return;
+                }
                 this.isDrawing = false;
                 this.mark = false;
                 this.allActive = false;

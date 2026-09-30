@@ -7,7 +7,7 @@ const source = readFileSync(new URL('../src/views/vip/lottery/index-app.vue', im
 const script = source.match(/<script>([\s\S]*?)<\/script>/)[1]
     .replace(/^import .*;\s*$/gm, '').replace('export default', 'globalThis.component =');
 function setup(overrides = {}) {
-    const context = { bindWechat: {}, ScratchSurface: {}, PrizeDetailItem: {}, normalizeMallImage: x => x,
+    const context = { Present: {}, bindWechat: {}, ScratchSurface: {}, PrizeDetailItem: {}, normalizeMallImage: x => x,
         User: { isLogin: () => true, getAsset: async () => ({ points: 0 }) },
         getMyInfo: async () => ({ data: { data: { wechat_mp_openid: 'test' } } }),
         __cdn: '', ...overrides };
@@ -255,4 +255,35 @@ test('抽奖期间服务端报告活动结束时关闭流程，仅显示页面�
 test('相同错误码的非活动错误仍保留一般失败处理', () => {
     const { state } = setup();
     assert.equal(state.activityErrorMessage({ data: { code: 61001, msg: '用户不存在' } }), '');
+});
+
+test('已集齐时关闭刮卡流程，显示专用提示且不报抽奖失败', async () => {
+    const { state } = setup({ getNoPrizeNotice: async () => 'vip.lottery.allPrizesCollected' });
+    Object.assign(state, { isDrawing: true, showBatchScratch: true, showDrawAll: true });
+    state.myPoints = () => {};
+    state.loadUser = () => {};
+    state.$message.error = () => assert.fail('不应显示抽奖失败');
+    await state.setDrawError({ response: { data: { code: '61011' } } });
+    assert.equal(state.noPrizeNotice, 'vip.lottery.allPrizesCollected');
+    assert.equal(state.showBatchScratch, false);
+    assert.equal(state.showDrawAll, false);
+    assert.equal(state.isDrawing, false);
+});
+
+test('不能再抽时立即关闭刮卡，核对奖品期间保留锁，完成后展示提示', async () => {
+    let resolveNotice;
+    const { state } = setup({ getNoPrizeNotice: () => new Promise(resolve => { resolveNotice = resolve; }) });
+    Object.assign(state, { isDrawing: true, showSingleScratch: true, showBatchScratch: true, showDrawAll: true });
+    state.myPoints = () => {};
+    state.loadUser = () => {};
+    state.$message.error = () => assert.fail('不应显示通用抽奖失败');
+    const pending = state.setDrawError({ response: { data: { code: 61011 } } });
+    assert.equal(state.showSingleScratch, false);
+    assert.equal(state.showBatchScratch, false);
+    assert.equal(state.showDrawAll, false);
+    assert.equal(state.isDrawing, true);
+    resolveNotice('vip.lottery.noAvailablePrizes');
+    await pending;
+    assert.equal(state.isDrawing, false);
+    assert.equal(state.noPrizeNotice, 'vip.lottery.noAvailablePrizes');
 });

@@ -172,6 +172,11 @@ export default {
         uidPlaceholder: "Enter your website UID",
     },
     lottery: {
+        noticeTitle: "Notice",
+        allPrizesCollected: "You have already collected all prizes in this event.",
+        noAvailablePrizes: "You have already collected all prizes in this event.",
+        noAvailablePrizesNote: "(Prizes with no remaining stock can no longer be drawn.)",
+
         blindBox: "JX3BOX Blind Box",
         prize: "Prize",
         prizeOverview: "Prize overview",

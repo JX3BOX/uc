@@ -172,6 +172,11 @@ export default {
         uidPlaceholder: "請輸入網站UID",
     },
     lottery: {
+        noticeTitle: "溫馨提示",
+        allPrizesCollected: "您已經獲取本期的全部獎品。",
+        noAvailablePrizes: "您已經獲取本期的全部獎品。",
+        noAvailablePrizesNote: "（部分獎品無剩餘庫存則不可再被抽取）",
+
         blindBox: "魔盒盲盒",
         prize: "獎品",
         prizeOverview: "獎品一覽",

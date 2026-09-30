@@ -1,8 +1,8 @@
 import { $pay, $cms } from "@jx3box/jx3box-common/js/api";
 
 // 获取中奖历史
-function getMyHistory(params) {
-    return $pay().get(`/api/lucky-draw/my/history`, { params });
+function getMyHistory(params, options = {}) {
+    return $pay(options).get(`/api/lucky-draw/my/history`, { params });
 }
 
 // 获取我的中奖
