@@ -253,6 +253,20 @@
     }
 }
 
+.m-premium-gift-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 22px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    > div { display: flex; flex-direction: column; gap: 4px; }
+    b { color: #24292e; font-size: 15px; }
+    span { color: #6b7280; font-size: 13px; }
+    .el-button { flex-shrink: 0; }
+}
+
 @media screen and (max-width: 900px) {
     .m-premium-panel {
         grid-template-columns: 1fr;
@@ -271,6 +285,7 @@
 }
 
 @media screen and (max-width: @phone) {
+    .m-premium-gift-card { align-items: flex-start; flex-direction: column; }
     .m-premium-levels {
         padding: 18px;
         .m-premium-level-grid {

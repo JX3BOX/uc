@@ -22,6 +22,14 @@
                         </div>
                     </div>
 
+                    <div class="m-premium-gift-card">
+                        <div>
+                            <b>{{ $t("vip.premium.giftCardTitle") }}</b>
+                            <span>{{ $t("vip.premium.giftCardEntryHint") }}</span>
+                        </div>
+                        <el-button @click="openGiftCard">{{ $t("vip.premium.giftCardOpen") }}</el-button>
+                    </div>
+
                     <Privilege class="m-premium-privilege" />
 
                     <section class="m-premium-levels">
@@ -46,6 +54,7 @@
                 </div>
             </div>
         </Main>
+        <GiftCardDialog v-model="giftCardVisible" />
         <CommonFooter></CommonFooter>
     </div>
 </template>
@@ -55,6 +64,7 @@ import User from "@jx3box/jx3box-common/js/user";
 import dayjs from "dayjs";
 import Privilege from "./components/privilege.vue";
 import Premium from "./components/premium.vue";
+import GiftCardDialog from "./components/GiftCardDialog.vue";
 import simple_header from "@/components/vip/simple_header.vue";
 
 import { showDate } from "@jx3box/jx3box-common/js/moment";
@@ -79,6 +89,7 @@ export default {
             premiumItem: {},
             isItemLoading: false,
             isSubmitting: false,
+            giftCardVisible: false,
             loadError: "",
             // 资产与权限
             isLogin: User.isLogin(),
@@ -96,6 +107,7 @@ export default {
     components: {
         Privilege,
         Premium,
+        GiftCardDialog,
         "simple-header": simple_header,
     },
     computed: {
@@ -180,6 +192,10 @@ export default {
         },
     },
     methods: {
+        openGiftCard() {
+            if (!this.isLogin) return User.toLogin();
+            this.giftCardVisible = true;
+        },
         showDate,
         wait(ms) {
             return new Promise((resolve) => setTimeout(resolve, ms));
