@@ -696,6 +696,11 @@ export default {
         generateSuccess: "產生邀請碼成功",
     },
     cards: {
+        redemptionHistory: "兌換歷史",
+        benefitName: "權益名稱",
+        redeemedAt: "核銷時間",
+        grantDetails: "到帳時間 / 等待原因",
+
         title: "我的卡密",
         unusedOnly: "僅查看未使用",
         keepSafeTip: "請務必妥善保管，並注意過期時間。",

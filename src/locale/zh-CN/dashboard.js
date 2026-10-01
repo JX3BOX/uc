@@ -674,6 +674,11 @@ export default {
         generateSuccess: "生成邀请码成功",
     },
     cards: {
+        redemptionHistory: "兑换历史",
+        benefitName: "权益名称",
+        redeemedAt: "核销时间",
+        grantDetails: "到账时间 / 等待原因",
+
         title: "我的卡密",
         unusedOnly: "仅查看未使用",
         keepSafeTip: "请务必妥善保管，并注意过期时间。",

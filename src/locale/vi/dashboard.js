@@ -706,6 +706,11 @@ export default {
         generateSuccess: "Tạo mã mời thành công",
     },
     cards: {
+        redemptionHistory: "Lịch sử đổi",
+        benefitName: "Quyền lợi",
+        redeemedAt: "Thời gian đổi",
+        grantDetails: "Thời gian nhận / Lý do chờ",
+
         title: "Mã của tôi",
         unusedOnly: "Chỉ xem chưa sử dụng",
         keepSafeTip: "Hãy giữ nó đúng cách và chú ý đến ngày hết hạn.",

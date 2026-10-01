@@ -253,18 +253,54 @@
     }
 }
 
-.m-premium-gift-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 18px 22px;
+.m-vip-premium.m-premium-gift-card {
+    margin-top: 18px;
+    padding: 22px 46px;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
-    > div { display: flex; flex-direction: column; gap: 4px; }
-    b { color: #24292e; font-size: 15px; }
-    span { color: #6b7280; font-size: 13px; }
-    .el-button { flex-shrink: 0; }
+    .m-premium-gift-card-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .m-premium-gift-card-intro {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-width: 0;
+    }
+    .u-gift-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        flex-shrink: 0;
+        color: @v4primary;
+        background: fade(@v4primary, 8%);
+        svg { width: 22px; height: 22px; }
+    }
+    .u-gift-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        b { color: #24292e; font-size: 16px; line-height: 24px; }
+        span { color: #6b7280; font-size: 13px; line-height: 20px; }
+    }
+    .u-gift-open {
+        flex-shrink: 0;
+        height: 38px;
+        padding: 0 16px;
+        border-radius: 6px;
+        font-weight: 500;
+        --el-button-text-color: @v4primary;
+        --el-button-border-color: fade(@v4primary, 24%);
+        --el-button-hover-text-color: @v4primary;
+        --el-button-hover-border-color: fade(@v4primary, 45%);
+        --el-button-hover-bg-color: fade(@v4primary, 5%);
+        > span { display: inline-flex; align-items: center; gap: 8px; }
+    }
 }
 
 @media screen and (max-width: 900px) {
@@ -285,7 +321,15 @@
 }
 
 @media screen and (max-width: @phone) {
-    .m-premium-gift-card { align-items: flex-start; flex-direction: column; }
+    .m-vip-premium.m-premium-gift-card {
+        margin-top: 24px;
+        padding: 20px;
+        .m-premium-gift-card-content {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+        .u-gift-open { width: 100%; }
+    }
     .m-premium-levels {
         padding: 18px;
         .m-premium-level-grid {

@@ -706,6 +706,11 @@ export default {
         generateSuccess: "Generate invitation code successfully",
     },
     cards: {
+        redemptionHistory: "Redemption history",
+        benefitName: "Benefit",
+        redeemedAt: "Redeemed at",
+        grantDetails: "Granted at / Pending reason",
+
         title: "My Codes",
         unusedOnly: "View only unused",
         keepSafeTip: "Please keep it properly and pay attention to the expiration date.",
