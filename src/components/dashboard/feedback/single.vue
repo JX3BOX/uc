@@ -164,7 +164,23 @@
                         ><i class="el-icon-edit-outline"></i> {{ $t("dashboard.feedback.content") }}</el-divider
                     >
                     <div class="u-detail">
-                        <span v-html="sanitizedHTML(data.content)"></span>
+                        <span v-html="sanitizedHTML(feedbackContent.body)"></span>
+                    </div>
+                </div>
+                <div v-if="feedbackContent.groups.length" class="m-device-info m-textarea">
+                    <el-divider content-position="left">
+                        <el-icon style="vertical-align: middle"><Cpu /></el-icon> {{ $t("dashboard.feedback.deviceInfo") }}
+                    </el-divider>
+                    <div class="u-device-grid">
+                        <section v-for="(group, index) in feedbackContent.groups" :key="index" class="u-device-group">
+                            <h4 v-if="group.title">{{ group.title }}</h4>
+                            <dl>
+                                <div v-for="(field, fieldIndex) in group.fields" :key="fieldIndex" class="u-device-field">
+                                    <dt v-if="field.label">{{ field.label }}</dt>
+                                    <dd>{{ field.value }}</dd>
+                                </div>
+                            </dl>
+                        </section>
                     </div>
                 </div>
                 <div class="m-attachment m-textarea">
@@ -435,6 +451,35 @@ export default {
         };
     },
     computed: {
+        feedbackContent() {
+            const content = this.data?.content || "";
+            const marker = /=+\s*本机信息\s*=+/.exec(content);
+            if (!marker) return { body: content, groups: [] };
+            const element = document.createElement("div");
+            element.innerHTML = DOMPurify.sanitize(
+                content.slice(marker.index + marker[0].length).replace(/<br\s*\/?\s*>/gi, "\n").replace(/<\/p>/gi, "\n")
+            );
+            const groups = [];
+            let group;
+            for (const line of element.textContent.split(/\r?\n/).map((line) => line.trim()).filter(Boolean)) {
+                const heading = /^【(.+)】$/.exec(line);
+                if (heading) {
+                    group = { title: heading[1], fields: [] };
+                    groups.push(group);
+                    continue;
+                }
+                if (!group) {
+                    group = { title: "", fields: [] };
+                    groups.push(group);
+                }
+                const field = /^([^：:]+)[：:]\s*(.*)$/.exec(line);
+                group.fields.push(field ? { label: field[1], value: field[2] } : { label: "", value: line });
+            }
+            return {
+                body: content.slice(0, marker.index).replace(/(?:\s|<br\s*\/?\s*>)+$/gi, ""),
+                groups,
+            };
+        },
         types() {
             return this.localizeMap(feedbackData.types, "feedbackTypes");
         },
@@ -742,4 +787,29 @@ export default {
 </script>
 <style lang="less">
 @import "~@/assets/css/dashboard/feedback_single.less";
+.m-device-info {
+    .u-device-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+        gap: 16px;
+    }
+    .u-device-group {
+        padding: 16px;
+        border: 1px solid var(--el-border-color-light);
+        border-radius: 6px;
+        background: var(--el-fill-color-light);
+        min-width: 0;
+        h4 { margin: 0 0 12px; font-size: 14px; }
+        dl { margin: 0; }
+    }
+    .u-device-field {
+        display: flex;
+        gap: 12px;
+        padding: 4px 0;
+        font-size: 13px;
+        line-height: 1.6;
+        dt { flex: 0 0 90px; color: var(--el-text-color-secondary); }
+        dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+    }
+}
 </style>

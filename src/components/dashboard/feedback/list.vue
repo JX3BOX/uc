@@ -27,6 +27,7 @@
             <el-table-column
                 :label="$t('dashboard.common.content')"
                 prop="content"
+                :formatter="formatContent"
                 show-overflow-tooltip
             ></el-table-column>
             <el-table-column :label="$t('dashboard.common.submittedAt')" prop="created_at" width="160">
@@ -91,6 +92,11 @@ export default {
         this.getData();
     },
     methods: {
+        formatContent(row) {
+            return (row.content || "")
+                .split(/=+\s*本机信息\s*=+/)[0]
+                .replace(/(?:\s|<br\s*\/?\s*>)+$/gi, "");
+        },
         localizeMap(source, name) {
             return Object.keys(source).reduce((result, key) => {
                 const path = `dashboard.dataLabels.${name}.${key}`;

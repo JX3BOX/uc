@@ -1023,6 +1023,7 @@ export default {
         relatedRepository: "Related Repository",
         cancelTicket: "Cancel work order",
         urgeTicket: "Send Reminder",
+        deviceInfo: "Device information",
         content: "Feedback content",
         attachments: "Attachment content",
         attachmentCount: "Total {count} attachments",

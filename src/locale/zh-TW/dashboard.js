@@ -1003,6 +1003,7 @@ export default {
         relatedRepository: "關聯倉庫",
         cancelTicket: "取消工單",
         urgeTicket: "催單",
+        deviceInfo: "裝置資訊",
         content: "回饋內容",
         attachments: "附件內容",
         attachmentCount: "共 {count} 個附件",

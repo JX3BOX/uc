@@ -977,6 +977,7 @@ export default {
         relatedRepository: "关联仓库",
         cancelTicket: "取消工单",
         urgeTicket: "催单",
+        deviceInfo: "设备信息",
         content: "反馈内容",
         attachments: "附件内容",
         attachmentCount: "共 {count} 个附件",

@@ -1022,6 +1022,7 @@ export default {
         relatedRepository: "Kho liên quan",
         cancelTicket: "Hủy lệnh làm việc",
         urgeTicket: "Nhắc xử lý",
+        deviceInfo: "Thông tin thiết bị",
         content: "Nội dung phản hồi",
         attachments: "Nội dung đính kèm",
         attachmentCount: "Tổng số tệp đính kèm {count}",
