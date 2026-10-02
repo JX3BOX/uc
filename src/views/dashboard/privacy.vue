@@ -3,7 +3,7 @@
         class="m-dashboard m-dashboard-profile m-dashboard-work m-dashboard-whitelist m-whitelist"
         :class="{ 'is-primary-only': active === 'myfans' || isRelationNet }"
     >
-        <div class="m-whitelist-primary">
+        <div class="m-whitelist-primary" ref="listContainer">
             <h2 class="m-whitelist-title u-title"><i class="el-icon-ship"></i> {{ $t("dashboard.privacy.title") }}</h2>
 
             <el-tabs v-model="active" @tab-change="tabChange">
@@ -124,11 +124,10 @@
                     <el-pagination
                         class="m-whitelist-pagination"
                         background
-                        v-if="active !== 'whitelist' && pagination.total"
-                        :page-sizes="[10, 20, 50]"
+                        v-if="pagination.total"
                         v-model:current-page="pagination.pageIndex"
                         v-model:page-size="pagination.pageSize"
-                        layout="total, sizes, prev, pager, next, jumper"
+                        layout="total, prev, pager, next, jumper"
                         @current-change="currentChange"
                         @size-change="handleSizeChange"
                         :total="pagination.total"
@@ -203,6 +202,7 @@ export default {
             loading: true,
             loadingCount: 0,
             invitationLoadingId: 0,
+            listRequestId: 0,
 
             // 侧边栏
             uid: "",
@@ -331,6 +331,25 @@ export default {
         },
     },
     methods: {
+        getListPageSize() {
+            if (window.matchMedia("(max-width: 720px)").matches) return 10;
+            const width = this.$refs.listContainer?.clientWidth || 0;
+            // PC 卡片为 200px（border-box），右侧间距为 10px。
+            return Math.max(1, Math.floor(width / 210)) * 2;
+        },
+        updateListPageSize() {
+            const pageSize = this.getListPageSize();
+            if (pageSize === this.pagination.pageSize) return;
+            this.pagination.pageSize = pageSize;
+            this.pagination.pageIndex = 1;
+            if (!this.isNormalTab(this.active)) return;
+            if (this.active === "whitelist") {
+                this.applyKithFilter();
+                this.syncRoute();
+            } else {
+                this.loadList();
+            }
+        },
         beginLoading() {
             this.loadingCount += 1;
             this.loading = true;
@@ -433,7 +452,7 @@ export default {
             if (!this.isRelationNet && this.keyword) {
                 query.keyword = this.keyword;
             }
-            if (this.active !== "whitelist") {
+            if (this.isNormalTab(this.active)) {
                 if (this.pagination.pageIndex > 1) {
                     query.page = this.pagination.pageIndex;
                 }
@@ -469,17 +488,17 @@ export default {
         initNormalTabQuery() {
             this.keyword = this.$route.query.keyword || "";
             const page = Number(this.$route.query.page);
-            const pageSize = Number(this.$route.query.pageSize);
             this.pagination.pageIndex = Number.isInteger(page) && page > 0 ? page : 1;
-            this.pagination.pageSize = Number.isInteger(pageSize) && pageSize > 0 ? pageSize : 10;
+            this.pagination.pageSize = this.getListPageSize();
         },
         resetSidebarSearch() {
             this.uid = "";
             this.userdata = "";
             this.flag = false;
         },
-        setActiveTab(tab) {
+        async setActiveTab(tab) {
             this.active = this.normalizeTab(tab);
+            await this.$nextTick();
             if (this.isRelationTab(this.active)) {
                 this.loadRelationTab();
             } else {
@@ -521,9 +540,13 @@ export default {
             return res?.data?.data?.page?.total ?? 0;
         },
         runListRequest(request, resolveList) {
+            const requestId = ++this.listRequestId;
             request
-                .then(resolveList)
+                .then((res) => {
+                    if (requestId === this.listRequestId) resolveList(res);
+                })
                 .catch((err) => {
+                    if (requestId !== this.listRequestId) return;
                     this.list = [];
                     this.pagination.total = 0;
                     this.handleRequestError(err);
@@ -585,11 +608,14 @@ export default {
             const keyword = String(this.keyword || "")
                 .trim()
                 .toLowerCase();
-            if (!keyword) {
-                this.list = this.kithList;
-                return;
-            }
-            this.list = this.kithList.filter((item) => this.getKithSearchText(item).includes(keyword));
+            const filtered = keyword
+                ? this.kithList.filter((item) => this.getKithSearchText(item).includes(keyword))
+                : this.kithList;
+            this.pagination.total = filtered.length;
+            const lastPage = Math.max(1, Math.ceil(filtered.length / this.pagination.pageSize));
+            this.pagination.pageIndex = Math.min(this.pagination.pageIndex, lastPage);
+            const start = (this.pagination.pageIndex - 1) * this.pagination.pageSize;
+            this.list = filtered.slice(start, start + this.pagination.pageSize);
         },
         loadRelationNetMembersByType() {
             // 加载关系网成员
@@ -626,8 +652,10 @@ export default {
                     this.endLoading();
                 });
         },
-        tabChange() {
+        async tabChange() {
             this.resetSidebarSearch();
+            await this.$nextTick();
+            this.pagination.pageSize = this.getListPageSize();
             if (this.isRelationTab(this.active)) {
                 this.loadRelationTab();
                 return;
@@ -831,7 +859,12 @@ export default {
         },
         authorLink,
     },
+    beforeUnmount() {
+        this.listResizeObserver?.disconnect();
+    },
     mounted: function () {
+        this.listResizeObserver = new ResizeObserver(() => this.updateListPageSize());
+        this.listResizeObserver.observe(this.$refs.listContainer);
         this.beginLoading();
         this.loadRelationNetTypes()
             .then(() => {

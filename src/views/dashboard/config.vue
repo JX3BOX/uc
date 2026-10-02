@@ -269,6 +269,7 @@ export default {
                     this.conf = {
                         ...(res?.data?.data || {}),
                         theme: res?.data?.data?.theme || "light",
+                        default_lang: String(res?.data?.data?.default_lang || "zh-cn").trim().replace(/_/g, "-").toLowerCase(),
                         feed_message_type: normalizeFeedMessageType(res?.data?.data?.feed_message_type),
                     };
 
