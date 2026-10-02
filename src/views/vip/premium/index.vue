@@ -45,7 +45,24 @@
                     </section>
                 </div>
             </div>
+
+            <div class="m-vip-premium m-premium-gift-card">
+                <div class="m-premium-gift-card-content">
+                    <div class="m-premium-gift-card-intro">
+                        <el-icon class="u-gift-icon" aria-hidden="true"><Present /></el-icon>
+                        <div class="u-gift-copy">
+                            <b>{{ $t("vip.premium.giftCardTitle") }}</b>
+                            <span>{{ $t("vip.premium.giftCardEntryHint") }}</span>
+                        </div>
+                    </div>
+                    <el-button class="u-gift-open" @click="openGiftCard">
+                        {{ $t("vip.premium.giftCardOpen") }}
+                        <el-icon aria-hidden="true"><ArrowRight /></el-icon>
+                    </el-button>
+                </div>
+            </div>
         </Main>
+        <GiftCardDialog v-model="giftCardVisible" @redeemed="refreshGiftCardAsset" />
         <CommonFooter></CommonFooter>
     </div>
 </template>
@@ -53,8 +70,10 @@
 <script>
 import User from "@jx3box/jx3box-common/js/user";
 import dayjs from "dayjs";
+import { Present, ArrowRight } from "@element-plus/icons-vue";
 import Privilege from "./components/privilege.vue";
 import Premium from "./components/premium.vue";
+import GiftCardDialog from "./components/GiftCardDialog.vue";
 import simple_header from "@/components/vip/simple_header.vue";
 
 import { showDate } from "@jx3box/jx3box-common/js/moment";
@@ -79,6 +98,7 @@ export default {
             premiumItem: {},
             isItemLoading: false,
             isSubmitting: false,
+            giftCardVisible: false,
             loadError: "",
             // 资产与权限
             isLogin: User.isLogin(),
@@ -94,8 +114,11 @@ export default {
         };
     },
     components: {
+        Present,
+        ArrowRight,
         Privilege,
         Premium,
+        GiftCardDialog,
         "simple-header": simple_header,
     },
     computed: {
@@ -180,6 +203,17 @@ export default {
         },
     },
     methods: {
+        openGiftCard() {
+            if (!this.isLogin) return User.toLogin();
+            this.giftCardVisible = true;
+        },
+        async refreshGiftCardAsset() {
+            try {
+                await this.loadAsset();
+            } catch {
+                // 权益已到账，资产展示更新失败不影响兑换结果或后续操作。
+            }
+        },
         showDate,
         wait(ms) {
             return new Promise((resolve) => setTimeout(resolve, ms));
