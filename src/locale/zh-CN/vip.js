@@ -120,6 +120,7 @@ export default {
         giftCardUnknown: "状态待确认",
         giftCardSuccess: "兑换成功",
         giftCardSuccessHint: "权益已到账，可继续兑换其他礼品卡。",
+        giftCardSuccessDaysHint: "会员有效期已延长 {days} 天，可继续兑换其他礼品卡。",
         giftCardFailed: "核销失败",
         giftCardUnconfirmed: "核销结果待确认",
         giftCardHistoryError: "兑换记录加载失败，请手动刷新",

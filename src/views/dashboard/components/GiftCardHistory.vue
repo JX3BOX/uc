@@ -1,34 +1,32 @@
 <template>
     <div class="m-card-history">
         <div class="m-card-history-toolbar">
+            <el-button type="primary" @click="dialogVisible = true">{{ $t('vip.premium.giftCardOpen') }}</el-button>
             <el-select v-model="grantStatus" :aria-label="$t('vip.premium.giftCardFilter')" @change="changeStatus">
                 <el-option :label="$t('vip.premium.giftCardAll')" value="all" />
                 <el-option v-for="status in statuses" :key="status" :label="grantText(status)" :value="status" />
             </el-select>
-            <div class="u-actions">
-                <el-button :disabled="loading" @click="loadHistory">{{ $t('vip.premium.giftCardRefresh') }}</el-button>
-                <el-button type="primary" @click="dialogVisible = true">{{ $t('vip.premium.giftCardOpen') }}</el-button>
-            </div>
+            <el-button class="u-refresh" icon="Refresh" :disabled="loading" @click="loadHistory">{{ $t('vip.premium.giftCardRefresh') }}</el-button>
         </div>
         <ContentSkeleton v-if="loading" variant="table" :rows="per" :columns="6" />
         <el-alert v-else-if="loadError" :title="loadError" type="error" :closable="false" show-icon />
         <el-table v-else-if="list.length" class="m-table" :data="list" row-key="id" show-header>
-            <el-table-column :label="$t('vip.premium.giftCardCodeLabel')" min-width="280">
-                <template #default="{ row }">
-                    <div class="u-code">
-                        <span class="u-history-code">{{ row.code }}</span>
-                        <el-button link icon="DocumentCopy" size="small" @click="copyCode(row.code)">{{ $t('dashboard.common.copy') }}</el-button>
-                    </div>
-                </template>
-            </el-table-column>
             <el-table-column :label="$t('dashboard.cards.benefitName')" min-width="150">
                 <template #default="{ row }">{{ $t(row.label === 'jx3box_pro_30' ? 'vip.premium.giftCardPro' : 'vip.premium.giftCardOther') }}</template>
             </el-table-column>
-            <el-table-column :label="$t('dashboard.cards.redeemedAt')" min-width="170">
-                <template #default="{ row }">{{ formatTime(row.redeemed_at) }}</template>
+            <el-table-column :label="$t('vip.premium.giftCardCodeLabel')" min-width="280">
+                <template #default="{ row }">
+                    <div class="u-code">
+                        <span class="u-history-code">{{ maskCode(row.code) }}</span>
+                        <el-button link icon="DocumentCopy" size="small" :aria-label="$t('dashboard.common.copy')" @click="copyCode(row.code)" />
+                    </div>
+                </template>
             </el-table-column>
             <el-table-column :label="$t('vip.premium.giftCardFilter')" min-width="150">
                 <template #default="{ row }"><el-tag :type="statusType(row.grant_status)" effect="plain">{{ grantText(row.grant_status) }}</el-tag></template>
+            </el-table-column>
+            <el-table-column :label="$t('dashboard.cards.redeemedAt')" min-width="170">
+                <template #default="{ row }">{{ formatTime(row.redeemed_at) }}</template>
             </el-table-column>
             <el-table-column :label="$t('dashboard.cards.grantDetails')" min-width="220">
                 <template #default="{ row }">{{ row.grant_status === 4 ? formatTime(row.granted_at) : row.message || '—' }}</template>
@@ -110,6 +108,11 @@ export default {
         window.clearInterval(this.timer);
     },
     methods: {
+        maskCode(code) {
+            const characters = Array.from(String(code || ""));
+            if (characters.length <= 6) return "*".repeat(characters.length);
+            return characters.slice(0, 3).join("") + "*".repeat(characters.length - 6) + characters.slice(-3).join("");
+        },
         formatTime(value) {
             const date = value ? dayjs(value) : null;
             return date?.isValid() ? date.format("YYYY-MM-DD HH:mm:ss") : "—";
@@ -135,7 +138,7 @@ export default {
                 params.grant_status = this.grantStatus;
                 query.grant_status = this.grantStatus;
             }
-            this.$router.replace({ name: "card", query });
+            this.$router.replace({ name: "ic", query });
             try {
                 const { data: payload } = await getGiftCardHistory(params);
                 if (requestId !== this.requestId) return;
@@ -236,20 +239,19 @@ export default {
         gap: 8px;
         margin-bottom: 16px;
         .el-select { width: 180px; }
-        .u-actions { display: flex; flex-shrink: 0; gap: 8px; }
-        .u-actions .el-button { margin: 0; }
+        .el-button { margin: 0; flex-shrink: 0; }
+        .el-button.u-refresh { margin-left: auto; }
     }
     .u-history-code { font-family: Consolas, monospace; overflow-wrap: anywhere; user-select: text; }
     .m-table td { opacity: 1; }
     @media (max-width: @phone) {
         .m-card-history-toolbar {
             display: grid;
-            grid-template-columns: minmax(0, 1fr) auto;
+            grid-template-columns: auto minmax(0, 1fr) auto;
             gap: 8px;
             margin-bottom: 12px;
             .el-select { width: 100%; min-width: 0; }
-            .u-actions { display: contents; }
-            .u-actions .el-button:last-child { grid-column: 1 / -1; width: 100%; }
+
         }
     }
 }

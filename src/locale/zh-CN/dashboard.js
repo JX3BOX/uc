@@ -663,6 +663,7 @@ export default {
         experienceHistory: "经验记录",
     },
     invitation: {
+        memberGiftCode: "会员礼品码",
         title: "我的盒码",
         registrationCode: "注册邀请码",
         generate: "生成邀请码",

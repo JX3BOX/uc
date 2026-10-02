@@ -685,6 +685,7 @@ export default {
         experienceHistory: "經驗記錄",
     },
     invitation: {
+        memberGiftCode: "會員禮品碼",
         title: "我的盒碼",
         registrationCode: "註冊邀請碼",
         generate: "產生邀請碼",

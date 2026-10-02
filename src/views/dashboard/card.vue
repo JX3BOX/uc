@@ -5,7 +5,7 @@
                 <i class="el-icon-bank-card"></i>
                 {{ $t("dashboard.cards.title") }}
             </span>
-            <span class="u-only" :class="{ 'is-placeholder': tab === 'history' }">
+            <span class="u-only">
                 <el-switch v-model="onlyNew" :active-text="$t('dashboard.cards.unusedOnly')"></el-switch>
             </span>
         </h2>
@@ -347,13 +347,6 @@
                         :total="total"
                     ></el-pagination>
                 </el-tab-pane>
-                <el-tab-pane :label="$t('dashboard.cards.redemptionHistory')" name="history" lazy>
-                    <template #label>
-                        <span class="u-tab--title">{{ $t("dashboard.cards.redemptionHistory") }}</span>
-                        <span class="u-tab--desc">{{ $t("vip.premium.giftCardTitle") }}</span>
-                    </template>
-                    <GiftCardHistory v-if="tab === 'history'" />
-                </el-tab-pane>
             </el-tabs>
         </div>
     </div>
@@ -369,7 +362,6 @@ import {
     getVirtualCode,
     markVirtualCode,
 } from "@/service/dashboard/card.js";
-import GiftCardHistory from "./components/GiftCardHistory.vue";
 import { getVirtual } from "@/service/dashboard/goods";
 import keycodeOptions from "@/assets/data/dashboard/card_keycode.json";
 import snOptions from "@/assets/data/dashboard/card_sn.json";
@@ -379,7 +371,6 @@ import { cloneDeep } from "lodash";
 // import _ from "lodash";
 export default {
     name: "card",
-    components: { GiftCardHistory },
     data: function () {
         return {
             loading: true,
@@ -674,14 +665,13 @@ export default {
         tabClick(tab) {
             this.page = 1;
             this.tab = tab;
-            if (tab === "history") return;
             this[this.loadName]();
         },
     },
     mounted() {
-        if (["sn", "virtual", "keycode", "history"].includes(this.$route.query.tab)) this.tab = this.$route.query.tab;
+        if (["sn", "virtual", "keycode"].includes(this.$route.query.tab)) this.tab = this.$route.query.tab;
         this.page = Number(this.$route.query.page || 1);
-        if (this.tab !== "history") this[this.loadName]();
+        this[this.loadName]();
 
         getBreadcrumb("dashboard_card_tips").then((res) => {
             this.bread = res;

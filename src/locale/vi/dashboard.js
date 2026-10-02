@@ -695,6 +695,7 @@ export default {
         experienceHistory: "Lịch sử kinh nghiệm",
     },
     invitation: {
+        memberGiftCode: "Mã quà tặng thành viên",
         title: "Mã mời của tôi",
         registrationCode: "Mã mời đăng ký",
         generate: "Tạo mã mời",

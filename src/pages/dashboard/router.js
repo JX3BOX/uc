@@ -334,6 +334,9 @@ const routes = [
         name: "card",
         path: "/card",
         component: card,
+        beforeEnter: (to) => {
+            if (to.query.tab === "history") return { name: "ic", query: to.query, hash: to.hash, replace: true };
+        },
         meta: {
             i18n: {
                 title: "pages.dashboard.card.title",

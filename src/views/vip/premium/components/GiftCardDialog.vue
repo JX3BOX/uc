@@ -37,7 +37,7 @@
 
         <div v-if="result" class="m-gift-card-result" :class="{ 'is-success': isGranted(result.data) }" role="status">
             <b>{{ resultTitle(result.data) }}</b>
-            <p v-if="isGranted(result.data)">{{ $t('vip.premium.giftCardSuccessHint') }}</p>
+            <p v-if="isGranted(result.data)">{{ successHint }}</p>
             <p v-else-if="result.message">{{ result.message }}</p>
             <p class="u-code">{{ result.code }}</p>
             <el-button
@@ -96,6 +96,12 @@ export default {
             const info = User.getInfo() || {};
             return info.name ? `${info.name} (UID ${info.uid || "—"})` : `UID ${info.uid || "—"}`;
         },
+        successHint() {
+            const days = this.result?.days;
+            return days > 0
+                ? this.$t("vip.premium.giftCardSuccessDaysHint", { days })
+                : this.$t("vip.premium.giftCardSuccessHint");
+        },
         blockedSeconds() {
             return Math.max(0, Math.ceil((this.blockedUntil - this.now) / 1000));
         },
@@ -125,6 +131,22 @@ export default {
                 this.$emit("redeemed");
             }
         },
+        async readMemberAsset() {
+            try {
+                return await User.getAsset();
+            } catch {
+                return null;
+            }
+        },
+        async updateGrantedDays(previousAsset, result) {
+            if (!previousAsset || !this.isGranted(result?.data)) return;
+            const asset = await this.readMemberAsset();
+            if (!asset || this.result !== result) return;
+            const previousDays = Number(previousAsset.pro_total_day);
+            const currentDays = Number(asset.pro_total_day);
+            const days = currentDays - previousDays;
+            if (Number.isInteger(days) && days > 0) result.days = days;
+        },
         async submitCode(rawCode) {
             if (this.submitting) return;
             if (!User.isLogin()) return User.toLogin();
@@ -140,6 +162,7 @@ export default {
             this.submitting = true;
             const normalizedCode = code.toUpperCase();
             this.lastSubmitted = { ...this.lastSubmitted, [normalizedCode]: Date.now() };
+            const previousAsset = await this.readMemberAsset();
             try {
                 const response = await redeemGiftCard(code);
                 const payload = response.data || {};
@@ -149,6 +172,7 @@ export default {
                 }
                 if ((payload.code === 0 || payload.code === 40005) && payload.data) {
                     this.showResult(payload, code);
+                    await this.updateGrantedDays(previousAsset, this.result);
                     return;
                 }
                 this.result = null;
@@ -159,6 +183,7 @@ export default {
                 if (payload?.code === 407) this.handleLimit(payload.msg, normalizedCode);
                 else if (payload?.code === 40005 && payload.data) {
                     this.showResult(payload, code);
+                    await this.updateGrantedDays(previousAsset, this.result);
                 } else {
                     this.result = null;
                     this.formError = payload?.msg || this.$t("vip.premium.giftCardUncertain");

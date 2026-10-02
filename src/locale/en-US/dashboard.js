@@ -695,6 +695,7 @@ export default {
         experienceHistory: "Experience History",
     },
     invitation: {
+        memberGiftCode: "Member Gift Codes",
         title: "My Invitation Codes",
         registrationCode: "Registration Invitation Code",
         generate: "Generate invitation code",

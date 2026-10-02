@@ -120,6 +120,7 @@ export default {
         giftCardUnknown: "Chưa xác nhận trạng thái",
         giftCardSuccess: "Đổi thành công",
         giftCardSuccessHint: "Quyền lợi đã được cấp. Bạn có thể tiếp tục đổi thẻ quà tặng khác.",
+        giftCardSuccessDaysHint: "Thời hạn thành viên đã được gia hạn thêm {days} ngày. Bạn có thể tiếp tục đổi thẻ quà tặng khác.",
         giftCardFailed: "Đổi mã thất bại",
         giftCardUnconfirmed: "Chưa xác nhận kết quả đổi mã",
         giftCardHistoryError: "Không tải được lịch sử. Vui lòng làm mới.",

@@ -104,11 +104,11 @@ test("a pending grant cannot reload history or change routes after leaving the t
 });
 
 
-function createDialog(respond, submission = newSubmission()) {
+function createDialog(respond, submission = newSubmission(), getAsset = async () => null) {
     const source = fs.readFileSync(new URL("../src/views/vip/premium/components/GiftCardDialog.vue", import.meta.url), "utf8");
     const script = source.match(/<script>([\s\S]*?)<\/script>/)[1].replace(/^import .*;$/gm, "").replace("export default", "component =");
     const events = [];
-    const context = { component: null, Present: {}, UserIcon: {}, User: { isLogin: () => true }, getGiftCardSubmissionState: () => submission, handleGiftCardLimit: sharedContext.handleGiftCardLimit, redeemGiftCard: respond };
+    const context = { component: null, Present: {}, UserIcon: {}, User: { isLogin: () => true, getAsset }, getGiftCardSubmissionState: () => submission, handleGiftCardLimit: sharedContext.handleGiftCardLimit, redeemGiftCard: respond };
     vm.runInNewContext(script, context);
     const instance = { ...context.component.data(), $t: key => key, $emit: event => events.push(event) };
     for (const [key, method] of Object.entries(context.component.methods)) instance[key] = method.bind(instance);
@@ -241,4 +241,23 @@ test("retrying an unknown result submits its original code after the input has b
     instance.submission.lastSubmitted = {};
     await instance.submitCode(instance.result.code);
     assert.deepEqual(sent, ["Original", "Original"]);
+});
+
+
+test("confirmed gift cards display the actual member day increase", async () => {
+    const assets = [{ pro_total_day: 600 }, { pro_total_day: 630 }];
+    const { instance } = createDialog(async () => ({ data: { code: 0, data: { redemption_status: 3, grant_status: 4 } } }), newSubmission(), async () => assets.shift());
+    await instance.submitCode("ThirtyDays");
+    assert.equal(instance.result.days, 30);
+    assert.equal(instance.successHint, "vip.premium.giftCardSuccessDaysHint");
+});
+
+test("already granted codes and unavailable assets do not invent extension days", async () => {
+    for (const getAsset of [async () => ({ pro_total_day: 630 }), async () => { throw new Error("Unavailable"); }]) {
+        const { instance, events } = createDialog(async () => ({ data: { code: 0, data: { redemption_status: 3, grant_status: 4 } } }), newSubmission(), getAsset);
+        await instance.submitCode("AlreadyGranted");
+        assert.equal(instance.result.days, undefined);
+        assert.equal(instance.successHint, "vip.premium.giftCardSuccessHint");
+        assert.deepEqual(events, ["redeemed"]);
+    }
 });

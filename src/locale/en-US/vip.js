@@ -120,6 +120,7 @@ export default {
         giftCardUnknown: "Status unconfirmed",
         giftCardSuccess: "Redemption successful",
         giftCardSuccessHint: "Your benefit has been granted. You can redeem another gift card.",
+        giftCardSuccessDaysHint: "Your membership has been extended by {days} days. You can redeem another gift card.",
         giftCardFailed: "Redemption failed",
         giftCardUnconfirmed: "Redemption result unconfirmed",
         giftCardHistoryError: "Could not load redemptions. Please refresh manually.",

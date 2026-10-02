@@ -120,6 +120,7 @@ export default {
         giftCardUnknown: "狀態待確認",
         giftCardSuccess: "兌換成功",
         giftCardSuccessHint: "權益已到帳，可繼續兌換其他禮品卡。",
+        giftCardSuccessDaysHint: "會員有效期已延長 {days} 天，可繼續兌換其他禮品卡。",
         giftCardFailed: "核銷失敗",
         giftCardUnconfirmed: "核銷結果待確認",
         giftCardHistoryError: "兌換記錄載入失敗，請手動重新整理",

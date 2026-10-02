@@ -2,8 +2,7 @@
     <div class="m-credit m-ic">
         <h2 class="u-title"><i class="el-icon-coin"></i> {{ $t("dashboard.invitation.title") }}</h2>
         <div class="m-credit-table m-packet-table">
-            <ContentSkeleton v-if="loading" variant="table" :rows="6" :columns="3" />
-            <el-tabs v-else v-model="tab" type="border-card">
+            <el-tabs v-model="tab" type="border-card" @tab-change="changeTab">
                 <el-tab-pane :label="$t('dashboard.invitation.registrationCode')" name="first" lazy>
                     <div class="m-tip-box">
                         <el-button class="u-btn" type="primary" @click="createCode"> {{ $t("dashboard.invitation.generate") }} </el-button>
@@ -12,7 +11,8 @@
                         </el-alert>
                     </div>
 
-                    <div class="m-packet-table" v-if="list && list.length">
+                    <ContentSkeleton v-if="loading" variant="table" :rows="6" :columns="3" />
+                    <div class="m-packet-table" v-else-if="list && list.length">
                         <table class="m-ic-in-list m-packet-in-list">
                             <thead>
                                 <tr>
@@ -47,6 +47,9 @@
                         show-icon
                     ></el-alert>
                 </el-tab-pane>
+                <el-tab-pane :label="$t('dashboard.invitation.memberGiftCode')" name="history" lazy>
+                    <GiftCardHistory v-if="tab === 'history'" />
+                </el-tab-pane>
             </el-tabs>
         </div>
     </div>
@@ -56,19 +59,24 @@
 import { showTime } from "@jx3box/jx3box-common/js/moment";
 import { genInvitation, getMyInvitation } from "@/service/dashboard/ic.js";
 import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
+import GiftCardHistory from "./components/GiftCardHistory.vue";
 export default {
     name: "Ic",
+    components: { GiftCardHistory },
     props: [],
     data: function () {
         return {
             // 记录列表
             loading: false,
-            tab: "first",
+            tab: this.$route.query.tab === "history" ? "history" : "first",
             list: [],
             rules: ``,
         };
     },
     methods: {
+        changeTab(tab) {
+            this.$router.replace({ name: "ic", query: tab === "history" ? { tab: "history", page: 1 } : {} });
+        },
         // 初始化
         init: function () {
             this.loadData();
