@@ -307,9 +307,8 @@ export default {
             return Array.from(_topics);
         },
         isChangelog() {
-            return this.post?.topics?.some((item) => {
-                return item.includes("技改");
-            });
+            const topics = Array.isArray(this.post?.topics) ? this.post.topics.flat(Infinity) : [];
+            return topics.some((item) => typeof item === "string" && item.includes("技改"));
         },
     },
     mounted() {
