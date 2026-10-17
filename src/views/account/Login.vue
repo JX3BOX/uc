@@ -44,8 +44,10 @@
                             </el-input>
                         </el-form-item>
 
+                        <el-alert v-if="lockSeconds > 0" class="u-lock-notice" :title="$t('account.login.lockedCountdown', { time: lockTimeText })" type="warning" show-icon :closable="false" role="status" />
+
                         <!-- 提交 -->
-                        <el-button class="u-submit u-button" type="primary" @click="submit" :loading="submitting" size="large">{{ $t("account.common.login") }}</el-button>
+                        <el-button class="u-submit u-button" type="primary" @click="submit" :loading="submitting" :disabled="lockSeconds > 0" size="large">{{ $t("account.common.login") }}</el-button>
                     </el-form>
 
                     <Union mode="login" :includes="['qq', 'wechat', 'weibo']" />
@@ -93,13 +95,13 @@
 <script>
 import CardHeader from "@/components/account/CardHeader.vue";
 import Union from "@/components/account/Union.vue";
-const cookie = require("@/utils/cookie");
-import { loginByAccount } from "@/service/account/email.js";
+import { loginByAccount, getLoginLockStatus } from "@/service/account/email.js";
 import { __Root, __Links } from "@/utils/config";
 import User from "@jx3box/jx3box-common/js/user";
 import Msg from "@/components/account/Msg.vue";
 import { isValidAccountLogin, isValidPassword } from "@/utils/account/validators.js";
 import { ensureDeviceFingerprint } from "@/utils/account/fingerprint.js";
+import { readLoginLocks, saveLoginLocks, loginLockDeadline, formatLoginLockTime } from "@/utils/account/login-lock";
 export default {
     name: "Login",
     data: function () {
@@ -118,9 +120,13 @@ export default {
 
             homepage: __Root,
 
-            failcount: 0,
-            faillimit: 10,
-            device_id: "",
+            loginLocks: readLoginLocks(),
+            lockNow: Date.now(),
+            lockTimer: null,
+            lockSyncTimer: null,
+            lockSyncVersion: 0,
+            lastLockSyncAt: 0,
+            lockPageActive: false,
 
             isLogin: User.isLogin(),
             username: User.getInfo().name,
@@ -128,7 +134,19 @@ export default {
             isAlternate: false,
         };
     },
+    watch: {
+        "form.account"() {
+            this.lockNow = Date.now();
+            this.scheduleLockSync();
+        },
+    },
     computed: {
+        lockSeconds() {
+            return Math.max(0, Math.ceil(((this.loginLocks[this.getLoginAccount()] || 0) - this.lockNow) / 1000));
+        },
+        lockTimeText() {
+            return formatLoginLockTime(this.lockSeconds);
+        },
         loginRules: function () {
             return {
                 account: [{ validator: this.validateAccount, trigger: "blur" }],
@@ -143,6 +161,85 @@ export default {
         },
     },
     methods: {
+        getLoginAccount() {
+            return this.form.account;
+        },
+        // 使用实际截止时间计算，避免应用进入后台后计时漂移。
+        startLockClock() {
+            this.stopLockClock();
+            this.lockPageActive = true;
+            this.lockNow = Date.now();
+            this.syncLoginLock();
+            this.lockTimer = window.setInterval(() => {
+                this.lockNow = Date.now();
+                if (
+                    document.visibilityState !== "hidden" &&
+                    this.loginLocks[this.getLoginAccount()] &&
+                    this.lockNow - this.lastLockSyncAt >= 10000
+                )
+                    this.syncLoginLock();
+            }, 1000);
+        },
+        stopLockClock() {
+            this.lockPageActive = false;
+            this.lockSyncVersion++;
+            if (this.lockTimer !== null) window.clearInterval(this.lockTimer);
+            if (this.lockSyncTimer !== null) window.clearTimeout(this.lockSyncTimer);
+            this.lockTimer = null;
+            this.lockSyncTimer = null;
+        },
+        onLockPageFocus() {
+            if (this.lockPageActive && document.visibilityState !== "hidden") this.syncLoginLock();
+        },
+        scheduleLockSync() {
+            this.lockSyncVersion++;
+            if (this.lockSyncTimer !== null) window.clearTimeout(this.lockSyncTimer);
+            if (!this.lockPageActive) return;
+            this.lockSyncTimer = window.setTimeout(() => {
+                this.lockSyncTimer = null;
+                this.syncLoginLock();
+            }, 350);
+        },
+        async syncLoginLock() {
+            if (!this.lockPageActive || !isValidAccountLogin(this.getLoginAccount())) return;
+            const account = this.getLoginAccount();
+            const version = ++this.lockSyncVersion;
+            this.lastLockSyncAt = Date.now();
+            try {
+                const response = await getLoginLockStatus({
+                    account,
+                    login_type: "account",
+                });
+                if (!this.lockPageActive || version !== this.lockSyncVersion || account !== this.getLoginAccount())
+                    return;
+                const state = response?.data?.data;
+                const seconds = Number(state?.retry_after);
+                // 只接受明确的服务端状态；网络异常或旧服务端不清除已知锁定。
+                if (state?.locked !== false && !(state?.locked === true && Number.isFinite(seconds) && seconds > 0))
+                    return;
+                const locks = { ...this.loginLocks };
+                if (state.locked) locks[account] = Date.now() + Math.ceil(seconds) * 1000;
+                else delete locks[account];
+                this.loginLocks = locks;
+                saveLoginLocks(locks);
+                this.lockNow = Date.now();
+            } catch {
+                // 查询失败保留现有倒计时，实际登录仍由后端校验。
+            }
+        },
+        handleLoginError(error, account) {
+            this.lockSyncVersion++;
+            const deadline = loginLockDeadline(error);
+            if (deadline) {
+                this.loginLocks = { ...this.loginLocks, [account]: deadline };
+                saveLoginLocks(this.loginLocks);
+                this.lockNow = Date.now();
+                this.success = null;
+            } else {
+                this.success = false;
+                this.errors = error?.response?.data?.msg || this.$t("account.common.invalidRequestOrNetwork");
+            }
+        },
         validateAccount: function (rule, value, callback) {
             callback(isValidAccountLogin(value) ? undefined : new Error(this.$t("account.validation.account")));
         },
@@ -150,8 +247,7 @@ export default {
             callback(isValidPassword(value) ? undefined : new Error(this.$t("account.validation.password")));
         },
         submit: async function () {
-            if (this.isfrozen()) return;
-            if (this.submitting) return;
+            if (this.lockSeconds > 0 || this.submitting) return;
 
             try {
                 await this.$refs.loginForm.validate();
@@ -159,9 +255,11 @@ export default {
                 return;
             }
 
+            if (this.lockSeconds > 0 || this.submitting) return;
+            const account = this.getLoginAccount();
             this.submitting = true;
             try {
-                loginByAccount({
+                await loginByAccount({
                     account: this.form.account,
                     pass: this.form.pass,
                     // device_id: this.device_id,
@@ -198,15 +296,11 @@ export default {
                                     alert(this.$t("account.login.browserUnsupported"));
                                 });
                         } else {
-                            this.success = false;
-                            this.errors = res.data.msg;
-                            this.failcount++;
-                            this.frozen();
+                            this.handleLoginError({ response: res }, account);
                         }
                     })
                     .catch((err) => {
-                        this.success = false;
-                        this.errors = this.$t("account.common.invalidRequestOrNetwork");
+                        this.handleLoginError(err, account);
                     })
                     .finally(() => {
                         this.submitting = false;
@@ -220,19 +314,6 @@ export default {
             this.form.account = "";
             this.form.pass = "";
             this.$refs.loginForm?.clearValidate();
-        },
-        frozen: function () {
-            if (this.failcount >= this.faillimit) {
-                cookie.set("loginIsFrozen", "true", 86400);
-            }
-        },
-        isfrozen: function () {
-            if (this.failcount >= this.faillimit) {
-                this.success = false;
-                this.errors = this.$t("account.login.tooManyAttempts");
-                return true;
-            }
-            return false;
         },
         checkDirect: function () {
             let search = new URLSearchParams(document.location.search);
@@ -270,6 +351,20 @@ export default {
     },
     mounted: function () {
         this.checkDirect();
+        document.addEventListener("visibilitychange", this.onLockPageFocus);
+        window.addEventListener("focus", this.onLockPageFocus);
+        this.startLockClock();
+    },
+    activated() {
+        this.startLockClock();
+    },
+    deactivated() {
+        this.stopLockClock();
+    },
+    beforeUnmount() {
+        document.removeEventListener("visibilitychange", this.onLockPageFocus);
+        window.removeEventListener("focus", this.onLockPageFocus);
+        this.stopLockClock();
     },
     created: function () {
         this.checkDeviceID();
@@ -286,4 +381,12 @@ export default {
 @import "~@/assets/css/account/common.less";
 @import "~@/assets/css/account/card.less";
 @import "~@/assets/css/account/register.less";
+
+.m-main .u-lock-notice {
+    margin-bottom: 0;
+
+    & + .u-submit {
+        margin-top: 12px;
+    }
+}
 </style>

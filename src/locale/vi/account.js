@@ -44,6 +44,8 @@ export default {
         failureTitle: "Đăng nhập thất bại",
         loggedInAs: "Đã đăng nhập với tên",
         browserUnsupported: "Trình duyệt của bạn quá cũ để sử dụng trang này",
+        lockedCountdown: "Đăng nhập tạm thời bị khóa. Vui lòng thử lại sau {time}.",
+        retryCountdown: "Thử lại sau {time}",
         tooManyAttempts: "Quá nhiều lần thử thất bại. Vui lòng thử lại sau 24 giờ.",
         redirecting: "Đang chuyển hướng",
     },

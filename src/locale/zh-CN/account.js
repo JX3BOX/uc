@@ -48,6 +48,8 @@ export default {
         failureTitle: "登录失败",
         loggedInAs: "已登录为",
         browserUnsupported: "浏览器版本太低，暂不支持本站",
+        lockedCountdown: "登录已暂时锁定，请在 {time} 后重试",
+        retryCountdown: "{time} 后重试",
         tooManyAttempts: "失败次数过多，请 24 小时后再试",
         redirecting: "即将跳转",
     },

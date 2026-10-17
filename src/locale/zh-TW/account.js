@@ -44,6 +44,8 @@ export default {
         failureTitle: "登入失敗",
         loggedInAs: "已登入為",
         browserUnsupported: "瀏覽器版本過舊，暫不支援本站",
+        lockedCountdown: "登入已暫時鎖定，請在 {time} 後重試",
+        retryCountdown: "{time} 後重試",
         tooManyAttempts: "失敗次數過多，請 24 小時後再試",
         redirecting: "即將跳轉",
     },

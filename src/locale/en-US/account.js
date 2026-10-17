@@ -44,6 +44,8 @@ export default {
         failureTitle: "Login failed",
         loggedInAs: "Logged in as",
         browserUnsupported: "Your browser is too old to use this site",
+        lockedCountdown: "Login is temporarily locked. Try again in {time}.",
+        retryCountdown: "Retry in {time}",
         tooManyAttempts: "Too many failed attempts. Please try again in 24 hours.",
         redirecting: "Redirecting",
     },

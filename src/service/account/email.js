@@ -3,6 +3,12 @@ import { __cms } from "@/utils/config";
 import { encryptPassword } from "@/utils/pwd_encrypt";
 import { getDeviceFingerprintHeader } from "@/utils/account/fingerprint";
 
+async function getLoginLockStatus({ account, login_type = "account" }) {
+    return $cms({
+        headers: await getDeviceFingerprintHeader(),
+    }).post("api/cms/user/account/login/lock-status", { account, login_type });
+}
+
 async function checkEmail(email) {
     return $.get("api/cms/user/account/email/valid", {
         headers: await getDeviceFingerprintHeader(),
@@ -89,4 +95,4 @@ async function verifyEmail(data) {
     );
 }
 
-export { checkEmail, registerByEmail, loginByEmail, loginByAccount, verifyEmail };
+export { getLoginLockStatus, checkEmail, registerByEmail, loginByEmail, loginByAccount, verifyEmail };
