@@ -667,6 +667,7 @@ export default {
         }
     },
     "resource": {
+        "attachResources": "附帶資源",
         "add": "新增資源",
         "confirmDelete": "確定刪除這個資源嗎？",
         "currentDownload": "目前下載地址",
@@ -884,7 +885,7 @@ export default {
         "featureUpdates": "功能更新",
         "redemptionNotice": "兌換通知",
         "tools": "工具資源",
-        "pluginData": "外掛程式資料",
+        "pluginTutorial": "外掛程式教學",
         "studyNotes": "學習筆札",
         "boxDocs": "魔盒文檔",
         "teamMonitorData": "團隊監控資料",

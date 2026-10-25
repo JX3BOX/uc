@@ -667,6 +667,7 @@ export default {
         }
     },
     "resource": {
+        "attachResources": "Attach resources",
         "add": "Add Resource",
         "confirmDelete": "Delete this resource?",
         "currentDownload": "Current Download URL",
@@ -884,7 +885,7 @@ export default {
         "featureUpdates": "Feature Updates",
         "redemptionNotice": "Redemption Notice",
         "tools": "Tools & Resources",
-        "pluginData": "Plugin Data",
+        "pluginTutorial": "Plugin Tutorials",
         "studyNotes": "Study Notes",
         "boxDocs": "JX3BOX Docs",
         "teamMonitorData": "Team Monitor Data",

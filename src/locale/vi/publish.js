@@ -667,6 +667,7 @@ export default {
         }
     },
     "resource": {
+        "attachResources": "Đính kèm tài nguyên",
         "add": "Thêm tài nguyên",
         "confirmDelete": "Xóa tài nguyên này?",
         "currentDownload": "Liên kết tải hiện tại",
@@ -884,7 +885,7 @@ export default {
         "featureUpdates": "Cập nhật tính năng",
         "redemptionNotice": "Thông báo đổi thưởng",
         "tools": "Công cụ và tài nguyên",
-        "pluginData": "Dữ liệu plugin",
+        "pluginTutorial": "Hướng dẫn plugin",
         "studyNotes": "Ghi chú học tập",
         "boxDocs": "Tài liệu JX3BOX",
         "teamMonitorData": "Dữ liệu giám sát đội",

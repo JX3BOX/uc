@@ -24,6 +24,7 @@
                 <!-- 资源 -->
                 <publish-tool-source
                     ref="toolSource"
+                    :optional="post.post_subtype == 2"
                     v-if="post.post_subtype == 1 || post.post_subtype == 2"
                     v-model="post.post_meta"
                 ></publish-tool-source>
@@ -223,6 +224,7 @@ export default {
             loading: false,
             // 发布状态
             processing: false,
+            savedDraftRouteId: null,
 
             // 内容
             post: {
@@ -295,11 +297,15 @@ export default {
             return ~~this.post.ID || ~~this.$route.params.id;
         },
         data: function () {
-            if (this.id) {
-                return [this.id, { ...this.post, post_content: this.removeBase64Img(this.post.post_content) }];
-            } else {
-                return [{ ...this.post, post_content: this.removeBase64Img(this.post.post_content) }];
+            const payload = { ...this.post, post_content: this.removeBase64Img(this.post.post_content) };
+            if (this.post.post_subtype == 2 && this.$refs?.toolSource?.includesFiles === false) {
+                // 只清空提交副本，保留表单资源，重新勾选后可继续编辑。
+                payload.post_meta = { ...omit(this.post.post_meta, ["data", "down"]), data: [] };
+                if (Object.prototype.hasOwnProperty.call(this.post.post_meta || {}, "down")) {
+                    payload.post_meta.down = "";
+                }
             }
+            return this.id ? [this.id, payload] : [payload];
         },
     },
     mounted() {
@@ -310,6 +316,12 @@ export default {
         // 初始化
         init: function () {
             sessionStorage.removeItem("atAuthor");
+            // 首次保存草稿只补充地址中的 ID，保留当前表单及资源开关。
+            if (this.savedDraftRouteId && String(this.$route.params.id) === String(this.savedDraftRouteId)) {
+                this.savedDraftRouteId = null;
+                return Promise.resolve();
+            }
+            this.savedDraftRouteId = null;
             // 尝试加载
             return this.loadData().then(() => {
                 // 加载成功后执行自动保存逻辑（含本地草稿、本地缓存、云端历史版本）
@@ -374,8 +386,10 @@ export default {
                     type: "success",
                 });
                 // 路由
-                this.post = result;
+                const keepResources = this.post.post_subtype == 2 && this.$refs?.toolSource?.includesFiles === false;
+                this.post = keepResources ? { ...result, post_meta: this.post.post_meta } : result;
                 if (!this.$route.params.id) {
+                    this.savedDraftRouteId = result.ID;
                     this.$router.push({
                         params: {
                             id: result.ID,

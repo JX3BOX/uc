@@ -88,7 +88,7 @@ export default {
                 功能更新: "featureUpdates",
                 兑换通知: "redemptionNotice",
                 工具资源: "tools",
-                插件数据: "pluginData",
+                插件教程: "pluginTutorial",
                 学习笔札: "studyNotes",
                 魔盒文档: "boxDocs",
                 团队监控数据: "teamMonitorData",

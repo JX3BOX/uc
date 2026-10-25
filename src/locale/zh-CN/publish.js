@@ -667,6 +667,7 @@ export default {
         }
     },
     "resource": {
+        "attachResources": "附带资源",
         "add": "添加资源",
         "confirmDelete": "确定删除这个资源吗？",
         "currentDownload": "当前下载地址",
@@ -884,7 +885,7 @@ export default {
         "featureUpdates": "功能更新",
         "redemptionNotice": "兑换通知",
         "tools": "工具资源",
-        "pluginData": "插件数据",
+        "pluginTutorial": "插件教程",
         "studyNotes": "学习笔札",
         "boxDocs": "魔盒文档",
         "teamMonitorData": "团队监控数据",

@@ -2,7 +2,11 @@
     <div class="m-publish-macro m-publish-tool-source">
         <el-divider content-position="left">{{ $t("publish.resource.title") }}</el-divider>
 
-        <div class="m-macro-box m-tool-source-box">
+        <div v-if="optional" class="m-tool-source-toggle">
+            <el-checkbox v-model="includesFiles">{{ $t("publish.resource.attachResources") }}</el-checkbox>
+        </div>
+
+        <div class="m-macro-box m-tool-source-box" v-show="!optional || includesFiles">
             <div class="m-tool-source-header">
                 <el-button class="m-macro-addbutton" icon="CirclePlus" type="primary" @click="addSource"
                     >{{ $t("publish.resource.add") }}</el-button
@@ -92,6 +96,10 @@ const default_meta = {
 export default {
     name: "publish-tool-source",
     props: {
+        optional: {
+            type: Boolean,
+            default: false,
+        },
         modelValue: {
             type: Object,
             default: undefined,
@@ -106,6 +114,7 @@ export default {
         return {
             data: this.modelValue !== undefined ? this.modelValue : this.value,
             activeIndex: "1",
+            includesFiles: false,
 
             files: [],
             uploadRequests: new WeakMap(),
@@ -117,7 +126,10 @@ export default {
         modelValue: {
             immediate: true,
             deep: true,
-            handler: function (val) {
+            handler: function (val, previous) {
+                if (val !== previous) {
+                    this.includesFiles = !!(val?.down || val?.data?.some((item) => item?.file));
+                }
                 if (val !== undefined) {
                     if (!val || isEmptyMeta(val)) {
                         this.data = lodash.cloneDeep(default_meta);
@@ -263,6 +275,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.m-tool-source-toggle {
+    margin-bottom: 20px;
+}
+
 ::v-deep(.el-tabs__item) {
     display: inline-flex;
     align-items: center;

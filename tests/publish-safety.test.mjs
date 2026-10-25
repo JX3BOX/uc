@@ -392,3 +392,116 @@ test("legacy prop and old down-only payload still initialize resource controls",
         assert.equal(state.value.down, "replacement.zip");
     } finally { view.unmount(); }
 });
+
+
+test("optional tutorial resources are excluded only from the payload and retained after saving", () => {
+    const page = load("src/post/tool.vue", { omit: lodash.omit });
+    const ctx = contextFor(page, { id: 123, removeBase64Img: (value) => value });
+    ctx.$refs = { toolSource: { includesFiles: false } };
+    ctx.post.post_subtype = "2";
+    ctx.post.post_meta = { data: [{ name: "Example", file: "file.zip" }], down: "legacy.zip", other: "kept" };
+    const original = ctx.post.post_meta;
+    assert.equal(ctx.data[1].post_meta.data.length, 0);
+    assert.equal(ctx.data[1].post_meta.down, "");
+    assert.equal(ctx.data[1].post_meta.other, "kept");
+    ctx.$notify = noop;
+    ctx.$route.params.id = 123;
+    ctx.done(false, { ID: 123, post_subtype: "2", post_meta: ctx.data[1].post_meta });
+    assert.equal(ctx.post.post_meta, original);
+    ctx.$refs.toolSource.includesFiles = true;
+    assert.equal(ctx.data[1].post_meta.data[0].file, "file.zip");
+    ctx.$refs.toolSource.includesFiles = false;
+    ctx.post.post_subtype = "1";
+    assert.equal(ctx.data[1].post_meta, original);
+});
+
+test("tutorial resource checkbox initializes from existing files and links", async () => {
+    const options = load("src/components/publish/publish_tool_source.vue");
+    const state = reactive({ meta: { data: [{ file: "" }] } });
+    const view = mount(options, () => ({ modelValue: state.meta, optional: true }));
+    try {
+        assert.equal(view.instance.includesFiles, false);
+        state.meta = { data: [{ file: "https://example.com/file.zip" }] };
+        await nextTick();
+        assert.equal(view.instance.includesFiles, true);
+        view.instance.includesFiles = false;
+        state.meta.data[0].name = "Preserved";
+        await nextTick();
+        assert.equal(view.instance.includesFiles, false);
+        assert.equal(view.instance.data.data[0].file, "https://example.com/file.zip");
+        state.meta = { down: "legacy.zip" };
+        await nextTick();
+        assert.equal(view.instance.includesFiles, true);
+    } finally { view.unmount(); }
+});
+
+for (const existing of [false, true]) {
+    test(`${existing ? "edited" : "new"} tutorial draft excludes disabled resources and restores them for the next save`, async () => {
+        const requests = [];
+        const page = load("src/post/tool.vue", {
+            omit: lodash.omit,
+            push: async (...args) => {
+                const payload = JSON.parse(JSON.stringify(args.at(-1)));
+                requests.push(payload);
+                return { data: { data: { ...payload, ID: 456 } } };
+            },
+        });
+        const ctx = contextFor(page, { removeBase64Img: (value) => value });
+        ctx.post = reactive({ ...ctx.post, ID: existing ? 456 : "", post_subtype: "2",
+            post_meta: { data: [{ name: "Tutorial", file: "https://example.com/file.zip", mode: "0", remark: "Keep this" }] } });
+        ctx.$route.params.id = existing ? 456 : undefined;
+        let reloads = 0;
+        ctx.loadData = async () => { reloads++; };
+        ctx.autoSave = noop;
+        ctx.$router = { push: ({ params }) => { ctx.$route.params = params; return ctx.init(); } };
+        Object.assign(ctx, { atUser: noop, setHasRead: noop, syncPalu: async () => {},
+            setCommentConfig: noop, afterPublish: async () => {}, $notify: noop });
+        const options = load("src/components/publish/publish_tool_source.vue");
+        const view = mount(options, () => ({ modelValue: ctx.post.post_meta, optional: true,
+            "onUpdate:modelValue": (value) => ctx.post.post_meta = value }));
+        ctx.$refs = { toolSource: view.instance };
+        try {
+            assert.equal(view.instance.includesFiles, true);
+            view.instance.includesFiles = false;
+            await ctx.publish("draft", false);
+            await nextTick();
+            assert.equal(requests[0].post_status, "draft");
+            assert.equal(requests[0].post_meta.data.length, 0);
+            assert.equal(view.instance.includesFiles, false);
+            assert.equal(reloads, 0);
+            assert.equal(view.instance.data.data[0].remark, "Keep this");
+            view.instance.includesFiles = true;
+            await ctx.publish("draft", false);
+            await nextTick();
+            assert.equal(requests[1].post_meta.data[0].file, "https://example.com/file.zip");
+            assert.equal(view.instance.includesFiles, true);
+            view.instance.includesFiles = false;
+            await ctx.publish("publish", false);
+            assert.equal(requests[2].post_meta.data.length, 0);
+            assert.equal(view.instance.data.data[0].file, "https://example.com/file.zip");
+            ctx.$route.params.id = 789;
+            await ctx.init();
+            assert.equal(reloads, 1);
+        } finally { view.unmount(); }
+    });
+}
+
+for (const draft of [false, true]) {
+    test(`${draft ? "local draft" : "article edit"} loading checks tutorial resources and displays their saved values`, async () => {
+        const saved = { ID: 456, post_subtype: "2", post_meta: { data: [{ name: "Saved", file: "saved.zip", mode: "1" }] } };
+        const mixin = load("src/utils/autoSaveMixin.js", { pull: async () => ({ data: { data: saved } }) });
+        const state = reactive({ post: { post_meta: { data: [{ file: "" }] } },
+            $route: { params: { id: 456 }, query: { key: "draft" }, path: "/tool/456" },
+            isDraft: draft, isRevision: false, db: { getItem: async () => saved } });
+        const options = load("src/components/publish/publish_tool_source.vue");
+        const view = mount(options, () => ({ optional: true, modelValue: state.post.post_meta }));
+        try {
+            assert.equal(view.instance.includesFiles, false);
+            await mixin.methods.loadData.call(state);
+            await nextTick();
+            assert.equal(view.instance.includesFiles, true);
+            assert.equal(view.instance.data.data[0].file, "saved.zip");
+            assert.equal(view.instance.data.data[0].name, "Saved");
+        } finally { view.unmount(); }
+    });
+}
