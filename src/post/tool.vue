@@ -154,7 +154,7 @@
 <script>
 // 公共模块
 import { getLink } from "@jx3box/jx3box-common/js/utils";
-import tool_types from "@/assets/data/publish/tool.json";
+import tool_types from "@/assets/data/publish/tool.js";
 import User from "@jx3box/jx3box-common/js/user.js";
 import { omit } from "lodash";
 
