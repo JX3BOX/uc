@@ -20,7 +20,7 @@
                 <!-- 客户端 -->
                 <publish-client v-model="post.client"></publish-client>
                 <!-- 类型 -->
-                <publish-subtype v-model="post.post_subtype" :options="tool_types"></publish-subtype>
+                <publish-subtype v-model="post.post_subtype" :options="tool_types" :order="['1', '5', '3', '4']"></publish-subtype>
                 <!-- 资源 -->
                 <publish-tool-source
                     ref="toolSource"

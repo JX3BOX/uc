@@ -3,7 +3,7 @@
         <el-form-item :label="$t('publish.common.type')">
             <el-radio-group v-model="subtype">
                 <el-radio
-                    v-for="(name, key) in subtypes"
+                    v-for="([key, name]) in orderedSubtypes"
                     :value="key"
                     border
                     :key="key"
@@ -34,6 +34,10 @@ export default {
         lock: {
             type: Boolean,
             default: false,
+        },
+        order: {
+            type: Array,
+            default: () => [],
         },
     },
     data: function () {
@@ -71,6 +75,15 @@ export default {
         },
     },
     computed: {
+        orderedSubtypes() {
+            const entries = Object.entries(this.subtypes);
+            if (!this.order.length) return entries;
+            const keys = this.order.map(String);
+            return [
+                ...keys.filter((key) => Object.prototype.hasOwnProperty.call(this.subtypes, key)).map((key) => [key, this.subtypes[key]]),
+                ...entries.filter(([key]) => !keys.includes(key)),
+            ];
+        },
         // 是否可以变更类型
         frozen: function () {
             return this.lock;
