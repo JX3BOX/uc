@@ -116,7 +116,7 @@
                     </el-select>
                 </div>
                 <div class="u-tv-id" style="margin-left: 10px;flex: 1">
-                    <el-input v-model="form.tv_id" size="large" :placeholder="$t('dashboard.profile.roomIdPlaceholder')"></el-input>
+                    <el-input v-model="form.tv_id" size="large" :placeholder="liveRoomPlaceholder"></el-input>
                 </div>
             </el-form-item>
 
@@ -129,6 +129,7 @@
 
 <script>
 import uc from "@/components/dashboard/uc.vue";
+import { tvLink } from "@jx3box/jx3box-common/js/utils";
 import User from "@jx3box/jx3box-common/js/user";
 import { updateProfile, getProfile } from "@/service/dashboard/profile";
 import servers from "@jx3box/jx3box-data/data/server/server_list.json";
@@ -156,10 +157,20 @@ export default {
             tvmap,
         };
     },
-    computed: {},
+    computed: {
+        liveRoomPlaceholder() {
+            const key = ["weixin", "xiaohongshu", "other"].includes(this.form.tv_type)
+                ? "roomUrlPlaceholder" : "roomIdPlaceholder";
+            return this.$t(`dashboard.profile.${key}`);
+        },
+    },
     methods: {
         // 提交资料
         submit() {
+            if (this.form.tv_id && !tvLink(this.form.tv_type, this.form.tv_id)) {
+                this.$message.error(this.$t("dashboard.profile.invalidLiveRoom"));
+                return;
+            }
             const birthday = this.normalizeBirthday(this.form.birthday);
             if (birthday === false) {
                 this.$message.error(this.$t("dashboard.profile.invalidBirthday"));

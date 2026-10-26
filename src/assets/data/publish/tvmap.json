@@ -1,5 +1,10 @@
 {
     "douyu": "斗鱼",
     "bilibili": "B站",
-    "huya": "虎牙"
+    "huya": "虎牙",
+    "douyin": "抖音",
+    "kuaishou": "快手",
+    "weixin": "微信视频号",
+    "xiaohongshu": "小红书",
+    "other": "其他平台"
 }
