@@ -62,6 +62,15 @@
                                 <video class="u-upload-video__player" :src="file.url" muted preload="metadata"></video>
                                 <i class="el-icon-video-play u-upload-video__icon"></i>
                             </div>
+                            <button
+                                type="button"
+                                class="u-upload-remove"
+                                :aria-label="$t('dashboard.common.remove')"
+                                :title="$t('dashboard.common.remove')"
+                                @click.stop="$refs.upload.handleRemove(file)"
+                            >
+                                <span aria-hidden="true">×</span>
+                            </button>
                         </div>
                     </template>
                     <i class="el-icon-plus avatar-uploader-icon"></i>
@@ -206,6 +215,8 @@ export default {
                     },
                 })
                 .then((res) => {
+                    // 已移除的附件即使上传完成，也不再加入提交列表。
+                    if (!this.$refs.upload?.uploadFiles?.some((item) => item.uid === file.uid)) return;
                     if (res.data.code) {
                         this.$message.error(`[${res.data.code}]${res.data.msg}`);
                         return;
@@ -336,10 +347,41 @@ export default {
             .mb(8px);
         }
         .u-upload-item {
+            position: relative;
             width: 100%;
             height: 100%;
             cursor: pointer;
             overflow: hidden;
+            &:hover .u-upload-remove,
+            &:focus-within .u-upload-remove {
+                opacity: 1;
+            }
+        }
+        .u-upload-remove {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background: rgb(0 0 0 / 65%);
+            color: #fff;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.15s;
+            &:hover {
+                background: #f56c6c;
+            }
+            @media (hover: none) {
+                opacity: 1;
+            }
         }
         .u-upload-video {
             position: relative;
