@@ -172,7 +172,6 @@ import lodash from "lodash";
 import { sterilizer } from "sterilizer/index.js";
 import { __iconPath } from "@/utils/config";
 import isEmptyMeta from "@/utils/isEmptyMeta.js";
-import cloneDeep from "lodash/cloneDeep";
 import publish_mark from "./publish_mark.vue";
 import talent_preset_dialog from "./talent_preset_dialog.vue";
 
@@ -254,6 +253,29 @@ export default {
         },
     },
     methods: {
+        initTabsSort: function () {
+            this.tabsSortable?.destroy();
+            const el = this.$el.querySelector(".tabs-sort .el-tabs__nav");
+            if (!el) return;
+            this.tabsSortable = Sortable.create(el, {
+                animation: 200,
+                filter: ".el-icon-close, .is-icon-close",
+                onEnd: ({ newIndex, oldIndex }) => {
+                    if (newIndex === oldIndex || newIndex == null || oldIndex == null) return;
+                    const data = this.macros.data.slice();
+                    const activeMacro = data[Number(this.activeIndex) - 1];
+                    const [currentMacro] = data.splice(oldIndex, 1);
+                    data.splice(newIndex, 0, currentMacro);
+                    // 重建标签以同步 Element Plus 的注册顺序，随后绑定新的导航 DOM。
+                    this.macros.data = [];
+                    this.$nextTick(() => {
+                        this.macros.data = data;
+                        this.activeIndex = String(data.indexOf(activeMacro) + 1);
+                        this.$nextTick(() => this.initTabsSort());
+                    });
+                },
+            });
+        },
         // 添加宏
         addMacro: function () {
             if (this.macros.data.length > 7) {
@@ -352,23 +374,11 @@ export default {
         },
     },
     created: function () {},
+    beforeUnmount: function () {
+        this.tabsSortable?.destroy();
+    },
     mounted: function () {
-        let el = document.querySelector(".tabs-sort .el-tabs__nav");
-        const _this = this;
-        let sortTabs = Sortable.create(el, {
-            animation: 200,
-            filter: ".el-icon-close",
-            onEnd({ newIndex, oldIndex }) {
-                const data = cloneDeep(_this.macros.data);
-                const currRow = cloneDeep(data.splice(oldIndex, 1)[0]);
-                data.splice(newIndex, 0, currRow);
-                console.log(data);
-                _this.macros.data = [];
-                _this.$nextTick(function () {
-                    _this.macros.data = data;
-                });
-            },
-        });
+        this.initTabsSort();
     },
 };
 </script>
