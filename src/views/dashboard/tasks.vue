@@ -2,7 +2,7 @@
     <div class="m-credit m-tasks">
         <h2 class="u-title"><i class="el-icon-coffee-cup"></i> {{ $t("dashboard.tasks.title") }}</h2>
 
-        <div v-if="loaded && !loadError && taskCount" class="m-tasks-progress">
+        <div v-if="loaded && activityLoaded && !loadError && !activityLoadError && taskCount" class="m-tasks-progress">
             <div class="u-progress-label">
                 <span>{{ $t("dashboard.tasks.progress", { finished: finishedCount, total: taskCount }) }}</span>
                 <b>{{ progressPercentage }}%</b>
@@ -29,25 +29,16 @@
                 </template>
             </el-alert>
 
-            <template v-else>
-                <taskItem
-                    v-for="item in list"
-                    :key="item.task.id"
-                    :data="item"
-                    :claiming="claimingTaskId === item.task.id"
-                    :claim-disabled="claimingTaskId !== null"
-                    @claim="claimReward"
-                />
-
-                <div
-                    v-for="groupItem in groupedTasks"
-                    :key="groupItem.key"
-                    class="u-item u-group"
-                    :class="groupItem.info.open ? 'open' : 'close'"
-                >
-                    <div class="u-parent u-item">
-                        <img class="u-img" :src="groupItem.info.img" :alt="groupItem.info.name" @error="useDefaultIcon" />
-                        <div class="u-box">
+            <div
+                v-for="groupItem in groupedTasks"
+                :key="groupItem.key"
+                class="u-item u-group"
+                :class="groupItem.info.open ? 'open' : 'close'"
+            >
+                <div class="u-parent u-item">
+                    <img class="u-img" :src="groupItem.info.img" :alt="groupItem.info.name" @error="useDefaultIcon" />
+                    <div class="u-box">
+                        <div class="u-group-label">
                             <a
                                 v-if="groupItem.info.url"
                                 class="u-title"
@@ -58,33 +49,73 @@
                                 {{ groupItem.info.name }}
                             </a>
                             <span v-else class="u-title">{{ groupItem.info.name }}</span>
-                            <el-button :type="groupItem.info.open ? 'primary' : ''" @click="toggleGroup(groupItem.key)">
-                                {{ groupItem.info.open ? $t("dashboard.tasks.collapse") : $t("dashboard.tasks.expand") }}
-                                <i :class="groupItem.info.open ? 'el-icon-caret-top' : 'el-icon-caret-right'"></i>
-                            </el-button>
+                            <span class="u-group-progress">
+                                {{
+                                    $t("dashboard.tasks.groupProgress", {
+                                        finished: groupItem.tasks.filter((item) => item.hasFinish).length,
+                                        total: groupItem.tasks.length,
+                                    })
+                                }}
+                            </span>
                         </div>
+                        <el-button
+                            :type="groupItem.info.open ? 'primary' : ''"
+                            :aria-expanded="groupItem.info.open"
+                            @click="toggleGroup(groupItem.key)"
+                        >
+                            {{ groupItem.info.open ? $t("dashboard.tasks.collapse") : $t("dashboard.tasks.expand") }}
+                            <i :class="groupItem.info.open ? 'el-icon-caret-top' : 'el-icon-caret-right'"></i>
+                        </el-button>
                     </div>
+                </div>
+                <template v-if="groupItem.info.open">
+                    <el-alert
+                        v-if="groupItem.key === activityGroupKey && activityLoadError"
+                        class="m-tasks-error"
+                        type="error"
+                        :closable="false"
+                        show-icon
+                        :title="$t('dashboard.tasks.activity.loadFailed')"
+                    >
+                        <el-button size="small" :loading="activityLoading" @click="loadActivityTasks">
+                            {{ $t("dashboard.tasks.retry") }}
+                        </el-button>
+                    </el-alert>
                     <taskItem
                         v-for="item in groupItem.tasks"
                         :key="item.task.id"
                         :data="item"
-                        :claiming="claimingTaskId === item.task.id"
-                        :claim-disabled="claimingTaskId !== null"
-                        @claim="claimReward"
+                        :claiming="isClaiming(groupItem.key, item)"
+                        :claim-disabled="isClaimDisabled(groupItem.key, item)"
+                        :claim-label="
+                            groupItem.key === activityGroupKey && item.hasFinish
+                                ? $t('dashboard.tasks.activity.claimed')
+                                : ''
+                        "
+                        @claim="groupItem.key === activityGroupKey ? claimActivityReward($event) : claimReward($event)"
                     />
-                </div>
+                </template>
+            </div>
 
-                <el-empty v-if="!taskCount" :description="$t('dashboard.tasks.empty')" />
-            </template>
+            <el-empty
+                v-if="loaded && !loading && !loadError && !taskCount && !activityLoading && !activityLoadError"
+                :description="$t('dashboard.tasks.empty')"
+            />
         </div>
     </div>
 </template>
 
 <script>
-import { getCheckTasks, getTasks } from "@/service/dashboard/tasks.js";
-import { __cdn, __imgPath } from "@/utils/config";
+import { claimActivityTask, getActivityTasks, getCheckTasks, getTasks } from "@/service/dashboard/tasks.js";
+import { __cdn, __imgPath, __Root } from "@/utils/config";
 import taskItem from "@/components/dashboard/task/item.vue";
 import { getBreadcrumb } from "@jx3box/jx3box-common/js/system.js";
+
+const DAILY_GROUP = "jx3box_daily_task";
+const SPECIAL_GROUP = "jx3box_special_task";
+const INVITATION_GROUP = "task_invitation_user_register";
+const BASIC_GROUP = Symbol("basic tasks");
+const ACTIVITY_GROUP = Symbol("activity tasks");
 
 export default {
     name: "tasks",
@@ -100,6 +131,12 @@ export default {
             group: {},
             groupInfo: {},
             claimingTaskId: null,
+            activityTasks: [],
+            activityGroupKey: ACTIVITY_GROUP,
+            activityLoading: false,
+            activityLoaded: false,
+            activityLoadError: false,
+            claimingActivityKey: null,
         };
     },
     computed: {
@@ -113,26 +150,109 @@ export default {
             return __cdn + "design/task/quest-pro.svg";
         },
         groupedTasks() {
-            return Object.keys(this.group).map((key) => ({
-                key,
-                tasks: this.group[key] || [],
-                info: this.getGroupInfo(key),
-            }));
+            const order = [DAILY_GROUP, BASIC_GROUP, SPECIAL_GROUP, ACTIVITY_GROUP, INVITATION_GROUP];
+            const tasksByGroup = new Map(Object.entries(this.group));
+            tasksByGroup.set(BASIC_GROUP, this.list);
+            tasksByGroup.set(ACTIVITY_GROUP, this.activityItems);
+            return [...order, ...Object.keys(this.group).filter((key) => !order.includes(key))]
+                .filter((key) => tasksByGroup.get(key)?.length || (key === ACTIVITY_GROUP && this.activityLoadError))
+                .map((key) => ({
+                    key,
+                    tasks: tasksByGroup.get(key),
+                    info: this.getGroupInfo(key),
+                }));
         },
-        allTasks() {
-            return [...this.list, ...this.groupedTasks.flatMap((item) => item.tasks)];
+        activityItems() {
+            return this.activityTasks.map((item) => {
+                const progress = this.$t("dashboard.tasks.activity.progress", {
+                    current: Math.min(item.progress, item.target),
+                    target: item.target,
+                });
+                return {
+                    task: {
+                        id: item.key,
+                        action_type_desc: item.name,
+                        task_detail: [item.desc, progress].filter(Boolean).join(" · "),
+                        task_icon: item.icon?.trim(),
+                        task_url: `${__Root}knowledge`,
+                    },
+                    rewardTags: item.awards.map((award) => {
+                        const type = this.$t(`dashboard.tasks.activity.awards.${award.type}`);
+                        return `${type} ${award.name || (award.key ?? award.amount)}`;
+                    }),
+                    hasFinish: item.status === "claimed",
+                    claimable: item.status === "claimable",
+                };
+            });
+        },
+        personalTasks() {
+            return this.list.concat(Object.values(this.group).flat());
         },
         taskCount() {
-            return this.allTasks.length;
+            return this.personalTasks.length + this.activityTasks.length;
         },
         finishedCount() {
-            return this.allTasks.filter((item) => item.hasFinish).length;
+            const personalFinished = this.personalTasks.filter((item) => item.hasFinish).length;
+            const activityClaimed = this.activityTasks.filter((item) => item.status === "claimed").length;
+            return personalFinished + activityClaimed;
         },
         progressPercentage() {
             return this.taskCount ? Math.round((this.finishedCount / this.taskCount) * 100) : 0;
         },
     },
     methods: {
+        isClaiming(key, item) {
+            return (key === ACTIVITY_GROUP ? this.claimingActivityKey : this.claimingTaskId) === item.task.id;
+        },
+        isClaimDisabled(key, item) {
+            return key === ACTIVITY_GROUP
+                ? !item.claimable || this.claimingActivityKey !== null || this.activityLoading
+                : this.claimingTaskId !== null;
+        },
+        async loadActivityTasks() {
+            if (this.activityLoading) return;
+            this.activityLoading = true;
+            this.activityLoadError = false;
+            try {
+                this.activityTasks = await getActivityTasks();
+                this.activityLoaded = true;
+            } catch {
+                this.activityLoadError = true;
+            } finally {
+                this.activityLoading = false;
+            }
+        },
+        refreshActivityOnFocus() {
+            if (this.claimingActivityKey === null) this.loadActivityTasks();
+        },
+        async claimActivityReward(key) {
+            if (this.claimingActivityKey !== null || this.activityLoading) return;
+            if (!this.activityTasks.some((task) => task.key === key && task.status === "claimable")) return;
+
+            this.claimingActivityKey = key;
+            try {
+                await claimActivityTask(key);
+                this.activityTasks = this.activityTasks.map((task) =>
+                    task.key === key ? { ...task, status: "claimed" } : task
+                );
+                this.$notify({
+                    title: this.$t("dashboard.common.success"),
+                    message: this.$t("dashboard.tasks.completedReward"),
+                    type: "success",
+                });
+                await this.loadActivityTasks();
+            } catch (error) {
+                const message = error?.response?.data?.msg || this.$t("dashboard.tasks.activity.claimFailed");
+                this.$notify({
+                    title: this.$t("dashboard.common.tip"),
+                    message,
+                    type: "warning",
+                });
+                await this.loadActivityTasks();
+            } finally {
+                this.claimingActivityKey = null;
+            }
+        },
         loadTasks(showSkeleton = !this.loaded) {
             if (showSkeleton) this.loading = true;
             this.loadError = false;
@@ -156,7 +276,7 @@ export default {
                     this.syncGroupInfo();
                 })
                 .catch(() => {
-                    if (!this.loaded || !this.taskCount) {
+                    if (!this.loaded || !this.personalTasks.length) {
                         this.list = [];
                         this.group = {};
                         this.loadError = true;
@@ -209,21 +329,30 @@ export default {
             return Number.isFinite(order) ? order : Number.MAX_SAFE_INTEGER;
         },
         getGroupInfo(key) {
-            const info =
-                this.groupInfo[key] || {
-                    name: key,
-                    img: this.defaultGroupIcon,
-                    url: "",
-                    open: false,
+            const info = this.groupInfo[key] || {
+                name: String(key),
+                img: this.defaultGroupIcon,
+                url: "",
+                open: false,
+            };
+            if (key === BASIC_GROUP) {
+                return { ...info, name: this.$t("dashboard.tasks.basicTasks"), img: this.specialGroupIcon };
+            }
+            if (key === ACTIVITY_GROUP) {
+                return {
+                    ...info,
+                    name: this.$t("dashboard.tasks.activity.title"),
+                    img: this.groupInfo[INVITATION_GROUP]?.img || this.specialGroupIcon,
                 };
-            if (key === "jx3box_daily_task") {
+            }
+            if (key === DAILY_GROUP) {
                 return {
                     ...info,
                     name: this.$t("dashboard.tasks.groups.daily"),
                     img: this.dailyGroupIcon,
                 };
             }
-            if (key === "jx3box_special_task") {
+            if (key === SPECIAL_GROUP) {
                 return {
                     ...info,
                     name: this.$t("dashboard.tasks.groups.special"),
@@ -288,6 +417,11 @@ export default {
     mounted() {
         this.loadTasks(true);
         this.loadGroupInfo();
+        this.loadActivityTasks();
+        window.addEventListener("focus", this.refreshActivityOnFocus);
+    },
+    beforeUnmount() {
+        window.removeEventListener("focus", this.refreshActivityOnFocus);
     },
 };
 </script>

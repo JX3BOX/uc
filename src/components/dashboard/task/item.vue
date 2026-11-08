@@ -14,7 +14,9 @@
                 </a>
                 <span v-else class="u-title">{{ task.action_type_desc }}</span>
                 <span v-if="!hasMallGoods" class="u-desc">
-                    <template v-if="task.task_detail">{{ task.task_detail }} ∕ </template>
+                    <template v-if="task.task_detail">
+                        {{ task.task_detail }}<template v-if="rewards.length"> ∕ </template>
+                    </template>
                     <span
                         v-for="(reward, index) in rewards"
                         :key="reward.key"
@@ -28,6 +30,11 @@
                     </span>
                 </span>
                 <span v-if="hasMallGoods && task.task_detail" class="u-task-detail">{{ task.task_detail }}</span>
+                <div v-if="data.rewardTags?.length" class="u-reward-tags">
+                    <el-tag v-for="(reward, index) in data.rewardTags" :key="index" size="small" type="info">
+                        {{ reward }}
+                    </el-tag>
+                </div>
                 <span v-if="expirationTime" class="u-task-expiration">
                     {{ $t("dashboard.tasks.expiresAt", { time: expirationTime }) }}
                 </span>
@@ -43,7 +50,7 @@
                     :icon="isFinished ? 'Check' : null"
                     @click="claimReward"
                 >
-                    {{ $t("dashboard.tasks.claimReward") }}
+                    {{ claimLabel || $t("dashboard.tasks.claimReward") }}
                 </el-button>
             </div>
         </div>
@@ -64,6 +71,10 @@ export default {
         claiming: {
             type: Boolean,
             default: false,
+        },
+        claimLabel: {
+            type: String,
+            default: "",
         },
         claimDisabled: {
             type: Boolean,

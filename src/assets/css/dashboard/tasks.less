@@ -43,8 +43,8 @@
             border: 1px solid #eee;
             align-items: center;
 
-            &:hover {
-                background-color: @bg-gray;
+            &:not(.u-group):not(.u-parent):hover {
+                background-color: #f8f9fa;
             }
 
             &.u-parent {
@@ -56,15 +56,21 @@
             &.u-group {
                 flex-direction: column;
 
+                .u-group-label {
+                    .flex;
+                    align-items: baseline;
+                    flex-wrap: wrap;
+                    gap: 4px 8px;
+                }
+
+                .u-group-progress {
+                    .fz(12px);
+                    color: #757575;
+                }
+
                 &.open {
                     .u-parent {
                         .pb(20px);
-                    }
-
-                    .u-item:not(.u-parent) {
-                        &:hover {
-                            background-color: #fff;
-                        }
                     }
                 }
 
@@ -117,6 +123,13 @@
             .u-task-detail {
                 .fz(12px, 1.8);
                 color: #999;
+            }
+
+            .u-reward-tags {
+                .flex;
+                flex-wrap: wrap;
+                gap: 6px;
+                margin-top: 4px;
             }
 
             .u-task-expiration {
