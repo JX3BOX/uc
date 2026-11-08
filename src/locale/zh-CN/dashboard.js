@@ -955,6 +955,8 @@ export default {
         mediaOnly: "仅支持上传图片或视频文件",
         fileTooLarge: "单个附件大小不能超过30MB",
         uploadInvalidResponse: "上传返回数据异常",
+        attachmentsUploading: "附件正在上传，请上传完成后再提交",
+        attachmentsFailed: "有附件上传失败，请移除失败的附件后重新添加，或直接提交反馈",
         attachmentLimit: "上传的附件个数最多为 {max} 个",
         assignTo: "指派至",
         coordinateWith: "协同给",

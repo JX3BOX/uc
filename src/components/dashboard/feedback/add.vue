@@ -36,11 +36,11 @@
                 <div class="u-attachment-tip">{{ $t("dashboard.feedback.attachmentTip", { max }) }}</div>
                 <el-upload
                     ref="upload"
+                    v-model:file-list="files"
                     class="u-upload avatar-uploader"
                     :action="url"
                     list-type="picture-card"
                     :on-preview="handlePictureCardPreview"
-                    :on-remove="remove"
                     :auto-upload="false"
                     :on-change="change"
                     :on-exceed="exceed"
@@ -135,8 +135,7 @@ export default {
                 public: 0,
             },
             url: API,
-            imgs: [],
-            uploadedMap: {},
+            files: [],
             loading: false,
             dialogImageUrl: "",
             dialogFileType: "image",
@@ -195,16 +194,19 @@ export default {
 
             return true;
         },
-        change(file) {
+        async change(file) {
+            const attachment = this.files.find((item) => item.uid === file.uid);
+            if (!attachment || attachment.status !== "ready") return;
             if (!this.validateFile(file)) {
                 this.$refs.upload?.handleRemove(file);
                 return;
             }
-            if (file.status === "success" || this.uploadedMap[file.uid]) return;
+            attachment.status = "uploading";
             const fdata = new FormData();
             fdata.append("file", file.raw);
-            axios
-                .post(API, fdata, {
+            const currentAttachment = () => this.files.find((item) => item.uid === file.uid);
+            try {
+                const { data } = await axios.post(API, fdata, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
@@ -213,34 +215,30 @@ export default {
                         username: (localStorage && localStorage.getItem("token")) || "",
                         password: "cms common request",
                     },
-                })
-                .then((res) => {
-                    // 已移除的附件即使上传完成，也不再加入提交列表。
-                    if (!this.$refs.upload?.uploadFiles?.some((item) => item.uid === file.uid)) return;
-                    if (res.data.code) {
-                        this.$message.error(`[${res.data.code}]${res.data.msg}`);
-                        return;
-                    }
-                    const imageUrl = res.data.data?.[0];
-                    if (!imageUrl) {
-                        this.$message.error(this.$t("dashboard.feedback.uploadInvalidResponse"));
-                        return;
-                    }
-                    this.uploadedMap[file.uid] = imageUrl;
-                    this.imgs = [...this.imgs, imageUrl];
-                    file.url = imageUrl;
-                    file.name = file.name || imageUrl.split("/").pop();
-                    file.status = "success";
-                })
-                .catch((err) => {
-                    if (err?.response?.data?.code) {
-                        this.$message.error(
-                            `[${err.response.data.code}]${err.response.data.msg || err.response.data.message}`
-                        );
-                    } else {
-                        this.$message.error(this.$t("dashboard.common.networkError"));
-                    }
                 });
+                // 已移除的附件即使上传完成，也不再加入提交列表。
+                const current = currentAttachment();
+                if (!current) return;
+                if (data.code || !data.data?.[0]) {
+                    current.status = "fail";
+                    this.$message.error(
+                        data.code ? `[${data.code}]${data.msg}` : this.$t("dashboard.feedback.uploadInvalidResponse")
+                    );
+                    return;
+                }
+                current.response = data;
+                current.status = "success";
+            } catch (err) {
+                const current = currentAttachment();
+                if (!current) return;
+                current.status = "fail";
+                const error = err?.response?.data;
+                this.$message.error(
+                    error?.code
+                        ? `[${error.code}]${error.msg || error.message}`
+                        : this.$t("dashboard.common.networkError")
+                );
+            }
         },
         // 附件上限
         exceed: function () {
@@ -251,55 +249,55 @@ export default {
             this.dialogFileType = this.isVideoFile(file) ? "video" : "image";
             this.dialogVisible = true;
         },
-        // 移除附件
-        remove: function (file) {
-            const imageUrl = this.uploadedMap[file?.uid] || file?.response?.data?.[0] || file?.url;
-            this.imgs = this.imgs.filter((img) => img !== imageUrl);
-            if (file?.uid) delete this.uploadedMap[file.uid];
-        },
         async submit() {
+            if (this.loading || !this.canSubmit) return;
+            if (this.files.some((file) => file.status === "ready" || file.status === "uploading")) {
+                this.$message.warning(this.$t("dashboard.feedback.attachmentsUploading"));
+                return;
+            }
+            if (this.files.some((file) => file.status === "fail")) {
+                this.$message.warning(this.$t("dashboard.feedback.attachmentsFailed"));
+                return;
+            }
             this.loading = true;
             const data = {
                 ...this.form,
-                images: this.imgs,
+                images: this.files.map((file) => file.response.data[0]),
                 client: this.client,
                 refer: this.refer,
             };
             data.content = data.content.replace(/\n/g, "<br/>");
-            feedback(data)
-                .then((res) => {
-                    this.$message.success(this.$t("dashboard.common.submitSuccess"));
-                    this.$refs.upload.clearFiles();
-                    this.resetForm();
-                })
-                .finally(() => {
-                    this.loading = false;
-                });
+            try {
+                await feedback(data);
+                this.$message.success(this.$t("dashboard.common.submitSuccess"));
+                for (const file of this.files) {
+                    if (file.url?.startsWith("blob:")) URL.revokeObjectURL(file.url);
+                }
+                this.$refs.upload.clearFiles();
+                this.resetForm();
+            } finally {
+                this.loading = false;
+            }
         },
         resetForm() {
             this.form = this.$options.data().form;
-            this.imgs = [];
-            this.uploadedMap = {};
-        },
-        addFile(file) {
-            if (!this.validateFile(file)) return false;
-            if ((this.$refs.upload?.uploadFiles?.length || 0) >= this.max) {
-                this.exceed();
-                return false;
-            }
-            this.$refs.upload.handleStart(file);
-            return false;
         },
         handlePaste(event) {
-            const clipboardItems = event.clipboardData.items;
-            for (let i = 0; i < clipboardItems.length; i++) {
-                const item = clipboardItems[i];
-                if (item.type.indexOf("image") !== -1) {
+            let remaining = this.max - this.files.length;
+            for (const item of event.clipboardData?.items || []) {
+                if (item.type.startsWith("image/")) {
+                    const file = item.getAsFile();
+                    if (!file) continue;
                     // 阻止默认粘贴图片的名字
                     event.preventDefault();
-                    const blob = item.getAsFile();
-                    const file = new File([blob], new Date().getTime() + "-" + blob.name, { type: blob.type });
-                    this.addFile(file);
+                    if (!this.validateFile(file)) continue;
+                    if (remaining <= 0) {
+                        this.exceed();
+                        break;
+                    }
+                    const screenshot = new File([file], `${Date.now()}-${file.name}`, { type: file.type });
+                    this.$refs.upload.handleStart(screenshot);
+                    remaining--;
                 }
             }
         },

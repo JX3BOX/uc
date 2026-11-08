@@ -997,6 +997,9 @@ export default {
         mediaOnly: "Only supports uploading image or video files",
         fileTooLarge: "The size of a single attachment cannot exceed 30MB",
         uploadInvalidResponse: "Abnormal upload return data",
+        attachmentsUploading: "Please wait for the attachments to finish uploading before submitting",
+        attachmentsFailed:
+            "Some attachments failed to upload. Remove them, then add them again or submit without them.",
         attachmentLimit: "The maximum number of uploaded attachments is {max}",
         assignTo: "Assign To",
         coordinateWith: "Collaborate With",

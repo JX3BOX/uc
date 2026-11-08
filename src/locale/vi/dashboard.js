@@ -996,6 +996,9 @@ export default {
         mediaOnly: "Chỉ hỗ trợ tải lên tập tin hình ảnh hoặc video",
         fileTooLarge: "Kích thước của một tệp đính kèm không thể vượt quá 30MB",
         uploadInvalidResponse: "Dữ liệu trả về tải lên bất thường",
+        attachmentsUploading: "Vui lòng đợi tệp đính kèm tải lên xong trước khi gửi",
+        attachmentsFailed:
+            "Có tệp đính kèm tải lên thất bại. Hãy xóa các tệp đó rồi thêm lại hoặc gửi mà không kèm chúng.",
         attachmentLimit: "Số lượng tệp đính kèm được tải lên tối đa là {max}",
         assignTo: "Giao cho",
         coordinateWith: "Phối hợp với",

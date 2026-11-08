@@ -977,6 +977,8 @@ export default {
         mediaOnly: "僅支援上傳圖片或影片文件",
         fileTooLarge: "單一附件大小不能超過30MB",
         uploadInvalidResponse: "上傳回傳資料異常",
+        attachmentsUploading: "附件正在上傳，請等上傳完成後再提交",
+        attachmentsFailed: "有附件上傳失敗，請移除失敗的附件後重新加入，或直接提交回報",
         attachmentLimit: "上傳的附件個數最多為 {max} 個",
         assignTo: "指派至",
         coordinateWith: "協同給",
