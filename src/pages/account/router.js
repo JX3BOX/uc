@@ -16,6 +16,11 @@ const routes = [
         redirect: "/login",
     },
     {
+        name: "account_wxmp_bind",
+        path: "/wxmp-bind",
+        component: () => import("@/views/account/WxmpBind.vue"),
+    },
+    {
         name: "account_login",
         path: "/login",
         component: Login,

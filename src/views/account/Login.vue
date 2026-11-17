@@ -1,9 +1,9 @@
 <template>
-    <div class="m-card" >
-        <el-card class="box-card">
-            <CardHeader />
+    <div :class="{ 'm-card': !embedded }">
+        <component :is="embedded ? 'div' : 'ElCard'" :class="{ 'box-card': !embedded }">
+            <CardHeader v-if="!embedded" />
             <Msg />
-            <template v-if="!isLogin || isAlternate">
+            <template v-if="embedded || !isLogin || isAlternate">
                 <main v-if="success == null" class="m-main">
                     <el-form ref="loginForm" :model="form" :rules="loginRules" class="m-form" @submit.prevent>
                         <!-- 账号 -->
@@ -47,12 +47,12 @@
                         <el-alert v-if="lockSeconds > 0" class="u-lock-notice" :title="$t('account.login.lockedCountdown', { time: lockTimeText })" type="warning" show-icon :closable="false" role="status" />
 
                         <!-- 提交 -->
-                        <el-button class="u-submit u-button" type="primary" @click="submit" :loading="submitting" :disabled="lockSeconds > 0" size="large">{{ $t("account.common.login") }}</el-button>
+                        <el-button class="u-submit u-button" type="primary" @click="submit" :loading="submitting" :disabled="preview || lockSeconds > 0" size="large">{{ $t("account.common.login") }}</el-button>
                     </el-form>
 
-                    <Union mode="login" :includes="['qq', 'wechat', 'weibo']" />
+                    <Union v-if="!embedded" mode="login" :includes="['qq', 'wechat', 'weibo']" />
 
-                    <footer class="m-footer">
+                    <footer v-if="!embedded" class="m-footer">
                         <p class="u-login">
                             {{ $t("account.login.noAccount") }}
                             <a :href="register_url">{{ $t("account.login.registerNow") }} &raquo;</a>
@@ -87,8 +87,8 @@
                     <el-button class="u-logout" type="danger" @click="logout" size="large" icon="SwitchButton">{{ $t("account.common.logout") }}</el-button>
                 </div>
             </template>
-        </el-card>
-        <CommonBottom />
+        </component>
+        <CommonBottom v-if="!embedded" />
     </div>
 </template>
 
@@ -104,6 +104,11 @@ import { ensureDeviceFingerprint } from "@/utils/account/fingerprint.js";
 import { readLoginLocks, saveLoginLocks, loginLockDeadline, formatLoginLockTime } from "@/utils/account/login-lock";
 export default {
     name: "Login",
+    props: {
+        embedded: Boolean,
+        preview: Boolean,
+    },
+    emits: ["logged-in"],
     data: function () {
         return {
             success: null,
@@ -247,7 +252,7 @@ export default {
             callback(isValidPassword(value) ? undefined : new Error(this.$t("account.validation.password")));
         },
         submit: async function () {
-            if (this.lockSeconds > 0 || this.submitting) return;
+            if (this.preview || this.lockSeconds > 0 || this.submitting) return;
 
             try {
                 await this.$refs.loginForm.validate();
@@ -279,6 +284,10 @@ export default {
                             };
                             User.update(_data)
                                 .then(() => {
+                                    if (this.embedded) {
+                                        this.$emit("logged-in", _data);
+                                        return;
+                                    }
                                     if (this.isAlternate) {
                                         localStorage.setItem(
                                             `jx3box-alternate-${_data.uid}`,
