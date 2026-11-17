@@ -336,14 +336,17 @@ export default {
                 open: false,
             };
             if (key === BASIC_GROUP) {
-                return { ...info, name: this.$t("dashboard.tasks.basicTasks"), img: this.specialGroupIcon };
+                return { ...info, name: this.$t("dashboard.tasks.basicTasks"), img: __cdn + "design/task/quest-base.svg" };
             }
             if (key === ACTIVITY_GROUP) {
                 return {
                     ...info,
                     name: this.$t("dashboard.tasks.activity.title"),
-                    img: this.groupInfo[INVITATION_GROUP]?.img || this.specialGroupIcon,
+                    img: __cdn + "design/task/quest-event.svg",
                 };
+            }
+            if (key === INVITATION_GROUP) {
+                return { ...info, img: __cdn + "design/task/quest-invite.svg" };
             }
             if (key === DAILY_GROUP) {
                 return {
