@@ -84,6 +84,9 @@ export default {
                 console.log("SSE Initialization");
             });
             this.sse.on("bind_wx_mp", this.onMessage);
+            this.sse.on("bind_wx_mp_failed", (event) => {
+                this.$message.warning(JSON.parse(event.data));
+            });
             this.sse.on("error", (e) => {
                 console.log("SSE Error", e);
             });
