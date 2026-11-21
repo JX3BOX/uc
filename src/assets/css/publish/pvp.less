@@ -454,8 +454,17 @@
         cursor: pointer;
 
         .u-skill-icon {
+            display: block;
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
             box-sizing: border-box;
             border: 2px solid #1a2b22;
+
+            &.is-wujie {
+                border-color: #2a9998;
+                border-radius: 50%;
+            }
         }
 
         .u-skill.active {

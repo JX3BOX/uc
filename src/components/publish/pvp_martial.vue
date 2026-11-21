@@ -173,8 +173,9 @@ export default {
                 const list = res.data.data;
                 const kungfu_skills = groupBy(
                     list
-                        .filter((item) => item.column >= 0 && !item.belong)
-                        .sort((a, b) => a.column - b.column)
+                        // 无界面板没有技能栏位 column，不能按旗舰端的栏位规则过滤。
+                        .filter((item) => (this.platform == "wujie" || item.column >= 0) && !item.belong && item.skill)
+                        .sort((a, b) => (a.column ?? 0) - (b.column ?? 0))
                         .map((item) => {
                             item.skill.Name = item.skill.Name.replace(/·悟$/, "");
                             return item;
@@ -210,10 +211,4 @@ export default {
 
 <style lang="less">
 @import "~@/assets/css/publish/pvp.less";
-.m-pvp-martial .m-martial-skill .u-skill-icon.is-wujie {
-    border: 2px solid #2a9998;
-    border-radius: 50%;
-    width: 52px;
-    height: 52px;
-}
 </style>
